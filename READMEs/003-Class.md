@@ -11,16 +11,17 @@
 * Uruchom testy jednostkowe dołączone do repozytorium
 
 ### Przeprowadzenie buildu w kontenerze
+Ponów ww.  proces w kontenerze, interaktywnie.
 1. Wykonaj kroki `build` i `test` wewnątrz wybranego kontenera bazowego. Tj. wybierz "wystarczający" kontener, np ```ubuntu``` dla aplikacji C lub ```node``` dla Node.js
 	* uruchom kontener
 	* podłącz do niego TTY celem rozpoczęcia interaktywnej pracy
 	* zaopatrz kontener w wymagania wstępne (jeżeli proces budowania nie robi tego sam)
 	* sklonuj repozytorium
-	* uruchom *build*
+	* Skonfiguruj środowisko i uruchom *build*
 	* uruchom testy
 2. Stwórz dwa pliki `Dockerfile` automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:
 	* Kontener pierwszy ma przeprowadzać wszystkie kroki aż do *builda*
-	* Kontener drugi ma bazować na pierwszym i wykonywać testy
+	* Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić *builda*!)
 3. Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?
    
 ### Zakres rozszerzony tematu sprawozdania
