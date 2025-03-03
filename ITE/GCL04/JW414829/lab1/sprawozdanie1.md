@@ -10,17 +10,13 @@
 
 ### 2. Klonowanie repozytorium
 **Klon przez SSH** (po dodaniu klucza do GitHub i skonfigurowaniu agenta SSH):
-   ```
-   ![Klonowanie przez SSH](./repo-clone.png)
-   ```
+![Klonowanie przez SSH](./repo-clone.png)
 
 ---
 
 ### 3. Przełączanie się na gałęzie
 - Przełączyłem się na gałąź `main`, a następnie na gałąź grupową `GCL04`. Następnie utworzyłem gałąź składającą się z moich inicjałów i numeru indeksu:
-  ```
   ![Zmiana brancha](./switch-branch.png)
-  ```
 
 ---
 
@@ -54,9 +50,7 @@ exit  1
 esac
 ```
 
-```
 ![Test hooka](./hook-test.png)
-```
 
 ---
 
@@ -67,6 +61,7 @@ esac
   git commit -m 'JW414829 sprawko i pliki'
   git push origin JW414829
   ```
-- Wykonałem próbę wciągnięcia mojej gałęzi do gałęzi grupowej, a następnie ponowny push, aby zaktualizować mój branch.
+- Wykonałem próbę wciągnięcia mojej gałęzi do gałęzi grupowej aczkolwiek nie pushowalem tego na remote.
+![Test merge](./merge.png)
 
 ---
