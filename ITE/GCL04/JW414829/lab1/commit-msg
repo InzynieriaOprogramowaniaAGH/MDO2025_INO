@@ -11,11 +11,9 @@ first_line=$(head -n1 "$1")
 # Sprawdzenie, czy pierwsza linia zaczyna się od wymaganego prefiksu
 case "$first_line" in
   "$required_prefix"*)
-    # Jeśli pasuje, commit jest kontynuowany
     ;;
   *)
-    # Jeśli nie pasuje, wyświetl komunikat błędu i przerwij commit
-    echo "Błąd: Wiadomość zatwierdzenia musi zaczynać się od '$required_prefix'." >&2
+    echo "Błąd: commit musi zaczynać się od '$required_prefix'." >&2
     exit 1
     ;;
 esac
