@@ -64,9 +64,9 @@ esac
 - Utworzyłem/zmodyfikowałem pliki, dodałem je i zrobiłem commit:
   ```bash
   git add .
-  git commit -m "JW414829 Dodanie sprawozdania i zrzutów ekranu"
+  git commit -m 'JW414829 sprawko i pliki'
   git push origin JW414829
   ```
-- Wykonałem próbę wciągnięcia mojej gałęzi do gałęzi grupowej (merge lub rebase lokalnie), a następnie ponowny push, aby zaktualizować mój branch.
+- Wykonałem próbę wciągnięcia mojej gałęzi do gałęzi grupowej, a następnie ponowny push, aby zaktualizować mój branch.
 
 ---
