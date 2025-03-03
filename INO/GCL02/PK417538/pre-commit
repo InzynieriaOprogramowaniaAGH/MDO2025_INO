@@ -1,0 +1,13 @@
+#!/bin/bash
+
+commit_message=$(cat "$1")
+
+pattern="PK417538"
+
+if [[ $commit_message =~ ^$pattern ]]; then
+    echo "Commit message poprawny"
+    exit 0
+else
+    echo "Commit message MUSI zaczynać się od $pattern"
+    exit 1
+fi
