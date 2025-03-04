@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "uruchomiono skrypt"
+
+PATTERN="^LD417127"
+
+if ! grep -qE "$PATTERN" "$1"; then
+	echo "Blad: Komunikat commita musi zaczynac sie od: $PATTERN"
+	exit 1
+fi
