@@ -9,6 +9,7 @@
    - Utwórz dwa klucze SSH, inne niż RSA, w tym co najmniej jeden zabezpieczony hasłem
    - Skonfiguruj klucz SSH jako metodę dostępu do GitHuba
    - Sklonuj repozytorium z wykorzystaniem protokołu SSH
+   - Skonfiguruj 2FA
 4. Przełącz się na gałąź ```main```, a potem na gałąź swojej grupy (pilnuj gałęzi i katalogu!)
 5. Utwórz gałąź o nazwie "inicjały & nr indeksu" np. ```KD232144```. Miej na uwadze, że odgałęziasz się od brancha grupy!
 6. Rozpocznij pracę na nowej gałęzi
