@@ -1,0 +1,6 @@
+#!/bin/bash
+COMMIT_MSG=$(cat "$1")
+if [[ ! "$COMMIT_MSG" | grep -qE "FS417758"; then
+    echo "Commit message - FS417758"
+    exit 1
+fi

@@ -1,6 +1,0 @@
-#!/bin/bash
-commit_msg=$(cat "$1")
-if [[ ! "$commit_msg" =~ ^FS417758 ]]; then
-    echo "Commit message - FS417758"
-    exit 1
-fi
