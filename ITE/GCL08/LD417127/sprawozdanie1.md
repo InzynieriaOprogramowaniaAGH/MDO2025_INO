@@ -108,3 +108,22 @@ cp GCL08/LD417127/commit-msg .git/hooks/
 ```
 
 **Zrzut ekranu:** ![git hook test](screens/class1/test_git_hooka.jpg)
+
+## 7. Próba merge z branchem grupowym
+
+Wypchnięcie repozytorium na repo zdalne:
+
+```bash
+git push origin LD417127
+
+git checkout GCL08
+
+git merge LD417127
+
+git commit -m "LD417127 Polaczenie galezi LD417127 z GCL08"
+
+git push origin GCL08
+```
+
+**Zrzut ekranu:** ![git hook test](screens/class1/git_merge.jpg)
+**Zrzut ekranu:** ![git hook test](screens/class1/git_merge_blad.jpg)
