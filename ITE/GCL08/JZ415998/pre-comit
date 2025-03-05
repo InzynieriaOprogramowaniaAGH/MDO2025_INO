@@ -1,0 +1,8 @@
+#!/bin/bash
+COMMIT_MSG_FILE=$1
+EXPECTED_PREFIX="JZ415998"
+
+if ! grep -q "^JZ415998" "$COMMIT_MSG_FILE"; then
+	echo "Commit message musi zaczynac sie od '$JZ415998'"
+	exit 1
+fi
