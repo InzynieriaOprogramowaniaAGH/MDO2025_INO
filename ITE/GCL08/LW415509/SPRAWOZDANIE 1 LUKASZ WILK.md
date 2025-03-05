@@ -130,6 +130,9 @@ Aby mieć pewność, że hook będzie się wykonywał, nadajemy mu uprawnienia:
 chmod +x commit-msg
 ```
 
+Przy próbie commitu bez podania odpowiedniej wiadomosci otrzymujemy błąd
+![alt text](images/image.png)
+
 ```bash
 #!/bin/bash
 
@@ -149,3 +152,8 @@ exit 0
 
 - Próba spushowania repozytorium lokalnego
 
+![alt text](images/push.png)
+
+Próba spushowania repozytorium nie powiodła się ponieważ w tym momencie nie zostały jeszcze nadane uprawnienia
+
+- Merge gałęzi LW415509 do gałęzi grupowej
