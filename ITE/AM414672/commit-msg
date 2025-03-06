@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# getting the commit text
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# the magic
+if ! echo "$COMMIT_MSG" | grep -qE '^AM414672'; then
+  echo "Error: Brain.exe not found"
+  exit 1
+fi
+
+exit 0
