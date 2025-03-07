@@ -23,7 +23,7 @@ Do wykonania tego zadania wykorzystano link prowadzący do repozytorium oraz pol
 
 ## 3. Dostęp do repozytorium jako uczestnik oraz klonowanie go za pomocą klucza SSH
 
-### Utworzenie dwóch kluczny SSH (inne niż RSA), w tym jednego zabezpieczonego hasłem 
+Utworzenie dwóch kluczny SSH (inne niż RSA), w tym jednego zabezpieczonego hasłem 
 
 W celu bezpiecznego dostępu do repozytorium github konieczne było utworzenie klucza, zdecydowano się na klucz <code style="color:rgb(35, 186, 101);">ED25519</code> a proces jego tworzenia wyglądał następująco:
 
@@ -74,3 +74,25 @@ Z gałęzi grupowej utworzono gałąz peronalną.
  ![alt text](<./img/git checkout -b AZ.png>)
 
  ## 6. Rozpoczęcie pracy na nowej gałęzi
+
+ W katalogu właściwym dla grupy utworzono nowy katalog, o nazwie identycznej jak nazwa gałęzi. 
+
+ Utworzono githooka weryfikującego poprawność tworzonynych commitów i dodanie go do katalogu .git/hooks:
+
+    #!/bin/bash
+
+    PATTERN="^AZ416400" 
+
+    COMMIT_MSG_FILE="$1"
+    COMMIT_MSG=$(head -n 1 "$COMMIT_MSG_FILE")
+
+    if [[ ! $COMMIT_MSG =~ $PATTERN ]]; then
+        echo "BŁĄD: Każdy commit message musi zaczynać się od '$PATTERN'"
+        exit 1  
+    fi
+
+    echo "Commit message jest poprawny!"
+    exit 0 
+
+Definiujemy wzorzec <code style="color:rgb(35, 186, 101);"> ^AZ416400</code>, oznaczający, że wiadomość musi zaczynać się od tej sekwencji znaków. Następnie pobierana jest ścieżka do pliku z wiadomością commita i odczytana z niego pierwsza linia. Jeśli ta linia nie pasuje do wzorca, skrypt wypisuje błąd i kończy działanie z kodem 1 (niepowodzenie). Jeśli pasuje, wyświetla komunikat o poprawności i kończy się kodem 0 (sukces).
+
