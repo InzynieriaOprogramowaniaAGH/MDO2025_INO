@@ -25,3 +25,5 @@ if [[!"$COMMIT_MSG" =~ ^$PREFIX]]; then
 	echo "Wrong commit prefix"
 	exit 1
 fi
+
+exit 0
