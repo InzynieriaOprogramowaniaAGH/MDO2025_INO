@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Pobranie pierwszej linii wiadomości commita
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(head -n 1 "$COMMIT_MSG_FILE")
+
+# Sprawdzenie, czy commit zaczyna się od "AB416965"
+if [[ ! "$COMMIT_MSG" =~ ^AB416965 ]]; then
+    echo "❌ Błąd: Każdy commit MUSI zaczynać się od 'AB416965'"
+    exit 1
+fi
+
+# Jeśli wszystko jest OK, commit przechodzi
+exit 0
