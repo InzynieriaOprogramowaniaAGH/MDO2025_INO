@@ -53,6 +53,10 @@ Udane klonowanie
 
 ![ss10](screeny/Screenshot_10.png)
 
+Skonfigurowanie 2fa
+
+![ss34](screeny/Screenshot_34.png)
+
 Gałęź main
 
 ![ss11](screeny/Screenshot_11.png)
@@ -88,3 +92,69 @@ Przejście na gałęź GCL05
 Wciągnięcie gałęzi FN414313 do GCL05
 
 ![ss20](screeny/Screenshot_20.png)
+
+Pobieranie i uruchamianie dockera
+
+![ss21](screeny/Screenshot_21.png)
+![ss22](screeny/Screenshot_22.png)
+
+Pobieranie obrazów i wyświetlanie wszystkich obrazów
+
+![ss23](screeny/Screenshot_23.png)
+![ss24](screeny/Screenshot_24.png)
+
+Uruchomienie kontenera busybox i wyświetlenie wersji
+
+![ss25](screeny/Screenshot_25.png)
+
+Uruchomienie konteneru na postawie obrazu fedora
+
+![ss26](screeny/Screenshot_26.png)
+
+Wyświetlenie pierwszego procesu (jest to proces bash)
+
+![ss27](screeny/Screenshot_27.png)
+
+Aktualizacja pakietów
+
+![ss28](screeny/Screenshot_28.png)
+
+Wyjście z kontenera
+
+![ss29](screeny/Screenshot_29.png)
+
+Treść dockerfile na podstawie lekkiego obrazu fedora, na którym instalowane są aktualizację, git oraz kolonowane jest repozytorium
+
+## Skrypt
+
+```bash
+FROM fedora:latest
+
+LABEL maintainer="Filnaw <filipnaw@student.agh.edu.pl>"
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN dnf update && dnf install git && dnf clean all
+
+WORKDIR /app
+
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git /app
+
+CMD ["/bin/bash"]
+```
+
+Zbudowanie prostego obrazu na podstawie pliku Dockerfile
+
+![ss30](screeny/Screenshot_30.png)
+
+Stworzenie i uruchomienie kontenera, wyświetlenie sklonowanego repozytorium
+
+![ss31](screeny/Screenshot_31.png)
+
+Wyświetlenie i wyczyszczenie kontenerów
+
+![ss32](screeny/Screenshot_32.png)
+
+Wyczyszczenie obrazów
+ 
+![ss33](screeny/Screenshot_33.png)
