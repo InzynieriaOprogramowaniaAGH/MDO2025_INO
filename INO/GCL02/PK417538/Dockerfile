@@ -1,8 +1,6 @@
 FROM ubuntu:latest
 
-LABEL maintainer="Kefireczek <kefireczek.pl@gmail.com>"
-
-RUN apt update && apt upgrade -y
+RUN apt update && apt upgrade -y && apt install -y git
 
 WORKDIR /app
 
