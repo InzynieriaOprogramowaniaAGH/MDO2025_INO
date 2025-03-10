@@ -27,4 +27,4 @@
 8. Pokaż uruchomione ( != "działające" ) kontenery, wyczyść je.
 9. Wyczyść obrazy
 10. Dodaj stworzone pliki `Dockefile` do folderu swojego `Sprawozdanie1` w repozytorium.
-11. Wystaw *Pull Request* do gałęzi grupowej jako zgłoszenie wykonanego
+11. ~~Wystaw *Pull Request* do gałęzi grupowej jako zgłoszenie wykonanego~~
