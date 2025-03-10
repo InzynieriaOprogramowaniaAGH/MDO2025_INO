@@ -76,3 +76,15 @@ Prezentacja działania git hooka
 Utworzenie sprawozdania
 
 ![ss17](screeny/Screenshot_17.png)
+
+Commit z dotychczasowymi zmianami
+
+![ss18](screeny/Screenshot_18.png)
+
+Przejście na gałęź GCL05
+
+![ss19](screeny/Screenshot_19.png)
+
+Wciągnięcie gałęzi FN414313 do GCL05
+
+![ss20](screeny/Screenshot_20.png)
