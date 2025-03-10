@@ -1,5 +1,0 @@
-#!/bin/sh
-if ! grep -qE "^KL414598" "$1"; then
-    echo "Commit message musi zaczynać się od KL414598"
-    exit 1
-fi
