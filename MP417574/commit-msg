@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Pobranie nazwy użytkownika w systemie Linux
+SYSTEM_USER=$(whoami)
+
+# Pobranie nazwy użytkownika w Git
+GIT_USER=$(git config user.name)
+
+# Dane
+EXPECTED_SYSTEM_USER="mpaskowski"
+EXPECTED_GIT_USER="icharne2"
+INITIALES_AND_INDEX="MP417574"
+
+# Sprawdzenie
+if [ "$SYSTEM_USER" = "$EXPECTED_SYSTEM_USER" ] || [ "$GIT_USER" = "$EXPECTED_GIT_USER" ]; then
+  if ! grep -q "^$INITIALES_AND_INDEX" "$1"; then
+    echo "Commit message musi zaczynać się od '$INITIALES_AND_INDEX'."
+    exit 1
+  fi
+fi
