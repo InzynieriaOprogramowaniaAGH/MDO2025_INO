@@ -34,29 +34,29 @@ Grupa laboratoryjna: gr. 8
 ![Testowanie połączenia](11.png)
 ## Zajęcia 01: Wprowadzenie, Git, Gałęzie, SSH
 1. Zainstalowanie klienta Git i obsługi kluczy SSH:\
-![Testowanie połączenia](12.png)\
-![Testowanie połączenia](13.png)
+![Instalacja Gita i OpenSSH](12.png)\
+![Weryfikacja](13.png)
 2. Sklonowanie [repozytorium przedmiotowego](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO) za pomocą HTTPS i [*personal access token*](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens):\
 
 3. Upewnienie się w kwestii dostępu do repozytorium jako uczestnik i sklonowanie go za pomocą utworzonego klucza SSH, zapoznanie się z [dokumentacją](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
    - Utworzenie dwuch kluczy SSH, inne niż RSA, w tym co najmniej jednego zabezpieczonego hasłem\
-   ![Testowanie połączenia](14.png)\
-   ![Testowanie połączenia](15.png)
+   ![Tworzenie klucza z hasłem](14.png)\
+   ![Tworzenie klucza bez hasła](15.png)
    - Skonfigurowanie klucza SSH jako metody dostępu do GitHuba\
    ![Dodanie klucza do GitHuba](10.png)
    - Sklonowanie repozytorium z wykorzystaniem protokołu SSH
-   ![Dodanie klucza do GitHuba](16.png)
+   ![Sklonowanie repozytorium](16.png)
    - Skonfigurowanie 2FA
-   ![Dodanie klucza do GitHuba](17.png)
-4. Przełączenie się na gałąź ```main```, a potem na gałąź swojej grupy (pilnuj gałęzi i katalogu!):\
-![Testowanie połączenia](18.png)\
-![Testowanie połączenia](19.png)
-5. Utworzenie gałęzi o nazwie "inicjały & nr indeksu" np. ```KD232144```. (Miej na uwadze, że odgałęziasz się od brancha grupy!)
-![Testowanie połączenia](20.png)
-6. Rozpocznij pracę na nowej gałęzi
-   - W katalogu właściwym dla grupy utwórz nowy katalog, także o nazwie "inicjały & nr indeksu" np. ```KD232144```\
-   ![Testowanie połączenia](21.png)
-   - Napisz [Git hooka](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) - skrypt weryfikujący, że każdy Twój "commit message" zaczyna się od "twoje inicjały & nr indexu". (Przykładowe githook'i są w `.git/hooks`.)
+   ![Skonfigurowanie 2FA](17.png)
+4. Przełączenie się na gałąź ```main```, a potem na gałąź swojej grupy:\
+![Przełączenie na main](18.png)\
+![Przełączenie na gałąź grupy](19.png)
+5. Utworzenie gałęzi o nazwie "inicjały & nr indeksu" np. ```KD232144```.\
+![Tworzenie gałęźi](20.png)
+6. Rozpoczęcie pracy na nowej gałęzi
+   - W katalogu właściwym dla grupy utworzenie nowego katalogu, także o nazwie "inicjały & nr indeksu" np. ```KD232144```\
+   ![Tworzenie katalogu](21.png)
+   - Napisanie [Git hooka](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) - skrypt weryfikujący, że każdy "commit message" zaczyna się od "inicjały & nr indexu".\
            
             #!/bin/bash
             commit_msg=$(cat "$1")
@@ -65,13 +65,14 @@ Grupa laboratoryjna: gr. 8
                 exit 1
             fi
 
-   - Dodaj ten skrypt do stworzonego wcześniej katalogu.
-   ![Testowanie połączenia](22.png)
-   - Skopiuj go we właściwe miejsce, tak by uruchamiał się za każdym razem kiedy robisz commita.
-   ![Testowanie połączenia](23.png)
-   - W katalogu dodaj plik ze sprawozdaniem. Dodaj zrzuty ekranu (jako inline)
-   ![Testowanie połączenia](24.png)
-   - Wyślij zmiany do zdalnego źródła
-   - Spróbuj wciągnąć swoją gałąź do gałęzi grupowej
-   - Zaktualizuj sprawozdanie i zrzuty o ten krok i wyślij aktualizację do zdalnego źródła (na swojej gałęzi)
-7. ~~Wystaw Pull Request do gałęzi grupowej~~
+   - Dodanie tego skryptu do stworzonego wcześniej katalogu.\
+   ![Dodanie skryptu](22.png)
+   - Skopiowanie go we właściwe miejsce, tak by uruchamiał się za każdym razem kiedy robisz commita.\
+   ![Skopiowanie skryptu](23.png)
+   - W katalogu dodanie pliku ze sprawozdaniem. Dodanie zrzutów ekranu (jako inline)\
+   ![Dodanie plików](24.png)
+   - Wysłanie zmian do zdalnego źródła\
+   ![Wysłanie zmian](25.png)
+   - Spróbowanie wciągnięcia swojej gałęzi do gałęzi grupowej\
+   ![Wciągnięcie gałęzi](26.png)
+7. ~~Wystawienie Pull Requesta do gałęzi grupowej~~
