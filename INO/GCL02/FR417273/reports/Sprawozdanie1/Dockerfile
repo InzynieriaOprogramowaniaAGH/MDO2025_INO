@@ -1,5 +1,5 @@
 # Use fedora's image
-FROM fedora:latest
+FROM fedora:39
 
 # Install git
 RUN dnf update -y && dnf install -y git
