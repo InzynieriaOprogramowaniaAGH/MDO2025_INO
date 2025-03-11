@@ -1,0 +1,6 @@
+#!/bin/bash
+commit_msg=$(cat "$1")
+if [[ ! $commit_msg =~ ^KW414979 ]]; then
+    echo "ERROR: Każdy commit musi zaczynać się od 'KW414979'"
+    exit 1
+fi
