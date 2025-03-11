@@ -1,9 +1,10 @@
 # Sprawozdanie 1
 
-## Tresc hooka
-#!/bin/bash
+## Treść hooka
 
 ```bash
+#!/bin/bash
+
 INITIALS="MK"
 INDEX="416690"
 
