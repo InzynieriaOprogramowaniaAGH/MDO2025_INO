@@ -21,30 +21,35 @@ git --version
 ```
 ![Wersja Gita](zrzuty_ekranu1/zrzut1.png)
 
+### Lokalizacja pliku wykonywalnego Gita
+
+```bash
+which git
+```
+![Lokalizacja pliku wykonywalnego Gita](zrzut2.png)
+
 ### Sprawdzenie klucza SSH
 
 ```bash
 ls -la ~/.ssh/
 ```
-![Sprawdzenie klucza SSH](zrzuty_ekranu1/zrzut2.png)
+![Sprawdzenie klucza SSH](zrzuty_ekranu1/zrzut3.png)
 
 ### Test połączenia SSH z GitHubem
 
 ```bash
 ssh -T git@github.com
 ```
-![Test połączenia SSH z GitHubem](zrzuty_ekranu1/zrzut3.png)
+![Test połączenia SSH z GitHubem](zrzuty_ekranu1/zrzut4.png)
 
 ### Konfiguracja użytkownika Git
-to jest juz zescreenowane, ale screen pod inna nazwa i do przyciecia
 
 ```bash
 git config --list
 ```
 
-![Konfiguracja użytkownika Git](zrzuty_ekranu1/zrzut4.png)
+![Konfiguracja użytkownika Git](zrzuty_ekranu1/zrzut5.png)
 
-może pokazać coś z tym, że utworzyłam te klucze, np. napisac za pomoca jakiej komendy ale nie dawac screena z terminala, tylko dac screena z githuba
 
 ## **2. Klonowanie repozytorium**
 
@@ -55,9 +60,9 @@ Po skonfigurowaniu klucza SSH, sklonowałam repozytorium przy użyciu SSH:
 ```bash
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 ```
-(ten zrzut mam ale pod inna nazwa)
+
 Zrzut ekranu przedstawiający poprawnie sklonowane repozytorium:
-![Klonowanie repozytorium](zrzuty_ekranu1/zrzut5.png)
+![Klonowanie repozytorium](zrzuty_ekranu1/zrzut6.png)
 
 
 ## **3. Gałęzie**
@@ -66,19 +71,19 @@ Zrzut ekranu przedstawiający poprawnie sklonowane repozytorium:
 Na początku przełączyłam się na gałęź main, następnie na gałęź mojej grupy, tj. GCL08
 
 (te screeny tez mam ale pod inna nazwa i do przyciecia)
-![Przełączenie na gałęź main i gałęź grupy](zrzuty_ekranu1/zrzut6.png)
+![Przełączenie na gałęź main i gałęź grupy](zrzuty_ekranu1/zrzut7.png)
 
 ### Utworzenie nowej gałęzi
 Następnie uwtorzyłam swoją gałąź o nazwie składającej się z moich inicjałów i numeru indeksu
 
-![Tworzenie mojej gałęzi](zrzuty_ekranu1/zrzut7.png)
+![Tworzenie mojej gałęzi](zrzuty_ekranu1/zrzut8.png)
 
 ## **4. Praca na nowej gałęzi**
 
 ### Utworzenie nowego katalogu
 Utworzyłam katalog, także o nazwie składającej się z moich inicjałów i numeru indeksu:
 
-![Tworzenie mojego katalogu](zrzuty_ekranu/zrzut8.png)
+![Tworzenie mojego katalogu](zrzuty_ekranu/zrzut9.png)
 
 ### Napisanie Git hooka
 Napisałam hooka `commit-msg`, weryfikującego to, aby każdy mój "commit message" zaczynał się od moich inicjałów i numeru indeksu.
@@ -101,13 +106,13 @@ exit 0
 ```
 Utworzony skrypt znajduje się w utworzonym wcześniej katalogu.
 
+![Lokalizacja skryptu](zrzuty_ekranu1/zrzut10.png)
+
 Następnie skopiowałam go do katalogu `.git/hooks/`:
 
 ```bash
 cp commit-msg ../../../.git/hooks/
 ```
-![Komenda kopiowania skryptu](zrzuty_ekranu1/zrzut9.png)
-
 
 Oraz dodałam uprawnienia do uruchamiania:
 
@@ -115,5 +120,10 @@ Oraz dodałam uprawnienia do uruchamiania:
 chmod +x ../../../.git/hooks/commit-msg
 ```
 
-![Komenda nadawania uprawnień](zrzuty_ekranu1/zrzut10.png)
+![Komenda kopiowania skryptu i nadawania uprawnień](zrzuty_ekranu1/zrzut11.png)
 
+### Sprawdzenie działania hooka
+
+![Komunikat o błędzie](zrzuty_ekranu1/zrzut12.png)
+
+![Poprawne dodanie commita](zrzuty_ekranu1/zrzut13.png)
