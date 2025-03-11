@@ -140,3 +140,164 @@ git merge OW416377
 git push origin OW416377
 ```
 ![Próba wyciągnięcia swojej gałęzi](zrzuty_ekranu1/zrzut15.png)
+
+---
+
+
+## **Laboratorium 02**
+
+### **Git, Docker**
+
+
+---
+
+## **1. Instalacja dockera**
+
+```bash
+sudo dnf install -y docker
+```
+
+![Instalacja dockera](zrzuty_ekranu1/instalacja_dockera.png)
+![Ukończenie instalacji](zrzuty_ekranu1/docker_ukonczenie_instalacji.png)
+
+### Uruchomienie Dockera oraz sprawdzenie, czy działa
+
+![Uruchomienie dockera](zrzuty_ekranu1/docker_uruchomienie.png)
+
+
+## **2. Rejestracja w Docker Hub **
+Zarejestrowałam się w Docker Hub poprzez konto na Githubie, a następnie zalogowałam się w terminalu.
+
+![Logowanie przez terminal](zrzuty_ekranu1/logowanie_docker.png)
+
+
+## **3. Pobranie odpowiednich obrazów**
+
+```bash
+sudo docker pull hello-world
+sudo docker pull busybox
+sudo docker pull ubuntu
+sudo docker pull fedora
+sudo docker pull mysql
+```
+Sprawdzenie czy obrazy zostały pobrane:
+
+```bash
+sudo docker images
+```
+
+![Sprawdzenie pobrania obrazów](zrzuty_ekranu1/lista_pobranych_obrazow.png)
+
+## **4. Uruchomienie kontenera z obrazu busybox**
+
+### Uruchomienie kontenera i sprawdzenie czy działa
+
+![Uruchomienie kontenera](zrzuty_ekranu1/uruchomienie_kontenera_busybox.png)
+
+### Interaktywne podłączenie się do kontenera
+
+```bash
+sudo docker exec -it busybox sh
+```
+![Podłączenie się do kontenera](zrzuty_ekranu1/wejscie_do_kontenera.png)
+
+### Wywołanie numeru wersji
+
+![Wywołanie numeru wersji](zrzuty_ekranu1/numer_wersji_busybox.png)
+
+## **5. Uruchomienie "systemu w kontenerze" (ubuntu)**
+
+### Uruchomienie kontenera Ubuntu i sprawdzenie, czy działa
+
+![Uruchomienie kontenera Ubuntu](zrzuty_ekranu1/uruchomienie_kontenera_ubuntu.png)
+
+### Sprawdzenie PID1 w kontenerze
+
+![PID1  w kontenerze ubuntu](zrzuty_ekranu1/pid1_ubuntu.png)
+
+### Sprawdzenie procesów dockera na hoście
+
+![Procesy dockera na hoście](zrzuty_ekranu1/procesy_dockera_na_hoscie.png)
+
+### Aktualizacja pakietów
+
+```bash
+apt update && apt upgrade -y
+```
+
+![Aktualizacja pakietów](zrzuty_ekranu1/koncowy_fragment_outtputu_aktualizacji_pakietow.png)
+
+## **6. Stworzenie własnego Dockerfile**
+
+### Tworzenie pliku Dockerfile
+
+![Tworzenie Dockerfile](zrzuty_ekranu1/tworzenie_pliku_dockerfile.png)
+
+plik `Dockerfile`:
+
+```bash
+FROM ubuntu:latest
+
+LABEL maintainer="Oliwia Wiatrowska"
+
+RUN apt update && apt install -y git && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+
+CMD ["bash"]
+```
+
+### Budowanie obrazu Dockera
+
+```bash
+sudo docker build -t moj_obraz .
+```
+![Budowanie obrazu](zrzuty_ekranu1/budowanie_obrazu_mojego_dockerfile.png)
+
+### Sprawdzenie, czy `moj_obraz` został zbudowany
+
+![Sprawdzenie zbudowania obrazu](zrzuty_ekranu1/sprawdzenie_zbudowania_mojego_obrazu.png)
+
+### Uruchomienie kontenera
+
+![Uruchomienie mojego kontenera](zrzuty_ekranu1/uruchomienie_mojego_kontenera.png)
+
+### Sprawdzenie, czy repozytorium zostało sklonowane
+
+![Sprawdzenie repo](zrzuty_ekranu1/sprawdzenie_sklonowania_repo.png)
+
+### Sprawdzenie czy Git działa
+
+![Sprawdzenie Git](zrzuty_ekranu1/sprawdzenie_git_moj_kontener.png)
+
+## **7. Wyświetlenie uruchomionych (!= "działających") kontenerów i usunięcie ich**
+
+### Wyświetlenie kontenerów
+
+![Wyświetlenie kontenerów](zrzuty_ekranu1/wyswietlenie_wszystkich_kontenerow.png)
+
+### Usunięcie kontenerów
+
+![Usunięcie kontenerów](zrzuty_ekranu1/usuniecie_kontenerow.png)
+
+## **8. Wyczyszczenie obrazów**
+
+### Wyświetlenie obrazów
+
+![Wyświetlenie obrazów](zrzuty_ekranu1/wyswietlenie_obrazow.png)
+
+### Usunięcie obrazów
+
+```bash
+sudo docker rmi $(sudo docker images -q)
+```
+![Usunięcie obrazów](zrzuty_ekranu1/usuniecie_obrazow.png)
+
+## **9. Dodanie pliku `Dockerfile` do folderu `sprawozdanie1`**
+
+```bash
+cp ~/MDO2025_INO/ITE/GCL08/OW416377/moj_kontener/Dockerfile ~/MDO2025_INO/ITE/GCL08/OW416377/sprawozdanie1/
+```
+![Skopiowanie pliku do katalogu sprawozdanie1](zrzuty_ekranu1/skopiowanie_mojego_dockerfile_do_sprawozdanie1.png)
