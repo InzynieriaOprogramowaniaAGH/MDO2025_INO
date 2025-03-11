@@ -1,0 +1,6 @@
+#!/bin/bash
+MESSAGE=$(cat $1)
+if [[ ! $MESSAGE =~ ^MD415045 ]]; then
+  echo "MD415045"
+  exit 1
+fi
