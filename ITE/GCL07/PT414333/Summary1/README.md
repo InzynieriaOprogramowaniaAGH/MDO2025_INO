@@ -88,3 +88,12 @@ git commit -m "Test"
 git commit -m "PT414333: Git Hook"
 ```
 ![Relut of test](6.png)
+
+## 7. Push to remote
+Push to remote repository
+```sh
+git push --set-upstream origin PT414333
+```
+Result:
+
+![alt text](7.png)
