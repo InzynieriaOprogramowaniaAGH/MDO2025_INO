@@ -5,7 +5,7 @@ Autor: Filip Rak
 Data: 10/03/2025
 
 ## Przebieg Ćwiczeń
-### Pierwsze zajęcia:
+### Pierwsze zajęcia (SSH, GIT):
 - Na wirtualnej maszynie VirtualBox zainstalowana została dystrybucja systemu Linux, Fedora. 
 - Na konto użytkonika zalogowano się przez SSH w programie PowerShell systemu Windows. ![Zrzut ekranu logowania](media/m1_login.png)
 - Na witrynie GitHub utworzono Personal Acces Token oraz wykorzystano go do sklonowania repozytorium. ![Zrzut ekranu PAT](media/m8_pat.png) ![Zrzut ekranu klonowanie z PAT](media/m9_pat_clone.png)
@@ -24,3 +24,11 @@ if ! grep -q "^$string" "$1"; then
   exit 1
 fi
 ```
+
+### Drugie zajęcia (Docker, Dockerfiles):
+- Zainstalowano oprogramowanie Docker, na systemie Fedora, poprzez polecenie: `sudo dnf install -y docker`.
+- Zarejestrowano się w witrynie `hub.docker.com`. ![Zrzut ekranu profilu na stronie](media/m10_fish.png).
+- Pobrano obrazy: `hello-world`, `busybox`, `ubuntu`, `fedora`, `mysql`. Wykorzystano polecenie `docker pull [obraz]`. ![Zrzut ekranu, pobieranie kilku obrazów](media/m_11_images.png)
+- Uruchomiono kontener z obrazu busybox, podłaczono się do niego interkatywnie i wywołano numer wersji systemu. ![Zrzut ekranu busybox](media/m12_busybox.png)
+- Uruchomiono kontener z obrazu systemu Ubuntu. Wyświetlono procesy w kontenerze w tym PID1: bash. Wyświetlono procesy dockera na hoście. [Zrzut ekranu pracy z obrazem ubutnu](media/m13_ubuntu.png)
+- Ponownie uruchomiono kontener z obrazu ubuntu i wywołano aktualizacje pakietów poleceniami `apt update && apt upgrade -y` . ![Zrzut ekranu, update ubtuntu](media/m14_update.png)
