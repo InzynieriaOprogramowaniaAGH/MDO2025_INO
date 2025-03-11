@@ -1,20 +1,11 @@
-# Wybieramy oficjalny obraz Ubuntu jako bazowy
+# Dockerfile
 FROM ubuntu:20.04
 
-# Ustawiamy zmienną środowiskową, aby nie pytano o wybór lokalizacji podczas instalacji
-ENV DEBIAN_FRONTEND=noninteractive
+# Instalacja Git
+RUN apt-get update && apt-get install -y git
 
-# Instalujemy wymagane pakiety, w tym Git
-RUN apt-get update && apt-get install -y \
-    git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Tworzymy katalog roboczy w kontenerze
+# Skopiuj nasze repozytorium
 WORKDIR /app
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
 
-# Skopiujemy lokalne repozytorium do kontenera
-# (Załóżmy, że masz repozytorium Git w lokalnym folderze)
-COPY . /app
-
-# Uruchomimy kontener w trybie interaktywnym, aby sprawdzić działanie repozytorium
-CMD ["/bin/bash"]
+CMD ["bash"]
