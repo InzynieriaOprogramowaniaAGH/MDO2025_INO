@@ -33,7 +33,8 @@ https://github.com/settings/keys
 ![alt text](<3 add ssh key.png>)
 
 ```sh
-ssh-add ./devops_ssh_1
+eval "$(ssh-agent -s)"  # startup ssh agent
+ssh-add ./devops_ssh_1  # add ssh
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 ```
 ![alt text](<3 add ssh key 2.png>)
