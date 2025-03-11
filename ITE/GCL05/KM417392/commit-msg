@@ -1,0 +1,8 @@
+#!/bin/sh
+
+pattern="^KM417392"
+
+if ! grep -qE "$pattern" "$1"; then
+    echo "Commit message must start with 'KM417392'" >&2
+    exit 1
+fi
