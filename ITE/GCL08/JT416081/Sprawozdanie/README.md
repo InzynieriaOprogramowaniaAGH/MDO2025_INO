@@ -67,3 +67,7 @@ exit 0
    W dalszej części "wypchnołem" wszystkie swoje pliki na GitHuba na swojego osobistego brancha
 
    ![Wypchnięcie zmian](image10.png)
+
+   Ostatnim zadaniem była próba wciągnięcia mojej gałęzi do gałęzi grupowej. Próba nie udana
+
+   ![Wypchniecie plików na GCL08](image11.png)
