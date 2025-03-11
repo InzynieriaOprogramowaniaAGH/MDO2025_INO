@@ -1,6 +1,10 @@
 #!/bin/bash
-MESSAGE=$(cat $1)
-if [[ ! $MESSAGE =~ ^MD415045 ]]; then
-  echo "MD415045"
-  exit 1
-fi
+
+PREFIX="MD 415045"
+
+test "$(head -n1 "$1" | grep -E "^$PREFIX")" || {
+    echo "✖ Błąd: Wiadomość commita musi zaczynać się od: '$PREFIX'"
+    exit 1
+}
+
+exit 0
