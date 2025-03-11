@@ -28,7 +28,28 @@ fi
 ### Drugie zajęcia (Docker, Dockerfiles):
 - Zainstalowano oprogramowanie Docker, na systemie Fedora, poprzez polecenie: `sudo dnf install -y docker`.
 - Zarejestrowano się w witrynie `hub.docker.com`. ![Zrzut ekranu profilu na stronie](media/m10_fish.png).
-- Pobrano obrazy: `hello-world`, `busybox`, `ubuntu`, `fedora`, `mysql`. Wykorzystano polecenie `docker pull [obraz]`. ![Zrzut ekranu, pobieranie kilku obrazów](media/m_11_images.png)
+- Pobrano obrazy: `hello-world`, `busybox`, `ubuntu`, `fedora`, `mysql`. Wykorzystano polecenie `docker pull [obraz]`. ![Zrzut ekranu, pobieranie kilku obrazów](media/m11_images.png)
 - Uruchomiono kontener z obrazu busybox, podłaczono się do niego interkatywnie i wywołano numer wersji systemu. ![Zrzut ekranu busybox](media/m12_busybox.png)
 - Uruchomiono kontener z obrazu systemu Ubuntu. Wyświetlono procesy w kontenerze w tym PID1: bash. Wyświetlono procesy dockera na hoście. [Zrzut ekranu pracy z obrazem ubutnu](media/m13_ubuntu.png)
 - Ponownie uruchomiono kontener z obrazu ubuntu i wywołano aktualizacje pakietów poleceniami `apt update && apt upgrade -y` . ![Zrzut ekranu, update ubtuntu](media/m14_update.png)
+- Utworzono własny plik Dockerfile bazujący na systemie fedora. Na tym obrazie zainstalowany zostaje git oraz skopiowane repozytorium przedmiotu. Poniżej znajduje się zawartość pliku Dockerfile
+```
+# Use fedora's image
+FROM fedora:39
+
+# Install git
+RUN dnf update -y && dnf install -y git
+
+# Set working directory
+WORKDIR /repo
+
+# Clone the repository
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+
+# Set default command
+CMD ["bash"]
+```
+- Obraz utworzono poleceniem: `docker build -t custom_image .`. Zweryfikowano następnie czy sklonowanie repozytorium udało się, poprzez otworzenie obrazu w trybie interaktywnym i weryfikacje manulaną. ![Zrzut ekranu weryfikacji klonowania](media/m15_custom_image.png).
+- Pokazanie działających kontenerów i usunięcie ich: ![Zrzut ekranu. Działające kontenery i usunięcie](media/m16_running.png)
+- Usunięcie wszysktich obrazów dockera poleceniem: `docker rmi $(docker images -q)` ![Zrzut ekranu, usunięcie wzystkich obrazów](media/m17_deletion.png)
+- Utworzony plik Dockerfile został dodany do katalogu Sprawozdanie1 wewnątrz repozytorium na gałęzi `FR417273`.
