@@ -127,3 +127,16 @@ chmod +x ../../../.git/hooks/commit-msg
 ![Komunikat o błędzie](zrzuty_ekranu1/zrzut12.png)
 
 ![Poprawne dodanie commita](zrzuty_ekranu1/zrzut13.png)
+
+### Wysłanie zmian do zdalnego źródła
+
+![Wysłanie zmian do zdalnego źródła](zrzuty_ekranu1/zrzut14.png)
+
+### Próba wyciągnięcia swojej gałęzi do gałęzi grupowej
+
+```bash
+git checkout GCL08
+git merge OW416377
+git push origin OW416377
+```
+![Próba wyciągnięcia swojej gałęzi](zrzuty_ekranu1/zrzut15.png)
