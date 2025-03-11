@@ -46,3 +46,6 @@ exit 0
 
    Następnie Wysłałem zmiany (git push) do zdalnego repozytorium i spróbowałem wciągnąć (merge) moją gałąź do gałęzi grupowej.
    ![Wysłanie sprawozdania](image10.png)
+   Na sam koniec stworzyłem Pull Requesta 
+   ![Zrobiony Pull request](image11.png)
+   
