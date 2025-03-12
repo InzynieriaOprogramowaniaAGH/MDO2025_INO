@@ -42,7 +42,7 @@
     5   ls ~/.ssh/
     6   ssh-keygen -t ecdsa -b 521 -f ~/.ssh/id_ecdsa
     7   ls ~/.ssh/
-    8   ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -C "konradbugaj547@gmail.com"
+    8   ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -C "k...@gmail.com"
     9   cat ~/.ssh/id_ed25519.pub
     10  ssh -T git@github.com
     11  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
