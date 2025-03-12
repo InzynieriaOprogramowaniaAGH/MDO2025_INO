@@ -17,13 +17,13 @@ sudo dnf install openssh-clients openssh-server
 
 Aby sprawdzić poprawność instalacji, sprawdziłem wersję Gita oraz OpenSSH
 
-![ss13](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss13.png)
+![ss13](../Sprawozdanie1/screenshots_lab1/ss13.png)
 
 <br>
 
 **2. Klonowanie repozytorium za pomocą HTTPS**
 
-![ss1](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss1.png)
+![ss1](../Sprawozdanie1/screenshots_lab1/ss1.png)
 
 <br>
 
@@ -32,14 +32,14 @@ Aby sprawdzić poprawność instalacji, sprawdziłem wersję Gita oraz OpenSSH
 Wygenerowałem dwa klucze SSH (inne niż RSA), w tym jeden zabezpieczony hasłem
 
 * Klucz nr 1
-![ss2](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss2.png)
+![ss2](../Sprawozdanie1/screenshots_lab1/ss2.png)
 
 * Klucz nr 2
-![ss5](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss2.png)
+![ss5](../Sprawozdanie1/screenshots_lab1/ss2.png)
 
 Następnie dodałem uruchomiłem proces agenta SSH i dodałem do niego klucz prywatny.
 
-![ss3](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss3.png)
+![ss3](../Sprawozdanie1/screenshots_lab1/ss3.png)
 
 <br>
 
@@ -53,13 +53,13 @@ cat key.pub
 
 Następnie należało na GitHubie kliknąć w swój profil, a następnie przejść do **Settings > SSH and GPG keys > New SSH key** i dodać wcześniej skopiowany klucz SSH.
 
-![ss4](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss4.png)
+![ss4](../Sprawozdanie1/screenshots_lab1/ss4.png)
 
 <br>
 
 **5. Klonowanie repozytorium z wykorzystaniem protokołu SSH**
 
-![ss6](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss6.png)
+![ss6](../Sprawozdanie1/screenshots_lab1/ss6.png)
 
 <br>
 
@@ -67,7 +67,7 @@ Następnie należało na GitHubie kliknąć w swój profil, a następnie przejś
 
 W celu skonfigurowania **2FA** należało na GitHubie kliknąć w swój profil, a następnie przejść do **Settings > Password and authentication** i dodać weryfikację logowania dwuetapową.
 
-![ss6](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss7.png)
+![ss6](../Sprawozdanie1/screenshots_lab1/ss7.png)
 
 <br>
 
@@ -75,7 +75,7 @@ W celu skonfigurowania **2FA** należało na GitHubie kliknąć w swój profil, 
 
 Po przełączeniu się na gałąź main, a potem na gałąź mojej grupy, utworzyłem gałąź o nazwie "inicjały & nr indeksu" (w moim przypadku TM415261)
 
-![ss8](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss8.png)
+![ss8](../Sprawozdanie1/screenshots_lab1/ss8.png)
 
 <br>
 
@@ -83,22 +83,22 @@ Po przełączeniu się na gałąź main, a potem na gałąź mojej grupy, utworz
 
 * W katalogu właściwym dla grupy utworzyłem nowy katalog, także o nazwie "inicjały & nr indeksu" (TM415261)
 
-![ss9](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss9.png)
+![ss9](../Sprawozdanie1/screenshots_lab1/ss9.png)
 
 * Utworzenie Git-hooka - jego zadanie to weryfikacja, że każdy mój commit message zaczyna się od "inicjały & nr indeksu"
 
 &emsp;&emsp;&emsp;Treść Git-hooka:
-![ss10](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss10.png)
+![ss10](../Sprawozdanie1/screenshots_lab1/ss10.png)
 
 
 * Dodanie skryptu do utworzonego wcześniej katalogu
 
 &emsp;&emsp;&emsp;Skopiowałem go we właściwe miejsce, tak aby uruchamiał się za każdym razem, gdy robię commita
 
-![ss11](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss11.png)
+![ss11](../Sprawozdanie1/screenshots_lab1/ss11.png)
 
 &emsp;&emsp;&emsp;Weryfikacja działania:
-![ss12](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab1/ss12.png)
+![ss12](../Sprawozdanie1/screenshots_lab1/ss12.png)
 
 <br>
 
@@ -111,13 +111,13 @@ Instalacja odbyła się poleceniem:
 ```bash
 sudo dnf install docker
 ```
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss1.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss1.png)
 
 <br>
 
 **2. Rejestracja w DockerHub**
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss2.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss2.png)
 
 <br>
 
@@ -133,7 +133,7 @@ sudo docker pull mysql
 ```
 <br>
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss3.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss3.png)
 
 <br>
 
@@ -147,7 +147,7 @@ sudo docker run -it busybox
 
 Efekt uruchomienia kontenera oraz podłączenie się do kontenera interaktywnie i wywołanie numeru wersji:
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss4.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss4.png)
 
 <br>
 
@@ -163,15 +163,15 @@ sudo docker run -it --name ubuntu-container ubuntu bash
 
 * `PID1` w kontenerze i procesy dockera na hoście:
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss5.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss5.png)
 
 * Aktualizacja pakietów:
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss6.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss6.png)
 
 * Wyjście:
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss7.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss7.png)
 
 
 **6. Tworzenie własnego `Dockerfile`**
@@ -184,21 +184,21 @@ nano Dockerfile
 
 Treść `Dockerfile`:
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss8.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss8.png)
 
 Powyższy `Dockerfile` jest odpowiedzialny za sklonowanie repozytorium.
 
 Budowa obrazu na podstawie `Dockerfile`:
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss9.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss9.png)
 
 Weryfikacja, że obraz ma `git`-a:
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss11.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss11.png)
 
 Uruchomienie kontenera w trybie interaktywnym i weryfikacja sklonowania repozytorium:
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss10.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss10.png)
 
 <br>
 
@@ -209,7 +209,7 @@ Aby sprawdzić uruchomione kontenery, użyłem polecenia:
 ```bash
 sudo docker ps -a
 ```
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss12.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss12.png)
 
 Czyszczenie kontenerów:
 
@@ -217,11 +217,11 @@ Czyszczenie kontenerów:
 sudo docker container prune
 ```
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss13.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss13.png)
 
 Weryfikacja działania:
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss14.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss14.png)
 
 <br>
 
@@ -233,10 +233,10 @@ Wyczyszczenie obrazów wykonałem poleceniem:
 sudo docker rmi -f $(sudo docker images -aq)
 ```
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss15.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss15.png)
 
 <br>
 
 **9. Dodanie stworzonego pliku `Dockerfile` do folderu `Sprawozdanie1` w repozytorium**
 
-![ss](/home/tmandat/github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/screenshots_lab2/ss16.png)
+![ss](../Sprawozdanie1/screenshots_lab2/ss16.png)
