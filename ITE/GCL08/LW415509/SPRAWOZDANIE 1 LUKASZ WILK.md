@@ -288,5 +288,4 @@ docker pull mysql
   exit
   ```
 
-  zmiana na test hooka
-  
+  zmiana na te
