@@ -17,5 +17,5 @@ fi
 exit 0
 ```
 Sprawdzenie działania:
-![Screen z ekranu - hook DZIALA es](test-commit.png)
+![Screen z ekranu - hook DZIALA es](test-commita.png)
 
