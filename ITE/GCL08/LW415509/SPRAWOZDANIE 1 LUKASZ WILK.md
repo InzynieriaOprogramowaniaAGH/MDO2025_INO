@@ -274,11 +274,16 @@ docker pull mysql
   ps aux
   ```
 
+  ![alt text](images/ubuntu_aux.png)
+
 - Sprawdzenie procesów Dockera na hoście
 
   ```
   ps aux | grep docker
   ```
+
+  ![alt text](images/local_grep.png)
+
 - Aktualizacja pakietów w kontenerze i wyjście z kontenera (dla ubuntu)
 
   ```
@@ -288,4 +293,47 @@ docker pull mysql
   exit
   ```
 
-  zmiana na teasdfasdf
+  ![alt text](images/akt.png)
+
+## Utworzenie własnego pliku Dockerfile bazującego na systemie Ubuntu
+
+Tworzymy plik Dockerfile o takiej treści jak poniżej. Dzięki temu będziemy mieli pewność że będzie zainstalowany git i nasze repozytorium zostanie sklonowane.
+
+```
+FROM ubuntu:latest
+RUN apt update && apt install -y git
+WORKDIR /app
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+CMD ["bash"]
+```
+- Aby zbudować obraz na podstawie pliku Dockerfile należy użyć polecenia
+
+  ```
+  docker build -t custom-ubuntu .
+  ```
+
+  ![alt text](images/budowa.png)
+
+- W celu uruchomienia obrazu, wejścia do niego i sprawdzenia poprawności sklonowania repozytorium użyjemy
+
+  ```
+  docker run -it custom-ubuntu /bin/bash
+  ```
+
+  ![alt text](images/custom-ubuntu.png)
+
+- Aby wyswietlic wszystkie działajace obrazy wraz z tymi zatrzymanymi należy użyć polecenia
+
+  ```
+  docker ps -a
+  ```
+
+  ![alt text](images/dockerpsa.png)
+
+- Czyszczenie obrazów
+
+  ```
+  docker rmi hello-world busybox ubuntu fedora mysql custom-ubuntu
+  ```
+
+  ![alt text](images/czyszczenie.png)
