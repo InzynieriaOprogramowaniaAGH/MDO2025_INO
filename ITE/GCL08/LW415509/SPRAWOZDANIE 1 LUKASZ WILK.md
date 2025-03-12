@@ -1,3 +1,5 @@
+# LABORATORIUM 1
+
 ## 1. Instalacja klienta Git i obsługi kluczy SSH
 
 W celu zainstalowania klienta git lokalnie należy użyć polecenia
@@ -156,4 +158,132 @@ exit 0
 
 Próba spushowania repozytorium nie powiodła się ponieważ w tym momencie nie zostały jeszcze nadane uprawnienia
 
-- Merge gałęzi LW415509 do gałęzi grupowej
+# LABORATORIUM 2
+
+## Instalacja Dockera w systemie linuksowym
+
+- Przed zainstalowaniem dockera w systemie dokonujemy aktualizacji aby upewnić się że wszystko jest aktualne. Polecenie do aktualizacji systemu:
+
+  ```
+  sudo dnf update -y
+  ```
+
+  ![alt text](images/aktualizacja_fedory.png)
+
+- W celu zainstalowania Dockera wykorzystujemy poniższe polecenie:
+
+  ```
+  sudo dnf install -y moby-engine
+  ```
+
+  ![alt text](images/instalacja_moby_engine.png)
+
+- Uruchamiamy i włączamy dockera przy użyciu poniższego polecenia
+
+  ```
+  sudo systemctl enable --now docker
+  ```
+
+  Następnie sprawdzamy czy instalacja i uruchomienie przebiegły pomyślnie przy użyciu polecenia:
+
+  ```
+  docker version
+  ```
+
+  ![alt text](images/docker_works.png)
+
+## Utworzenie konta w serwisie Docker Hub
+
+![alt text](images/dockerhub.png)
+
+## Pobranie obrazów Docker
+
+- W celu pobrania obrazu z repozytorium DockerHub należy wykorzystać polecenie docker pull. Każde z poniższych poleceń pobiera inny obraz.
+
+```
+docker pull hello-world
+```
+```
+docker pull busybox
+```
+```
+docker pull ubuntu
+```
+```
+docker pull fedora
+```
+```
+docker pull mysql
+```
+
+![alt text](images/pobranie_obrazow.png)
+
+- Aby zweryfikować poprawność pobierania obrazów wykorzytamy poniższe polecenie:
+
+  ```
+  docker images
+  ```
+
+  Wyświetli ono wszystkie dostępne obrazy.
+
+  ![alt text](images/dostepne_obrazy.png)
+
+## Uruchomienie kontenera z obrazu busybox
+
+- Aby uruchomić kontener z obrazu busybox należy wykonać nastepujące czynności
+
+  ```
+  docker run busybox echo "Pozdrowienia ze srodka kontenera busybox!"
+  ```
+
+  Powyższe polecenie pozwala na uruchomienie kontenera i wypisanie podanego przez nas komunikatu.
+
+  ![alt text](images/busybox.png)
+
+  - W celu interaktywnego podłączenia się do kontenera i wywołania numeru wersji należy użyć polecenia
+
+  ```
+  docker run -it busybox sh
+  ```
+
+  Następnie będąc wewnątrz aby sprawdzić wersję systemu należy użyć polecenia
+
+  ```
+  uname -a
+  ```
+
+  a aby opuścić kontener polecenia
+
+  ```
+  exit
+  ```
+
+  ![alt text](images/busybox_in.png)
+
+## Uruchomienie systemu ubuntu w kontenerze
+
+- Polecenie umożliwiające uruchomienie kontenera z systemem ubuntu
+
+  ```
+  docker run -it ubuntu /bin/bash
+  ```
+
+- Sprawdzenie PID wewnątrz kontenera
+
+  ```
+  ps aux
+  ```
+
+- Sprawdzenie procesów Dockera na hoście
+
+  ```
+  ps aux | grep docker
+  ```
+- Aktualizacja pakietów w kontenerze i wyjście z kontenera (dla ubuntu)
+
+  ```
+  apt update && apt upgrade -y
+  ```
+  ```
+  exit
+  ```
