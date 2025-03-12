@@ -98,4 +98,13 @@ fi
 ### Dodanie sprawozdania do katalogu
 ![Sprawozdanie w katalogu](image-18.png)
 
+### Test nieprawidłowego commita
+![Nieprawidłowa treść commita](image-18.png)
 
+### Poprawne wysłanie commita (na razie na root)
+![Commit](image-19.png)
+
+### Wysłanie zmian
+![Wysłanie zmian](image-20.png)
+
+Na koniec wysłanie aktualnej wersji tego sprawozdania na brancha
