@@ -133,6 +133,7 @@ chmod +x commit-msg
 ```
 
 Przy próbie commitu bez podania odpowiedniej wiadomosci otrzymujemy błąd
+
 ![alt text](images/image.png)
 
 ```bash
