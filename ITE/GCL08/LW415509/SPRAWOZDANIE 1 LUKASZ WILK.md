@@ -288,4 +288,4 @@ docker pull mysql
   exit
   ```
 
-  zmiana na te
+  zmiana na teasdfasdf
