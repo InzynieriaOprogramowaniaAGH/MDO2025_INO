@@ -1,0 +1,9 @@
+#!/bin/bash
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+if [[ ! $COMMIT_MSG =~ ^MG417201 ]]; then
+  echo "Error: Commit message has to begin with 'MG417201'"
+  exit 1
+fi
+
