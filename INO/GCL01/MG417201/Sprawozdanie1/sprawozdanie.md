@@ -178,47 +178,108 @@ Powyższy zrzut ekranu obrazuje powyżej opisane polecenia, ponieważ gałąź g
 Powyższy zrzut ekranu przedstawia wykonanie powyższych poleceń.
 
 
-**2. S**
+**2. Pobranie obrazów**
+
+- Aby pobrać obrazy _**hello-world**_, _**busybox**_, _**ubuntu**_ oraz _**mysql**_ należy użyć polecenia `docker pull` uzupełniając je o nazwę pobieranego obrazu
+- Poleceniem `docker images` można sprawdzić, jakie obrazy zostały pobrane
 
 <div align="center">
-  <img src="screens2/2.jpg" alt="instalacja Dockera">
+  <img src="screens2/2.jpg" alt="pobieranie obrazów">
 </div>
 
-<div align="center">
-  <img src="screens2/3.jpg" alt="instalacja Dockera">
-</div>
+Powyższy zrzut ekranu obrazuje działanie wymienionych poleceń.
+
+
+**3. Uruchomienie kontenera z obrzu _**busybox**_**
+
+- Aby uruchomić kontener z obrazu _**busybox**_ należy użyć polecenia `docker run --rm busybox`, gdzie `--rm` odpowiada za wyłączenie kontenera po zakończeniu jego działania
+- Aby uruchomić kontener interaktywnie należy użyć polecenia `docker run --rm -it busybox`, gdzie `-it` zapewnia jego interaktywne działanie. Aby wywołać numer wersji podczas jego działania należy użyć polecenia `busybox --help`
 
 <div align="center">
-  <img src="screens2/4.jpg" alt="instalacja Dockera">
+  <img src="screens2/3.jpg" alt="Uruchomienie kontenera busybox">
 </div>
 
+Powyższy zrzut ekranu obrazuje polecenie użyte do uruchomienia kontenera _**busybox**_ oraz efekt jego uruchomienia.
+
 <div align="center">
-  <img src="screens2/5.jpg" alt="instalacja Dockera">
+  <img src="screens2/4.jpg" alt="interaktywne uruchomienie busybox">
 </div>
+
+Powyższy zrzut ekranu obrazuje interaktywne uruchomienie kontenera _**busybox**_.
+
+**4. Uruchomienie kontenera z obrazu _**ubuntu**_**
+
+- Aby uruchomić kontener z obrazu ubuntu należy użyć polecenia `docker run --rm -it ubuntu`.
+- Żeby zaprezentować _**PID1**_ w kontenerze należy wywołać w nim polecenie `ps aux`, natomiast aby wyświetlić procesy dockera na hoście należy użyć komendy `ps aux | grep docker`
+- Aktualizacji pakietów dokonuje się za pomocą polecenia `apt update -y && apt upgrade -y`
+
+<div align="center">
+  <img src="screens2/5.jpg" alt="wyświetlenie PID1 i procesów dockera na hoście">
+</div>
+
+Na powyższym zrzucie ekranu zaprezentowany jest _**PID1**_ oraz procesy dockera na hoście.
 
 <div align="center">
   <img src="screens2/6.jpg" alt="instalacja Dockera">
 </div>
 
+Powyższy zrzut ekranu obrazuje aktualizację pakietów.
+
+
+**5. Stworzenie, zbudowanie i uruchomienie własnego _**Dockerfile**_**
+
+- Aby stworzyć własny plik _**Dockerfile**_ bazujący na ubuntu i sklonować repozytorium przedmiotowe należało napisać poniższą treść:
+
 <div align="center">
-  <img src="screens2/7.jpg" alt="instalacja Dockera">
+  <img src="screens2/7.jpg" alt="Tworzenie własnego Dockerfile">
 </div>
+
+W pliku widocznym na powyższym zrzucie ekranu ukazany jest _**Dockerfile**_, który bazuje na ubuntu. Jest w nim przeprowadzana aktualizacja pakietów oraz instalacja klienta Git, jako katalog roboczy ustawiany jest katalog _**/app**_, a następnie klonowane jest repozytorium przedmiotowe i ustawia uruchomienie powłoki bash jako domyślne działanie po uruchomieniu kontenera.
+
+- Aby zbudować własny obraz należy użyć polecenia `docker build -t name path`, gdzie name to nazwa tworzonego obrazu, a path to ścieżka, gdzie ma zostać utworzony obraz
+- Aby go potem uruchomić w trybie interaktywnym należy wykorzystać komendę `docker run --rm -it name`
+- Żeby sprawdzić, czy repozytorium zostało pobrane należy wypisać zawartość katalogu roboczego _**/app**_ za pomocą polecenia `ls /app/`
 
 <div align="center">
   <img src="screens2/8.jpg" alt="instalacja Dockera">
 </div>
 
+Na powyższym zrzucie ekranu widać wykonanie powyższych kroków.
+
+
+**6. Wyświetlenie i wyczyszczenie uruchomionych kontenerów**
+
+- Aby wyświetlić uruchomione kontenery należy użyć polecenia `docker ps -a`
+- Aby je wyczyścić należy użyć polecenia `docker rm $(docker ps -aq)`
+
 <div align="center">
   <img src="screens2/9.jpg" alt="instalacja Dockera">
 </div>
+
+Powyższy zrzut ekranu obrazuje działanie poleceń wykorzystanych do wyświetlenia i wyczyszczenia uruchomionych kontenerów.
+
+
+**7. Wyczyszczenie obrazów**
+
+- Aby wyczyścić obrazy należy użyć polecenia `docker rmi $(docker images -q)`
 
 <div align="center">
   <img src="screens2/10.jpg" alt="instalacja Dockera">
 </div>
 
+Na powyższym zrzucie ekranu zaprezentowane jest działanie polecenia użytego do wyczyszczenia obrazów.
+
+
+**8. Dodanie pliku _**Dockerfile**_ do folderu _**Sprawozdanie1**_ w repozytorium**
+
+- Aby dodać plik _**Dockerfile**_ do folderu _**Sprawozdanie1**_ w repozytorium należało skopiować go do tego folderu, a następnie wykonać polecenia `git add`, `git commit` oraz `git push`
+
 <div align="center">
   <img src="screens2/11.jpg" alt="instalacja Dockera">
 </div>
+
+Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dockerfile**_ do folderu _**Sprawozdanie1**_ w repozytorium.
+
 
 ***
 ## Laboratorium 3
