@@ -125,7 +125,7 @@ Powyższy zrzut ekranu obrazuje wykonanie powyższego podpunktu.
      </div>`
 
 <div align="center">
-	<img src="1/6_4.jpg" alt="zrzuty ekranu inline">
+	<img src="screens1/6_4.jpg" alt="zrzuty ekranu inline">
 </div>
 
 Powyższy zrzut ekranu zawiera fragment kodu sprawozdania, zawierający kod odpowiedzialny za dodanie zrzutów ekranu jako inline za pomocą _**HTML**_.
@@ -139,7 +139,7 @@ Powyższy zrzut ekranu zawiera fragment kodu sprawozdania, zawierający kod odpo
   - `git push origin branch`, które aktualizuje wybraną gałąź o zaistniałe zmiany
 
 <div align="center">
-  <img src="1/6_5.jpg" alt="wysłanie zmian">
+  <img src="screens1/6_5.jpg" alt="wysłanie zmian">
 </div>
 
 Powyższy zrzut ekranu obrazuje powyżej opisane polecenia.
@@ -153,7 +153,7 @@ Powyższy zrzut ekranu obrazuje powyżej opisane polecenia.
   - `git push origin group_branch`, które
   
 <div align="center">
-  <img src="1/6_5.jpg" alt="wysłanie zmian">
+  <img src="screens1/6_5.jpg" alt="wysłanie zmian">
 </div>
 
 Powyższy zrzut ekranu obrazuje powyżej opisane polecenia.
