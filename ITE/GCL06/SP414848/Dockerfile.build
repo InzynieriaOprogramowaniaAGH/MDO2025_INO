@@ -7,5 +7,3 @@ WORKDIR /sqlite
 
 RUN ./configure
 RUN make
-
-VOLUME /sqlite
