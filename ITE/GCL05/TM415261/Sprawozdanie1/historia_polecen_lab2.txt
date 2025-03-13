@@ -1,0 +1,108 @@
+   44  sudo dnf install docker
+   45  docker
+   46  exit
+   47  ls
+   48  exit
+   49  ls
+   50  cd MDO2025_INO/
+   51  ls
+   52  cd ..
+   53  cd github/
+   54  ls
+   55  cd MDO2025_INO/
+   56  ls
+   57  cd ITE/
+   58  ls
+   59  cd TM415261/
+   60  ls
+   61  cat commit-msk
+   62  cat commit-msg
+   63  Get-History
+   64  h
+   65  history
+   66  history 55
+   67  history 57
+   68  history 58 > historia_polecen.txt
+   69  ls
+   70  cat historia_polecen.txt 
+   71  rm historia_polecen.txt 
+   72  ls
+   73  history | '$1 >= 11 && $1 <= 62' > historia_polecen.txt
+   74  history | awk '$1 >= 11 && $1 <= 62' > historia_polecen.txt
+   75  ls
+   76  cst historia_polecen.txt 
+   77  cat historia_polecen.txt 
+   78  ls
+   79  mkdir Sprawozdanie1
+   80  ls
+   81  mv historia_polecen.txt Sprawozdanie1/
+   82  ;s
+   83  ls
+   84  cd Sprawozdanie1/
+   85  ls
+   86  cat historia_polecen.txt 
+   87  cd ..
+   88  cd..
+   89  cd ..
+   90  ls
+   91  cd MDO2025_INO/
+   92  ;s
+   93  ls
+   94  cat README.md
+   95  cd READMEs/
+   96  ls
+   97  cat 001-Assignment.md 
+   98  cd ..
+   99  cd github/MDO2025_INO/ITE/TM415261/
+  100  ls
+  101  exit
+  102  ls
+  103  cd github/MDO2025_INO/ITE/TM415261/
+  104  ls
+  105  cd Sprawozdanie1/
+  106  cat historia_polecen.txt 
+  107  exit
+  108  cd
+  109  cd github/
+  110  ls
+  111  cd MDO2025_INO/ITE/TM415261/
+  112  ls
+  113  cd Sprawozdanie1/
+  114  cat historia_polecen.txt 
+  115  exit
+  116  cd github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/
+  117  nano historia_polecen.txt 
+  118  code historia_polecen.txt 
+  119  cat historia_polecen.txt 
+  120  exit
+  121  history
+  122  cd github/MDO2025_INO/ITE/TM415261/Sprawozdanie1/
+  123  history | awk '$1 >= 5 && $1 <= 62' > historia_polecen.txt
+  124  ls
+  125  cat historia_polecen.txt 
+  126  history | awk '$1 >= 5 && $1 <= 43' > historia_polecen.txt
+  127  cat historia_polecen.txt 
+  128  exit
+  129  sudo docker pull hello-world
+  130  sudo docker pull busybox
+  131  sudo docker pull ubuntu
+  132  sudo docker pull mysql
+  133  sudo docker run -it busybox
+  134  docker images
+  135  sudo docker images
+  136  sudo docker run -it --name ubuntu-container ubuntu bash
+  137  sudo docker run -it ubuntu
+  138  touch Dockerfile
+  139  nano Dockerfile 
+  140  ls
+  141  cat Dockerfile 
+  142  nano Dockerfile 
+  143  sudo docker build -t my-git-repo .
+  144  sudo docker run -it my-git-repo sh 
+  145  sudo docker ps -a
+  146  sudo docker run -it my-git-repo git
+  147  sudo docker ps -a
+  148  sudo docker container prune
+  149  sudo docker ps -a
+  150  sudo docker rmi -f $(sudo docker images -aq)
+  151  sudo docker images
