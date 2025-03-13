@@ -1,15 +1,15 @@
 # Zajęcia 01
 
 1. Instalacja git i obsługi ssh
-[TODO]
+
 2. Sklonowanie repozytorium przedmiotowego
-[TODO]
+
 3. Tworzenie kluczy ssh i konfiguracja ssh jako metodę dostępu do GitHuba.
-[TODO]
+
 4. Przełączenie gałęzi na grupową.
-[TODO]
+
 5. Utwórz nowej gałęzi.
-[TODO]
+
 6. Praca na nowej gałęzi
 
 Treść hooka:
@@ -23,8 +23,9 @@ if ! [[ $commit_msg =~ $pattern ]]; then
   exit 1
 fi
 ```
-[TODO]
+
 7. Wystawienie Pull Request
+
 ![Pull Request](screens/lab1-last.png)
 
 # Zajęcia 2
