@@ -161,28 +161,66 @@ Powyższy zrzut ekranu obrazuje powyżej opisane polecenia, ponieważ gałąź g
 
 ***
 ## Laboratorium 2
-![Zrzut ekranu z wersją gita](screens2/1.jpg)
 
-![Zrzut ekranu z wersją gita](screens2/2.jpg)
+**1. Instalacja Dockera w systemie linuskowym**
 
-![Zrzut ekranu z wersją gita](screens2/3.jpg)
+- Aby zainstalować Dockera należało użyć poleceń:
+  - `sudo dnf install -y dnf-plugins-core`
+  - `sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo`
+  - `sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin`
+- Po pomyślnej instalacji Dockera należy go włączyć: 
+  `sudo systemctl enable --now docker`
+- Można także sprawdzić, czy działa:
+  `sudo docker version`
 
-![Zrzut ekranu z wersją gita](screens2/4.jpg)
+<div align="center">
+  <img src="screens2/1.jpg" alt="instalacja Dockera">
+</div>
 
-![Zrzut ekranu z wersją gita](screens2/5.jpg)
+Powyższy zrzut ekranu przedstawia wykonanie powyższych poleceń.
 
-![Zrzut ekranu z wersją gita](screens2/6.jpg)
 
-![Zrzut ekranu z wersją gita](screens2/7.jpg)
+**2. S**
 
-![Zrzut ekranu z wersją gita](screens2/8.jpg)
+<div align="center">
+  <img src="screens2/2.jpg" alt="instalacja Dockera">
+</div>
 
-![Zrzut ekranu z wersją gita](screens2/9.jpg)
+<div align="center">
+  <img src="screens2/3.jpg" alt="instalacja Dockera">
+</div>
 
-![Zrzut ekranu z wersją gita](screens2/10.jpg)
+<div align="center">
+  <img src="screens2/4.jpg" alt="instalacja Dockera">
+</div>
 
-![Zrzut ekranu z wersją gita](screens2/11.jpg)
+<div align="center">
+  <img src="screens2/5.jpg" alt="instalacja Dockera">
+</div>
 
+<div align="center">
+  <img src="screens2/6.jpg" alt="instalacja Dockera">
+</div>
+
+<div align="center">
+  <img src="screens2/7.jpg" alt="instalacja Dockera">
+</div>
+
+<div align="center">
+  <img src="screens2/8.jpg" alt="instalacja Dockera">
+</div>
+
+<div align="center">
+  <img src="screens2/9.jpg" alt="instalacja Dockera">
+</div>
+
+<div align="center">
+  <img src="screens2/10.jpg" alt="instalacja Dockera">
+</div>
+
+<div align="center">
+  <img src="screens2/11.jpg" alt="instalacja Dockera">
+</div>
 
 ***
 ## Laboratorium 3
