@@ -1,0 +1,124 @@
+  109  sudo dnf install git openssh
+  110  git --version
+  111  ssh -V
+  112  git status
+  113  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+  114  git config --global credential.helper
+  115  git credential-cache exit
+  116  git credential-manager-core erase
+  117  git remote -v
+  118  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  119  git credential-osxkeychain erase
+  120  git credential-cache exit
+  121  git config --global credential.helper
+  122  rm ~/.git-credentials
+  123  git credential-cache exit
+  124  git config --global --unset credential.helper
+  125  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+  126  ssh-keygen -t ed25519 -C "kamilpudzisz@student.agh.edu.pl"
+  127  ssh-keygen -t ecdsa -b 521 -C "kamilpudzisz@student.agh.edu.pl"
+  128  eval "$(ssh-agent -s)"
+  129  ssh-add ~/.ssh/id_github_ed25519
+  130  ssh-add ~/.ssh/id_github_ed25519ssh-add ~/.ssh/id_github_ecdsa
+  131  ssh-add ~/.ssh/id_github_ecdsa
+  132  ls
+  133  cd MDO2025_INO/
+  134  git remote -v
+  135  git remote set-utl origin https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  136  git remote set-url origin https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  137  git remote -V
+  138  git remote -v
+  139  git remote set-url origin git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  140  git remote -v
+  141  git checkout main
+  142  git checkout GCL06
+  143  git pull
+  144  git checkout -B KP415903
+  145  ls
+  146  cd ITE
+  147  ls
+  148  cd GCL06/
+  149  ls
+  150  mkdir -p KP415903
+  151  cp KP415903/commit-hook-KP415903 ./../../.git/hooks/commit-hook-KP415903
+  152  git add .
+  153  git status
+  154  cd ..
+  155  ls
+  156  git add .
+  157  git status
+  158  history
+  159  git add .
+  160  git status
+  161  git commit -m "KP415903: Initial commit, Sprawozdanie1"
+  162  git branch
+  163  git push -u origin KP415903
+  164  git history
+  165  hitsory
+  166  history
+
+  2
+
+  140  sudo dnf install dnf-plugins-core -y
+  141  sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+  142  sudo dnf-3 config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+  143  sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  144  sudo dnf remove moby-engine docker-cli
+  145  sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  146  clear
+  147  sudo systemctl start docker
+  148  sudo systemctl enable docker
+  149  sudo systemctl status docker
+  150  sudo usermod -aG docker $USER
+  151  newgrp docker
+  152  cd ..
+  153  ls
+  154  docker login
+  155  docker pull busybox
+  156  docker status
+  157  ls
+  158  sudo docker pull busybox
+  159  ls
+  160  docker images
+  161  sudo docker images
+  162  docker images
+  163  sudo systemctl restart docker
+  164  docker images
+  165  sudo docker images
+  166  sudo docker run busybox echo "Hello World!"
+  167  busybox --help
+  168  sudo busybox --help
+  169  sudo docker run -it busybox
+  170  docker ps
+  171  sudo docker ps
+  172  sudo docker ps -a
+  173  sudo docker pull fedora
+  174  sudo docker run -it fedora /bin/bash
+  175  ls
+  176  cd reps/
+  177  ls
+  178  cd MDO2025_INO/
+  179  ls
+  180  cd ITE
+  181  ls
+  182  cd GCL06/
+  183  ls
+  184  cd KP415903/
+  185  ls
+  186  cd Sprawozdanie1/
+  187  LS
+  188  ls
+  189  sudo docker build -t my-fedora-repo .
+  190  sudo docker run -it my-fedora-repo /bin/bash
+  191  sudo docker ps -a
+  192  sudo docker rm $(docker ps -a -q -f status=exited)
+  193  sudo docker rm $(sudo docker ps -a -q -f status=exited)
+  194  docker rmi $(docker images -q)
+  195  sudo docker rmi $(docker images -q)
+  196  sudo docker rmi $(sudo docker images -q)
+  197  ls
+  198  git status
+  199  git add Dockerfile
+  200  ls
+  201  git status
+  202  history
