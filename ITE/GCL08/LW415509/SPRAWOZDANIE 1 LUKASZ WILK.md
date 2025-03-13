@@ -360,3 +360,5 @@ CMD ["bash"]
   ```
 
   ![alt text](images/czyszczenie.png)
+
+  .
