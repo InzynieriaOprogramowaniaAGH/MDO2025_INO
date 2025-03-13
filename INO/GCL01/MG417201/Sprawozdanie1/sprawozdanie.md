@@ -168,10 +168,8 @@ Powyższy zrzut ekranu obrazuje powyżej opisane polecenia, ponieważ gałąź g
   - `sudo dnf install -y dnf-plugins-core`
   - `sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo`
   - `sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin`
-- Po pomyślnej instalacji Dockera należy go włączyć: 
-    `sudo systemctl enable --now docker`
-- Można także sprawdzić, czy działa:
-    `sudo docker version`
+- Po pomyślnej instalacji Dockera należy go włączyć za pomocą polecenia `sudo systemctl enable --now docker`
+- Można także sprawdzić, czy działa sprawdzając jego wersję za pomocą polecenia `sudo docker version`
 
 <div align="center">
   <img src="screens2/1.jpg" alt="instalacja Dockera">
