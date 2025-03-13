@@ -1,1 +1,10 @@
 FROM sqlite-build
+
+RUN useradd -m testuser
+RUN chown -R testuser:testuser /sqlite
+
+USER testuser
+
+WORKDIR /sqlite
+
+CMD ["make", "test"]

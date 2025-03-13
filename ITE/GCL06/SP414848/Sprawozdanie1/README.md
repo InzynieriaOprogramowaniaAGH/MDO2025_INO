@@ -83,3 +83,30 @@ CMD ["/bin/bash"]
 2.
 
 3.
+
+Kod Dockerfile.build:
+```
+FROM fedora:40
+
+RUN dnf install -y git gcc make tcl-devel
+
+RUN git clone https://github.com/sqlite/sqlite.git
+WORKDIR /sqlite
+
+RUN ./configure
+RUN make
+```
+
+Kod Dockerfile.test:
+```
+FROM sqlite-build
+
+RUN useradd -m testuser
+RUN chown -R testuser:testuser /sqlite
+
+USER testuser
+
+WORKDIR /sqlite
+
+CMD ["make", "test"]
+```
