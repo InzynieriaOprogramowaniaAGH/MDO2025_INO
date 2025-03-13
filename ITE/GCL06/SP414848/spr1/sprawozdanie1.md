@@ -32,19 +32,36 @@ fi
 
 1. Instalacja Dockera.
 
+![Komenda do instalacji dockera](screens/lab2-1.png)
+
 2. Rejestracja w Docker Hub.
+
+![Strona po zalogowaniu](screens/lab2-2.png)
 
 3. Pobieranie obrazów.
 
+
 4. Uruchomienie obrazu `busybox`.
+
+![Pobrane obrazy i uruchomienie busyboxa](screens/lab2-3.png)
 
 5. Uruchomienie obrazu `ubuntu`.
 
+![Komenda do uruchomienia](screens/lab2-4.png)
+![Bash ubuntu](screens/lab2-5.png)
+
 6. Utworzenie pliku Dockerfile i sklonowanie repo
+
+![DockerFile](screens/lab2-6.png)
 
 7. Uruchomienie kontenerów i usunięcie ich.
 
+![Uruchomione kontenery](screens/lab2-7.png)
+![Usuwanie kontenerów](screens/lab2-8.png)
+
 8. Usunięcie obrazów.
+
+![Usuwanie obrazów](screens/lab2-9.png)
 
 Kod Dockerfile:
 ```
