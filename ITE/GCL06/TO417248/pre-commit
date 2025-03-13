@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# This hook checks if commit message starts with proper prefix,
+# which is my initials and index number.
+
+COMMIT_MESSAGE_FILE=$1
+COMMIT_MESSAGE=$(head -n1 "$COMMIT_MESSAGE_FILE")
+
+PREFIX="TO417248"
+
+if ! echo "$COMMIT_MESSAGE" | grep -q "^$PREFIX"; then
+    echo "Error: Commit message must start with `$PREFIX`"
+    exit 1
+fi
+
+exit 0
