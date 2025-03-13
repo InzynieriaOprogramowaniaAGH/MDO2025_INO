@@ -21,6 +21,7 @@ Powyższy zrzut ekranu przedstawia wynik uruchomienia polecenia `git --version`,
 <div align="center">
 	<img src="1/1_ssh.jpg" alt="Zrzut ekranu pokazujący skonfigurowanego klienta SSH">
 </div>
+
 Powyższy zrzut ekranu pokazuje, że autentyfikacja za pomocą publicznego klucza SSH została poprawnie skonfigurowana.
 
 
@@ -32,8 +33,9 @@ Powyższy zrzut ekranu pokazuje, że autentyfikacja za pomocą publicznego klucz
   - istnieje także możliwość zapamiętania tokena poprzez klient Git. W tym celu należy wpisać polecenie `git config --global credential.helper store`, a następnie sklonować repozytorium wpisując swój token. Po tym sklonowaniu token zostanie zapamiętany i nie będzie już potrzeby wpisywania go podczas klonowania, wystarczy wtedy polecenie `git clone https://github.com/user/repo.git`. Z racji że token jest w wyniku tego działania zapisywany w zwykłym pliku tekstowym bez zabezpieczeń, nie jest to optymalne rozwiązanie ze względów bezpieczeństwa.
  
 <div align="center"> 
-	<img src="1/2_repo.jpg" alt="clone personal access token	">
+	<img src="1/2_repo.jpg" alt="clone personal access token">
 </div>
+
 Powyższy zrzut ekranu pokazuje wykonanie polecenia `git clone` przy użyciu HTTPS oraz PAT.
 
 
@@ -48,9 +50,11 @@ Powyższy zrzut ekranu pokazuje wykonanie polecenia `git clone` przy użyciu HTT
   - wpisać w terminalu polecenie `git clone git@github.com:user/repo.git`, gdzie _**git@github.com/user/repo.git**_ to skopiowany adres repozytorium
 
 <div align="center"> 
-	<img src="1/3_git.jpg" alt="Zrzut ekranu z wersją Git-a">
+	<img src="1/3_git.jpg" alt="SSH">
 </div>
+
 Powyższy zrzut ekranu pokazuje wynik wpisania komendy `ssh -T git@github.com` po poprawnym skonfigurowaniu połączenia SSH między klientem Git, a kontem na GitHub, w wyniku działania którego GitHub zostaje dodany do zaufanych hostów. 
+
 
 **5. Przełączenie się na gałąź main oraz swojej grupy**
 
@@ -65,27 +69,94 @@ Powyższy zrzut ekranu pokazuje wynik wpisania komendy `ssh -T git@github.com` p
 - Aby utworzyć swoją nową gałąź należy:
   - wpisać polecenie `git checkout -b IN123456`, gdzie _**IN123456**_ to inicjały oraz numer indeksu
   - wpisać polecenie `git branch`, aby upewnić się, czy gałąź została poprawnie utworzona i czy jesteśmy na nią przełączeni
+
 <div align="center"> 
-	<img src="1/4_branches.jpg" alt="Zrzut ekranu z wersją Git-a">
+	<img src="1/4_branches.jpg" alt="branches">
 </div>
+
 Powyższy zrzut ekranu obrazuje wykonanie wszystkich powyższych kroków z tego punktu.
 
-**6. **
+
+**6. Utworzenie nowego katalogu w katalogu grupy**
+
+- Aby utworzyć swój nowy katalog należy:
+  - zmienić obecny katalog na katalog grupy za pomocą polecenia `cd`
+  - utworzyć nowy katalog za pomocą polecenia `mkdir`, nazywając go także swoimi inicjałami i numerem indeksu
+
 <div align="center"> 
-	<img src="1/6_1.jpg" alt="Zrzut ekranu z wersją Git-a">
+	<img src="1/6_1.jpg" alt="Utworzenie katalogu">
 </div>
 
+Powyższy zrzut ekranu obrazuje wykonanie powyższych kroków z tego punktu.
 
-**7. **
+
+**7. Utworzenie Git hooka**
+
+- Aby utworzyć Git hooka należy:
+  - w swoim katalogu utworzyć plik _**commit-msg**_ i otworzyć go w edytorze tekstowym, np. nano
+  - dodać treść Git hooka, który będzie sprawdzał, czy commit zaczyna się od inicjałów i numeru albumu
+
 <div align="center"> 
-	<img src="1/6_2.jpg" alt="Zrzut ekranu z wersją Git-a">
+	<img src="1/6_2.jpg" alt="Git hook">
 </div>
 
+Powyższy zrzut ekranu zawiera treść Git hooka.
 
-**8. **
+
+**8. Skopiowanie Git hooka do odpowiedniego katalogu**
+
+- Aby Git hook uruchamiał się za każdym razem, gdy wywoływane jest polecenie _**commit**_ należy skopiować go do katalogu `.git/hooks`
+
 <div align="center"> 
-	<img src="1/6_3.jpg" alt="Zrzut ekranu z wersją Git-a">
+	<img src="1/6_3.jpg" alt="Kopiowanie Git hook'a">
 </div>
+
+Powyższy zrzut ekranu obrazuje wykonanie powyższego podpunktu.
+
+
+**9. Utworzenie sprawozdania i dodanie zrzutów ekranu jako inline**
+
+- Aby utworzyć sprawozdanie w formacie markdown należy użyć polecenia `nano sprawozdanie.md`, a następnie je zapisać, w wyniku czego zostanie utworzony plik
+- Aby dodać zrzut ekranu jako inline należy w sprawozdaniu:
+  - napisać kod `![alternatywny opis](sciezka/do/pliku/zrzut_ekranu.jpg)`
+  - można też użyć _**HTML**_, aby zrzuty ekranu były wyśrodkowane:
+    `<div align="center">
+	<img src="sciezka/do/pliku/zrzut_ekranu.jpg alt="alternatywny opis">
+     </div>`
+
+<div align="center">
+	<img src="1/6_4.jpg" alt="zrzuty ekranu inline">
+</div>
+
+Powyższy zrzut ekranu zawiera fragment kodu sprawozdania, zawierający kod odpowiedzialny za dodanie zrzutów ekranu jako inline za pomocą _**HTML**_.
+
+
+**10. Wysłanie zmian do zdalnego źródła**
+
+- Aby wysłać zmiany do zdalnego źródła należy użyć poleceń:
+  - `git add .`, które dodaje powstałe we wszystkich plikach w katalogu zmiany do 
+  - `git commit -m "message"`, które 
+  - `git push origin branch`, które aktualizuje wybraną gałąź o zaistniałe zmiany
+
+<div align="center">
+  <img src="1/6_5.jpg" alt="wysłanie zmian">
+</div>
+
+Powyższy zrzut ekranu obrazuje powyżej opisane polecenia.
+
+
+**11. Wciągnięcie swojej gałęzi do gałęzi grupowej**
+
+- Aby wciągnąć swoją gałąź do gałęzi grupowej należy użyć poleceń:
+  - `git checkout group_branch`, które
+  - `git merge own_branch`, które
+  - `git push origin group_branch`, które
+  
+<div align="center">
+  <img src="1/6_5.jpg" alt="wysłanie zmian">
+</div>
+
+Powyższy zrzut ekranu obrazuje powyżej opisane polecenia.
 
 
 ***
