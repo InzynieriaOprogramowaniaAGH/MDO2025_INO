@@ -150,5 +150,137 @@ Gdy pushujemy za pierwszym razem branch stworzony lokalnie, musimy podać gitowi
 
 
 ---
+
+# Docker
+
+## Instalacja docker
+
+Docker został zainstalowany wraz z systemem
+![](images/Pasted%20image%2020250313181936.png)
+
+## Zakładanie konta na Dockerhub
+
+![](images/Pasted%20image%2020250313193636.png)
+![](images/Pasted%20image%2020250313193713.png)
+
 ## Pobranie kontenerów
+
+Aby pobrać obrazy z dockerhub używamy polecenia
+`$ docker pull nazwa_obrazu`
+
 ![](images/Pasted%20image%2020250313181530.png)
+
+Teraz aby zobaczyć pobrane obranzy wpisujemy
+`$ docker images`
+
+![](images/Pasted%20image%2020250313194638.png)
+
+## Uruchomienie kontenera
+
+Aby uruchomić kontener używamy polecenia
+`$ docker run nazwa_obrazu`
+
+![](images/Pasted%20image%2020250313194729.png)
+
+### Uruchomienie kontenera w trybie interaktywnym
+
+Aby uruchomić kontener w trybie interaktywnym używamy polecenia
+`$ docker run -it nazwa_obrazu`
+
+> Dodatkono na końcu możemy podac program, który chcemy uruchomić np. bash albo sh
+
+![](images/Pasted%20image%2020250313194854.png)
+
+## Uruchamianie systemu w kontenerze
+
+Uruchamiamy kontener tak jak w poleceniu wyżej (tutaj jest to fedora)
+
+### 1. Zczytanie PID1
+Aby posiadać polecenie ps musimy zainstalować odpowienie narzędzia
+`$ dnf install -y procps-ng`
+
+![](images/Pasted%20image%2020250313195856.png)
+
+Następie możemy otrzymać informacje o urucjomionych prohramach w kontenerze
+`$ ps`
+
+![](images/Pasted%20image%2020250313195908.png)
+
+Pokazanie procesów dockera na hoście
+`$ ps auc | grep docker`
+
+![](images/Pasted%20image%2020250313200325.png)
+
+### 2. Zaktualizowanie pakietów
+
+`$ dnf update`
+
+![](images/Pasted%20image%2020250313200432.png)
+
+### 3. Wyjście z kontenera
+
+`$ exit`
+
+![](images/Pasted%20image%2020250313200504.png)
+
+## Dockerfile
+
+Tworzymy plik Dockerfile, który będzie pobierał repo z github
+
+```dockerfile
+FROM fedora
+
+RUN dnf install -y git && dnf clean all
+
+WORKDIR /app
+
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+```
+
+Przechodzimy do folderu, gdzie znajduje się nasz plik Dockerfile
+
+![](images/Pasted%20image%2020250313201208.png)
+
+A następnie budujemy nasz obraz
+
+`$ docker build -t nazwa_naszego_obrazu .`
+
+![](images/Pasted%20image%2020250313201322.png)
+
+Teraz możemy zobaczyć, że mamy dostępny nasz nowy obraz
+
+`$ docker images`
+
+![](images/Pasted%20image%2020250313211953.png)
+
+Uruchamiamt nasz obraz i sprawdzamy czy repo zostało sklonowane
+
+`$ docker run -it nazwa_naszego_obrazu`
+
+![](images/Pasted%20image%2020250313212027.png)
+
+## Usuwanie kontenerów
+
+Aby usunąć wszystkie kontenery, musimy je najpierw zatrzymać
+
+`$ docker stop $(docker ps -a -q)`
+
+Następnie możemy usunąc  nasze konterery
+
+`$ docker rm $(docker ps -a -q)`
+
+![](images/Pasted%20image%2020250313212533.png)
+
+## Usuwanie obrazów
+
+> Aby usunąć obrazu, wsyzsktie kontenery z nimi powiązane muszą być usunięte
+
+Wszystkie obrazy usuwamy za pomoca polecenia
+
+`$ docker rmi -f $(docker images -aq)`
+
+![](images/Pasted%20image%2020250313213330.png)
+
+![](images/Pasted%20image%2020250313215248.png)
+
+---
