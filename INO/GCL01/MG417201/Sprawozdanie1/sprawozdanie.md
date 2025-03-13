@@ -156,7 +156,7 @@ Powyższy zrzut ekranu obrazuje powyżej opisane polecenia.
   <img src="screens1/6_6.jpg" alt="wysłanie zmian">
 </div>
 
-Powyższy zrzut ekranu obrazuje powyżej opisane polecenia.
+Powyższy zrzut ekranu obrazuje powyżej opisane polecenia, ponieważ gałąź grupowa jest chroniona, push został odrzucony.
 
 
 ***
