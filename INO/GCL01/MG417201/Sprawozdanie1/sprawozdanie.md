@@ -3,7 +3,7 @@
 ## Laboratorium 1
 **1. Instalacja klienta Git:**
 
-Aby zainstalować klienta Git należy użyć polecenia `sudo dnf install git-all`
+- Aby zainstalować klienta Git należy użyć polecenia `sudo dnf install git-all`
 
 <div align="center"> 
 	<img src="1/1_git.jpg" alt="Zrzut ekranu z wersją Git-a">
@@ -12,11 +12,11 @@ Aby zainstalować klienta Git należy użyć polecenia `sudo dnf install git-all
 Powyższy zrzut ekranu przedstawia wynik uruchomienia polecenia `git --version`, w wyniku którego wyświetla się wersja zainstalowanego klienta Git. Stanowi to potwierdzenie poprawnego jego zainstalowania.
 
 
-**2. Obsługa kluczy SSH**
+**2. Instalacja obsługi kluczy SSH**
 
-Aby włączyć obsługę kluczy SSH należy:
-- uruchomić usługę _**sshd**_ za pomocą polecenia `sudo systemctl enable sshd`, a następnie `sudo systemctl start sshd`
-- wygenerować swój klucz SSH za pomocą wybranego algorytmu szyfrującego, używając polecenia `ssh-keygen -t ed25519 -C "adres.email@domena.com"`, a następnie wyświetlić klucz publiczny za pomocą polecenia `cat ~/.ssh/id_ed25519.pub` i go skopiować. Potem należy w ustawieniach konta GitHub wybrać opcję kluczy SSH i dodać skopiowany wcześniej klucz do swojego konta.
+- Aby włączyć obsługę kluczy SSH należy:
+  - zainstalować pakiet OpenSSH przy użyciu polecenia `sudo dnf install openssh-server`
+  - uruchomić usługę _**sshd**_ za pomocą polecenia `sudo systemctl enable sshd`, a następnie `sudo systemctl start sshd`
 
 <div align="center">
 	<img src="1/1_ssh.jpg" alt="Zrzut ekranu pokazujący skonfigurowanego klienta SSH">
@@ -30,7 +30,13 @@ Powyższy zrzut ekranu pokazuje, że autentyfikacja za pomocą publicznego klucz
 </div>
 
 
-**4. **
+**4. Ustanowienie połączenia między klientem Git a kontem GitHub za pomocą SSH**
+- Aby ustanowić połączenie między klientem Git a kontem GitHub należy:
+  - wygenerować swój klucz SSH za pomocą wybranego algorytmu szyfrującego, używając polecenia `ssh-keygen -t ed25519 -C "adres.email@domena.com"` 
+  - następnie należy wyświetlić klucz publiczny za pomocą polecenia `cat ~/.ssh/id_ed25519.pub` i go skopiować
+  - potem w ustawieniach konta GitHub należy wybrać opcję kluczy SSH i dodać skopiowany wcześniej klucz do swojego konta.
+
+
 <div align="center"> 
 	<img src="1/3_git.jpg" alt="Zrzut ekranu z wersją Git-a">
 </div>
