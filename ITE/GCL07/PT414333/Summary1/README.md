@@ -100,3 +100,117 @@ git push --set-upstream origin PT414333
 Result:
 
 ![alt text](class1/7.png)
+
+# Class 2
+## Git, Docker
+
+## 1. Install Docker
+
+Instructions:
+https://docs.docker.com/engine/install/
+
+For ArchLinux:
+```sh
+sudo pacman -S docker # Arch
+```
+![alt text](class2/1.png)
+
+## 2. Create DockerHub account
+
+Link:
+https://app.docker.com/signup
+
+Reslut:
+
+![alt text](class2/2.png)
+
+## 3. Pull images
+
+```sh
+docker pull hello-world
+docker pull busybox
+docker pull ubuntu
+docker pull mysql
+```
+
+![alt text](class2/3.png)
+
+## 4. Run container
+
+```sh
+docker run -i -d --name Test busybox # run contaienr dettached
+docker attach Test                   # attach std io
+
+# inside container
+busybox | head -1
+```
+
+![alt text](class2/4.png)
+
+## 5. "System in container"
+
+```sh
+docker run -i -t -d --name Ubuntu ubuntu  # create new container
+docker attach Ubuntu
+
+# Inside contaienr
+ps -fe
+
+exit # exit from contaienr
+```
+
+![alt text](class2/5.png)
+
+```sh
+# On host
+ps -fe
+```
+
+![alt text](class2/5.2.png)
+
+## 6. Create custom image
+
+Create file: `Dockerfile` with content:
+```Dockerfile
+FROM ubuntu
+
+RUN apt-get update && apt-get install -y git
+
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+```
+In `Dockerfile`'s directory:
+```sh
+docker build . -t test-image
+```
+
+![alt text](class2/6.1.png)
+![alt text](class2/6.2.png)
+
+```sh
+docker run -i -t -d --name Test test-image
+docker attach Test
+
+# Inside container
+ls
+```
+
+![alt text](class2/6.3.png)
+
+## 7. Running containers
+```sh
+docker ps -la     # List all contaienrs
+
+docker rm Test    # Remove container Test
+docker rm Ubuntu  # Remove contaienr Ubuntu
+
+docker ps -la
+```
+
+![alt text](class2/7.png)
+
+## 8. Images cleanup
+
+```sh
+docker image prune
+```
+![alt text](class2/8.png)
