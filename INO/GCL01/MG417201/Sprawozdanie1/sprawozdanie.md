@@ -6,7 +6,7 @@
 - Aby zainstalować klienta Git należy użyć polecenia `sudo dnf install git-all`
 
 <div align="center"> 
-	<img src="1/1_git.jpg" alt="Zrzut ekranu z wersją Git-a">
+	<img src="screens1/1_git.jpg" alt="Zrzut ekranu z wersją Git-a">
 </div>
 
 Powyższy zrzut ekranu przedstawia wynik uruchomienia polecenia `git --version`, w wyniku którego wyświetla się wersja zainstalowanego klienta Git. Stanowi to potwierdzenie poprawnego jego zainstalowania.
@@ -19,7 +19,7 @@ Powyższy zrzut ekranu przedstawia wynik uruchomienia polecenia `git --version`,
   - uruchomić usługę _**sshd**_ za pomocą polecenia `sudo systemctl enable sshd`, a następnie `sudo systemctl start sshd`
 
 <div align="center">
-	<img src="1/1_ssh.jpg" alt="Zrzut ekranu pokazujący skonfigurowanego klienta SSH">
+	<img src="screens1/1_ssh.jpg" alt="Zrzut ekranu pokazujący skonfigurowanego klienta SSH">
 </div>
 
 Powyższy zrzut ekranu pokazuje, że autentyfikacja za pomocą publicznego klucza SSH została poprawnie skonfigurowana.
@@ -33,7 +33,7 @@ Powyższy zrzut ekranu pokazuje, że autentyfikacja za pomocą publicznego klucz
   - istnieje także możliwość zapamiętania tokena poprzez klient Git. W tym celu należy wpisać polecenie `git config --global credential.helper store`, a następnie sklonować repozytorium wpisując swój token. Po tym sklonowaniu token zostanie zapamiętany i nie będzie już potrzeby wpisywania go podczas klonowania, wystarczy wtedy polecenie `git clone https://github.com/user/repo.git`. Z racji że token jest w wyniku tego działania zapisywany w zwykłym pliku tekstowym bez zabezpieczeń, nie jest to optymalne rozwiązanie ze względów bezpieczeństwa.
  
 <div align="center"> 
-	<img src="1/2_repo.jpg" alt="clone personal access token">
+	<img src="screens1/2_repo.jpg" alt="clone personal access token">
 </div>
 
 Powyższy zrzut ekranu pokazuje wykonanie polecenia `git clone` przy użyciu HTTPS oraz PAT.
@@ -50,7 +50,7 @@ Powyższy zrzut ekranu pokazuje wykonanie polecenia `git clone` przy użyciu HTT
   - wpisać w terminalu polecenie `git clone git@github.com:user/repo.git`, gdzie _**git@github.com/user/repo.git**_ to skopiowany adres repozytorium
 
 <div align="center"> 
-	<img src="1/3_git.jpg" alt="SSH">
+	<img src="screens1/3_git.jpg" alt="SSH">
 </div>
 
 Powyższy zrzut ekranu pokazuje wynik wpisania komendy `ssh -T git@github.com` po poprawnym skonfigurowaniu połączenia SSH między klientem Git, a kontem na GitHub, w wyniku działania którego GitHub zostaje dodany do zaufanych hostów. 
@@ -71,7 +71,7 @@ Powyższy zrzut ekranu pokazuje wynik wpisania komendy `ssh -T git@github.com` p
   - wpisać polecenie `git branch`, aby upewnić się, czy gałąź została poprawnie utworzona i czy jesteśmy na nią przełączeni
 
 <div align="center"> 
-	<img src="1/4_branches.jpg" alt="branches">
+	<img src="screens1/4_branches.jpg" alt="branches">
 </div>
 
 Powyższy zrzut ekranu obrazuje wykonanie wszystkich powyższych kroków z tego punktu.
@@ -84,7 +84,7 @@ Powyższy zrzut ekranu obrazuje wykonanie wszystkich powyższych kroków z tego 
   - utworzyć nowy katalog za pomocą polecenia `mkdir`, nazywając go także swoimi inicjałami i numerem indeksu
 
 <div align="center"> 
-	<img src="1/6_1.jpg" alt="Utworzenie katalogu">
+	<img src="screens1/6_1.jpg" alt="Utworzenie katalogu">
 </div>
 
 Powyższy zrzut ekranu obrazuje wykonanie powyższych kroków z tego punktu.
@@ -97,7 +97,7 @@ Powyższy zrzut ekranu obrazuje wykonanie powyższych kroków z tego punktu.
   - dodać treść Git hooka, który będzie sprawdzał, czy commit zaczyna się od inicjałów i numeru albumu
 
 <div align="center"> 
-	<img src="1/6_2.jpg" alt="Git hook">
+	<img src="screens1/6_2.jpg" alt="Git hook">
 </div>
 
 Powyższy zrzut ekranu zawiera treść Git hooka.
@@ -108,7 +108,7 @@ Powyższy zrzut ekranu zawiera treść Git hooka.
 - Aby Git hook uruchamiał się za każdym razem, gdy wywoływane jest polecenie _**commit**_ należy skopiować go do katalogu `.git/hooks`
 
 <div align="center"> 
-	<img src="1/6_3.jpg" alt="Kopiowanie Git hook'a">
+	<img src="screens1/6_3.jpg" alt="Kopiowanie Git hook'a">
 </div>
 
 Powyższy zrzut ekranu obrazuje wykonanie powyższego podpunktu.
