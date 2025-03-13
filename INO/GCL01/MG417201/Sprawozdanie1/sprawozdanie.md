@@ -24,7 +24,6 @@ Powyższy zrzut ekranu przedstawia wynik uruchomienia polecenia `git --version`,
 Powyższy zrzut ekranu pokazuje, że autentyfikacja za pomocą publicznego klucza SSH została poprawnie skonfigurowana.
 
 
-
 **3. Sklonowanie repozytorium za pomocą HTTPS i personal access token**
 
 - Aby sklonować repozytorium za pomocą HTTPS i PAT należy:
@@ -35,6 +34,7 @@ Powyższy zrzut ekranu pokazuje, że autentyfikacja za pomocą publicznego klucz
 <div align="center"> 
 	<img src="1/2_repo.jpg" alt="clone personal access token	">
 </div>
+Powyższy zrzut ekranu pokazuje wykonanie polecenia `git clone` przy użyciu HTTPS oraz PAT.
 
 
 **4. Ustanowienie połączenia między klientem Git a kontem GitHub za pomocą SSH**
