@@ -23,17 +23,32 @@ Aby włączyć obsługę kluczy SSH należy:
 </div>
 Powyższy zrzut ekranu pokazuje, że autentyfikacja za pomocą publicznego klucza SSH została poprawnie skonfigurowana.
 
-![Zrzut ekranu z wersją gita](1/2_repo.jpg)
 
-![Zrzut ekranu z wersją gita](1/3_git.jpg)
+<div align="center"> 
+	<img src="1/2_repo.jpg" alt="Zrzut ekranu z wersją Git-a">
+</div>
 
-![Zrzut ekranu z wersją gita](1/4_branches.jpg)
 
-![Zrzut ekranu z wersją gita](1/6_1.jpg)
+<div align="center"> 
+	<img src="1/3_git.jpg" alt="Zrzut ekranu z wersją Git-a">
+</div>
 
-![Zrzut ekranu z wersją gita](1/6_2.jpg)
+<div align="center"> 
+	<img src="1/4_branches.jpg" alt="Zrzut ekranu z wersją Git-a">
+</div>
 
-![Zrzut ekranu z wersją gita](1/6_3.jpg)
+<div align="center"> 
+	<img src="1/6_1.jpg" alt="Zrzut ekranu z wersją Git-a">
+</div>
+
+<div align="center"> 
+	<img src="1/6_2.jpg" alt="Zrzut ekranu z wersją Git-a">
+</div>
+
+<div align="center"> 
+	<img src="1/6_3.jpg" alt="Zrzut ekranu z wersją Git-a">
+</div>
+
 
 ***
 ## Laboratorium 2
@@ -61,8 +76,8 @@ Powyższy zrzut ekranu pokazuje, że autentyfikacja za pomocą publicznego klucz
 
 
 ***
-##Laboratorium 3
+## Laboratorium 3
 
 
 ***
-##Laboratorium 4
+## Laboratorium 4
