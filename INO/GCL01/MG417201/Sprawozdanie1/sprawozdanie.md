@@ -120,9 +120,9 @@ Powyższy zrzut ekranu obrazuje wykonanie powyższego podpunktu.
 - Aby dodać zrzut ekranu jako inline należy w sprawozdaniu:
   - napisać kod `![alternatywny opis](sciezka/do/pliku/zrzut_ekranu.jpg)`
   - można też użyć _**HTML**_, aby zrzuty ekranu były wyśrodkowane:
-    `<div align="center">
-	<img src="sciezka/do/pliku/zrzut_ekranu.jpg alt="alternatywny opis">
-     </div>`
+    `<div align="center">`
+      `<img src="sciezka/do/pliku/zrzut_ekranu.jpg alt="alternatywny opis">`
+    `</div>`
 
 <div align="center">
 	<img src="screens1/6_4.jpg" alt="zrzuty ekranu inline">
@@ -134,9 +134,9 @@ Powyższy zrzut ekranu zawiera fragment kodu sprawozdania, zawierający kod odpo
 **10. Wysłanie zmian do zdalnego źródła**
 
 - Aby wysłać zmiany do zdalnego źródła należy użyć poleceń:
-  - `git add .`, które dodaje powstałe we wszystkich plikach w katalogu zmiany do 
-  - `git commit -m "message"`, które 
-  - `git push origin branch`, które aktualizuje wybraną gałąź o zaistniałe zmiany
+  - `git add .`, które dodaje wszystkie zmiany w katalogu do obszaru staging 
+  - `git commit -m "message"`, które zapisuje dodane zmiany lokalnie w historii repozytorium z podanym opisem
+  - `git push origin branch`, wysyła zmiany do zdalnego repozytorium na wskazaną gałąź
 
 <div align="center">
   <img src="screens1/6_5.jpg" alt="wysłanie zmian">
@@ -148,12 +148,12 @@ Powyższy zrzut ekranu obrazuje powyżej opisane polecenia.
 **11. Wciągnięcie swojej gałęzi do gałęzi grupowej**
 
 - Aby wciągnąć swoją gałąź do gałęzi grupowej należy użyć poleceń:
-  - `git checkout group_branch`, które
-  - `git merge own_branch`, które
-  - `git push origin group_branch`, które
+  - `git checkout group_branch`, które przełącza się na gałąź grupową
+  - `git merge own_branch`, które scala zmiany z własnej gałęzi do gałęzi grupowej
+  - `git push origin group_branch`, które wysyła zmiany w gałęzi grupowej do zdalnego repozytorium
   
 <div align="center">
-  <img src="screens1/6_5.jpg" alt="wysłanie zmian">
+  <img src="screens1/6_6.jpg" alt="wysłanie zmian">
 </div>
 
 Powyższy zrzut ekranu obrazuje powyżej opisane polecenia.
@@ -161,27 +161,27 @@ Powyższy zrzut ekranu obrazuje powyżej opisane polecenia.
 
 ***
 ## Laboratorium 2
-![Zrzut ekranu z wersją gita](2/1.jpg)
+![Zrzut ekranu z wersją gita](screens2/1.jpg)
 
-![Zrzut ekranu z wersją gita](2/2.jpg)
+![Zrzut ekranu z wersją gita](screens2/2.jpg)
 
-![Zrzut ekranu z wersją gita](2/3.jpg)
+![Zrzut ekranu z wersją gita](screens2/3.jpg)
 
-![Zrzut ekranu z wersją gita](2/4.jpg)
+![Zrzut ekranu z wersją gita](screens2/4.jpg)
 
-![Zrzut ekranu z wersją gita](2/5.jpg)
+![Zrzut ekranu z wersją gita](screens2/5.jpg)
 
-![Zrzut ekranu z wersją gita](2/6.jpg)
+![Zrzut ekranu z wersją gita](screens2/6.jpg)
 
-![Zrzut ekranu z wersją gita](2/7.jpg)
+![Zrzut ekranu z wersją gita](screens2/7.jpg)
 
-![Zrzut ekranu z wersją gita](2/8.jpg)
+![Zrzut ekranu z wersją gita](screens2/8.jpg)
 
-![Zrzut ekranu z wersją gita](2/9.jpg)
+![Zrzut ekranu z wersją gita](screens2/9.jpg)
 
-![Zrzut ekranu z wersją gita](2/10.jpg)
+![Zrzut ekranu z wersją gita](screens2/10.jpg)
 
-![Zrzut ekranu z wersją gita](2/11.jpg)
+![Zrzut ekranu z wersją gita](screens2/11.jpg)
 
 
 ***
