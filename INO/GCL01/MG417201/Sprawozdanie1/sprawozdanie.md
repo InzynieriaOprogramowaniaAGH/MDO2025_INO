@@ -24,9 +24,9 @@ Aby włączyć obsługę kluczy SSH należy:
 Powyższy zrzut ekranu pokazuje, że autentyfikacja za pomocą publicznego klucza SSH została poprawnie skonfigurowana.
 
 
-**3. **
+**3. Sklonowanie repozytorium za pomocą HTTPS i personal access token**
 <div align="center"> 
-	<img src="1/2_repo.jpg" alt="Zrzut ekranu z wersją Git-a">
+	<img src="1/2_repo.jpg" alt="clone personal access token	">
 </div>
 
 
