@@ -120,7 +120,7 @@ Przetestowanie hooka
 
 **Teraz każdy commit MUSI zaczynać się od **`AB416965`**, w przeciwnym razie zostanie zablokowany!**
 
-### **5. Dodanie sprawozdania i zrzutów ekranu**
+### **6. Dodanie sprawozdania i zrzutów ekranu**
 
 **Dodanie sprawozdania do katalogu:**
 
@@ -128,7 +128,7 @@ Przetestowanie hooka
 
 Następnie skopiowałem wszystkie zrzuty ekranu do katalogu `Zrzuty1/`
 
-### **6. Wysłanie zmian do repozytorium zdalnego**
+### **7. Wysłanie zmian do repozytorium zdalnego**
 
 ![Wywołanie git push](<Zrzuty1/zrzut_ekranu15.png>)
 
