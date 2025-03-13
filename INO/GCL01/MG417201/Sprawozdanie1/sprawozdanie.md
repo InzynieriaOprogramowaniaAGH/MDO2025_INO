@@ -24,27 +24,37 @@ Aby włączyć obsługę kluczy SSH należy:
 Powyższy zrzut ekranu pokazuje, że autentyfikacja za pomocą publicznego klucza SSH została poprawnie skonfigurowana.
 
 
+**3. **
 <div align="center"> 
 	<img src="1/2_repo.jpg" alt="Zrzut ekranu z wersją Git-a">
 </div>
 
 
+**4. **
 <div align="center"> 
 	<img src="1/3_git.jpg" alt="Zrzut ekranu z wersją Git-a">
 </div>
 
+
+**5. **
 <div align="center"> 
 	<img src="1/4_branches.jpg" alt="Zrzut ekranu z wersją Git-a">
 </div>
 
+
+**6. **
 <div align="center"> 
 	<img src="1/6_1.jpg" alt="Zrzut ekranu z wersją Git-a">
 </div>
 
+
+**7. **
 <div align="center"> 
 	<img src="1/6_2.jpg" alt="Zrzut ekranu z wersją Git-a">
 </div>
 
+
+**8. **
 <div align="center"> 
 	<img src="1/6_3.jpg" alt="Zrzut ekranu z wersją Git-a">
 </div>
