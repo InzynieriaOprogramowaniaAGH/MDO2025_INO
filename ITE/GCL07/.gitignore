@@ -1,0 +1,12 @@
+#!/bin/bash
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Zapisz commit message do loga, żeby upewnić się, że działa
+echo "Commit message: $COMMIT_MSG" >> /tmp/git_commit_log.txt
+
+# Sprawdź, czy commit message zaczyna się od "BS416365"
+if [[ ! $COMMIT_MSG =~ ^BS416365 ]]; then
+    echo "Błąd: Commit message musi zaczynać się od 'BS416365'" >> /tmp/git_commit_log.txt
+    exit 1
+fi
