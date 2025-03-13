@@ -92,7 +92,7 @@ COMMIT_MESSAGE=$(head -n1 "$COMMIT_MESSAGE_FILE")
 PREFIX="TO417248"
 
 if ! echo "$COMMIT_MESSAGE" | grep -q "^$PREFIX"; then
-    echo "Error: Commit message must start with `$PREFIX`"
+    echo "Error: Commit message must start with '$PREFIX'"
     exit 1
 fi
 
