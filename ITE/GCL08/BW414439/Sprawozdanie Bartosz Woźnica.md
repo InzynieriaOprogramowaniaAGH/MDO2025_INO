@@ -150,3 +150,5 @@ Gdy pushujemy za pierwszym razem branch stworzony lokalnie, musimy podać gitowi
 
 
 ---
+## Pobranie kontenerów
+![](images/Pasted%20image%2020250313181530.png)
