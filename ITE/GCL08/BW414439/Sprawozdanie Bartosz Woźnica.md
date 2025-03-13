@@ -1,4 +1,5 @@
 # Maszyna wirtualna
+
 ![](images/Pasted%20image%2020250312165218.png)
 
 # Wprowadzenie, Git, Gałęzie, SSH
@@ -6,7 +7,14 @@
 ## Instalacja git
 ![](images/Pasted%20image%2020250312220828.png)
 
-## Pozyskiwanie klucza personalnego
+## Konfiguracja użytkownika
+- Dodanie nazwy użytkoniwka
+`$ git config --global user.name "Your Name"`
+- Dodanie adresu email
+`$ git config --global user.email "you@example.com"`
+
+![](images/Pasted%20image%2020250313152452.png)
+## Pozyskiwanie klucza personalnego i klonowanie repo
 
 ### 1. Weryfikacja maila
 
@@ -26,13 +34,13 @@
 
 ![](images/Pasted%20image%2020250312172036.png)
 
-## 3. Sklonowanie repo
+###  3. Sklonowanie repo
 
 `$ git clone https://<PAT>@github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git`
 
 ![](images/Pasted%20image%2020250312172919.png)
 
-## 4. Dodanie klucza SSH
+## Dodanie klucza SSH i klonowanie za pomocą SSH
 
 ### Generowanie klucza
 Na maszynie, z której chcemy dostęp uruchamiamy polecenie
@@ -111,4 +119,34 @@ I dodajemy uprawnienia do uruchamiania
 
 ![](images/Pasted%20image%2020250312220120.png)
 
+## Commit i push
 
+### Dodanie plików
+Sprawdzamy status naszego repo za pomocą
+`$ git status`
+Dodajemy wszystkie nowe pliki do repo
+`$ git add .`
+
+![](images/Pasted%20image%2020250313152358.png)
+
+### Commit
+Następnie commitujemy nasze zmiany do lokalnego repo
+`$ git commit -am "komentarz"`
+
+Próba commita z błędnym komentarzem
+![](images/Pasted%20image%2020250313152634.png)
+
+Commit
+![](images/Pasted%20image%2020250313152752.png)
+
+### Push na github
+
+Gdy pushujemy za pierwszym razem branch stworzony lokalnie, musimy podać gitowi do jakiego brancha na serwerze ma go powiązać
+
+`$ git push --set-upstream origin BW414439`
+
+![](images/Pasted%20image%2020250313152914.png)
+![](images/Pasted%20image%2020250313153118.png)
+
+
+---
