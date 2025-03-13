@@ -1,8 +1,8 @@
 #!/bin/sh
 
-commit_message = $(cat "$1")
+COMMIT_MESSAGE=$(cat "$1")
 
-if [[ ! $commit_message =~ ^KP414342 ]]; then
+if [[  ! $COMMIT_MESSAGE =~ ^KP414342 ]]; then
     echo "ERROR: Commit message does not start with KP414342"
     exit 1
 fi
