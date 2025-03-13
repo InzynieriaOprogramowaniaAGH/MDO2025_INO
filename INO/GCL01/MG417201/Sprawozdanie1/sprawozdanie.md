@@ -2,6 +2,7 @@
 
 ## Laboratorium 1
 **1. Instalacja klienta Git:**
+
 Aby zainstalować klienta Git należy użyć polecenia `sudo dnf install git-all`
 
 <div align="center"> 
@@ -12,6 +13,7 @@ Powyższy zrzut ekranu przedstawia wynik uruchomienia polecenia `git --version`,
 
 
 **2. Obsługa kluczy SSH**
+
 Aby włączyć obsługę kluczy SSH należy:
 - uruchomić usługę _**sshd**_ za pomocą polecenia `sudo systemctl enable sshd`, a następnie `sudo systemctl start sshd`
 - wygenerować swój klucz SSH za pomocą wybranego algorytmu szyfrującego, używając polecenia `ssh-keygen -t ed25519 -C "adres.email@domena.com"`, a następnie wyświetlić klucz publiczny za pomocą polecenia `cat ~/.ssh/id_ed25519.pub` i go skopiować. Potem należy w ustawieniach konta GitHub wybrać opcję kluczy SSH i dodać skopiowany wcześniej klucz do swojego konta.
