@@ -108,3 +108,33 @@ git push origin KL417218
 ```
 
 ![12](screenshots/12.png)
+
+
+### Temat 2 - Git, Docker
+
+```bash
+sudo usermod -aG docker $USER (ponieważ wiem że mogę i vmka jest moja pozdro 600)
+su - $USER
+docker ps
+
+docker pull hello-world
+docker pull busybox
+docker pull ubuntu
+docker pull mysql
+
+docker run -it busybox sh (od razu interactive bo inaczej sie wywala za 0)
+>> busybox
+
+docker run -it ubuntu sh
+>> ps aux
+>> apt update
+>> apt upgrade
+>> exit
+
+docker build -t februbuntu .
+
+docker ps -a
+
+docker rm $(docker ps -a -q)
+docker ps -a
+```
