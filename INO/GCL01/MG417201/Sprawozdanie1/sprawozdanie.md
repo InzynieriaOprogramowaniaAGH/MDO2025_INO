@@ -4,9 +4,10 @@
 1. Instalacja klienta Git:
 * Aby zainstalować klienta Git należało użyć polecenia **sudo dnf install git-all**
 
-![Zrzut ekranu z wersją gita](1/1_git.jpg)
+<div align="center">![Zrzut ekranu z wersją gita](1/1_git.jpg)
 
-Powyższy zrzut ekranu przedstawia wynik uruchomienia polecenia **git --version**, w wyniku którego wyświetla się wersja zainstalowanego klienta Git. Stanowi to potwierdzenie poprawnego jego zainstalowania.
+	<p>Powyższy zrzut ekranu przedstawia wynik uruchomienia polecenia **git --version**, w wyniku którego wyświetla się wersja zainstalowanego klienta Git. Stanowi to potwierdzenie poprawnego jego zainstalowania.</p>
+<\div>
 
 2. Obsługa kluczy SSH
 
