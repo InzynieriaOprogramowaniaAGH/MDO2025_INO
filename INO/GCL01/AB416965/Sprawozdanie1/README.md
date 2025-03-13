@@ -1,14 +1,14 @@
-# Sprawozdanie 1
+# Sprawozdanie 1 z przedmiotu DevOps
+
+### **Kierunek: Inżynieria Obliczeniowa Autor: Adam Borek Grupa 1**
 
 ---
 
-## **Zajęcia 01**
-
-### **Wprowadzenie, Git, Gałęzie, SSH**
+## **Zajęcia 01 - Wprowadzenie, Git, Gałęzie, SSH**
 
 ---
 
-## **1. Instalacja systemu Fedora i przygotowanie środowiska**
+### **1. Instalacja systemu Fedora i przygotowanie środowiska**
 
 Zanim przystąpiłem do wykonywania ćwiczenia pobrałem system Fedora z linku dostarczonego prze prowadzącego i za pomocą Virtual Box postawiłem system.
 
@@ -30,9 +30,9 @@ Następnie próbowałem się połączyć poprzez SSH z serwerem wykorzystując V
 
 ![Udane połączenie SSH w Visual Studio Code](Zrzuty1/zrzut_ekranu6.png)
 
-## **2. Instalacja klienta Git i konfiguracja SSH**
+### **2. Instalacja klienta Git i konfiguracja SSH**
 
-### **Instalacja Git**
+#### **Instalacja Git**
 
 Git został zainstalowany za pomocą oficjalnego menedżera pakietów:
 
@@ -48,7 +48,7 @@ git --version
 
 ![Sprawdzenie poprawności instalacji](Zrzuty1/zrzut_ekranu7.png)
 
-### **Konfiguracja kluczy SSH**
+#### **Konfiguracja kluczy SSH**
 
 Wygenerowano dwa klucze SSH (**inne niż RSA**, jeden zabezpieczony hasłem):
 
@@ -64,9 +64,9 @@ cat ~/.ssh/id_ed25519.pub
 
 ![Wygenerowane klucze zapisane na koncie GitHub](Zrzuty1/zrzut_ekranu8.png)
 
-## **3. Klonowanie repozytorium**
+### **3. Klonowanie repozytorium**
 
-### **Klonowanie repozytorium przez SSH**
+#### **Klonowanie repozytorium przez SSH**
 
 Po skonfigurowaniu klucza SSH, repozytorium zostało sklonowane przy użyciu SSH:
 
@@ -76,23 +76,23 @@ git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 
 ![Wygenerowane klucze zapisane na koncie GitHub po wykorzystaniu klucza](Zrzuty1/zrzut_ekranu9.png)
 
-## **4. Praca z gałęziami w Git**
+### **4. Praca z gałęziami w Git**
 
-### **Przełączenie na gałęź **`main`** i gałęź grupy**
+#### **Przełączenie na gałęź **`main`** i gałęź grupy**
 
 ![Przełączenie na gałęź main i gałęź grupy](Zrzuty1/zrzut_ekranu10.png)
 
-### **Tworzenie nowej gałęzi (inicjały & numer indeksu)**
+#### **Tworzenie nowej gałęzi (inicjały & numer indeksu)**
 
 ![Utworzenie mojej gałęzi](Zrzuty1/zrzut_ekranu11.png)
 
-## **5. Tworzenie mojego katalogu i githooka**
+### **5. Tworzenie mojego katalogu i githooka**
 
-### **Utworzenie katalogu w repozytorium**
+#### **Utworzenie katalogu w repozytorium**
 
 ![Utworzenie katalogu w repozytorium](Zrzuty1/zrzut_ekranu12.png)
 
-### **Napisanie hooka **`commit-msg`** (walidacja prefiksu w commitach)**
+#### **Napisanie hooka **`commit-msg`** (walidacja prefiksu w commitach)**
 
 Plik `.git/hooks/commit-msg`:
 
@@ -108,7 +108,7 @@ fi
 exit 0
 ```
 
-📌 **Dodanie uprawnień do uruchamiania:**
+**Dodanie uprawnień do uruchamiania:**
 
 ```bash
 chmod +x .git/hooks/commit-msg
@@ -117,3 +117,21 @@ chmod +x .git/hooks/commit-msg
 Przetestowanie hooka
 
 ![Testowy commit z niepoprawną nazwą](Zrzuty1/zrzut_ekranu13.png)
+
+**Teraz każdy commit MUSI zaczynać się od **`AB416965`**, w przeciwnym razie zostanie zablokowany!**
+
+### **5. Dodanie sprawozdania i zrzutów ekranu**
+
+**Dodanie sprawozdania do katalogu:**
+
+![Dodanie sprawozdania do katalogu](<Zrzuty1/zrzut_ekranu14.png>)
+
+Następnie skopiowałem wszystkie zrzuty ekranu do katalogu `Zrzuty1/`
+
+### **6. Wysłanie zmian do repozytorium zdalnego**
+
+![Wywołanie git push](<Zrzuty1/zrzut_ekranu15.png>)
+
+Sprawdzenie czy zmiany zostały zapisane na githubie:
+
+![Commit widoczny na githubie](<Zrzuty1/zrzut_ekranu16.png>)
