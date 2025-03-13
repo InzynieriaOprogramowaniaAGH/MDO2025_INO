@@ -75,3 +75,66 @@ Pushowanie:
 
 Branch:
 ![](images/Pasted%20image%2020250313153147.png)
+
+---
+
+### LAB 2
+Aktualizowanie systemu:
+![](images/Pasted%20image%2020250313181204.png)
+po to aby zainstalować dockera:![](images/Pasted%20image%2020250313182157.png)
+
+Włączenie dockera:
+![](images/Pasted%20image%2020250313183347.png)
+
+Zainstalowany docker:
+![](images/Pasted%20image%2020250313193606.png)
+
+Tworzenie konta na dockerHub:
+![](images/Pasted%20image%2020250313193703.png)
+![](images/Pasted%20image%2020250313193735.png)
+
+Pobranie obrazów docker:
+![](images/Pasted%20image%2020250313194109.png)
+Zainstalowane obrazy:
+![](images/Pasted%20image%2020250313194132.png)
+
+Utworzony kontenera busybox:
+![](images/Pasted%20image%2020250313194251.png)
+
+Interaktywne podłączenie się do kontenera busybox i wywołanie jego wersji:
+![](images/Pasted%20image%2020250313194443.png)
+
+Uruchomienie fedory i uzyskanie informacji o PTD1 w kontenerze:
+![](images/Pasted%20image%2020250313200100.png)
+
+Pokazanie na hostcie procesów dockera:
+![](images/Pasted%20image%2020250313200322.png)
+
+Aktualizowanie pakietów:
+![](images/Pasted%20image%2020250313200448.png)
+i wyjście:
+![](images/Pasted%20image%2020250313200515.png)
+
+Plik dockerfile:
+![](images/Pasted%20image%2020250313201301.png)
+
+Buildowanie dockerfile'a:
+![](images/Pasted%20image%2020250313201627.png)
+
+Stworzony własny obraz:
+![](images/Pasted%20image%2020250313201709.png)
+
+Odpalenie kontenera z widocznym sklonowanym repo:
+![](images/Pasted%20image%2020250313202026.png)
+
+Wszystkie uruchomione kontenery:
+![](images/Pasted%20image%2020250313202331.png)
+
+Wyłączenie kontenerów:
+![](images/Pasted%20image%2020250313213036.png)
+
+Usunięciu kontenerów:
+![](images/Pasted%20image%2020250313213249.png)![](images/Pasted%20image%2020250313213424.png)
+
+Usunięcie obrazów:
+![](images/Pasted%20image%2020250313213324.png)![](images/Pasted%20image%2020250313213343.png)
