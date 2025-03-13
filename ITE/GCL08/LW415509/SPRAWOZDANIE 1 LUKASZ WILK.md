@@ -159,6 +159,28 @@ exit 0
 
 Próba spushowania repozytorium nie powiodła się ponieważ w tym momencie nie zostały jeszcze nadane uprawnienia
 
+- Merge gałęzi LW415509 do gałęzi GCL08
+
+  Aby móc wciągnąć swoją gałąź do innej gałęzi należy:
+
+  - Przełączyć się na gałąź do której chcemy mergować:
+
+    ```
+    git checkout GCL08
+    ```
+
+  - Wykonać merge poleceniem:
+
+    ```
+    git merge LW415509
+    ```
+
+    W miejce LW415509 należy wpisać nazwę naszego brancha
+
+  ![alt text](images/merge.png)
+
+  Na załączanym obrazku widać ze nasza gałąź została wciągnięta do gałęzi grupy
+
 # LABORATORIUM 2
 
 ## Instalacja Dockera w systemie linuksowym
