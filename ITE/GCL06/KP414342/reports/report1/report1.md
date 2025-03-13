@@ -27,6 +27,9 @@ fi
 exit 0
 ```
 # Przetestowano działanie Git Hooka
+
 ![alt text](8.png)
 ![alt text](9.png)
-# Dodano plik ze sprawozdaniem
+
+# Wysłano zmiany
+![alt text](10.png)
