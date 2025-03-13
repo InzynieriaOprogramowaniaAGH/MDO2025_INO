@@ -1,8 +1,5 @@
-! Zrzuty ekranu na razie wrzucane do worda, później to ograne
-
 # Zajęcia 01
 
----
 1. Instalacja git i obsługi ssh
 [TODO]
 2. Sklonowanie repozytorium przedmiotowego
@@ -28,8 +25,7 @@ fi
 ```
 [TODO]
 7. Wystawienie Pull Request
-[TODO]
-
+![Pull Request](screens/lab1-last.png)
 
 # Zajęcia 2
 
@@ -45,6 +41,10 @@ fi
 
 6. Utworzenie pliku Dockerfile i sklonowanie repo
 
+7. Uruchomienie kontenerów i usunięcie ich.
+
+8. Usunięcie obrazów.
+
 Kod Dockerfile:
 ```
 FROM ubuntu:latest
@@ -53,8 +53,15 @@ WORKDIR /app
 RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
 CMD ["/bin/bash"]
 ```
----
 
 7. Uruchomienie i usunięcie wszytskich kontenerów.
 
 8. Wyczyszczenie obrazów.
+
+# Zajęcia 03
+
+1.
+
+2.
+
+3.
