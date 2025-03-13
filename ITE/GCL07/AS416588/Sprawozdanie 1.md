@@ -4,6 +4,7 @@ Maszyna wirtualna
 
 Instalacja gita
 ![](images/Pasted%20image%2020250312170259.png)
+Konfiguracja użytkownika:![](images/Pasted%20image%2020250313152523.png)
 
 Uzyskiwanie klucza personalnego (classic), poprzez wykonanie następujących instrukcji zawartych w dokumentacji:
 1. [Verify your email address](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/verifying-your-email-address), if it hasn't been verified yet.
@@ -60,3 +61,17 @@ Skopiowanie git hooka w do folderu .git/hooks tak, aby wyświetlał się on przy
 Dodanie uprawnień do uruchomienia skryptu:
 ![](images/Pasted%20image%2020250312221123.png)
 
+##### Commitowanie:
+![](images/Pasted%20image%2020250313152355.png)
+
+Błąd, ponieważ komentarz commitu nie zaczyna się od ustawionej wiadomości:
+![](images/Pasted%20image%2020250313152751.png)
+
+Poprawnie wykonany commit:
+![](images/Pasted%20image%2020250313152914.png)
+
+Pushowanie:
+![](images/Pasted%20image%2020250313153009.png)
+
+Branch:
+![](images/Pasted%20image%2020250313153147.png)
