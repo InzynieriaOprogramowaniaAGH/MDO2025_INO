@@ -1,0 +1,8 @@
+#!/usr/bin/sh
+
+MSG=$(cat $1)
+
+if ! [[ $MSG == SM418114* ]]; then
+  echo "Commit message should contain SM418114! Aborting."
+  exit -1
+fi
