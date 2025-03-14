@@ -1,8 +1,7 @@
 FROM fedora:39
 
-RUN dnf update --disableplugin=subscription-manager -y && dnf install --disableplugin=subscription-manager -y git
+RUN dnf update -y && dnf install -y git
 
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git  
 
-RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git /app 
-
-WORKDIR /app
+CMD ["bash"]
