@@ -1,0 +1,18 @@
+#!/usr/bin/sh
+
+# Oczekiwany prefiks w commit message
+EXPECTED_PREFIX="SO417771"
+
+# Pobranie pierwszej linii commit message
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(head -n 1 "$COMMIT_MSG_FILE")
+
+# Sprawdzenie, czy commit message zaczyna się od oczekiwanego prefiksu
+if [[ ! $COMMIT_MSG =~ ^$EXPECTED_PREFIX ]]; then
+    echo "Błąd: Commit message musi zaczynać się od \"$EXPECTED_PREFIX\"."
+    echo "Przykład: \"$EXPECTED_PREFIX: Opis zmiany\""
+    exit 1
+fi
+
+exit 0
+
