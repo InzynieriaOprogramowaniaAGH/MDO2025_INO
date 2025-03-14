@@ -1,20 +1,36 @@
 # Zajęcia 01
 
+Niestety nie robiłem na bierząco zrzutów ekranu do pierwszych zajęć, więc wiekszość zrzutów to fragmenty historii poleceń.
+
 ## 1. Instalacja git i obsługi ssh
+
+![Instalacja git, ssh](screens/lab1-1.png)
 
 ## 2. Sklonowanie repozytorium przedmiotowego
 
-## 3. Tworzenie kluczy ssh i konfiguracja ssh jako metodę dostępu do GitHuba.
+![sklonowanie repozytorium przez https](screens/lab1-2.png)
 
-## 4. Przełączenie gałęzi na grupową.
+## 3. Tworzenie kluczy ssh i konfiguracja ssh jako metodę dostępu do GitHuba
 
-## 5. Uwtorzenie nowej gałęzi.
+Utworzone klucze za pomocą 'ssh-keygen':
 
-## 6. Praca na nowej gałęzi
+![Utworzone klucze](screens/lab1-3.png)
+
+SSH jako metoda dostępu do githuba:
+
+![ssh github](screens/lab1-4.png)
+
+## 4. Przełączenie gałęzi na main -> grupową -> utworzenie nowej gałęzi
+
+![gałęzie](screens/lab1-5.png)
+
+('-b' przy 'git checkout' oznacza utworzenie gałęzi i przełączenie się na nią)
+
+## 5. Praca na nowej gałęzi
 
 Utworzono katalog "SP414848" za pomocą 'mkdir' oraz napisano git hooka.
 
-# Treść hooka:
+### Treść hooka:
 ```
 #!/bin/bash
 
@@ -28,48 +44,52 @@ fi
 
 Skopiowano hooka do odpowiedniego katalogu (.git/hooks) za pomocą 'cp', wynik działania:
 
+![commit error](screens/lab1-6.png)
+
+Git poprawnie wyrzuca błąd gdy wiadomość się nie zgadza z ustawionym wzorcem.
 
 
-## 7. Wystawienie Pull Request
+## 6. Wystawienie Pull Request
 
-![Pull Request](screens/lab1-last.png)
+![Pull Request](screens/lab1-7.png)
+
+(wybrano gałąź grupową jako 'base' - lewy górny róg)
 
 # Zajęcia 2
 
-## 1. Instalacja Dockera.
+## 1. Instalacja Dockera
 
 ![Komenda do instalacji dockera](screens/lab2-1.png)
 
-## 2. Rejestracja w Docker Hub.
+## 2. Rejestracja w Docker Hub
 
 ![Strona po zalogowaniu](screens/lab2-2.png)
 
-## 3. Pobieranie obrazów.
+## 3. Pobieranie obrazów
 
-
-## 4. Uruchomienie obrazu `busybox`.
+Obrazy standardowo pobrano za pomocą 'docker pull'
+```
+  143  docker pull hello-world
+  144  docker pull busybox
+  145  docker pull ubuntu
+  146  docker pull mysql
+```
+## 4. Uruchomienie obrazu `busybox`
 
 ![Pobrane obrazy i uruchomienie busyboxa](screens/lab2-3.png)
 
-## 5. Uruchomienie obrazu `ubuntu`.
+(-it uruchamia obraz w trybie interaktywnym oraz przydziela terminal, sh na końcu polecenia uruchamia powłokę)
+
+
+## 5. Uruchomienie obrazu `ubuntu`
 
 ![Komenda do uruchomienia](screens/lab2-4.png)
+
 ![Bash ubuntu](screens/lab2-5.png)
 
-## 6. Utworzenie pliku Dockerfile i sklonowanie repo
+## 6. Utworzenie pliku Dockerfile i sklonowanie repozytorium
 
-![DockerFile](screens/lab2-6.png)
-
-## 7. Uruchomienie kontenerów i usunięcie ich.
-
-![Uruchomione kontenery](screens/lab2-7.png)
-![Usuwanie kontenerów](screens/lab2-8.png)
-
-## 8. Usunięcie obrazów.
-
-![Usuwanie obrazów](screens/lab2-9.png)
-
-Kod Dockerfile:
+### Kod Dockerfile:
 ```
 FROM ubuntu:latest
 RUN apt update && apt install -y git
@@ -78,17 +98,59 @@ RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
 CMD ["/bin/bash"]
 ```
 
-## 9. Uruchomienie i usunięcie wszytskich kontenerów.
+Zbudowanie obrazu - 'docker build'
 
-## 10. Wyczyszczenie obrazów.
+![DockerFile](screens/lab2-6.png)
+
+## 7. Uruchomienie kontenerów i usunięcie ich
+
+Kontenery po uruchomieniu:
+
+![Uruchomione kontenery](screens/lab2-7.png)
+
+Usunięcie za pomocą 'docker rm'
+
+![Usuwanie kontenerów](screens/lab2-8.png)
+
+## 8. Usunięcie obrazów
+
+Do usuwania obrazów - 'docker rmi'
+
+![Usuwanie obrazów](screens/lab2-9.png)
 
 # Zajęcia 03
 
-## 1.
+Do przeprowadzenia poniższych zadań użyto repozytorium `sqlite`: https://github.com/sqlite/sqlite 
 
-## 2.
+## 1. Proces budowania i testowania w kontenerze
 
-## 3.
+Pierwszym krokiem przy budowaniu aplikacji jest zainstalowanie zależności, w przypadku sqlite można je znaleźć w dokumentacji repozytorium.
+
+Następnym krokiem jest przygotowanie środowiska do kompilacji, w sqlite aby to zrobić należy uruchomić skrypt './configure'.
+
+Ostatnim krokiem jest sama kompilacja, w sqlite aby zbudować większość komponentów wystarczy zwyczajnie uruchomić make na domyślny target (all) - 'make', ewentualnie 'make all'.
+
+### Zrzut przedstawiający polecenia potrzebne do poprawnego zbudowania sqlite
+
+![Build](screens/lab3-1.png)
+
+Do przeprowadzenia standardowych testów sqlite potrzebujemy jeszcze utworzyć nowego użytkownika, testy nie uruchamiają się na użytkowniku root.
+
+### Zrzut przedstawiający tworzenie użytkownika oraz przyznanie mu uprawnień
+
+![Tworzenie użytkownika](screens/lab3-2.png)
+
+Następnie możemu już przejść do testów - sqlite posiada wiele targetów do testowania, ja tutaj użyłem standardowego 'make test'.
+
+### Uruchomienie testów
+
+![Test](screens/lab3-3.png)
+
+### Raport z testów
+
+![Raport](screens/lab3-4.png)
+
+## 2. Automatyzacja budowania i testów za pomocą Dockerfile
 
 ### Kod Dockerfile.build:
 ```
@@ -103,6 +165,10 @@ RUN ./configure
 RUN make
 ```
 
+### Zrzut przedstawiający kod oraz poprawne budowanie obrazu za pomocą pliku Dockerfile.build
+
+![Dockerfile.build](screens/lab3-5.png)
+
 ### Kod Dockerfile.test:
 ```
 FROM sqlite-build
@@ -116,6 +182,28 @@ WORKDIR /sqlite
 
 CMD ["make", "test"]
 ```
+
+### Zrzut przedstawiający kod oraz poprawne budowanie obrazu za pomocą pliku Dockerfile.test
+
+![Dockerfile.test](screens/lab3-6.png)
+
+### Zrzut przedstawiający uruchomienie kontenera do testów ('--rm' usuwa kontener po zakończeniu testów)
+
+![Kontener do testów](screens/lab3-7.png)
+
+### Raport z testów - brak błędów, kontener poprawnie się wdrożył i działa
+
+![Raport](screens/lab3-8.png)
+
+## 3. Różnica pomiędzy kontenerem a obrazem
+
+Obraz jest to stały 'przepis' na kontener, zawiera wszytsko co jest potrzebne do jego uruchomienia - kod aplikacji, zależności, biblioteki oraz inne elementy bez których nie możemy uruchomić poprawnie aplikacji. Obraz budujemy raz i możemy z niego korzystać. Z jednego obrazu możemy uruchomić wiele kontenerów.
+
+Kontener to natomiast dynamiczne środowisko uruchomione na bazie obrazu w którym działa nasza aplikacja, środowisko to jest mocno odizolowane od systemu hosta i nie wpływa na niego.
+
+## 4. Co pracuje w kontenerze
+
+W kontenerze pracuje widoczny w systemie hosta proces, jest on jednak mocno odizolowany - nie ma dostępu do procesów, ustawień, plików etc. hosta, jednakże korzysta z jego zasobów (CPU, RAM, sieć etc.).
 
 # Zajęcia 04
 
