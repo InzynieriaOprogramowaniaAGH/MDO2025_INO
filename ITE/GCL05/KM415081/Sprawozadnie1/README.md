@@ -63,11 +63,11 @@ exit 0
 
 ![Opis obrazka](lab2_screenshots/pid1.png)
 
-7. Stworzono własny Dockerfile, który następnie zbudowano i uruchomiono.
+6. Stworzono własny Dockerfile, który następnie zbudowano i uruchomiono.
 
 ![Opis obrazka](lab2_screenshots/docker.png)
 
-8. Pokazano uruchomione kontenery, po czym je wyczyszczono wraz z obrazami.
+7. Pokazano uruchomione kontenery, po czym je wyczyszczono wraz z obrazami.
 
 ![Opis obrazka](lab2_screenshots/containers.png)
 
