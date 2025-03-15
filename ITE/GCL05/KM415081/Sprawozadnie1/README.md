@@ -37,5 +37,5 @@ exit 0
 ![Opis obrazka](lab1_screenshots_backup/hook_check.PNG)
 ```
 6. Próba wciągnięcia gałęzi do gałęzi grupowej.
-![Opis obrazka](lab1_screenshots_backup/merge.PNG)
+![Opis obrazka](lab1_screenshots_backup/merge.png)
 
