@@ -33,7 +33,9 @@ fi
 exit 0
 ```
 ![Opis obrazka](lab1_screenshots/pwd.PNG)
+
 ![Opis obrazka](lab1_screenshots/commit-msg_location.PNG)
+
 ![Opis obrazka](lab1_screenshots/hook_check.PNG)
 
 6. Próba wciągnięcia gałęzi do gałęzi grupowej.
@@ -54,13 +56,15 @@ exit 0
 
 5. Uruchomiono "system w kontenerze".
 ![Opis obrazka](lab2_screenshots/update.png)
+
 ![Opis obrazka](lab2_screenshots/pid1.png)
 
-6. Stworzono własny Dockerfile, który następnie zbudowano i uruchomiono.
+7. Stworzono własny Dockerfile, który następnie zbudowano i uruchomiono.
 ![Opis obrazka](lab2_screenshots/docker.png)
 
-7. Pokazano uruchomione kontenery, po czym je wyczyszczono wraz z obrazami.
+8. Pokazano uruchomione kontenery, po czym je wyczyszczono wraz z obrazami.
 ![Opis obrazka](lab2_screenshots/containers.png)
+
 ![Opis obrazka](lab2_screenshots/images.png)
 
 
