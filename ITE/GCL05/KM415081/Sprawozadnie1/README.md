@@ -6,8 +6,10 @@
 ![Opis obrazka](lab1_screenshots_backup/clone_https.PNG)
 
 3. Utworzono dwa klucze SSH, inne niż RSA, w tym co najmniej jeden zabezpieczony hasłem. Skonfigurowano klucz SSH jako metodę dostępu do GitHuba. Sklonowano repozytorium z wykorzystaniem protokołu SSH oraz skonfigurowano 2FA.
+![Opis obrazka](lab1_screenshots_backup/clone_ssh.PNG)
 
 4. Przełączono się na gałąź main, a następnie na gałąź grupową GCL05 po czym utworzono nową gałąź.
+![Opis obrazka](lab1_screenshots_backup/switch_branches.PNG)
 
 5. Praca na nowej gałęzi.
 - w katalogu właściwym dla grupy utworzono nowy katalog
@@ -15,6 +17,10 @@
 - dodano plik ze sprawozdaniem
 - dodano zrzuty ekranu
 - wysłano zmiany
+
+![Opis obrazka](lab1_screenshots_backup/pwd.PNG)
+![Opis obrazka](lab1_screenshots_backup/commit-msg_location.PNG)
+![Opis obrazka](lab1_screenshots_backup/hook_check.PNG)
 
 6. Treść githooka
 ```sh
