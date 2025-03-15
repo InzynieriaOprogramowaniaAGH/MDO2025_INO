@@ -15,8 +15,7 @@
 - dodano zrzuty ekranu
 - wysłano zmiany
 
-##6. Treść githooka
-
+6. Treść githooka
 ```sh
 #!/usr/bin/sh
 
