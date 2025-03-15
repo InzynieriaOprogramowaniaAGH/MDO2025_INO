@@ -1,4 +1,5 @@
-# 001-Class
+# Zajęcia 1 - Wprowadzenie, Git, Gałęzie, SSH
+
 
 Na wirtualnej maszynie (VM) obsługującej Fedora 41 Server zainstalowano git oraz obsługę ssh. W tym celu potrzebne są komendy
 ```sh
@@ -48,3 +49,11 @@ fi
 
 exit 0
 ```
+Wykonano commit z poprawną wiadomością a następnie 
+```sh
+git push
+```
+![image](7.PNG)
+Pull request zostanie wykonany na koniec części drugiej.
+
+# Zajęcia 2 - Git, Docker
