@@ -1,4 +1,4 @@
-## Zajęcia 01
+# Zajęcia 01
 
 #1. Zainstalowano klienta Git i obsługę kluczy SSH.
 
@@ -16,6 +16,7 @@
 - wysłano zmiany
 
 #6. Treść githooka.
+
 '#!/usr/bin/sh'
 EXPECTED_PREFIX="KM415081"
 COMMIT_MSG=$(cat "$1")
