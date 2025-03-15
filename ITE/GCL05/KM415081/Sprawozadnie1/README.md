@@ -39,3 +39,30 @@ exit 0
 6. Próba wciągnięcia gałęzi do gałęzi grupowej.
 ![Opis obrazka](lab1_screenshots/merge.png)
 
+# Zajęcia 02
+
+1. Zainstalowano Docker.
+![Opis obrazka](lab2_screenshots/docker_install.png)
+
+2. Zarejestrowano się w DockerHub.
+
+3. Pobrano obrazy: hello-world, busybox, fedora, mysql.
+![Opis obrazka](lab2_screenshots/download.png)
+
+4. Uruchom kontener z obrazu busybox.
+![Opis obrazka](lab2_screenshots/busybox.png)
+
+5. Uruchomiono "system w kontenerze".
+![Opis obrazka](lab2_screenshots/update.png)
+![Opis obrazka](lab2_screenshots/pid1.png)
+
+6. Stworzono własny Dockerfile, który następnie zbudowano i uruchomiono.
+![Opis obrazka](lab2_screenshots/docker.png)
+
+7. Pokazano uruchomione kontenery, po czym je wyczyszczono wraz z obrazami.
+![Opis obrazka](lab2_screenshots/containers.png)
+![Opis obrazka](lab2_screenshots/images.png)
+
+
+
+   
