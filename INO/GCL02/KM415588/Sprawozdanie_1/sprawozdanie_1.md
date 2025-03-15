@@ -115,6 +115,8 @@ git merge KM415588
 
 ![merge](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/img/merge.png)
 
+Na zdjęciu widać, iż merge się nie powiódł ze względu na brak uprawnień - wstawiam więc pull request-a na Githubie.
+
 ## Laboratorium 2 - Git,Docker
 
 ### 1️⃣ Instalacja Dockera:
@@ -256,13 +258,9 @@ docker image prune
 ![im_rm](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/img/usuwanie_img.png)
 
 ### 7️⃣ Dodanie sprawozdania w formacie .md i zrzutów ekranu:
-Po utworzeniu odpowiedniej struktury plików i napisaniu sprawozdania wypushowałem zmiany do mojej gałęzi po czym zmergeowałem ją z gałęzią grupy:
+Po utworzeniu odpowiedniej struktury plików i napisaniu sprawozdania wypushowałem zmiany do mojej gałęzi po czym wystawiłem pull request-a:
 ```
 git add .
 git commit -m "KM415588: sprawozdanie i zdjęcia"
-
 git push origin KM415588
-git checkout GCL02
-git pull origin GCL02
-git merge KM415588
 ```
