@@ -3,7 +3,7 @@
 1. Zainstalowano klienta Git i obsługę kluczy SSH.
 
 2. Sklonowano repozytorium za pomocą HTTPS i personal access token.
-![Opis obrazka](lab1_screenshots_backup/clone_https.png)
+![Opis obrazka](lab1_screenshots_backup/clone_https.PNG)
 
 3. Utworzono dwa klucze SSH, inne niż RSA, w tym co najmniej jeden zabezpieczony hasłem. Skonfigurowano klucz SSH jako metodę dostępu do GitHuba. Sklonowano repozytorium z wykorzystaniem protokołu SSH oraz skonfigurowano 2FA.
 
