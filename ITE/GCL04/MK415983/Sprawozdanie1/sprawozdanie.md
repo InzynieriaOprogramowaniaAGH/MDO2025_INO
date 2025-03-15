@@ -54,6 +54,76 @@ Wykonano commit z poprawną wiadomością a następnie
 git push
 ```
 ![image](7.PNG)
+
 Pull request zostanie wykonany na koniec części drugiej.
 
 # Zajęcia 2 - Git, Docker
+
+Na VM zainstalowano Docker za pomocą
+```sh
+sudo dnf install docker
+```
+
+![image](201.PNG)
+
+oraz zarejestrowano się w Docker Hub. Kolejno pobrano obrazy
+
+```
+sudo docker pull <nazwa obrazu>
+```
+
+![image](202.PNG)
+
+Na start włączono kontener obrazu busybox wprost poprzez
+```sh
+sudo docker run busybox
+```
+po czym kontener prawie natychmaist kończy pracę. Komendą
+```sh
+sudo docker pps -a
+```
+można sprawdzić wszystkie kontenery, a opcja -a również wyświetla kontenery, które ostatnio zakończyły pracę.
+
+![image](203.PNG)
+
+Aby kontener natychmiast nie zatrzymał pracy, włączono go w trybie interaktywnym za pomocą
+```
+sudo docker run --tty --interactive busybox
+```
+
+i sprawdzono wersję busybox.
+
+![image](204.PNG)
+
+Uruchomiono również Fedora w kontenerze
+```sh
+sudo docker run --tty --interactive fedora
+```
+oraz doinstalowano brakujący procps
+```sh
+dnf install procps -y
+```
+aby móc wywołać:
+```sh
+ps
+```
+Na hoscie procesy dockera to:
+
+![image](206.PNG)
+
+podczas gdy procesy w kontenerze to:
+
+![image](205.PNG)
+
+PID1 to terminal bash.
+
+Zaktualizowano pakiety Fedora poprzez
+
+```
+dnf update -y
+```
+![image](207.PNG)
+oraz opuszczono kontener poprzez
+```
+exit
+```
