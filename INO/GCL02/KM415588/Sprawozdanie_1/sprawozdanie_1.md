@@ -115,7 +115,7 @@ git merge KM415588
 
 ![merge](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/img/merge.png)
 
-Na zdjęciu widać, iż merge się nie powiódł ze względu na brak uprawnień - wstawiam więc pull request-a na Githubie.
+Na zdjęciu nie widać zakończenia wywołania merge, ale się nie powiódł ze względu na brak uprawnień - wstawiam więc pull request-a na Githubie.
 
 ## Laboratorium 2 - Git,Docker
 
