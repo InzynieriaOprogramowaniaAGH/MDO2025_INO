@@ -31,11 +31,11 @@ if [[ "$COMMIT_MSG" != $EXPECTED_PREFIX* ]]; then
 fi
 
 exit 0
-
+```
 ![Opis obrazka](lab1_screenshots_backup/pwd.PNG)
 ![Opis obrazka](lab1_screenshots_backup/commit-msg_location.PNG)
 ![Opis obrazka](lab1_screenshots_backup/hook_check.PNG)
-```
+
 6. Próba wciągnięcia gałęzi do gałęzi grupowej.
 ![Opis obrazka](lab1_screenshots_backup/merge.png)
 
