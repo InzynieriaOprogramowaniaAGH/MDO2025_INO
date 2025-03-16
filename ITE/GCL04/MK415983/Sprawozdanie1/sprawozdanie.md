@@ -127,3 +127,40 @@ oraz opuszczono kontener poprzez
 ```
 exit
 ```
+Utworzono prosty [Dockerfile](Dockerfile), który klonuje repozytorium.
+
+```docker
+FROM fedora:latest
+
+RUN dnf install -y git && dnf clean all
+
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+
+CMD ["/bin/sh"]
+```
+
+Stworzono kontener oraz uruchomiono go następująco
+
+```sh
+sudo docker build -t moja-fedora .
+sudo docker run -it moja-fedora sh 
+```
+
+Po wpisaniu komendy `ls` widać, że repozytorium zostało zklonowane do kontenera.
+
+![image](208.PNG)
+
+W tym momencie, historia uruchomionych kontenerów wygląda tak:
+
+![image](209.PNG)
+
+Jak widać, wszystkie uruchomione kontenery nadal istnieją, mimo że zatrzymały pracę. Aby usunąć na stałe najpierw kontenery, a potem obrazy:
+
+```sh
+sudo docker image prune
+sudo docker rmi -f $(sudo docker images -aq)
+```
+
+![image](210.PNG)
+
+![image](211.PNG)
