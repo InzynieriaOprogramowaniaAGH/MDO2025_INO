@@ -55,6 +55,7 @@ git push
 ```
 ![image](7.PNG)
 
+
 Pull request zostanie wykonany na koniec części drugiej.
 
 # Zajęcia 2 - Git, Docker
