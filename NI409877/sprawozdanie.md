@@ -1,0 +1,9 @@
+##sprawozdanie
+#!/bin/bash
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+if [[ ! $COMMIT_MSG =~ ^NI409877 ]]; then
+    echo "❌ Błąd: Commit message must start from 'NI409877'"
+    exit 1
+fi
