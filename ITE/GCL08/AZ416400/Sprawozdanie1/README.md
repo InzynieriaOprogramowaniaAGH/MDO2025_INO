@@ -102,6 +102,14 @@ Utworzono w osobistym katalogu i dodano plik ze sprawozdaniem tak aby git mogł 
 
 Dzięki wcześniej wykonanym poleceniom aby zmiany mogły zostać wysłane do zdalnego hosta wystarczyło użyć <code style="color:rgb(35, 186, 101);"> git push</code>
 
+![alt text](<./img/git push.png>)
 
+Na sam koniec podjęto próbę wciągnięcia swojej gałąź do gałęzi grupowej
 
+![alt text](<./img/git merge.png>)
 
+![alt text](<./img/git push error.png>)
+
+sama operacja <code style="color:rgb(35, 186, 101);"> git merge</code> powiodła się jednak próba wypchnięcia skutkowała zgodnie z oczekiwaniami otrzymaniem błędu z uwagi na chroniony status gałęzi. 
+
+# Zajęcia 02
