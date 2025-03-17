@@ -1,8 +1,8 @@
 Jakub Tyliński, Grupa 8, 416081
 
-Temat: Wprowadzenie, Git, Gałęzie, SSH
-
 ---ZAJĘCIA_01---
+
+Temat: Wprowadzenie, Git, Gałęzie, SSH
 
 Poszczególne wykonane kroki:
 1. Zainstalowałem klienta Git i obsługę kluczy SSH
@@ -71,3 +71,73 @@ exit 0
    Ostatnim zadaniem była próba wciągnięcia mojej gałęzi do gałęzi grupowej. Próba nie udana
 
    ![Wypchniecie plików na GCL08](image11.png)
+
+
+---ZAJĘCIA_02---
+
+Temat: Git, Docker
+
+1. Zainstalowanie Dockera
+
+   ![alt text](image12.png)
+
+2. Zarejestrowanie się w Docker Hub
+
+   ![alt text](image13.png)
+
+3. Pobranie obrazów `hello-world`, `busybox`, `ubuntu`, `fedora`, `mysql` z wykorzystaniem "docker pull"
+
+   ![alt text](image14.png)
+
+4. Uruchomienie konteneru z obrazu `busybox`
+   - Efekt uruchomienia kontenera:
+
+   ![alt text](image15.png)
+
+   - Podłączenie się do kontenera interaktywnie i wywołanie numeru wersji
+
+   ![alt text](image16.png)
+
+5. Uruchomienie konteneru z obrazu `ubuntu`
+
+   - `PID1` w kontenerze i procesy dockera na hoście:
+
+   ![alt text](image17.png)
+
+   ![alt text](image18.png)
+
+   - Zaktualizowanie pakietów:
+
+   ![alt text](image19.png)
+
+   - Wyjście:
+
+   ![alt text](image20.png)
+
+6. Stworzono własnoręcznie plik `Dockerfile` 
+
+```
+FROM ubuntu:latest
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt update && apt install -y git
+
+RUN git clone --depth 1 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git /app
+
+WORKDIR /app
+
+CMD ["/bin/bash"]
+```
+
+   - Sprawdzenie czy zawiera gita oraz nasze repozytorium:
+
+   ![alt text](image21.png)
+
+7. Pokazanie uruchomionych kontenerów
+
+   ![alt text](image22.png)
+
+8. Wyczyszczenie obrazów (tylko tych nie używanych)
+
+   ![alt text](image23.png)
