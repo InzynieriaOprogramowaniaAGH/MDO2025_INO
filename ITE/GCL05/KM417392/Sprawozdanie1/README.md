@@ -63,6 +63,7 @@ cd ~/MDO2025_INO/.git/hooks/
 nano commit-msg
 chmod +x commit-msg
 ```
+![obraz](KM/lab1/zajecia/uprawnienia-hook.png)
 ```
 #!/bin/sh
 
@@ -75,6 +76,13 @@ fi
 ```
 ![obraz](KM/lab1/zajecia/git_hook.png)
 
+10. W katalogu ```KM417392``` utworzono folder "Sprawozdanie1" oraz w nim umieszczono ważne pliki (Readme.md oraz zrzuty ekranu - folder "KM")
+```
+mkdir Sprawozdanie1
+cd Sprawozdanie1
+touch Readme.md
+```
+11. Gotowe pliki 
 
 
 
