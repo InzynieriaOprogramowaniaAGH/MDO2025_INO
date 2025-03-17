@@ -29,7 +29,44 @@ exit 0
 ```
 - Dodałem katalog oraz plik ze sprawozdaniem
 ![mkdir oraz touch!!!!](image-1.png)
+- Dodałem commit
+![commit](image-3.png)
+*(błąd naprawiłem instrukcją `chmod +x commit-msg`)*
 - Wypchnąłem zmiany na mój branch
 ![fancy git push](image-2.png)
 - Zaktualizowałem zmiany w sprawozdaniu
-![ospdjgoiseghs](image-3.png)
+- Wciągnąłem swoją gałąź do gałęzi grupowej
+![merge](image-4.png)
+
+## Lab 02
+1. Zainstalowałem docker: `dnf install docker`
+2. Konto na Docker miałem już stworzone po zajęciach z BazDanych rok temu.
+3. Poprałem wszystkie wymagane obrazy (jeden przykład)
+![docker pull](image-5.png)
+4. Uruchomiłem `BusyBox` i pobrałem wersję
+![BusyBox](image-6.png)
+5. Uruchomiłem Ubutnu w Docker
+![Ubuntu Docker](image-7.png)
+- PID1 w kontenerze
+![PID1 Docker](image-8.png)
+- PID1 na hoście
+![PID1 Host](image-9.png)
+- Zaktualizowałem pakiety
+![apt update](image-10.png)
+![aut upgrade](image-11.png)
+- Wyszedłem
+![exit](image-12.png)
+6. Stworzyłem plik Dockerfile i uzupełniłem go:
+```Docker
+# syntax=docker/dockerfile:1
+FROM ubuntu:24.04
+RUN apt update -y && apt upgrade -y
+RUN apt install git -y
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+```
+- Uruchomiłem nowy docker Ubuntu i zweryfikowałem poprawność działania
+![docker build, docker run](image-13.png)
+7. Uruchomione kontenery
+![docker ps](image-14.png)
+8-9. Wylistowałem i wyczyściłem uruchomione wcześniej obrazy
+![docker ps, docker rm](image-15.png)
