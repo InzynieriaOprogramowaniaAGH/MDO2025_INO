@@ -60,3 +60,26 @@ CMD ["bash"]
 - Kolejnym zadaniem było powtórzenie tego procesu, tym razem w kontenerze. Uruchomiono kontener na podstawie obrazu ubuntu, w trybie interkatywnym, poleceniem `docker run -it --rm ubuntu bash`
 - Następnie na uruchomionym kontenerze zainstalowane wszelkie zależności wymagane do dalszej pracy: git, make, gcc. Polecenie: `aptg-get update && apt-get install -y git make gcc`
 - Repozytoriumn ponownie sklonowano, tym razem w ramach kontenera, poleceniem `git clone https://github.com/DaveGamble/cJSON.git` ![Zrzut ekranu kompilacji](media/m19_make.png)
+- Kolejnym zadaniem było utworzenie dwóch plików Dockerfile, których zadaniami będą kompilacja oraz uruchamiane testów, gdzie pierwszy obraz przygotowuje środowisko oraz kompiluje oprogramowanie a drugi obraz przeprowadza testy. W tym celu utworzono dwa pliki `Dockerfile.build` oraz `Dockerfile.test`. Ponizej znajdują się ich zawartości.
+
+```
+#### Dockerfile.build ####
+FROM ubuntu:22.04
+WORKDIR /app
+RUN apt update
+RUN apt-get -y install git make gcc
+RUN git clone https://github.com/DaveGamble/cJSON.git
+WORKDIR /app/cJSON
+RUN make
+CMD ["/bin/bash"]
+```
+
+```
+#### Dockerfile.test ####
+FROM cj-build
+WORKDIR /app/cJSON
+RUN mkdir logs && make test > logs/test_results.log
+CMD ["/bin/bash"]
+```
+- Pliki zostały skompilowane jeden po drugim poleceniami `docker build -t cj-build -f Dockerfile.build .` oraz `docker build -t cj-test dockerfile.test .` ![Zrzut ekranu tworzenia drugiego obrazu](media/m20_test-build.png)
+- W celu werfyikacji poprawności uruchomiony został kontener na bazie obrazu do testowania `cj-test`, w trybie interaktywnym. Manulanie została zweryfikowana obecność pliku tekstowego z wydrukiem testu. ![Zrzut ekranu wydruku testu](media/m21_test_result.png)
