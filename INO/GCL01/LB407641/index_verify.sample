@@ -1,0 +1,12 @@
+#!/bin/bash
+
+PREFIX="LB407641"
+
+INITIAL_INDEX=$(head -n 1 "$COMMIT_MSG_FILE")
+
+if [[ ! "$COMMIT_MSG" =~ ^$PREFIX ]]; then
+    echo "nazwy sa rozne"
+    exit 1
+fi
+
+echo "nazwy sa takie same"
