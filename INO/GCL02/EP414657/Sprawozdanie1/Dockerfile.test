@@ -1,0 +1,2 @@
+FROM node-js-dummy-test-build
+CMD ["npm", "test"]
