@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Verify if commit message starts with the correct initials
+string="[FR417273]"
+
+if ! grep -q "^$string" "$1"; then
+  echo "FAILED. Start commit message with $string."
+  exit 1
+fi
+
