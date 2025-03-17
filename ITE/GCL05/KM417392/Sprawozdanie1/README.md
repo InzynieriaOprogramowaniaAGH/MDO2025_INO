@@ -46,7 +46,7 @@ git checkout GCL05
 git checkout -b KM417392
 ```
 ![obraz](KM/lab1/zajecia/galaz-main.png)
-![obraz](KM/lab1/zajecia/galazGCL05.png)
+![obraz](KM/lab1/zajecia/galaz%20GCL05.png)
 
 8. Utworzono również nowy folder "KM417392"
 ```
@@ -64,6 +64,14 @@ nano commit-msg
 chmod +x commit-msg
 ```
 ```
+#!/bin/sh
+
+pattern="^KM417392"
+
+if ! grep -qE "$pattern" "$1"; then
+    echo "Commit message must start with 'KM417392'" >&2
+    exit 1
+fi
 ```
 ![obraz](KM/lab1/zajecia/git_hook.png)
 
