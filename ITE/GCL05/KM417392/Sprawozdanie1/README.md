@@ -82,9 +82,27 @@ mkdir Sprawozdanie1
 cd Sprawozdanie1
 touch Readme.md
 ```
-11. Gotowe pliki 
+11. Gotowe pliki dodajemy najpierw do staging area (obszar przygotowania do commitowania)
+```
+git add .
+git status
+```
+![obraz](KM/lab1/zajecia/git%20add.png)
 
+12. Zatwierdzenie zmian z staging area do lokalnej historii repozytorium. Pliki są teraz zapisane w lokalnej gałęzi.
+```
+git commit -m  "KM417392: add ss"
+```
+![obraz](KM/lab1/zajecia/spraw.png)
+- Sprawdzenie czy działa poprawnie Git hook wcześniej zapisany
+![obraz](KM/lab1/zajecia/dziala_hook.png)
 
+13. Wypychanie plików do zdalnego repozytorium na Githubie
+```
+git push origin KM417392
+```
+![obraz](KM/lab1/zajecia/push.png)
 
+## Zajęcia 02: Git, Docker
 
 
