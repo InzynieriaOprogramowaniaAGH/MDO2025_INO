@@ -46,7 +46,7 @@ git checkout GCL05
 git checkout -b KM417392
 ```
 ![obraz](KM/lab1/zajecia/galaz-main.png)
-![obraz](KM/lab1/zajecia/galaz GCL05.png)
+![obraz](KM/lab1/zajecia/galazGCL05.png)
 
 8. Utworzono również nowy folder "KM417392"
 ```
@@ -55,7 +55,18 @@ mkdir KM417392
 ```
 ![obraz](KM/lab1/zajecia/folder.png)
 
-9. 
+9. Następnie w folderze: ```.git/hooks``` napisano nowy skrypt weryfikujący  (każdy "commit message" zaczyna się od "KM417392").
+W nowo utworzonym pliku "commit-msg" napisano skrypt oraz przyznano uprawnienia do wykonywania.
+Plik został również skopiowany do osobistego folderu.
+```
+cd ~/MDO2025_INO/.git/hooks/
+nano commit-msg
+chmod +x commit-msg
+```
+```
+```
+![obraz](KM/lab1/zajecia/git_hook.png)
+
 
 
 
