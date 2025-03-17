@@ -135,3 +135,152 @@ Następnie skopiowałem wszystkie zrzuty ekranu do katalogu `Zrzuty1/`
 Sprawdzenie czy zmiany zostały zapisane na githubie:
 
 ![Commit widoczny na githubie](<Zrzuty1/zrzut_ekranu16.png>)
+
+---
+
+## **Zajęcia 02 - Docker**
+
+---
+
+### 1. **Instalacja Dockera**
+
+Docker został zainstalowany zgodnie z instrukcją, używając oficjalnego repozytorium dystrybucji.
+
+#### **Komendy instalacyjne dla Fedory**
+
+```bash
+sudo dnf install -y dnf-plugins-core
+sudo dnf install -y docker
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+#### **Nadanie uprawnień do wywoływania komend dockera**
+
+![Danie uprawnień do wywoływania komend dockera](<Zrzuty2/zrzut_ekranu1.png>)
+
+Sprawdzenie wersji Dockera bez potrzeby wpisywania `sudo`: 
+
+![Sprawdzenie wersji dockera](<Zrzuty2/zrzut_ekranu2.png>)
+
+### **2. Rejestracja w Docker Hub**
+
+Zarejestrowałem się na Docker Hub
+
+![Moje konto na Docker Hub](Zrzuty2/zrzut_ekranu3.png)
+
+Następnie na Fedorze zalogowałem się na moje konto Docker Hub
+
+![Logowanie na konto na Docker Hub](<Zrzuty2/zrzut_ekranu4.png>)
+
+### **3. Pobranie obrazów Dockera**
+
+Pobrałem wymagane obrazy przy użyciu następujących komend:
+
+```bash
+docker pull hello-world
+docker pull busybox
+docker pull ubuntu
+docker pull fedora
+docker pull mysql
+```
+
+**Lista pobranych obrazów:**
+
+W terminalu
+
+![Wyswietlenie pobranych obrzow w terminalu](<Zrzuty2/zrzut_ekranu5.png>)
+
+W VS Code po pobraniu rozszerzenia Docker:
+
+![Wyswietlenie pobranych obrzow w VS Code](<Zrzuty2/zrzut_ekranu6.png>)
+
+### **4. Uruchomienie kontenera `busybox`**
+
+#### **Uruchomienie proste:**
+
+![Uruchomienie proste BusyBox](<Zrzuty2/zrzut_ekranu7.png>)
+
+#### **Uruchomienie w trybie interaktywnym:**
+
+Po uruchomieniu kontenera sprawdziłew wersję BusyBox komendą `busybox --help`
+
+![Uruchomienie BusyBox w trybie interaktywnym](<Zrzuty2/zrzut_ekranu8.png>)
+
+**Wyjście z kontenera:**
+
+```bash
+exit
+```
+W VS Code działające kontenery były wyświetlane wraz z ich stanem
+
+![Wyświetlenie działających kontenerow](<Zrzuty2/zrzut_ekranu9.png>)
+
+### **5. Uruchomienie systemu Ubuntu w kontenerze**
+
+**Sprawdzenie procesu `PID 1` w kontenerze:**
+
+![Działajace ubuntu w kontenerze](<Zrzuty2/zrzut_ekranu10.png>)
+
+**Lista procesów Dockera na hoście:**
+
+![Lista procesow Dockera na hoscie](<Zrzuty2/zrzut_ekranu11.png>)
+
+**Aktualizacja pakietów w kontenerze:**
+```bash
+apt update && apt upgrade -y
+```
+
+**Wyjście z kontenera:**
+```bash
+exit
+```
+
+### **6. Tworzenie własnego obrazu Docker (`Dockerfile`)**
+
+![Utworzenie Dockerfile](<Zrzuty2/zrzut_ekranu12.png>)
+
+#### **Zawartość `Dockerfile`**
+
+```dockerfile
+FROM ubuntu:latest
+
+RUN apt update && apt install -y git
+
+WORKDIR /repo
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+
+CMD ["bash"]
+```
+
+#### **Budowanie obrazu:**
+
+![Bodowanie obrazu z Dockerfile](<Zrzuty2/zrzut_ekranu13.png>)
+
+#### **Uruchomienie kontenera i sprawdzenie repozytorium:**
+
+![Uruchomienie kontenera](<Zrzuty2/zrzut_ekranu14.png>)
+
+### **7. Usuwanie kontenerów i obrazów**
+
+**Sprawdzenie listy wszystkich kontenerów, a następnie zatrzymanie i usunięcie ich:**
+
+![Sprawdzenie i usuniecie wszystkich kontenerow](<Zrzuty2/zrzut_ekranu15.png>)
+
+**Usunięcie obrazów:**
+
+![Usuniecie obrazow](<Zrzuty2/zrzut_ekranu16.png>)
+
+**Pusta lista kontenerów i obrazów:**
+
+![Lista kontenerow i obrazow po usunieciu](<Zrzuty2/zrzut_ekranu17.png>)
+
+### **8. Dodanie `Dockerfile` do repozytorium**
+
+**Przeniesienie `Dockerfile` do folderu `Sprawozdanie1`**
+
+![Przeniesienie Dockerfile do folderu sprawozdanie1](<Zrzuty2/zrzut_ekranu18.png>)
+
+**Dodanie `Dockerfile` do commita i wypchnięcie zmian do repozytorium zdalnego**
+
+![Stworzenie commita z Dockerfile](<Zrzuty2/zrzut_ekranu19.png>)
