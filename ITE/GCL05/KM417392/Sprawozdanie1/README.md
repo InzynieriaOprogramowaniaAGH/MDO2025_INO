@@ -44,9 +44,10 @@ cd MDO2025_INO
 git checout main
 git checkout GCL05
 git checkout -b KM417392
+```
 ![obraz](KM/lab1/zajecia/galaz-main.png)
 ![obraz](KM/lab1/zajecia/galaz GCL05.png)
-```
+
 8. Utworzono również nowy folder "KM417392"
 ```
 cd ITE/GCL05/
