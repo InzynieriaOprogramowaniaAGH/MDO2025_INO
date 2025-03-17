@@ -83,3 +83,28 @@ CMD ["/bin/bash"]
 ```
 - Pliki zostały skompilowane jeden po drugim poleceniami `docker build -t cj-build -f Dockerfile.build .` oraz `docker build -t cj-test dockerfile.test .` ![Zrzut ekranu tworzenia drugiego obrazu](media/m20_test-build.png)
 - W celu werfyikacji poprawności uruchomiony został kontener na bazie obrazu do testowania `cj-test`, w trybie interaktywnym. Manulanie została zweryfikowana obecność pliku tekstowego z wydrukiem testu. ![Zrzut ekranu wydruku testu](media/m21_test_result.png)
+- Docker Compose służy do definiowania i zarządzania wielokontenerowymi aplikacjami, umożliwiając ich łatwe uruchamianie, konfigurację i współpracę w jednym środowisku poprzez deklaratywny plik docker-compose.yml. W ramach kolejnego zadania utworzono taki plik oraz go zbudowano.
+```
+#### docker-compose.yml ####
+services:
+  cj-build:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+    container_name: cj-build
+
+  cj-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: cj-test
+    depends_on:
+      - cj-build
+```
+- Budowanie odbyło się poleceniem `docker-compose up --build`. ![Zrzut ekranu kompozycji](media/m22_compose.png)
+-To, czy dany program nadaje się do wdrażania i publikowania jako kontener, zależy od kilku czynników. Jeśli aplikacja opiera się na interakcji z użytkownikiem i środowiskiem, w którym działa, jej uruchomienie w kontenerze wymagałoby znacznego dodatkowego wysiłku, aby zapewnić pełną funkcjonalność (np. obsługę sterowników, dostęp do plików oraz urządzeń peryferyjnych hosta). Kontenery są idealnym rozwiązaniem dla aplikacji działających w tle, które nie wymagają bezpośredniej interakcji z użytkownikiem, takich jak serwery czy backendy. Ze względu na ograniczoną obsługę sterowników oraz brak natywnej współpracy z hostem i urządzeniami peryferyjnymi, aplikacje użytkowe, które z tych funkcji korzystają, nie powinny być umieszczane w kontenerach – z wyjątkiem sytuacji, w których konieczne jest testowanie działania aplikacji w różnych środowiskach.
+- W przypadku cJSON wdrażanie jako kontener nie ma żadnego sensu, ponieważ jest to biblioteka, która powinna być instalowana w systemie lub dołączana jako zależność w projekcie C. Jedynym uzasadnionym zastosowaniem kontenera w tym przypadku jest testowanie biblioteki w różnych środowiskach.
+- Jeśli program miałby zostać opublikowany w kontenerze, powinien zostać oczyszczony z pozostałości kompilacyjnych, aby zmniejszyć zużycie pamięci i przestrzeni dyskowej oraz uniknąć zbędnych plików, które nie są potrzebne w środowisku produkcyjnym. W takim przypadku dedykowany Dockerfile do procesu "deploy-and-publish" jest jak najbardziej uzasadniony. Pozwala on na automatyczne czyszczenie obrazu z niepotrzebnych plików kompilacyjnych, co zmniejsza jego rozmiar i optymalizuje wdrażanie nowych wersji oprogramowania. Oddzielenie builda od wdrożenia ułatwia również zarządzanie cyklem życia aplikacji i zapewnia lepszą kontrolę nad jej zależnościami.
+- Jeśli program wymaga głębszej integracji z systemem użytkownika, powinien być dystrybuowany w formie pakietu, np. `.dll` (dla Windows) lub `.jar` (dla wieloplatformowych aplikacji Java). Nie wszystkie z tych formatów są kompatybilne z każdym systemem, co stanowi pewną wadę i jednocześnie podkreśla jedną z zalet kontenerów – ich niezależność od systemu operacyjnego.
+- Finalny pakiet może zostać wygenerowany przy użyciu dedykowanego kontenera, ale nie jest to konieczne – w zależności od projektu, format taki może być tworzony również w tradycyjnym środowisku builda.
+
