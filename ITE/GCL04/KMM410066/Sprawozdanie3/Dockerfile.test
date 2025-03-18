@@ -1,0 +1,3 @@
+FROM build:latest
+
+RUN cargo test > results.txt
