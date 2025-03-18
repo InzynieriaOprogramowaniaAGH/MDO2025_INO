@@ -1,0 +1,12 @@
+services:
+  makapaka-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: makapaka-builder
+
+  makapaka-test:
+    image: makapaka-builder
+    depends_on:
+      - makapaka-builder
+    command: ./sds-test
