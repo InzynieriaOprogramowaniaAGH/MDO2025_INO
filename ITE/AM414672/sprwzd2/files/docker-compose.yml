@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  sds-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sds-dockor
+
+  sds-test:
+    image: sds-dockor
+    depends_on:
+      - sds-builder
+    command: ./sds-test
