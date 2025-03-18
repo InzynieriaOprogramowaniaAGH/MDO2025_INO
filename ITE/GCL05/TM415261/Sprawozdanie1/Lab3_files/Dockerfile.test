@@ -1,0 +1,5 @@
+FROM sds-container
+
+WORKDIR /app
+
+CMD ["./sds-test"]
