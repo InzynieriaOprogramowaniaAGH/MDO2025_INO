@@ -1,0 +1,7 @@
+FROM fedora
+
+RUN dnf -y install git meson gcc glib2-devel openssl-devel ncurses-devel
+RUN git clone http://github.com/irssi/irssi.git
+WORKDIR /irssi
+RUN meson Build
+RUN ninja -C Build
