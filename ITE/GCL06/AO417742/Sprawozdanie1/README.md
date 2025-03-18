@@ -153,3 +153,15 @@ exit 0
 
 adam@adam-VirtualBox:~/git_repozytorium/MDO2025_INO$ git commit -m "Testowy commit "
  BŁĄD:  commit message musi zaczynać się od 'AO417742'
+
+5. Próba wciągnięcia swojej gałęzi do gałęzi grupowej 
+Po zakończeniu prac na mojej gałęzi `AO417742`, scaliłem  ją do `GCL06`.
+
+1. Przełączenie się na GCL06:
+
+   git checkout GCL06
+   gull origin GCL06
+
+2. Scalanie mojej gałęzi
+   git merge AO417742
+![Merge](screenshots/probaMerge.png)
