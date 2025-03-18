@@ -46,3 +46,8 @@
 ![alt text](screens/screens1/image-10.png)
 
 * Wciągnięcie gałęzi na gałąź grupową.
+
+Gałąź grupowa jest chroniona, więc push został odrzucony.
+
+![alt text](screens/screens1/image11.png)
+
