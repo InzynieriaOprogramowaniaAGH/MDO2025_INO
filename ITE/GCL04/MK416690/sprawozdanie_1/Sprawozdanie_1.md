@@ -62,3 +62,39 @@ Pobrane obrazy z Docker Hub
 Uruchomienie kontenera z obrazu busyboxa
 
 ![Uruchomienie kontenera z obrazu busyboxa](lab2_screenshots/4.jpg)
+
+Podłączenie się do kontenera i wyświetlenie wersji
+
+![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/5.jpg)
+
+Uruchomienie Fedory w kontenerze i pokazanie PID1
+
+![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/6.jpg)
+
+Aktualizacja pakietów
+
+![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/7.jpg)
+
+Procesy Dockera
+
+![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/8.jpg)
+
+Przygotowanie Dockerfile, który będzie tworzył nam kontener z Fedorą, instalował Gita i klonował nasze repozytorium
+
+![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/9.jpg)
+
+Zbudowanie obrazu na podstawie Dockerfile
+
+![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/10.jpg)
+
+Uruchomienie kontenera z naszego obrazu, jak widać wszystko działa elegancko
+
+![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/11.jpg)
+
+Wszystkie kontenery, jak widać uruchomiony i działający jest tylko jeden
+
+![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/12.jpg)
+
+Usuwanie wszystkich kontenerów oraz obrazów
+
+![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/13.jpg)
