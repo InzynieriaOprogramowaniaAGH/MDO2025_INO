@@ -1,6 +1,10 @@
 # Sprawozdanie 1
 
+---
+
 ## Laboratorium 1
+
+---
 
 #### 1. Zainstaluj klienta Git i obsługę kluczy SSH
 
@@ -91,3 +95,70 @@ Powyższy hook, sprawi że tylko commit zaczynający się od "JK403999" będzie 
 ![Wciągnięcie osobistej gałęzi do gałęzi grupowej](Images/merge.png "Wciągnięcie osobistej gałęzi do gałęzi grupowej")  
 
 * Zaktualizuj sprawozdanie i zrzuty o ten krok i wyślij aktualizację do zdalnego źródła (na swojej gałęzi)  
+
+---
+
+## Laboratorium 2
+
+---
+
+1. Zainstaluj Docker w systemie linuksowym
+   - użyj repozytorium dystrybucji, jeżeli to możliwe (zamiast Community Edition)
+
+        ![Instalacja Dockera z repozytorium Fedory](Images2/Docker_instalacja.png "Instalacja Dockera z repozytorium Fedory")  
+
+   - rozważ niestosowanie rozwiązania Snap (w Ubuntu)
+
+3. Zarejestruj się w [Docker Hub](https://hub.docker.com/) i zapoznaj z sugerowanymi obrazami
+
+![Konto na Docker Hubie](Images2/docker_hub_account.png "Konto na Docker Hubie")  
+
+4. Pobierz obrazy `hello-world`, `busybox`, `ubuntu` lub `fedora`, `mysql`
+
+Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
+
+![Pobieranie obrazu busyboxa](Images2/busybox.png "Pobieranie obrazu busyboxa")  
+
+5. Uruchom kontener z obrazu `busybox`
+   - Pokaż efekt uruchomienia kontenera
+
+        ![Zwykłe uruchomienie busyboxa](Images2/busybox_run_without_interactive.png "Zwykłe uruchomienie busyboxa")  
+        
+        Gdy po prostu uruchomimy busyboxa włączy się on, sprawdzi że nie podaliśmy żadnej dodatkowej komendy, a następnie wyłączy
+
+   - Podłącz się do kontenera **interaktywnie** i wywołaj numer wersji
+
+        ![Podłączenie do busyboxa interaktywnie oraz wyświetlenie jego numeru wersji](Images2/interaktywny_busybox_i_wersja.png "Podłączenie do busyboxa interaktywnie oraz wyświetlenie jego numeru wersji")  
+
+6. Uruchom "system w kontenerze" (czyli kontener z obrazu `fedora` lub `ubuntu`)
+   - Zaprezentuj `PID1` w kontenerze i procesy dockera na hoście
+
+        ![PID1 w kontenerze](Images2/fedora_container_ps.png "PID1 w kontenerze")  
+
+        ![Procesy dockera na hoście](Images2/ps_host.png "Procesy dockera na hoście")  
+
+   - Zaktualizuj pakiety
+
+        ![Aktualizacja pakietów](Images2/dnf_upgrade.png "Aktualizacja pakietów")  
+
+   - Wyjdź
+   
+7. Stwórz własnoręcznie, zbuduj i uruchom prosty plik `Dockerfile` bazujący na wybranym systemie i sklonuj nasze repo.
+   - Kieruj się [dobrymi praktykami](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+
+        ![Budowanie obrazu z plikiem Dockerfile](Images2/dockerfile_build.png "Budowanie obrazu z plikiem Dockerfile")  
+
+   - Upewnij się że obraz będzie miał `git`-a
+   - Uruchom w trybie interaktywnym i zweryfikuj że jest tam ściągnięte nasze repozytorium
+
+      ![Uruchomienie kontenera oraz weryfikacja zainstalowanego gita i sklonowanego repo](Images2/uruchomienie_kontenera_git_repo.png "Uruchomienie kontenera oraz weryfikacja zainstalowanego gita i sklonowanego repo")  
+
+8. Pokaż uruchomione ( != "działające" ) kontenery, wyczyść je.
+
+        ![Wyczyszczenie kontenerów](Images2/containers_clear.png "Wyczyszczenie kontenerów")  
+
+9. Wyczyść obrazy
+
+        ![Wyczyszczenie obrazów](Images2/images_clear.png "Wyczyszczenie obrazów")  
+
+10. Dodaj stworzone pliki `Dockefile` do folderu swojego `Sprawozdanie1` w repozytorium.

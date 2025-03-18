@@ -1,0 +1,82 @@
+    1  exit
+    2  ip a
+    3  exit
+    4  useradd -m jk
+    5  passwd jk
+    6  exit
+    7  ip a
+    8  ssh root@localhost
+    9  ssh root@10.200.8.252
+   10  sudo firewall-cmd --permanent --add-service=ssh
+   11  sudo firewall-cmd --reload
+   12  setenforce 0
+   13  ip a
+   14  exit
+   15  ip a
+   16  exit
+   17  sudo apt update
+   18  apt update
+   19  ls
+   20  apt
+   21  yum
+   22  pacman
+   23  yum install git -y
+   24  git --v
+   25  git -v
+   26  exit
+   27  yum install docker
+   28  exit
+   29  systemctl enable --now docker
+   30  ls
+   31  docker run hello-world
+   32  docker pull busybox
+   33  docker run busybox
+   34  docker run --tty --interactive busybox
+   35  docker pull fedora
+   36  docker run fedora
+   37  docker run --tty --interactive fedora
+   38  ps
+   39  docker run --tty --interactive fedora
+   40  exit
+   41  ls
+   42  whoami
+   43  pwd
+   44  cd ..
+   45  ls
+   46  ls -a
+   47  cd root
+   48  pwd
+   49  cd ..
+   50  cd jk
+   51  cd jk/
+   52  cd /jk/
+   53  ls -a
+   54  cd root
+   55  ls -a
+   56  docker
+   57  history
+   58  docker images
+   59  docker ps
+   60  docker ps -a
+   61  mkdir dcr
+   62  ls
+   63  ls -a
+   64  docker build -t fedora-git .
+   65  docker images
+   66  Set-ItemProperty -Path 'HKCU:\Console' -Name 'ScreenColors' -Value 0x1F
+   67  docker run -it fedora-git
+   68  docker ps -a
+   69  docker container prune
+   70  docker ps -a
+   71  docker images
+   72  docker image prune -f
+   73  docker images
+   74  docker image prune -af
+   75  docker images
+   76  exit
+   77  ps
+   78  ps -a
+   79  ps aux --forest
+   80  exot
+   81  exit
+   82  history
