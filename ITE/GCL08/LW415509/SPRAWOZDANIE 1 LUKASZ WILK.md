@@ -272,7 +272,7 @@ docker pull mysql
   Następnie będąc wewnątrz aby sprawdzić wersję systemu należy użyć polecenia
 
   ```
-  uname -a
+  busybox | head -n 1
   ```
 
   a aby opuścić kontener polecenia
@@ -281,7 +281,7 @@ docker pull mysql
   exit
   ```
 
-  ![alt text](images/busybox_in.png)
+  ![alt text](images/busy_wersja.png)
 
 ## Uruchomienie systemu ubuntu w kontenerze
 
@@ -361,4 +361,186 @@ CMD ["bash"]
 
   ![alt text](images/czyszczenie.png)
 
-  .
+# LABORATORIUM 3
+
+W celu wykonania zadania z laboratorium numer 3 rozpoczęto od znalezienia odpowiedniego projektu na licencji open source, ktory spełnia poniższe wymagania:
+  - Projekt umieszczony wraz z narzędziami Makefile
+  - Umożliwia uruchomienie 'make build' oraz 'make test'
+  - Zawiera zdefiniowane testy
+  - Jest na licencji Open Source
+
+Znaleziona aplikacja która spełnia wymagania to create-react-app, dostępna pod linkiem: https://github.com/facebook/create-react-app
+
+Jest to aplikacja wykorzystująca npm, więc przed przystąpieniem do zadania należy zainstalować na systemie fedora node.js oraz npm. W tym celu należy wykorzystać poniższe polecenia:
+
+```
+sudo dnf install -y nodejs npm
+```
+
+Następnie w celu weryfikacji poprawności instalacji należy użyć poleceń:
+
+```
+node -v
+npm -v
+```
+
+![alt text](images/node_install.png)
+
+## Sklonowanie repozytorium projektu i weryfikacja wymagań
+
+  - Na początku należy sklonować repozytorium i wejść do pobranego folderu poniższym poleceniem
+
+    ```
+    git clone https://github.com/facebook/create-react-app.git
+    cd create-react-app
+    ```
+
+  - Po wejściu do folderu należy doisntalować brakujące zależności poleceniem
+
+  ```
+  npm install
+  ```
+
+  ![alt text](images/npm_install.png)
+
+  Gdy wszystkie zależności zostną pobrane można przeprowadzić build programu
+
+  ```
+  npm run build
+  ```
+
+  ![alt text](images/testowy_build.png)
+
+  Następnie aby uruchomić testy
+
+  ```
+  npm test
+  ```
+
+  ![alt text](images/test_1.png)
+
+  ![alt text](images/test_2.png)
+
+## Wykonanie powyższych czynności w kontenerze docker
+
+  - W celu wykonania powyższych czynności w kontenerze docker należy rozpocząć od pobrania odpowiedniego obrazu. W naszym przypadku będzie to obraz node.js
+
+  ```
+  docker pull node:latest
+  ```
+
+  ![alt text](images/pull_node.png)
+
+  - Następnie aby uruchomić kontener interaktywnie wykorzstujemy poniższe polecenie
+
+  ```
+  docker run -it --name react-app-container node /bin/bash
+  ```
+
+  ![alt text](images/inside_node.png)
+
+  - Po uruchomieniu obrazu musimy upewnić się że kontener zawiera wszystkie wymagane zależności oraz gita
+
+  ```
+  apt update && apt install -y git
+  ```
+
+  ![alt text](images/git_in_node.png)
+
+  - Następnie można przystąpić do klonowania repozytorium
+
+  ```
+  git clone https://github.com/facebook/create-react-app.git
+  cd create-react-app
+  ```
+
+  ![alt text](images/clone_repo_in.png)
+
+  - Instalujemy wymagane zależności i wykonujemy te same kroki co powyżej
+
+  ```
+  npm install
+  ```
+
+  ![alt text](images/npm_install_inside.png)
+
+  ```
+  npm run build
+  ```
+
+  ![alt text](images/run_build_inside.png)
+
+  ```
+  npm test
+  ```
+
+  ![alt text](images/npm_test_inside.png)
+
+  ![alt text](images/all_tests_inside.png)
+
+  - Aby opuścić kontener używamy polecenia
+
+  ```
+  exit
+  ```
+
+  ![alt text](images/node_exit.png)
+
+## Automatyzacja powyższych kroków z wykorzystaniem Dockerfile
+
+  - W celu zautomatyzowania powyższych czynności utworzono poniższy plik Dockerfile który jest odpowiedzialny za utworzenie buildu aplikacji
+
+  ```
+  FROM node:latest
+
+  RUN git clone https://github.com/facebook/create-react-app.git
+
+  WORKDIR /create-react-app
+
+  RUN npm install
+  ```
+
+  - Po utworzeniu pliku Dockerfile tworzymy na jego podstawie obraz
+
+  ```
+  sudo docker build -t react-app-build --file Dockerfile.nodeapp .
+  ```
+
+  - Uruchamianie kontenera
+
+  ```
+  docker run react-app-build
+  ```
+
+  ![alt text](images/react_app_build.png)
+
+  - Poniższy plik Dockerfile.test jest odpowiedzialn za uruchamianie testów jednostkowych projektu bez tworzenia jego buildu
+
+  ```
+  FROM react-app-build
+  RUN npm test -- --watchAll=false --ci
+  ```
+
+  - Budowanie obrazu z powyższego pliku Dockerfile.test
+
+  ```
+  docker build -t react-app-test --file Dockerfile.test .
+  ```
+
+  ![alt text](images/dockerfile_test.png)
+
+  - Uruchomienie kontenera
+
+  ```
+  docker run react-app-test
+  ```
+
+ ![alt text](images/dockerfile_testy_dziala.png)
+
+  - Przy użyciu poniższego polecenia możemy łatwo zweryfikować że kontener wdrąża się poprawnie
+
+  ```
+  docker ps
+  ```
+
+  ![alt text](images/react_test_weryfikacja.png)
