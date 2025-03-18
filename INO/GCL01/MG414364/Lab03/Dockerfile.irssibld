@@ -1,0 +1,8 @@
+FROM ubuntu:24.04
+
+RUN apt update
+RUN apt -y install libotr5 libotr5-dev libssl-dev libgcrypt20 libgcrypt20-dev cmake git perl libncurses6 libncurses-dev libutf8proc3 libutf8proc-dev libglib2.0-0 libglib2.0-dev libtinfo6 terminfo meson
+
+RUN git clone https://github.com/irssi/irssi
+WORKDIR /irssi
+RUN meson Build
