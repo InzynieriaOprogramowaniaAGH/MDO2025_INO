@@ -155,10 +155,10 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
 
 8. Pokaż uruchomione ( != "działające" ) kontenery, wyczyść je.
 
-        ![Wyczyszczenie kontenerów](Images2/containers_clear.png "Wyczyszczenie kontenerów")  
+     ![Wyczyszczenie kontenerów](Images2/containers_clear.png "Wyczyszczenie kontenerów")  
 
 9. Wyczyść obrazy
 
-        ![Wyczyszczenie obrazów](Images2/images_clear.png "Wyczyszczenie obrazów")  
+     ![Wyczyszczenie obrazów](Images2/images_clear.png "Wyczyszczenie obrazów")  
 
 10. Dodaj stworzone pliki `Dockefile` do folderu swojego `Sprawozdanie1` w repozytorium.
