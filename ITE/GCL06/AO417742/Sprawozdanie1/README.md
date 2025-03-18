@@ -20,7 +20,7 @@ Na początku zainstalowałem Git oraz OpenSSH na maszynie wirtualnej z systemem 
 
    ssh-keygen -t ecdsa -b 521 -C "aolech55@gmail.com"
 
-
+![Generowanie kluczy](screenshots/generowanieKluczy.png)
 
 3. Dodałem klucz prywatny do agenta SSH: 
 
@@ -28,12 +28,13 @@ Na początku zainstalowałem Git oraz OpenSSH na maszynie wirtualnej z systemem 
 
    ssh-add ~/.ssh/id_ed25519
 
-	
+![Klucz do agenta](screenshots/kluczDoAgenta.png)
 
    oraz skopiowałem klucz publiczny do GitHub:
 
    cat ~/.ssh/id_ed25519.pub
 
+![Klucz GitHub](screenshots/kluczGithub.png)
 
 
 4. Aby zweryfikować poprawność połączenia SSH wykonałem polecenie: 
@@ -58,6 +59,7 @@ W pierwszej kolejności użyłem metody HTTPS, a następnie SSH.
 
 2. Klonowanie repozytorium przez HTTPS:
 
+![Klonowanie HTTPS](screenshots/klonowanieHttps.png)
 
 
 git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
@@ -66,6 +68,7 @@ git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 
 3. Klonowanie repozytorium przez SSH
 
+![Klonowanie SSH](screenshots/klonowanieSSH.png)
 
 
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
@@ -116,7 +119,7 @@ Kolejnym krokiem było przełączenie się na odpowiednie gałęzie w repozytori
 
    git push -u origin AO417742
 
-
+![Praca na gałęziach](screenshots/pracaNaGaleziach.png)
 
 4. Implementacja Git Hooka:
 
@@ -148,3 +151,5 @@ exit 0
 
 3. Testowanie dodawania commita
 
+adam@adam-VirtualBox:~/git_repozytorium/MDO2025_INO$ git commit -m "Testowy commit "
+ BŁĄD:  commit message musi zaczynać się od 'AO417742'
