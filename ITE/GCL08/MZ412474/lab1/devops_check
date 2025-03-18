@@ -1,0 +1,12 @@
+#!/bin/bash
+
+commit_msg_file=$1
+commit_msg=$(head -n1 "$commit_msg_file")
+EXPECTED_PREFIX="MZ412474"
+
+if [[ ! "$commit_msg" =~ ^$EXPECTED_PREFIX ]]; then
+    echo "ERR: commit message must begin with '$EXPECTED_PREFIX'!"
+    exit 1
+fi
+
+exit 0
