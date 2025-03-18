@@ -2,4 +2,4 @@ FROM sds-container
 
 WORKDIR /app
 
-CMD ["./sds-test"]
+RUN ./sds-test
