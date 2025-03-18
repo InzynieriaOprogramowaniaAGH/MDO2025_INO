@@ -53,7 +53,7 @@ exit 0
 
 ![Opis obrazka](lab2_screenshots/download.png)
 
-4. Uruchom kontener z obrazu busybox.
+4. UruchomIONO kontener z obrazu busybox.
 
 ![Opis obrazka](lab2_screenshots/busybox.png)
 
@@ -67,6 +67,20 @@ exit 0
 
 ![Opis obrazka](lab2_screenshots/docker.png)
 
+Treść Dockerfile
+```sh
+FROM fedora:latest
+
+RUN dnf update -y && \
+    dnf install -y git && \
+    dnf clean all
+
+WORKDIR /app
+
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+
+CMD ["/bin/bash"]
+```
 7. Pokazano uruchomione kontenery, po czym je wyczyszczono wraz z obrazami.
 
 ![Opis obrazka](lab2_screenshots/containers.png)
