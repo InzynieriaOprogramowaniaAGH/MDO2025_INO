@@ -30,9 +30,9 @@ Jak widać, skrypt działa. Niepoprawna nazwa commita nie jest akceptowana
 
 ![Jak widać, skrypt działa. Niepoprawna nazwa commita nie jest akceptowana](lab1_screenshots/7.jpg)
 
-Poprawny commit oraz wypchnięcie dodanych plików na zdalne repozytorium
+Poprawny commit
 
-![Poprawny commit oraz wypchnięcie dodanych plików na zdalne repozytorium](lab1_screenshots/8.jpg)
+![Poprawny commit](lab1_screenshots/8.jpg)
 
 Treść hooka
 
