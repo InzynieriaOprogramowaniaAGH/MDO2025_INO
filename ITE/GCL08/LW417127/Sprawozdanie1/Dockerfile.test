@@ -1,0 +1,8 @@
+# Bazujemy na obrazie z wcześniejszego builda
+FROM build_image
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
+
+# Uruchomienie testów
+CMD ninja -C builddir test

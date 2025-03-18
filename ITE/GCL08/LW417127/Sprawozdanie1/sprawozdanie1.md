@@ -309,3 +309,172 @@ docker pull mysql
    docker rmi busybox fedora ubuntu mysql
    ```
    ![Zrzut ekranu: Zatrzymywanie kontenerów](../screens/class2/zatrzymanie_i_usuniecie_kontenerow_i_obrazow.jpg)
+
+# Sprawozdanie z Dockerfiles, kontener jako definicja etapu
+
+## 1. Wybór oprogramowania
+
+Wybranym oprogramowaniem jest oprogramowanie irssi, zaproponowane przez prowadzącego
+
+## 2. Przygotowanie środowiska
+
+### 1. Sklonowanie repozytorium:
+
+Aby rozpocząć pracę, sklonowano repozytorium projektu irssi z GitHub:
+
+```
+git clone https://github.com/irssi/irssi
+```
+![](../screens/class3/clone_irssi.jpg)
+
+### 2. Instalacja zależności
+
+Następnie, zainstalowane zostały wymagane zależności, aby umożliwić kompilację aplikacji. W przypadku braku odpowiednich pakietów, należy je zainstalować:
+
+```
+sudo dnf -y install gcc glib2-devel openssl-devel perl-devel ncurses-devel meson ninja
+```
+
+![](../screens/class3/meson_install.jpg)
+![](../screens/class3/instalacja_gcc.jpg)
+![](../screens/class3/instalacja_zaleznosci.jpg)
+
+Po zainstalowaniu zależności, zbudowano projekt przy użyciu Meson:
+
+```
+meson Build
+ninja -C Build
+```
+
+![](../screens/class3/meson_build.jpg)
+![](../screens/class3/ninja_build.jpg)
+
+Oraz uruchomiono testy:
+
+```
+ninja -C Build test
+```
+
+![](../screens/class3/ninja_test.jpg)
+
+### 3. Przeprowadzenie buildu w kontenerze
+
+Pobranie obrazu i ruchomienie interaktywnego kontenera
+
+```
+docker pull ubuntu:latest
+docker run -it --name my_build_env ubuntu:latest /bin/bash
+```
+
+![](../screens/class3/kontener_uruchomienie.jpg)
+
+Ponowna instalacja zależności programu wewnątrz kontenera
+
+```
+apt update && apt install -y build-essential git meson ninja-build perl-ExtUtils-Embed glib2-devel openssl-devel ncurses-devel
+```
+
+![](../screens/class3/instalacja_zaleznosci_w_kontenerze.jpg)
+
+Klonowanie repozytorium wewnątrz kontenera:
+
+```
+git clone https://github.com/irssi/irssi
+```
+
+![](../screens/class3/klonowanie_repo_docker.jpg)
+
+Konfiguracja i build aplikacji
+
+```
+meson setup builddir
+ninja -C builddir
+```
+
+![](../screens/class3/meson_builddir.jpg)
+![](../screens/class3/ninja_build_docker.jpg)
+
+Uruchomienie testów
+
+```
+ninja -C builddir test
+```
+
+![](../screens/class3/ninja_test_docker.jpg)
+
+### 4. Tworzenie Dockerfile
+
+![](../screens/class3/dockerfiles.jpg)
+
+#### Dockerfile dla pierwszego kontenera (build)
+
+```
+# Używamy Ubuntu jako bazowego obrazu
+FROM ubuntu:latest
+
+# Aktualizacja repozytoriów i instalacja wymaganych pakietów
+RUN apt update && apt install -y \
+    build-essential \
+    git \
+    meson \
+    ninja-build \
+    pkg-config \
+    libssl-dev \
+    libglib2.0-dev \
+    libutf8proc-dev \
+    libncurses-dev \
+    libtinfo-dev \
+    libperl-dev \
+    perl cpanminus && \
+    cpanm ExtUtils::Embed
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
+
+# Skopiowanie całego kodu źródłowego do kontenera
+COPY . /app
+
+# Konfiguracja Meson
+RUN meson setup builddir
+
+# Budowanie aplikacji
+RUN ninja -C builddir
+
+```
+
+Zbudowanie obrazu kontenera (build)
+
+```
+docker build -t build_image -f Dockerfile.build .
+```
+
+![](../screens/class3/build_z_dockerfile.jpg)
+
+#### Dockerfile dla drugiego kontenera (test)
+
+```
+# Bazujemy na obrazie z wcześniejszego builda
+FROM build_image
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
+
+# Uruchomienie testów
+CMD ninja -C builddir test
+```
+
+Budowanie drugiego obrazu (test)
+
+```
+docker build -t test_image -f Dockerfile.test .
+```
+
+![](../screens/class3/test_z_dockerfile.jpg)
+
+Uruchomienie kontenera z testami
+
+```
+docker run --rm --name test_container test_image
+```
+
+![](../screens/class3/uruchomienie_testu_z_dockerfile.jpg)
