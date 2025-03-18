@@ -1,4 +1,4 @@
-FROM fedora:42
+FROM fedora:latest
 
 RUN dnf -y install git meson ninja gcc glib2-devel openssl-devel utf8proc-devel ncurses-devel perl-ExtUtil*
 
