@@ -109,7 +109,7 @@ git push origin KM417392
 ```
 sudo apt install docker.io
 ```
-![obraz](KM/lab2/instalacja@20docker.png)
+![obraz](KM/lab2/instalacja%20docker.png)
 
 2. Następnie zarejestrowano się w DockerHub i zalogowano przez maszyne
 ```
@@ -129,7 +129,7 @@ sudo usermod -aG docker $USER
 ```
 docker images
 ```
-![obraz](KM/lab2/pobrane_zdj.png)
+![obraz](KM/lab2/lab2_cz2/pobrane_zdj.png)
 
 4. Uruchomiono kontener z obrazu *busybox*
 - Bez podłączenia się do kontenera interaktywnie 
@@ -152,8 +152,8 @@ apt update
 apt upgrade
 exit
 ```
-![obraz](KM/lab2/lab2_cz2/apt_update.png)
-![obraz](KM/lab2/lab2_cz2/apt_upgrade.png)
+![obraz](KM/lab2/lab2_cz2/apt-update.png)
+![obraz](KM/lab2/lab2_cz2/apt-upgrade.png)
 
 6. Utworzono i zbudowano nowy plik Dockerfile bazujący na systemie Ubuntu
 ```
