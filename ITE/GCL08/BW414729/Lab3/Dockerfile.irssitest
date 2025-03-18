@@ -1,0 +1,6 @@
+FROM irssi-build
+
+WORKDIR /irssi
+
+# Uruchomienie testów za pomocą ninja
+CMD ["ninja", "-C", "Build", "test"]
