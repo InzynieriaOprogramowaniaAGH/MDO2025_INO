@@ -12,13 +12,7 @@ Wyniki z testów są podzielone na 2 zrzuty ekranu, ponieważ projekt jest podzi
 Następnie, został utworzony plik `Dockerfile.build` zawierający kroki, które zostały przeprowadzone w celu przygotowania środowiska i zbudowania aplikacji.
 
 ```Dockerfile
-FROM ubuntu:latest
-
-RUN apt update
-RUN apt install -y build-essential git curl
-
-RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
-ENV PATH="/root/.cargo/bin:${PATH}"
+FROM rust:1.85.0
 
 RUN git clone https://github.com/SkaneroOo/kagikachi
 WORKDIR /kagikachi
@@ -33,7 +27,7 @@ Następnie utworzony został plik `Dockerfile.test` bazujący na wcześniej zbud
 ```Dockerfile
 FROM build:latest
 
-RUN cargo test > results.txt
+RUN cargo test
 ```
 
 Uruchomienie kontenera zbudowanego obrazu w trybie interaktywnym ponownie potwierdza poprawność działania obrazu.
