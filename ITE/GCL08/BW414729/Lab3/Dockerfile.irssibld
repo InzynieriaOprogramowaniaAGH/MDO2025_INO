@@ -1,0 +1,11 @@
+FROM fedora:latest
+
+# Instalacja zależności
+RUN dnf install -y git meson ninja-build gcc gcc-c++ glib2-devel openssl-devel ncurses-devel libtool perl
+
+# Klonowanie repozytorium
+WORKDIR /
+RUN git clone https://github.com/irssi/irssi.git
+
+# Przejście do katalogu kodu źródłowego
+WORKDIR /irssi
