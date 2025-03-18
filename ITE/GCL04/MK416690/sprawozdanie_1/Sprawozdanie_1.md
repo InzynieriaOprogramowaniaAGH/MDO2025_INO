@@ -1,6 +1,22 @@
 # Sprawozdanie 1
 
-## Treść hooka
+## Lab 1
+
+![Instalacja Gita](lab1_screenshots/1.jpg)
+
+![Sklonowanie repozytorium przez HTTPS](lab1_screenshots/2.jpg)
+
+![Wygenerowanie klucza SSH](lab1_screenshots/3.jpg)
+
+![Sklonowanie repozytorium przez SSH](lab1_screenshots/4.jpg)
+
+![Utworzenie katalogu w odpowiednim branchu](lab1_screenshots/5.jpg)
+
+![Dodanie skryptu walidującego poprawność nazw commitów do odpowiedniego katalogu z hookami](lab1_screenshots/6.jpg)
+
+![Jak widać, skrypt działa. Niepoprawna nazwa commita nie jest akceptowana](lab1_screenshots/7.jpg)
+
+Treść hooka
 
 ```bash
 #!/bin/bash
@@ -15,3 +31,4 @@ if ! echo "$COMMIT_MSG" | grep "^$INITIALS & $INDEX"; then
 	exit 1
 fi
 ```
+## Lab 2
