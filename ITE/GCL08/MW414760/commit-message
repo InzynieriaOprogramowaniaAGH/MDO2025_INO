@@ -1,0 +1,14 @@
+#!/bin/bash
+
+PREFIX="MW414760"
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(head -n1 "$COMMIT_MSG_FILE")
+
+if [[ ! "$COMMIT_MSG" =~ ^$PREFIX ]]; then
+  echo "BŁĄD, nie zaczyna sie od '$PREFIX'"
+  exit 1
+fi
+
+exit 0
+
