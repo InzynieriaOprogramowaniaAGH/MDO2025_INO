@@ -53,12 +53,12 @@ fi
 
 Poprawnie zainstalowany Docker
 
-![Poprawnie zainstalowany Docker](lab1_screenshots/2.jpg)
+![Poprawnie zainstalowany Docker](lab2_screenshots/2.jpg)
 
 Pobrane obrazy z Docker Hub
 
-![Pobrane obrazy z Docker Hub](lab1_screenshots/3.jpg)
+![Pobrane obrazy z Docker Hub](lab2_screenshots/3.jpg)
 
 Uruchomienie kontenera z obrazu busyboxa
 
-![Uruchomienie kontenera z obrazu busyboxa](lab1_screenshots/4.jpg)
+![Uruchomienie kontenera z obrazu busyboxa](lab2_screenshots/4.jpg)
