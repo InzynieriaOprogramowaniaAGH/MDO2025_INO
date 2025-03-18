@@ -19,3 +19,13 @@ exit 0
 Sprawdzenie działania:
 ![Screen z ekranu - hook DZIALA es](test-commita.png)
 
+# Lab 2
+## Kontener z obrazu busybox'a
+
+Efekt uruchomienia:
+![Screen z ekranu - busybox uruchomiony](efekt-uruchomienia-busyboxa.png)
+
+Numer wersji busyboxa:
+![Screen po sprawdzeniu wersji busyboxa](numer-wersji-busyboxa.png)
+
+
