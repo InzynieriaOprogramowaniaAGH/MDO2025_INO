@@ -132,6 +132,7 @@ docker run -it ubuntu sh
 >> exit
 
 docker build -t februbuntu .
+docker run -it februbuntu
 
 docker ps -a
 
