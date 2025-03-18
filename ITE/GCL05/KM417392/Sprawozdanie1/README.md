@@ -105,4 +105,96 @@ git push origin KM417392
 
 ## Zajęcia 02: Git, Docker
 
+1. Zainstalowano Docker w systemie Ubuntu Server
+```
+sudo apt install docker.io
+```
+![obraz](KM/lab2/instalacja@20docker.png)
+
+2. Następnie zarejestrowano się w DockerHub i zalogowano przez maszyne
+```
+docker login
+```
+![obraz](KM/lab2/logowanie%20docker.png)
+
+3. Pobrano obrazy hello-world, busybox, ubuntu, mysql
+```
+docker pull ubuntu
+```
+Aby uniknąć wpisywania za każdym razem "sudo":
+```
+sudo usermod -aG docker $USER
+```
+![obraz](KM/lab2/logowanie%20docker.png)
+```
+docker images
+```
+![obraz](KM/lab2/pobrane_zdj.png)
+
+4. Uruchomiono kontener z obrazu *busybox*
+- Bez podłączenia się do kontenera interaktywnie 
+```
+docker run busybox echo "Kontener BusyBox uruchomiony"
+```
+Po wykonaniu komendy *echo*, natychmiast kończy swoje działanie. Kontener się zatrzymuje.
+![obraz](KM/lab2/lab2_cz2/busybox-nie-interaktywnie.png)
+
+- Z podłączeniem się do kontenera interaktywnie oraz wyświetleniem PID1 i procesy dockera na hoście
+```
+docker run -it busybox sh
+ps aux
+```
+![obraz](KM/lab2/lab2_cz2/procesy_dockera.png)
+
+5. Zaktualizowano pakiety oraz wyszło z powłoki shell
+```
+apt update
+apt upgrade
+exit
+```
+![obraz](KM/lab2/lab2_cz2/apt_update.png)
+![obraz](KM/lab2/lab2_cz2/apt_upgrade.png)
+
+6. Utworzono i zbudowano nowy plik Dockerfile bazujący na systemie Ubuntu
+```
+touch Dockerfile
+nano Dockerfile
+docker build -t nowy_obraz .
+```
+*Plik Dockerfile*
+```
+FROM ubuntu:latest
+
+RUN apt-get update && \
+    apt-get install -y git && \
+    apt-get clean
+
+
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+
+WORKDIR /MDO2025_INO
+
+CMD ["/bin/bash"]
+```
+![obraz](KM/lab2/lab2_cz2/budowanie_obrazu.png)
+- Uruchomiono interaktywnie i sprawdzono czy jest ściągnięte repozytorium
+```
+docker run -it nowy_obraz
+docker ps -a
+```
+![obraz](KM/lab2/lab2_cz2/uruchomiamy_nowy_obraz.png)
+
+7. Wyświetlenie działających kontenerów oraz ich usunięcie
+```
+docker ps -a
+docker rm $(docker ps -a -q)
+```
+![obraz](KM/lab2/lab2_cz2/kontenery.png)
+![obraz](KM/lab2/lab2_cz2/usuwanie_docker.png)
+- usunięcie obrazów
+```
+docker rmi $(docker images -q)
+docker images
+``` 
+![obraz](KM/lab2/lab2_cz2/czyszczenie_obrazow.png)
 
