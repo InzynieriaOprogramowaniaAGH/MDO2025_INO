@@ -55,8 +55,9 @@ git push
 ```
 ![image](7.PNG)
 
+Wykonano pull request na główną gałąź grupy:
 
-Pull request zostanie wykonany na koniec części drugiej.
+![image](8.PNG)
 
 # Zajęcia 2 - Git, Docker
 
