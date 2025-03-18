@@ -1,3 +1,4 @@
+# **LAB 1**
 # 1. Zainstaluj klienta Git i obsługę kluczy SSH
 
 ## konfiguracja ssh, maszyny wirtualnej oraz srodowiska pracy w VSC
@@ -81,6 +82,7 @@ uzywamy komendy:
 git clone (analogicznie link z githuba)
 ```
 link po ssh znajdujemy:
+
 ![alt text](<lab1/ssh clone.png>)
 
 ### nalezy pamietac by zrobic to w osobnym folderze
@@ -133,3 +135,127 @@ git config --local core.hooksPath (sciezka do pliku)
 # 5. Spuszowanie galezi do galezi grupowej 
 
 ![alt text](<lab1/spuszowanie commita.png>)
+
+# **LAB 2**
+# 1. Instalacja dockera na maszynie
+
+jak zainstalowac: https://docs.docker.com/engine/install/fedora/
+
+![alt text](<instalacja dockera1.png>)
+
+![alt text](<instalacja dockera2.png>)
+
+![alt text](<instalacja dockera3.png>)
+
+## Sprawdzenie dzialania dockera hello-worldem
+
+![alt text](<dzialanie dockera.png>)
+
+## Dodanie uzytkownika do grupy docker
+
+![alt text](<dodanie do grupy.png>)
+
+# 2. Utworzenie konta docker
+
+Konto mozna zalozyc na: https://app.docker.com/signup
+
+![alt text](<konto docker.png>)
+
+# 3. Pobierz obrazy
+## pobiezemy obrazy: hello-world, busybox, ubuntu, mysql
+potrzeba użyc komend:
+```sh
+docker pull hello-world
+docker pull busybox
+docker pull ubuntu
+docker pull mysql
+```
+
+![alt text](<pobranie imagy.png>)
+
+# 4. Uruchom kontener z obrazu busybox
+do uruchomienia kontenera potrzebowac bedziemy komendy:
+ ```sh
+docker run -i -d --name Test busybox sleep 3600
+ ```
+gdzie:
+* -i - pozwala na interakcje z kontenerem
+* -d - uruchamia kontener w tle
+* --name - nadaje nazwe kontenerowi
+* sleep 3600 - upewnia nas ze kontener bedzie aktywny przez 3600 sekund a nie zamknie sie w trakcie
+
+## Podłącz się do kontenera interaktywnie i wywołaj numer wersji
+
+nastepnie zeby dostac sie do interaktywnej powloki kontenera musimy:
+
+```sh
+docker exec -it Test sh
+```
+aby wywołać nr wersji w kontenerze piszemy:
+
+```sh
+busybox | head -1
+```
+
+![alt text](<busybox otworzenie.png>)
+
+# 5. Uruchom "system w kontenerze"
+do uruchomienia kontenera potrzebowac bedziemy komendy:
+ ```sh
+docker run -i -t -d --name Ubuntu ubuntu sleep 3600
+ ```
+
+## Zaprezentuj PID1 w kontenerze i procesy dockera na hoście
+nastepnie zeby dostac sie do interaktywnej powloki kontenera musimy:
+
+```sh
+docker exec -it Ubuntu sh
+```
+
+bastepnie wywolujemy to kolejno w kontenerze i na hoscie:
+```sh
+ps -fe
+```
+
+![alt text](Pid1.png)
+![alt text](pid1-host.png)
+
+# 6. Stwórz własnoręcznie, zbuduj i uruchom prosty plik Dockerfile bazujący na wybranym systemie i sklonuj nasze repo
+
+Tworzymy dockerfila w folderze lab2:
+```dockerfile
+FROM ubuntu
+
+RUN apt-get update && apt-get install -y git
+
+WORKDIR /app
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+```
+![alt text](dockerfile.png)
+
+nastepnie w folderze w ktorym mamy dockerfila (u nas lab2):
+```sh
+docker build . -t test-ubuntu-image
+```
+
+![alt text](<dzialajacy dockerfile.png>)
+
+analogicznie jak wczesniej wchodzimy do kontenera i sprawdzamy czy sie dobrze pobralo
+
+![alt text](<pokazanie dzialania.png>)
+
+# 7. Pokaż uruchomione ( != "działające" ) kontenery, wyczyść je.
+żeby sprawdzic liste kontenerow:
+```sh
+docker ps -la
+
+docker rm Test Ubuntu test-ubuntu
+```
+
+![alt text](czyszczenie.png)
+
+# 8. Wyczyść obrazy
+```sh
+docker image prune
+```
+![alt text](<usuniecie imagy.png>)
