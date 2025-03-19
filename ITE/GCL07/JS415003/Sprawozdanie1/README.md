@@ -2,6 +2,21 @@
 
 ## 001-Class
 
+6. Praca na nowej gałęzi
+    - Treść githooka
+    
+    ```bash
+    commit_msg=$(cat "$1")
+
+    if ! [[ "$commit_msg" =~ ^JS415003.* ]]; then
+        echo "ERROR: Commit message musi zaczynać się od 'JS415003'"
+        echo "Twoja wiadomość: $commit_msg"
+        exit 1
+    fi
+
+    exit 0
+    ```
+
 ## 002-Class
 1. Instalacja Dockera na Fedorze
 <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/002-Class/1.png" title="Docker instalacja" /> 
@@ -38,15 +53,18 @@
 
     <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/002-Class/6.png" title="Uruchomienie kontenera ubuntu" />
 
+7. Sprawdzenie czy kontener się utworzył i czy jest wyłączony.
 
-```bash
-commit_msg=$(cat "$1")
+    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/002-Class/7.png" title="Kontenery" />
 
-if ! [[ "$commit_msg" =~ ^JS415003.* ]]; then
-    echo "ERROR: Commit message musi zaczynać się od 'JS415003'"
-    echo "Twoja wiadomość: $commit_msg"
-    exit 1
-fi
+    Po sprawdzeniu wyczyszczenie kontenera.
 
-exit 0
-```
+    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/002-Class/8.png" title="Czyszczenie kontenera" />
+
+8. Czyszczenie obrazu.
+
+    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/002-Class/9.png" title="Czyszczenie obrazu" />
+
+9. Dodanie plików do folderu.
+
+    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/002-Class/10.png" title="Foldery" />
