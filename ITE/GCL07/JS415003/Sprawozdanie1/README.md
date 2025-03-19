@@ -1,3 +1,9 @@
+# Sprawozdanie 1
+
+## 002-Class
+1. Instalacja Dockera na Fedorze
+<img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/lab2 docker/1.png" title="Docker installation" /> 
+
 #!/bin/bash
 
 # Pobierz treść wiadomości commita
