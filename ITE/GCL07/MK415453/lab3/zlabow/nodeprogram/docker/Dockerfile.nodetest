@@ -1,0 +1,2 @@
+FROM bld2
+RUN npm start
