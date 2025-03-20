@@ -1,0 +1,9 @@
+#!/bin/bash
+
+COMMIT_MSG_FILE=$1
+EXPECTED_PREFIX="MS416436"
+
+if ! grep -q "^$EXPECTED_PREFIX" "$COMMIT_MSG_FILE"; then
+    echo "Blad: Komunikat commit'a musi zaczynac sie od \"$EXPECTED_PREFIX\""
+    exit 1
+fi
