@@ -1,5 +1,0 @@
-FROM wget-build
-
-WORKDIR /opt/wget
-
-CMD ["make", "check"]
