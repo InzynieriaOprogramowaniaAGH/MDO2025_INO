@@ -1,9 +1,0 @@
-# HOOK:
-
-#!/bin/sh
-MSG_FILE=$1
-COMMIT_MSG=$(cat "$MSG_FILE")
-if ! echo "$COMMIT_MSG" | grep -q "^MP415362"; then
-    echo "Error: Commit message must start with 'MP415362'"
-    exit 1
-fi
