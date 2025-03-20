@@ -1,0 +1,5 @@
+FROM node_build_v1
+
+WORKDIR /node-js-dummy-test
+
+RUN npm test
