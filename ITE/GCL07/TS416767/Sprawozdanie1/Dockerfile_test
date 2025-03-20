@@ -1,0 +1,17 @@
+# Dockerfile (test)
+FROM build_irssi
+
+# Ustaw zmienne środowiskowe (opcjonalne, ale pomocne)
+ENV IRSSI_SOURCE_DIR=/irssi
+ENV IRSSI_BUILD_DIR=/irssi/build
+
+# Ustaw katalog roboczy
+WORKDIR ${IRSSI_BUILD_DIR}
+
+# Uruchom testy podczas budowania obrazu
+CMD ninja test
+
+# (Opcjonalne) Sprawdź kod powrotu polecenia `ninja test` i wyjdź z błędem, jeśli testy się nie powiodły
+RUN if [ $? -ne 0 ]; then echo "Testy nie powiodły się!" && exit 1; fi
+
+    
