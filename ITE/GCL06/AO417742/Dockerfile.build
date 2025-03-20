@@ -1,0 +1,14 @@
+
+FROM node:latest
+
+
+WORKDIR /app
+
+RUN apt update && apt install -y git
+
+RUN git clone https://github.com/devenes/node-js-dummy-test.git /app
+
+RUN npm install
+
+
+CMD ["echo", " Build zakończon"]
