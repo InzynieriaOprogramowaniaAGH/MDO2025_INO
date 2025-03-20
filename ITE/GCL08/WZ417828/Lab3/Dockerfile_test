@@ -1,0 +1,5 @@
+FROM cjson_build
+
+WORKDIR /app
+
+CMD make test
