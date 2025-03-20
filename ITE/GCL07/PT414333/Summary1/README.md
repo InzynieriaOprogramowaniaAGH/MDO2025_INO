@@ -214,3 +214,57 @@ docker ps -la
 docker image prune
 ```
 ![alt text](class2/8.png)
+
+
+# Class 3
+
+
+## 1. Build & run tests in temporart container
+```sh
+docker run -i -t -d --name Ubuntu ubuntu
+docker attach Ubuntu
+
+# Inside container
+apt -y update
+apt -y install git meson gcc libglib2.0-dev libssl-dev libncurses-dev libutf8proc-dev libperl-dev
+
+git clone https://github.com/irssi/irssi.git
+cd irssi
+
+meson Build
+ninja -C Build && ninja -C Build test
+```
+
+## 2. Create Dokerfiles for build & test
+
+Create build [Dockerfile.irssi_b](class3/Dockerfile.irssi_b)
+```Dockerfile
+FROM ubuntu
+
+RUN apt -y update && \
+    apt -y install git meson gcc libglib2.0-dev libssl-dev libncurses-dev libutf8proc-dev libperl-dev
+
+RUN git clone https://github.com/irssi/irssi.git
+WORKDIR /irssi
+
+RUN meson Build
+RUN ninja -C Build
+```
+
+Create image:
+```sh
+docker build -f Dockerfile.irssi_b -t irssi-build .
+```
+
+Create test [Dockerfile.irssi_t](class3/Dockerfile.irssi_t)
+```Dockerfile
+FROM irssi-build
+
+WORKDIR /irssi
+
+RUN ninja -C Build test
+```
+Create image:
+```sh
+docker build -f Dockerfile.irssi_t --no-cache -t irssi-tests .
+```
