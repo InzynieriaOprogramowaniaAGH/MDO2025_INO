@@ -1,0 +1,2 @@
+FROM irssi_build
+RUN ninja -C Build test
