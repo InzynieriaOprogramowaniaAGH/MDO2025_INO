@@ -1,0 +1,20 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodebld
+    container_name: node-build-container
+    ports:
+      - "3000:3000"
+    working_dir: /node-js-dummy-test
+    command: npm start
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodetest
+    container_name: node-test-container
+    depends_on:
+      - app
+    command: npm test
