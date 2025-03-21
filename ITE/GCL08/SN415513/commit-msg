@@ -3,8 +3,6 @@
 FILE=$1
 MSG=$(cat "$FILE")
 
-echo "$MSG"
-
 if [[ ! "$MSG" =~ ^SN415513 ]]; then
     echo "ERROR: Invalid commit message. It has to begin with 'SN415513'."
     exit 1

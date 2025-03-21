@@ -85,18 +85,22 @@ szymon@szymonserver:~$ history
 
 ## Git hook
 ```sh
-#!/bin/sh
+#!/bin/bash
+
 FILE=$1
 MSG=$(cat "$FILE")
 
-if [[ ! $MSG =~ ^SN415513 ]]; then
+if [[ ! "$MSG" =~ ^SN415513 ]]; then
     echo "ERROR: Invalid commit message. It has to begin with 'SN415513'."
     exit 1
 fi
 ```
-## Nadanie uprawnień, przeniesienie w odpowiednie miejsce, sprawdzenie działania:
+## Nadanie uprawnień, konfiguracja:
 ![](12.png)
 
 
-## Push
+## Commit, sprawdzenie dzialania hooka
+![](13.png)
 
+## Push
+![](14.png)
