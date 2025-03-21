@@ -135,7 +135,30 @@ RUN npm test
 ![Opis obrazka](lab_3_dockerfile/hfajksdgfhksdjaghfk.png)
    
 4. Ujęto kontenery w kompozycję.
-   
+
+docker_compose.yml
+```sh
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodebld
+    container_name: node-build-container
+    ports:
+      - "3000:3000"
+    working_dir: /node-js-dummy-test
+    command: npm start
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodetest
+    container_name: node-test-container
+    depends_on:
+      - app
+    command: npm test
+```
 ![Opis obrazka](lab_3_dockerfile/3_1.png)
 
 ![Opis obrazka](lab_3_dockerfile/3_2.png)
