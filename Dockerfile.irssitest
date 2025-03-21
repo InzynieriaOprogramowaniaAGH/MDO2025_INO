@@ -1,0 +1,4 @@
+FROM irssibld
+
+WORKDIR /irssi/Build
+RUN ninja test
