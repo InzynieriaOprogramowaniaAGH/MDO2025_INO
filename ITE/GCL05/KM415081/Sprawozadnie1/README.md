@@ -87,6 +87,57 @@ CMD ["/bin/bash"]
 
 ![Opis obrazka](lab2_screenshots/images.png)
 
+# Zajęcia 03
 
+1. Sklonowano przesłane przez prowadzącego zajęcia repozytorium, przeprowadzono build programu, doinstalowano wymagane zależności i uruchomiono testy jednostkowe dołączone do repozytorium.
 
+![Opis obrazka](lab_3_dockerfile/1_1.png)
+
+![Opis obrazka](lab_3_dockerfile/1_2.png)
+
+![Opis obrazka](lab_3_dockerfile/1_3.png)
+
+2. Wykonano kroki build i test wewnątrz wybranego kontenera bazowego.
+- uruchomiono kontener
+- podłączono do niego TTY celem rozpoczęcia interaktywnej pracy
+- sklonowano repozytorium
+- skonfigurowano środowisko i uruchomiono build
+- uruchomiono testy
+
+![Opis obrazka](lab_3_dockerfile/2_1.png)
+
+![Opis obrazka](lab_3_dockerfile/2_2.png)
+
+![Opis obrazka](lab_3_dockerfile/2_3.png)
+
+3. Stworzono dwa pliki Dockerfile automatyzujące kroki powyżej i wykazano działanie kontenera.
+
+Dockerfile.nodebld
+```sh
+FROM node:22.14.0
+
+RUN git clone https://github.com/devenes/node-js-dummy-test
+WORKDIR /node-js-dummy-test
+RUN npm install
+CMD ["npm", "start"]
+```
+
+Dockerfile.nodetest
+```sh
+FROM nodebld
+RUN npm test
+```
+
+![Opis obrazka](lab_3_dockerfile/2_4.png)
+
+![Opis obrazka](lab_3_dockerfile/2_5.png)
+
+![Opis obrazka](lab_3_dockerfile/hfajksdgfhksdjaghfk.png)
    
+4. Ujęto kontenery w kompozycję.
+   
+![Opis obrazka](lab_3_dockerfile/3_1.png)
+
+![Opis obrazka](lab_3_dockerfile/3_2.png)
+
+![Opis obrazka](lab_3_dockerfile/3_3.png)
