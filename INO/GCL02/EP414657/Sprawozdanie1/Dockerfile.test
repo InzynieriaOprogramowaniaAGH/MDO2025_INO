@@ -1,2 +1,3 @@
-FROM node-js-dummy-test-build
-CMD ["npm", "test"]
+FROM myapp
+
+RUN npm test
