@@ -1,0 +1,210 @@
+684  git clone https://github.com/devenes/node-js-dummy-test.git
+  685  cd node-js-dummy-test/
+  686  npm install
+  687  sudo dnf install nodejs
+  688  cd ..
+  689  rm -rf node-js-dummy-test/
+  690  ls
+  691  cd ..
+  692  ls
+  693  git clone https://github.com/devenes/node-js-dummy-test.git
+  694  sudo dnf install nodejs
+  695  npm install
+  696  pwd
+  697  ls
+  698  cd node-js-dummy-test/
+  699  npm install
+  700  ;s
+  701  ls
+  702  make bulid
+  703  make build
+  704  npm test
+  705  node -v
+  706  cd ..
+  707  ls
+  708  cd node-js-dummy-test/
+  709  ls
+  710  docker build -t nodetest ./Dockerfile.nodetest .
+  711  docker build -t nodetest -f ./Dockerfile.nodetest .
+  712  npm test
+  713  ls
+  714  nano Dockerfile.build
+  715  nano Dockerfile.test
+  716  nano Dockerfile.build
+  717  nano Dockerfile.noderun
+  718  docker build -t test -f ./Dockerfile.test .
+  719  cat  Dockerfile.build
+  720  ctd Dockerfile.noderun
+  721  cat Dockerfile.noderun
+  722  cat Dockerfile.test
+  723  cd ..
+  724  ld
+  725  ls
+  726  cd MDO2025_INO/
+  727  cd ITE
+  728  cd GCL05
+  729  ls
+  730  cd KM415081/
+  731  ls
+  732  nano Dockerfile.nodebld
+  733  nano Dockerfile.noderun
+  734  nano Dockerfile.nodetest
+  735  docker build -t node-test -f ./Dockerfile.nodetest .
+  736  pwd
+  737  cd ..
+  738  ls
+  739  pwd
+  740  cd /home/cadmus/MDO2025_INO/ITE/GCL05/KM415081
+  741  ls
+  742  nano Dockerfile.nodebld
+  743  docker build -t node-test -f ./Dockerfile.nodetest .
+  744  nano Dockerfile.nodebld
+  745  docker build -t nodebld -f /home/cadmus/MDO2025_INO/ITE/GCL05/KM415081/Dockerfile.nodebld .
+  746  ls
+  747  rm Dockerfile.noderun
+  748  nano Dockerfile.nodetest
+  749  cat Dockerfile.nodebld
+  750  nano Dockerfile.nodebld
+  751  docker build -t nodebld -f ./Dockerfile.nodebld .
+  752  rm Dockerfile.nodebld
+  753  rm Dockerfile.nodetest 
+  754  cd ..
+  755  cd node-js-dummy-test/
+  756  ls
+  757  mv Dockerfile.build Dockerfile.nodebld
+  758  mv Dockerfile.test Dockerfile.nodetest
+  759  nano Dockerfile.nodebld
+  760  nano Dockerfile.noderun
+  761  nano Dockerfile.nodetest
+  762  dockler build -t nodetest -f ./Dockerfile.nodetest .
+  763  docker build -t nodetest -f ./Dockerfile.nodetest .
+  764  docker build -t nodebld -f ./Dockerfile.nodebld .
+  765  docker build -t noderun -f ./Dockerfile.noderun .
+  766  docker build -t noderun -f ./Dockerfile.nodetest .
+  767  docker images
+  768  docker run dummy
+  769  docker run --rm -it node:slim sh
+  770  docker build -t noderun -f ./Dockerfile.nodetest .
+  771  docker build -t nodetest -f ./Dockerfile.nodetest .
+  772  docker images
+  773  ls
+  774  cat package.json
+  775  cat Dockerfile
+  776  docker run -it --name node-container node:16 /bin/bash
+  777  docker images
+  778  docker build -t nodetest -f ./Dockerfile.nodetest .
+  779  docker build -t dummy -f ./Dockerfile.nodedeploy .
+  780  mv Dockerfile.noderun
+  781  ls
+  782  rm Dockerfile.noderun
+  783  nano Dockerfile.nodebld
+  784  docker build -t node-build -f Dockerfile.nodebld .
+  785  nano Dockerfile.nodebld
+  786  docker build -t node-build -f Dockerfile.nodebld .
+  787  docker build -t nodetest -f ./Dockerfile.nodetest .
+  788  nano Dockerfile.nodebld
+  789  nano Dockerfile.nodetest
+  790  docker run -it node-test
+  791  docker run -it nodetest
+  792  npm start
+  793  node src/index.js
+  794  docker run -it node-test
+  795  docker run -it nodetest
+  796  node src/index.js
+  797  sudo netstat -tuln | grep :3000
+  798  sudo kill -9 tcp6
+  799  sudo lsof -i :3000
+  800  sudo kill -9 10327
+  801  node src/index.js
+  802  ls
+  803  docker run dummy
+  804  docker run nodetest
+  805  cat package.json
+  806  docker build -t dummy .
+  807  docker run dummy
+  808  docker ps
+  809  docker run dummy
+  810  nano docker-compose.yml
+  811  docker-compose up -d
+  812  docker-compose up
+  813  yum install docker-compose
+  814  sudo yum install docker-compose
+  815  docker-compose up
+  816  nano docker-compose.yml
+  817  ls -l
+  818  ls
+  819  cd node-js-dummy-test/
+  820  nano docker-compose.yml
+  821  docker-compose up
+  822  docker-compose down
+  823  pwd
+  824  ls
+  825  cd ..
+  826  cd MDO2025_INO/
+  827  cd ITE
+  828  cd GCL05
+  829  cd KM415081/
+  830  ls
+  831  cd Sprawozdanie1
+  832  cd Sprawozadnie1
+  833  ls
+  834  mkdir lab_3_dockerfile
+  835  cd lab_3_dockerfile/
+  836  pwd
+  837  cp /home/cadmus/node-js-dummy-test/docker-compose.yml /home/cadmus/MDO2025_INO/ITE/GCL05/KM415081/Sprawozadnie1/lab_3_dockerfile/
+  838  ls
+  839  nano docker-compose.yml 
+  840  cp /home/cadmus/node-js-dummy-test/Dockerfile.nodebld /home/cadmus/MDO2025_INO/ITE/GCL05/KM415081/Sprawozadnie1/lab_3_dockerfile/
+  841  ls
+  842  cp /home/cadmus/node-js-dummy-test/Dockerfile.nodetest /home/cadmus/MDO2025_INO/ITE/GCL05/KM415081/Sprawozadnie1/lab_3_dockerfile/
+  843  ls
+  844  nano Dockerfile.nodebld
+  845  nano Dockerfile.nodetest
+  846  cd ..
+  847  git checkout KM415081
+  848  git add .
+  849  git commit -m "KM415081 lab3"
+  850  git push origin KM415081
+  851  git branch
+  852  git checkout KM415081
+  853  git add .
+  854  git commit -m "KM415081 lab3"
+  855  git push origin KM415081
+  856  git pull origin KM415081
+  857  git pull --rebase origin KM415081
+  858  ls
+  859  git add .
+  860  git commit -m "KM415081 lab3"
+  861  git push origin KM415081 
+  862  git pull origin KM415081 --rebase
+  863  git status
+  864  cd lab_3_dockerfile/
+  865  git add .
+  866  git status
+  867  ssh-keygen -t rsa -b 4096 -C "mierzwakc@o2.pl"
+  868  cat ~/.ssh/id_rsa.pub
+  869  cd ..
+  870  git add .
+  871  git status
+  872  cd lab_3
+  873  cd lab_3_dockerfile/
+  874  ls
+  875  nano docker-compose.yml 
+  876  nano Dockerfile.nodebld
+  877  nano Dockerfile.nodetest
+  878  cd ..
+  879  ls
+  880  cd MDO2025_INO/
+  881  git remote set-url origin git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  882  git push origin KM415081
+  883  cd /ITE/GCL05/KM415081/Sprawozadnie1/
+  884  cd ITE/GCL05/KM415081/Sprawozadnie1/
+  885  ls
+  886  mkdir lab3_screenshots
+  887  ls
+  888  git add .
+  889  git commit -m "KM415081 ssy z 3"
+  890  git push origin KM415081 
+  891  rmdir lab3_screenshots/
+  892  ls
+  893  history
