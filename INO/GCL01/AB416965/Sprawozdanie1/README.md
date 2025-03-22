@@ -284,3 +284,4 @@ CMD ["bash"]
 **Dodanie `Dockerfile` do commita i wypchnięcie zmian do repozytorium zdalnego**
 
 ![Stworzenie commita z Dockerfile](<Zrzuty2/zrzut_ekranu19.png>)
+
