@@ -285,3 +285,112 @@ CMD ["bash"]
 
 ![Stworzenie commita z Dockerfile](<Zrzuty2/zrzut_ekranu19.png>)
 
+## **Zajęcia 03 - Dockerfile, Build i Testy**
+
+---
+
+### **1. Wybrane oprogramowanie:** [**cJSON**](https://github.com/DaveGamble/cJSON)
+
+- Oprogramowanie na otwartej licencji (MIT)
+- Repozytorium zawiera `CMakeLists.txt` oraz `Makefile`
+- Obsługuje `make` i `make test`
+- Zawiera testy jednostkowe z raportem
+
+---
+
+### **2. Budowanie i testowanie lokalnie (Fedora)**
+
+#### **Instalacja zależności:**
+
+![Instalacja zaleznosci](<Zrzuty3/zrzut_ekranu1.png>)
+
+#### **Klonowanie repozytorium:**
+
+![Klonowanie repozytorium](<Zrzuty3/zrzut_ekranu2.png>)
+
+#### **Budowanie projektu:**
+
+![Budowanie projektu_1](<Zrzuty3/zrzut_ekranu3.png>)
+
+![Budowanie projektu_2](<Zrzuty3/zrzut_ekranu4.png>)
+
+![Budowanie projektu_3](<Zrzuty3/zrzut_ekranu5.png>)
+
+![Budowanie projektu_4](<Zrzuty3/zrzut_ekranu6.png>)
+
+#### **Testowanie:**
+
+![Testowanie](<Zrzuty3/zrzut_ekranu7.png>)
+
+### **3. Budowanie i testowanie w kontenerze Docker (interaktywnie)**
+
+#### **Uruchomienie kontenera Ubuntu i instalacja zeleżności:**
+
+![Uruchomienie kontenera Ubuntu](<Zrzuty3/zrzut_ekranu8.png>)
+
+#### **Klonowanie repozytorium:**
+
+![Klonowanie repozytorium](<Zrzuty3/zrzut_ekranu9.png>)
+
+#### **Budowanie i testy:**
+
+![Budowanie_1](<Zrzuty3/zrzut_ekranu10.png>)
+
+![Budowanie_2](<Zrzuty3/zrzut_ekranu11.png>)
+
+![Testy](<Zrzuty3/zrzut_ekranu12.png>)
+
+#### **Wyjście z kontenera:**
+
+![Wyjscie](<Zrzuty3/zrzut_ekranu13.png>)
+
+### **4. Dockerfile - etap build**
+
+#### **Dockerfile.build**
+
+```dockerfile
+FROM ubuntu:latest
+
+RUN apt update && apt install -y git cmake gcc g++ make
+
+WORKDIR /app
+RUN git clone https://github.com/DaveGamble/cJSON.git .
+RUN mkdir build && cd build && cmake .. && make
+```
+
+#### **Budowanie obrazu:**
+
+![Budowanie obrazu](<Zrzuty3/zrzut_ekranu14.png>)
+
+### **5. Dockerfile - etap test**
+
+#### **Dockerfile.test**
+
+```dockerfile
+FROM cjson-build
+
+WORKDIR /app/build
+CMD ["ctest"]
+```
+
+#### **Budowanie obrazu:**
+
+![Budowanie obrazu](<Zrzuty3/zrzut_ekranu15.png>)
+
+#### **Uruchomienie testów:**
+
+![Testowanie](<Zrzuty3/zrzut_ekranu16.png>)
+
+#### **Widoczny działający kontener i obrazy:**
+
+![Widoczne obrazy](<Zrzuty3/zrzut_ekranu17.png>)
+
+### **6. Dodanie `Dockerfile.build` i `Dockerfile.test` do repozytorium**
+
+#### **Przeniesienie Dockerfile do przygotowanego katalogu w repozytorium:**
+
+![Przeniesienie Dockerfile do folderu w repo](<Zrzuty3/zrzut_ekranu18.png>)
+
+#### **Wysłanie Dockerfile na repozytorium zdalne:**
+
+![Git push](<Zrzuty3/zrzut_ekranu19.png>)
