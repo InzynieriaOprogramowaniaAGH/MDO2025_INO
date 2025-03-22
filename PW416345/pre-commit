@@ -1,6 +1,0 @@
-#!/bin/bash
-commit_msg=$(cat "$1")
-if [[ ! $commit_msg =~ ^AB123456 ]]; then
-    echo "Commit message musi zaczynać się od 'AB123456'"
-    exit 1
-fi
