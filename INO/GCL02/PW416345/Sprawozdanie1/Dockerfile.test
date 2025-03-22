@@ -1,0 +1,5 @@
+FROM build-image
+
+WORKDIR /app
+
+CMD ["npm", "test"]
