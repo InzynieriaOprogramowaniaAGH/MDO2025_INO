@@ -240,3 +240,85 @@ sudo docker rmi -f $(sudo docker images -aq)
 **9. Dodanie stworzonego pliku `Dockerfile` do folderu `Sprawozdanie1` w repozytorium**
 
 ![ss](../Sprawozdanie1/screenshots_lab2/ss16.png)
+
+<br>
+
+## Laboratorium nr 3
+
+Wybrane przeze mnie repozytorium to **sds (Simple Dynamic Strings)**.
+* Dysponuje ono otwartą licencją
+* Zawiera plik `Makefile`
+* Zawiera zdefiniowane testy, jako "target" `Makefile`
+
+Klonowanie repozytorium:
+``` bash
+git clone https://github.com/antirez/sds.git
+```
+
+![ss](./screenshots_lab3/ss1.png)
+
+Uruchomienie programu:
+
+![ss](./screenshots_lab3/ss2.png)
+
+![ss](./screenshots_lab3/ss3.png)
+
+Program przeszedł pomyślnie wszystkie testy.
+
+
+
+### Przeprowadzenie buildu w kontenerze
+
+**1. Proces został przeprowadzony w kontenerze `ubuntu`**
+
+* Pobranie i uruchomienie kontenera:
+![ss](./screenshots_lab3/ss4.png)
+
+* Instalacja wymaganych zależności:
+![ss](./screenshots_lab3/ss5.png)
+![ss](./screenshots_lab3/ss7.png)
+
+* Klonowanie repozytorium:
+![ss](./screenshots_lab3/ss6.png)
+
+* Uruchomienie programu (wszystkie testy przebiegły pomyślnie):
+![ss](./screenshots_lab3/ss8.png)
+
+<br>
+
+**2. Pliki Dockerfile automatyzujące powyższe kroki**
+
+Plik `Dockerfile` (build):
+![ss](./screenshots_lab3/ss9.png)
+
+Plik `Dockerfile.test` (testy):
+![ss](./screenshots_lab3/ss10.png)
+
+Budowanie obrazu na podstawie `Dockerfile`:
+![ss](./screenshots_lab3/ss11.png)
+
+Budowanie obrazu na podstawie `Dockerfile.test`:
+![ss](./screenshots_lab3/ss12.png)
+
+Uruchomienie testów:
+![ss](./screenshots_lab3/ss13.png)
+Wszystkie testy zakończyły się powodzeniem.
+
+<br>
+
+### Docker Compose
+
+Plik `docker-compose.yml`:
+![ss](./screenshots_lab3/ss14.png)
+
+Konieczne było doinstalowanie potrzebnego pakietu:
+``` bash
+sudo yum install docker-compose
+```
+![ss](./screenshots_lab3/ss15.png)
+
+Efekt uruchomienia:
+![ss](./screenshots_lab3/ss16.png)
+![ss](./screenshots_lab3/ss17.png)
+
+
