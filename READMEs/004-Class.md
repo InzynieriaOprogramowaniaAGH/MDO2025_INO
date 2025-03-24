@@ -10,7 +10,10 @@
   * https://docs.docker.com/engine/storage/volumes/
 * Przygotuj woluminy wejściowy i wyjściowy, o dowolnych nazwach, i podłącz je do kontenera bazowego, z którego rozpoczynano poprzednio pracę. Kontener bazowy to ten, który umie budować nasz projekt (ma zainstalowane wszystkie dependencje)
 * Uruchom kontener, zainstaluj/upewnij się że istnieją niezbędne wymagania wstępne (jeżeli istnieją), ale *bez gita*
-* Sklonuj repozytorium na wolumin wejściowy (opisz dokładnie, jak zostało to zrobione)
+* Sklonuj repozytorium na wolumin wejściowy
+  * Opisz dokładnie, jak zostało to zrobione
+    * Wolumin pomocniczy?
+    * Kopiowanie do katalogu z woluminem na hoście?
 * Uruchom build w kontenerze - rozważ skopiowanie repozytorium do wewnątrz kontenera
 * Zapisz powstałe/zbudowane pliki na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera.
 * Pamiętaj udokumentować wyniki.
