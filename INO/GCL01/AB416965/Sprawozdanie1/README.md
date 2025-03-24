@@ -385,12 +385,40 @@ CMD ["ctest"]
 
 ![Widoczne obrazy](<Zrzuty3/zrzut_ekranu17.png>)
 
-### **6. Dodanie `Dockerfile.build` i `Dockerfile.test` do repozytorium**
+### **6. Docker Compose**
 
-#### **Przeniesienie Dockerfile do przygotowanego katalogu w repozytorium:**
+#### **docker-compose.yml**
 
-![Przeniesienie Dockerfile do folderu w repo](<Zrzuty3/zrzut_ekranu18.png>)
+```yaml
+version: '3'
+services:
+  build:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      - build
+```
 
-#### **Wysłanie Dockerfile na repozytorium zdalne:**
+#### **Uruchomienie wszystkiego:**
 
-![Git push](<Zrzuty3/zrzut_ekranu19.png>)
+![Docker-compose_1](<Zrzuty3/zrzut_ekranu18.png>)
+
+![Docker_compose_2](<Zrzuty3/zrzut_ekranu19.png>)
+
+### **7. Analiza procesu wdrożenia i publikacji**
+
+#### **Jak wygląda przygotowanie artefaktu?**
+
+- Artefaktem byłaby biblioteka `.a` lub `.so`, którą należałoby przenieść do innego systemu.
+- Można utworzyć **trzeci Dockerfile** do eksportu tych plików.
+- Alternatywnie: stworzyć **pakiet DEB lub RPM**.
+
+#### **Wdrożenie?**
+
+- Konteneryzacja builda to dobry krok w CI/CD.
+- Do publikacji: **dedykowana ścieżka (deploy)**, z czystym obrazem lub paczką.
