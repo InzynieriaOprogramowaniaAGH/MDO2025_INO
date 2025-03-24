@@ -98,3 +98,71 @@ Wszystkie kontenery, jak widać uruchomiony i działający jest tylko jeden
 Usuwanie wszystkich kontenerów oraz obrazów
 
 ![Usuwanie wszystkich kontenerów oraz obrazów](lab2/13.jpg)
+
+## Lab 3
+
+Sklonowanie repozytorium z aplikacją w Node.js (lokalnie, nie w kontenerze)
+
+![Sklonowanie repozytorium z aplikacją w Node.js](lab3/1.jpg)
+
+Zainstalowanie wymaganych zależności
+
+![Zainstalowanie wymaganych zależności](lab3/2.jpg)
+
+Wykonanie testów jednostkowych
+
+![Wykonanie testów jednostkowych](lab3/3.jpg)
+
+Gotowy obraz Node.js do użycia
+
+![Gotowy obraz Node.js do użycia](lab3/4.jpg)
+
+Uruchomienie kontenera z obrazu Node i przejście do terminala tegoż kontenera
+
+![Uruchomienie kontenera z obrazu Node i przejście do terminala tegoż kontenera](lab3/5.jpg)
+
+Sklonowanie repozytorium wewnątrz kontenera, zainstalowanie wymaganych zależności
+
+![Sklonowanie repozytorium wewnątrz kontenera, zainstalowanie wymaganych zależności](lab3/6.jpg)
+
+Wykonanie testów jednostkowych w kontenerze
+
+![Wykonanie testów jednostkowych w kontenerze](lab3/7.jpg)
+
+Dockerfile do zbudowania obrazu naszej aplikacji
+
+![Dockerfile do zbudowania obrazu naszej aplikacji](lab3/8.jpg)
+
+```dockerfile
+FROM node:latest
+
+RUN git clone https://github.com/devenes/node-js-dummy-test
+
+WORKDIR /node-js-dummy-test
+
+RUN npm i
+
+CMD ["npm", "run", "start"]
+```
+
+Dockerfile do zbudowania drugiego obrazu do odpalenia testów jednostkowych aplikacji, który jest budowany na podstawie obrazu stworzonego w poprzednim kroku
+
+![Dockerfile no. 2](lab3/9.jpg)
+
+```dockerfile
+FROM my_node_build
+
+CMD ["npm", "run", "test"]
+```
+
+Budowanie pierwszego obrazu z pierwszego Dockerfile
+
+![Budowanie pierwszego obrazu z pierwszego Dockerfile](lab3/10.jpg)
+
+Budowanie drugiego obrazu z drugiego Dockerfile
+
+![Budowanie drugiego obrazu z drugiego Dockerfile](lab3/11.jpg)
+
+Uruchomienie kontenerów z obydwu utworzonych przez nas obrazów
+
+![Uruchomienie kontenerów z obydwu utworzonych przez nas obrazów](lab3/12.jpg)
