@@ -124,6 +124,8 @@ services:
 - Powodzenie działania potwierdza możliwość wymiany plików pomiędzy dwoma kontenerami za pomocą woluminów. 
 - Utworzony lik `Dockerfile`, którego zadaniem było zautomatyzowanie budowania aplikacji poprzez skopiowanie jej z udostępnionego woluminu, zbudowanie i zwrócenie wynikó pracy w woluminie wyjściowym. Wykorzystano typ montowania bind i utworzono nowe katalogi dla woluminów, nie znajdujące się w katalogach dockera. 
 ```
+### Dockerfile ###
+
 FROM ubuntu:22.04
 
 RUN apt update && apt install -y gcc make
@@ -144,6 +146,8 @@ RUN --mount=type=bind,source=./input,target=/mnt/input \
 - Uruchomiono nowy kontener, zainstalowano usługę `iperf3` i połączono się z serwerem poprzez uzyskany adres. ![zrzut ekranu](media/m34_society.png)
 - Do następnych zadań utworzono, prosty, pomocniczy plik `Dockerfiles.iperf`, który instaluje usługę `iperf3`.
 ```
+### Dockerfile.iperf ###
+
 FROM ubuntu:22.04
 RUN apt update && apt install -y iperf3 -y
 ```
@@ -159,3 +163,17 @@ RUN apt update && apt install -y iperf3 -y
 - Uruchomiono kontener jenkins-dind, zadaniem którego jest udostępnienie środowiska Docker, z którego kontener z Jenkinsem może korzystać do budowania, uruchamiania i zarządzania innymi kontenerami w ramach zadań CI/CD.
 - Uruchomiono kontener jenkins z oficjalnego obrazu `jenkins/jenkins:lts`, podłączony do wcześniej utworzonej sieci `jenkins-net`. Kontener wystawia porty `8080` (interfejs webowy) oraz `50000` (dla agentów Jenkins). Dane konfiguracyjne Jenkinsa są przechowywane w woluminie `jenkins_home`, zamontowanym pod `/var/jenkins_home` w kontenerze.
 - Udało się dostać do ekranu logowania na hoście maszyny wirtualnej. ![ekran logowania](media/m40_jenkins.png)
+- W ramach zadania dodatkowego utworzono obraz, który zajmie się wyłącznie budowaniem, bez kopiowania i klonowania.
+```
+### Dockerfile.build ###
+
+FROM ubuntu:20.04
+RUN apt update && apt install -y gcc make
+CMD ["bash"]
+```
+- Dockerfile został zbudowany pod nazwą `builder` i został następnie użyty jako podstawa kontenera, który skopiował repozytorium z woluminu wejściowego i następnie wykorzystując już zaisntalowane narzędzia, dokonał kompilacji po czym zapisał wyniki w woluminie wyjściowym.
+![kompilacja i efekty](media/m41_build.png)
+
+
+### Wykorzystanie Sztucznej Intelginecji w ramach zajęć
+W ramach zajęć wykorzystano model GPT-4o
