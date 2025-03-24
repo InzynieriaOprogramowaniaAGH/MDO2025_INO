@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/458ac43b-d0fb-4f6b-b30b-77eb10a926cc)![image](https://github.com/user-attachments/assets/75396def-2212-488e-9c08-9b83de988a14)# Sprawozdanie z laboratoriów: SSH, GIT, Docker, Dockerfiles
+Sprawozdanie z laboratoriów: SSH, GIT, Docker, Dockerfiles
 Przedmiot: DevOps
 Kierunek: Inżynieria Obliczeniowa
 Autor: Filip Rak
@@ -102,7 +102,7 @@ services:
       - cj-build
 ```
 - Budowanie odbyło się poleceniem `docker-compose up --build`. ![Zrzut ekranu kompozycji](media/m22_compose.png)
--To, czy dany program nadaje się do wdrażania i publikowania jako kontener, zależy od kilku czynników. Jeśli aplikacja opiera się na interakcji z użytkownikiem i środowiskiem, w którym działa, jej uruchomienie w kontenerze wymagałoby znacznego dodatkowego wysiłku, aby zapewnić pełną funkcjonalność (np. obsługę sterowników, dostęp do plików oraz urządzeń peryferyjnych hosta). Kontenery są idealnym rozwiązaniem dla aplikacji działających w tle, które nie wymagają bezpośredniej interakcji z użytkownikiem, takich jak serwery czy backendy. Ze względu na ograniczoną obsługę sterowników oraz brak natywnej współpracy z hostem i urządzeniami peryferyjnymi, aplikacje użytkowe, które z tych funkcji korzystają, nie powinny być umieszczane w kontenerach – z wyjątkiem sytuacji, w których konieczne jest testowanie działania aplikacji w różnych środowiskach.
+- To, czy dany program nadaje się do wdrażania i publikowania jako kontener, zależy od kilku czynników. Jeśli aplikacja opiera się na interakcji z użytkownikiem i środowiskiem, w którym działa, jej uruchomienie w kontenerze wymagałoby znacznego dodatkowego wysiłku, aby zapewnić pełną funkcjonalność (np. obsługę sterowników, dostęp do plików oraz urządzeń peryferyjnych hosta). Kontenery są idealnym rozwiązaniem dla aplikacji działających w tle, które nie wymagają bezpośredniej interakcji z użytkownikiem, takich jak serwery czy backendy. Ze względu na ograniczoną obsługę sterowników oraz brak natywnej współpracy z hostem i urządzeniami peryferyjnymi, aplikacje użytkowe, które z tych funkcji korzystają, nie powinny być umieszczane w kontenerach – z wyjątkiem sytuacji, w których konieczne jest testowanie działania aplikacji w różnych środowiskach.
 - W przypadku cJSON wdrażanie jako kontener nie ma żadnego sensu, ponieważ jest to biblioteka, która powinna być instalowana w systemie lub dołączana jako zależność w projekcie C. Jedynym uzasadnionym zastosowaniem kontenera w tym przypadku jest testowanie biblioteki w różnych środowiskach.
 - Jeśli program miałby zostać opublikowany w kontenerze, powinien zostać oczyszczony z pozostałości kompilacyjnych, aby zmniejszyć zużycie pamięci i przestrzeni dyskowej oraz uniknąć zbędnych plików, które nie są potrzebne w środowisku produkcyjnym. W takim przypadku dedykowany Dockerfile do procesu "deploy-and-publish" jest jak najbardziej uzasadniony. Pozwala on na automatyczne czyszczenie obrazu z niepotrzebnych plików kompilacyjnych, co zmniejsza jego rozmiar i optymalizuje wdrażanie nowych wersji oprogramowania. Oddzielenie builda od wdrożenia ułatwia również zarządzanie cyklem życia aplikacji i zapewnia lepszą kontrolę nad jej zależnościami.
 - Jeśli program wymaga głębszej integracji z systemem użytkownika, powinien być dystrybuowany w formie pakietu, np. `.dll` (dla Windows) lub `.jar` (dla wieloplatformowych aplikacji Java). Nie wszystkie z tych formatów są kompatybilne z każdym systemem, co stanowi pewną wadę i jednocześnie podkreśla jedną z zalet kontenerów – ich niezależność od systemu operacyjnego.
@@ -113,8 +113,8 @@ services:
 - Przygotowano woluminy wejściowy i wyjściowy poleceniem `docker volume create [nazwa]`. ![Utworzenie woluminów](media/m23_create_volumes.png)
 - Uruchomiono nowy kontener bazujący na ubuntu połączono do niego utworzone woluminy poleceniem `docker run -it --name volume-test -v input:/mnt/input -v output:/mnt/output ubuntu`
 - Zainstalowano wymagania wstępne do kompilacji cJSON (`make`, `gcc`) poleceniami `apt-get update && apt-get install gcc make -y` ![Wejście do kontenera i instalacja zależności](media/m24_install_dep.png)
-- Zweryfikowano obecność zamontowanych katalogów ![Mounts](media/m25_mounts.png)
-- Na hoście odnaleziono lokalizacje woluminu wejściowego (`docker volume inspect`) i skolonowano do niego repozytorium `cJSON` ![Klonowanie do woluminu](media/m26_clone.png)
+- Zweryfikowano obecność zamontowanych katalogów ![Mounts](media/m26_mounts.png)
+- Na hoście odnaleziono lokalizacje woluminu wejściowego (`docker volume inspect`) i skolonowano do niego repozytorium `cJSON` ![Klonowanie do woluminu](media/m25_clone.png)
 - W kontenerze udało się potwierdzić obecność sklonowanego repozytorium ![repo w kontenerrze](media/m27_ls.png)
 - Poleceniem `cp -r` skopiowano repozytorium do katalogu wewnętrznego kontenera i zbudowano poleceniem `make`.
 - Skopilowanie pliki bibliotek i nagłówkowe skopiowano do katalogu wyjściowego. ![skopiowanie wyników](media/m28_build.png)
@@ -155,3 +155,7 @@ RUN apt update && apt install -y iperf3 -y
 - Z serwerem połączono się również z samego hosta. ![połączenie z hosta](media/m37_host_conn.png)
 - Następnie połączono się z serwerem przez kolejny kontener, tym razem zapisując wynik w woluminie wyjściowym, który został odczytany na hoście poleceniem `cat`. ![logi z kontenera](media/m38_cat.png)
 - Z powodzeniem udało się nawiązać połączenie z serwerem z innej maszyny wirtualnej. Wymagane było otworzenie portu używanego przez usługę `iperf3`, co zostało osiągniętę podczas uruachmiania kontenera i użycia opcji `-p`. Pełne polecenie: `docker run -d --name iperf-server --network iperf-net -p 5201:5201 iperf-ready sh -c "iperf3 -s"` ![Polaczenie z ubuntu](media/m39_ubuntu_conn.png)
+- Utworzono nową sieć `docker network create jenkins-net`.
+- Uruchomiono kontener jenkins-dind, zadaniem którego jest udostępnienie środowiska Docker, z którego kontener z Jenkinsem może korzystać do budowania, uruchamiania i zarządzania innymi kontenerami w ramach zadań CI/CD.
+- Uruchomiono kontener jenkins z oficjalnego obrazu `jenkins/jenkins:lts`, podłączony do wcześniej utworzonej sieci `jenkins-net`. Kontener wystawia porty `8080` (interfejs webowy) oraz `50000` (dla agentów Jenkins). Dane konfiguracyjne Jenkinsa są przechowywane w woluminie `jenkins_home`, zamontowanym pod `/var/jenkins_home` w kontenerze.
+- Udało się dostać do ekranu logowania na hoście maszyny wirtualnej. ![ekran logowania](media/m40_jenkins.png)
