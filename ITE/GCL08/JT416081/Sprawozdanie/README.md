@@ -117,7 +117,7 @@ Temat: Git, Docker
 6. Stworzono własnoręcznie plik `Dockerfile` 
 
 ```
-FROM ubuntu:latest
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -141,3 +141,79 @@ CMD ["/bin/bash"]
 8. Wyczyszczenie obrazów (tylko tych nie używanych)
 
    ![alt text](image23.png)
+
+---ZAJĘCIA_03---
+
+Na potrzeby tego zadania znalazłem projekt json-c – jest to biblioteka C do obsługi JSON-a, rozwijana jako projekt open-source na GitHubie.
+Repozytorium posiada otwartą licencję (MIT), a także zawiera kompletny system budowania oparty o CMake i Makefile. Dodatkowo dostępne są testy jednostkowe, które można odpalić jako cel make test.
+Sklonowanie repozytorium:
+
+   ![alt text](image24.png)
+
+Kompilacja przebiegła bez błędów po zainstalowaniu wymaganych pakietów:
+
+   ![alt text](image25.png)
+
+   ![alt text](image26.png)
+
+Testy wykonały się poprawnie, a wynik końcowy był jasno sformułowany:
+
+   ![alt text](image27.png)
+
+Proces w kontenerze, interaktywnie
+
+Na potrzeby konteneryzacji użyłem obrazu bazowego ubuntu:20.04. Uruchomiłem kontener w trybie interaktywnym z TTY:
+
+   ![alt text](image28.png)
+
+Po wejściu do kontenera doinstalowałem potrzebne pakiety:
+
+   ![alt text](image29.png)
+
+Klonowanie repo i budowanie:
+
+   ![alt text](image30.png)
+
+   ![alt text](image31.png)
+
+Testowanie:
+
+   ![alt text](image32.png)
+
+Dockerfile do budowania i testowania
+Stworzyłem pierwszy Dockerfile, który wykonuje wszystkie kroki aż do zbudowania projektu:
+
+```
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y  git cmake gcc g++ make
+
+WORKDIR /json-c
+
+RUN git clone https://github.com/json-c/json-c.git src
+
+WORKDIR /json-c/src
+
+RUN mkdir build
+WORKDIR /json-c/src/build
+
+RUN cmake ..
+RUN make
+```
+
+   ![alt text](image33.png)
+
+
+Drugi Dockerfile bazuje na poprzednim obrazie (np. json-c-builder) i wykonuje tylko testy:
+
+```
+FROM json-c-builder:latest
+
+WORKDIR /json-c/src/build
+
+CMD ["make", "test"]
+```
+
+   ![alt text](image34.png)
