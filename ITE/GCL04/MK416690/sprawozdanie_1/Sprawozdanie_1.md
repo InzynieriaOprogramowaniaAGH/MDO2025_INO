@@ -4,35 +4,35 @@
 
 Instalacja Gita
 
-![Instalacja Gita](lab1_screenshots/1.jpg)
+![Instalacja Gita](lab1/1.jpg)
 
 Sklonowanie repozytorium przez HTTPS
 
-![Sklonowanie repozytorium przez HTTPS](lab1_screenshots/2.jpg)
+![Sklonowanie repozytorium przez HTTPS](lab1/2.jpg)
 
 Wygenerowanie klucza SSH
 
-![Wygenerowanie klucza SSH](lab1_screenshots/3.jpg)
+![Wygenerowanie klucza SSH](lab1/3.jpg)
 
 Sklonowanie repozytorium przez SSH
 
-![Sklonowanie repozytorium przez SSH](lab1_screenshots/4.jpg)
+![Sklonowanie repozytorium przez SSH](lab1/4.jpg)
 
 Utworzenie katalogu w odpowiednim branchu
 
-![Utworzenie katalogu w odpowiednim branchu](lab1_screenshots/5.jpg)
+![Utworzenie katalogu w odpowiednim branchu](lab1/5.jpg)
 
 Dodanie skryptu walidującego poprawność nazw commitów do odpowiedniego katalogu z hookami
 
-![Dodanie skryptu walidującego poprawność nazw commitów do odpowiedniego katalogu z hookami](lab1_screenshots/6.jpg)
+![Dodanie skryptu walidującego poprawność nazw commitów do odpowiedniego katalogu z hookami](lab1/6.jpg)
 
 Jak widać, skrypt działa. Niepoprawna nazwa commita nie jest akceptowana
 
-![Jak widać, skrypt działa. Niepoprawna nazwa commita nie jest akceptowana](lab1_screenshots/7.jpg)
+![Jak widać, skrypt działa. Niepoprawna nazwa commita nie jest akceptowana](lab1/7.jpg)
 
 Poprawny commit
 
-![Poprawny commit](lab1_screenshots/8.jpg)
+![Poprawny commit](lab1/8.jpg)
 
 Treść hooka
 
@@ -53,48 +53,48 @@ fi
 
 Poprawnie zainstalowany Docker
 
-![Poprawnie zainstalowany Docker](lab2_screenshots/2.jpg)
+![Poprawnie zainstalowany Docker](lab2/2.jpg)
 
 Pobrane obrazy z Docker Hub
 
-![Pobrane obrazy z Docker Hub](lab2_screenshots/3.jpg)
+![Pobrane obrazy z Docker Hub](lab2/3.jpg)
 
 Uruchomienie kontenera z obrazu busyboxa
 
-![Uruchomienie kontenera z obrazu busyboxa](lab2_screenshots/4.jpg)
+![Uruchomienie kontenera z obrazu busyboxa](lab2/4.jpg)
 
 Podłączenie się do kontenera i wyświetlenie wersji
 
-![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/5.jpg)
+![Podłączenie się do kontenera i wyświetlenie wersji](lab2/5.jpg)
 
 Uruchomienie Fedory w kontenerze i pokazanie PID1
 
-![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/6.jpg)
+![Uruchomienie Fedory w kontenerze i pokazanie PID1](lab2/6.jpg)
 
 Aktualizacja pakietów
 
-![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/7.jpg)
+![Aktualizacja pakietów](lab2/7.jpg)
 
 Procesy Dockera
 
-![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/8.jpg)
+![Procesy Dockera](lab2/8.jpg)
 
 Przygotowanie Dockerfile, który będzie tworzył nam kontener z Fedorą, instalował Gita i klonował nasze repozytorium
 
-![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/9.jpg)
+![Przygotowanie Dockerfile, który będzie tworzył nam kontener z Fedorą, instalował Gita i klonował nasze repozytorium](lab2/9.jpg)
 
 Zbudowanie obrazu na podstawie Dockerfile
 
-![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/10.jpg)
+![Zbudowanie obrazu na podstawie Dockerfile](lab2/10.jpg)
 
 Uruchomienie kontenera z naszego obrazu, jak widać wszystko działa elegancko
 
-![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/11.jpg)
+![Uruchomienie kontenera z naszego obrazu, jak widać wszystko działa elegancko](lab2/11.jpg)
 
 Wszystkie kontenery, jak widać uruchomiony i działający jest tylko jeden
 
-![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/12.jpg)
+![Wszystkie kontenery, jak widać uruchomiony i działający jest tylko jeden](lab2/12.jpg)
 
 Usuwanie wszystkich kontenerów oraz obrazów
 
-![Podłączenie się do kontenera i wyświetlenie wersji](lab2_screenshots/13.jpg)
+![Usuwanie wszystkich kontenerów oraz obrazów](lab2/13.jpg)
