@@ -12,8 +12,9 @@
 * Uruchom kontener, zainstaluj/upewnij się że istnieją niezbędne wymagania wstępne (jeżeli istnieją), ale *bez gita*
 * Sklonuj repozytorium na wolumin wejściowy
   * Opisz dokładnie, jak zostało to zrobione
-    * Wolumin pomocniczy?
-    * Kopiowanie do katalogu z woluminem na hoście?
+    * Wolumin/kontener pomocniczy?
+    * *Bind mount* z lokalnym katalogiem?
+    * Kopiowanie do katalogu z woluminem na hoście (`/var/lib/docker`)?
 * Uruchom build w kontenerze - rozważ skopiowanie repozytorium do wewnątrz kontenera
 * Zapisz powstałe/zbudowane pliki na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera.
 * Pamiętaj udokumentować wyniki.
