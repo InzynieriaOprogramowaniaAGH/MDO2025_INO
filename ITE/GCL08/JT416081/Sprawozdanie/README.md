@@ -206,7 +206,7 @@ RUN make
    ![alt text](image33.png)
 
 
-Drugi Dockerfile bazuje na poprzednim obrazie (np. json-c-builder) i wykonuje tylko testy:
+Drugi Dockerfile bazuje na poprzednim obrazie i wykonuje tylko testy:
 
 ```
 FROM json-c-builder:latest
