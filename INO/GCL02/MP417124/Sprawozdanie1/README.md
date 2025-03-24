@@ -83,9 +83,13 @@ Celem zadania było zapoznanie się z podstawami systemu kontroli wersji Git ora
 ```bash
 docker pull [obraz]
 ```
+
+2. **Uruchomienie kontenera z obrazu busyboxa**
 Uruchomiłam kontener z obrazu busybox i podłaczyłam się do niego interaktywnie, następnie wywołując numer wersji systemu.
 
 ![Zrzut ekranu busybox](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-15%20at%207.21.19%E2%80%AFPM.png)
+
+3. **Uruchomienie kontenera z obrazu fedora**
 
 Kolejno uruchomiłam kontener z obrazu systemu Fedora. Wyświetliłam procesy w kontenerze w tym PID1. Wyświetliłam procesy dockera na hoście. Najpierw użyłam komendy `docker run -it fedora sh`. Ta komenda uruchomiła interaktywną sesję shell (sh) w kontenerze na bazie obrazu Fedora. Po jej wykonaniu znalazłam się w środowisku kontenera, ale zauważyłam, że nie mogę uruchomić polecenia `ps`, które służy do wyświetlania listy procesów działających w systemie.
 
@@ -107,6 +111,8 @@ dnf update -y
 ```
 
 ![Zrzut ekranu zaktualizowanie pakietów](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-15%20at%207.30.44%E2%80%AFPM.png)
+
+4. **Stworzenie własnego obrazu Dockera (Dockerfile)**
 
 Następnie własnoręcznie napisałam prosty plik `Dockerfile` bazujący na systemie fedora i sklonowałam ćwiczeniowe repozytorium.
 Plik wyglądał następująco:
@@ -136,3 +142,5 @@ Po wyświetleniu listy uruchomionych kontenerów postanowiłam oczyścić system
 Ostatnią czynnością było dodanie stworzonego pliku `Dockerfile` do folderu `Sprawozdanie1` w repozytorium.
 ![Zrzut ekranu dodany dockerfile na repozytorium](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-15%20at%207.59.30%E2%80%AFPM.png)
 
+
+## Zadanie 3: Dockerfiles, kontener jako definicja etapu
