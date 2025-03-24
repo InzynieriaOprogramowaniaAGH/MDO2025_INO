@@ -8,6 +8,7 @@
   * https://docs.docker.com/storage/volumes/
   * https://docs.docker.com/engine/storage/bind-mounts/
   * https://docs.docker.com/engine/storage/volumes/
+  * https://docs.docker.com/reference/dockerfile/#volume
 * Przygotuj woluminy wejściowy i wyjściowy, o dowolnych nazwach, i podłącz je do kontenera bazowego, z którego rozpoczynano poprzednio pracę. Kontener bazowy to ten, który umie budować nasz projekt (ma zainstalowane wszystkie dependencje)
 * Uruchom kontener, zainstaluj/upewnij się że istnieją niezbędne wymagania wstępne (jeżeli istnieją), ale *bez gita*
 * Sklonuj repozytorium na wolumin wejściowy
