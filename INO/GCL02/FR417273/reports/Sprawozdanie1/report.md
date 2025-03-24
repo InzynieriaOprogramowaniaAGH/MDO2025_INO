@@ -1,4 +1,4 @@
-# Sprawozdanie z laboratoriów: SSH, GIT, Docker, Dockerfiles
+![image](https://github.com/user-attachments/assets/75396def-2212-488e-9c08-9b83de988a14)# Sprawozdanie z laboratoriów: SSH, GIT, Docker, Dockerfiles
 Przedmiot: DevOps
 Kierunek: Inżynieria Obliczeniowa
 Autor: Filip Rak
@@ -112,5 +112,29 @@ services:
 ### Czwarte zajęcia (Dodatkowa terminologia w konteneryzacji, instancja Jenkins):
 - Przygotowano woluminy wejściowy i wyjściowy poleceniem `docker volume create [nazwa]`. ![Utworzenie woluminów](media/m23_create_volumes.png)
 - Uruchomiono nowy kontener bazujący na ubuntu połączono do niego utworzone woluminy poleceniem `docker run -it --name volume-test -v input:/mnt/input -v output:/mnt/output ubuntu`
-- Zainstalowano wymagania wstępne do kompilacji cJSON (`make`, `gcc`) poleceniami `apt update && apt install gcc make` ![Wejście do kontenera i instalacja zależności](media/m24_install_dep.png)
+- Zainstalowano wymagania wstępne do kompilacji cJSON (`make`, `gcc`) poleceniami `apt-get update && apt-get install gcc make -y` ![Wejście do kontenera i instalacja zależności](media/m24_install_dep.png)
 - Zweryfikowano obecność zamontowanych katalogów ![Mounts](media/m25_mounts.png)
+- Na hoście odnaleziono lokalizacje woluminu wejściowego (`docker volume inspect`) i skolonowano do niego repozytorium `cJSON` ![Klonowanie do woluminu](media/m26_clone.png)
+- W kontenerze udało się potwierdzić obecność sklonowanego repozytorium ![repo w kontenerrze](media/m27_ls.png)
+- Poleceniem `cp -r` skopiowano repozytorium do katalogu wewnętrznego kontenera i zbudowano poleceniem `make`.
+- Skopilowanie pliki bibliotek i nagłówkowe skopiowano do katalogu wyjściowego. ![skopiowanie wyników](media/m28_build.png)
+- Obecność wyniku zweryfikowano na hoście. ![wynik na hoście](media/m29_host_res.png)
+- Ponowiono operacje, tym razem klonując (przez git) repozytorium wewnątrz kontenera i zapisując je w woluminie wejściowym ![klon](media/m30_clone.png)
+- Powodzenie działania potwierdza możliwość wymiany plików pomiędzy dwoma kontenerami za pomocą woluminów. 
+- Utworzony lik `Dockerfile`, którego zadaniem było zautomatyzowanie budowania aplikacji poprzez skopiowanie jej z udostępnionego woluminu, zbudowanie i zwrócenie wynikó pracy w woluminie wyjściowym. Wykorzystano typ montowania bind i utworzono nowe katalogi dla woluminów, nie znajdujące się w katalogach dockera. 
+```
+FROM ubuntu:22.04
+
+RUN apt update && apt install -y gcc make
+
+WORKDIR /cJSON
+
+RUN --mount=type=bind,source=./input,target=/mnt/input \
+    --mount=type=bind,source=./output,target=/mnt/output,rw \
+    cp -r /mnt/input/cJSON/* . && \
+    make && \
+    cp lib*.so* /mnt/output && \
+    cp cJSON*.h /mnt/output
+```
+![budowanie dockerfile](media/m31_dockerbuild.png)
+- `RUN --mount` w docker build pozwala tymczasowo zamontować katalogi z hosta (np. wejściowe repozytorium i katalog wyjściowy), co pozwala na szybkie wykonanie builda. Jednak dane zapisane w czasie buildu do zamontowanego katalogu nie są trwałe – po zakończeniu buildu nie trafiają one na hosta. Dlatego choć teoretycznie można wykonać całą operację (klonowanie, build, zapis) w docker build, to w praktyce lepiej użyć docker run jeśli chcemy trwale przenieść efekty buildu do katalogu hosta.
