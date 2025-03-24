@@ -109,3 +109,8 @@ services:
 - Finalny pakiet może zostać wygenerowany przy użyciu dedykowanego kontenera, ale nie jest to konieczne – w zależności od projektu, format taki może być tworzony również w tradycyjnym środowisku builda.
 - Sposób wdrożenia oprogramowania zależy od jego specyfiki i docelowego systemu. Aplikacje użytkowe najlepiej dystrybuować jako pakiety (`.deb`, `.rpm`), zapewniając łatwą instalację. Biblioteki (np. `cJSON`) powinny być dostarczane w formie `.so` lub `.dll` i pakietów systemowych, umożliwiając prostą integrację z kodem. Backendy i mikrousługi często wdraża się w kontenerach Docker, co zapewnia niezależność od systemu i łatwe skalowanie.
 
+### Czwarte zajęcia (Dodatkowa terminologia w konteneryzacji, instancja Jenkins):
+- Przygotowano woluminy wejściowy i wyjściowy poleceniem `docker volume create [nazwa]`. ![Utworzenie woluminów](media/m23_create_volumes.png)
+- Uruchomiono nowy kontener bazujący na ubuntu połączono do niego utworzone woluminy poleceniem `docker run -it --name volume-test -v input:/mnt/input -v output:/mnt/output ubuntu`
+- Zainstalowano wymagania wstępne do kompilacji cJSON (`make`, `gcc`) poleceniami `apt update && apt install gcc make` ![Wejście do kontenera i instalacja zależności](media/m24_install_dep.png)
+- Zweryfikowano obecność zamontowanych katalogów ![Mounts](media/m25_mounts.png)
