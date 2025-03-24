@@ -4,7 +4,10 @@
 
 ## Zadania do wykonania
 ### Zachowywanie stanu
-* Zapoznaj się z dokumentacją https://docs.docker.com/storage/volumes/
+* Zapoznaj się z dokumentacją:
+  * https://docs.docker.com/storage/volumes/
+  * https://docs.docker.com/engine/storage/bind-mounts/
+  * https://docs.docker.com/engine/storage/volumes/
 * Przygotuj woluminy wejściowy i wyjściowy, o dowolnych nazwach, i podłącz je do kontenera bazowego, z którego rozpoczynano poprzednio pracę
 * Uruchom kontener, zainstaluj niezbędne wymagania wstępne (jeżeli istnieją), ale *bez gita*
 * Sklonuj repozytorium na wolumin wejściowy (opisz dokładnie, jak zostało to zrobione)
