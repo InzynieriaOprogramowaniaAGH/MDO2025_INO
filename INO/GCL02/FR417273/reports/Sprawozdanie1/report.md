@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/75396def-2212-488e-9c08-9b83de988a14)# Sprawozdanie z laboratoriów: SSH, GIT, Docker, Dockerfiles
+![image](https://github.com/user-attachments/assets/458ac43b-d0fb-4f6b-b30b-77eb10a926cc)![image](https://github.com/user-attachments/assets/75396def-2212-488e-9c08-9b83de988a14)# Sprawozdanie z laboratoriów: SSH, GIT, Docker, Dockerfiles
 Przedmiot: DevOps
 Kierunek: Inżynieria Obliczeniowa
 Autor: Filip Rak
@@ -119,6 +119,7 @@ services:
 - Poleceniem `cp -r` skopiowano repozytorium do katalogu wewnętrznego kontenera i zbudowano poleceniem `make`.
 - Skopilowanie pliki bibliotek i nagłówkowe skopiowano do katalogu wyjściowego. ![skopiowanie wyników](media/m28_build.png)
 - Obecność wyniku zweryfikowano na hoście. ![wynik na hoście](media/m29_host_res.png)
+- Zastosowane podejście moze być probelmatyczne ponieważ narusza model izolacji Dockera, wprowadza problemy z przenośnością bezpieczeństwem i uprawnieniami oraz nie nadaje się do automatyzacji. Zamiast tego lepiej użyć dedykowanego kontenera, który montuje wolumin i wykonuje git clone w przewidywalny i bezpieczny sposób.
 - Ponowiono operacje, tym razem klonując (przez git) repozytorium wewnątrz kontenera i zapisując je w woluminie wejściowym ![klon](media/m30_clone.png)
 - Powodzenie działania potwierdza możliwość wymiany plików pomiędzy dwoma kontenerami za pomocą woluminów. 
 - Utworzony lik `Dockerfile`, którego zadaniem było zautomatyzowanie budowania aplikacji poprzez skopiowanie jej z udostępnionego woluminu, zbudowanie i zwrócenie wynikó pracy w woluminie wyjściowym. Wykorzystano typ montowania bind i utworzono nowe katalogi dla woluminów, nie znajdujące się w katalogach dockera. 
@@ -138,3 +139,19 @@ RUN --mount=type=bind,source=./input,target=/mnt/input \
 ```
 ![budowanie dockerfile](media/m31_dockerbuild.png)
 - `RUN --mount` w docker build pozwala tymczasowo zamontować katalogi z hosta (np. wejściowe repozytorium i katalog wyjściowy), co pozwala na szybkie wykonanie builda. Jednak dane zapisane w czasie buildu do zamontowanego katalogu nie są trwałe – po zakończeniu buildu nie trafiają one na hosta. Dlatego choć teoretycznie można wykonać całą operację (klonowanie, build, zapis) w docker build, to w praktyce lepiej użyć docker run jeśli chcemy trwale przenieść efekty buildu do katalogu hosta.
+- Uruchomiono nowy kontener w tle, zainstalowano usługę `iperf3` i uczyniono go serwerem `docker run -d --name iperf-server ubuntu sh -c "apt update && apt install -y iperf3 && iperf3 -s"` ![tworzenie serwera](media/m32_iamtired.png)
+- Na hoście odnaleziono adres IP utworzonego serwera poleceniem `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-server` ![odnalezeinie IP](media/m33_address.png)
+- Uruchomiono nowy kontener, zainstalowano usługę `iperf3` i połączono się z serwerem poprzez uzyskany adres. ![zrzut ekranu](media/m34_society.png)
+- Do następnych zadań utworzono, prosty, pomocniczy plik `Dockerfiles.iperf`, który instaluje usługę `iperf3`.
+```
+FROM ubuntu:22.04
+RUN apt update && apt install -y iperf3 -y
+```
+![zrzut](media/m35_build.png)
+- Utworzono sieć mostkowaną iperf-net poleceniem `docker network create --driver bridge iperf-net`
+- Po raz kolejny utworzono kontenery serwera i klienta, tym razem wewnątrz zdefiniowanej sieci. Ponadto wykorzystano utworzony obraz z zainstalowanym `iperf3`.
+- Ułożenie obu kontenerów w jednej sieci pozwoliło na połączenie się poprzez wykorzystanie nazwy, bez potrzeby odnajdowywania adresu IP.
+![polaczenie przez nazwe](media/m36_custom_image.png)
+- Z serwerem połączono się również z samego hosta. ![połączenie z hosta](media/m37_host_conn.png)
+- Następnie połączono się z serwerem przez kolejny kontener, tym razem zapisując wynik w woluminie wyjściowym, który został odczytany na hoście poleceniem `cat`. ![logi z kontenera](media/m38_cat.png)
+- Z powodzeniem udało się nawiązać połączenie z serwerem z innej maszyny wirtualnej. Wymagane było otworzenie portu używanego przez usługę `iperf3`, co zostało osiągniętę podczas uruachmiania kontenera i użycia opcji `-p`. Pełne polecenie: `docker run -d --name iperf-server --network iperf-net -p 5201:5201 iperf-ready sh -c "iperf3 -s"` ![Polaczenie z ubuntu](media/m39_ubuntu_conn.png)
