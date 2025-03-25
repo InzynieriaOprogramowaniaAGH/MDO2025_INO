@@ -173,7 +173,17 @@ CMD ["bash"]
 ```
 - Dockerfile został zbudowany pod nazwą `builder` i został następnie użyty jako podstawa kontenera, który skopiował repozytorium z woluminu wejściowego i następnie wykorzystując już zaisntalowane narzędzia, dokonał kompilacji po czym zapisał wyniki w woluminie wyjściowym.
 ![kompilacja i efekty](media/m41_build.png)
-
+- Utworzono nowy kontener na podstawie obrazu ubuntu, poleceniem, które od razu instalowało i konfigurowało usługę `sshd`: `docker run -d --name ssh-ubuntu -p 2222:22 ubuntu sh -c "apt update && apt install -y openssh-server && echo 'root:root' | chpasswd && mkdir -p /var/run/sshd && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && /usr/sbin/sshd -D"`. Udało się nawiązać połączenie z hosta. ![połączneie przez ssh](media/m42_ssh.png)
+- Zaletami SSH są: bezpieczna komunikacja, możliwość trnasferu plików (SCP), zdalne debugowanie i integracja, łatwiejsza integracja z CI/CD.
+- Do wad należą: Zwiękoszna złożoność kontenera, większa powierzchnia ataku poprzez otwarty port, łamie zasadę jednego proces = jeden kontener, zbędne w środowisku deweloperskim, gdzie `docker exec` spełnia tą samą role.
+- Przypadkami użycią mogą być: kontenery z rolą pseudo-serwera, do integracji z zewnętrzynymi systemami.
+- Co jest potrzebne by w naszym Jenkinsie uruchomić Dockerfile dla buildera? Do budowania Dockerfile w Jenkinsie potrzebny jest dostęp do Dockera (przez socket lub DIND) oraz zainstalowany Docker CLI i/lub odpowiedni plugin
+- Co jest potrzebne w Jenkinsie by uruchomić Docker Compose? Do uruchamiania Docker Compose Jenkins musi mieć zainstalowane docker-compose i również dostęp do Dockera.
 
 ### Wykorzystanie Sztucznej Intelginecji w ramach zajęć
-W ramach zajęć wykorzystano model GPT-4o
+- W ramach zajęć korzystano z modelu `GPT-4o` w celach konsultacji związanych z teorią lub składnią.
+- Sztuczna inteligencja była zaopatrzona w ogólny kontekst zadań w celu poprawy jej odpowiedzi.
+- Odpowiedzi AI nie były wyryfikowane, ponieważ pytając o źródła, GPT by je zwyczajnie wymyślił :)
+- Bot za każdym razem musiał wszystko wyjaśnić (w przypadku sugerowanych poleceń będą to m.i.n wszystkie opcje i działanie) oraz przedstawić swój tok 'myślenia'.
+- Nie kopiowano niczego od SI. Wszelkie polecenia jaki zwrócił bot były intepretowane i ręcznie pisane z uwagą na własne potrzeby i preferencje.
+
