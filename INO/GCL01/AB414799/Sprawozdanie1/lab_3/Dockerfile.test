@@ -1,0 +1,5 @@
+FROM irssi_builder as irssi_tester
+
+# Uruchomienie testów jednostkowych
+WORKDIR /irssi
+CMD ["ninja", "-C", "Build", "test"]
