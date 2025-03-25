@@ -1,0 +1,19 @@
+FROM fedora:latest
+
+#pobranie wymaganych pakietow i repo
+RUN dnf -y install \
+gcc \
+glib2-devel \
+openssl-devel \
+ncurses-devel \
+meson \
+ninja \
+git \
+perl-ExtUtils-Embed 
+
+WORKDIR /app
+
+COPY . /app
+
+RUN meson setup builddir
+RUN ninja -C builddir
