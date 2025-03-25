@@ -139,3 +139,18 @@ docker ps -a
 docker rm $(docker ps -a -q)
 docker ps -a
 ```
+
+### Temat 3 - Dockerfiles, kontener jako definicja etapu
+
+
+### Temat 4
+
+```bash
+docker volume create vol-in
+docker volume create vol-out
+
+git clone https://github.com/nginx/nginx.git
+
+docker run -it -v /home/febru/nginx:/nginx -v vol-in:/vol-in ubuntu bash
+cp -r nginx vol-in/
+```
