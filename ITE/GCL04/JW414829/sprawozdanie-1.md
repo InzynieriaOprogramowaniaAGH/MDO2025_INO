@@ -20,7 +20,7 @@ Klonowanie przez SSH:
 
 ### 3. Przełączanie się na gałęzie
 Przełączyłem się na gałąź `main`, a następnie na gałąź grupową `GCL04`. Następnie utworzyłem gałąź składającą się z moich inicjałów i numeru indeksu (`JW414829`):
-  ![Zmiana brancha](./lab1/switch-branch.png)
+![Zmiana brancha](./lab1/switch-branch.png)
 
 ---
 
