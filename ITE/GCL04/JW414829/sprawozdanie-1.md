@@ -186,3 +186,9 @@ Przeszedłem do katalogu z aplikacją i pobrałem wymagane zalezności a następ
 
 Uruchomiłem testy
 ![test in container](./lab3/test-container.png)
+
+### 2. Utworzenie plików Dockerfile w celu zautomatyzowania wcześniejszych kroków
+
+Utworzyłem dwa pliki:
+* `Dockerfile.build`
+* `Dockerfile.test`

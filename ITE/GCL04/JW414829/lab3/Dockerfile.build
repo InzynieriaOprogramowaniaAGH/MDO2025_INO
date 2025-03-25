@@ -1,0 +1,19 @@
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential \
+    meson \
+    ninja-build \
+    pkg-config \
+    libglib2.0-dev \
+    libssl-dev \
+    libncurses-dev \
+    perl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /irssi
+
+RUN git clone https://github.com/devenes/node-js-dummy-test.git .
+
+RUN meson setup build && ninja -C build
