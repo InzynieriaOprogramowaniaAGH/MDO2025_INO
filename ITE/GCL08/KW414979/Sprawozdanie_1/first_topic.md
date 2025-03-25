@@ -44,9 +44,9 @@ Grupa laboratoryjna: gr. 8
    ![Tworzenie klucza bez hasła](15.png)
    - Skonfiguruj klucz SSH jako metodę dostępu do GitHuba\
    ![Dodanie klucza do GitHuba](10.png)
-   - Sklonuj repozytorium z wykorzystaniem protokołu SSH
+   - Sklonuj repozytorium z wykorzystaniem protokołu SSH\
    ![Sklonowanie repozytorium](16.png)
-   - Skonfiguruj 2FA
+   - Skonfiguruj 2FA\
    ![Skonfigurowanie 2FA](17.png)
 4. Przełącz się na gałąź ```main```, a potem na gałąź swojej grupy (pilnuj gałęzi i katalogu!)\
 ![Przełączenie na main](18.png)\
@@ -90,74 +90,95 @@ Grupa laboratoryjna: gr. 8
    ![Wyświetlenie pobranych obrazów](30.png)
 5. Uruchom kontener z obrazu `busybox`
    - Pokaż efekt uruchomienia kontenera\
-   ![Pobranie obrazów](31.png)
+   ![Efekt uruchomienia kontenera](31.png)
    - Podłącz się do kontenera **interaktywnie** i wywołaj numer wersji\
-   ![Pobranie obrazów](32.png)
+   ![Interaktywne podłączenie się i sprawdzenie wersji](32.png)
 6. Uruchom "system w kontenerze" (czyli kontener z obrazu `fedora` lub `ubuntu`)
    - Zaprezentuj `PID1` w kontenerze i procesy dockera na hoście\
-   ![Pobranie obrazów](33.png)
+   ![Zaprezentowanie procesów](33.png)
    - Zaktualizuj pakiety\
-   ![Pobranie obrazów](34.png)
+   ![zaktualizowanie pakietów](34.png)
    - Wyjdź\
-   ![Pobranie obrazów](35.png)
+   ![Wyjście z kontenera](35.png)
 7. Stwórz własnoręcznie, zbuduj i uruchom prosty plik `Dockerfile` bazujący na wybranym systemie i sklonuj nasze repo.   
    - Kieruj się [dobrymi praktykami](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
    - Upewnij się że obraz będzie miał `git`-a\
-      ![Pobranie obrazów](36.png)
+      ![Plik Dockerfile](36.png)
 
          FROM ubuntu:latest
          RUN apt update && apt install -y git
          WORKDIR /app
          RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
          CMD ["bash"]
-      ![Pobranie obrazów](37.png)
+      ![Zbudowanie kontenera](37.png)
    - Uruchom w trybie interaktywnym i zweryfikuj że jest tam ściągnięte nasze repozytorium\
-      ![Pobranie obrazów](38.png)
-      ![Pobranie obrazów](39.png)
+      ![Uruchomienie w trybie interaktywnym](38.png)\
+      ![Weryfikacja zawartości](39.png)
 8. Pokaż uruchomione ( != "działające" ) kontenery, wyczyść je.\
-   ![Pobranie obrazów](40.png)
-   ![Pobranie obrazów](41.png)
+   ![Pokazanie działających kontynerów](40.png)
+   ![Czyszczenie kontenerów](41.png)
 9. Wyczyść obrazy\
-   ![Pobranie obrazów](42.png)
+   ![Czyszczenie obrazów](42.png)
    Alternatywna komenda:
 
          docker rmi nazwa_obrazu nazwa_obrazu ...
 
 10. Dodaj stworzone pliki `Dockefile` do folderu swojego `Sprawozdanie1` w repozytorium.
-   ![Pobranie obrazów](43.png)
+   ![Dodanie pliku do folderu](43.png)
 ## Zajęcia 03: Dockerfiles, kontener jako definicja etapu
 ### Wybór oprogramowania na zajęcia
 * Znajdź repozytorium z kodem dowolnego oprogramowania, które:
 	* dysponuje otwartą licencją
 	* jest umieszczone wraz ze swoimi narzędziami Makefile tak, aby możliwe był uruchomienie w repozytorium czegoś na kształt ```make build``` oraz ```make test```. Środowisko Makefile jest dowolne. Może to być automake, meson, npm, maven, nuget, dotnet, msbuild...
 	* Zawiera zdefiniowane i obecne w repozytorium testy, które można uruchomić np. jako jeden z "targetów" Makefile'a. Testy muszą jednoznacznie formułować swój raport końcowy (gdy są obecne, zazwyczaj taka jest praktyka)
-* Sklonuj niniejsze repozytorium, przeprowadź build programu (doinstaluj wymagane zależności)
-* Uruchom testy jednostkowe dołączone do repozytorium
-
+* Sklonuj niniejsze repozytorium, przeprowadź build programu (doinstaluj wymagane zależności)\
+   ![Sklonowanie repozytorium](44.png)\
+   ![Doinstalowanie zasobów](45.png)\
+   ![Meson build](46.png)\
+   ![Ninja build](47.png)
+   
+* Uruchom testy jednostkowe dołączone do repozytorium\
+![uruchomienie testów jednostkowych](48.png)
 ### Przeprowadzenie buildu w kontenerze
 Ponów ww.  proces w kontenerze, interaktywnie.
 1. Wykonaj kroki `build` i `test` wewnątrz wybranego kontenera bazowego. Tj. wybierz "wystarczający" kontener, np ```ubuntu``` dla aplikacji C lub ```node``` dla Node.js
 	* uruchom kontener
 	* podłącz do niego TTY celem rozpoczęcia interaktywnej pracy
 	* zaopatrz kontener w wymagania wstępne (jeżeli proces budowania nie robi tego sam)
-	* sklonuj repozytorium
-	* Skonfiguruj środowisko i uruchom *build*
-	* uruchom testy
+	* sklonuj repozytorium\
+   ![Sklonowanie repozytorium](49.png)
+	* Skonfiguruj środowisko i uruchom *build*\
+   ![Meson build](50.png)\
+   ![Ninja build](51.png)
+	* uruchom testy\
+   ![Testowanie kontenera](52.png)
 2. Stwórz dwa pliki `Dockerfile` automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:
 	* Kontener pierwszy ma przeprowadzać wszystkie kroki aż do *builda*
-	* Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić *builda*!)
-3. Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?
-   
-### Zakres rozszerzony tematu sprawozdania
-#### Docker Compose
-* Zamiast ręcznie wdrażać kontenery, ujmij je w kompozycję
-#### Przygotowanie do wdrożenia (deploy): dyskusje
-Otrzymany kontener ze zbudowanym programem może, ale nie musi, być już końcowym artefaktem procesu przygotowania nowego wydania. Jednakże, istnieje szereg okoliczności, w których nie ma to sensu. Na przykład gdy chodzi o oprogramowanie interaktywne, które kiepsko działa w kontenerze.
 
-Przeprowadź dyskusję i wykaż:
-* czy program nadaje się do wdrażania i publikowania jako kontener, czy taki sposób interakcji nadaje się tylko do builda
-* opisz w jaki sposób miałoby zachodzić przygotowanie finalnego artefaktu
-	* jeżeli program miałby być publikowany jako kontener - czy trzeba go oczyszczać z pozostałości po buildzie?
-	* A może dedykowany *deploy-and-publish* byłby oddzielną ścieżką (inne Dockerfiles)?
-	* Czy zbudowany program należałoby dystrybuować jako pakiet, np. JAR, DEB, RPM, EGG?
-	* W jaki sposób zapewnić taki format? Dodatkowy krok (trzeci kontener)? Jakiś przykład?
+            FROM ubuntu
+            RUN apt-get update && apt-get install -y \
+               git \
+               sudo\
+               build-essential \
+               meson \
+               ninja-build \
+               pkg-config \
+               libglib2.0-dev \
+               libssl-dev \
+               perl \
+               ncurses-dev
+
+            RUN git clone https://github.com/irssi/irssi
+            WORKDIR /irssi
+            RUN meson Build
+            RUN ninja -C Build && sudo ninja -C Build install
+
+	* Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić *builda*!)
+
+            FROM irssi-builder
+            RUN ninja -C Build test
+
+3. Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?\
+![Budowa kontenera 1](53.png)\
+![Budowa kontenera 2](54.png)\
+![Testowanie działania](55.png)
