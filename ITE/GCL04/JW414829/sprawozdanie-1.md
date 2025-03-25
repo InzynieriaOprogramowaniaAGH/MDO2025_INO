@@ -135,10 +135,15 @@ A następnie go uruchomiłem oraz aby sprawdzić działanie gita jeszcze raz, sk
 ---
 
 ### 6. Sprawdziłem uruchomione kontenery i wyczyściłem je
+
+Polecenie `docker ps -aq` generuje listę identyfikatorów wszystkich kontenerów, a `docker rm` usuwa te kontenery. 
+
 ![Uruchomione kontenery](./lab2/uruchomione-kontenery.png)
 ![Usuniecie kontenerow](./lab2/usuniecie-kontenerow.png)
 
 ---
+
+Polecenie `docker images -aq` generuje listę identyfikatorów wszystkich obrazów, a `docker rmi` usuwa te obrazy.
 
 ### 7. Wyczyściłem obrazy
 ![Czyszczenie obrazow](./lab2/usuniecie-obrazow.png)
@@ -150,4 +155,34 @@ A następnie go uruchomiłem oraz aby sprawdzić działanie gita jeszcze raz, sk
 ---
 ## Zajęcia 03
 
-### 1.
+### 1. Wybór oprogramowania
+
+Jako oprogramowanie wybrałem repozytorium irssi.
+
+Sklonowałem repozytorium z aplikacją i zbuildowałem program.
+![Klonowanie repo](./lab3/repo-clone.png)
+
+
+A następnie doinstalowałem wymagane pakiety i uruchomiłem testy.
+
+![dnf install](./lab3/dnf-install.png)
+![test](./lab3/test.png)
+
+
+### 2. Przeprowadzenie buildu w kontenerze
+
+Jako bazowy obraz uruchomiłem kontener ubuntu z interaktywnym terminalem.
+![kontener bazowy pod aplikacje](./lab3/ubuntu-container.png)
+
+Zaaktualizowałem zalezności i upewniłem się, ze git jest zainstalowany.
+![apt get](./lab3/apt-get.png)
+
+Następnie sklonowałem repozytorium wewnątrz kontenera.
+![git clone](./lab3/repo-clone-container.png)
+
+Przeszedłem do katalogu z aplikacją i pobrałem wymagane zalezności a następnie zbudowałem aplikację.
+![apt get in container](./lab3/apt-get-container.png)
+![build in container](./lab3/build-container.png)
+
+Uruchomiłem testy
+![test in container](./lab3/test-container.png)
