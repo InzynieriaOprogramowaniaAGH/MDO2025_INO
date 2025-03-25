@@ -9,7 +9,8 @@ Data: 10/03/2025
 - Na wirtualnej maszynie VirtualBox zainstalowana została dystrybucja systemu Linux, Fedora. 
 - Na konto użytkonika zalogowano się przez SSH w programie PowerShell systemu Windows. ![Zrzut ekranu logowania](media/m1_login.png)
 - Na witrynie GitHub utworzono Personal Acces Token oraz wykorzystano go do sklonowania repozytorium. ![Zrzut ekranu PAT](media/m8_pat.png) ![Zrzut ekranu klonowanie z PAT](media/m9_pat_clone.png)
-- Utworzone zostały dwa klucze SSH, nie będace typu RSA, z czego jeden z nich został zabezpieczony hasłem. Użyto polecenia: ```ssh-keygen -t ed25519 -C "ADRES-EMAIL.com"``` ![Zrzut ekrnau tworzenia kluczy](media/m2_keygen.png)
+- Utworzone zostały dwa klucze SSH, nie będace typu RSA, z czego jeden z nich został zabezpieczony hasłem. Użyto polecenia: `ssh-keygen -t ed25519 -C "ADRES-EMAIL.com"`
+![Zrzut ekrnau tworzenia kluczy](media/m2_keygen.png)
 - Do SHH dodano utworzony klucz, poleceniem `ssh-add ./key_no_password` ![Zrzut ekranu dodanie klucza](media/m3_add.png)
 - Klucz publiczny został skopiowany z pliku o rozszerzeniu `.pub` i przekazany witrynie GitHub. ![Zrzut ekranu klucza na GitHub'ie](media/m4_gh.png)
 - Autentyifkacja została potwierdzona poleceniem `ssh -T git@github.com` ![Zrzut ekranu autentyfikacji](media/m5_auth.png)
@@ -117,12 +118,12 @@ services:
 - Na hoście odnaleziono lokalizacje woluminu wejściowego (`docker volume inspect`) i skolonowano do niego repozytorium `cJSON` ![Klonowanie do woluminu](media/m25_clone.png)
 - W kontenerze udało się potwierdzić obecność sklonowanego repozytorium ![repo w kontenerrze](media/m27_ls.png)
 - Poleceniem `cp -r` skopiowano repozytorium do katalogu wewnętrznego kontenera i zbudowano poleceniem `make`.
-- Skopilowanie pliki bibliotek i nagłówkowe skopiowano do katalogu wyjściowego. ![skopiowanie wyników](media/m28_build.png)
+- Skompilowanie pliki bibliotek i nagłówkowe skopiowano do katalogu wyjściowego. ![skopiowanie wyników](media/m28_build.png)
 - Obecność wyniku zweryfikowano na hoście. ![wynik na hoście](media/m29_host_res.png)
 - Zastosowane podejście moze być probelmatyczne ponieważ narusza model izolacji Dockera, wprowadza problemy z przenośnością bezpieczeństwem i uprawnieniami oraz nie nadaje się do automatyzacji. Zamiast tego lepiej użyć dedykowanego kontenera, który montuje wolumin i wykonuje git clone w przewidywalny i bezpieczny sposób.
 - Ponowiono operacje, tym razem klonując (przez git) repozytorium wewnątrz kontenera i zapisując je w woluminie wejściowym ![klon](media/m30_clone.png)
 - Powodzenie działania potwierdza możliwość wymiany plików pomiędzy dwoma kontenerami za pomocą woluminów. 
-- Utworzono plik `Dockerfile`, którego zadaniem było zautomatyzowanie budowania aplikacji poprzez skopiowanie jej z udostępnionego woluminu, zbudowanie i zwrócenie wyników pracy w woluminie wyjściowym. Wykorzystano typ montowania bind i utworzono nowe katalogi dla woluminów, nie znajdujące się w katalogach dockera. 
+- Utworzono plik `Dockerfile`, którego zadaniem było zautomatyzowanie budowania aplikacji poprzez skopiowanie jej z udostępnionego woluminu, zbudowanie i zwrócenie wyników pracy w woluminie wyjściowym. Wykorzystano typ montowania bind i utworzono nowe katalogi dla woluminów - nie znajdujące się w katalogach dockera. 
 ```
 ### Dockerfile ###
 
@@ -156,7 +157,8 @@ RUN apt update && apt install -y iperf3 -y
 - Po raz kolejny utworzono kontenery serwera i klienta, tym razem wewnątrz zdefiniowanej sieci. Ponadto wykorzystano utworzony obraz z zainstalowanym `iperf3`.
 - Ułożenie obu kontenerów w jednej sieci pozwoliło na połączenie się poprzez wykorzystanie nazwy, bez potrzeby odnajdowywania adresu IP.
 ![polaczenie przez nazwe](media/m36_custom_image.png)
-- Z serwerem połączono się również z samego hosta. ![połączenie z hosta](media/m37_host_conn.png)
+- Z serwerem połączono się również z samego hosta.
+![połączenie z hosta](media/m37_host_conn.png)
 - Następnie połączono się z serwerem przez kolejny kontener, tym razem zapisując wynik w woluminie wyjściowym, który został odczytany na hoście poleceniem `cat`. ![logi z kontenera](media/m38_cat.png)
 - Z powodzeniem udało się nawiązać połączenie z serwerem z innej maszyny wirtualnej. Wymagane było otworzenie portu używanego przez usługę `iperf3`, co zostało osiągniętę podczas uruachmiania kontenera i użycia opcji `-p`. Pełne polecenie: `docker run -d --name iperf-server --network iperf-net -p 5201:5201 iperf-ready sh -c "iperf3 -s"` ![Polaczenie z ubuntu](media/m39_ubuntu_conn.png)
 - Utworzono nową sieć `docker network create jenkins-net`.
@@ -177,13 +179,13 @@ CMD ["bash"]
 - Zaletami SSH są: bezpieczna komunikacja, możliwość trnasferu plików (SCP), zdalne debugowanie i integracja, łatwiejsza integracja z CI/CD.
 - Do wad należą: Zwiękoszna złożoność kontenera, większa powierzchnia ataku poprzez otwarty port, łamie zasadę jednego proces = jeden kontener, zbędne w środowisku deweloperskim, gdzie `docker exec` spełnia tą samą role.
 - Przypadkami użycią mogą być: kontenery z rolą pseudo-serwera, do integracji z zewnętrzynymi systemami.
-- Co jest potrzebne by w naszym Jenkinsie uruchomić Dockerfile dla buildera? Do budowania Dockerfile w Jenkinsie potrzebny jest dostęp do Dockera (przez socket lub DIND) oraz zainstalowany Docker CLI i/lub odpowiedni plugin
-- Co jest potrzebne w Jenkinsie by uruchomić Docker Compose? Do uruchamiania Docker Compose Jenkins musi mieć zainstalowane docker-compose i również dostęp do Dockera.
+- `Co jest potrzebne by w naszym Jenkinsie uruchomić Dockerfile dla buildera?` Do budowania Dockerfile w Jenkinsie potrzebny jest dostęp do Dockera (przez socket lub DIND) oraz zainstalowany Docker CLI i/lub odpowiedni plugin
+- `Co jest potrzebne w Jenkinsie by uruchomić Docker Compose?` Do uruchamiania Docker Compose Jenkins musi mieć zainstalowane docker-compose i również dostęp do Dockera.
 
 ## Wykorzystanie Sztucznej Intelginecji w ramach zajęć
 - W ramach zajęć korzystano z modelu `GPT-4o` w celach konsultacji związanych z teorią lub składnią.
 - Sztuczna inteligencja była zaopatrzona w ogólny kontekst zadań w celu poprawy jej odpowiedzi.
 - Odpowiedzi AI nie były wyryfikowane, ponieważ pytając o źródła, GPT by je zwyczajnie wymyślił :)
 - Bot za każdym razem musiał wszystko wyjaśnić (w przypadku sugerowanych poleceń będą to m.i.n wszystkie opcje i działanie) oraz przedstawić swój tok 'myślenia'.
-- Nie kopiowano niczego od SI. Wszelkie polecenia jaki zwrócił bot były intepretowane i ręcznie pisane z uwagą na własne potrzeby i preferencje.
+- Nie kopiowano niczego od SI. Wszelkie polecenia jakie zwrócił bot były intepretowane i ręcznie pisane z uwagą na własne potrzeby i preferencje.
 
