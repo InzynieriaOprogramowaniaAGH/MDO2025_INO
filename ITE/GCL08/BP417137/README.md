@@ -141,25 +141,25 @@ git config --local core.hooksPath (sciezka do pliku)
 
 jak zainstalowac: https://docs.docker.com/engine/install/fedora/
 
-![alt text](<instalacja dockera1.png>)
+![alt text](<lab2/instalacja dockera1.png>)
 
-![alt text](<instalacja dockera2.png>)
+![alt text](<lab2/instalacja dockera2.png>)
 
-![alt text](<instalacja dockera3.png>)
+![alt text](<lab2/instalacja dockera3.png>)
 
 ## Sprawdzenie dzialania dockera hello-worldem
 
-![alt text](<dzialanie dockera.png>)
+![alt text](<lab2/dzialanie dockera.png>)
 
 ## Dodanie uzytkownika do grupy docker
 
-![alt text](<dodanie do grupy.png>)
+![alt text](<lab2/dodanie do grupy.png>)
 
 # 2. Utworzenie konta docker
 
 Konto mozna zalozyc na: https://app.docker.com/signup
 
-![alt text](<konto docker.png>)
+![alt text](<lab2/konto docker.png>)
 
 # 3. Pobierz obrazy
 ## pobiezemy obrazy: hello-world, busybox, ubuntu, mysql
@@ -171,7 +171,7 @@ docker pull ubuntu
 docker pull mysql
 ```
 
-![alt text](<pobranie imagy.png>)
+![alt text](<lab2/pobranie imagy.png>)
 
 # 4. Uruchom kontener z obrazu busybox
 do uruchomienia kontenera potrzebowac bedziemy komendy:
@@ -197,7 +197,7 @@ aby wywołać nr wersji w kontenerze piszemy:
 busybox | head -1
 ```
 
-![alt text](<busybox otworzenie.png>)
+![alt text](<lab2/busybox otworzenie.png>)
 
 # 5. Uruchom "system w kontenerze"
 do uruchomienia kontenera potrzebowac bedziemy komendy:
@@ -217,8 +217,8 @@ bastepnie wywolujemy to kolejno w kontenerze i na hoscie:
 ps -fe
 ```
 
-![alt text](Pid1.png)
-![alt text](pid1-host.png)
+![alt text](<lab2/Pid1.png>)
+![alt text](<lab2/pid1-host.png>)
 
 # 6. Stwórz własnoręcznie, zbuduj i uruchom prosty plik Dockerfile bazujący na wybranym systemie i sklonuj nasze repo
 
@@ -231,18 +231,18 @@ RUN apt-get update && apt-get install -y git
 WORKDIR /app
 RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 ```
-![alt text](dockerfile.png)
+![alt text](<lab2/dockerfile.png>)
 
 nastepnie w folderze w ktorym mamy dockerfila (u nas lab2):
 ```sh
 docker build . -t test-ubuntu-image
 ```
 
-![alt text](<dzialajacy dockerfile.png>)
+![alt text](<lab2/dzialajacy dockerfile.png>)
 
 analogicznie jak wczesniej wchodzimy do kontenera i sprawdzamy czy sie dobrze pobralo
 
-![alt text](<pokazanie dzialania.png>)
+![alt text](<lab2/pokazanie dzialania.png>)
 
 # 7. Pokaż uruchomione ( != "działające" ) kontenery, wyczyść je.
 żeby sprawdzic liste kontenerow:
@@ -252,10 +252,118 @@ docker ps -la
 docker rm Test Ubuntu test-ubuntu
 ```
 
-![alt text](czyszczenie.png)
+![alt text](<lab2/czyszczenie.png>)
 
 # 8. Wyczyść obrazy
 ```sh
 docker image prune
 ```
-![alt text](<usuniecie imagy.png>)
+![alt text](<lab2/usuniecie imagy.png>)
+
+# **LAB3**
+# 1. Wybór oprogramowania na zajęcia
+
+# Oprogramowanie z podlinkowanego repozytorium na zajeciach
+repozytorium: https://github.com/irssi/irssi
+## klonujemy repozytorium
+![alt text](<lab3/clone repo.png>)
+
+# Doinstalowujemy wszystkie potrzebne rzeczy z requirements
+Używamy flagi
+* -devel - jest to wymagane do kompilacji. Inaczej zostaly by pobrane same binarki.
+
+```sh
+sudo dnf -y install gcc glib2-devel openssl-devel perl-devel ncurses-devel meson ninja
+```
+![alt text](<lab3/requirements.png>)
+
+
+# Uruchomienie Builda
+```sh
+meson Build
+```
+![alt text](<lab3/uruchomienie mesona.png>)
+![alt text](<lab3/doinstalowanie brakujacego skladnika.png>)
+
+# Uruchomienie Builda po doinstalowaniu brakujacych bibliotek
+![alt text](<lab3/poprawny build.png>)
+
+# Nastepnie uruchomimy testy jednostkowe 
+```sh
+ninja -C Build test
+```
+![alt text](<lab3/testy jednostkowe.png>)
+
+### history
+![alt text](<lab3/history1.png>)
+
+# 2. Przeprowadzenie buildu w kontenerze
+
+## Wykonujemy te same polecenia co wyżej tylko w kontenerze ubuntu
+
+Analogicznie do tego jak to robilismy w lab2, uruchamiamy kontener i kolejno wykonujemy na nim polecenia jak w punkcie 1
+![alt text](<lab3/kontener ubuntu.png>)
+
+ze wzgledu ze to ubuntu to trzeba uzyc odpowiednikow dla ubuntu
+```sh
+apt update && apt -y install git gcc libglib2.0-dev libssl-dev libperl-dev libncurses-dev meson ninja-build perl
+```
+![alt text](<lab3/req ubuntu.png>)
+![alt text](<lab3/clone ubuntu.png>)
+![alt text](<lab3/build ubuntu.png>)
+![alt text](<lab3/test ubuntu.png>)
+
+# 2. Stwórz dwa pliki Dockerfile automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii
+
+## Pierwszy docker file odpowiadajacy za builda
+
+```Dockerfile
+FROM ubuntu
+
+RUN apt -y update && \
+    apt -y install git meson gcc libglib2.0-dev libssl-dev libncurses-dev libutf8proc-dev libperl-dev
+
+RUN git clone https://github.com/irssi/irssi.git
+WORKDIR /irssi
+
+RUN meson Build
+RUN ninja -C Build
+```
+
+![alt text](<lab3/dockerfile build.png>)
+
+## Stworzenie obrazu
+
+```sh
+docker build -f Dockerfile.build -t docker-build-irrsi .
+```
+
+![alt text](<lab3/docker build image.png>)
+
+## Drugi docker file odpowiadajacy za testy
+
+```Dockerfile
+FROM docker-build-irrsi
+
+WORKDIR /irssi
+
+CMD [ "ninja", "-C", "Build", "test" ]
+```
+![alt text](<lab3/docker test image.png>)
+
+## Tworzymy obraz testu analogicznie
+
+```sh
+docker build -f Dockerfile.test -t docker-test-irrsi2 .
+```
+
+![alt text](<lab3/docker test image2.png>)
+
+## Tworzymy oraz uruchamiamy kontener bazujacy na docker-test-irrsi2
+
+```sh
+docker run --rm --name oby-dzialalo docker-test-irrsi2
+```
+
+![alt text](<lab3/oby dzialalo i dziala.png>)
+
