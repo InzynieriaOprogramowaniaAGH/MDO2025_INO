@@ -56,9 +56,9 @@ CMD ["bash"]
 
 ### Trzecie zajęcia (Docker, Dockerfiles):
 - Sklonowano repozytorium oprogramowania o otwartej licencji, [cJSON](https://github.com/DaveGamble/cJSON), zawierające działający Makefile, który ma zdefiniowany zestaw testów.
-- Kompilacja odbyła się poleceniem `make`, zaś uruchomienie testó poleceniem `make test`. ![Zrzut ekranu testu](media/m18_test.png)
+- Kompilacja odbyła się poleceniem `make`, zaś uruchomienie testów poleceniem `make test`. ![Zrzut ekranu testu](media/m18_test.png)
 - Kolejnym zadaniem było powtórzenie tego procesu, tym razem w kontenerze. Uruchomiono kontener na podstawie obrazu ubuntu, w trybie interkatywnym, poleceniem `docker run -it --rm ubuntu bash`
-- Następnie na uruchomionym kontenerze zainstalowane wszelkie zależności wymagane do dalszej pracy: git, make, gcc. Polecenie: `aptg-get update && apt-get install -y git make gcc`
+- Następnie na uruchomionym kontenerze zainstalowane wszelkie zależności wymagane do dalszej pracy: git, make, gcc. Polecenie: `apt-get update && apt-get install -y git make gcc`
 - Repozytoriumn ponownie sklonowano, tym razem w ramach kontenera, poleceniem `git clone https://github.com/DaveGamble/cJSON.git` ![Zrzut ekranu kompilacji](media/m19_make.png)
 - Kolejnym zadaniem było utworzenie dwóch plików Dockerfile, których zadaniami będą kompilacja oraz uruchamiane testów, gdzie pierwszy obraz przygotowuje środowisko oraz kompiluje oprogramowanie a drugi obraz przeprowadza testy. W tym celu utworzono dwa pliki `Dockerfile.build` oraz `Dockerfile.test`. Ponizej znajdują się ich zawartości.
 
@@ -122,7 +122,7 @@ services:
 - Zastosowane podejście moze być probelmatyczne ponieważ narusza model izolacji Dockera, wprowadza problemy z przenośnością bezpieczeństwem i uprawnieniami oraz nie nadaje się do automatyzacji. Zamiast tego lepiej użyć dedykowanego kontenera, który montuje wolumin i wykonuje git clone w przewidywalny i bezpieczny sposób.
 - Ponowiono operacje, tym razem klonując (przez git) repozytorium wewnątrz kontenera i zapisując je w woluminie wejściowym ![klon](media/m30_clone.png)
 - Powodzenie działania potwierdza możliwość wymiany plików pomiędzy dwoma kontenerami za pomocą woluminów. 
-- Utworzony lik `Dockerfile`, którego zadaniem było zautomatyzowanie budowania aplikacji poprzez skopiowanie jej z udostępnionego woluminu, zbudowanie i zwrócenie wynikó pracy w woluminie wyjściowym. Wykorzystano typ montowania bind i utworzono nowe katalogi dla woluminów, nie znajdujące się w katalogach dockera. 
+- Utworzono plik `Dockerfile`, którego zadaniem było zautomatyzowanie budowania aplikacji poprzez skopiowanie jej z udostępnionego woluminu, zbudowanie i zwrócenie wyników pracy w woluminie wyjściowym. Wykorzystano typ montowania bind i utworzono nowe katalogi dla woluminów, nie znajdujące się w katalogach dockera. 
 ```
 ### Dockerfile ###
 
