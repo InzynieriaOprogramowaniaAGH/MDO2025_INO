@@ -10,6 +10,7 @@ W ramach pierwszego zadania wykonano pełną konfigurację środowiska Git, SSH 
 
 git --version
 ssh -V
+ls
 
 
 ## 2. Klonowanie repozytorium przez HTTPS
