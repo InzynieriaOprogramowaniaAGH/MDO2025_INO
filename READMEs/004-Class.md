@@ -10,7 +10,7 @@
   * https://docs.docker.com/engine/storage/volumes/
   * https://docs.docker.com/reference/dockerfile/#volume
   * https://docs.docker.com/reference/dockerfile/#run---mount
-* Przygotuj woluminy wejściowy i wyjściowy, o dowolnych nazwach, i podłącz je do kontenera bazowego, z którego rozpoczynano poprzednio pracę. Kontener bazowy to ten, który umie budować nasz projekt (ma zainstalowane wszystkie dependencje)
+* Przygotuj woluminy wejściowy i wyjściowy, o dowolnych nazwach, i podłącz je do kontenera bazowego (np. tego, z którego rozpoczynano poprzednio pracę). Kontener bazowy to ten, który umie budować nasz projekt (ma zainstalowane wszystkie dependencje, `git` nią nie jest)
 * Uruchom kontener, zainstaluj/upewnij się że istnieją niezbędne wymagania wstępne (jeżeli istnieją), ale *bez gita*
 * Sklonuj repozytorium na wolumin wejściowy
   * Opisz dokładnie, jak zostało to zrobione
