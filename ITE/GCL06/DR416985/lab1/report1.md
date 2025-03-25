@@ -9,7 +9,9 @@ W ramach pierwszego zadania wykonano pełną konfigurację środowiska Git, SSH 
 ## 1. Instalacja Gita i SSH
 
 git --version
+
 ssh -V
+
 ls
 
 
