@@ -455,3 +455,29 @@ npm test
 Obraz `app-build` przechowuje kod źródłowy i skompilowaną aplikację, natomiast kontener `app-build` uruchomiony na bazie tego obrazu
 wykonuje build.
 Obraz `app-test` dziedziczy wszystko od `app-build`, ale dodaje krok uruchomienia testów, natomiast kontener `app-test` wykonuje testy i kończy pracę.
+
+
+---
+
+
+## **Laboratorium 04**
+
+### **Dodatkowa terminologia w konteneryzacji, instancja Jenkins**
+
+
+---
+
+## **1. Zachowywanie stanu**
+
+### 1.1 Utworzenie woluminu wejściowego i wyjściowego kolejno o nazwach `wejsciowy` i `wyjsciowy`
+
+```bash
+sudo docker volume create wejsciowy
+```
+![Utworzenie woluminu wejsciowego](zrzuty_ekranu_lab4/utworzenie_woluminu_wejsciowego.png)
+
+```bash
+sudo docker volume create wyjsciowy
+```
+
+![Utworzenie woluminu wyjsciowego](zrzuty_ekranu_lab4/utworzenie_woluminu_wyjsciowego.png)
