@@ -478,3 +478,241 @@ docker run --rm --name test_container test_image
 ```
 
 ![](../screens/class3/uruchomienie_testu_z_dockerfile.jpg)
+
+# Sprawozdanie z Dodatkowa terminologia w konteneryzacji, instancja Jenkins
+
+## 1. Zachowywanie stanu
+
+### Utworzenie woluminów wejściowego i wyjściowego
+```
+docker volume create input_volume
+docker volume create output_volume
+```
+![](../screens/class4/1.jpg)
+
+### Utworzenie kontenera bazowego z zainstalowanymi zależnościami ale bez gita za pomocą Dockerfile
+
+```
+# Używamy Ubuntu jako bazowego obrazu
+FROM ubuntu:latest
+
+# Aktualizacja repozytoriów i instalacja wymaganych pakietów (bez gita)
+RUN apt update && apt install -y \
+    build-essential \
+    meson \
+    ninja-build \
+    pkg-config \
+    libssl-dev \
+    libglib2.0-dev \
+    libutf8proc-dev \
+    libncurses-dev \
+    libtinfo-dev \
+    libperl-dev \
+    perl cpanminus && \
+    cpanm ExtUtils::Embed
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
+
+# Pozostawiamy możliwość podłączenia kodu przez wolumin lub bind mount
+CMD ["/bin/bash"]
+```
+```
+docker build -t build_image_no_git -f Dockerfile.build_no_git .
+```
+
+![](../screens/class4/2.jpg)
+
+### Uruchomienie kontenera bazowego z podpięciem utworzonych woluminów
+
+```
+docker run -it --name build-container \ 
+-v input_volume:/mnt/input \ 
+-v output_volume:/mnt/output \ 
+build_image_no_git /bin/bash
+```
+
+![](../screens/class4/3.jpg)
+
+### Sklonowanie repozytorium spoza kontenera na wolumin wejściowy
+
+#### Zostało to osiągnięte poprzez bezpośrednie sklonowanie repozytorium do ścieżki powiązanej z woluminem za pomocą polecenia:
+
+```
+sudo git clone https://github.com/irssi/irssi $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)
+```
+
+![](../screens/class4/4.jpg)
+
+### Uruchomienie buildu repozytorium wewnątrz kontenera korzystając z woluminu wejściowego
+
+```
+cd mnt/input/
+meson setup builddir
+ninja -C builddir
+```
+
+![](../screens/class4/5.jpg)
+![](../screens/class4/6.jpg)
+
+### Zapisanie folderu builda na woluminie wyjściowym
+
+```
+cp -r /mnt/input/builddir /mnt/output
+```
+
+![](../screens/class4/7.jpg)
+
+### Weryfikacja zapisanego builda na woluminie przy pomocy innego kontenera z zamontowanym woluminem wyjściowym
+
+```
+docker run --rm -v output_volume:/mnt/output alpine ls /mnt/output
+```
+
+![](../screens/class4/9.jpg)
+
+Powyższe czynnosci można również wykonać za pomocą ```docker build``` i ```Dockerfile``` bez konieczności uruchamiania kontenerów ręcznie.
+
+```RUN --mount``` daje możliwość tymczasowego zamontowania katalogów w trakcie budowy obrazu
+
+## 2. Eksponowanie portu
+
+### Instalacja iperf3 na hoscie
+
+```
+sudo dnf install -y iperf3
+```
+
+![](../screens/class4/10.jpg)
+
+### Uruchomienie kontenerów i instalacja iperf3 wewnątrz przygotowanych kontenerów z fedorą
+
+```
+docker run --rm --tty -i --name f1 fedora bash
+docker run --rm --tty -i --name f2 fedora bash
+```
+
+```
+sudo dnf install -y iperf3
+```
+
+![](../screens/class4/11.jpg)
+
+### Komunikacja pomiędzy kontenerami
+
+Na serwerze
+```
+iperf3 -s
+```
+
+na kliencie
+```
+iperf3 -c f1
+iperf3 -c 172.17.0.2
+```
+
+pierwsze polecenie na kliencie jeszcze nie zadziała, ponieważ nie ma utworzonej customowej sieci, która umożliwi korzystanie z DNS
+
+![](../screens/class4/12.jpg)
+
+### Utworzenie własnej dedykowane sieci mostkowej
+
+```
+docker network create my_network
+```
+
+![](../screens/class4/13.jpg)
+
+### Uruchomienie kontenerów w utworzonej sieci mostkowanej
+
+```
+docker run --rm --tty -i -- network=my_network --name f1 fedora bash
+docker run --rm --tty -i -- network=my_network --name f2 fedora bash
+```
+
+Teraz ip kontenerów to
+ * f1 -> 172.18.0.2
+ * f2 -> 172.18.0.3
+
+![](../screens/class4/14.jpg)
+
+#### Teraz możemy już komunikować się wewnątrz tej samej sieci za pomocą nazw, dzięki DNS
+
+Na serwerze
+```
+iperf3 -s
+```
+
+na kliencie
+```
+iperf3 -c f1
+```
+
+![](../screens/class4/15.jpg)
+
+### Połączenie z serwerem iperf3 w kontenerze z hosta
+
+Żeby połączyć się z serwerem z hosta, wystarczy że podamy ip naszego serwera, DNS nie zadziała, ponieważ host i kontenery nie są w obrębie tej samej sieci mostkowanej
+
+```
+iperf3 -c 172.18.0.2
+```
+
+![](../screens/class4/16.jpg)
+
+### Połączenie z serwerem spoza hosta
+
+Aby połączenie spoza hosta było możliwe, wykorzystałem WSL w wersji 1, tak aby wsl otrzymal ip w tej samej sieci lokalnej, w której znajduje się host maszyny wirtualnej. Dodatkowo, należy uruchomić kontener z serwerem z przekierowaniem portu kontenera 5201:5201 na port maszyny wirtualnej
+
+```
+docker run --rm --tty -i -- network=my_network -p 5201:5201 --name f1 fedora bash
+```
+
+```
+iperf3 -c 192.168.0.37
+```
+
+Spoza hosta podajemy ip hosta i port, po czym następuje przekierowanie przez port z hosta na VM do kontenera z serwerem słuchającym na danym porcie
+
+![](../screens/class4/17.jpg)
+
+Przepustowości połączenia widać w terminalach serwera i komunikującego się klienta
+
+## 3. Instancja Jenkins
+
+### Instalacja skonteneryzowanej wersji Jenkins z pomocnikiem DIND i inicjalizacja
+
+```
+docker run --privileged --name jenkins-dind \ 
+-d \
+-p 8080:8080 \
+-v jenkins_home:/var/jenkins_home \
+-v /var/run/docker.sock:/var/run/docker.sock \
+jenkins/jenkins:lts
+```
+
+![](../screens/class4/22.jpg)
+
+### Uruchomione kontenery wewnątrz jenkinsa i na hoscie
+
+```
+docker exec -it --user root jenkins-dind docker ps
+docker ps
+```
+
+Uruchomione kontenery widok z jenkinsa i hosta
+
+![](../screens/class4/26.jpg)
+
+### Logowanie
+
+#### Po uruchomieniu jenkinsa, kontener na porcie 8080:8080 hostuje setup jenkinsa, na której możemy się zalogować podając klucz, który otrzymujemy od instancji
+
+```
+docker exec jenkins-dind cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+![](../screens/class4/23.jpg)
+![](../screens/class4/24.jpg)
+
+Strona oferuje konfiguracje właściwości i pluginów jenkinsa, które można doinstalować wedle woli z poziomu strony na lokalhoscie
