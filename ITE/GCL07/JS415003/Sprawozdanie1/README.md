@@ -1,6 +1,16 @@
 # Sprawozdanie 1
 
 ## 001-Class
+Niestety źle przemyślałem sprawę i w przypadku pierwszych laboratoriów zapomniałem robić screenów więc postarałem się zrobić później takie screeny które pokazują, że zainstalowałem odpowiednie rzeczy i ustawiłem na githubie.
+
+1. Zainstaluj klienta Git i obsługę kluczy SSH
+    
+    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/001-Class/lab1_1.png" /> 
+
+2. Sklonowanie repozytorium za pomocą HTTPS i personal access token.
+
+    Najpierw sklonowałem repozytorium za pomocą HTTPS i później dodałem personal access token do githuba.
+    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/001-Class/lab1_2.png" />
 
 6. Praca na nowej gałęzi
     - Treść githooka
