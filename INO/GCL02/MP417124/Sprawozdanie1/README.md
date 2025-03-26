@@ -142,5 +142,5 @@ Po wyświetleniu listy uruchomionych kontenerów postanowiłam oczyścić system
 Ostatnią czynnością było dodanie stworzonego pliku `Dockerfile` do folderu `Sprawozdanie1` w repozytorium.
 ![Zrzut ekranu dodany dockerfile na repozytorium](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-15%20at%207.59.30%E2%80%AFPM.png)
 
-
+..
 ## Zadanie 3: Dockerfiles, kontener jako definicja etapu
