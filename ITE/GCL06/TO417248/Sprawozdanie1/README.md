@@ -6,9 +6,9 @@ Celem laboratorium było skonfigurowanie usługi SSH umożliwiającej połączen
 
 **DLACZEGO NA ZRZUTACH EKRANU WIDOCZNY JEST LOCALHOST?**
 
-Podczas instalacji systemu urządzenie domyślnie przyjęło nazwę localhost.localdomain, co widoczne jest na poniższym zrzucie. Nie oznacza to jednak, że połączenie SSH odbywa się do localhosta.
+Podczas instalacji systemu maszyna domyślnie przyjęła nazwę localhost.localdomain, co widoczne jest na poniższym zrzucie.
 
-![uname -a](ss/lab1/0.png)
+![uname -a](001-Class/ss/0.png)
 
 **1. Instalacja klienta git i obsługi kluczy SSH**
 
@@ -17,31 +17,34 @@ Instalacja została przeprowadzona przy użyciu menadżera paczek dnf:
 sudo dnf install git
 ```
 
-Instalacja klienta oraz serwera SSH nie była konieczna, gdyż Fedora Server w domyśle ma zainstalowany OpenSSH.
+Instalacja klienta oraz serwera SSH nie była konieczna, gdyż Fedora Server domyślnie ma zainstalowany OpenSSH.
 
 W celu weryfikacji poprawnej instalacji gita sprawdzono jego wersję:
+```bash
+git --version
+```
 
-![Sprawdzenie wersji git](ss/lab1/1.png)
+![Sprawdzenie wersji git](001-Class/ss/1.png)
 
 **2. Sklonowanie repozytorium przedmiotowego za pomocą HTTP**
 
 Ponieważ repozytorium jest publiczne, klonowanie mogło się odbyć poprzez HTTP bez konieczności tworzenia <i>personal access token</i>:
 
-![Klonowanie repozytorium przez HTTP](ss/lab1/2.png)
+![Klonowanie repozytorium przez HTTP](001-Class/ss/2.png)
 
 **3. Konfiguracja klucza SSH, klonowanie repozytorium przez SSH**
 
 Wygenerowane zostały 2 klucze SSH - jeden z hasłem, drugi bez hasła.
 
 - klucz zabezpieczony hasłem:
-![Generowanie klucza z hasłem](ss/lab1/3.png)
+![Generowanie klucza z hasłem](001-Class/ss/3.png)
 
 - klucz bez hasła:
-![Generowanie klucza bez hasła](ss/lab1/4.png)
+![Generowanie klucza bez hasła](001-Class/ss/4.png)
 
 Klucz prywatny zabezpieczony hasłem został dodany do agenta SSH:
 
-![Dodanie klucza do agenta ssh](ss/lab1/5.png)
+![Dodanie klucza do agenta ssh](001-Class/ss/5.png)
 
 Zawartość publicznego klucza zabezpieczonego hasłem została odczytana przy użyciu polecenia <i>cat</i>:
 ```bash
@@ -50,35 +53,35 @@ cat ~/.ssh/password.pub
 
 Na koncie GitHub został dodany nowy klucz SSH przy użyciu uprzednio odczytanego klucza publicznego:
 
-![Dodanie klucza na GitHubie](ss/lab1/6.png)
+![Dodanie klucza na GitHubie](001-Class/ss/6.png)
 
 Pobrane repozytorium zostało usunięte, a następnie ponownie sklonowane - tym razem z wykorzystaniem protokołu SSH:
 
-![Klonowanie repozytorium przez SSH](ss/lab1/8.png)
+![Klonowanie repozytorium przez SSH](001-Class/ss/8.png)
 
 Na koncie na GitHubie został skonfigurowany Two-Factor Authentication (2FA). Jako metodę autentykacji wybrano aplikację uwierzytelniającą (Authenticator od firmy Microsoft):
 
-![2FA](ss/lab1/7.png)
+![2FA](001-Class/ss/7.png)
 
 **4. Zmiana gałęzi**
 
 Przełączono gałąż na main, a następnie na gałąź grupy - GCL06:
 
-![Zmiana gałęzi](ss/lab1/9.png)
+![Zmiana gałęzi](001-Class/ss/9.png)
 
 **5. Utworzenie własnej gałęzi**
 
 Od brancha grupy została utworzona własna gałąź o nazwie "inicjały & nr indeksu":
 
-![Utworzenie własnej gałęzi](ss/lab1/9-i-pol.png)
+![Utworzenie własnej gałęzi](001-Class/ss/9-i-pol.png)
 
 **6. Praca na nowej gałęzi**
 
 W katalogu grupy został utworzony własny katalog o nazwie takiej samej, jak nazwa gałęzi:
 
-![Utworzenie katalogu](ss/lab1/9-i-75.png)
+![Utworzenie katalogu](001-Class/ss/9-i-75.png)
 
-Następnie został napisany git hook weryfikujący, czy każdy commit message zaczyna się od "inicjały & nr indeksu". Plik został zapisany jako pre-commit:
+Następnie został napisany git hook weryfikujący, czy każdy commit message zaczyna się od "inicjały & nr indeksu". Plik został zapisany jako commit-msg:
 
 ```bash
 #!/bin/sh
@@ -100,8 +103,19 @@ exit 0
 ```
 
 Plikowi ustawiono możliwość wykonywania:
-![Zmiana uprawnień do pliku](ss/lab1/10-i-pol.png)
+![Zmiana uprawnień do pliku](001-Class/ss/10-i-pol.png)
 
 Plik następnie został przeniesiony z katalogu GCL06 do własnego katalogu oraz skopiowany do katalogu .git/hooks w celu instalacji:
 
-![Przeniesienie git hooka do własnego katalogu](ss/lab1/12.png)
+![Przeniesienie git hooka do własnego katalogu](001-Class/ss/12.png)
+
+Wszelnie wprowadzone zmiany należało wysłać do zdalnego źródła. Przed tym jednak powinien zostać skonfigurowany git tak, aby autor commita na githubie był widoczny jako poprawny użytkownik. W moim przypadku krok ten został niestety wykonany po commicie, przez co w historii commitów jest widoczny inny, niepowiązany ze mną użytkownik: 
+
+![Konfiguracja użytkownika git](001-Class/ss/13.png)
+
+Zmiany zcommitowano w lokalnym repozytorium:
+
+![Git Commit](001-Class/ss/14.png)
+
+Finalnie wprowadzone zmiany zostały wysłane do zdalnego źródła:
+![Git Push](001-Class/ss/15.png)
