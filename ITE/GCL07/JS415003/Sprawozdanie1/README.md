@@ -12,6 +12,32 @@ Niestety źle przemyślałem sprawę i w przypadku pierwszych laboratoriów zapo
     Najpierw sklonowałem repozytorium za pomocą HTTPS i później dodałem personal access token do githuba.
     <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/001-Class/lab1_2.png" />
 
+3. Upewnij się w kwestii dostępu do repozytorium jako uczestnik i sklonuj je za pomocą utworzonego klucza SSH, zapoznaj się [dokumentacją](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+   - Utwórz dwa klucze SSH, inne niż RSA, w tym co najmniej jeden zabezpieczony hasłem
+   <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/001-Class/lab1_4.png" />
+
+   - Skonfiguruj klucz SSH jako metodę dostępu do GitHuba
+   <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/001-Class/lab1_5.png" />
+
+   - Sklonuj repozytorium z wykorzystaniem protokołu SSH
+
+   Po sklonowaniu przeze mnie repozytorium za pomocą HTTPS musiałem później zmienić URL zdalnego repozytorium na mojej maszynie stosując komendę:
+    
+    ```bash
+    git remote set-url origin NOWY_URL
+    ```
+
+    Efektem tego później są zmienione URL.
+
+    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/001-Class/lab1_3.png" />
+
+   - Skonfiguruj 2FA
+   <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/001-Class/lab1_6.png" />
+
+4. Przełącz się na gałąź ```main```, a potem na gałąź swojej grupy
+
+5. Utwórz gałąź o nazwie "inicjały & nr indeksu" np. ```KD232144```. Miej na uwadze, że odgałęziasz się od brancha grupy!
+
 6. Praca na nowej gałęzi
     - Treść githooka
     
