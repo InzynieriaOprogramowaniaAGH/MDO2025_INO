@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/970840bb-e9da-4054-9d6e-b55a72ead83d)![image](https://github.com/user-attachments/assets/a61fed2f-0571-4b13-975e-6fa4ab3c0400)# Sprawozdanie z przedmiotu Metodyki DevOps z laboratorium nr 1-4
+# Sprawozdanie z przedmiotu Metodyki DevOps z laboratorium nr 1-4
 Sprawozdanie wykonała: Amelia Nalborczyk, nr grupy: 2.
 Data wykonania: 30.03. 2025 r.
 ## Laboratorium 1  
