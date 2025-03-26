@@ -4,13 +4,13 @@
 ## Zajęcia 01
 Celem laboratorium było skonfigurowanie usługi SSH umożliwiającej połączenie z GitHubem oraz zapoznanie się i przygotowanie własnej gałęzi w repozytorium git.
 
-**DLACZEGO NA ZRZUTACH EKRANU WIDOCZNY JEST LOCALHOST?**
+### DLACZEGO NA ZRZUTACH EKRANU WIDOCZNY JEST LOCALHOST?
 
 Podczas instalacji systemu maszyna domyślnie przyjęła nazwę localhost.localdomain, co widoczne jest na poniższym zrzucie.
 
 ![uname -a](001-Class/ss/0.png)
 
-**1. Instalacja klienta git i obsługi kluczy SSH**
+### 1. Instalacja klienta git i obsługi kluczy SSH
 
 Instalacja została przeprowadzona przy użyciu menadżera paczek dnf:
 ```bash
@@ -26,13 +26,13 @@ git --version
 
 ![Sprawdzenie wersji git](001-Class/ss/1.png)
 
-**2. Sklonowanie repozytorium przedmiotowego za pomocą HTTP**
+### 2. Sklonowanie repozytorium przedmiotowego za pomocą HTTP
 
 Ponieważ repozytorium jest publiczne, klonowanie mogło się odbyć poprzez HTTP bez konieczności tworzenia <i>personal access token</i>:
 
 ![Klonowanie repozytorium przez HTTP](001-Class/ss/2.png)
 
-**3. Konfiguracja klucza SSH, klonowanie repozytorium przez SSH**
+### 3. Konfiguracja klucza SSH, klonowanie repozytorium przez SSH
 
 Wygenerowane zostały 2 klucze SSH - jeden z hasłem, drugi bez hasła.
 
@@ -63,19 +63,19 @@ Na koncie na GitHubie został skonfigurowany Two-Factor Authentication (2FA). Ja
 
 ![2FA](001-Class/ss/7.png)
 
-**4. Zmiana gałęzi**
+### 4. Zmiana gałęzi
 
 Przełączono gałąż na main, a następnie na gałąź grupy - GCL06:
 
 ![Zmiana gałęzi](001-Class/ss/9.png)
 
-**5. Utworzenie własnej gałęzi**
+### 5. Utworzenie własnej gałęzi
 
 Od brancha grupy została utworzona własna gałąź o nazwie "inicjały & nr indeksu":
 
 ![Utworzenie własnej gałęzi](001-Class/ss/9-i-pol.png)
 
-**6. Praca na nowej gałęzi**
+### 6. Praca na nowej gałęzi
 
 W katalogu grupy został utworzony własny katalog o nazwie takiej samej, jak nazwa gałęzi:
 
@@ -103,6 +103,7 @@ exit 0
 ```
 
 Plikowi ustawiono możliwość wykonywania:
+
 ![Zmiana uprawnień do pliku](001-Class/ss/10-i-pol.png)
 
 Plik następnie został przeniesiony z katalogu GCL06 do własnego katalogu oraz skopiowany do katalogu .git/hooks w celu instalacji:
@@ -118,4 +119,119 @@ Zmiany zcommitowano w lokalnym repozytorium:
 ![Git Commit](001-Class/ss/14.png)
 
 Finalnie wprowadzone zmiany zostały wysłane do zdalnego źródła:
+
 ![Git Push](001-Class/ss/15.png)
+
+
+
+## Zajęcia 02
+
+Celem laboratorium było przygotowanie środowiska umożliwiającego konteneryzację aplikacji przy użyciu Dockera.
+
+### 1. Instalacja Dockera w systemie linuksowym
+
+Instalacja odbyła się przy użyciu menadżera paczek dnf:
+```bash
+sudo dnf install docker
+```
+
+W celu weryfikacji poprawności instalacji sprawdzono wersję Dockera:
+
+![Sprawdzenie wersji Dockera](002-Class/ss/1.png)
+
+Otrzymany komunikat oznacza, że nie jest aktywny demon Dockera, dlatego też został aktywowany oraz uruchomiony:
+```bash
+sudo systemctl enable docker
+sudo systemctl start docker
+```
+
+Po aktywacji sprawdzono, czy demon działa:
+
+![Aktywacja demona Dockera](002-Class/ss/2.png)
+
+### 2. Rejestracja w Docker Hub
+
+Utworzone zostało konto na stronie [Docker Hub](https://hub.docker.com):
+
+![](002-Class/ss/docker-profile.png)
+
+### 3. Pobieranie obrazów Dockera
+
+W następnym kroku zostały pobrane obrazy - `hello-world`, `busy-box`, `ubuntu` oraz `mysql`:
+
+![Pobieranie obrazów Dockera](002-Class/ss/3.png)
+
+### 4. Uruchomienie kontenera z obrazu `busybox`
+
+Kontener uruchomiono wraz z automatycznym usuwaniem po zakończeniu działania przy użyciu poniższego polecenia:
+```bash
+sudo docker run --rm busybox
+```
+
+Kontener ten jednak uruchomił się i automatycznie zamknął, gdyż nie miał zadań do wykonania, co przedstawia poniższy zrzut ekranu z listą uruchomionych kontenerów:
+
+![Uruchomienie kontenera obrazu busybox](002-Class/ss/4.png)
+
+Aby kontener nie zakończył działania od razu, należało uruchomić go w trybie interaktywnym. Wersja kontenera obrazu dostępna jest przy wywołaniu `--help` dla dowolnego uniksowego polecenia:
+
+![Uruchomienie kontenera obrazu busybox w trybie interaktywnym](002-Class/ss/5.png)
+
+Ciąg znaków `2>&1` przy sprawdzeniu wersji oznacza przekazanie strumienia `stderr` do `stdout`.
+
+### 5. Uruchomienie "systemu w kontenerze"
+
+Wybranym obrazem systemu był ubuntu, dlatego też kontener z tym systemem został uruchomiony, a wewnątrz niego zostały sprawdzony proces z `PID 1`. Jak widać, jest to bash:
+
+![Proces o PID 1 w kontenerze ubuntu](002-Class/ss/6.png)
+
+Na hoście w kolejnym terminalu sprawdzono również procesy dockera przy użyciu poniższego polecenia:
+```bash
+ps aux | grep docker
+```
+
+![Procesy dockera na hoście](002-Class/ss/7.png)
+
+Ostatnim zadaniem w tym kroku było zaktualizowanie pakietów w kontenerze: 
+
+![Aktualizacja pakietów w kontenerze ubuntu](002-Class/ss/8.png)
+
+Po zaktualizowaniu pakietów opuszczono kontener:
+
+![Wyjście z kontenera](002-Class/ss/exit.png)
+
+### 6. Utworzenie własnego Dockerfile'a
+
+Obraz tworzony przy użyciu Dockerfile'a bazuje na Alpine Linux, dzięki czemu będzie bardzo lekki. Obraz ma posiadać zainstalowanego gita oraz sklonowane repozytorium przedmiotu:
+```Dockerfile
+FROM alpine:latest
+
+RUN apk add --no-cache git
+
+WORKDIR /app
+
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+
+CMD ["/bin/sh"]
+```
+
+Następnie obraz został zbudowany. Jako własną nazwę obrazu ustawiono `apline-image`:
+
+![Budowa obrazu na podstawie Dockerfile](002-Class/ss/9.png)
+
+Po zbudowaniu obrazu został uruchomiony kontener bazujący na nim, a następnie wewnątrz zweryfikowano, czy jest zainstalowany git oraz czy zostało ściągnięte repozytorium:
+
+![Weryfikacja instalacji gita oraz sklonowania repozytorium](002-Class/ss/11.png)
+
+W nowym terminalu na hoście sprawdzono uruchomione kontenery:
+
+![Sprawdzenie uruchomionych kontenerów](002-Class/ss/12.png)
+
+W ostatnim kroku wyczyszczono wszystkie zatrzymane kontenery, a następnie obrazy przy użyciu poleceń:
+```bash
+sudo docker container prune
+sudo docker rmi -f $(sudo docker images -aq)
+```
+
+![Czyszczenie kontenerów i obrazów](002-Class/ss/13.png)
+
+Plik Dockerfile umieszczony został w katalogu `002-Class` wewnątrz katalogu `Sprawozdanie1` dla lepszej organizacji plików.
