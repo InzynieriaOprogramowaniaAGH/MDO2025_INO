@@ -1,0 +1,31 @@
+sudo dnf install git
+git --version
+git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ssh-keygen -t ed25519 -C "tomekoszczypko@gmail.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/password
+cat ~/.ssh/password.pub
+rm -fr MDO2025_INO
+git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+cd MDO2025_INO/
+git checkout main
+git checkout GCL06
+git checkout -b TO417248
+cd ITE/GCL06
+mkdir TO417248
+nano commit-msg
+chmod a+x commit-msg
+mv commit-msg TO417248
+cd ../..
+cp ITE/GCL06/TO417248/commit-msg .git/hooks/
+mkdir ITE/GCL06/TO417248/Sprawozdanie1
+touch ITE/GCL06/TO417248/Sprawozdanie1/README.md
+git status
+git add -A
+git status
+git commit -m "Initial commit"
+git commit -m "TO417248 Initial commit"
+git status
+git config --global user.name "Tomasz Oszczypko"
+git config --global user.email "tomekoszczypko@gmail.com"
+git push origin TO417248
