@@ -180,3 +180,53 @@ sama operacja <code style="color:rgb(35, 186, 101);"> git merge</code> powiodła
 ![alt text](<./img/docker rm.png>)
 
 ## 8. Wyczyszczenie obrazów
+
+# Zajęcia 03
+
+## Wybór oprogramowania na zajęcia, sklonowanie jego repozytorium oraz przeprowadzenie testów
+
+![alt text](<./img/git clone irssi.png>)
+
+![alt text](<./img/dnf install meson.png>)
+
+![alt text](<./img/meson build.png>)
+
+![alt text](<./img/ninja -C Build.png>)
+
+![alt text](<./img/ninja -C Build test.png>)
+
+## Przeprowadzenie buildu w kontenerze
+
+![alt text](<./img/docker run fedora bash.png>)
+
+## 1. Wykonanie  <code style="color:rgb(35, 186, 101);"> build</code> i  <code style="color:rgb(35, 186, 101);"> test</code> wewnątrz wybranego kontenera bazowego.
+
+![alt text](<./img/gir clone fedora irssi.png>)
+
+    dnf -y install git meson ninja gcc glib2-devel utf8proc-devel ncurses-devel perl-ExtUtil*
+
+![alt text](<./img/fedora meson Build.png>)
+
+![alt text](<./img/meson Build fin.png>)
+
+    ninja -C Build
+
+![alt text](<./img/fedora ninja -C Build tet.png>)
+
+## 2. Stworzenie dwóch plikiów Dockerfile automatyzujących kroki powyżej
+
+![alt text](./img/dockerfile.irssibld.png)
+
+     docker build -t irssibld -f ./Dockerfile.irssibld .
+
+![alt text](<./img/docker bilid dockerfile.irssibld.png>)
+
+![alt text](./img/dockerfile.irssibldv2.png)
+
+    docker build -t irssibldv2 -f ./Dockerfile.irssibldv2 . 
+
+![alt text](<./img/docker bilid dockerfile.irssibldv2.png>)
+
+## 3. Wykazanie, że kontener wdraża się i pracuje poprawnie. 
+
+![alt text](<./img/run irssibldv2.png>)
