@@ -40,7 +40,53 @@ Zmieniono połączenie z repozytorium na SSH:
     fi
 ![image](https://github.com/user-attachments/assets/80e9c452-a24f-46ed-89e3-49ab220374d7)
 ![image](https://github.com/user-attachments/assets/fd2f3037-08ce-4a95-bc99-1ffe370bc127)
-![image](https://github.com/user-attachments/assets/7b41b221-467e-444b-a126-c13d7e46f26c)
+![image](https://github.com/user-attachments/assets/77337adc-6852-41c6-83eb-cc4b61b9d9a4)
+### Zajęcia numer dwa
+1) Zainstalowano oprogramowanie Docker, na systemie Fedora, poprzez polecenie:
+
+          sudo dnf install -y docker.
+   ![image](https://github.com/user-attachments/assets/06e49c26-bc56-4883-aced-96dff7ea6cc8)
+
+2) Pobrano obrazy: hello-world, busybox, ubuntu, fedora, mysql. Wykorzystano polecenie docker pull [obraz].
+   ![image](https://github.com/user-attachments/assets/813039e9-a11b-4f80-b570-518c38642e76)
+3) Uruchomiono kontener z obrazu busybox, podłaczono się do niego interkatywnie i wywołano numer wersji systemu.
+   ![image](https://github.com/user-attachments/assets/94f22783-ee04-407e-a86e-7dc5e54ed301)
+   Pokaż efekt uruchomienia kontenera
+   ![image](https://github.com/user-attachments/assets/9219e997-5a1f-43ce-aa35-5475b8857798)
+4) Podłącz się do kontenera interaktywnie i wywołaj numer wersji
+   ![image](https://github.com/user-attachments/assets/0b147c8b-62f4-4705-b224-583bb073567a)
+5) Uruchom "system w kontenerze" (czyli kontener z obrazu fedora lub ubuntu)
+   Zaprezentuj PID1 w kontenerze i procesy dockera na hoście
+   ![image](https://github.com/user-attachments/assets/a78b95cb-2893-417e-95d4-c1402c5ea4fe)
+
+   Zaktualizuj pakiety
+   ![image](https://github.com/user-attachments/assets/1082390d-dae6-4e05-a1e3-ec8e5491b7c9)
+6) Stwórz własnoręcznie, zbuduj i uruchom prosty plik Dockerfile bazujący na wybranym systemie i sklonuj nasze repo.
+     Kieruj się dobrymi praktykami
+     Upewnij się że obraz będzie miał git-a
+     Uruchom w trybie interaktywnym i zweryfikuj że jest tam ściągnięte nasze repozytorium
+![image](https://github.com/user-attachments/assets/63ded7f7-c87f-4898-9a3b-d68440cf123d)
+
+![image](https://github.com/user-attachments/assets/27e6b901-8004-4195-86c1-84cc5a0ddab9)
+
+
+7)Pokaż uruchomione ( != "działające" ) kontenery, wyczyść je.
+ ![image](https://github.com/user-attachments/assets/9c61aba4-7f9b-4c84-bda3-bcdc245e4138)
+
+8) Wyczyść obrazy
+   ![image](https://github.com/user-attachments/assets/ceed0dc6-56d2-4ff9-9f36-97a4726514ec)
+
+9) Utworzony plik Dockerfile został dodany do katalogu Sprawozdanie1 wewnątrz repozytorium na gałęzi JK414562.
+
+
+
+
+
+
+
+
+
+ 
 
 
 
