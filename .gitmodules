@@ -1,0 +1,3 @@
+[submodule "ITE/GCL06/AO417742/irssi"]
+	path = ITE/GCL06/AO417742/irssi
+	url = https://github.com/irssi/irssi.git
