@@ -1,0 +1,158 @@
+# Clone the repository
+git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+
+# Set global Git configuration
+git config --global user.name "Adam"
+git config --global user.email "matan@student.agh.edu.pl"
+
+# Generate SSH key
+ssh-keygen -t ed25519 -C "matan@student.agh.edu.pl"
+# Save the key in a custom file
+Enter file in which to save the key (/home/adam/.ssh/id_ed25519): skibidi.c
+# No passphrase
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+
+# Start SSH agent
+eval "$(ssh-agent -s)"
+# Add the SSH key to the agent
+ssh-add skibidi.c
+
+# Display the public key
+cat skibidi.c.pub
+
+# Attempt to generate an ECDSA-SK key (fails due to missing device)
+ssh-keygen -t ecdsa-sk -C "matan@student.agh.edu.pl"
+Key enrollment failed: device not found
+
+# Generate another SSH key (ED25519)
+ssh-keygen -t ed25519 -C "matan@student.agh.edu.pl"
+# Save the key in the default location
+Enter file in which to save the key (/home/adam/.ssh/id_ed25519): 
+# No passphrase
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+
+# Clone the repository again using SSH (fails because the directory already exists)
+git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+fatal: destination path 'MDO2025_INO' already exists and is not an empty directory.
+
+# List files in the current directory
+ls
+# Output: MDO2025_INO  skibidi.c  skibidi.c.pub
+
+# Move to the parent directory
+cd ..
+
+# Clone the repository again using SSH (successful)
+git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+# The authenticity of host 'github.com (140.82.121.4)' can't be established.
+# Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+
+# List files in the current directory
+ls
+# Output: devopszad1.txt  GitHub  MDO2025_INO
+
+# Move into the cloned repository
+cd GitHub/MDO2025_INO/
+
+# Check the current branch
+git branch
+# Output: * main
+
+# List all branches (local and remote)
+git branch -a
+# Output:
+# * main
+#   remotes/origin/FR417273
+#   remotes/origin/GCL01
+#   remotes/origin/GCL02
+#   remotes/origin/GCL04
+#   remotes/origin/GCL08
+#   remotes/origin/HEAD -> origin/main
+#   remotes/origin/JK414562
+#   remotes/origin/KD232144
+#   remotes/origin/main
+
+# Switch to the GCL04 branch
+git checkout -b GCL04 origin/GCL04
+# Output: branch 'GCL04' set up to track 'origin/GCL04'.
+# Switched to a new branch 'GCL04'
+
+# Create a new branch AM414672
+git checkout -b AM414672
+
+# Move into the ITE directory and create a new directory for AM414672
+cd ITE/
+mkdir AM414672
+cd AM414672/
+
+# Create a commit-msg file and edit it
+touch commit-msg
+nano commit-msg
+
+# Move back to the repository root
+cd ../../
+
+# List all files (including hidden ones)
+ls -a
+# Output: .  ..  .git  ITE  README.md  READMEs
+
+# Move into the .git directory
+cd .git
+
+# List files in the .git directory
+ls
+# Output: config  description  HEAD  hooks  index  info  logs  objects  packed-refs  refs
+
+# Move into the hooks directory
+cd hooks
+
+# Copy the commit-msg file to the hooks directory
+cp ../ITE/AM414672/commit-msg hooks/
+
+# Move back to the repository root
+cd ../../
+
+# Stage all changes
+git add .
+
+# Commit the changes with a message
+git commit -m "test"
+# Output:
+# hint: The '.git/hooks/commit-msg' hook was ignored because it's not set as executable.
+# hint: You can disable this warning with `git config set advice.ignoredHook false`.
+# [AM414672 ea2b832] test
+#  1 file changed, 13 insertions(+)
+#  create mode 100644 ITE/AM414672/commit-msg
+
+# Make the commit-msg hook executable
+cd .git/hooks/
+chmod +x commit-msg
+
+# Move back to the repository root
+cd ../../
+
+# Push the changes to the remote repository (fails due to no upstream branch)
+git push
+# Output:
+# fatal: The current branch AM414672 has no upstream branch.
+# To push the current branch and set the remote as upstream, use
+#     git push --set-upstream origin AM414672
+
+# Attempt to push with upstream set (fails due to permission issues)
+git push --set-upstream origin AM414672
+# Output:
+# remote: Permission to InzynieriaOprogramowaniaAGH/MDO2025_INO.git denied to student-bida-agh.
+# fatal: unable to access 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git/': The requested URL returned error: 403
+
+# Amend the commit message
+git commit --amend -m "AM414672 1st edition of gaming"
+# Output:
+# [AM414672 e684900] AM414672 1st edition of gaming
+#  Date: Thu Mar 6 18:01:58 2025 +0100
+#  1 file changed, 13 insertions(+)
+#  create mode 100644 ITE/AM414672/commit-msg
+
+# Exit the shell
+exit
