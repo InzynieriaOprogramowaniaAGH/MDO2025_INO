@@ -350,3 +350,21 @@ services:
 Finalnie możliwe jest zbudowanie i uruchomienie kontenera z testami przy użyciu przygotowanego pliku:
 
 ![Uruchomienie kontenera z testami](003-Class/ss/13.png)
+
+
+
+## Zajęcia 04
+
+### 1. Zachowywanie stanu
+
+W pierwszej kolejności przygotowane zostały dwa woluminy - wejściowy i wyjściowy o nazwach `input-volume` oraz `output-volume`:
+
+![Utworzenie woluminów](004-Class/ss/1.png)
+
+Czyste repozytorium przedmiotu zostało ponownie sklonowane - do folderu `repo`:
+
+![Sklonowanie repozytorium](004-Class/ss/2.png)
+
+W celu skopiowania sklonowanego repozytorium na wolumin wejściowy z hosta przygotowany został kontener oparty o `hello-world` z podpiętym woluminem `input-volume`. Kontener ten nie był i nie musi być nigdy uruchamiany - służy on tylko do interakcji z woluminem wejściowym poprzez `docker cp`, stąd nadana mu nazwa `input-interface`. Takie rozwiązanie pozwala na oszczędzenie zasobów - obraz `hello-world` jest bardzo lekki, waży tylko nieco ponad 10kB. 
+
+![Skopiowanie repozytorium na wolumin wejściowy](004-Class/ss/3.png)
