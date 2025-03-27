@@ -113,3 +113,70 @@ Na sam koniec podjęto próbę wciągnięcia swojej gałąź do gałęzi grupowe
 sama operacja <code style="color:rgb(35, 186, 101);"> git merge</code> powiodła się jednak próba wypchnięcia skutkowała zgodnie z oczekiwaniami otrzymaniem błędu z uwagi na chroniony status gałęzi. 
 
 # Zajęcia 02
+
+##  1. Instalacja Dockera w systemie linuksowym
+
+    sudo dnf install -y moby-engine
+
+![alt text](<./img/instal docker.png>)
+
+![alt text](<./img/docker --version.png>)
+
+## 2. Rejestracja w Docker Hub i zapoznanie się z sugerowanymi obrazami
+
+![alt text](<./img/docker account.png>)
+
+## 3. Pobranie obrazów <code style="color:rgb(35, 186, 101);"> hello-world</code>, <code style="color:rgb(35, 186, 101);"> busybox</code>, <code style="color:rgb(35, 186, 101);"> ubuntu</code> lub <code style="color:rgb(35, 186, 101);"> fedora</code>, <code style="color:rgb(35, 186, 101);"> mysql</code>
+
+
+![alt text](<./img/docker start.png>)
+
+    sudo systemctl enable docker
+
+![alt text](<./img/docker status.png>)
+
+![alt text](<./img/docker usermod.png>)
+
+![alt text](<./img/docker pull.png>)
+
+![alt text](<./img/docker images.png>)
+
+## 4. Uruchomienie kontenera z obrazu <code style="color:rgb(35, 186, 101);"> busybox</code>
+
+![alt text](<./img/run busybox.png>)
+
+![alt text](<./img/busybox --help.png>)
+
+![alt text](<./img/docker ps busybox.png>),
+
+## 5. Uruchomienie "system w kontenerze" 
+
+![alt text](<run fedora .png>)
+
+![alt text](<fedora ps -aux .png>)
+
+![alt text](<ps aux.png>)
+
+![alt text](<dnf update -y.png>)
+
+![alt text](<dnf update summary.png>)
+
+    exit
+
+## 6. Własnoręcznie tworzenie, zbudowanie i uruchomienie prostego plik Dockerfile bazującego na wybranym systemie i sklonowanie repozytorium.
+
+![alt text](dockerfile.png)
+
+![alt text](<docker bulid.png>)
+
+![alt text](<docker images my-fedora.png>)
+
+![alt text](<run my-fedora.png>)
+
+## 7. Pokazanie uruchomionych ( != "działających" ) kontenerów, wyczyszczenie ich.
+
+![alt text](<dokrer ps -a end.png>)
+
+![alt text](<docker rm.png>)
+
+## 8. Wyczyszczenie obrazów
