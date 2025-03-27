@@ -151,32 +151,32 @@ sama operacja <code style="color:rgb(35, 186, 101);"> git merge</code> powiodła
 
 ## 5. Uruchomienie "system w kontenerze" 
 
-![alt text](<run fedora .png>)
+![alt text](<./img/run fedora .png>)
 
-![alt text](<fedora ps -aux .png>)
+![alt text](<./img/fedora ps -aux .png>)
 
-![alt text](<ps aux.png>)
+![alt text](<./img/ps aux.png>)
 
-![alt text](<dnf update -y.png>)
+![alt text](<./img/dnf update -y.png>)
 
-![alt text](<dnf update summary.png>)
+![alt text](<./img/dnf update summary.png>)
 
     exit
 
 ## 6. Własnoręcznie tworzenie, zbudowanie i uruchomienie prostego plik Dockerfile bazującego na wybranym systemie i sklonowanie repozytorium.
 
-![alt text](dockerfile.png)
+![alt text](./img/dockerfile.png)
 
-![alt text](<docker bulid.png>)
+![alt text](<./img/docker bulid.png>)
 
-![alt text](<docker images my-fedora.png>)
+![alt text](<./img/docker images my-fedora.png>)
 
-![alt text](<run my-fedora.png>)
+![alt text](<./img/run my-fedora.png>)
 
 ## 7. Pokazanie uruchomionych ( != "działających" ) kontenerów, wyczyszczenie ich.
 
-![alt text](<dokrer ps -a end.png>)
+![alt text](<./img/dokrer ps -a end.png>)
 
-![alt text](<docker rm.png>)
+![alt text](<./img/docker rm.png>)
 
 ## 8. Wyczyszczenie obrazów
