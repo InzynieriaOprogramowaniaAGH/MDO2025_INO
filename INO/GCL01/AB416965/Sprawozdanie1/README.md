@@ -422,3 +422,171 @@ services:
 
 - Konteneryzacja builda to dobry krok w CI/CD.
 - Do publikacji: **dedykowana ścieżka (deploy)**, z czystym obrazem lub paczką.
+
+## **Zajęcia 04 - Woluminy, Sieci, Jenkins**
+
+---
+
+### **1. Zachowywanie stanu z wykorzystaniem woluminów**
+
+#### **Przygotowanie woluminów**
+
+Do utworzenia woluminów zostało wykorzystane polecenie `docker volume create`:
+
+![Przygotowanie woluminów](<Zrzuty4/zrzut_ekranu1.png>)
+
+#### **Uruchomienie kontenera z podpiętymi woluminami i instalacja zależności:**
+
+Aby uruchomić kontener z podpiętym woluminem należało użyć opcji `-v` która pozwala wskazać folder w którym dane woluminu będą się znajdować:
+
+![Uruchomienie kontenera z woluminami](<Zrzuty4/zrzut_ekranu2.png>)
+
+#### **Sprawdzenie obecności dedykowanych folderów woluminów:**
+
+![Sprawdzenie folderow](<Zrzuty4/zrzut_ekranu3.png>)
+
+#### **Klonowanie repozytorium na wolumin (z hosta)**
+
+Aby sklonować repozytorium znajdując się na hoście wykorzystałem polecenie `dockr volume inspect`, które wyśmietla przeróżne informacje o woluminie w tym lokalizacje jego danych na hoście:
+
+![Klonowanie na hoście](<Zrzuty4/zrzut_ekranu4.png>)
+
+Sprawdzenie poprawnośći sklonowania w kontenerze:
+
+![Sprawdzenie porpawnosci sklonowania](<Zrzuty4/zrzut_ekranu5.png>)
+
+#### **Build wewnątrz kontenera i wysłanie wyniku na wolumin wyjściowy:**
+
+Budowanie
+
+![Build](<Zrzuty4/zrzut_ekranu6.png>)
+
+Przesłanie nowo utworzonego pliku `CJSON_test` na wolumin wyjściowy
+
+![Przesłanie na wolumin wyjściowy](<Zrzuty4/zrzut_ekranu7.png>)
+
+Odczytanie z woluminu wyjściowego
+
+![Odczytanie z woluminu wyjsciowego](<Zrzuty4/zrzut_ekranu8.png>)
+
+#### **Powtórzenie powyższych kroków tym razem z klonowaniem wewnątrz kontenera**
+
+Instalacja gita i klonowanie w kontenerze:
+
+![Instalacja gita i klonowanie w kontenerze](<Zrzuty4/zrzut_ekranu9.png>)
+
+Sprawdzenie poprawnosci klonowania
+
+![Sprawdzenie poprawnosci klonowanie](<Zrzuty4/zrzut_ekranu10.png>)
+
+Dla oszczędzenia czasu nie przeprowadzałem builda tylko od razu sklopiowałem cały folder pobranego repozytorium na wolumin wyjściowy
+
+![Skopiowanie folderu cJSON na wolumin wyjsciowy](<Zrzuty4/zrzut_ekranu11.png>)
+
+Sprawdzenie na hoście czy folder został przeniesiony na wolumin wyjściowy
+
+![Sprawdzenie kopiowania na wolumin wyjsciowy](<Zrzuty4/zrzut_ekranu12.png>)
+
+#### **`docker build` i `RUN --mount`**
+
+Dla tej części zadania utworzyłem `Dockerfile.buildkit`, którego zadaniem było zbindowanie folderu na hoście z woluminem. Podczas wywołania `RUN --mount` były tworzone woluminy tymczasowe, po zakończeniu działania Dockerfile były one usuwane.
+
+Dockerfile.buildkit:
+
+```dockerfile
+FROM ubuntu:latest
+
+RUN apt update && apt install -y cmake gcc g++ make
+
+WORKDIR /cJSON
+
+
+RUN --mount=type=bind,source=./temp_in,target=/mnt/v1_in \
+    --mount=type=bind,source=./temp_out,target=/mnt/v2_out,rw \
+    cp -r /mnt/v1_in/* . && \
+    mkdir build && cd build && \
+    cmake .. && make && \
+    cp cJSON_test /mnt/v2_out/
+```
+
+Na hoście utworzyłem dwa foldery `temp_in` i `temp_out`. DO `temp_in` sklonowałem repozytorium gita i zbindowałem te foldery z woluminami dzięki czemu mogłem przeprowadzić proces make w sklonowanym repozytorium na woluminie.
+
+![Docker build](<Zrzuty4/zrzut_ekranu13.png>)
+
+### **2. Eksponowanie portu i iperf3**
+
+#### **Tworzenie kontenera z serwerem iperf**
+
+Utworzenie i uruchomienie serwera `iperf-server` wykorzystując obraz `networkstatic/iperf3` który jest dostępny publicznie na DockerHub. Serwer utworzyłem na porcie `5201`
+
+Po utworzeniu serwer zaczyna nasłuchiwanie.
+
+![Utworzenie serwera](<Zrzuty4/zrzut_ekranu14.png>)
+
+#### **Połączenie z drugiego kontenera (klient)**
+
+W drugim terminalu utworzyłem drugi kontener który próbował połączyć się z serwerem.
+
+![Poloczenie z drugiego kontenera](<Zrzuty4/zrzut_ekranu15.png>)
+
+Serwer poprawnie odebrał połączenie.
+
+![Odebranie polaczenia](<Zrzuty4/zrzut_ekranu16.png>)
+
+#### **Własna sieć bridged**
+
+Utworzyłem własną sieć mostkowana za pomocą polecenia `docker network create`
+
+![Utworzenie sieci](<Zrzuty4/zrzut_ekranu17.png>)
+
+Utworzyłem nowy serwer w mojej sieci, a następnie połączyłem się z nim z fedory.
+
+![Polaczenie z serwerem we wlasnej sieci](<Zrzuty4/zrzut_ekranu18.png>)
+
+#### **Połączenie z hosta i spoza hosta**
+
+Ponownie utworzyłem nowy serwer(poprzedni został usunięty)
+
+![Nowy serwer](<Zrzuty4/zrzut_ekranu19.png>)
+
+Najpierw połączyłem się z nim z hosta czyli fedory
+
+![Polaczenie z hosta](<Zrzuty4/zrzut_ekranu20.png>)
+
+Połączenie zostało odebrane
+
+![Odebranie hosta](<Zrzuty4/zrzut_ekranu21.png>)
+
+Z zewnętrznego systemu Windows połączyłem się z serwerem iperf: `iperf3 -c 192.168.56.101` na porcie `5201`
+
+![Polaczenie z windowsa](<Zrzuty4/zrzut_ekranu22.png>)
+
+Te połączenie również udało się odebrać pomyślnie na serwerze
+
+![Odebranie windowsa](<Zrzuty4/zrzut_ekranu23.png>)
+
+Sprawdziłem logi serwera za pomocą polecenia `docker logs iperf-server`
+
+![Logi serwera](<Zrzuty4/zrzut_ekranu24.png>)
+
+Logi nie wykazały żadnych problemów w połączeniu. Prędkość połączenia pomiędzy hostem i serwerem jest znacznie szybsza niż ta pomiędzy windowsem i serwerem, co mam sens ponieważ host i serwer działają w ramach jednej maszyny wirtualnej.
+
+### **3. Instalacja Jenkinsa (Docker)**
+
+#### **Uruchomienie instancji Jenkins + DIND**
+
+To zadanie wykonywałem korzystając z instrukcji na stronie [**Jenkins**](https://www.jenkins.io/doc/book/installing/docker/). Najpierw utworzyłem sieć o nazwie `jenkins`.
+
+![Utworzenie sieci o nazwie jenkins](<Zrzuty4/zrzut_ekranu25.png>)
+
+Korzystając z instrukcji pobrałem i utworzyłem kontener `docker:dind`.
+
+![Pobranie docker:dind](<Zrzuty4/zrzut_ekranu26.png>)
+
+Korzystając z instrukcji pobrałem i utworzyłem kontener `jenkins:lts`.
+
+![Pobranie jenkins:lts](<Zrzuty4/zrzut_ekranu27.png>)
+
+Logowanie do jenkina z Windowsa
+
+![alt text](<Zrzuty4/zrzut_ekranu28.png>)
