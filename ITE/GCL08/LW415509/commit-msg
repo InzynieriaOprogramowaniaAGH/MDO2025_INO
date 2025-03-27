@@ -1,0 +1,16 @@
+#!/bin/bash
+
+INITIALS="LW"
+INDEX="415509"
+
+COMMIT_MSG_FILE=".git/COMMIT_EDITMSG"
+COMMIT_MSG=$(head -n 1 "$COMMIT_MSG_FILE")
+
+EXPECTED_PATTERN="^$INITIALS & $INDEX"
+
+if ! [[ "$COMMIT_MSG" =~ $EXPECTED_PATTERN ]]; then
+    echo "ERROR: Komunikat commita musi zaczynać się od: '$INITIALS & $INDEX'"
+    exit 1
+fi
+
+exit 0
