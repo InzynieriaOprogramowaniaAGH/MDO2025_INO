@@ -386,7 +386,7 @@ npm -v
 
 ![alt text](images/node_install.png)
 
-## Sklonowanie repozytorium projektu i weryfikacja wymagań
+## Sklonowanie repozytorium projektu i weryfikacja wymagań poprzez uruchomienie buildu oraz testów
 
   - Na początku należy sklonować repozytorium i wejść do pobranego folderu poniższym poleceniem
 
