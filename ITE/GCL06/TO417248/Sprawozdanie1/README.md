@@ -235,3 +235,118 @@ sudo docker rmi -f $(sudo docker images -aq)
 ![Czyszczenie kontenerów i obrazów](002-Class/ss/13.png)
 
 Plik Dockerfile umieszczony został w katalogu `002-Class` wewnątrz katalogu `Sprawozdanie1` dla lepszej organizacji plików.
+
+
+
+## Zajęcia 03
+
+Celem laboratorium było przygotowanie plików Dockerfile tworzących wersje testową oraz produkcyjną obrazów z dowolnym otwartoźródłowym projektem.
+
+### 1. Wybór oprogramowania
+
+Wybrane przeze mnie oprogramowanie to `toasty` - otwartoźródłowy framework do pisania testów jednostkowych w C mojego autorstwa. Projekt zawiera plik `Makefile` z dwoma targetami - domyślnym do kompilacji jako biblioteki statycznej oraz `test` do kompilacji i uruchomienia wewnętrznych testów jednostkowych.
+
+Repozytorium zostało sklonowane:
+
+![Klonowanie repozytorium](003-Class/ss/1.png)
+
+Maszyna nie ma wymaganych zależności, dlatego też zostały doinstalowane przy użyciu poniższego polecenia:
+```bash
+sudo dnf install gcc make
+```
+
+Następnie został przeprowadzony build oraz uruchomienie testów:
+
+![Build projektu](003-Class/ss/2.png)
+
+![Budowa i uruchomienia testów](003-Class/ss/3.png)
+
+### 2. Przeprowadzenie buildu w kontenerze
+
+W pierwszym kroku został pobrany obraz ubuntu przy użyciu poniższego polecenia:
+```bash
+docker pull ubuntu
+```
+
+Następnie uruchomiono kontener w trybie interaktywnym:
+
+![Uruchomienie kontenera ubuntu](003-Class/ss/4.png)
+
+W kontenerze zostały zainstalowane wymagane zależności:
+
+![Instalacja zależności](003-Class/ss/5.png)
+
+Po krótkiej chwili możliwe było sklonowanie repozytorium projektu:
+
+![Klonowanie repozytorium](003-Class/ss/6.png)
+
+Następnie zmieniono katalog na katalog projektu oraz zbudowano go:
+
+![Budowa projektu](003-Class/ss/7.png)
+
+Po skończonej budowie możliwe było skompilowanie i uruchomienie testów, które zakończyły się powodzeniem:
+
+![Budowa i uruchomienie testów](003-Class/ss/8.png)
+
+W kolejnym kroku zostały przygotowane dwa pliki Dockerfile automatyzujące powyższe kroki:
+- `Dockerfile` - build:
+```Dockerfile
+FROM ubuntu:latest
+
+RUN apt update && apt install -y git gcc make
+
+RUN git clone https://github.com/badzianga/toasty.git
+
+WORKDIR /toasty
+
+RUN make
+```
+
+- `Dockerfile.test` - testy:
+```Dockerfile
+FROM toasty
+
+RUN make test 
+```
+
+Pliki te początkowo zostały umieszczone w katalogu domowym. W pierwszej kolejności zbudowano obraz builda:
+
+![Budowanie obrazu builda](003-Class/ss/9.png)
+
+Następnie zbudowano obraz testów:
+
+![Budowanie obrazu testów](003-Class/ss/10.png)
+
+W ostatnim kroku uruchomiono kontener oparty na obrazie testów. Jak widać na poniższym zrzucie, wraz z uruchomieniem kontenera automatycznie uruchamiany jest target testów, który działa poprawnie:
+
+![Uruchomienie kontenera z testami](003-Class/ss/11.png)
+
+### 3. Kompozycja przy użyciu `docker-compose`
+
+W pierwsze kolejności został pobrany `docker-compose`, gdyż nie był dostępny na maszynie:
+
+![Instalacja docker-compose](003-Class/ss/12.png)
+
+Następnie został utworzony plik `docker-compose.yml` w tym samym katalogu, co pliki Dockerfile. Jego treść wygląda następująco:
+```yaml
+services:
+  toasty:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: toasty
+    container_name: toasty
+
+  toasty-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      - toasty
+    image: toasty-test
+    container_name: toasty-test
+```
+
+Finalnie możliwe jest zbudowanie i uruchomienie kontenera z testami przy użyciu przygotowanego pliku:
+
+![Uruchomienie kontenera z testami](003-Class/ss/13.png)
