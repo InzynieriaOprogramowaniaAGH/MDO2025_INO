@@ -162,3 +162,55 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
      ![Wyczyszczenie obrazów](Images2/images_clear.png "Wyczyszczenie obrazów")  
 
 10. Dodaj stworzone pliki `Dockefile` do folderu swojego `Sprawozdanie1` w repozytorium.
+
+---
+
+## Laboratorium 3
+
+---
+
+1. Wykonaj kroki `build` i `test` wewnątrz wybranego kontenera bazowego. Tj. wybierz "wystarczający" kontener, np ```ubuntu``` dla aplikacji C lub ```node``` dla Node.js
+	* uruchom kontener
+	* podłącz do niego TTY celem rozpoczęcia interaktywnej pracy
+	* zaopatrz kontener w wymagania wstępne (jeżeli proces budowania nie robi tego sam)
+	* sklonuj repozytorium
+	* Skonfiguruj środowisko i uruchom *build*
+
+          ![Budowanie irssi za pomocą mesona](Images3/meson_build.png "Budowanie irssi za pomocą mesona")  
+
+	* uruchom testy
+
+          ![Uruchomienie testów](Images3/irssi_tests.png "Uruchomienie testów")  
+     
+2. Stwórz dwa pliki `Dockerfile` automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:
+	* Kontener pierwszy ma przeprowadzać wszystkie kroki aż do *builda*
+
+          Zawartość pliku Dockerfile.bld:
+
+          **FROM fedora**
+
+          **RUN dnf -y install git meson gcc glib2-devel openssl-devel ncurses-devel perl-ExtUtils-Embed**
+          **RUN git clone http://github.com/irssi/irssi.git**
+          **WORKDIR /irssi**
+          **RUN meson Build**
+          **RUN ninja -C Build**
+
+          Efekt wykonania polecenia: **docker build -t irssibld -f Dockerfile.bld .** :
+
+          ![Stworzenie obrazu na podstawie pliku Dockerfile.bld](Images3/Dockerfile_build.png "Stworzenie obrazu na podstawie pliku Dockerfile.bld")  
+
+	* Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić *builda*!)
+
+        Zawartość pliku Dockerfile.test:
+
+          **FROM irssibld**
+          **RUN ninja -C Build test**
+
+          Efekt wykonania polecenia: **docker build -t irssitest -f Dockerfile.test .** :
+
+          ![Stworzenie obrazu na podstawie pliku Dockerfile.test](Images3/Dockerfile_test.png "Stworzenie obrazu na podstawie pliku Dockerfile.test")  
+
+
+3. Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?
+
+          ![Wdrożone i działające na kontenerze irssi](Images3/irssi.png "Wdrożone i działające na kontenerze irssi")
