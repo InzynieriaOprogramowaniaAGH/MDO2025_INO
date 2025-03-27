@@ -1,0 +1,13 @@
+git clone https://github.com/badzianga/toasty.git
+cd toasty
+make
+make test
+docker run --rm -it ubuntu bash
+nano Dockerfile
+docker build -t toasty .
+nano Dockerfile.test
+docker build -t toasty-test -f Dockerfile.test .
+docker run --rm -it toasty-test
+sudo dnf install -y docker-compose
+sudo docker-compose up toasty-test
+exit
