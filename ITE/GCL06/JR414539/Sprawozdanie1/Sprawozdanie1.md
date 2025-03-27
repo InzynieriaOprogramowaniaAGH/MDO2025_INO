@@ -21,7 +21,7 @@ sudo apt update
 sudo apt install git
 ```
 
-![Zrzut ekranu – instalacja gita](zrzuty_ekranu/1.png)
+![Zrzut ekranu – instalacja gita](zrzuty_ekranu_sprawozdanie_1/1.png)
 
 Instalacja i sprawdzenie działania klienta SSH.
 
@@ -30,7 +30,7 @@ sudo apt install openssh-client -y
 ssh -v
 ```
 
-![Zrzut ekranu – obsługa kluczy SSH](zrzuty_ekranu/2.png)
+![Zrzut ekranu – obsługa kluczy SSH](zrzuty_ekranu_sprawozdanie_1/2.png)
 
 ## 2. **Sklonowanie repozytorium przedmiotowego za pomocą HTTPS i personal access token**
 
@@ -42,11 +42,11 @@ git remote -v
 git pull origin main
 ```
 
-![Zrzut ekranu – Sklonowanie repozytorium przedmiotowego za pomocą HTTPS](zrzuty_ekranu/3.png)
+![Zrzut ekranu – Sklonowanie repozytorium przedmiotowego za pomocą HTTPS](zrzuty_ekranu_sprawozdanie_1/3.png)
 
 Utworzenie personal access token do uwierzytelniania przez HTTPS.
 
-![Zrzut ekranu – personal access token](zrzuty_ekranu/4.png)
+![Zrzut ekranu – personal access token](zrzuty_ekranu_sprawozdanie_1/4.png)
 
 ## 3. **Utworzenie dwóch kluczy SSH, w tym co najmniej jeden zabezpieczony hasłem**
 
@@ -58,7 +58,7 @@ ssh-keygen -t ecdsa -b 521 -C "Jakub559@onet.pl"
 eval "$(ssh-agent -s)"
 ```
 
-![Zrzut ekranu – Utworzenie dwóch kluczy SSH ](zrzuty_ekranu/5.png)
+![Zrzut ekranu – Utworzenie dwóch kluczy SSH ](zrzuty_ekranu_sprawozdanie_1/5.png)
 
 ## 4. **Skonfigurowanie klucza SSH jako metodę dostępu do GitHuba oraz sklonowanie repozytorium z wykorzystaniem protokołu SSH**
 
@@ -69,7 +69,7 @@ ssh-add ~/.ssh/id_ed25519
 ssh-add ~/.ssh/id_ecdsa
 ```
 
-![Zrzut ekranu – Skonfigurowanie klucza SSH jako metodę dostępu do GitHuba ](zrzuty_ekranu/6.png)
+![Zrzut ekranu – Skonfigurowanie klucza SSH jako metodę dostępu do GitHuba ](zrzuty_ekranu_sprawozdanie_1/6.png)
 
 Weryfikacja poprawnego połączenia SSH z GitHub oraz klonowanie repozytorium za pomocą protokołu SSH.
 
@@ -78,19 +78,19 @@ ssh -T git@github.com
 git clone git@github.com:InżynieriaOprogramowaniaAGH/MDO2025_INO.git
 ```
 
-![Zrzut ekranu – Skonfigurowanie klucza SSH jako metodę dostępu do GitHuba ](zrzuty_ekranu/8.png)
+![Zrzut ekranu – Skonfigurowanie klucza SSH jako metodę dostępu do GitHuba ](zrzuty_ekranu_sprawozdanie_1/8.png)
 
 ## 5. **Pokazanie kluczy na githubie**
 
 Pokazanie jak to wygląda na githubie
 
-![Zrzut ekranu – Pokazanie kluczy na githubie ](zrzuty_ekranu/9.png)
+![Zrzut ekranu – Pokazanie kluczy na githubie ](zrzuty_ekranu_sprawozdanie_1/9.png)
 
 ## 6. **Skonfigurowanie 2FA**
 
 Włączenie dwuskładnikowego uwierzytelniania (2FA) na koncie GitHub z wykorzystaniem aplikacji Authenticator
 
-![Zrzut ekranu – 2FA ](zrzuty_ekranu/10.png)
+![Zrzut ekranu – 2FA ](zrzuty_ekranu_sprawozdanie_1/10.png)
 
 ## 7. **Utworzenie gałęci o nazwie "inicjały & nr indeksu"**
 
@@ -102,7 +102,7 @@ git checkout -b JR414539
 git push origin JR414539
 ```
 
-![Zrzut ekranu – Utworzenie gałęci o nazwie "inicjały & nr indeksu ](zrzuty_ekranu/12.png)
+![Zrzut ekranu – Utworzenie gałęci o nazwie "inicjały & nr indeksu ](zrzuty_ekranu_sprawozdanie_1/12.png)
 
 ## 8. **Napisanie Git hooka - skrypt weryfikujący czy każdy mój "commit message" zaczyna się od moich inicjałów i numeru indeksu(JR414539)**
 
@@ -114,11 +114,11 @@ nano commit-msg
 chmod +x commit-msg
 ```
 
-![Zrzut ekranu – Stworzenie katalogu oraz nadanie uprawnień ](zrzuty_ekranu/14.png)
+![Zrzut ekranu – Stworzenie katalogu oraz nadanie uprawnień ](zrzuty_ekranu_sprawozdanie_1/14.png)
 
 Sprawdzenie czy stworzony skrypt działa.
 
-![Zrzut ekranu – Sprawdzenie czy git-hook działą ](zrzuty_ekranu/15.png)
+![Zrzut ekranu – Sprawdzenie czy git-hook działą ](zrzuty_ekranu_sprawozdanie_1/15.png)
 
 Kod skryptu:
 
@@ -153,7 +153,7 @@ sudo chmod a+r /etc/apt/keyrings/docker.asc
 ```
 Polecenie: sudo install -m 0755 -d /etc/apt/keyrings ustawia prawa dostępu, żeby właściciel miał większe prawa niż grupa. Własciciel może zpaisywać, odczytywać, modyfikować, a grupa, inni użytkownicy mogą tylko odczytywać i wykonywać. /etc/apt/keyrings — to katalog, w którym są przechowywane klucze GPG repozytoriów.
 
-![Zrzut ekranu – GPG i curl ](zrzuty_ekranu/17.png)
+![Zrzut ekranu – GPG i curl ](zrzuty_ekranu_sprawozdanie_1/17.png)
 
 Zakończenie instalacji Dockera, sprawdzenie wersji, uruchomienie usługi i dodanie użytkownika do grupy docker.
 
@@ -163,7 +163,7 @@ sudo systemctl enable --now docker
 sudo usermod -aG docker $USER
 ```
 
-![Zrzut ekranu – dodanie użytkownika, instalacja Dockera ](zrzuty_ekranu/18.png)
+![Zrzut ekranu – dodanie użytkownika, instalacja Dockera ](zrzuty_ekranu_sprawozdanie_1/18.png)
 
 Weryfikacja działania Dockera poprzez uruchomienie kontenera hello-world oraz logowanie do konta Docker Hub.
 
@@ -172,7 +172,7 @@ docker run hello-world
 docker login
 ```
 
-![Zrzut ekranu – Weryfikacja działania dockera ](zrzuty_ekranu/19.png)
+![Zrzut ekranu – Weryfikacja działania dockera ](zrzuty_ekranu_sprawozdanie_1/19.png)
 
 Zalogowanie do Docker Hub oraz wyszukiwanie dostępnych obrazów systemu Ubuntu.
 
@@ -180,7 +180,7 @@ Zalogowanie do Docker Hub oraz wyszukiwanie dostępnych obrazów systemu Ubuntu.
 docker search ubuntu
 ```
 
-![Zrzut ekranu – sprawdzenie dostępnych obrazów systemu Ubuntu ](zrzuty_ekranu/20.png)
+![Zrzut ekranu – sprawdzenie dostępnych obrazów systemu Ubuntu ](zrzuty_ekranu_sprawozdanie_1/20.png)
 
 ## 2. **Pobranie obrazów hello-world, busybox, ubuntu, mysql**
 
@@ -194,7 +194,7 @@ dokcer pull mysql
 docker images
 ```
 
-![Zrzut ekranu – pobranie obrazów ](zrzuty_ekranu/21.png)
+![Zrzut ekranu – pobranie obrazów ](zrzuty_ekranu_sprawozdanie_1/21.png)
 
 ## 3. **Uruchomienie kontenera z obrazu busybox**
 
@@ -205,7 +205,7 @@ docker run -it --name my_busybox busybox sh
 busybox --version
 ```
 
-![Zrzut ekranu – Podłączenie się do kontenera interaktywnie i wywołanie numeru wersji ](zrzuty_ekranu/22.png)
+![Zrzut ekranu – Podłączenie się do kontenera interaktywnie i wywołanie numeru wersji ](zrzuty_ekranu_sprawozdanie_1/22.png)
 
 ## 4. **Uruchomienie "systemu w kontenerze", wybrałem kontener z obrazu ubuntu**
 
@@ -217,7 +217,7 @@ ps -aux
 apt update && apt upgrade -y
 ```
 
-![Zrzut ekranu – PID1 i zaktualizowanie pakietów ](zrzuty_ekranu/24.png)
+![Zrzut ekranu – PID1 i zaktualizowanie pakietów ](zrzuty_ekranu_sprawozdanie_1/24.png)
 
 Na nowym terminalu sprawdzamy procesy dockera na hoście
 
@@ -225,7 +225,7 @@ Na nowym terminalu sprawdzamy procesy dockera na hoście
 ps aux | grep docker 
 ```
 
-![Zrzut ekranu – procesy ](zrzuty_ekranu/25.png)
+![Zrzut ekranu – procesy ](zrzuty_ekranu_sprawozdanie_1/25.png)
 
 ## 5. **Stworzenie własnoręcznie, zbudowanie i uruchomienie prostego pliku Dockerfile bazującego na wybranym systemie i sklonowanie repozytorium**
 
@@ -237,7 +237,7 @@ cd ~/docker_projects/mdo_container
 nano Dockerfile
 ```
 
-![Zrzut ekranu – PID1 i zaktualizowanie pakietów ](zrzuty_ekranu/26.png)
+![Zrzut ekranu – PID1 i zaktualizowanie pakietów ](zrzuty_ekranu_sprawozdanie_1/26.png)
 
 Stworzenie Dockerfilea, jego kod:
 
@@ -264,7 +264,7 @@ docker build -t mdo_container
 docker run -it --name mdo_test mdo_container
 ```
 
-![Zrzut ekranu – PID1 i zaktualizowanie pakietów ](zrzuty_ekranu/28.png)
+![Zrzut ekranu – PID1 i zaktualizowanie pakietów ](zrzuty_ekranu_sprawozdanie_1/28.png)
 
 Wyświetlenie wszystkich utworzonych kontenerów, zatrzymanie ich oraz usunięcie przy pomocy poleceń docker stop oraz docker rm.
 
@@ -274,7 +274,7 @@ docker stop <id_kontenera>
 docker rm $(docker ps -aq)
 ```
 
-![Zrzut ekranu – PID1 i zaktualizowanie pakietów ](zrzuty_ekranu/29.png)
+![Zrzut ekranu – PID1 i zaktualizowanie pakietów ](zrzuty_ekranu_sprawozdanie_1/29.png)
 
 Wyświetlenie listy dostępnych obrazów oraz ich usunięcie za pomocą polecenia docker image prune -a.
 
@@ -283,7 +283,7 @@ docker images
 docker image prune -a
 ```
 
-![Zrzut ekranu – PID1 i zaktualizowanie pakietów ](zrzuty_ekranu/30.png)
+![Zrzut ekranu – PID1 i zaktualizowanie pakietów ](zrzuty_ekranu_sprawozdanie_1/30.png)
 
 # **Zajęcia 3 - Dockerfiles, kontener jako definicja etapu** 
 
@@ -327,9 +327,9 @@ libgnutls28-dev \
 zlib1g-dev
 ```
 
-![Zrzut ekranu – zależności, sklonowanie repo ](zrzuty_ekranu/31.png)
+![Zrzut ekranu – zależności, sklonowanie repo ](zrzuty_ekranu_sprawozdanie_1/31.png)
 
-![Zrzut ekranu – zależności](zrzuty_ekranu/32.png)
+![Zrzut ekranu – zależności](zrzuty_ekranu_sprawozdanie_1/32.png)
 
 Jak udało się doinstalować wszystkie zależności można na tym etapie przeprowadzić builda(może on zająć bardzo długo):
 
@@ -340,15 +340,15 @@ make
 ```
 Jeśli wszystko przeszło poprawnie powinno to wyglądać tak jak na screenach poniżej:
 
-![Zrzut ekranu – bootstrap, powolny proces](zrzuty_ekranu/33.png)
+![Zrzut ekranu – bootstrap, powolny proces](zrzuty_ekranu_sprawozdanie_1/33.png)
 
-![Zrzut ekranu – configure_1](zrzuty_ekranu/34.png)
+![Zrzut ekranu – configure_1](zrzuty_ekranu_sprawozdanie_1/34.png)
 
-![Zrzut ekranu – configure_2](zrzuty_ekranu/35.png)
+![Zrzut ekranu – configure_2](zrzuty_ekranu_sprawozdanie_1/35.png)
 
-![Zrzut ekranu – configure_2](zrzuty_ekranu/37.png)
+![Zrzut ekranu – configure_2](zrzuty_ekranu_sprawozdanie_1/37.png)
 
-![Zrzut ekranu – configure_2](zrzuty_ekranu/38.png)
+![Zrzut ekranu – configure_2](zrzuty_ekranu_sprawozdanie_1/38.png)
 
 Możemy teraz uruchomić testy jednostkowe. WGET ma ich dużo, zatem pokażę tylko podsumowania.
 
@@ -356,11 +356,11 @@ Możemy teraz uruchomić testy jednostkowe. WGET ma ich dużo, zatem pokażę ty
 make check
 ```
 
-![Zrzut ekranu – configure_2](zrzuty_ekranu/39.png)
+![Zrzut ekranu – configure_2](zrzuty_ekranu_sprawozdanie_1/39.png)
 
-![Zrzut ekranu – configure_2](zrzuty_ekranu/40.png)
+![Zrzut ekranu – configure_2](zrzuty_ekranu_sprawozdanie_1/40.png)
 
-![Zrzut ekranu – configure_2](zrzuty_ekranu/41.png)
+![Zrzut ekranu – configure_2](zrzuty_ekranu_sprawozdanie_1/41.png)
 
 ## 3. **Przeprowadzenie buildu w kontenerze**
 
@@ -390,7 +390,7 @@ zlib1g-dev \
 git
 ```
 
-![Zrzut ekranu – run, zaleznosci](zrzuty_ekranu/45.png)
+![Zrzut ekranu – run, zaleznosci](zrzuty_ekranu_sprawozdanie_1/45.png)
 
 Na koniec klonuję repozytorium oraz przeprowadzam builda, a także uruchamiam testy:
 
@@ -403,13 +403,13 @@ make
 make check
 ```
 
-![Zrzut ekranu – klonowanie](zrzuty_ekranu/46.png)
+![Zrzut ekranu – klonowanie](zrzuty_ekranu_sprawozdanie_1/46.png)
 
-![Zrzut ekranu – bootstrap](zrzuty_ekranu/47.png)
+![Zrzut ekranu – bootstrap](zrzuty_ekranu_sprawozdanie_1/47.png)
 
-![Zrzut ekranu – wynik configure](zrzuty_ekranu/44.png)
+![Zrzut ekranu – wynik configure](zrzuty_ekranu_sprawozdanie_1/44.png)
 
-![Zrzut ekranu – make test](zrzuty_ekranu/42.png)
+![Zrzut ekranu – make test](zrzuty_ekranu_sprawozdanie_1/42.png)
 
 ## 4. **Stworzenie dwóch plików Dockerfile: Dockerfile.build oraz Dockerfile.test**
 
@@ -464,13 +464,13 @@ docker build -t wget-build -f Dockerfile.build
 docker build -t wget-test -f Dockerfile.test
 docker images
 ```
-![Zrzut ekranu – 1](zrzuty_ekranu/52.png)
+![Zrzut ekranu – 1](zrzuty_ekranu_sprawozdanie_1/52.png)
 
-![Zrzut ekranu – 2](zrzuty_ekranu/49.png)
+![Zrzut ekranu – 2](zrzuty_ekranu_sprawozdanie_1/49.png)
 
-![Zrzut ekranu – 3](zrzuty_ekranu/50.png)
+![Zrzut ekranu – 3](zrzuty_ekranu_sprawozdanie_1/50.png)
 
-![Zrzut ekranu – 4](zrzuty_ekranu/51.png)
+![Zrzut ekranu – 4](zrzuty_ekranu_sprawozdanie_1/51.png)
 
 Obraz Docker (wget-build, wget-test) to gotowa paczka do uruchomienia. Zaś kontener Docker to działający lub wcześniej uruchomiony proces utworzony na podstawie obrazu. Obraz testowy został zbudowany u mnie na bazie wget-build, co oznacza, że projekt zbudował się poprawnie i jest gotowy do testowania.
 
@@ -480,7 +480,7 @@ W kontenerze działa system oparty na Ubuntu 22.04, znajdują się w nim wszystk
 
 Przetestowanie czy WGET działa:
 
-![Zrzut ekranu – testowania czy WGET działa](zrzuty_ekranu/48.png)
+![Zrzut ekranu – testowania czy WGET działa](zrzuty_ekranu_sprawozdanie_1/48.png)
 
 # **Zajęcia 4 - Dodatkowa terminologia w konteneryzacji, instancja Jenkins** 
 
@@ -517,9 +517,9 @@ wget \
 ca-certificates
 ```
 
-![Zrzut ekranu – woluminy](zrzuty_ekranu/54.png)
+![Zrzut ekranu – woluminy](zrzuty_ekranu_sprawozdanie_1/54.png)
 
-![Zrzut ekranu – instalowanie zależności dalsze](zrzuty_ekranu/55.png)
+![Zrzut ekranu – instalowanie zależności dalsze](zrzuty_ekranu_sprawozdanie_1/55.png)
 
 W osobnym terminalu na hoście (poza kontenerem) klonuję repozytorium oraz kopiuję dane na wolumin (volume_wejściowy):
 
@@ -528,7 +528,7 @@ git clone https://git.savannah.gnu.org/git/wget.git
 cp -r wget/* $(docker volume inspect volume_wejsciowy -f '{{ .Mountpoint }}')
 ```
 
-![Zrzut ekranu – klonowanie na hoście i kopiowanie na wolumin BEZ GITA](zrzuty_ekranu/57.png)
+![Zrzut ekranu – klonowanie na hoście i kopiowanie na wolumin BEZ GITA](zrzuty_ekranu_sprawozdanie_1/57.png)
 
 Uruchomiłem build w kontenerze(bootstrap na hoście, ponieważ wymagał gita) oraz zapisałem wszystkie zbudowane/powstałe pliki na wolumin wyjściowy:
 
@@ -541,11 +541,11 @@ make
 cp src/wget /mnt/wyjsciowy/
 ```
 
-![Zrzut ekranu – klonowanie na hoście i kopiowanie na wolumin BEZ GITA](zrzuty_ekranu/58.png)
+![Zrzut ekranu – klonowanie na hoście i kopiowanie na wolumin BEZ GITA](zrzuty_ekranu_sprawozdanie_1/58.png)
 
-![Zrzut ekranu – klonowanie na hoście i kopiowanie na wolumin BEZ GITA](zrzuty_ekranu/59.png)
+![Zrzut ekranu – klonowanie na hoście i kopiowanie na wolumin BEZ GITA](zrzuty_ekranu_sprawozdanie_1/59.png)
 
-![Zrzut ekranu – klonowanie na hoście i kopiowanie na wolumin BEZ GITA](zrzuty_ekranu/60.png)
+![Zrzut ekranu – klonowanie na hoście i kopiowanie na wolumin BEZ GITA](zrzuty_ekranu_sprawozdanie_1/60.png)
 
 Sprawdzenie czy wszystko się zapisało na woluminie wyjściowym:
 
@@ -553,9 +553,9 @@ Sprawdzenie czy wszystko się zapisało na woluminie wyjściowym:
 sudo ls $(docker volume inspect volume_wyjsciowy -f '{{ .Mountpoint }}')
 ```
 
-![Zrzut ekranu – kopiowanie na wolumin wyjściowy](zrzuty_ekranu/62.png)
+![Zrzut ekranu – kopiowanie na wolumin wyjściowy](zrzuty_ekranu_sprawozdanie_1/62.png)
 
-![Zrzut ekranu – bootstrap na hoście i weryfikacja](zrzuty_ekranu/61.png)
+![Zrzut ekranu – bootstrap na hoście i weryfikacja](zrzuty_ekranu_sprawozdanie_1/61.png)
 
 Ponowiłem operację, ale klonowanie na wolumin wejściowy przeprowadziłem wewnątrz kontenera (!GIT W KONTENERZE!). Zatem dodajemy gita do zależności:
 
@@ -588,7 +588,7 @@ cd /mnt/wejsciowy
 ```bash
 git clone https://github.com/mirror/wget.git
 ```
-![Zrzut ekranu – klonowanie](zrzuty_ekranu/64.png)
+![Zrzut ekranu – klonowanie](zrzuty_ekranu_sprawozdanie_1/64.png)
 
 ```bash
 ./bootstrap
@@ -596,11 +596,11 @@ git clone https://github.com/mirror/wget.git
 make
 ```
 
-![Zrzut ekranu – bootstrap](zrzuty_ekranu/65.png)
+![Zrzut ekranu – bootstrap](zrzuty_ekranu_sprawozdanie_1/65.png)
 
-![Zrzut ekranu – configure](zrzuty_ekranu/66.png)
+![Zrzut ekranu – configure](zrzuty_ekranu_sprawozdanie_1/66.png)
 
-![Zrzut ekranu – make](zrzuty_ekranu/67.png)
+![Zrzut ekranu – make](zrzuty_ekranu_sprawozdanie_1/67.png)
 
 Zapisanie danych na wolumin wyjściowy:
 
@@ -608,9 +608,9 @@ Zapisanie danych na wolumin wyjściowy:
 cp -r * /mnt/wyjsciowy/
 ```
 
-![Zrzut ekranu – weryfikacja1](zrzuty_ekranu/69.png)
+![Zrzut ekranu – weryfikacja1](zrzuty_ekranu_sprawozdanie_1/69.png)
 
-![Zrzut ekranu – weryfikacja2](zrzuty_ekranu/70.png)
+![Zrzut ekranu – weryfikacja2](zrzuty_ekranu_sprawozdanie_1/70.png)
 
 W poprzednim podejściu, które zrealizowaliśmy, dane do i z kontenera przekazywane były za pomocą nazwanych woluminów (volume_wejsciowy, volume_wyjsciowy) montowanych przy uruchamianiu kontenera (docker run ...). Jednak od wersji BuildKit w Dockerze, możliwe jest użycie RUN --mount bezpośrednio w Dockerfile, co umożliwia dostęp do danych z zewnątrz już na etapie budowania obrazu.
 
@@ -627,6 +627,10 @@ Jeśli chodzi o zalety takiego podejścia to można wymienić:
 
 Podsumowując, dzięki RUN --mount, wiele operacji związanych z kopiowaniem, woluminami i zarządzaniem danymi można uprościć i zautomatyzować. Choć wymaga to włączenia BuildKit(DOCKER_BUILDKIT=1), daje znacznie większe możliwości.
 
+Niestety nie udało mi się woluminów przesłać na githuba, ponieważ były zbyt duże. 
+
+![Zrzut ekranu – weryfikacja2](zrzuty_ekranu_sprawozdanie_1/96.png)
+
 ## 2. **Eksponowanie portu**
 
 Uruchomiłem wewnątrz kontenera serwer iperf (iperf3):
@@ -642,9 +646,9 @@ apt update && apt install -y iperf3
 iperf3 -s
 ```
 
-![Zrzut ekranu – iperf](zrzuty_ekranu/74.png)
+![Zrzut ekranu – iperf](zrzuty_ekranu_sprawozdanie_1/74.png)
 
-![Zrzut ekranu – iperf](zrzuty_ekranu/75.png)
+![Zrzut ekranu – iperf](zrzuty_ekranu_sprawozdanie_1/75.png)
 
 Połączyłem się z nim z drugiego kontenera(klienta) oraz zbadałem ruch. Żeby to zrobić musiałem znać adres ip serwera:
 
@@ -656,7 +660,7 @@ docker run -it --name iperf-client ubuntu:22:04
 apt update && apt install -y iperf3
 ```
 
-![Zrzut ekranu – iperf](zrzuty_ekranu/76.png)
+![Zrzut ekranu – iperf](zrzuty_ekranu_sprawozdanie_1/76.png)
 
 Na nowym terminalu:
 
@@ -664,7 +668,7 @@ Na nowym terminalu:
 docker inspect iperf-server | grep "IPAddress"
 ```
 
-![Zrzut ekranu – iperf](zrzuty_ekranu/77.png)
+![Zrzut ekranu – iperf](zrzuty_ekranu_sprawozdanie_1/77.png)
 
 Zatem adresem IP serwera jest: "172.17.0.3". Zatem łączę się klientem z serwerem:
 
@@ -672,7 +676,7 @@ Zatem adresem IP serwera jest: "172.17.0.3". Zatem łączę się klientem z serw
 iperf3 -c 172.17.0.3 port 5201
 ```
 
-![Zrzut ekranu – iperf](zrzuty_ekranu/78.png)
+![Zrzut ekranu – iperf](zrzuty_ekranu_sprawozdanie_1/78.png)
 
 Ponawiam ten krok, ale wykorzystuję tym razem własną dedykowaną sieć mostkową (zamiast domyślnej). Użyłem także rozwiązywania nazw.
 
@@ -681,7 +685,7 @@ Tworzę własną sieć mostkową:
 ```bash
 docker network create --driver bridge mynet
 ```
-![Zrzut ekranu – iperf](zrzuty_ekranu/80.png)
+![Zrzut ekranu – iperf](zrzuty_ekranu_sprawozdanie_1/80.png)
 
 Uruchamiam ponownie kontenery w tej sieci(serwer i klient). Dodałem --rm, ponieważ miałem problemy z pamięcią:
 
@@ -693,9 +697,9 @@ docker run -it --rm --name iperf-server --network mynet ubuntu:22.04
 iperf3 -s
 ```
 
-![Zrzut ekranu – iperf](zrzuty_ekranu/79.png)
+![Zrzut ekranu – iperf](zrzuty_ekranu_sprawozdanie_1/79.png)
 
-![Zrzut ekranu – iperf](zrzuty_ekranu/81.png)
+![Zrzut ekranu – iperf](zrzuty_ekranu_sprawozdanie_1/81.png)
 
 ```bash
 docker run -it --rm --name iperf-client --network mynet ubuntu:22.04
@@ -707,7 +711,7 @@ iperf3 -c iperf-server
 
 Jak można zauważyć, teraz działa rozwiązywanie nazw przez DNS w sieci mynet, więc nie trzeba IP, wystarczy nazwa iperf-server. Na poniższym zrzucie ekranu widać przepustowość komunikacji.
 
-![Zrzut ekranu – iperf](zrzuty_ekranu/82.png)
+![Zrzut ekranu – iperf](zrzuty_ekranu_sprawozdanie_1/82.png)
 
 ## 3. **Instancja Jenkins**
 
@@ -725,7 +729,7 @@ docker volume create jenkins-data
 docker volume create jenkins-docker-certs
 ```
 
-![Zrzut ekranu – jenkins](zrzuty_ekranu/84.png)
+![Zrzut ekranu – jenkins](zrzuty_ekranu_sprawozdanie_1/84.png)
 
 Następnie uruchomiłem kontener pomocniczy DIND oraz kontener Jenkinsa główny.
 
@@ -754,9 +758,9 @@ docker run --name jenkins-blueocean \
 jenkins/jenkins:lts
 ```
 
-![Zrzut ekranu – jenkins](zrzuty_ekranu/85.png)
+![Zrzut ekranu – jenkins](zrzuty_ekranu_sprawozdanie_1/85.png)
 
-![Zrzut ekranu – jenkins](zrzuty_ekranu/86.png)
+![Zrzut ekranu – jenkins](zrzuty_ekranu_sprawozdanie_1/86.png)
 
 Wyświetliłem działające kontenery
 
@@ -764,7 +768,7 @@ Wyświetliłem działające kontenery
 docker ps 
 ```
 
-![Zrzut ekranu – jenkins](zrzuty_ekranu/87.png)
+![Zrzut ekranu – jenkins](zrzuty_ekranu_sprawozdanie_1/87.png)
 
 Żeby pokazać ekran logowania Jenkinsa musiałem wykonać takie operacje:
 
@@ -772,16 +776,16 @@ docker ps
 docker logs jenkins-blueocean
 ```
 
-![Zrzut ekranu – jenkins](zrzuty_ekranu/89.png)
+![Zrzut ekranu – jenkins](zrzuty_ekranu_sprawozdanie_1/89.png)
 
 Mając już hasło mogłem się zalogować na jenkinsa pod adresem: http://localhost:8081/. Wybrałem taki adres, ponieważ tak skonfigurowałem przekierowanie portów w sieci NAT na maszynie wirtualnej(zrzut ekranu poniżej).
 
-![Zrzut ekranu – jenkins](zrzuty_ekranu/91.png)
+![Zrzut ekranu – jenkins](zrzuty_ekranu_sprawozdanie_1/91.png)
 
 Na koniec pokażę ekran logowania przed logowaniem oraz po logowaniu:
 
-![Zrzut ekranu – jenkins](zrzuty_ekranu/92.png)
+![Zrzut ekranu – jenkins](zrzuty_ekranu_sprawozdanie_1/94.png)
 
-![Zrzut ekranu – jenkins](zrzuty_ekranu/93.png)
+![Zrzut ekranu – jenkins](zrzuty_ekranu_sprawozdanie_1/95.png)
 
 ---
