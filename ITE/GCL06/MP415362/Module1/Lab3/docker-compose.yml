@@ -1,0 +1,24 @@
+services:
+  nodebuild:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodebuild
+    image: nodebuild
+
+  noderun:
+    build:
+      context: .
+      dockerfile: Dockerfile.noderun
+    image: noderun
+    ports:
+      - "3000:3000"
+    depends_on:
+      - nodebuild
+
+  nodetest:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodetest
+    image: nodetest
+    depends_on:
+      - nodebuild
