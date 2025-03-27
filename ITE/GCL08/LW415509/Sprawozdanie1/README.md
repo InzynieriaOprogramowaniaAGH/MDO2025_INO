@@ -874,7 +874,7 @@ npm -v
     myjenkins-blueocean:2.492.2-1
     ```
 
-    ![alt text](images/jenkins_docker_works.png.png)
+    ![piwo](images/jenkins_docker_works.png)
 
     Weryfikujemy także poprawność uruchomienia poprzez uruchomienie jenkinsa w przeglądarce wchodząc pod poniższy adres
 
