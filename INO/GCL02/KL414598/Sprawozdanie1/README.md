@@ -1,13 +1,19 @@
 # Sprawozdanie
 ## Wstęp, Git, Gałęzie, SSH
 ### 1) Instalacja Git i kluczy SSH Aby rozpocząć pracę z systemem Git oraz zapewnić bezpieczne połączenie przez SSH, zainstalowano odpowiednie narzędzia.
+
+Aby rozpocząć pracę z systemem Git oraz zapewnić bezpieczne połączenie przez SSH, zainstalowano odpowiednie narzędzia.
+
     sudo apt-get install git
     apt-get install openssh-server
+    
 ![0](https://github.com/user-attachments/assets/07765b4f-d32a-4f9c-affa-23de9d4eb0fd)
 ![image](https://github.com/user-attachments/assets/895ee287-57fe-4112-a4e4-d5e09884cb07)
 
 
 ### 2) Repozytorium przedmiotowe zostało sklonowane za pomocą polecenia git clone, początkowo używając protokołu HTTPS.
+Sklonowanie repozytorium Repozytorium przedmiotowe zostało sklonowane za pomocą polecenia git clone, początkowo używając protokołu HTTPS.
+
         git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
 ![image](https://github.com/user-attachments/assets/e72599c4-0e33-4b7f-b6c6-5c1d67b7c557)
 
@@ -37,7 +43,7 @@ Zmieniono połączenie z repozytorium na SSH:
 ![4 3](https://github.com/user-attachments/assets/6d213f69-3617-445c-8e30-a83fc474f3e1)
 
 
-### 6)Praca na nowej gałęzi W odpowiednim katalogu stworzono folder o nazwie KP415903. Utworzono również Git hooka, który sprawdza, czy wiadomość commit zaczyna się od "KP415903".
+### 6)Praca na nowej gałęzi W odpowiednim katalogu stworzono folder o nazwie KP415903. Utworzono również Git hooka, który sprawdza, czy wiadomość commit zaczyna się od "KL414598".
         mkdir -p .git/hooks
         cd .git/hooks
         touch pre-commit
