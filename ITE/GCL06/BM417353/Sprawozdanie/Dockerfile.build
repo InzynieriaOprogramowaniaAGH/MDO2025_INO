@@ -1,0 +1,33 @@
+# Dockerfile.build
+FROM fedora:latest AS builder
+
+# Instalacja wymaganych zależności
+RUN dnf install -y \
+    git \
+    meson \
+    ninja-build \
+    gcc \
+    glib2-devel \
+    ncurses-devel \
+    openssl-devel \
+    perl-devel \
+    perl-ExtUtils-Embed \
+    pkgconfig \
+    utf8proc-devel \
+    && dnf clean all
+
+# Sklonowanie repozytorium i inicjalizacja submodułów
+WORKDIR /src
+RUN git clone --depth 1 https://github.com/irssi/irssi.git && \
+    cd irssi && \
+    git submodule update --init --recursive
+
+# Budowanie projektu
+WORKDIR /src/irssi
+RUN meson setup Build \
+    -Dwith-perl=yes \
+    -Dwith-perl-lib=/usr/lib64/perl5 \
+    && meson compile -C Build
+
+# Instalacja (opcjonalna)
+RUN meson install -C Build
