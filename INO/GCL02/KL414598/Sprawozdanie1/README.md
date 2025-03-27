@@ -20,6 +20,9 @@ Sklonowanie repozytorium Repozytorium przedmiotowe zostało sklonowane za pomoc�
 
 ### 3)Generowanie kluczy SSH i zmiana połączenia na SSH Aby zapewnić bezpieczne połączenie z GitHubem bez konieczności każdorazowego podawania loginu i hasła, wygenerowano dwa klucze SSH: jeden dla algorytmu ed25519, drugi dla ecdsa.
 
+        ssh-keygen -t ed25519 -C "kristfolach@gmail.com"
+        ssh-keygen -t ecdsa -b 521 -C "kristoflach@gmail.com"
+        
 ![1](https://github.com/user-attachments/assets/46db9f25-13cd-405f-99ed-528a8f4ec90a)
 ![image](https://github.com/user-attachments/assets/45f65d8c-ff0d-4f9a-a03f-f293719692a7)
 
@@ -43,7 +46,7 @@ Zmieniono połączenie z repozytorium na SSH:
 ![4 3](https://github.com/user-attachments/assets/6d213f69-3617-445c-8e30-a83fc474f3e1)
 
 
-### 6)Praca na nowej gałęzi W odpowiednim katalogu stworzono folder o nazwie KP415903. Utworzono również Git hooka, który sprawdza, czy wiadomość commit zaczyna się od "KL414598".
+### 6)Praca na nowej gałęzi W odpowiednim katalogu stworzono folder o nazwie KL414598. Utworzono również Git hooka, który sprawdza, czy wiadomość commit zaczyna się od "KL414598".
         mkdir -p .git/hooks
         cd .git/hooks
         touch pre-commit
