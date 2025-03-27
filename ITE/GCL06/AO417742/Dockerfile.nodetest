@@ -1,0 +1,5 @@
+FROM node-builder
+
+WORKDIR /app/node-js-dummy-test
+
+CMD ["npm", "start"]
