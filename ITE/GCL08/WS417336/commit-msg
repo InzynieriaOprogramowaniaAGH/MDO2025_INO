@@ -1,0 +1,8 @@
+#!/bin/sh
+EXPECTED_PREFIX="WS417336"
+MESSAGE=$(cat "$1")
+
+if [[ "$MESSAGE" != "$EXPECTED_PREFIX"* ]]; then
+  echo "Commit message musi zaczynać się od: $EXPECTED_PREFIX"
+  exit 1
+fi
