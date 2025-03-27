@@ -33,5 +33,24 @@ Zmieniono połączenie z repozytorium na SSH:
 
 ### 5) Stworzenie nowej gałęzi Utworzono nową gałąź o nazwie KP415903, odgałęziając ją od gałęzi grupowej.
 
+        git checkout -b KL414598
+![4 3](https://github.com/user-attachments/assets/6d213f69-3617-445c-8e30-a83fc474f3e1)
+
+
 ### 6)Praca na nowej gałęzi W odpowiednim katalogu stworzono folder o nazwie KP415903. Utworzono również Git hooka, który sprawdza, czy wiadomość commit zaczyna się od "KP415903".
+        mkdir -p .git/hooks
+        cd .git/hooks
+        touch pre-commit
+        nano pre-commit
+        chmod +x pre-commit
+
+        #!/bin/bash
+        EXPECTED_PREFIX="KL414598"
+        COMMIT_MSG=$(cat "$1")
+        if [[ "$COMMIT_MSG" != $EXPECTED_PREFIX* ]]; then
+        echo "Error: Początek wiadomości musi zaczynać się od '$EXPECTED_PREFIX'."
+        exit 1
+        fi
+![6](https://github.com/user-attachments/assets/8fd9e204-ba37-4244-9049-c1a8c3f76b64)
+![5](https://github.com/user-attachments/assets/bdb9f5e7-a6ab-464e-9a94-ea9c6d74eef3)
 
