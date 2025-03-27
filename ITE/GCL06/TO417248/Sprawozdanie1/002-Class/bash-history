@@ -1,0 +1,34 @@
+sudo dnf install docker
+docker version
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo systemctl status docker
+sudo docker image pull hello-world
+sudo docker image pull busybox
+sudo docker image pull ubuntu
+sudo docker image pull mysql
+sudo docker run --rm busybox
+sudo docker ps
+sudo docker run -it --rm busybox
+sudo docker run --rm -it ubuntu bash
+sudo docker ps
+ps aux | grep docker
+cd MDO2025_INO/
+git add -A
+git status
+git commit -m "TO417248 Docker installed, busybox and ubuntu tasks"
+git push origin TO417248
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/password
+git push origin TO417248
+nano Dockerfile 
+sudo docker build -t alpine-image .
+docker run --rm -it alpine-image
+sudo docker ps -a
+sudo docker container prune
+sudo docker rmi -f $(sudo docker images -aq)
+cd MDO2025_INO/ITE/GCL06/TO417248/
+git add -A
+git status
+git commit -m "TO417248 Dockerfile from 002-Class"
+git push origin TO417248

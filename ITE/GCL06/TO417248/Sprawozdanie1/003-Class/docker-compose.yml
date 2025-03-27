@@ -1,0 +1,16 @@
+services:
+  toasty:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: toasty
+    container_name: toasty
+
+  toasty-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      - toasty
+    image: toasty-test
+    container_name: toasty-test

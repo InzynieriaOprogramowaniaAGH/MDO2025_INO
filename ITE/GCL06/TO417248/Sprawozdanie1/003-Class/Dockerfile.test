@@ -1,0 +1,3 @@
+FROM toasty
+
+CMD ["make", "test"]
