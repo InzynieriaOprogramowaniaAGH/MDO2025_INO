@@ -19,9 +19,17 @@
 
 Następnie klucze zostały dodane do agenta SSH:
 
+![2](https://github.com/user-attachments/assets/4df17867-5a64-406b-b748-b7c8c7f1f3c5)
+
 Zmieniono połączenie z repozytorium na SSH:
 
+![3](https://github.com/user-attachments/assets/ee421b52-e96b-4656-9902-88015be3ec8a)
+
 ### 4) Zmiana gałęzi Po skonfigurowaniu połączenia SSH przełączono się na gałąź główną i gałąź dedykowaną dla grupy.
+        git checkout main
+        git checkout GCL02
+![4 1](https://github.com/user-attachments/assets/f9619c28-f188-4d66-86e0-fff7b3ee38c2)
+![4 2](https://github.com/user-attachments/assets/2686ca3a-171f-4db6-be8d-b18f3bace47d)
 
 ### 5) Stworzenie nowej gałęzi Utworzono nową gałąź o nazwie KP415903, odgałęziając ją od gałęzi grupowej.
 
