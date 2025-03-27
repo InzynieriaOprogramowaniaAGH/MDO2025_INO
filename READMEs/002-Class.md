@@ -8,7 +8,7 @@
 
 ## Zestawienie środowiska
 
-1. Zainstaluj Docker w systemie linuksowym
+sudo apt-get updat
 2. Zarejestruj się w [Docker Hub](https://hub.docker.com/) i zapoznaj z sugerowanymi obrazami
 3. Pobierz obrazy `hello-world`, `busybox`, `ubuntu` lub `fedora`, `mysql`
 4. Uruchom kontener z obrazu `busybox`
