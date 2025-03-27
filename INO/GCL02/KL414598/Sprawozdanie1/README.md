@@ -1,7 +1,14 @@
 # Sprawozdanie
 ## Wstęp, Git, Gałęzie, SSH
-### 1) Instalacja Git i kluczy SSH Aby rozpocząć pracę z systemem Git oraz zapewnić bezpieczne połączenie przez SSH, zainstalowano odpowiednie narzędzia przy użyciu menedżera pakietów dnf, który jest domyślny w systemach Fedora.
-### 2) Sklonowanie repozytorium Repozytorium przedmiotowe zostało sklonowane za pomocą polecenia git clone, początkowo używając protokołu HTTPS.
+### 1) Instalacja Git i kluczy SSH Aby rozpocząć pracę z systemem Git oraz zapewnić bezpieczne połączenie przez SSH, zainstalowano odpowiednie narzędzia.
+    sudo apt-get install git
+    apt-get install openssh-server
+![0](https://github.com/user-attachments/assets/07765b4f-d32a-4f9c-affa-23de9d4eb0fd)
+![image](https://github.com/user-attachments/assets/895ee287-57fe-4112-a4e4-d5e09884cb07)
+
+
+### 2) Repozytorium przedmiotowe zostało sklonowane za pomocą polecenia git clone, początkowo używając protokołu HTTPS.
+
 ### 3)Generowanie kluczy SSH i zmiana połączenia na SSH Aby zapewnić bezpieczne połączenie z GitHubem bez konieczności każdorazowego podawania loginu i hasła, wygenerowano dwa klucze SSH: jeden dla algorytmu ed25519, drugi dla ecdsa.
 
 Następnie klucze zostały dodane do agenta SSH:
