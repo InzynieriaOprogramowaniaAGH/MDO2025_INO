@@ -63,3 +63,150 @@ Zmieniono połączenie z repozytorium na SSH:
 ![6](https://github.com/user-attachments/assets/8fd9e204-ba37-4244-9049-c1a8c3f76b64)
 ![5](https://github.com/user-attachments/assets/bdb9f5e7-a6ab-464e-9a94-ea9c6d74eef3)
 
+
+
+
+# Instalacja i podstawowa konfiguracja Dockera na Linuxie
+
+## Instalacja Dockera
+
+### 1) Instalacja Dockera z repozytorium dystrybucji
+Jeżeli to możliwe, korzystam z repozytorium mojej dystrybucji zamiast Docker Community Edition (CE).
+
+```sh
+sudo apt update
+sudo apt install docker.io
+git -v
+sudo docker run hello-world
+```
+![image](https://github.com/user-attachments/assets/e003c990-7ee2-4543-9369-e550e47d8ee9)
+![image](https://github.com/user-attachments/assets/a4917653-5cdc-40a8-b3c1-3f885927fef2)
+
+
+Uruchomienie i automatyczne startowanie Dockera
+```sh
+sudo systemctl enable --now docker
+```
+![9](https://github.com/user-attachments/assets/bbefe96c-1a17-4cd7-9759-26b39a5f1e3c)
+
+---
+
+### 2) Rejestracja w Docker Hub
+
+Rejestruję się na stronie: [https://hub.docker.com/](https://hub.docker.com/) i zapoznaję się z sugerowanymi obrazami.
+
+![10](https://github.com/user-attachments/assets/bf497b8a-dfdd-46b7-a1ba-4e17e97ed46a)
+
+
+### 3) Pobranie podstawowych obrazów
+```sh
+docker pull hello-world
+docker pull busybox
+docker pull ubuntu
+docker pull fedora
+docker pull mysql
+```
+
+![11](https://github.com/user-attachments/assets/f5ac210d-1c8b-457d-bf59-854d50034999)
+
+---
+
+### 4) Uruchomienie kontenera z obrazu busybox
+```sh
+docker run busybox echo "Hello from BusyBox"
+```
+![12](https://github.com/user-attachments/assets/65370449-a06a-42a3-9e7c-aca2ac62589e)
+
+Efekt uruchomienia powinien wyświetlić komunikat "Hello from BusyBox".
+
+```sh
+docker run -it busybox sh
+```
+W środku kontenera sprawdzam wersję systemu:
+```sh
+uname -a
+exit
+```
+![13](https://github.com/user-attachments/assets/2615618d-f056-4ea0-bd1e-1eea2c8f449b)
+
+### 5) Uruchomienie pełnego systemu w kontenerze
+```sh
+docker run -it ubuntu bash
+```
+![14](https://github.com/user-attachments/assets/0d1ceec7-7beb-4ba2-a0e8-136fe6d67a53)
+
+W środku sprawdzam PID1 i procesy Dockera na hoście:
+```sh
+ps aux
+exit
+```
+![15](https://github.com/user-attachments/assets/0b5da344-fc58-4aaf-b358-e66f14ea62ef)
+
+
+### 6) Aktualizacja pakietów w kontenerze
+```sh
+docker run -it ubuntu bash 
+apt update && apt upgrade -y
+```
+![16](https://github.com/user-attachments/assets/4abd3c5c-1fcb-484f-b1e4-aac85a91ac79)
+
+---
+
+
+### 7) Tworzenie pliku `Dockerfile`
+W folderze `Sprawozdanie1` tworzę plik `Dockerfile`:
+```Dockerfile
+FROM ubuntu:latest
+RUN apt update && apt install -y git
+WORKDIR /app
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+CMD ["/bin/bash"]
+```
+![17](https://github.com/user-attachments/assets/39287d0a-0cd2-48c6-860f-ced6457b4ef3)
+
+### 2. Budowanie i uruchamianie obrazu
+```sh
+docker build -t obraz .
+docker run -it obraz
+```
+![18](https://github.com/user-attachments/assets/c3e9de51-f06e-4b51-8168-bf146b0d01bf)
+
+![19](https://github.com/user-attachments/assets/890520df-2eb4-4af0-a5c5-3f43a9a7d903)
+
+Sprawdzam, czy repozytorium zostało pobrane:
+```sh
+ls /app
+```
+
+---
+
+## Zarządzanie kontenerami i obrazami
+
+### 1. Lista uruchomionych i wszystkich kontenerów
+```sh
+docker ps -a
+```
+
+### 2. Usuwanie kontenerów
+```sh
+docker rm $(docker ps -aq)
+```
+
+### 3. Czyszczenie obrazów
+```sh
+docker rmi moj_obraz busybox ubuntu fedora mysql hello-world
+```
+
+---
+
+## Dodanie plików do repozytorium
+
+Plik `Dockerfile` dodaję do folderu `Sprawozdanie1` i commituję:
+```sh
+git add Sprawozdanie1/Dockerfile
+git commit -m "Dodano Dockerfile do Sprawozdanie1"
+git push
+
+
+
+
