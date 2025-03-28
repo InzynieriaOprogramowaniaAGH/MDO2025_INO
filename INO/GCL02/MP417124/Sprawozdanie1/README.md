@@ -145,14 +145,31 @@ Ostatnią czynnością było dodanie stworzonego pliku `Dockerfile` do folderu `
 ..
 ## Zadanie 3: Dockerfiles, kontener jako definicja etapu
 
+1. **Sklonowanie repozytorium z otwartą licencją:**
+
 Zaczełam od sklonowania repozytorium oprogramowania o otwartej licencji, cJSON, zawierające działający Makefile, który ma zdefiniowany zestaw testów.
-![Zrzut ekranu git clone]()
+
+- Polecenie:
+     ```bash
+     git clone https://github.com/yaml/libyaml.git
+     ```
+
+2. **Przygotowanie środowiska i kompilacja:**
 
 Przed kompilacja wykonałam polecenia `/bootstrap` i  `./configure` zgodnie z instrukcją w repozytorium. Następnie wykonałam kompilację poprzez `make`, zaś uruchomienie testów poleceniem `make test`.
+
+   - Polecenia:
+     ```bash
+     ./bootstrap
+     ./configure
+     ```
+
+   - Zrzuty ekranu:
 ![Zrzut ekranu bootstrap](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%204.36.57%E2%80%AFPM.png)
 ![Zrzut ekranu bootstrap](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%204.37.02%E2%80%AFPM.png)
 ![Zrzut ekranu make](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%204.37.11%E2%80%AFPM.png)
 ![Zrzut ekranu make test](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%204.37.20%E2%80%AFPM.png)
+
 
 W ramach kolejnego etapu zadania, uruchomiłam kontener na podstawie obrazu ubuntu w trybie interaktywnym. W tym celu wykorzystałam polecenie:
 ```bash
@@ -212,7 +229,22 @@ Dzięki pracy w trybie interaktywnym możliwa była bezpośrednia interakcja z k
 ![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%205.21.23%E2%80%AFPM.png)
 ![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%205.21.31%E2%80%AFPM.png)
 
+# Zadanie 4: Dodatkowa terminologia w konteneryzacji, instancja Jenkins
+
+Zadanie rozpoczęłam od przygotowania woluminu wejściowego i wyściowego o nazwach `input` i `output`. Podłączyłam je do kontenera bazowego używając polecenia: 
+
+```bash
+apt-get update && apt-get install gcc make -y
+```
+Po wstępnym zweryfikowaniu katalogów, przeszłam do odnaleznienia lokalizacji wolumina wejściowego, stosując komendę: `docker volume inspect input` i następnie klonując do niego repozytorium stosując polecenie:
+
+```bash
+git clone https://github.com/yaml/libyaml.git
+```
 
 
+![Zrzut ekranu]()
+![Zrzut ekranu]()
+![Zrzut ekranu]()
 ![Zrzut ekranu]()
 ![Zrzut ekranu]()
