@@ -1,0 +1,23 @@
+# Używamy oficjalnego obrazu Ubuntu jako bazowego
+FROM ubuntu:22.04
+
+# Ustawiamy katalog roboczy
+WORKDIR /app
+
+# Aktualizujemy pakiety i instalujemy wymagane narzędzia (git, make, gcc, itp.)
+RUN apt-get update && \
+    apt-get install -y git make gcc autoconf automake libtool
+
+# Sklonowanie repozytorium libyaml
+RUN git clone https://github.com/yaml/libyaml.git
+
+# Przechodzimy do katalogu z aplikacją
+WORKDIR /app/libyaml
+
+# Uruchamiamy bootstrap, konfigurujemy i budujemy aplikację
+RUN ./bootstrap && \
+    ./configure && \
+    make
+
+# Ustawiamy domyślną komendę, aby kontener uruchamiał bash
+CMD ["/bin/bash"]
