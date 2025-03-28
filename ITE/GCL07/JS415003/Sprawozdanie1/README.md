@@ -48,7 +48,10 @@ Niestety źle przemyślałem sprawę i w przypadku pierwszych laboratoriów zapo
    Na poprzednim screenie już widać, że plik jest w folderze.
 
    - Skopiuj go we właściwe miejsce, tak by uruchamiał się za każdym razem kiedy robisz commita.
-   
+
+        Tutaj przykład, że rzeczywiście hook działa dobrze.
+        <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/001-Class/lab1_9.png" />
+
    - Umieść treść githooka w sprawozdaniu.
     ```bash
     commit_msg=$(cat "$1")
