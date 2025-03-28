@@ -202,7 +202,7 @@ docker rmi moj_obraz busybox ubuntu fedora mysql hello-world
 
 ## Dockerfiles, kontener jako definicja etapu
 
-### 1. Wybór oprogramowania
+### 1) Wybór oprogramowania
 
 Do przeprowadzenia ćwiczenia wybrano repozytorium cJSON,
 ![23](https://github.com/user-attachments/assets/de7d178d-68bb-44f7-9e28-fe484ed96a8f)
@@ -231,5 +231,16 @@ oraz uruchomienie testów zgodnie z instrukcjami w dokumentacji poleceniem
     make test
     
 ![26](https://github.com/user-attachments/assets/776b7512-b500-4fe7-9e7a-1933c8bbb74c)
+
+### 2)Przeprowadzenie buildu w kontenerze
+Ponieważ cJSON jest biblioteką napisaną w języku C, odpowiednim wyborem będzie użycie obrazu bazowego Ubuntu, który zapewnia niezbędne narzędzia do kompilacji.
+![27](https://github.com/user-attachments/assets/1c0c6d0e-9ab2-4b93-bff8-73a41b72630d)
+Pierwszy plik Dockerfile (Dockerfile.build) będzie odpowiedzialny za zbudowanie aplikacji.​
+![28](https://github.com/user-attachments/assets/0784426b-0141-4fd2-b77b-32dcb4cee9c7)
+
+Drugi plik Dockerfile (Dockerfile.test) będzie bazować na obrazie zbudowanym w poprzednim etapie i będzie odpowiedzialny za uruchomienie testów.​
+![29](https://github.com/user-attachments/assets/8adb260e-3ec7-43fd-a2d9-92d297c3fd75)
+
+Budowanie i uruchamianie kontenerów:
 
 
