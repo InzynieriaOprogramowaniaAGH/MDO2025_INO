@@ -1,6 +1,6 @@
 # Sprawozdanie 1
 
-Sprawozdanie z lab 1
+Sprawozdanie z lab 1. Wprowadzenie, Git, Gałęzie, SSH
 
 ## Wykonanie
 -   Zainstaluj klienta Git i obsługę kluczy SSH
@@ -110,3 +110,142 @@ Sprawozdanie z lab 1
 	![5](https://github.com/user-attachments/assets/cac9969d-583d-47d3-8746-c76ff93231c9)
 
     -   Zaktualizuj sprawozdanie i zrzuty o ten krok i wyślij aktualizację do zdalnego źródła (na swojej gałęzi)
+
+
+# Sprawozdanie 2
+
+Sprawozdanie z lab 2. Git, Docker
+
+## Wykonanie
+
+1. **Zainstalowano Docker w systemie linuksowym**  
+   Zaktualizowano listę pakietów i zainstalowano Dockera. Włączono usługę i sprawdzono jej status.
+
+   ```sh
+   apt-get update 
+   apt-get install docker.io
+   systemctl enable docker
+   systemctl start docker
+   systemctl status docker
+   ```
+
+   ![obraz](https://github.com/user-attachments/assets/f3e547e1-7c71-4010-b9e7-11e2d2ea2fa9)
+
+
+3. **Zarejestrowano się w [Docker Hub](https://hub.docker.com/) i zapoznano z sugerowanymi obrazami**  
+   Utworzono konto i przejrzano dostępne oficjalne obrazy Dockera.
+
+   ![obraz](https://github.com/user-attachments/assets/762238d7-bcd0-456f-a094-1c0606d4dfd6)
+
+
+5. **Pobrano obrazy `hello-world`, `busybox`, `ubuntu`, `mysql`**  
+   Pobranie wymaganych obrazów z Docker Hub.
+
+   ```sh
+   docker pull hello-world
+   docker pull busybox
+   docker pull ubuntu
+   docker pull mysql
+   ```
+    ![obraz](https://github.com/user-attachments/assets/c087618e-c512-4198-9a7e-0a6d23ac42ab)
+
+7. **Uruchomiono kontener z obrazu `busybox`**  
+   - Pokazano efekt uruchomienia kontenera.
+
+     ```sh
+     docker run busybox echo "Hello World"
+     ```
+
+      ![obraz](https://github.com/user-attachments/assets/ac149650-33c0-4357-aec1-c227a4cfb2d2)
+
+
+   - Podłączono się do kontenera interaktywnie i sprawdzono wersję systemu.
+
+     ```sh
+     docker run -it busybox sh
+     uname -a
+     exit
+     ```
+
+      ![obraz](https://github.com/user-attachments/assets/173ef1ae-4d24-437e-a568-d797138bfe3b)
+
+
+7. **Uruchomiono "system w kontenerze"**  
+   - Uruchomiono kontener w trybie interaktywnym.
+
+     ```sh
+     docker run -it ubuntu bash
+     ```
+
+   - Zaprezentowano `PID1` w kontenerze i procesy Dockera na hoście.
+
+     ```sh
+     ps -fp 1
+     ps aux | grep docker
+     ```
+
+    ![obraz](https://github.com/user-attachments/assets/08066a32-884d-43fe-9332-20ee685f7a85)
+
+
+   - Zaktualizowano pakiety w kontenerze.
+
+     ```sh
+     apt update && apt upgrade -y
+     ```
+
+    ![obraz](https://github.com/user-attachments/assets/e19c5225-8983-4e72-b33f-312212db74c3)
+
+
+   - Wyjście z kontenera.
+
+     ```sh
+     exit
+     ```
+
+9. **Stworzono, zbudowano i uruchomiono własny `Dockerfile`**  
+   - Utworzono plik `Dockerfile`, który instaluje `git` i klonuje repozytorium.
+
+     ```dockerfile
+     FROM ubuntu:latest
+     RUN apt update && apt upgrade -y && apt install -y git
+     WORKDIR /app
+     RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+     ```
+
+   - Zbudowano obraz Dockera i uruchomiono go interaktywnie, aby sprawdzić, czy repozytorium zostało sklonowane.
+
+     ```sh
+     docker build -t obraz .
+     docker run -it obraz
+     ls /app
+     ```
+     ![obraz](https://github.com/user-attachments/assets/81421669-4052-45b2-a970-491a3c1d2514)
+     ![obraz](https://github.com/user-attachments/assets/26fc86e8-faac-41d1-b6f5-538ef0cad3b4)
+
+10. **Pokazano uruchomione kontenery i usunięto je**  
+    - Wyświetlono wszystkie kontenery (w tym zatrzymane) i usunięto je.
+
+      ```sh
+      docker ps -a
+      docker rm $(docker ps -aq)
+      ```
+
+      ![obraz](https://github.com/user-attachments/assets/015e2a30-4ca5-4c32-8eac-f33b15a3b071)
+
+
+12. **Wyczyszczono obrazy Dockera**  
+    - Usunięto wszystkie pobrane obrazy Dockera.
+
+      ```sh
+      docker rmi $(docker images -q)
+      ```
+
+      ![obraz](https://github.com/user-attachments/assets/a15bb467-b821-489e-935a-397cd1b9affc)
+
+
+14. **Dodano `Dockerfile` do repozytorium `Sprawozdanie1`**  
+    - Skopiowano utworzony plik `Dockerfile` do odpowiedniego katalogu w repozytorium.
+
+      ```sh
+      cp Dockerfile ~/MDO2025_INO/INO/GCL02/PK417538/Sprawozdanie1/Dockerfile
+      ```
