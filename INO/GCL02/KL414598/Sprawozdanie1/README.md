@@ -200,7 +200,36 @@ docker rmi moj_obraz busybox ubuntu fedora mysql hello-world
 ![image](https://github.com/user-attachments/assets/cf8a41c8-4b71-4c5c-a98c-4e3b4b4dace1)
 
 
+## Dockerfiles, kontener jako definicja etapu
+
+### 1. Wybór oprogramowania
+
+Do przeprowadzenia ćwiczenia wybrano repozytorium cJSON,
+![23](https://github.com/user-attachments/assets/de7d178d-68bb-44f7-9e28-fe484ed96a8f)
+
+które skonowałem poleceniem: 
+
+    git clone https://github.com/DaveGamble/cJSON
+![24](https://github.com/user-attachments/assets/6ec3b844-2e15-4a12-abfd-24b8b82051c3)
 
 
+zawierające oprogramowanie na otwartej licencji, spełniające następujące wymagania:
+
+-Jest dostępne publicznie i posiada otwartą licencję.
+
+-Zawiera skrypt Makefile umożliwiający kompilację (make build) oraz uruchomienie testów (make test).
+
+-Posiada testy jednostkowe z jednoznacznym raportem wyników.
+
+Repozytorium zostało sklonowane, a następnie przeprowadzono kompilację 
+    
+    make
+
+![25](https://github.com/user-attachments/assets/37077354-3abd-4b7e-9286-9bf21abb6b8c)
+oraz uruchomienie testów zgodnie z instrukcjami w dokumentacji poleceniem
+
+    make test
+    
+![26](https://github.com/user-attachments/assets/776b7512-b500-4fe7-9e7a-1933c8bbb74c)
 
 
