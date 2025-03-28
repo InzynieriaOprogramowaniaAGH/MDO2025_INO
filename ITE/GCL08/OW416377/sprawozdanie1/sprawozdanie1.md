@@ -1,5 +1,7 @@
 # Sprawozdanie 1
 
+Oliwia Wiatrowska
+
 
 ---
 
@@ -26,7 +28,7 @@ git --version
 ```bash
 which git
 ```
-![Lokalizacja pliku wykonywalnego Gita](zrzut2.png)
+![Lokalizacja pliku wykonywalnego Gita](zrzuty_ekranu1/zrzut2.png)
 
 ### Sprawdzenie klucza SSH
 
@@ -70,7 +72,6 @@ Zrzut ekranu przedstawiający poprawnie sklonowane repozytorium:
 ### Przełączanie się między gałęziami
 Na początku przełączyłam się na gałęź main, następnie na gałęź mojej grupy, tj. GCL08
 
-(te screeny tez mam ale pod inna nazwa i do przyciecia)
 ![Przełączenie na gałęź main i gałęź grupy](zrzuty_ekranu1/zrzut7.png)
 
 ### Utworzenie nowej gałęzi
@@ -83,7 +84,7 @@ Następnie uwtorzyłam swoją gałąź o nazwie składającej się z moich inicj
 ### Utworzenie nowego katalogu
 Utworzyłam katalog, także o nazwie składającej się z moich inicjałów i numeru indeksu:
 
-![Tworzenie mojego katalogu](zrzuty_ekranu/zrzut9.png)
+![Tworzenie mojego katalogu](zrzuty_ekranu1/zrzut9.png)
 
 ### Napisanie Git hooka
 Napisałam hooka `commit-msg`, weryfikującego to, aby każdy mój "commit message" zaczynał się od moich inicjałów i numeru indeksu.
@@ -165,8 +166,9 @@ sudo dnf install -y docker
 ![Uruchomienie dockera](zrzuty_ekranu1/docker_uruchomienie.png)
 
 
-## **2. Rejestracja w Docker Hub **
+## **2. Rejestracja w Docker Hub**
 Zarejestrowałam się w Docker Hub poprzez konto na Githubie, a następnie zalogowałam się w terminalu.
+![Konto w DockerHub](zrzuty_ekranu1/konto_w_dockerhub.png)
 
 ![Logowanie przez terminal](zrzuty_ekranu1/logowanie_docker.png)
 
@@ -331,7 +333,7 @@ Nastepnie doinstalowałam wymagane zależności.
 sudo dnf install nodejs
 sudo npm install
 ```
-![Instalacja nodejs](zrzuty_ekarny_lab3/instalacja_nodejs_poza_kontenerem.png)
+![Instalacja nodejs](zrzuty_ekranu_lab3/instalacja_nodejs_poza_kontenerem.png)
 
 ![Instalacja npm](zrzuty_ekranu_lab3/instalacja_npm_poza_kontenerem.png)
 
@@ -346,9 +348,9 @@ npm test
 ![Wynik testu](zrzuty_ekranu_lab3/uruchomienie_testow_poza_kontenerem.png)
 
 
-## **2. Przeprowadzenie buildu w kontenerze **
+## **2. Przeprowadzenie buildu w kontenerze**
 
-### **2.1. Wykonanie build i test wewnątrz kontenera **
+### **2.1. Wykonanie build i test wewnątrz kontenera**
 
 ### Uruchomienie kontenera w trybie interaktywnym
 Wybrałam obraz `Node.js 22.14.0`, ponieważ aplikacja napisana jest w Node.js i wymaga `npm` do instalacji zależności oraz uruchomienia testów.
@@ -384,7 +386,7 @@ npm test
 
 Wynik testu potwierdza poprawność działania aplikacji.
 
-### **2.2. Stworzenie dwóch plików Dockerfile - **
+### **2.2. Stworzenie dwóch plików Dockerfile**
 Utworzone pliki mają za zadanie zautomatyzować wyżej wymienione kroki.
 
 ### Utworzenie pliku `Dockerfile.build`
@@ -420,7 +422,7 @@ docker build -t test -f ./Dockerfile.test .
 ```
 ![Budowanie kontenera](zrzuty_ekranu_lab3/budowanie_kontenera_testowego.png)
 
-### **2.3. Wykazanie poprawnego działania kontenera **
+### **2.3. Wykazanie poprawnego działania kontenera**
 
 ### Pokazanie poprawnego zbudowania obrazów - wyświetlenie listy dostępnych obrazów
 
@@ -448,7 +450,7 @@ Do zweryfikowania poprawności działania testów w kontenerze, uruchomiłam kon
 sudo docker run -it --rm test bash
 npm test
 ```
-![Uruchomienie kontenera testowego interaktywnie](zrzuty_ekranu_lab3/interaktywne_uruchomienie_kontenera_testowego.png)
+![Uruchomienie kontenera testowego interaktywnie](zrzuty_ekranu_lab3/interaktywne_uruchomienie_kontenera_test.png)
 
 
 ### Kontener a obraz
