@@ -230,9 +230,9 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
   * https://docs.docker.com/reference/dockerfile/#run---mount
 * Przygotuj woluminy wejściowy i wyjściowy, o dowolnych nazwach, i podłącz je do kontenera bazowego (np. tego, z którego rozpoczynano poprzednio pracę). Kontener bazowy to ten, który umie budować nasz projekt (ma zainstalowane wszystkie dependencje, `git` nią nie jest)
 
-          ![Stworzenie woluminów](Images4/vol_created.png "Stworzenie woluminów")
+     ![Stworzenie woluminów](Images4/vol_created.png "Stworzenie woluminów")
 
-          ![Bazowy kontener z dependencjami bez Gita](Images4/base_container.png "Bazowy kontener z dependencjami bez Gita")
+     ![Bazowy kontener z dependencjami bez Gita](Images4/base_container.png "Bazowy kontener z dependencjami bez Gita")
 
 * Uruchom kontener, zainstaluj/upewnij się że istnieją niezbędne wymagania wstępne (jeżeli istnieją), ale *bez gita*
 * Sklonuj repozytorium na wolumin wejściowy
@@ -247,18 +247,18 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
 
 * Uruchom build w kontenerze - rozważ skopiowanie repozytorium do wewnątrz kontenera
 
-          ![Budowanie w kontenerze bez gita](Images4/build_p1.png "Budowanie w kontenerze bez gita")
+     ![Budowanie w kontenerze bez gita](Images4/build_p1.png "Budowanie w kontenerze bez gita")
 
-          ![Budowanie w kontenerze bez gita](Images4/build_p2.png "Budowanie w kontenerze bez gita")
+     ![Budowanie w kontenerze bez gita](Images4/build_p2.png "Budowanie w kontenerze bez gita")
 
 * Zapisz powstałe/zbudowane pliki na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera.
 
-          ![Skopiowanie zbudowanych plików na woluminie wyjściowym](Images4/cp_to_out.png "Skopiowanie zbudowanych plików na woluminie wyjściowym")
+     ![Skopiowanie zbudowanych plików na woluminie wyjściowym](Images4/cp_to_out.png "Skopiowanie zbudowanych plików na woluminie wyjściowym")
 
 * Pamiętaj udokumentować wyniki.
 * Ponów operację, ale klonowanie na wolumin wejściowy przeprowadź wewnątrz kontenera (użyj gita w kontenerze)
 
-          ![Klonowanie wykonane w kontenerze](Images4/clone_from_container.png "Klonowanie wykonane w kontenerze")
+     ![Klonowanie wykonane w kontenerze](Images4/clone_from_container.png "Klonowanie wykonane w kontenerze")
 
 * Przedyskutuj możliwość wykonania ww. kroków za pomocą `docker build` i pliku `Dockerfile`. (podpowiedź: `RUN --mount`)
 
