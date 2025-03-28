@@ -214,3 +214,120 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
 3. Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?
 
           ![Wdrożone i działające na kontenerze irssi](Images3/irssi.png "Wdrożone i działające na kontenerze irssi")
+
+---
+
+## Laboratorium 4
+
+---
+
+### Zachowywanie stanu
+* Zapoznaj się z dokumentacją:
+  * https://docs.docker.com/storage/volumes/
+  * https://docs.docker.com/engine/storage/bind-mounts/
+  * https://docs.docker.com/engine/storage/volumes/
+  * https://docs.docker.com/reference/dockerfile/#volume
+  * https://docs.docker.com/reference/dockerfile/#run---mount
+* Przygotuj woluminy wejściowy i wyjściowy, o dowolnych nazwach, i podłącz je do kontenera bazowego (np. tego, z którego rozpoczynano poprzednio pracę). Kontener bazowy to ten, który umie budować nasz projekt (ma zainstalowane wszystkie dependencje, `git` nią nie jest)
+
+          ![Stworzenie woluminów](Images4/vol_created.png "Stworzenie woluminów")
+
+          ![Bazowy kontener z dependencjami bez Gita](Images4/base_container.png "Bazowy kontener z dependencjami bez Gita")
+
+* Uruchom kontener, zainstaluj/upewnij się że istnieją niezbędne wymagania wstępne (jeżeli istnieją), ale *bez gita*
+* Sklonuj repozytorium na wolumin wejściowy
+  * Opisz dokładnie, jak zostało to zrobione
+    * Wolumin/kontener pomocniczy?
+    * *Bind mount* z lokalnym katalogiem?
+    * Kopiowanie do katalogu z woluminem na hoście (`/var/lib/docker`)?
+          
+          Repozytorium zostało skopiowane na wolumin wejściowy używając polecenia **docker cp** będąc na hoście
+
+          ![Kopiowanie repo do woluminu](Images4/copy_to_vol.png "Kopiowanie repo do woluminu")
+
+* Uruchom build w kontenerze - rozważ skopiowanie repozytorium do wewnątrz kontenera
+
+          ![Budowanie w kontenerze bez gita](Images4/build_p1.png "Budowanie w kontenerze bez gita")
+
+          ![Budowanie w kontenerze bez gita](Images4/build_p2.png "Budowanie w kontenerze bez gita")
+
+* Zapisz powstałe/zbudowane pliki na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera.
+
+          ![Skopiowanie zbudowanych plików na woluminie wyjściowym](Images4/cp_to_out.png "Skopiowanie zbudowanych plików na woluminie wyjściowym")
+
+* Pamiętaj udokumentować wyniki.
+* Ponów operację, ale klonowanie na wolumin wejściowy przeprowadź wewnątrz kontenera (użyj gita w kontenerze)
+
+          ![Klonowanie wykonane w kontenerze](Images4/clone_from_container.png "Klonowanie wykonane w kontenerze")
+
+* Przedyskutuj możliwość wykonania ww. kroków za pomocą `docker build` i pliku `Dockerfile`. (podpowiedź: `RUN --mount`)
+
+
+
+### Eksponowanie portu
+* Zapoznaj się z dokumentacją https://iperf.fr/
+* Uruchom wewnątrz kontenera serwer iperf (iperf3)
+
+     Użyto polecenia: **docker run --rm -d --name iperf-server -p 5201:5201 networkstatic/iperf3 -s** w którym:
+     **--rm** oznacza że kontener zostanie automatycznie usunięty po jego zatrzymaniu.
+     **-d**   uruchomienie kontenera w tle.
+     **-p**   przypisanie który port hosta ma przekazywać połączenie do którego portu kontenera.
+     **-s**   argument perfa uruchamiający perf jako server.
+
+     ![Uruchomiony serwer iperf3 w kontenerze](Images4/server.png "Uruchomiony serwer iperf3")
+
+* Połącz się z nim z drugiego kontenera, zbadaj ruch
+
+    ![Uruchomiony klient iperf3 w kontenerze](Images4/iperf_client.png "Uruchomiony klient iperf3")     
+
+* Zapoznaj się z dokumentacją `network create` : https://docs.docker.com/engine/reference/commandline/network_create/
+* Ponów ten krok, ale wykorzystaj własną dedykowaną sieć mostkową (zamiast domyślnej). Spróbuj użyć rozwiązywania nazw
+
+     Najpierw tworzymy sieć
+
+    ![Tworzenie własnej sieci](Images4/network_create.png "Tworzenie własnej sieci")
+
+     A następnie podobnym jak poprzednio poleceniem tworzymy kontener, jednak tym razem podajemy nazwę sieci:
+
+          ![Tworzenie servera w kontenerze, pracującego w stworzonej sieci](Images4/server_own_network.png "Tworzenie servera w kontenerze, pracującego w stworzonej sieci")     
+
+* Połącz się spoza kontenera (z hosta i spoza hosta)
+
+     Tym razem nie musimy podawać adresu ip do którego chcemy się połączyć ponieważ użycie własnej sieci umożliwia połączenie się na podstawie samej nazwy kontenera
+
+          ![Stworzenie kontenera klienta, z połączeniem przy użyciu nazwy](Images4/client_conn_by_name.png "Stworzenie kontenera klienta, z połączeniem przy użyciu nazwy")     
+
+     Aby połączyć musimy uruchomić serwer jeszcze raz, podając przekierowany port tak jak, w pierwszym przypadku.
+     Z hosta następnie możemy połączyć się w następujący sposób (oczywiście uprzednio musimy zainstalować iperf3 także na hoście) :
+
+          ![Połączenie z serwerem z hosta](Images4/client_conn_from_host.png "Połączenie z serwerem z hosta")     
+
+* Przedstaw przepustowość komunikacji lub problem z jej zmierzeniem (wyciągnij log z kontenera, woluminy mogą pomóc)
+
+          Przepustowość komunikacji z kontenera w stworzonej sieci (sposób drugi ) wynosi około 10 Gbit/s, a przepustowość z kontenera sposobem pierwszym, lub przepustowość z hosta wynosi około 7 Gbit/s
+
+* Opcjonalnie: odwołuj się do kontenera serwerowego za pomocą nazw, a nie adresów IP
+
+### Instancja Jenkins
+* Zapoznaj się z dokumentacją  https://www.jenkins.io/doc/book/installing/docker/
+* Przeprowadź instalację skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND
+
+     Zgodnie z dokumentacją najpierw należy uruchomić kontener DIND:
+
+          ![Uruchomienie kontenera DIND](Images4/dind.png "Uruchomienie kontenera DIND")     
+
+     Następnie należy zbudować obraz jenkinsa przy użyciu Dockerfila podanego w dokumentacji:
+
+          ![Budowanie obrazu jenkins](Images4/jenkins_build.png "Budowanie obrazu jenkins")     
+
+* Zainicjalizuj instację, wykaż działające kontenery, pokaż ekran logowania
+
+     Następnie zostało już tylko stworzenie kontenera:
+
+          ![Tworzenie kontenera jenkins](Images4/jenkins_cont.png "Tworzenie kontenera jenkins")     
+
+     Następnie pozostaje już tylko przekierowanie portu 8080 z maszyny wirtualnej do komputera hosta,
+     można to zrobić za pomocą polecenia: ssh -L 8080:localhost:8080 root@127.0.0.1
+
+          ![Ekran logowania do jenkinsa w przeglądarce](Images4/jenkins_login.png "Nareszcie ekran logowania Jenkins :heart:")
+
