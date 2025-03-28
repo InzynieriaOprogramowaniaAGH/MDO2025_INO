@@ -144,3 +144,75 @@ Ostatnią czynnością było dodanie stworzonego pliku `Dockerfile` do folderu `
 
 ..
 ## Zadanie 3: Dockerfiles, kontener jako definicja etapu
+
+Zaczełam od sklonowania repozytorium oprogramowania o otwartej licencji, cJSON, zawierające działający Makefile, który ma zdefiniowany zestaw testów.
+![Zrzut ekranu git clone]()
+
+Przed kompilacja wykonałam polecenia `/bootstrap` i  `./configure` zgodnie z instrukcją w repozytorium. Następnie wykonałam kompilację poprzez `make`, zaś uruchomienie testów poleceniem `make test`.
+![Zrzut ekranu bootstrap](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%204.36.57%E2%80%AFPM.png)
+![Zrzut ekranu bootstrap](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%204.37.02%E2%80%AFPM.png)
+![Zrzut ekranu make](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%204.37.11%E2%80%AFPM.png)
+![Zrzut ekranu make test](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%204.37.20%E2%80%AFPM.png)
+
+W ramach kolejnego etapu zadania, uruchomiłam kontener na podstawie obrazu ubuntu w trybie interaktywnym. W tym celu wykorzystałam polecenie:
+```bash
+docker run -it ubuntu:latest /bin/bash
+```
+![Zrzut ekranu docker run](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%204.40.39%E2%80%AFPM.png)
+
+Po uruchomieniu kontenera, zainstalowałam wszystkie wymagane zależności, takie jak git, make oraz gcc. Aby zainstalować niezbędne pakiety, wykonałam poniższe polecenie:
+```bash
+apt-get update
+apt-get install -y build-essential git cmake
+```
+![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%204.41.16%E2%80%AFPM.png)
+![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%204.41.32%E2%80%AFPM.png)
+
+Następnie, w ramach kontenera, sklonowałam repozytorium z projektem libyaml z GitHub. Użyłam do tego polecenia:
+```bash
+git clone https://github.com/yaml/libyaml.git
+```
+![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%204.42.17%E2%80%AFPM.png)
+
+Repozytorium zostało pomyślnie sklonowane, a następnie mogłam przystąpić do dalszych działań zgodnych z wymaganiami zadania. Kolejnym zadaniem było utworzenie dwóch plików Dockerfile, które miały odpowiedzialność za przygotowanie środowiska, kompilację oprogramowania oraz uruchomienie testów. Pierwszy plik `Dockerfile.build` przygotowuje środowisko i przeprowadza kompilację oprogramowania, a drugi plik `Dockerfile.test` uruchamia testy na skompilowanym oprogramowaniu.
+
+Poniżej znajdują się zawartości obu plików:
+![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%205.03.43%E2%80%AFPM.png)
+![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%205.06.00%E2%80%AFPM.png)
+
+Pliki zostały skompilowane jeden po drugim za pomocą poniższych poleceń:
+![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%205.03.29%E2%80%AFPM.png)
+![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%205.05.52%E2%80%AFPM.png)
+
+Pierwsze polecenie buduje obraz libyaml-build, który przygotowuje środowisko oraz kompiluje oprogramowanie. Drugie polecenie buduje obraz libyaml-test, który jest odpowiedzialny za uruchomienie testów w kontenerze.
+
+
+W celu weryfikacji poprawności działania, uruchomiłam kontener na bazie obrazu stworzonego przy użyciu Dockerfile.test w trybie interaktywnym. Dzięki temu możliwe było manualne sprawdzenie, czy kontener działa zgodnie z oczekiwaniami. Potwierdzono, że kontener wdraża się i pracuje poprawnie.
+
+**Różnica między obrazem a kontenerem**
+
+Ważnym aspektem jest zrozumienie różnicy między obrazem a kontenerem. Obraz to statyczna jednostka, która zawiera wszystkie pliki, zależności oraz instrukcje potrzebne do stworzenia kontenera. Jest to jakby szablon aplikacji, który może być przechowywany w repozytoriach (np. Docker Hub).
+
+Z kolei kontener to uruchomiona instancja obrazu. Jest to dynamiczna jednostka, która działa w określonym czasie na podstawie obrazu. Kontener posiada swoje własne środowisko wykonawcze i jest izolowany od innych kontenerów oraz systemu gospodarza.
+
+**Co pracuje w kontenerze?**
+
+W kontenerze uruchomionym na bazie obrazu stworzonego z pliku `Dockerfile.test` znajduje się środowisko, które zawiera wszystkie zależności oraz instrukcje do przeprowadzenia testów. Kontener ten obejmuje:
+
+1. Zainstalowane niezbędne narzędzia, takie jak `git`, `make`, `gcc`, które umożliwiają pobranie kodu źródłowego oraz kompilację aplikacji.
+2. Skrypty i narzędzia odpowiedzialne za przeprowadzenie testów aplikacji, takie jak np. uruchomienie odpowiednich plików testowych z repozytorium.
+3. Pliki wynikowe, takie jak logi z testów lub inne raporty, które pomagają w weryfikacji poprawności działania aplikacji.
+
+**Weryfikacja działania kontenera**
+
+Po uruchomieniu kontenera w trybie interaktywnym, ręcznie zweryfikowano jego działanie. Sprawdzono, czy wszystkie wymagane pliki są obecne, a testy wykonują się poprawnie. Kontener wdrożył się bez problemów, a przeprowadzenie testów zakończyło się zgodnie z oczekiwaniami.
+
+Dzięki pracy w trybie interaktywnym możliwa była bezpośrednia interakcja z kontenerem, co pozwoliło na dokładne monitorowanie jego stanu oraz przebiegu testów. Po zakończeniu weryfikacji, kontener został zatrzymany, a wszystkie operacje zakończone pomyślnie.
+
+![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%205.21.23%E2%80%AFPM.png)
+![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%205.21.31%E2%80%AFPM.png)
+
+
+
+![Zrzut ekranu]()
+![Zrzut ekranu]()
