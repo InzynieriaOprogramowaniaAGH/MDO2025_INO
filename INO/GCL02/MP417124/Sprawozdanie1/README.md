@@ -232,19 +232,32 @@ Dzięki pracy w trybie interaktywnym możliwa była bezpośrednia interakcja z k
 # Zadanie 4: Dodatkowa terminologia w konteneryzacji, instancja Jenkins
 
 Zadanie rozpoczęłam od przygotowania woluminu wejściowego i wyściowego o nazwach `input` i `output`. Podłączyłam je do kontenera bazowego używając polecenia: 
+![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%206.28.35%E2%80%AFPM.png)
 
 ```bash
 apt-get update && apt-get install gcc make -y
 ```
-Po wstępnym zweryfikowaniu katalogów, przeszłam do odnaleznienia lokalizacji wolumina wejściowego, stosując komendę: `docker volume inspect input` i następnie klonując do niego repozytorium stosując polecenie:
+![Zrzut ekranu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%206.55.23%E2%80%AFPM.png)
+
+Po wstępnym zweryfikowaniu katalogów, przeszłam do odnaleznienia lokalizacji wolumina wejściowego, stosując komendę: `docker volume inspect input`. Uruchomiłam nowy kontener bazujący na ubuntu: 
+
+![Zrut ekranu docker volume](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%206.58.21%E2%80%AFPM.png)
+![Zrzut ekranu docker run](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%206.54.49%E2%80%AFPM.png)
+
+Następnie klonując do niego repozytorium zastosowałam polecenie:
 
 ```bash
 git clone https://github.com/yaml/libyaml.git
 ```
+![Zrzut ekranu git clone](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%207.22.41%E2%80%AFPM.png)
 
 
-![Zrzut ekranu]()
-![Zrzut ekranu]()
-![Zrzut ekranu]()
-![Zrzut ekranu]()
-![Zrzut ekranu]()
+Sprawdziłam zawartość katalogu `/mnt/input/` poprzez komendę `ls`, która powinna zawierać pliki z repozytorium:
+   - Zrzut ekranu:
+![Zrzut ekranu input ls](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%208.36.45%E2%80%AFPM.png)
+
+Skopiowałam pliki do `/mnt/output/` (katalogu wyjściowego)
+![Zrzut ekranu output ls](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie1/Screenshots/Screenshot%202025-03-28%20at%208.54.13%E2%80%AFPM.png)
+
+Po wyjściu z kontenera, potwierdziłam obecność plików w katalogu pod ścieżką: `/var/lib/docker/volumes/output/_data`.
+
