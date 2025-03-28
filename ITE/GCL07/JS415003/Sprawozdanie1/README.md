@@ -35,12 +35,21 @@ Niestety źle przemyślałem sprawę i w przypadku pierwszych laboratoriów zapo
    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/001-Class/lab1_6.png" />
 
 4. Przełącz się na gałąź ```main```, a potem na gałąź swojej grupy
+<img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/001-Class/lab1_7.png" />
 
 5. Utwórz gałąź o nazwie "inicjały & nr indeksu" np. ```KD232144```. Miej na uwadze, że odgałęziasz się od brancha grupy!
+    Na poprzednim screenie widać że utworzyłem gałąź ze swoimi inicjałami.
 
-6. Praca na nowej gałęzi
-    - Treść githooka
-    
+6. Rozpocznij pracę na nowej gałęzi
+   - W katalogu właściwym dla grupy utwórz nowy katalog, także o nazwie "inicjały & nr indeksu" np. ```KD232144```
+   <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/001-Class/lab1_8.png" />
+
+   - Dodaj ten skrypt do stworzonego wcześniej katalogu.
+   Na poprzednim screenie już widać, że plik jest w folderze.
+
+   - Skopiuj go we właściwe miejsce, tak by uruchamiał się za każdym razem kiedy robisz commita.
+   
+   - Umieść treść githooka w sprawozdaniu.
     ```bash
     commit_msg=$(cat "$1")
 
