@@ -1,0 +1,118 @@
+  669  sudo docker volume create input-vol
+  670  sudo docker volume create output-vol
+  671  sudo docker ps
+  672  sudo docker ps -a
+  673  docker pull node:slim
+  674  sudo docker pull node:slim
+  675  sudo docker images
+  676  sudo docker run -it --rm -v input_vol:/app/input -v output_vol:/app/output --name lab4_container node:slim bash
+  677  sudo docker ps -a
+  678  sudo docker images
+  679  sudo docker rmi 60c81708db87
+  680  sudo docker images
+  681  sudo docker pull gcc
+  682  docker run -it --rm -v input_vol:/app/input -v output_vol:/app/output --name lab4_container gcc bash
+  683  sudo docker run -it --rm -v input_vol:/app/input -v output_vol:/app/output --name lab4_container gcc bash
+  684  sudo docker run --rm -v input_vol:/repo -w /repo git:latest git clone https://github.com/antirez/sds .
+  685  sudo docker run --rm -v input_vol:/repo -w /repo alpine/git clone https://github.com/antirez/sds .
+  686  docker volume inspect input
+  687  sudo docker volume inspect input
+  688  sudo docker volume inspect input_vol
+  689  sudo docker volume inspect uotput_vol
+  690  sudo docker volume inspect output_vol
+  691  docker run --rm -it -v input_vol:/repo alpine ls -la /repo
+  692  sudo docker run --rm -it -v input_vol:/repo alpine ls -la /repo
+  693  docker pull alpine:latest
+  694  sudo docker pull alpine:latest
+  695  sudo docker run --rm -it -v input_vol:/repo alpine
+  696  docker ps -a
+  697  sudo docker ps -a
+  698  exit
+  699  cd github/MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie1/Lab4_files/
+  700  sudo docker run --rm -it -v input_vol:/repo alpine
+  701  sudo docker ps
+  702  sudo docker ps -a
+  703  docker run -it -v input_vol:/app/input -v output_vol:/app/output --name lab4_container gcc bash
+  704  sudo docker run -it -v input_vol:/app/input -v output_vol:/app/output --name lab4_container gcc bash
+  705  sudo docker run -it -v input_vol:/repo -w /repo alpine/git clone https://github.com/antirez/sds .
+  706  sudo docker run --rm -it -v input_vol:/repo alpine
+  707  sudo docker run -it -v input_vol:/repo alpine
+  708  docker ps
+  709  sudo docker ps
+  710  sudo docker ps -a
+  711  docker rmi 7f4193839672
+  712  sudo docker rmi 7f4193839672
+  713  sudo docker prune
+  714  sudo docker rm 7f4193839672
+  715  sudo docker ps -a
+  716  ls
+  717  cd ..
+  718  sudo docker run -it -v input_vol:/repo alpine
+  719  sudo docker inspect a4ee87167638
+  720  sudo docker inspect a4ee87167638 | grep -A 10 "Mounts"
+  721  docker ps -a
+  722  sudo docker ps -a
+  723  sudo docker inspect c3093ce5f1b7 | grep -A 10 "Mounts"
+  724  exit
+  725  cd github/MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie1/Lab4_files/
+  726  ls
+  727  sudo docker ps -a
+  728  sudo docker run -it lab4_container bash
+  729  sudo docker run -it gcc bash
+  730  sudo docker ps -a
+  731  sudo docker run -it --rm -v input_vol:/app/input -v output_vol:/app/output --name lab4_container gcc bash
+  732  sudo docker rm bb8c3da9cb74
+  733  sudo docker run -it --rm -v input_vol:/app/input -v output_vol:/app/output --name lab4_container gcc bash
+  734  sudo docker pull networkstatic/iperf3
+  735  sudo docker run -d --name container1 -p 5201:5201 networkstatic/iperf3 -s
+  736  SERVER_IP=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf3-server)
+  737  SERVER_IP=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container1)
+  738  echo SERVER_IP
+  739  echo "SERVER_IP:$SERVER_IP"
+  740  SERVER_IP=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container1)
+  741  echo $SERVER_IP
+  742  sudo docker exec -it container bash -c "apt update && apt install -y tcpdump && tcpdump -i eth0 -w /tmp/iperf3.pcap"
+  743  sudo docker exec -it container1 bash -c "apt update && apt install -y tcpdump && tcpdump -i eth0 -w /tmp/iperf3.pcap"
+  744  sudo docker exec -it container1 bash -c "apt update && apt install -y tcpdump && tcpdump -i eth0 -w /tmp/iperf3.pcap" $
+  745  sudo docker run -it --rm networkstatic/iperf3 -c $SERVER_IP
+  746  exit
+  747  cd github/MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie1/Lab4_files/
+  748  ls
+  749  nano Dockerfile
+  750  ls
+  751  nano Dockerfile
+  752  sudo docker network create --driver bridge iperf-net
+  753  sudo docker build -t iperf3-img . 
+  754  sudo docker run -d --name iperf-server -docker run -d --name iperf-server --network iperf-net iperf3-img iperf3 -s
+  755  sudo docker run -d --name iperf-server -d --network iperf-net iperf3-img iperf3 -s
+  756  sudo docker run -it --name iperf-client --network iperf-net iperf3-img iperf3 -c iperf-server
+  757  sudo docker volume create srv-vol
+  758  sudo docker volume create cli-vol
+  759  sudo docker ps
+  760  sudo docker stop 57e283283e61
+  761  sudo docker ps
+  762  sudo docker run -d   --name iperf-server   --network iperf-net   -v srv-vol:/logs   iperf3-img   sh -c "iperf3 -s > /logs/iperf-server.log 2>&1"
+  763  sudo docker ps -a
+  764  sudo docker rmi 2fb7836d4df7
+  765  sudo docker rm 2fb7836d4df7
+  766  sudo docker run -d   --name iperf-server   --network iperf-net   -v srv-vol:/logs   iperf3-img   sh -c "iperf3 -s > /logs/iperf-server.log 2>&1"
+  767  sudo docker ps -a
+  768  sudo docker rm 57e283283e61
+  769  sudo docker run -d   --name iperf-server   --network iperf-net   -v srv-vol:/logs   iperf3-img   sh -c "iperf3 -s > /logs/iperf-server.log 2>&1"
+  770  sudo docker run -it   --name iperf-client   --network iperf-net   -v cli-vol:/logs   iperf3-img   sh -c "iperf3 -c iperf-server > /logs/iperf-client.log 2>&1"
+  771  sudo docker run --rm -v srv_vol:/logs alpine cat /logs/iperf-server.log
+  772  sudo docker run --rm -v srv-vol:/logs alpine cat /logs/iperf-server.log
+  773  sudo docker run --rm -v cli-vol:/logs alpine cat /logs/iperf-server.log
+  774  sudo docker run --rm -v cli-vol:/logs alpine cat /logs/iperf-client.log
+  775  sudo yum install iperf3
+  776  sudo docker run -d   --name iperf-server   -p 5201:5201   iperf3-img   iperf3 -s
+  777  sudo docker rm 6f23b9428eb658
+  778  sudo docker ps
+  779  sudo docker stop 6f23b9428eb658
+  780  sudo docker stop 6f23b9428eb6
+  781  sudo docker rm 6f23b9428eb6
+  782  sudo docker run -d   --name iperf-server   -p 5201:5201   iperf3-img   iperf3 -s
+  783  iperf3 -c localhost
+  784  sudo docker network create jenkins-net
+  785  sudo docker run --name jenkins-docker   --rm --detach   --privileged   --network jenkins-net   --network-alias docker   --env DOCKER_TLS_CERTDIR=""   -p 2376:2376   docker:dind
+  786  sudo docker run --name jenkins   --rm --detach   --network jenkins-net   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_TLS_VERIFY=0   -p 8080:8080 -p 50000:50000   -v jenkins-data:/var/jenkins_home   jenkins/jenkins:lts-jdk11
