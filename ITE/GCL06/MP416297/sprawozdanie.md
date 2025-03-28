@@ -64,6 +64,8 @@ przy tworzeniu klucza zostajemy poproszeni o passphrase, aby zabezpieczyć klucz
         echo "MP416297 - $commit_msg" > "$COMMIT_MSG_FILE"
         fi
 
+## Wciągnięcie do gałęzi grupowej
 
-Spróbuj wciągnąć swoją gałąź do gałęzi grupowej
-Zaktualizuj sprawozdanie i zrzuty o ten krok i wyślij aktualizację do zdalnego źródła (na swojej gałęzi)
+Przy pomocy `git merge MP416297` zrobiłem "wciągnięcie" swojej gałęzi do gałęzi `GCL06`, a wynik wygląda następująco:
+
+![alt text](lab1_ss/8_git_merge.png)
