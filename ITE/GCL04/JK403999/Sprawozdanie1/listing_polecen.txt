@@ -380,3 +380,57 @@
   380  git commit -m "JK403999 Poprawa drobnych błędów w sprawozdaniu"
   381  git push origin JK403999
   382  history
+  383  git status
+  384  git add .
+  385  git status
+  386  git commit -m "JK403999 Dodanie listingu polecen"
+  387  git push origin JK403999
+  388  exit
+  389  git status
+  390  exit
+  391  cd MDO2025_INO/
+  392  git status
+  393  git add .
+  394  git status
+  395  git commit -m "JK403999 Sprawozdanie lab2: screeny, dockerfile, listing polecen"
+  396  git push origin JK403999
+  397  git status
+  398  git add .
+  399  git commit -m
+  400  git commit -m "JK403999 Poprawa błędu w sprawozdaniu"
+  401  git push origin JK403999
+  402  exit
+  403  cd MDO2025_INO/
+  404  git status
+  405  git add .
+  406  git commit -m "JK403999 Dockerfile Build i Test do Irssi"
+  407  git push origin JK403999
+  408  exit
+  409  ls
+  410  git clone https://github.com/EvoSuite/evosuite.git
+  411  ls
+  412  cd evosuite
+  413  mvn compile
+  414  dnf
+  415  dnf --help
+  416  dnf install maven
+  417  exit
+  418  ls
+  419  cd evosuite/
+  420  mvn compile
+  421  ls
+  422  mvn test
+  423  ls
+  424  cd MDO2025_INO/
+  425  git status
+  426  git add .
+  427  git status
+  428  git commit -m "JK403999 Laboratorium numer 3"
+  429  git history
+  430  git log
+  431  git branch
+  432  exit
+  433  ls
+  434  cd MDO2025_INO/
+  435  git status
+  436  history
