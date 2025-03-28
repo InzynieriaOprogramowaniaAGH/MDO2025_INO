@@ -242,5 +242,7 @@ Drugi plik Dockerfile (Dockerfile.test) będzie bazować na obrazie zbudowanym w
 ![29](https://github.com/user-attachments/assets/8adb260e-3ec7-43fd-a2d9-92d297c3fd75)
 
 Budowanie i uruchamianie kontenerów:
-
+![30](https://github.com/user-attachments/assets/8dfbd9e7-0d6b-458e-9d73-7f6fd75eb121)
+![31](https://github.com/user-attachments/assets/eb8e86b8-0053-44ff-a8cd-dd79afda83e4)
+![32](https://github.com/user-attachments/assets/9aa4deb3-96fb-409e-a36f-ef7852b8cc83)
 
