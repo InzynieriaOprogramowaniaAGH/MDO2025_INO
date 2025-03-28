@@ -30,7 +30,7 @@ Inżynieria Obliczeniowa
 
 7.  Następnie utworzyłam Git hooka, który weryfikował, czy każdy commit message zaczyna się od moich inicjałów i numeru indeksu. Nadałam mu uprawnienia do wykonywania i skopiowałam go do katalogu `.git/hooks`, aby uruchamiał się przy wykonywaniu commitów: `nano check-commit-msg.sh   chmod +x check-commit-msg.sh   cp check-commit-msg.sh ../.git/hooks/commit-msg` ![tworzenie githooka](screenshots/7.png)
 
-8.  Edytowałam plik commit-msg, dodając poniższy skrypt: ![Githook treść](screenshots/8.png) W przypadku błędnego komentarza do commita wyświetla się następujący komunikat: ![Błędny commit](screenshots/9.png)
+8.  Edytowałam plik `commit-msg`, dodając poniższy skrypt: ![Githook treść](screenshots/8.png) W przypadku błędnego komentarza do commita wyświetla się następujący komunikat: ![Błędny commit](screenshots/9.png)
 
 ## Zajęcia 2
 
@@ -44,7 +44,7 @@ Inżynieria Obliczeniowa
 
 5.  Następnie uruchomiłam system w kontenerze za pomocą `docker run -it fedora bash` ![uruchomienie systemu w kontenerze](screenshots/14.png) , wyświetliłam PID1 w kontenerze używając komendy `cat /proc/1/status`: ![Wyświetlenie PID1](screenshots/15.png) ![wyświetlenie PID1](screenshots/16.png) ![wyświetlenie PID1](screenshots/17.png) Wyświetliłam procesy Dockera na hoście przy wykorzystaniu `ps aux | grep docker` ![procesy na hoście](screenshots/18.png) Następnie zaktualizowałam pakiety poprzez `dnf update -y` ![aktualizacja pakietów](screenshots/19.png)
 
-6.  Stworzyłam plik `Dockerfile` ![tworzenie Dockerfile](screenshots/20.png) Którego treść wyglądała następująco: ![Dockerfile](screenshots/21.png) Następnie zbudowałam go: `docker build -t my-fedora-image .` i uruchomiłam `docker run -it my-fedora-image bash` ![budowanie i uruchomienie Dockerfile](screenshots/22.png) Sprawdziłam czy ściągnięte jest tam odpowiednie repozytorium poprzez komendę `ls /app` ![repozytorium](screenshots/23.png)
+6.  Stworzyłam plik `Dockerfile` ![tworzenie Dockerfile](screenshots/20.png), którego treść wyglądała następująco: ![Dockerfile](screenshots/21.png) Następnie zbudowałam go: `docker build -t my-fedora-image .` i uruchomiłam `docker run -it my-fedora-image bash` ![budowanie i uruchomienie Dockerfile](screenshots/22.png) Sprawdziłam czy ściągnięte jest tam odpowiednie repozytorium poprzez komendę `ls /app` ![repozytorium](screenshots/23.png)
 
 7.  Sprawdziłam uruchomione kontenery poprzez `docker ps -a` ![uruchomione kontenery](screenshots/24.png) Wyczyściłam je używając komendy `docker rm $(docker ps -aq)` ![czyszczenie kontenerów](screenshots/25.png) Usunęłam obrazy poprzez `docker rmi` ![usunięcie obrazów](screenshots/26.png) ![usunięcie obrazu](screenshots/27.png)
 
@@ -86,66 +86,66 @@ Inżynieria Obliczeniowa
 
 ## Zajęcia 4
 
-1.  Przygotowałam woluminy: wejściowy i wyjściowy. Użyłam do tego komendy `docker volume create`. Nadałam woluminom nazwy: `wolumin_wejsciowy` oraz `wolumin_wyjsciowy`. ![tworzenie woluminów](screenshots/46). Wolumin wejściowy został stworzony by przechować dane, takie jak repozytorium aplikacji `zlib`, natomiast wolumin wyjściowy miał za zadanie przechować zbudowane pliki.
+1.  Przygotowałam woluminy: wejściowy i wyjściowy. Użyłam do tego komendy `docker volume create`. Nadałam woluminom nazwy: `wolumin_wejsciowy` oraz `wolumin_wyjsciowy`. ![tworzenie woluminów](screenshots/46.png). Wolumin wejściowy został stworzony by przechować dane, takie jak repozytorium aplikacji `zlib`, natomiast wolumin wyjściowy miał za zadanie przechować zbudowane pliki.
 
-2.  Uruchomiłam kontener bazowy `Ubuntu` oraz podłączyłam do niego woluminy komendą `docker run -it kontener_bazowy -v wolumin_wejsciowy:/mnt/wejsciowy -v wolumin_wyjsciowy:/mnt/wyjsciowy ubuntu:latest bash` ![kontener bazowy](screenshots/47).
+2.  Uruchomiłam kontener bazowy `Ubuntu` oraz podłączyłam do niego woluminy komendą `docker run -it kontener_bazowy -v wolumin_wejsciowy:/mnt/wejsciowy -v wolumin_wyjsciowy:/mnt/wyjsciowy ubuntu:latest bash` ![kontener bazowy](screenshots/47.png).
 
-3.  Wewnątrz kontenera zainstalowałam wymagane narzędzia poprzez `apt-get update` oraz `apt-get install -y build-essential curl wget` ![instalacja narzędzi](screenshots/48).
+3.  Wewnątrz kontenera zainstalowałam wymagane narzędzia poprzez `apt-get update` oraz `apt-get install -y build-essential curl wget` ![instalacja narzędzi](screenshots/48.png).
 
-4.  Następnie sklonowałam repozytorium na wolumin wejściowy. Zrobiłam to poprzez klonowanie repozytorium aplikacji `zlib` z hosta bezpośrednio do woluminu. Po zalogowaniu na swojego hosta w osobnym terminalu użyłam komendy `git clone https://github.com/madler/zlib.git /var/lib/docker/volumes/wolumin_wejsciowy/_data` ![klonowanie repozytorium](screenshots/49). Metoda ta jest poprawna, jednak uznawana jest za niebezpieczną, ponieważ bezpośrednia edycja katalogu `var/lib/docker` może prowadzić do uszkodzenia danych, konfilktów z Dockerem - Docker nie wie o bezpośrednich zmianach w katalogu woluminów, problemów z bezpieczeństem.
+4.  Następnie sklonowałam repozytorium na wolumin wejściowy. Zrobiłam to poprzez klonowanie repozytorium aplikacji `zlib` z hosta bezpośrednio do woluminu. Po zalogowaniu na swojego hosta w osobnym terminalu użyłam komendy `git clone https://github.com/madler/zlib.git /var/lib/docker/volumes/wolumin_wejsciowy/_data` ![klonowanie repozytorium](screenshots/49.png). Metoda ta jest poprawna, jednak uznawana jest za niebezpieczną, ponieważ bezpośrednia edycja katalogu `var/lib/docker` może prowadzić do uszkodzenia danych, konfilktów z Dockerem - Docker nie wie o bezpośrednich zmianach w katalogu woluminów, problemów z bezpieczeństem.
 
-5.  W kontenerze bazowym przeszłam do katalogu `mnt`, a następnie do katalogu `wejsciowy`. Użyłam tam polecenia `ls` aby wyświetlić zawartość. Tym samym sprawdziłam czy repozytorium zostało poprawnie skopiowane ![zawartość katalogu wejsciowy](screenshots/50).
+5.  W kontenerze bazowym przeszłam do katalogu `mnt`, a następnie do katalogu `wejsciowy`. Użyłam tam polecenia `ls` aby wyświetlić zawartość. Tym samym sprawdziłam czy repozytorium zostało poprawnie skopiowane ![zawartość katalogu wejsciowy](screenshots/50.png).
 
-6.  W katalogu `wejsciowy` w kontenerze uruchomiłam proces kompilacji aplikacji `zlib`. Najpierw użyłam polecenia `./configure` ![configure](screenshots/51). Następnie użyłam polecenia `make` ![make](screenshots/52).
+6.  W katalogu `wejsciowy` w kontenerze uruchomiłam proces kompilacji aplikacji `zlib`. Najpierw użyłam polecenia `./configure` ![configure](screenshots/51.png). Następnie użyłam polecenia `make` ![make](screenshots/52.png).
 
-7.  Skopiowałam skompilowane pliki `libz.a` oraz `zlib.h` na wolumin wyjściowy za pomocą poleceń: `cp libz.a /mnt/wyjsciowy/` oraz `cp zlib.h /mnt/wyjsciowy/` ![kopiowanie skompilowanych plików](screenshots/53).
+7.  Skopiowałam skompilowane pliki `libz.a` oraz `zlib.h` na wolumin wyjściowy za pomocą poleceń: `cp libz.a /mnt/wyjsciowy/` oraz `cp zlib.h /mnt/wyjsciowy/` ![kopiowanie skompilowanych plików](screenshots/53.png).
 
-8.  Sprawdziłam zawartość `wyjsciowy` poprzez użycie w nim polecenia `ls`, aby sprawdzić czy pliki zostały poprawnie skopiowane ![wyjsciowy](screenshots/54).
+8.  Sprawdziłam zawartość `wyjsciowy` poprzez użycie w nim polecenia `ls`, aby sprawdzić czy pliki zostały poprawnie skopiowane ![wyjsciowy](screenshots/54.png).
 
-9.  W kolejnym kroku doinstalowałam do kontenera gita używając `apt-get update && apt-get install -y git` ![instalacja git](screenshots/55).
+9.  W kolejnym kroku doinstalowałam do kontenera gita używając `apt-get update && apt-get install -y git` ![instalacja git](screenshots/55.png).
 
-10. Skolonowałam repoytorium `zlib` do woluminu wewnątrz kontenera za pomocą komendy `git clone https://github.com/madler/zlib.git /mnt/wejsciowy/zlib_rep` ![klonowanie wewnątrz kontenera](screenshots/56).
+10. Skolonowałam repoytorium `zlib` do woluminu wewnątrz kontenera za pomocą komendy `git clone https://github.com/madler/zlib.git /mnt/wejsciowy/zlib_rep` ![klonowanie wewnątrz kontenera](screenshots/56.png).
 
-11. Sprawdziłam, używjąc `ls`, zawartość katalogu `zlib_repo`, gdzie sklonowane zostało repozytorium ![zlib_repo](screenshots/57).
+11. Sprawdziłam, używjąc `ls`, zawartość katalogu `zlib_repo`, gdzie sklonowane zostało repozytorium ![zlib_repo](screenshots/57.png).
 
-12. Tak jak poprzednio, uruchomiłam proces kompilacji poprzez `./configure` oraz `make` ![configure](screenshots/58) ![make](screenshots/59).
+12. Tak jak poprzednio, uruchomiłam proces kompilacji poprzez `./configure` oraz `make` ![configure](screenshots/58.png) ![make](screenshots/59.png).
 
-13. Utworzyłam w katalogu `wyjściowy` katalog `zlib_build`- `mkdir zlib_build`, w celu skopiowania tam wyników kompilacji z woluminu wejściowego ![tworzenie katalogu zlib_build](screenshots/60).
+13. Utworzyłam w katalogu `wyjściowy` katalog `zlib_build`- `mkdir zlib_build`, w celu skopiowania tam wyników kompilacji z woluminu wejściowego ![tworzenie katalogu zlib_build](screenshots/60.png).
 
-14. Następnie skopiowałam tam pliki `libz.a` oraz `zlib.h`poleceniami `cp libz.a /mnt/wyjsciowy/zlib_build/` oraz `cp zlib.h /mnt/wyjsciowy/zlib_build/` ![exit](screenshots/61).
+14. Następnie skopiowałam tam pliki `libz.a` oraz `zlib.h`poleceniami `cp libz.a /mnt/wyjsciowy/zlib_build/` oraz `cp zlib.h /mnt/wyjsciowy/zlib_build/` ![exit](screenshots/61.png).
 
-15. Sprawdziłam zawartość katalogu `zlib_build` poprzez wykonanie w nim `ls` ![zlib_build](screenshots/62).
+15. Sprawdziłam zawartość katalogu `zlib_build` poprzez wykonanie w nim `ls` ![zlib_build](screenshots/62.png).
 
-16. Pobrałam obraz iPerf za pomocą komendy `docker pull networkstatic/iperf3` ![iperf](screenshots/63).
+16. Pobrałam obraz iPerf za pomocą komendy `docker pull networkstatic/iperf3` ![iperf](screenshots/63.png).
 
-17. Uruchomiłam kontener, który pełnił rolę serwera za pomocą `docker run --rm --name iperf-server -p 5201:5201 networkstatic/iperf3 -s`. Uruchamiało to serwer iPerf3 na porcie 5201 ![serwer](screenshots/64).
+17. Uruchomiłam kontener, który pełnił rolę serwera za pomocą `docker run --rm --name iperf-server -p 5201:5201 networkstatic/iperf3 -s`. Uruchamiało to serwer iPerf3 na porcie 5201 ![serwer](screenshots/64.png).
 
-18. Następnie uruchomiłam drugi kontener, który łączył się z serwerm. Uruchomienie odbywało się poprzez komendę `docker run --rm --name iperf-client networkstatic/iperf3 -c 172.17.0.1` ![client](screenshots/65).
+18. Następnie uruchomiłam drugi kontener, który łączył się z serwerm. Uruchomienie odbywało się poprzez komendę `docker run --rm --name iperf-client networkstatic/iperf3 -c 172.17.0.1` ![client](screenshots/65.png).
 
-19. Po uruchomieniu kontera-klienta, w kontenerze z serwerem pojawił się wydruk: ![serwer wydruk](screenshots/66).
+19. Po uruchomieniu kontera-klienta, w kontenerze z serwerem pojawił się wydruk: ![serwer wydruk](screenshots/66.png).
 
-20. Poleceniem `docker network create my-bridge-network` utworzyłam własną sieć mostkową ![tworzenie sieci](screenshots/67).
+20. Poleceniem `docker network create my-bridge-network` utworzyłam własną sieć mostkową ![tworzenie sieci](screenshots/67.png).
 
-21. Uruchomiłam serwer na nowej sieci poprzez `docker run --rm --name iperf-server --network my-bridge-network -p 5201:5201 networkstatic/iperf3 -s` ![serwer na sieci](screenshots/68).
+21. Uruchomiłam serwer na nowej sieci poprzez `docker run --rm --name iperf-server --network my-bridge-network -p 5201:5201 networkstatic/iperf3 -s` ![serwer na sieci](screenshots/68.png).
 
-22. Uruchomiłam również klienta na nowej sieci, używając nazwy kontenera serwera zamiast adresu IP `docker run --name iperf-client --network my-bridge-network networkstatic/iperf3 -c iperf-server` ![klient na sieci](screenshots/69).
+22. Uruchomiłam również klienta na nowej sieci, używając nazwy kontenera serwera zamiast adresu IP `docker run --name iperf-client --network my-bridge-network networkstatic/iperf3 -c iperf-server` ![klient na sieci](screenshots/69.png).
 
-23. Po wykonaniu kroku wyżej w kontenerze z serwerem pojawił się wydruk: ![serwer wydruk własna sieć](screenshots/70).
+23. Po wykonaniu kroku wyżej w kontenerze z serwerem pojawił się wydruk: ![serwer wydruk własna sieć](screenshots/70.png).
 
-24. Używając iPerf3 zainstalowanego na hoście wykonałam test przepustowości za pomocą komendy `iperf3 -c 127.0.0.1` ![test host](screenshots/71).
+24. Używając iPerf3 zainstalowanego na hoście wykonałam test przepustowości za pomocą komendy `iperf3 -c 127.0.0.1` ![test host](screenshots/71.png).
 
-25. Wydruk kontenera z serwerem po wykonaniu testu na hoście: ![serwer po teście na hoście](screenshots/72).
+25. Wydruk kontenera z serwerem po wykonaniu testu na hoście: ![serwer po teście na hoście](screenshots/72.png).
 
-26. Następnie przeprowadziłam test spoza hosta, z innego urządzenia w tej samej sieci. Po zainstalowaniu `iPerf` na urządzenie użyłam komendy `.\iperf3.exe -c 192.168.8.51` ![test spoza hosta](screenshots/73).
+26. Następnie przeprowadziłam test spoza hosta, z innego urządzenia w tej samej sieci. Po zainstalowaniu `iPerf` na urządzenie użyłam komendy `.\iperf3.exe -c 192.168.8.51` ![test spoza hosta](screenshots/73.png).
 
-27. Powyższy krok dał wynik kontenera z serwerem: ![serwer po teście spoza hosta](screenshots/74).
+27. Powyższy krok dał wynik kontenera z serwerem: ![serwer po teście spoza hosta](screenshots/74.png).
 
-28. Wyciągnełąm logi z kontenerów i zapisałam je w plikach `server.log` oraz `client.log` za pomocą polecenia `docker logs iperf-server > server.log` oraz `docker logs iperf-client > client.log` ![logi](screenshots/75).
+28. Wyciągnełąm logi z kontenerów i zapisałam je w plikach `server.log` oraz `client.log` za pomocą polecenia `docker logs iperf-server > server.log` oraz `docker logs iperf-client > client.log` ![logi](screenshots/75.png).
 
-29. Zainstalowałam `Jenkins` w kontenerze używając `docker pull jenkins/jenkins:lts` ![Jenkins](screenshots/76).
+29. Zainstalowałam `Jenkins` w kontenerze używając `docker pull jenkins/jenkins:lts` ![Jenkins](screenshots/76.png).
 
-30. Uruchomiłam instancję Jenkinsa w kontenerze z pomocą DIND poprzez polecenie `docker run --rm -d --name jenkins --network host --privileged \   -p 8080:8080 -p 50000:50000 \   -v jenkins_home:/var/jenkins_home \   -v /var/run/docker.sock:/var/run/docker.sock \   jenkins/jenkins:lts`. Sprawdziłam czy kontener działa poprawnie za pomocą polecenia `docker ps` ![kontener Jenkins](screenshots/77).
+30. Uruchomiłam instancję Jenkinsa w kontenerze z pomocą DIND poprzez polecenie `docker run --rm -d --name jenkins --network host --privileged \   -p 8080:8080 -p 50000:50000 \   -v jenkins_home:/var/jenkins_home \   -v /var/run/docker.sock:/var/run/docker.sock \   jenkins/jenkins:lts`. Sprawdziłam czy kontener działa poprawnie za pomocą polecenia `docker ps` ![kontener Jenkins](screenshots/77.png).
 
-31. W przeglądarce wpisałam `http://192.168.8.51:8080/`, po czym ukazał się ekran logowania Jenkinsa ![logowanie Jenkins](screenshots/78).
+31. W przeglądarce wpisałam `http://192.168.8.51:8080/`, po czym ukazał się ekran logowania Jenkinsa ![logowanie Jenkins](screenshots/78.png).
 
-32. Uzyskałam hasło administratora poprzez polecenie `docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword` ![uzyskanie hasla](screenshots/79).
+32. Uzyskałam hasło administratora poprzez polecenie `docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword` ![uzyskanie hasla](screenshots/79.png).
