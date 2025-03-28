@@ -289,18 +289,18 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
 
      A następnie podobnym jak poprzednio poleceniem tworzymy kontener, jednak tym razem podajemy nazwę sieci:
 
-          ![Tworzenie servera w kontenerze, pracującego w stworzonej sieci](Images4/server_own_network.png "Tworzenie servera w kontenerze, pracującego w stworzonej sieci")     
+     ![Tworzenie servera w kontenerze, pracującego w stworzonej sieci](Images4/server_own_network.png "Tworzenie servera w kontenerze, pracującego w stworzonej sieci")     
 
 * Połącz się spoza kontenera (z hosta i spoza hosta)
 
      Tym razem nie musimy podawać adresu ip do którego chcemy się połączyć ponieważ użycie własnej sieci umożliwia połączenie się na podstawie samej nazwy kontenera
 
-          ![Stworzenie kontenera klienta, z połączeniem przy użyciu nazwy](Images4/client_conn_by_name.png "Stworzenie kontenera klienta, z połączeniem przy użyciu nazwy")     
+     ![Stworzenie kontenera klienta, z połączeniem przy użyciu nazwy](Images4/client_conn_by_name.png "Stworzenie kontenera klienta, z połączeniem przy użyciu nazwy")     
 
      Aby połączyć musimy uruchomić serwer jeszcze raz, podając przekierowany port tak jak, w pierwszym przypadku.
      Z hosta następnie możemy połączyć się w następujący sposób (oczywiście uprzednio musimy zainstalować iperf3 także na hoście) :
 
-          ![Połączenie z serwerem z hosta](Images4/client_conn_from_host.png "Połączenie z serwerem z hosta")     
+     ![Połączenie z serwerem z hosta](Images4/client_conn_from_host.png "Połączenie z serwerem z hosta")     
 
 * Przedstaw przepustowość komunikacji lub problem z jej zmierzeniem (wyciągnij log z kontenera, woluminy mogą pomóc)
 
@@ -314,20 +314,20 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
 
      Zgodnie z dokumentacją najpierw należy uruchomić kontener DIND:
 
-          ![Uruchomienie kontenera DIND](Images4/dind.png "Uruchomienie kontenera DIND")     
+     ![Uruchomienie kontenera DIND](Images4/dind.png "Uruchomienie kontenera DIND")     
 
      Następnie należy zbudować obraz jenkinsa przy użyciu Dockerfila podanego w dokumentacji:
 
-          ![Budowanie obrazu jenkins](Images4/jenkins_build.png "Budowanie obrazu jenkins")     
+     ![Budowanie obrazu jenkins](Images4/jenkins_build.png "Budowanie obrazu jenkins")     
 
 * Zainicjalizuj instację, wykaż działające kontenery, pokaż ekran logowania
 
      Następnie zostało już tylko stworzenie kontenera:
 
-          ![Tworzenie kontenera jenkins](Images4/jenkins_cont.png "Tworzenie kontenera jenkins")     
+     ![Tworzenie kontenera jenkins](Images4/jenkins_cont.png "Tworzenie kontenera jenkins")     
 
      Następnie pozostaje już tylko przekierowanie portu 8080 z maszyny wirtualnej do komputera hosta,
      można to zrobić za pomocą polecenia: ssh -L 8080:localhost:8080 root@127.0.0.1
 
-          ![Ekran logowania do jenkinsa w przeglądarce](Images4/jenkins_login.png "Nareszcie ekran logowania Jenkins :heart:")
+     ![Ekran logowania do jenkinsa w przeglądarce](Images4/jenkins_login.png "Nareszcie ekran logowania Jenkins :heart:")
 
