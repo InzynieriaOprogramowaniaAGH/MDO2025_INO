@@ -164,48 +164,42 @@ CMD ["/bin/bash"]
 ```
 ![17](https://github.com/user-attachments/assets/39287d0a-0cd2-48c6-860f-ced6457b4ef3)
 
-### 2. Budowanie i uruchamianie obrazu
+uruchamianie obrazu
 ```sh
 docker build -t obraz .
 docker run -it obraz
 ```
 ![18](https://github.com/user-attachments/assets/c3e9de51-f06e-4b51-8168-bf146b0d01bf)
 
-![19](https://github.com/user-attachments/assets/890520df-2eb4-4af0-a5c5-3f43a9a7d903)
-
 Sprawdzam, czy repozytorium zostało pobrane:
 ```sh
 ls /app
 ```
+![19](https://github.com/user-attachments/assets/2288243b-3207-41cd-a509-97f3cca8a097)
 
 ---
 
-## Zarządzanie kontenerami i obrazami
+### 7) Zarządzanie kontenerami i obrazami
 
-### 1. Lista uruchomionych i wszystkich kontenerów
+Lista uruchomionych i wszystkich kontenerów
 ```sh
 docker ps -a
 ```
+![20](https://github.com/user-attachments/assets/c307540b-e82a-4857-bf59-1cb97ebe329b)
 
-### 2. Usuwanie kontenerów
+Usuwanie kontenerów
 ```sh
 docker rm $(docker ps -aq)
 ```
+![21](https://github.com/user-attachments/assets/15444acb-0ac6-4536-a052-fa4a3e6a9f95)
 
-### 3. Czyszczenie obrazów
+Czyszczenie obrazów
 ```sh
 docker rmi moj_obraz busybox ubuntu fedora mysql hello-world
 ```
+![image](https://github.com/user-attachments/assets/cf8a41c8-4b71-4c5c-a98c-4e3b4b4dace1)
 
----
 
-## Dodanie plików do repozytorium
-
-Plik `Dockerfile` dodaję do folderu `Sprawozdanie1` i commituję:
-```sh
-git add Sprawozdanie1/Dockerfile
-git commit -m "Dodano Dockerfile do Sprawozdanie1"
-git push
 
 
 
