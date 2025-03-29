@@ -8,6 +8,7 @@
 3. - [Laboratorium 3 -Dockerfiles, kontener jako definicja etapu](#laboratorium-2---git-docker)
 4. - [Laboratorium 4 -Dodatkowa terminologia w konteneryzacji, instancja Jenkins](#laboratorium-2---git-docker)
 
+---
 ## Laboratorium 2 - Git, Docker
 
 Laboratoria dotyczyły zagadnień konteneryzacji przy użyciu Dockera, obejmujących pobieranie i budowanie obrazów, tworzenie plików Dockerfile oraz uruchamiania kontenerów. 
@@ -60,4 +61,5 @@ Uruchomiono kontener w trybie interaktywnym poleceniem `sudo docker run -it fedo
 
 *Rys. 8 uruchomienie kontenera w trybie interaktywnym*
 
+---
 ## Laboratorium 3 - Dockerfiles, kontener jako definicja etapu
