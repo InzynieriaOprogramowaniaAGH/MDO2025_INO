@@ -21,18 +21,18 @@ git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
    - Sklonuj repozytorium z wykorzystaniem protokołu SSH
 
 Generowanie pary kluczy (prywatnego i publicznego):
-![Ssh klucze](../Sprawozdanie/Screenshots/shhkey.png)
+![Ssh klucze](..Sprawozdanie1Screenshots/shhkey.png)
 
 Klonowanie repozytorium przez ssh:
-![Ssh klonowanie](../Sprawozdanie/Screenshots/sshclone.png)
+![Ssh klonowanie](..Sprawozdanie1Screenshots/sshclone.png)
 
 4. Przełącz się na gałąź `main`, a potem na gałąź swojej grupy (pilnuj gałęzi i katalogu!)
 
-![Main](../Sprawozdanie/Screenshots/mainb.png)
+![Main](..Sprawozdanie1Screenshots/mainb.png)
 
 5. Utwórz gałąź o nazwie "inicjały & nr indeksu" np. `KD232144`. Miej na uwadze, że odgałęziasz się od brancha grupy!
 
-![Własny branch](../Sprawozdanie/Screenshots/wlasnyb.png)
+![Własny branch](..Sprawozdanie1Screenshots/wlasnyb.png)
 
 6. Rozpocznij pracę na nowej gałęzi
    - W katalogu właściwym dla grupy utwórz nowy katalog, także o nazwie "inicjały & nr indeksu" np. `KD232144`
@@ -65,13 +65,13 @@ exit 0
 ```
 
 Git hook w odpowiednim folderze
-![Git hook](../Sprawozdanie/Screenshots/hook.png)
+![Git hook](..Sprawozdanie1Screenshots/hook.png)
 
 Pokazanie git hooka w folderze ML416047 oraz pokazanie że działa
-![Test hooka](../Sprawozdanie/Screenshots/testhooka.png)
+![Test hooka](..Sprawozdanie1Screenshots/testhooka.png)
 
 Próba wciągnięcia swojej gałęzi do gałęzi grupowej:
-![Galaz grupowa](../Sprawozdanie/Screenshots/grupowa.png)
+![Galaz grupowa](..Sprawozdanie1Screenshots/grupowa.png)
 
 ---
 
@@ -90,7 +90,7 @@ sudo dnf install docker
 2. Zarejestruj się w [Docker Hub](https://hub.docker.com/) i zapoznaj z sugerowanymi obrazami
 
 Screen z zalogowanego konta na stronie hub.docker.com
-![Rejestracja](../Sprawozdanie/Screenshots/rejestracja.png)
+![Rejestracja](..Sprawozdanie1Screenshots/rejestracja.png)
 
 3. Pobierz obrazy `hello-world`, `busybox`, `ubuntu` lub `fedora`, `mysql`
 
@@ -109,7 +109,7 @@ sudo docker pull mysql
 sudo docker run -it busybox
 ```
 
-![Busybox](../Sprawozdanie/Screenshots/busybox.png)
+![Busybox](..Sprawozdanie1Screenshots/busybox.png)
 
 5. Uruchom "system w kontenerze" (czyli kontener z obrazu `fedora` lub `ubuntu`)
    - Zaprezentuj `PID1` w kontenerze i procesy dockera na hoście
@@ -120,9 +120,9 @@ sudo docker run -it busybox
 sudo docker run -it ubuntu
 ```
 
-![PID 1 w kontenerze](../Sprawozdanie/Screenshots/pid1.png)
+![PID 1 w kontenerze](..Sprawozdanie1Screenshots/pid1.png)
 
-![Update pakietow w kontenerze](../Sprawozdanie/Screenshots/updatepakietow.png)
+![Update pakietow w kontenerze](..Sprawozdanie1Screenshots/updatepakietow.png)
 
 Wyjście poprzez komendę:
 
@@ -152,8 +152,8 @@ sudo docker build -t mydocker .
 sudo docker run -it mydocker sh
 ```
 
-![Budowanie mydocker](../Sprawozdanie/Screenshots/budowaniemydocker.png)
-![Pokazanie repozytorium](../Sprawozdanie/Screenshots/wlasnerepo.png)
+![Budowanie mydocker](..Sprawozdanie1Screenshots/budowaniemydocker.png)
+![Pokazanie repozytorium](..Sprawozdanie1Screenshots/wlasnerepo.png)
 
 7. Pokaż uruchomione ( != "działające" ) kontenery, wyczyść je.
 
@@ -163,7 +163,7 @@ Kontenery przed czyszczeniem:
 sudo docker ps -a
 ```
 
-![Pokazanie kontenerow](../Sprawozdanie/Screenshots/przedczystka.png)
+![Pokazanie kontenerow](..Sprawozdanie1Screenshots/przedczystka.png)
 
 Usuwanie kontenerów:
 
@@ -171,10 +171,10 @@ Usuwanie kontenerów:
 sudo docker container prune
 ```
 
-![Usuwanie kontenerow](../Sprawozdanie/Screenshots/czystka.png)
+![Usuwanie kontenerow](..Sprawozdanie1Screenshots/czystka.png)
 
 Kontenery po czyszczeniu:
-![Kontenery po czyszczeniu](../Sprawozdanie/Screenshots/poczystce.png)
+![Kontenery po czyszczeniu](..Sprawozdanie1Screenshots/poczystce.png)
 
 8. Wyczyść obrazy
 
@@ -184,12 +184,12 @@ Czyszczenie obrazów za pomocą polecenia:
 sudo docker rmi -f $(sudo docker images -aq)
 ```
 
-![Czyszczenie obrazów za pomocą polecenia:](../Sprawozdanie/Screenshots/czobr.png)
+![Czyszczenie obrazów za pomocą polecenia:](..Sprawozdanie1Screenshots/czobr.png)
 
 9. Dodaj stworzone pliki `Dockefile` do folderu swojego `Sprawozdanie1` w repozytorium.
 
 Dockerfile w folderze Sprawozdanie:
-![Dockerfile w folderze Sprawozdanie](../Sprawozdanie/Screenshots/dfwspr.png)
+![Dockerfile w folderze Sprawozdanie](..Sprawozdanie1Screenshots/dfwspr.png)
 
 ---
 
@@ -208,7 +208,7 @@ Dockerfile w folderze Sprawozdanie:
 
 Repozytorium, które wybrałem to [Simple Dynamic Strings - sds](https://github.com/antirez/sds.git), zawiera ono własne pliki make, które pozwalają na testowanie oprogramowania we własnym środowisku.
 Przeprowadzone testy:
-![Testy na kontenerze](../Sprawozdanie/Screenshots/testywkontenerze.png)
+![Testy na kontenerze](..Sprawozdanie1Screenshots/testywkontenerze.png)
 
 ### Przeprowadzenie buildu w kontenerze
 
@@ -223,26 +223,26 @@ Ponów ww. proces w kontenerze, interaktywnie.
    - uruchom testy
 
 Klonowanie repozytorium i wykreowanie wymaganych plików przy pomocy polecenia `make`:
-![Klonowanie wewnatrz kontenera](../Sprawozdanie/Screenshots/klonowaniewewnatrzkontenera.png)
+![Klonowanie wewnatrz kontenera](..Sprawozdanie1Screenshots/klonowaniewewnatrzkontenera.png)
 
 Uruchomienie testów:
-![Testy2](../Sprawozdanie/Screenshots/testy2.png)
+![Testy2](..Sprawozdanie1Screenshots/testy2.png)
 
 2. Stwórz dwa pliki `Dockerfile` automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:
    - Kontener pierwszy ma przeprowadzać wszystkie kroki aż do _builda_
    - Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić _builda_!)
 
 Zawartość dwóch plików Dockerfile:
-![Dockerfile x2](../Sprawozdanie/Screenshots/2dockfile.png)
+![Dockerfile x2](..Sprawozdanie1Screenshots/2dockfile.png)
 
 Drugi plik `Dockerfile.test`, bazuje na obrazie zbudowanym z pierwszego pliku, w tym celu pierwsza linijka tego pliku odnosi się do nazwy obrazu `FROM makapaka-sds`.
 
 3. Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?
 
 Działający kontener o nazwie `makapaka-sds` wykonuje testy na nowozbudowanym obrazie `makapaka-sds` powstałym na bazie pliku `Dockerfile.test`
-![Budowanie obrazu makapaka-sds](../Sprawozdanie/Screenshots/makapaka-build.png)
+![Budowanie obrazu makapaka-sds](..Sprawozdanie1Screenshots/makapaka-build.png)
 
-![Kontener wykonuje testy](../Sprawozdanie/Screenshots/makapaka-sds-testy.png)
+![Kontener wykonuje testy](..Sprawozdanie1Screenshots/makapaka-sds-testy.png)
 
 Pozorna kolizja nazw tak naprawdę nie występuje, ponieważ docker "usuwa" starego taga/nazwę i nadaje nowemu obrazowi. Stary obraz nadal istnieje, ale nie posiada własnego taga/nazwy i można go wywołać po unikalnym ID.
 
@@ -290,10 +290,10 @@ sudo docker volume create Wejsciowy
 sudo docker volume create Wyjsciowy
 ```
 
-![Tworzenie woluminów:](../Sprawozdanie/Screenshots/woluminy.png)
+![Tworzenie woluminów:](..Sprawozdanie1Screenshots/woluminy.png)
 
 Podłączanie woluminu wejściowego do kontenera zbudowanego na obrazie `Dockerfile.lab4`:
-![Laczenie wol:](../Sprawozdanie/Screenshots/wolkont.png)
+![Laczenie wol:](..Sprawozdanie1Screenshots/wolkont.png)
 
 ```bash
 sudo docker build -t wolumin -f Dockerfile.lab4 .
@@ -308,7 +308,7 @@ RUN mkdir -p /entry /output
 ```
 
 Klonowanie plików na wolumin wejściowy:
-![Pliki na wol wej:](../Sprawozdanie/Screenshots/wejscie.png)
+![Pliki na wol wej:](..Sprawozdanie1Screenshots/wejscie.png)
 
 ```bash
 sudo docker build -t nogitches -f Dockerfile.lab4 .
@@ -316,13 +316,13 @@ sudo docker run -it --rm -v Wejsciowy:/entry -v Wyjsciowy:/output --name nogitus
 ```
 
 Budowanie plików w kontenerze:
-![Budowa:](../Sprawozdanie/Screenshots/makewkont.png)
+![Budowa:](..Sprawozdanie1Screenshots/makewkont.png)
 
 Zbudowane pliki na woluminie wyjściowym:
-![Pliki na wol wyj:](../Sprawozdanie/Screenshots/wyjscie.png)
+![Pliki na wol wyj:](..Sprawozdanie1Screenshots/wyjscie.png)
 
 Klonowanie plików na wolumin wejściowy wewnątrz kontenera:
-![Klonowanie wewnatrz kont:](../Sprawozdanie/Screenshots/gitclonekont.png)
+![Klonowanie wewnatrz kont:](..Sprawozdanie1Screenshots/gitclonekont.png)
 
 ### Eksponowanie portu
 
@@ -341,7 +341,7 @@ Instalowanie iperf3
 sudo docker pull networkstatic/iperf3
 ```
 
-![instalowanie iperf3](../Sprawozdanie/Screenshots/iperfin.png)
+![instalowanie iperf3](..Sprawozdanie1Screenshots/iperfin.png)
 
 Uruchomienie serwera iperf w kontenerze, zapisanie jego adresu IP do zmiennej `$adresip` a następnie połączenie się z drugiego kontenera przy użyciu tej zmiennej:
 
@@ -351,8 +351,8 @@ adresip=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress
 sudo docker run -it --rm networkstatic/iperf3 -c $adresip
 ```
 
-![Stawianie serwera](../Sprawozdanie/Screenshots/stawianieserwer.png)
-![Polaczenie klienta](../Sprawozdanie/Screenshots/laczenieklient.png)
+![Stawianie serwera](..Sprawozdanie1Screenshots/stawianieserwer.png)
+![Polaczenie klienta](..Sprawozdanie1Screenshots/laczenieklient.png)
 
 Stworzenie własnej sieci mostkowej:
 
@@ -360,7 +360,7 @@ Stworzenie własnej sieci mostkowej:
 sudo docker network create --driver bridge iperf-net
 ```
 
-![Stawianie sieci](../Sprawozdanie/Screenshots/network.png)
+![Stawianie sieci](..Sprawozdanie1Screenshots/network.png)
 
 Połączenie się klienta z serwerem:
 
@@ -370,7 +370,7 @@ sudo docker run -it --rm --name trueklient --network iperf-net klient iperf3 -c 
 
 ```
 
-![Polaczenie klienta z serwerem](../Sprawozdanie/Screenshots/consiec.png)
+![Polaczenie klienta z serwerem](..Sprawozdanie1Screenshots/consiec.png)
 
 Stworzenie woluminów, na których będą przechowywane logi:
 
@@ -380,7 +380,7 @@ sudo docker volume create klient-vol
 ```
 
 Lista istniejących woluminów:
-![Woluminy](../Sprawozdanie/Screenshots/volser.png)
+![Woluminy](..Sprawozdanie1Screenshots/volser.png)
 
 Połączenie między serwerem a klientem z wykorzystaniem logów:
 
@@ -389,7 +389,7 @@ sudo docker run -d   --name serwer   --network iperf-net   -v serwer-vol:/logs  
 sudo docker run -it   --name trueklient   --network iperf-net   -v klient-vol:/logs   klient   sh -c "iperf3 -c serwer > /logs/trueklient.log 2>&1"
 ```
 
-![Klonowanie wewnatrz kont:](../Sprawozdanie/Screenshots/serwerklient.png)
+![Klonowanie wewnatrz kont:](..Sprawozdanie1Screenshots/serwerklient.png)
 
 ### Instancja Jenkins
 
@@ -404,10 +404,10 @@ sudo docker run --name jenkins   --rm --detach   --network jenkins-net   --env D
 ```
 
 Działające kontenery: serwer, klient oraz jenkins
-![Dzialajace kontenery](../Sprawozdanie/Screenshots/status.png)
+![Dzialajace kontenery](..Sprawozdanie1Screenshots/status.png)
 
 Ekran logowania:
-![Logowanie Jenkins](../Sprawozdanie/Screenshots/logpage.png)
+![Logowanie Jenkins](..Sprawozdanie1Screenshots/logpage.png)
 
 ## Zakres rozszerzony
 
