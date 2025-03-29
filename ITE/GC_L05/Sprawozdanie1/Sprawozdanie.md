@@ -6,7 +6,7 @@
 
 Laboratoria dotyczyły zagadnień konteneryzacji przy użyciu Docker, obejmujących pobieranie i budowanie obrazów, tworzenie plików Dockerfile oraz uruchamiania kontenerów. 
 
---
+---
 
 W systemie Fedora zaktualizowano system i zainstalowano Docker.  Następnie pobrano obrazy hello-world, busybox, fedora oraz mysql za pomocą polecenia `docker pull`. 
 
