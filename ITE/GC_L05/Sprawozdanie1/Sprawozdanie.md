@@ -6,6 +6,7 @@
 1. - [Laboratorium 1 - Wprowadzenie, Git, Gałęzie, SSH](#laboratorium-2---git-docker)
 2. - [Laboratorium 2 - Git, Docker](#laboratorium-2---git-docker)
 3. - [Laboratorium 3 -Dockerfiles, kontener jako definicja etapu](#laboratorium-2---git-docker)
+4. - [Laboratorium 4 -Dodatkowa terminologia w konteneryzacji, instancja Jenkins](#laboratorium-2---git-docker)
 
 ## Laboratorium 2 - Git, Docker
 
