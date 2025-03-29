@@ -1,0 +1,114 @@
+    1  ls
+    2  cd
+    3  ls
+    4  cd MDO2025_INO/
+    5  ls
+    6  cd READMEs/
+    7  ls
+    8  code 001-Assignment.md 
+    9  code 001-Class.md 
+   10  git --version
+   11  git remote -v
+   12  git remote set-url origin git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   13  git fetch
+   14  git remote -v
+   15  git fetch
+   16  git checkout main
+   17  git pull
+   18  git branch
+   19  git checkout GCL06
+   20  git checkout SP414848
+   21  git checkout -b SP414848
+   22  git branch
+   23  cd ..
+   24  ls
+   25  cd ITE
+   26  ls
+   27  cd GCL06/
+   28  ls
+   29  mkdir SP414848
+   30  ls
+   31  cd SP414848/
+   32  code verify-commit-msg.sh
+   33  ls
+   34  cd MDO2025_INO/
+   35  cd ITE/
+   36  cd GCL06/
+   37  cd SP414848/
+   38  code verify-commit-msg.sh 
+   39  code ../../../READMEs/001-Class.md
+   40  ls -a
+   41  ls -la
+   42  chmod +x verify-commit-msg.sh 
+   43  ls -la
+   44  cp verify-commit-msg.sh ../../../.git/hooks/
+   45  ls
+   46  cd ../../../.git/hooks
+   47  ls -la
+   48  ls
+   49  cd ../../ITE/GCL06/SP414848/
+   50  code sprawozdanie1.md
+   51  git config --global user.email "szpolak@student.agh.edu.pl"
+   52  git config --global user.name "user123user321"
+   53  git reset --soft HEAD~1
+   54  code ../../../.git/hooks/verify-commit-msg.sh 
+   55  git reset --soft HEAD~1
+   56  ls ../../../.git/hooks/
+   57  czt ../../../.git/hooks/commit-msg.sample 
+   58  cat ../../../.git/hooks/commit-msg.sample 
+   59  sudo apt-get update
+   60  ls
+   61  code MDO2025_INO/READMEs/001-Class.md 
+   62  cd MDO2025_INO/ITE/GCL06/SP414848/
+   63  rm verify-commit-msg.sh 
+   64  git add .
+   65  git commit -m "SP414848 deleted usless file"
+   66  code ../../../READMEs
+   67  code ../../../READMEs/002-Class.md 
+   68  ls
+   69  docker pull hello-world
+   70  sudo docker pull hello-world
+   71  ls
+   72  docker pull hello-world
+   73  groups
+   74  sudo docker pull hellow-world
+   75  docker run -d mysql:latest
+   76  docker run -d mysql
+   77  docker run -d -e MYSQL_ROOT_PASSWORD=root mysql
+   78  docker run -d hello-world
+   79  docker run -d hello-worldxxxx
+   80  docker run hello-world
+   81  docker ps
+   82  docker ps -a
+   83  dokcer rm 44c 5b6 bec 967 802
+   84  docker rm 44c 5b6 bec 967 802
+   85  docker rmi busybox hello-world mysql obraz ubuntu
+   86  ls
+   87  git clone https://github.com/sqlite/sqlite
+   88  ls
+   89  cd sqlite/
+   90  ./configure
+   91  make
+   92  make test
+   93  cd ..
+   94  cd MDO2025_INO/ITE/GCL06/SP414848/
+   95  ls
+   96  code Dockerfile 
+   97  cd ..
+   98  cd SP414848/
+   99  code ../../../READMEs/002-Class.md 
+  100  ls
+  101  git fetch
+  102  ls
+  103  mkdir spr1
+  104  mv Dockerfile ./spr1
+  105  ls
+  106  cd spr1/
+  107  ls
+  108  cd ..
+  109  mv 'screeny sprawko.docx' ./spr1
+  110  mv sprawozdanie1.md ./spr1
+  111  ls
+  112  cd spr1/
+  113  history
+  114  history >> history.txt
