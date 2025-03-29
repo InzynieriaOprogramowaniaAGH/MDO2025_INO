@@ -3,7 +3,7 @@
 ---
 # Spis Treści
 
-1. [Lab1](#Laboratorium 1)
+1. - [Laboratorium 1 - Git, Docker](#laboratorium-2---git-docker)
 2. - [Laboratorium 2 - Git, Docker](#laboratorium-2---git-docker)
 
 ## Laboratorium 2 - Git, Docker
