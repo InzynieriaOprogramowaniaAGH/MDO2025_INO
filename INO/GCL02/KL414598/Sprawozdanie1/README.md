@@ -251,15 +251,22 @@ Budowanie i uruchamianie kontenerów:
 
 Zadanie polegało na wykorzystaniu woluminów Docker do zarządzania kodem źródłowym i wynikami kompilacji. Zgodnie z instrukcją, zapoznałem się z dokumentacją Docker dotyczącą woluminów i bind mount, a następnie wykonałem szereg operacji wykorzystujących te mechanizmy.
 
+
 Utworzyłem dwa woluminy: wejściowy (dla kodu źródłowego) i wyjściowy (dla skompilowanych plików):
 
     docker volume create input-vol
     docker volume create output-vol
+    
 ![33](https://github.com/user-attachments/assets/ede8aec1-fb8f-4184-afbe-4c4b1cf6f043)
 
 Sprawdziłem, czy woluminy zostały utworzone:
 
 ## Wariant 1: Klonowanie repozytorium na wolumin wejściowy z zewnątrz kontenera
+
+Aby sklonować repozytorium na wolumin wejściowy, użyłem kontenera pomocniczego z zainstalowanym git:
+
+![34](https://github.com/user-attachments/assets/1b2ae6b1-362b-47cc-9433-e00d94fbf646)
+![35](https://github.com/user-attachments/assets/52ec5030-0ca0-4a3d-99b8-3866cfdb2c43)
 
 
 
