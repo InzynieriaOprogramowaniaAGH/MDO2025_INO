@@ -69,7 +69,7 @@ Należało też nadać mu uprawnienia do uruchamiania:
 
 * Umieść treść githooka w sprawozdaniu.  
 
-```
+```bash
 #!/usr/bin/bash
 commit_msg_file=$1
 #cat $commit_msg_file
@@ -189,7 +189,7 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
 
      Zawartość pliku Dockerfile.bld:
 
-     ```   
+     ```Dockerfile   
      FROM fedora
 
      RUN dnf -y install git meson gcc glib2-devel openssl-devel ncurses-devel perl-ExtUtils-Embed
@@ -207,7 +207,7 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
 
      Zawartość pliku Dockerfile.test:
 
-     ```   
+     ```Dockerfile
      FROM irssibld
      RUN ninja -C Build test
      ```   
