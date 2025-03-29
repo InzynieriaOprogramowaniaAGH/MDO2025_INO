@@ -130,7 +130,7 @@ Inżynieria Obliczeniowa
 
 2.  Zainstalowałam wymagane narzędzia - make oraz gcc - poleceniem `sudo dnf install gcc make -y`:
 
-    ![instalacja make gcc](screenshots/28.png).
+    ![instalacja make gcc](screenshots/28.png)
 
 3.  Skolonowałam repozytorium do katalogu `zlib`:
 
@@ -184,7 +184,7 @@ Inżynieria Obliczeniowa
 
 15. W kolejnym kroku zbudowałam drugi obraz:
 
-    ![budowanie obrazu 2](screenshots/42.png).
+    ![budowanie obrazu 2](screenshots/42.png)
 
 16. Uruchomiłam testy z obrazu testowego za pomocą `docker run --rm --name test-container zlib-test`:
 
@@ -194,7 +194,7 @@ Inżynieria Obliczeniowa
 
     ![obrazy](screenshots/44.png)
 
-    ![kontenery](screenshots/45.png).
+    ![kontenery](screenshots/45.png)
 
 ## Zajęcia 4
 
@@ -204,15 +204,15 @@ Inżynieria Obliczeniowa
 
     Wolumin wejściowy został stworzony by przechować dane, takie jak repozytorium aplikacji `zlib`, natomiast wolumin wyjściowy miał za zadanie przechować zbudowane pliki.
 
-2.  Uruchomiłam kontener bazowy `Ubuntu` oraz podłączyłam do niego woluminy komendą `docker run -it kontener_bazowy -v wolumin_wejsciowy:/mnt/wejsciowy -v wolumin_wyjsciowy:/mnt/wyjsciowy ubuntu:latest bash`
+2.  Uruchomiłam kontener bazowy `Ubuntu` oraz podłączyłam do niego woluminy komendą `docker run -it kontener_bazowy -v wolumin_wejsciowy:/mnt/wejsciowy -v wolumin_wyjsciowy:/mnt/wyjsciowy ubuntu:latest bash`.
 
     ![kontener bazowy](screenshots/47.png)
 
-3.  Wewnątrz kontenera zainstalowałam wymagane narzędzia poprzez `apt-get update` oraz `apt-get install -y build-essential curl wget`
+3.  Wewnątrz kontenera zainstalowałam wymagane narzędzia poprzez `apt-get update` oraz `apt-get install -y build-essential curl wget`.
 
     ![instalacja narzędzi](screenshots/48.png)
 
-4.  Następnie sklonowałam repozytorium na wolumin wejściowy. Zrobiłam to poprzez klonowanie repozytorium aplikacji `zlib` z hosta bezpośrednio do woluminu. Po zalogowaniu na swojego hosta w osobnym terminalu użyłam komendy `git clone https://github.com/madler/zlib.git /var/lib/docker/volumes/wolumin_wejsciowy/_data`
+4.  Następnie sklonowałam repozytorium na wolumin wejściowy. Zrobiłam to poprzez klonowanie repozytorium aplikacji `zlib` z hosta bezpośrednio do woluminu. Po zalogowaniu na swojego hosta w osobnym terminalu użyłam komendy `git clone https://github.com/madler/zlib.git /var/lib/docker/volumes/wolumin_wejsciowy/_data`.
 
     ![klonowanie repozytorium](screenshots/49.png)
 
@@ -234,15 +234,15 @@ Inżynieria Obliczeniowa
 
     ![kopiowanie skompilowanych plików](screenshots/53.png)
 
-8.  Sprawdziłam zawartość `wyjsciowy` poprzez użycie w nim polecenia `ls`, aby sprawdzić czy pliki zostały poprawnie skopiowane
+8.  Sprawdziłam zawartość `wyjsciowy` poprzez użycie w nim polecenia `ls`, aby sprawdzić czy pliki zostały poprawnie skopiowane.
 
     ![wyjsciowy](screenshots/54.png)
 
-9.  W kolejnym kroku doinstalowałam do kontenera gita używając `apt-get update && apt-get install -y git`
+9.  W kolejnym kroku doinstalowałam do kontenera gita używając `apt-get update && apt-get install -y git`.
 
     ![instalacja git](screenshots/55.png)
 
-10. Skolonowałam repoytorium `zlib` do woluminu wewnątrz kontenera za pomocą komendy `git clone https://github.com/madler/zlib.git /mnt/wejsciowy/zlib_rep`
+10. Skolonowałam repoytorium `zlib` do woluminu wewnątrz kontenera za pomocą komendy `git clone https://github.com/madler/zlib.git /mnt/wejsciowy/zlib_rep`.
 
     ![klonowanie wewnątrz kontenera](screenshots/56.png)
 
