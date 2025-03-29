@@ -12,3 +12,4 @@ W systemie Fedora zaktualizowano system i zainstalowano Docker.  Następnie pobr
 
 Uruchomiono kontener z obrazem busybox w trybie interaktywnym i wyświetlono informację o wersji.
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20run%20busybox.png?raw=true)
