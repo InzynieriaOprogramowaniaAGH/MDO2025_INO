@@ -191,7 +191,36 @@ Uruchomiłem testy
 
 Utworzyłem dwa pliki:
 * `Dockerfile.build`
+```
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential \
+    meson \
+    ninja-build \
+    pkg-config \
+    libglib2.0-dev \
+    libssl-dev \
+    libncurses-dev \
+    perl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /irssi
+
+RUN git clone https://github.com/irssi/irssi .
+
+RUN meson setup build && ninja -C build
+```
+
 * `Dockerfile.test`
+```
+FROM irssi-build
+
+WORKDIR /irssi
+
+CMD ["ninja", "-C", "build", "test"]
+```
 
 `Dockerfile.build` opiera się na obrazie Ubuntu. Instaluje on wszystkie wymagane zalezności, klonuje repozytorium projektu do odpowiedniego folderu a następnie konfiguruje środowisko builda wykorzystując do tego Meson i kompiluje projekt przy uzyciu Ninja.
 
@@ -211,4 +240,95 @@ Następnie uruchomiłem kontener z testami, który takze zadziałał w oczekiwan
 ![irssi-test run](./lab3/run-irssi-test.png)
 
 ## Zajęcia 04
-### 1. 
+### 1. Zachowywanie stanu
+Zacząłem od utworzenia woluminu wejściowego `input_vol`, oraz wyjściowego `output_vol`.
+![volume create](./lab4/volume-create.png)
+
+Następnie utworzyłem Dockerfile do tworzenia obrazu bazowego i go zbudowałem. Jest on oparty na ubuntu i zawiera zainstalowane wszystkie potrzebne pakiety ale bez gita.
+```
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    meson \
+    ninja-build \
+    pkg-config \
+    libglib2.0-dev \
+    libssl-dev \
+    libncurses-dev \
+    perl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /irssi
+
+CMD ["/bin/bash"]
+```
+![build without git](./lab4/build-nogit.png)
+
+Następnie sklonowałem repozytorium z irssi. Klonowanie zostało wykonane na hoście bezpośrednio do lokalizacji przypisanej do woluminu.
+![clone](./lab4/repo-clone-nogit.png)
+
+Skorzystałem z komendy `sudo git clone https://github.com/irssi/irssi $(docker volume inspect --format '{{ .Mountpoint }}' input_vol)`
+- `docker volume inspect input_vol` - pobiera informacje o wolumenie wejściowym
+- `--format '{{.MountPoint}}'` - flaga, która sprawia, ze pobieramy ściezkę do miejsca w którym znajduję się wolumen na hoście
+- `sudo git clone ...` - klonuje repo
+
+Normalnie po `git clone` mozemy określić w jakim miejscu sklonowane ma zostać repozytorium - tutaj dzięki uyciu `$(...)` mozemy dynamicznie dodać jako ściezkę wynik komendy `docker volume inspect`
+
+Następnym krokiem było uruchomienie kontenera z zamontowanymi woluminami w celu zbudowania aplikacji. Wewnątrz tego kontenera skopiowałem repozytorium do katalogu `/build`, oraz zbuildowałem go.
+![app build without git](./lab4/build-irssi-nogit.png)
+
+Po pomyślnym zbudowaniu zapisałem build do woluminu wyjściowego.
+![output volume save without git](./lab4/save-output-nogit.png)
+
+Całą operację wykonałem jeszcze raz, ale tym razem uzyłem gita w kontenerze. Zrobiłem to za pomocą `docker build` i pliku `Dockerfile.git`
+
+```
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential \
+    meson \
+    ninja-build \
+    pkg-config \
+    libglib2.0-dev \
+    libssl-dev \
+    libncurses-dev \
+    perl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /irssi
+
+RUN --mount=type=cache,target=/git_cache \
+    git clone https://github.com/irssi/irssi .
+
+RUN meson setup build && ninja -C build
+
+RUN mkdir -p /output && cp -r build /output
+
+CMD ["/bin/bash"]
+```
+
+Dzięki wykorzystaniu `RUN --mount` repozytorium jest klonowane z uzyciem cache co przyspiesza kolejne buildy. Uwzględniłem tez automatycznie kopiowanie wynikowych artefaktów builda do `/output`, dzięki czemu są one dostępne po zakończeniu pracy.
+
+Zbudowałem obraz a następnie na jego bazie uruchomiłem kontener
+![build run git](./lab4/build-run-giit.png)
+
+Aby sprawdzić poprawność działania zweryfikowałem, ze katalog build znajduje się w woluminie /output.
+![alt text](./lab4/git-volume-output.png)
+
+### 2. Eksponowanie portu
+* Zapoznaj się z dokumentacją https://iperf.fr/
+* Uruchom wewnątrz kontenera serwer iperf (iperf3)
+* Połącz się z nim z drugiego kontenera, zbadaj ruch
+* Zapoznaj się z dokumentacją `network create` : https://docs.docker.com/engine/reference/commandline/network_create/
+* Ponów ten krok, ale wykorzystaj własną dedykowaną sieć mostkową. Spróbuj użyć rozwiązywania nazw
+* Połącz się spoza kontenera (z hosta i spoza hosta)
+* Przedstaw przepustowość komunikacji lub problem z jej zmierzeniem (wyciągnij log z kontenera, woluminy mogą pomóc)
+* Opcjonalnie: odwołuj się do kontenera serwerowego za pomocą nazw, a nie adresów IP
+
+### 3. Instancja Jenkins
+* Zapoznaj się z dokumentacją  https://www.jenkins.io/doc/book/installing/docker/
+* Przeprowadź instalację skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND
+* Zainicjalizuj instację, wykaż działające kontenery, pokaż ekran logowania
