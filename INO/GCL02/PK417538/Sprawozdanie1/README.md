@@ -280,6 +280,9 @@ Sprawozdanie z lab 3. Dockerfiles, kontener jako definicja etapu
   ```
   * `make test` - wykonuje testy jednostkowe.
 
+  ![obraz](https://github.com/user-attachments/assets/d3a8720c-6c77-4425-9b2b-44fadf7495cc)
+
+
 ### Przeprowadzenie buildu w kontenerze
 Ponów ww. proces w kontenerze, interaktywnie.
 1. Wykonaj kroki `build` i `test` wewnątrz wybranego kontenera bazowego. Tj. wybierz "wystarczający" kontener, np. `ubuntu` dla aplikacji C lub `node` dla Node.js.
@@ -288,6 +291,9 @@ Ponów ww. proces w kontenerze, interaktywnie.
      docker run -it ubuntu:latest /bin/bash
      ```
      * `docker run -it` - uruchamia kontener w trybie interaktywnym.
+
+     ![obraz](https://github.com/user-attachments/assets/cb37f106-118b-41fd-8fa2-538765769626)
+       
    * Podłącz do niego TTY celem rozpoczęcia interaktywnej pracy.
    * Zaopatrz kontener w wymagania wstępne:
      ```bash
@@ -297,11 +303,19 @@ Ponów ww. proces w kontenerze, interaktywnie.
      apt-get update && apt-get install -y pipx && pipx install uv
      ```
      * `apt-get install` - instaluje pakiety.
+
+     ![obraz](https://github.com/user-attachments/assets/44da712c-56cf-436a-a705-4f35cd3bf4ee)
+
+
    * Sklonuj repozytorium:
      ```bash
      git clone https://github.com/pydantic/pytest-examples.git /app
      ```
      * `git clone` - pobiera kod źródłowy.
+    
+     ![obraz](https://github.com/user-attachments/assets/8bcf83a0-8531-47c0-9553-80219b85aae1)
+
+
    * Skonfiguruj środowisko i uruchom *build*:
      ```bash
      cd /app
@@ -309,13 +323,20 @@ Ponów ww. proces w kontenerze, interaktywnie.
      ```
      * `cd /app` - przechodzi do katalogu projektu.
      * `make install` - instaluje zależności.
+    
+     ![obraz](https://github.com/user-attachments/assets/747dffe9-924b-4fa2-a0cc-df2b1a792c5f)
+
+
    * Uruchom testy:
      ```bash
      make test
      ```
      * `make test` - wykonuje testy.
+    
+     ![obraz](https://github.com/user-attachments/assets/14947a63-91f9-4630-8a82-e20d0d7d0290)
 
-2. Stwórz dwa pliki `Dockerfile` automatyzujące kroki powyżej:
+
+1. Stwórz dwa pliki `Dockerfile` automatyzujące kroki powyżej:
    * Kontener pierwszy ma przeprowadzać wszystkie kroki aż do *builda*:
      ```dockerfile
      FROM ubuntu:latest
@@ -345,11 +366,13 @@ Ponów ww. proces w kontenerze, interaktywnie.
      * `FROM` - wykorzystuje obraz utworzony wcześniej.
      * `CMD` - określa domyślne polecenie do wykonania.
 
-3. Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?
+2. Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?
    ```bash
-   docker build -f Dockerfile.test -t pytest-examples-test .
+   docker build -f Dockerfile.build -t pytest-examples-test .
    docker run --rm pytest-examples-test
    ```
    * `docker build` - buduje obraz z pliku `Dockerfile.test`.
    * `docker run --rm` - uruchamia kontener i usuwa go po zakończeniu.
 
+   ![obraz](https://github.com/user-attachments/assets/e191a989-3521-4f8f-895d-83969d2e1f9a)
+   ![obraz](https://github.com/user-attachments/assets/064f2c0c-70e9-4019-acd7-750acb940c87)
