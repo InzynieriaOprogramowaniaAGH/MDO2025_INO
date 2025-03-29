@@ -466,9 +466,187 @@ Zbudowanie obrazu dla testów powinno zwrócić ich poprawne wykonanie:
 
 ![Screen z testów przez Dockerfile](screenshots/Dotnet_test_dockerfile.png)
 
-A zbudowanie obrazu dla publish powinno dać nam dostęp do aplikacji:
+A uruchomienie obrazu dla publish powinno dać nam dostęp do aplikacji:
 ```
 docker run -p 8080:8080  weatherapp-publish
 ```
 ![Screen z docker run dla publish](screenshots/Dotnet_publish_run.png)
 ![Screen z curl dla Dockerfile](screenshots/Curl_dockerfile.png)
+
+## Obsługiwanie Docker Volumes
+Woluminy to miejsca wyznaczone przez `Docker` w których dane będą się znajdowały nawet po zakonćzeniu pracy przez kontener.
+
+Aby utworzyć wolumin, należy skorzystać z komendy `docker volume create`. W naszym przypadku tworzymy wolumin zawierający pliki pobrane z `GitHub` i wolumin zawierający zbudowany projekt:
+```
+docker volume create vol-source
+docker volume create vol-output
+```
+
+Do pobrania projektu z repozytorium, użyjemy kontenera pomocniczego, który pobierze dane i zapisze w woluminie `vol-source`:
+```
+docker run --rm -v vol-source:/repo alpine/git clone https://github.com/JakubLatawiec/weatherapp-backend.git /repo
+```
+
+Teraz pliki projektu znajdują się w ścieżce `/var/lib/docker/volumes/vol-source/_data`.
+
+![Screen z ls vol-source](screenshots/Ls_vol_source.png)
+
+Modyfikujemy `Dockerfile.build` tak aby nie pobierał danych z `GitHub`:
+``` dockerfile
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+
+WORKDIR /src
+
+ENTRYPOINT dotnet build WeatherForecast.Api/WeatherForecast.Api.csproj -c Release -o /out
+```
+
+I budujemy obraz:
+```
+docker build -f Dockerfile.build -t weatherapp-build-no-git .
+```
+
+Uruchamiamy kontener z przypisanymi woluminami:
+```
+docker run --rm -v vol-source:/src -v vol-output:/out weatherapp-build-no-git
+```
+
+Zbudowany projekt znajduje się teraz w woluminie `vol-output` pod ścieżką `/var/lib/docker/volumes/vol-output/_data`.
+
+![Screen z ls vol-output](screenshots/Ls_vol_output.png)
+
+Klonowanie danych można też zrobić w trybie interaktywnym z kontenera:
+```
+docker run -it --rm -v vol-source:/src mcr.microsoft.com/dotnet/sdk:8.0 bash
+```
+
+I w kontenerze wpisać komendy:
+```
+cd /src
+git clone https://github.com/JakubLatawiec/weatherapp-backend.git .
+```
+
+Teraz w wolumine `vol-source` znajduje się pobrane repozytorium.
+
+Przy wykorzystaniu `BuildKit` i `RUN --mount` jest możliwe zrobienie obu kroków za pomocą jednego `Dockerfile`:
+``` dockerfile
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS builder
+
+RUN --mount=type=bind,source=/mnt/data/source,target=/src \
+    --mount=type=bind,source=/mnt/data/output,target=/out \
+    git clone https://github.com/JakubLatawiec/weatherapp-backend.git /src && \
+    dotnet build /src/WeatherForecast.Api/WeatherForecast.Api.csproj -c Release -o /out
+```
+
+Wymagany do tego kroku jest `buildx`. Aby go zainstalować korzystamy z komendy:
+```
+sudo apt install docker-buildx-plugin
+```
+
+## Badanie sieci za pomocą iperf3
+`iperf3` to narzędzie do testowania wydajności sieci.
+
+Aby uruchomić kontener z serwerem `iperf3` wykorzstujemy komende `docker run` z parametrem `-s` aby uruchomić jako serwer:
+```
+docker run -d --rm --name iperf-server networkstatic/iperf3 -s
+```
+
+Sprawdzamy jaki adres IP został przypisany do kontenera:
+```
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-server
+```
+W tym przypadku to `172.17.0.2`.
+
+Teraz uruchamiamy klienta `iperf3`:
+```
+docker run --rm networkstatic/iperf3 -c 172.17.0.2
+```
+
+Przykładowy wynik testu wygląda następujaco:
+
+![Screen z iperf3 dla domyślnej sieci](screenshots/Iperf3_default.png)
+
+Zamiast odwoływać się po adresach IP, możemy odwoływać się po nazwach kontenerów za pomocą wbudowanego `DNS` w `Docker`. Aby to zrobić, musimy utworzyć własną sieć np.
+```
+docker network create iperf-net
+```
+
+Uruchamiamy teraz serwer `iperf3` na stworzonej sieci:
+```
+docker run -d --rm --name iperf-server --network iperf-net networkstatic/iperf3 -s
+```
+
+I uruchamiamy klienta `iperf3` na utworzonej sieci, tym razem podając nazwę kontenera:
+```
+docker run --rm --network iperf-net networkstatic/iperf3 -c iperf-server
+```
+
+Powinniśmy otrzymać poprawne wyniki:
+
+![Screen z iperf3 dla domyślnej sieci](screenshots/Iperf3_custom.png)
+
+Aby przetestować połączenie między hostem a kontenerem, należy podać adres IP kontenera. Między hostem i kontenerem nie działa DNS.
+```
+iperf3 -c 172.18.0.2
+```
+
+![Screen z iperf3 między hostem a kontenerem](screenshots/Iperf3_custom_host.png)
+
+Możemy wyciągnąć wyniki z testu połączenia do logów za pomocą `docker logs`, np.
+```
+docker logs iperf-server > iperf3_logs.log
+```
+
+Możemy łączyć się do serwera `iperf3` również spoza hosta. Aby to zrobić należy na hoscie otworzyć port np.
+```
+sudo ufw allow 5201
+```
+
+I uruchomić serwer `iperf3` na otwartym porcie np.
+```
+docker run -d --rm --name iperf-server --network iperf-net   -p 5201:5201 networkstatic/iperf3 -s
+```
+
+A następnie połączyć się z innej maszyny znajdującej się w tej samej sieci co host, np.
+```
+iperf3 -c 192.168.0.207 -p 5201
+```
+
+![Screen z iperf3 spoza hosta](screenshots/Iperf3_custom_nohost.png)
+
+## Uruchamianie Jenkins przez DIND
+`DIND`, czyli `Docker in docker` pozwala uruchamiać kontenery `Docker` wewnątrz tego kontenera. Wykorzystujemy go do `Jenkinsa`, ponieważ `Jenkins` może budować własne obrazy dockera.
+
+Tworzymy sieć aby kontenery mogły się między sobą łączyć:
+```
+docker network create jenkins-net
+```
+
+Aby uruchomić kontener `DIND` wykorzystujemy komendę:
+```
+docker run -d --rm --name jenkins-docker \
+  --network jenkins-net --privileged \
+  -v jenkins-docker-certs:/certs/client \
+  -v jenkins-docker-data:/var/lib/docker \
+  -e DOCKER_TLS_CERTDIR=/certs \
+  docker:dind
+```
+
+Do uruchomienia kontenera `Jenkins` korzystamy z komendy:
+```
+docker run -d --rm --name jenkins \
+  --network jenkins-net \
+  -p 8080:8080 -p 50000:50000 \
+  -v jenkins-data:/var/jenkins_home \
+  -v jenkins-docker-certs:/certs/client:ro \
+  -e DOCKER_HOST=tcp://jenkins-docker:2376 \
+  -e DOCKER_CERT_PATH=/certs/client \
+  -e DOCKER_TLS_VERIFY=1 \
+  jenkins/jenkins:lts
+```
+
+Gdy oba kontenery działają, możemy przejść do strony `Jenkins` na `localhost:8080` i się zalogować. Domyślne hasło możemy zdobyć wpisując komendę:
+```
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+![Screen ze strony Jenkins](screenshots/Jenkins_home.png)
