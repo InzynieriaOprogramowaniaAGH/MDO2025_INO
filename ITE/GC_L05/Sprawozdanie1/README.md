@@ -67,8 +67,12 @@ Uruchomiono kontener w trybie interaktywnym poleceniem `sudo docker run -it fedo
 Laboratoria dotyczyły zagadnień automatyzacji procesu budowania i testowania oprogramowania przy użyciu narzędzi Makefile oraz technologii konteneryzacji. Nauczono się integrować środowiska developerskie, realizować build i testy jednostkowe w odizolowanych kontenerach.
 
 ---
-Na począku sklonowano repozytorium `libuv` zawierające plik Makefile, a następnie wykonano build przy użycia polecenia `make`. 
+Na począku sklonowano repozytorium `libuv` zawierające plik Makefile, a następnie wykonano build przy użyciu polecenia `make`. 
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/sklonowanie%20repozytorium%20git%20z%20make.png?raw=true)
 
 *Rys. 1 sklonowanie repozytorium git*
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/make.png?raw=true)
+
+*Rys. 2 build za pomocą make*
