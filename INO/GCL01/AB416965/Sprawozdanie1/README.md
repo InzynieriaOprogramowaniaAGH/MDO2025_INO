@@ -10,7 +10,7 @@
 
 ### **1. Instalacja systemu Fedora i przygotowanie środowiska**
 
-Zanim przystąpiłem do wykonywania ćwiczenia pobrałem system Fedora z linku dostarczonego prze prowadzącego i za pomocą Virtual Box postawiłem system.
+Zanim przystąpiłem do wykonywania ćwiczenia pobrałem system Fedora z linku dostarczonego przez prowadzącego i za pomocą Virtual Box postawiłem system.
 
 ![Gotowy system Fedora na Virtual Box](Zrzuty1/zrzut_ekranu1.png)
 
@@ -324,7 +324,7 @@ CMD ["bash"]
 
 ### **3. Budowanie i testowanie w kontenerze Docker (interaktywnie)**
 
-#### **Uruchomienie kontenera Ubuntu i instalacja zeleżności:**
+#### **Uruchomienie kontenera Ubuntu i instalacja zależności:**
 
 ![Uruchomienie kontenera Ubuntu](<Zrzuty3/zrzut_ekranu8.png>)
 
@@ -387,6 +387,9 @@ CMD ["ctest"]
 
 ### **6. Docker Compose**
 
+Docker Compose to narzędzie do definiowania i uruchamiania wielokontenerowych aplikacji Dockera.
+Zamiast uruchamiać każdy kontener ręcznie i ustawiać zależności między nimi, można użyć jednego pliku (`docker-compose.yml`).
+
 #### **docker-compose.yml**
 
 ```yaml
@@ -412,16 +415,29 @@ services:
 
 ### **7. Analiza procesu wdrożenia i publikacji**
 
-#### **Jak wygląda przygotowanie artefaktu?**
+#### **Czy program nadaje się do publikowania jako kontener?**
 
-- Artefaktem byłaby biblioteka `.a` lub `.so`, którą należałoby przenieść do innego systemu.
-- Można utworzyć **trzeci Dockerfile** do eksportu tych plików.
-- Alternatywnie: stworzyć **pakiet DEB lub RPM**.
+Nie. `cJSON` to biblioteka, nie aplikacja. Kontener ma sens tylko jako środowisko do builda i testów – nie jako forma dystrybucji.
 
-#### **Wdrożenie?**
+#### **Jak wygląda przygotowanie finalnego artefaktu?**
 
-- Konteneryzacja builda to dobry krok w CI/CD.
-- Do publikacji: **dedykowana ścieżka (deploy)**, z czystym obrazem lub paczką.
+Buduje się pliki libcjson.a / libcjson.so + nagłówki. Gotowe pliki można zapakować jako `.tar.gz`, `.deb` albo `.rpm`.
+
+#### **Czy trzeba oczyszczać kontener z pozostałości po buildzie?**
+
+Tak, jeśli kontener miałby być publikowany – powinny w nim zostać tylko biblioteka i nagłówki.
+
+#### **Czy deploy-and-publish powinien mieć osobny Dockerfile?**
+
+Tak, najlepiej osobny Dockerfile tylko do pakowania gotowych artefaktów.
+
+#### **Czy program warto pakować jako JAR/DEB/RPM?**
+
+Tak – `.deb` albo `.rpm` to wygodny sposób na dystrybucję biblioteki w systemach Linux.
+
+#### **Jak zapewnić taki format?**
+
+Dodatkowy krok lub osobny kontener, który pakuje pliki np. przy użyciu `fpm`.
 
 ## **Zajęcia 04 - Woluminy, Sieci, Jenkins**
 
@@ -499,7 +515,6 @@ FROM ubuntu:latest
 RUN apt update && apt install -y cmake gcc g++ make
 
 WORKDIR /cJSON
-
 
 RUN --mount=type=bind,source=./temp_in,target=/mnt/v1_in \
     --mount=type=bind,source=./temp_out,target=/mnt/v2_out,rw \
@@ -579,7 +594,7 @@ To zadanie wykonywałem korzystając z instrukcji na stronie [**Jenkins**](https
 
 ![Utworzenie sieci o nazwie jenkins](<Zrzuty4/zrzut_ekranu25.png>)
 
-Korzystając z instrukcji pobrałem i utworzyłem kontener `docker:dind`.
+Korzystając z instrukcji pobrałem i utworzyłem kontener `docker:dind`, który połączyłem z wcześniej utworzoną siecią jenkins. 
 
 ![Pobranie docker:dind](<Zrzuty4/zrzut_ekranu26.png>)
 
@@ -587,6 +602,14 @@ Korzystając z instrukcji pobrałem i utworzyłem kontener `jenkins:lts`.
 
 ![Pobranie jenkins:lts](<Zrzuty4/zrzut_ekranu27.png>)
 
-Logowanie do jenkina z Windowsa
+Po wpisaniu adresu hosta w przeglądarkę udaje mi się dostać do ekranu logowania Jenkinsa.
 
 ![alt text](<Zrzuty4/zrzut_ekranu28.png>)
+
+---
+
+## **Wykorzystanie sztucznej inteligencji**
+
+Podczas zajęć i podczas pisania sprawozdania wykorzystywałem ChatGPT w wersji 4o. Korzystałem z niego głównie do szybszego odnajdywania odpowiednich fragmentów dokumentacji oraz sprawdzania składni i przykładów użycia narzędzi takich jak Docker czy Git. Wprowadzałem tam pełny kontekst polecenia, co pozwalało mi uzyskać bardziej dopasowane odpowiedzi.
+
+Model często przyspieszał pracę i podpowiadał konkretne rozwiązania, jednak nie był niezawodny – zdarzały się błędy merytoryczne, ignorowanie poprawek, dlatego rozwiązania musiałem weryfikować samodzielnie. Nie pytałem się chatu o źródła z których bierze odpowiedzi.
