@@ -8,13 +8,13 @@ Inżynieria Obliczeniowa
 
 ## Zajęcia 1
 
-1.  Pracę nad zadaniami rozpoczęłam od instalacji systemu Fedora Server na maszynie wirtualnej. Następnie, aby połączyć się z systemem Fedora, skorzystałam z protokołu SSH, używając wiersza poleceń w systemie Windows oraz polecenia `ssh root@192.168.8.49`
+1.  Pracę nad zadaniami rozpoczęłam od instalacji systemu Fedora Server na maszynie wirtualnej. Następnie, aby połączyć się z systemem Fedora, skorzystałam z protokołu SSH, używając wiersza poleceń w systemie Windows oraz polecenia `ssh root@192.168.8.49`.
 
     ![logowanie ssh](screenshots/1.png)
 
     Zainstalowałam klienta Git, korzystając z komendy `sudo dnf install git`.
 
-2.  Po instalacji sklonowałam repozytorium przedmiotowe, używając HTTPS oraz Personal Access Token za pomocą polecenia `git clone https://<LOGIN>:<TOKEN>@github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git`
+2.  Po instalacji sklonowałam repozytorium przedmiotowe, używając HTTPS oraz Personal Access Token za pomocą polecenia `git clone https://<LOGIN>:<TOKEN>@github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git`.
 
     ![klonowanie https](screenshots/2.png)
 
