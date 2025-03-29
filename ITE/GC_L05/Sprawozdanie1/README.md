@@ -5,7 +5,7 @@
 
 1. - [Laboratorium 1 - Wprowadzenie, Git, Gałęzie, SSH](#laboratorium-2---git-docker)
 2. - [Laboratorium 2 - Git, Docker](#laboratorium-2---git-docker)
-3. - [Laboratorium 3 -Dockerfiles, kontener jako definicja etapu](#Laboratorium-3---Dockerfiles,-kontener-jako-definicja-etapu)
+3. - [Laboratorium 3 -Dockerfiles, kontener jako definicja etapu](#Laboratorium-3---Dockerfiles)
 4. - [Laboratorium 4 -Dodatkowa terminologia w konteneryzacji, instancja Jenkins](#laboratorium-2---git-docker)
 
 ---
@@ -62,7 +62,7 @@ Uruchomiono kontener w trybie interaktywnym poleceniem `sudo docker run -it fedo
 *Rys. 8 uruchomienie kontenera w trybie interaktywnym*
 
 ---
-## Laboratorium 3 - Dockerfiles, kontener jako definicja etapu
+## Laboratorium 3 - Dockerfiles
 
 Laboratoria dotyczyły zagadnień automatyzacji procesu budowania i testowania oprogramowania przy użyciu Makefile oraz technologii konteneryzacji. Nauczono się integrować środowiska developerskie, realizować build i testy jednostkowe w odizolowanych kontenerach.
 
