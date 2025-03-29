@@ -222,7 +222,7 @@ Inżynieria Obliczeniowa
 
     ![zawartość katalogu wejsciowy](screenshots/50.png)
 
-6.  W katalogu `wejsciowy` w kontenerze uruchomiłam proces kompilacji aplikacji `zlib`. Najpierw użyłam polecenia `./configure`
+6.  W katalogu `wejsciowy` w kontenerze uruchomiłam proces kompilacji aplikacji `zlib`. Najpierw użyłam polecenia `./configure`.
 
     ![configure](screenshots/51.png)
 
@@ -250,13 +250,13 @@ Inżynieria Obliczeniowa
 
     ![zlib_repo](screenshots/57.png)
 
-12. Tak jak poprzednio, uruchomiłam proces kompilacji poprzez `./configure` oraz `make`
+12. Tak jak poprzednio, uruchomiłam proces kompilacji poprzez `./configure` oraz `make`.
 
     ![configure](screenshots/58.png)
 
     ![make](screenshots/59.png)
 
-13. Utworzyłam w katalogu `wyjściowy` katalog `zlib_build`- `mkdir zlib_build`, w celu skopiowania tam wyników kompilacji z woluminu wejściowego
+13. Utworzyłam w katalogu `wyjściowy` katalog `zlib_build`- `mkdir zlib_build`, w celu skopiowania tam wyników kompilacji z woluminu wejściowego.
 
     ![tworzenie katalogu zlib_build](screenshots/60.png)
 
@@ -284,7 +284,7 @@ Inżynieria Obliczeniowa
 
     ![serwer wydruk](screenshots/66.png)
 
-20. Poleceniem `docker network create my-bridge-network` utworzyłam własną sieć mostkową
+20. Poleceniem `docker network create my-bridge-network` utworzyłam własną sieć mostkową.
 
     ![tworzenie sieci](screenshots/67.png)
 
@@ -319,6 +319,8 @@ Inżynieria Obliczeniowa
 28. Wyciągnełąm logi z kontenerów i zapisałam je w plikach `server.log` oraz `client.log` za pomocą polecenia `docker logs iperf-server > server.log` oraz `docker logs iperf-client > client.log`.
 
     ![logi](screenshots/75.png)
+    
+    Po analizie logów można zauważyć różnice w przepustowości, w zależności od sposobu komunikacji. Pierwszy test obejmował komunikację między dwoma kontenerami uruchomionymi w dedykowanej sieci mostkowej, w wyniku czego osiągnięto wysoką średnią przepustowość wynoszącą 5.76 Gbits/sec, co świadczy o efektywnej wymianie danych w obrębie tej sieci. Drugi test sprawdzał komunikację między kontenerem a hostem systemowym, gdzie zaobserwowano niższą przepustowość – 1.78 Gbits/sec. Trzeci test objął komunikację między kontenerem a urządzeniem spoza hosta w sieci LAN, a średnia przepustowość wyniosła 358 Mbits/sec.
 
 29. Zainstalowałam `Jenkins` w kontenerze używając `docker pull jenkins/jenkins:lts`.
 
