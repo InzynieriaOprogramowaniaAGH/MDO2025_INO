@@ -340,9 +340,8 @@ Następnie uruchomiłem kontener Docker-in-Docker, który będzie służył jako
 ![45](https://github.com/user-attachments/assets/1b41a357-5224-4fbc-86d9-30a8167b1832)
 
 ekran logowania
-![47](https://github.com/user-attachments/assets/ca639f12-70e3-4871-8744-f20a5c773f96)
 ![46](https://github.com/user-attachments/assets/f2224f5a-5f25-4491-904f-4535fc4159eb)
-
+![47](https://github.com/user-attachments/assets/ca639f12-70e3-4871-8744-f20a5c773f96)
 
 
 
