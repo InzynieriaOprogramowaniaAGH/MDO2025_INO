@@ -22,3 +22,5 @@ Uruchomiono kontener z obrazem Fedora przy użyciu polecenia `sudo docker run -i
 
 Następnie zbudowano kontener przy użyciu Dockerfile, który aktualizuje system i instaluje Git za pomocą menedżera pakietów dnf (`dnf -y upgrade && dnf -y install git`), czyści pamięć podręczną, a potem klonuje repozytorium git.
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/Dockerfile.png?raw=true)
+
