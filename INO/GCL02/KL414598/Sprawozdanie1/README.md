@@ -269,6 +269,10 @@ Aby sklonować repozytorium na wolumin wejściowy, użyłem kontenera pomocnicze
 
 ![35](https://github.com/user-attachments/assets/40a268b8-660a-4d11-816a-0e3fe99ec764)
 
+sprawdziłem zawartość woluminu na hoście: 
+
+![36](https://github.com/user-attachments/assets/ffb9e133-247f-476e-87a4-2d44717dcdf6)
+
 
 Użyłem dedykowanego kontenera pomocniczego alpine/git, który:
 
@@ -290,6 +294,12 @@ Dane na woluminie pozostają po zakończeniu działania kontenera
 
 Ponownie utworzyłem nowy kontener z obrazu program:
 
+![37](https://github.com/user-attachments/assets/b207b5cc-afa5-4962-bdae-9ed937bdc17a)
+![38](https://github.com/user-attachments/assets/434e9189-39d2-4479-bdbd-55c223013da9)
 
-
+### Eksponowanie portów i testowanie przepustowości sieci w Docker
     
+Uruchomienie serwera iperf3 w kontenerze
+
+    docker run -d --name iperf-test ubuntu sh -c "apt update && apt install -y iperf3 && iperf3 -s"
+    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-test
