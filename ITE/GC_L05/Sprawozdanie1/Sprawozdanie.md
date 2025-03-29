@@ -4,7 +4,7 @@
 
 ## Laboratorium 2 - Git, Docker
 
-W systemie Fedora zaktualizowano system i zainstalowano Docker.  Następnie pobrano obrazy hello-world, busybox, fedora oraz mysql za pomocą polecenia docker pull.
+W systemie Fedora zaktualizowano system i zainstalowano Docker.  Następnie pobrano obrazy hello-world, busybox, fedora oraz mysql za pomocą polecenia `docker pull`. 
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20pull%20busybox.png?raw=true)
 
@@ -14,7 +14,9 @@ W systemie Fedora zaktualizowano system i zainstalowano Docker.  Następnie pobr
 
 *Rys. 2 pobranie obrazu fedora*
 
-Uruchomiono kontener z obrazem busybox w trybie interaktywnym i wyświetlono informację o wersji.
+Polecenie `docker pull` pobiera obraz kontenera z zdalnego rejestru i zapisuje go lokalnie. Dzięki temu można później uruchamiać kontenery na podstawie pobranego obrazu.
+
+ W kolejnym kroku uruchomiono kontener z obrazem busybox w trybie interaktywnym i wyświetlono informację o wersji.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20run%20busybox.png?raw=true)
 
