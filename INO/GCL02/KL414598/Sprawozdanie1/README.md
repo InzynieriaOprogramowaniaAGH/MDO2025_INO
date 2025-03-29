@@ -266,7 +266,29 @@ Sprawdziłem, czy woluminy zostały utworzone:
 Aby sklonować repozytorium na wolumin wejściowy, użyłem kontenera pomocniczego z zainstalowanym git:
 
 ![34](https://github.com/user-attachments/assets/1b2ae6b1-362b-47cc-9433-e00d94fbf646)
-![35](https://github.com/user-attachments/assets/52ec5030-0ca0-4a3d-99b8-3866cfdb2c43)
+
+![35](https://github.com/user-attachments/assets/40a268b8-660a-4d11-816a-0e3fe99ec764)
+
+
+Użyłem dedykowanego kontenera pomocniczego alpine/git, który:
+
+-Jest lekkim kontenerem bazującym na Alpine Linux
+
+-Ma preinstalowany git, więc nie musiałem instalować go w kontenerze bazowym
+
+-Działa tylko przez czas potrzebny do sklonowania repozytorium (flaga --rm automatycznie usuwa kontener po zakończeniu działania)
+
+Montowanie woluminu
+Wolumin input-vol został zamontowany w kontenerze pomocniczym w ścieżce /repo:
+-v input-vol:/repo - łączy wolumin Docker z katalogiem w kontenerze
+
+Wszystkie pliki zapisane w katalogu /repo w kontenerze zostają zapisane trwale na woluminie
+
+Dane na woluminie pozostają po zakończeniu działania kontenera
+
+## Wariant 2: Klonowanie repozytorium wewnątrz kontenera
+
+Ponownie utworzyłem nowy kontener z obrazu program:
 
 
 
