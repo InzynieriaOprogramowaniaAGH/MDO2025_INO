@@ -1,5 +1,5 @@
-# Sprawozdanie
-## Wstęp, Git, Gałęzie, SSH
+
+# LEKCJA 1: Wstęp, Git, Gałęzie, SSH
 ### 1) Instalacja Git i kluczy SSH Aby rozpocząć pracę z systemem Git oraz zapewnić bezpieczne połączenie przez SSH, zainstalowano odpowiednie narzędzia.
 
 Aby rozpocząć pracę z systemem Git oraz zapewnić bezpieczne połączenie przez SSH, zainstalowano odpowiednie narzędzia.
@@ -66,7 +66,7 @@ Zmieniono połączenie z repozytorium na SSH:
 
 
 
-# Instalacja i podstawowa konfiguracja Dockera na Linuxie
+# LEKCJA 2: Instalacja i podstawowa konfiguracja Dockera na Linuxie
 
 ## Instalacja Dockera
 
@@ -200,7 +200,7 @@ docker rmi moj_obraz busybox ubuntu fedora mysql hello-world
 ![image](https://github.com/user-attachments/assets/cf8a41c8-4b71-4c5c-a98c-4e3b4b4dace1)
 
 
-## Dockerfiles, kontener jako definicja etapu
+# LEKCJA 3: Dockerfiles, kontener jako definicja etapu
 
 ### 1) Wybór oprogramowania
 
@@ -246,3 +246,21 @@ Budowanie i uruchamianie kontenerów:
 ![31](https://github.com/user-attachments/assets/eb8e86b8-0053-44ff-a8cd-dd79afda83e4)
 ![32](https://github.com/user-attachments/assets/9aa4deb3-96fb-409e-a36f-ef7852b8cc83)
 
+
+# LEKCJA 4: Sprawozdanie z zadania: Wykorzystanie woluminów Docker
+
+Zadanie polegało na wykorzystaniu woluminów Docker do zarządzania kodem źródłowym i wynikami kompilacji. Zgodnie z instrukcją, zapoznałem się z dokumentacją Docker dotyczącą woluminów i bind mount, a następnie wykonałem szereg operacji wykorzystujących te mechanizmy.
+
+Utworzyłem dwa woluminy: wejściowy (dla kodu źródłowego) i wyjściowy (dla skompilowanych plików):
+
+    docker volume create input-vol
+    docker volume create output-vol
+![33](https://github.com/user-attachments/assets/ede8aec1-fb8f-4184-afbe-4c4b1cf6f043)
+
+Sprawdziłem, czy woluminy zostały utworzone:
+
+## Wariant 1: Klonowanie repozytorium na wolumin wejściowy z zewnątrz kontenera
+
+
+
+    
