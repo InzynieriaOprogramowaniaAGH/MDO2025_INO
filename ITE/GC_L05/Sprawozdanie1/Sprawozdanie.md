@@ -27,3 +27,5 @@ Następnie zbudowano kontener przy użyciu Dockerfile, który aktualizuje system
 Polecenie `sudo docker build -t fedora .` buduje obraz na podstawie instrukcji zawartych w pliku Dockerfile.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20build%20fedora.png?raw=true)
+
+Uruchomiono kontener w trybie interaktywnym poleceniem `sudo docker run -it fedora /bin/bash`, a następnie wyświetlono zawartość katalogu roboczego. 
