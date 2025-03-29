@@ -45,7 +45,8 @@ Niestety źle przemyślałem sprawę i w przypadku pierwszych laboratoriów zapo
    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/001-Class/lab1_8.png" />
 
    - Dodaj ten skrypt do stworzonego wcześniej katalogu.
-   Na poprzednim screenie już widać, że plik jest w folderze.
+
+        Na poprzednim screenie już widać, że plik jest w folderze.
 
    - Skopiuj go we właściwe miejsce, tak by uruchamiał się za każdym razem kiedy robisz commita.
 
