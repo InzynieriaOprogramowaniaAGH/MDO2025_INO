@@ -81,16 +81,16 @@ Próba wciągnięcia swojej gałęzi do gałęzi grupowej:
 
 1. Zainstaluj Docker w systemie linuksowym
 
+Instalacja dockera na maszynie wirtualnej
+
 ```bash
 sudo dnf install docker
 ```
 
-Instalacja dockera na maszynie wirtualnej
-
 2. Zarejestruj się w [Docker Hub](https://hub.docker.com/) i zapoznaj z sugerowanymi obrazami
 
-![Rejestracja](../Sprawozdanie/Screenshots/rejestracja.png)
 Screen z zalogowanego konta na stronie hub.docker.com
+![Rejestracja](../Sprawozdanie/Screenshots/rejestracja.png)
 
 3. Pobierz obrazy `hello-world`, `busybox`, `ubuntu` lub `fedora`, `mysql`
 
@@ -109,6 +109,8 @@ sudo docker pull mysql
 sudo docker run -it busybox
 ```
 
+![Busybox](../Sprawozdanie/Screenshots/busybox.png)
+
 5. Uruchom "system w kontenerze" (czyli kontener z obrazu `fedora` lub `ubuntu`)
    - Zaprezentuj `PID1` w kontenerze i procesy dockera na hoście
    - Zaktualizuj pakiety
@@ -119,8 +121,6 @@ sudo docker run -it ubuntu
 ```
 
 ![PID 1 w kontenerze](../Sprawozdanie/Screenshots/pid1.png)
-
-![Procesy w kontenerze](../Sprawozdanie/Screenshots/pid.png)
 
 ![Update pakietow w kontenerze](../Sprawozdanie/Screenshots/updatepakietow.png)
 
@@ -135,6 +135,8 @@ exit
    - Upewnij się że obraz będzie miał `git`-a
    - Uruchom w trybie interaktywnym i zweryfikuj że jest tam ściągnięte nasze repozytorium
 
+Zawartość pliku Dockerfile
+
 ```bash
 FROM alpine:latest
 RUN apk add --no-cache git
@@ -143,14 +145,12 @@ RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git .
 CMD ["git", "--help"]
 ```
 
-Zawartość pliku Dockerfile
+Zbudowanie i uruchomienie własnego kontenera
 
 ```bash
 sudo docker build -t mydocker .
 sudo docker run -it mydocker sh
 ```
-
-Zbudowanie i uruchomienie własnego kontenera
 
 ![Budowanie mydocker](../Sprawozdanie/Screenshots/budowaniemydocker.png)
 ![Pokazanie repozytorium](../Sprawozdanie/Screenshots/wlasnerepo.png)
@@ -184,7 +184,7 @@ Czyszczenie obrazów za pomocą polecenia:
 sudo docker rmi -f $(sudo docker images -aq)
 ```
 
-![Czyszczenie obrazów za pomocą polecenia:](../Sprawozdanie/Screenshots/dfwspr.png)
+![Czyszczenie obrazów za pomocą polecenia:](../Sprawozdanie/Screenshots/czobr.png)
 
 9. Dodaj stworzone pliki `Dockefile` do folderu swojego `Sprawozdanie1` w repozytorium.
 
@@ -407,7 +407,7 @@ Działające kontenery: serwer, klient oraz jenkins
 ![Dzialajace kontenery](../Sprawozdanie/Screenshots/status.png)
 
 Ekran logowania:
-![Logowanie Jenkins](../Sprawozdanie/Screenshots/gitclonekont.png)
+![Logowanie Jenkins](../Sprawozdanie/Screenshots/logpage.png)
 
 ## Zakres rozszerzony
 
