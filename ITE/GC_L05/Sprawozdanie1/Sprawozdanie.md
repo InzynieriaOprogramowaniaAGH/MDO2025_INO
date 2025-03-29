@@ -2,6 +2,12 @@
 
 ---
 
+- [Wprowadzenie](#wprowadzenie)
+- [Instalacja](#instalacja)
+- [Konfiguracja](#konfiguracja)
+- [Zakończenie](#zakonczenie)
+
+
 ## Laboratorium 2 - Git, Docker
 
 Laboratoria dotyczyły zagadnień konteneryzacji przy użyciu Dockera, obejmujących pobieranie i budowanie obrazów, tworzenie plików Dockerfile oraz uruchamiania kontenerów. 
