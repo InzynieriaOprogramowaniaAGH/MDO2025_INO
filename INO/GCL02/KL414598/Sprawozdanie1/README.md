@@ -303,3 +303,46 @@ Uruchomienie serwera iperf3 w kontenerze
 
     docker run -d --name iperf-test ubuntu sh -c "apt update && apt install -y iperf3 && iperf3 -s"
     docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-test
+    iperf3 -c 172.17.0.2
+
+![39](https://github.com/user-attachments/assets/60d8297e-882a-42bf-900b-f52c5ceaed68)
+
+
+Stworzyłem dedykowaną sieć mostkową:
+![40](https://github.com/user-attachments/assets/99a0ff36-f85c-434a-a07a-10046cbd0e36)
+
+
+
+
+Po raz kolejny utworzyłem kontenery serwera i klienta, tym razem wewnątrz zdefiniowanej sieci. Umieszczenie obu kontenerów w tej samej sieci umożliwiło ich komunikację przy użyciu nazw zamiast konieczności wyszukiwania adresów IP.
+
+    docker network create iperf-network
+    docker stop iperf-server
+    docker rm iperf-server
+    docker run -d --name iperf-server --network iperf-network -p 5201:5201 ubuntu sh -c "apt update && apt install -y iperf3 && iperf3 -s"
+    docker run --rm --network iperf-network ubuntu sh -c "apt update && apt install -y iperf3 && iperf3 -c iperf-server"
+
+![41](https://github.com/user-attachments/assets/595ffc2f-9ff6-4239-add6-a1bf95b5b4a1)
+![42](https://github.com/user-attachments/assets/5931143e-a8ac-4dae-8c5f-6fc786aa034e)
+
+### Instalacja skonteneryzowanej instancji Jenkins z Docker-in-Docker (DIND)
+
+Najpierw utworzyłem dedykowaną sieć Docker, aby umożliwić komunikację między kontenerem Jenkins a kontenerem Docker (DIND):
+
+    docker network create jenkins
+
+![43](https://github.com/user-attachments/assets/c0a31479-bb91-4cb0-ae3b-8137653bb61b)
+
+Następnie uruchomiłem kontener Docker-in-Docker, który będzie służył jako agent budowania oraz stworzyłem kontener Jenkins skonfigurowany do współpracy z Docker-in-Docker:
+
+![44](https://github.com/user-attachments/assets/478942f3-56c1-42fb-9692-6cee8995a714)
+
+![45](https://github.com/user-attachments/assets/1b41a357-5224-4fbc-86d9-30a8167b1832)
+
+ekran logowania
+![47](https://github.com/user-attachments/assets/ca639f12-70e3-4871-8744-f20a5c773f96)
+![46](https://github.com/user-attachments/assets/f2224f5a-5f25-4491-904f-4535fc4159eb)
+
+
+
+
