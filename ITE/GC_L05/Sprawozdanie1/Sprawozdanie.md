@@ -24,3 +24,4 @@ Następnie zbudowano kontener przy użyciu Dockerfile, który aktualizuje system
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/Dockerfile.png?raw=true)
 
+Polecenie `sudo docker build -t fedora .` buduje obraz na podstawie instrukcji zawartych w pliku Dockerfile.
