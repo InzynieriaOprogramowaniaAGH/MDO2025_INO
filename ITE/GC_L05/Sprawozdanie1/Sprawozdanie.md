@@ -8,11 +8,11 @@ W systemie Fedora zaktualizowano system i zainstalowano Docker.  Następnie pobr
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20pull%20busybox.png?raw=true)
 
-                                        *Rys. 1 pobranie obrazu buysbox*
+*Rys. 1 pobranie obrazu buysbox*
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20pull%20fedora.png?raw=true)
 
-                                         *Rys. 2 pobranie obrazu fedora*
+*Rys. 2 pobranie obrazu fedora*
 
 Uruchomiono kontener z obrazem busybox w trybie interaktywnym i wyświetlono informację o wersji.
 
