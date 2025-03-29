@@ -63,3 +63,5 @@ Uruchomiono kontener w trybie interaktywnym poleceniem `sudo docker run -it fedo
 
 ---
 ## Laboratorium 3 - Dockerfiles, kontener jako definicja etapu
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/sklonowanie%20repozytorium%20git%20z%20make.png?raw=true)
