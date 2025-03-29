@@ -64,7 +64,7 @@ Uruchomiono kontener w trybie interaktywnym poleceniem `sudo docker run -it fedo
 ---
 ## Laboratorium 3 - Dockerfiles, kontener jako definicja etapu
 
-Laboratoria dotyczyły zagadnień automatyzacji procesu budowania i testowania oprogramowania przy użyciu narzędzi Makefile oraz technologii konteneryzacji. Nauczono się integrować środowiska developerskie, realizować build i testy jednostkowe w odizolowanych kontenerach.
+Laboratoria dotyczyły zagadnień automatyzacji procesu budowania i testowania oprogramowania przy użyciu Makefile oraz technologii konteneryzacji. Nauczono się integrować środowiska developerskie, realizować build i testy jednostkowe w odizolowanych kontenerach.
 
 ---
 Na począku sklonowano repozytorium `libuv` zawierające plik Makefile, a następnie wykonano build przy użyciu polecenia `make`. 
