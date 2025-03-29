@@ -192,3 +192,23 @@ Uruchomiłem testy
 Utworzyłem dwa pliki:
 * `Dockerfile.build`
 * `Dockerfile.test`
+
+`Dockerfile.build` opiera się na obrazie Ubuntu. Instaluje on wszystkie wymagane zalezności, klonuje repozytorium projektu do odpowiedniego folderu a następnie konfiguruje środowisko builda wykorzystując do tego Meson i kompiluje projekt przy uzyciu Ninja.
+
+Do zbudowania obraz builda wykorzystałem `docker build`:
+![irssi-build](./lab3/build-irssi-build.png)
+
+
+`Dockerfile.test` bazuje na obrazie utworzonym przez poprzedni Dockerfile i wykonuje jedynie testy bez ponownego budowania projektu.
+
+Do zbudowania obrazu testującego aplikację takze wykorzystałem `docker build`. W Dockerfile uwzględniłem nazwę poprzedniego obrazu `irssi-build`.
+![irssi-build](./lab3/build-irssi-test.png)
+
+Aby upewnić się, ze kontener z buildem pracuje poprawnie uruchomiłem go w trybie interaktywnym i upewniłem się, ze w katalogu build znajduje się zbudowany projekt
+![irssi-build run](./lab3/run-irssi-build.png)
+
+Następnie uruchomiłem kontener z testami, który takze zadziałał w oczekiwany sposób.
+![irssi-test run](./lab3/run-irssi-test.png)
+
+## Zajęcia 04
+### 1. 
