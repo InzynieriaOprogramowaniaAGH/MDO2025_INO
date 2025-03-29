@@ -1,1 +1,158 @@
-Cos tu zaraz dodam
+# **Sprawozdanie 1** - Metodyki DevOps
+## **LAB 1** - Wprowadzenie, Git, Gałęzie, SSH
+### Przygotowanie
+Przed rozpoczęciem kolejnych zajęć laboratoryjnych musiałam skonfigurować odpowiednie środowisko pracy. W tym celu, zgodnie z zaleceniami, utworzyłam maszynę wirtualną z systemem Fedora przy użyciu programu Hyper-V.
+
+Następnie przetestowałam komunikację z serwerem, przesyłając przykładowe pliki między urządzeniem lokalnym a serwerem za pomocą polecenia scp. Aby usprawnić i zrobić pracę bardziej przejrzystą, w programie Visual Studio Code zainstalowałam wtyczkę Remote-SSH. Dzięki niej mogłam połączyć się z serwerem poprzez Command Palette (klawisz F1), wprowadzając niezbędne dane, takie jak adres IP serwera, wybranie systemu Linux oraz podanie hasła.
+
+Dodatkowo na maszynie wirtualnej musiałam zainstalować narzędzia git i tar, aby wszystko poprawnie mogło działać.
+
+  ``` bash
+  # Komendy:
+  # przesyłanie z serwera na lokalny komputer
+  scp kaoina@172.18.148.33:/home/kaoina/hello_from_Fedora.txt C:\Users\kkuro\Desktop\Studia\semestr_6\DevOps\
+
+  # przesyłanie z lokalnego komputera na serwer
+  scp .\Desktop\Studia\semestr_6\DevOps\bonjour.txt kaoina@172.18.148.33:/home/kaoina/
+
+  # instalowanie potrzebnych narzędzi
+  sudo dnf install -y tar
+  sudo dnf install -y git
+  ```
+
+### Wykonane zadania
+#### Cel
+Celem wykonywanych zadań jest wprowadzenie do pracy na sklonowanym repozytorium zajęć, nauka podstaw Gita poprzez stworzenie własnej gałęzi, zarządzanie commitami (z użyciem git hook) oraz nauka wprowadzania aktualizacji.
+
+- [x] **Zainstaluj klienta Git i obsługę kluczy SSH**
+
+Jak widać na załączonym screenie, nie musiałam już pobierać ani klienta Git, ani obsługi kluczy SSH. Git został przezemnie pobrany w trakcie przygotowania środowiska do zajęć, a obsługa SSH była pradowpodbnie dostępna razem z systemem Fedora. 
+
+<img src="https://github.com/user-attachments/assets/f2255642-c4cf-4b5a-af48-58ef040834f8" style="width:50%;">
+
+
+- [x] **Sklonuj repozytorium przedmiotowe za pomocą HTTPS i personal access token**
+
+ Utworzyłam personal access token do pobrania repozytorium (nie było to jednak konieczne, gdyż repozytorium było publiczne i nie wymagało odemnie 
+ hasła (bądz zastępczego tokena)).
+ 
+ <img src="https://github.com/user-attachments/assets/331e7971-31ba-4ae3-be59-8b5c00d14a5d" style="width:70%;"> 
+
+ Skopiowałam repozytorium poleceniem: `git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git`
+
+- [x] **Upewnij się w kwestii dostępu do repozytorium jako uczestnik i sklonuj je za pomocą utworzonego klucza SSH, zapoznaj się dokumentacją.**
+  - **Utwórz dwa klucze SSH, inne niż RSA, w tym co najmniej jeden zabezpieczony hasłem**
+  
+  Klucze SSH pozwalają na bezpieczne logowanie do serwerów bez użycia haseł. Wygenerowałam klucze (typ klucza ed25519) za pomocą komendy: `ssh-keygen -t ed25519 -C "kkurowka600@gmail.com"`
+ 
+ <img src="https://github.com/user-attachments/assets/97475e2b-143c-4a06-96de-e26d6bddb043" style="width:50%;">
+
+  Dodatkowo uruchomiłam agenta SSH (który jest procesem zarządzającym kluczami SSH) komendą `eval "$(ssh-agent -s)"`. Przechowuje on klucze w pamięci RAM, dzięki czemu nie będzie trzeba wpisywać hasła za każdym razem, gdy skorzystam z klucza. Dodałam klucz do agenta poleceniem `ssh-add ~/.ssh/id_ed25519` 
+
+Następnie wyświetliłam klucz poleceniem `cat ~/.ssh/id_ed25519.pub` i skopiowałam w celu dodania do serwisu GitHub.
+  
+  ![image](https://github.com/user-attachments/assets/514122d0-127f-4972-841c-59d645b82284)
+
+  - **Skonfiguruj klucz SSH jako metodę dostępu do GitHuba**
+    
+Wykonałam to poprzez wklejenie wcześniej pobranego klucza w odpowiednie miejsce w ustawieniach GitHub: `Settings > SSH and GPG keys > New SSH key`
+
+  ![image](https://github.com/user-attachments/assets/8ec2b355-f6be-4f73-a68e-4da89e06680a)
+
+  - **Skonfiguruj 2FA**
+  Zabezpieczyłam też swoje konto włączając uwierzetylnaine dwuskładnikowe (two-factor authentication)
+
+  <img src="https://github.com/user-attachments/assets/0a065ed2-f477-4842-8822-2609c1e9057f" style="width:50%;">
+
+- [x] **Przełącz się na gałąź main, a potem na gałąź swojej grupy (pilnuj gałęzi i katalogu!)**
+
+Wykonałam to poleceniem *git checkout* które służy do przełączania się pomiędzy różnymi gałęziami (branchami). Komenda: `git checkout GCL02`
+
+ <img src="https://github.com/user-attachments/assets/726b7a2d-5e56-438f-9b0c-fe482540caa7" style="width:50%;">
+
+- [x] **Utwórz gałąź o nazwie "inicjały & nr indeksu" np. KD232144.**
+
+Tworzenie nowych gałęzi odbywa się poprzez dodanie do wcześniejszej komendy parametru *-b* (od branch) i zapisania po niej nazwy nowej gałęzi. Komenda: `git checkout -b KK416269`
+
+ <img src="https://github.com/user-attachments/assets/020cfaa7-460d-46b8-8645-676cf8261c68" style="width:50%;">
+
+- [x] **Rozpocznij pracę na nowej gałęzi**
+
+  - **W katalogu właściwym dla grupy utwórz nowy katalog, także o nazwie "inicjały & nr indeksu" np. KD232144**
+W tym katalogu zawarte będą wszytkie pliki i foldery na których pracować będę podczas zajęć. Tworzenie katalogu: `[kaoina@KaoinaFedora GCL02]$ mkdir KK416269`
+
+  - **Napisz Git hooka - skrypt weryfikujący, że każdy Twój "commit message" zaczyna się od "twoje inicjały & nr indexu".**
+
+W ścieżce `.git/hooks/commit-msg.sample` znalazłam przykładowy Git hook, który pozwala kontrolować treść wiadomości commitów. Aby z niego skorzystać, należało nadać mu odpowiednie uprawnienia do uruchamiania. `chmod +x .git/hooks/commit-msg`
+
+  - **Dodaj ten skrypt do stworzonego wcześniej katalogu.**
+
+Utworzyłam plik poleceniem `touch commit-msg`, o kodzie który widnieje powyżej.
+
+  - **Skopiuj go we właściwe miejsce, tak by uruchamiał się za każdym razem kiedy robisz commita.**
+
+  Jeśli wcześniej nie nadałabym odpowiednich uprawnień do pliku w katalogu .git/hooks/, teraz sensowne byłoby wykonanie poniższej operacji: skopiowanie skryptu, który został utworzony w moim folderze, do katalogu .git/hooks, aby działał poprawnie. Plik w katalogu .git/hooks zostanie nadpisany. Polecenie : `[kaoina@KaoinaFedora MDO2025_INO]$ cp ~/MDO2025_INO/INO/GCL02/KK416269/commit-msg .git/hooks/commit-msg`
+
+ W trakcie testowania działania gita hooka okazało się, że musiałam również skonfigurować adres e-mail oraz nazwę użytkownika dla mojego konta Git, aby móc wykonywać commity. W tym celu wykonałam następujące komendy:
+  ``` bash
+  git config --global user.email "kkurowska600@gmail.com"`
+  git config --global user.name "kaoina"
+  ```
+
+  - **Umieść treść githooka w sprawozdaniu**
+
+``` bash
+#!/bin/bash
+
+commit_message=$(cat "$1")
+
+pattern="KK416269"
+
+if [[ $commit_message =~ ^$pattern ]]; then
+    exit 0
+else
+    echo "Commit message musi zaczynać się od $pattern"
+    exit 1
+fi 
+``` 
+  - **W katalogu dodaj plik ze sprawozdaniem**
+
+Podobnie jak wcześniej, utworzyłam w moim katalogu plik o rozszerzeniu .md za pomocą polecenia: `touch sprawozdanie.md`. Jest to rozszerzenie, które jest obsługiwane przez GitHub i pozwala na tworzenie dokumentów w formacie Markdown.
+
+  - **Dodaj zrzuty ekranu (jako inline)**
+
+Korzystałam z dwóch składni
+``` HTML
+1. ![image](ścieżka_do_screena)
+2. <img src="ścieżka_do_screena" style="width:50%;"> (opcja *style* dodatkowo)
+```
+
+Druga składnia była szczególnie przydatna, gdy moje zrzuty ekranu były zdecydowanie za duże i psuły czytelność sprawozdania. Korzystała ona ze składni HTML, która również jest wspierana przez GitHub.
+
+  - **Wyślij zmiany do zdalnego źródła**
+
+  Wszystkie zmiany dodałam do zdalnego repozytorium za pomocą standardowego ciągu instrukcji:
+  ```
+  git add .
+  git commit -m "KK416269 treść"
+  git push origin KK416269 `
+  ```
+Pierwsza komenda git add . dodaje wszystkie zmienione pliki do strefy staging, następnie git commit zapisuje je w lokalnym repozytorium z wiadomością opisującą zmiany. Na końcu, za pomocą git push origin KK416269, wysyłam swoją gałąź do zdalnego repozytorium na serwerze GitHub.
+
+  - **Spróbuj wciągnąć swoją gałąź do gałęzi grupowej**
+
+Pierwszą komendą przełączyłam się na gałąź grupową. Następnie, dzięki git pull pobrałam najnowsze zmiany z tej gałęzi. Kolejno, git merge KK416269 próbuje połączyć moją gałąź z gałęzią grupową, a ostatnia komenda (git push origin GCL02) wysyła zaktualizowaną gałąź grupową z powrotem do zdalnego repozytorium.
+  ``` bash
+  git checkout GCL02
+  git pull origin GCL02
+  git merge KK416269
+  ```
+Próba wciągnięcia mojej gałęzi do gałęzi grupowej (GCL02) nie powiodła się z powodu zabezpieczeń w repozytorium. Taką zmianę należy wprowadzać za pomocą pull request, aby zapewnić kontrolę nad wprowadzanymi zmianami co jednak nie było jeszcze konieczne w tym laboratorium.
+
+  - **Zaktualizowanie sprawozdania**
+
+Korzystając już z wcześniej poznanych komend dokończyłam sprawozdanie i dodałam do zdalnego repozytorium.
+
+
+
+
