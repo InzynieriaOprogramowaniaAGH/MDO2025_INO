@@ -187,15 +187,15 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
 
      Zawartość pliku Dockerfile.bld:
 
-     '''    
-     **FROM fedora**
+     ```   
+     FROM fedora
 
-     **RUN dnf -y install git meson gcc glib2-devel openssl-devel ncurses-devel perl-ExtUtils-Embed**
-     **RUN git clone http://github.com/irssi/irssi.git**
-     **WORKDIR /irssi**
-     **RUN meson Build**
-     **RUN ninja -C Build**
-     '''    
+     RUN dnf -y install git meson gcc glib2-devel openssl-devel ncurses-devel perl-ExtUtils-Embed
+     RUN git clone http://github.com/irssi/irssi.git
+     WORKDIR /irssi
+     RUN meson Build
+     RUN ninja -C Build
+     ```    
 
      Efekt wykonania polecenia: **docker build -t irssibld -f Dockerfile.bld .** :
 
@@ -205,10 +205,10 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
 
      Zawartość pliku Dockerfile.test:
 
-     '''     
-     **FROM irssibld**
-     **RUN ninja -C Build test**
-     '''     
+     ```   
+     FROM irssibld
+     RUN ninja -C Build test
+     ```   
 
      Efekt wykonania polecenia: **docker build -t irssitest -f Dockerfile.test .** :
 
