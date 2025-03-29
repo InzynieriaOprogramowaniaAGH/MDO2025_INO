@@ -20,7 +20,7 @@ Dodatkowo na maszynie wirtualnej musiałam zainstalować narzędzia git i tar, a
   sudo dnf install -y git
   ```
 
-### Wykonane zadania
+### Wykonanie zadania
 #### Cel
 Celem wykonywanych zadań jest wprowadzenie do pracy na sklonowanym repozytorium zajęć, nauka podstaw Gita poprzez stworzenie własnej gałęzi, zarządzanie commitami (z użyciem git hook) oraz nauka wprowadzania aktualizacji.
 
@@ -153,6 +153,161 @@ Próba wciągnięcia mojej gałęzi do gałęzi grupowej (GCL02) nie powiodła s
 
 Korzystając już z wcześniej poznanych komend dokończyłam sprawozdanie i dodałam do zdalnego repozytorium.
 
+## **LAB 2** - Git, Docker
+### Wykonane zadania
+#### Cel
+Zajęcia miały na celu pomóc zrozumieć podstawowe koncepcje DevOpsowe jakimi są kontenery, oraz nauczyć samodzielnie tworzyć i zarządzać prostymi kontenerami Dockera.
+  
+- [x] **Zainstaluj Docker w systemie linuksowym**
+      - użyj repozytorium dystrybucji, jeżeli to możliwe (zamiast Community Edition)
+Ponieważ repozytorium dystrybucji zapewnia stabilniejsze i lepiej zintegrowane z systemem wersje dockera, instalujemy go za pomocą komendy `sudo dnf install docker`. Następnie poniższymi komendami uruchamiamy usługę, oraz ustalamy, że Docker będzie włączał się automatycznie przy starcie systemu. Na końcu weryfikujemy czy zainstalowanie powiodło się pomyślnie (wyświetlamy dostępną wersję).
+
+```bash
+sudo systemctl start docker
+sudo systemctl enable docker
+
+sudo docker --version
+```
+
+![image](https://github.com/user-attachments/assets/87d13b71-6be6-4b9c-81ee-a5d236f8c9f0)
+
+- [x] **Zarejestruj się w Docker Hub i zapoznaj z sugerowanymi obrazami**
+
+Docker Hub to publiczne repozytorium obrazów Docker, gdzie można pobrać gotowe kontenery z aplikacjami i systemami.
+Zarejestrowałam się w serwisie i przejrzałam dostępne obrazy.
+
+![image](https://github.com/user-attachments/assets/2124867f-1f26-40ac-961d-d0dc171dedbc)
+
+- [x] **Pobierz obrazy hello-world, busybox, ubuntu lub fedora, mysql**
+
+Pobrałam kilka podstawowych obrazów (`hello-world` to testowy obraz do sprawdzenia poprawności działania Dockera, a `busybox` to minimalistyczna dystrybucja Linuxa, zawierająca podstawowe narzędza np. do testów), dzięki poniższym komendom:
+
+```bash
+docker pull hello-world
+docker pull busybox
+docker pull ubuntu
+docker pull fedora
+docker pull mysql
+```
+
+![image](https://github.com/user-attachments/assets/16a641fa-7291-488c-8160-b5f0089a0525)
+
+- [x] **Uruchom kontener z obrazu busybox**
+  - **Pokaż efekt uruchomienia kontenera**
+
+Uruchomiłam kontener i zmusiłam do wyświetlenia testowej wiadomości instrukcją `docker run busybox echo "Test działania kontenera busybox"`
+Następnie sprawdziłam listę uruchomionych przeze mnie kontenerów dzięki `sudo docker ps -a`.
+
+![image](https://github.com/user-attachments/assets/8fbfe249-dfc4-47fa-a4c2-32891810ac82)
+
+  - **Podłącz się do kontenera interaktywnie i wywołaj numer wersji**
+
+Uruchomienie kontenera w trybie interaktywnym można wykonać dodając do polecenia argument `-it` oraz `sh` które uruchamia powłokę i pozwala na interakcję z systemem: `sudo docker run -it busybox sh`.
+
+Następnie już wewnątrz kontenera wpisałam komendę `busybox --help` która wyświetliła informację o wersji i licencji (mogłam też użyć po prostu `busybox --version`)
+
+![image](https://github.com/user-attachments/assets/a671736d-ad85-4d6a-831c-623550916f88)
 
 
+- [x] **Uruchom "system w kontenerze" (czyli kontener z obrazu fedora lub ubuntu)**
+  - **Zaprezentuj PID1 w kontenerze i procesy dockera na hoście**
 
+PID 1 (Process ID 1) to pierwszy proces uruchamiany w systemie lub w kontenerze (nadrzędny dla wszystkich innych procesów)
+Aby go zaprezentować uruchomiłam interaktywnie kontener w bash (w moim przypadku fedora). 
+`sudo docker run -it fedora bash`
+
+![image](https://github.com/user-attachments/assets/93f173a8-f2eb-46db-b846-d880f7387d8e)
+
+Aby komenda `ps aux` (która pokazuje listę procesów w kontenerze) działała, należało doinstalować pakiet `dnf install -y procps-ng`, który zawiera `ps`.
+
+![image](https://github.com/user-attachments/assets/09d342d3-81fe-4fdd-8ccb-12e9b0354370)
+
+```bash
+ps aux
+ps -ef
+```
+
+Dodatkowo sprawdziłam hierarchię procesów poleceniem `ps -ef`, gdzie jak widać na screenie, w kolumnie PPID (pokazuje rodzica procesu). Dla bash PPID = 0, co oznacza, że proces nie ma rodzica (czyli jest procesem startowym systemu).
+
+![image](https://github.com/user-attachments/assets/df3aadc7-2955-4801-922a-b2df67d8b423)
+
+Zgodnie z instrukcją wyszukałam procesy dockera. Zrobiłam to dzięki poniższej komendzie. Polecenie wypisało procesy dockera, ponieważ komenda `grep` zwróci tylko te procesy które zawierają słowo docker.
+
+`ps aux | grep docker` 
+
+![image](https://github.com/user-attachments/assets/ea2cb66b-3878-4f2f-80a4-7d97b247c9da)
+
+
+  - **Zaktualizuj pakiety**
+
+W celu aktualizacji pakietów w kontenerze korzystamy z komendy `dnf update -y`. 
+
+![image](https://github.com/user-attachments/assets/d4f4536c-a226-474a-a379-9fe070ee4262)
+
+  - **Wyjdź**
+
+Aby wyjść wpisujemy w konsolę `exit`.
+
+- [x] **Stwórz własnoręcznie, zbuduj i uruchom prosty plik Dockerfile bazujący na wybranym systemie i sklonuj nasze repo.**
+  - **Kieruj się dobrymi praktykami**
+  - **Upewnij się że obraz będzie miał git-a**
+  - **Uruchom w trybie interaktywnym i zweryfikuj że jest tam ściągnięte nasze repozytorium**
+
+Dockerfile:
+
+``` bash
+# Używamy najnowszej wersji Fedory jako bazowego obrazu
+FROM fedora:latest
+
+# Informacje o autorze (opcjonalnie)
+LABEL maintainer="Kaoina <kkurowska600@gmail.com>"
+
+# Instalacja Git-a i usunięcie zbędnych plików cache (dobre praktyki)
+RUN dnf install -y git && dnf clean all
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
+
+# Sklonowanie repozytorium
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+
+# Domyślny tryb interaktywny
+CMD ["/bin/bash"]
+```
+
+Aby zbudować nasz własny kontener na podstawie kryteriów podanych w pliku `Dockerfile` należy go najpierw zbudować przy pomocy `docker build -t moj_git_kontener`.
+Następnie możemy go uruchomć jak poprzednio interaktywnie przy pomocy polecenia `docker run -it --name testowy_kontener moj_git_kontener`.
+
+W środku listujemy (`ls`) katalog roboczy w którym pobraliśmy nasze repozytorium, aby zweryfikować czy nie popełniłam błędów. Upewniamy się również czy pobrał się git poleceniem `git --version`.
+
+![image](https://github.com/user-attachments/assets/5993fbba-5636-49ba-9f66-3cc3ad0a6edb)
+
+- [x] **Pokaż uruchomione ( != "działające" ) kontenery, wyczyść je.**
+
+Poniższymi poleceniami dockera wypisałam w konsoli wszystkie uruchamiane przezemnie kontenery, a następnie wszystkie wyczyściłam. 
+
+`docker ps -a` - wypisanie
+
+![image](https://github.com/user-attachments/assets/378744ac-b5bc-40c2-9468-9513187de5b4)
+
+`docker rm $(docker ps -a -q)` - czyszczenie (flaga `-q` zwraca tylko ID kontenerów)
+
+![image](https://github.com/user-attachments/assets/85598821-4775-4029-8df7-ea598fef74bb)
+
+- [x] **Wyczyść obrazy**
+
+`docker rmi $(docker images -q)` - polecenie wewnątrz zwraca listę ID obrazów (analogicznie jak powyżej). Następnie polecenie `docker rmi` usuwa wszystkie wskazane obrazy.
+
+![image](https://github.com/user-attachments/assets/f8a474e4-d6cf-4fa9-8fd8-1534208b253c)
+
+- [x] **Dodaj stworzone pliki Dockefile do folderu swojego Sprawozdanie1 w repozytorium.**
+
+Na koniec zgodnie z instrukcją dodałam plik Dockerfile do folderu Sprawozdanie1 (w folderze moj_obraz), i zgodnie z zapoznanym schematem uaktualniłam zdalne repozytorium.
+
+```bash
+git add moj_obraz/Dockerfile
+git commit -m "KK416269 Dodanie Dockerfile do Sprawozdanie1"
+git push origin KK416269 
+```
+
+![image](https://github.com/user-attachments/assets/a7661e21-b5e8-46ed-a20d-57da3b370241)
