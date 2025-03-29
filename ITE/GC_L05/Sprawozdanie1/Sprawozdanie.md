@@ -6,6 +6,6 @@
 
 W systemie Fedora zaktualizowano system i zainstalowano Docker.  Następnie pobrano obrazy hello-world, busybox, fedora oraz mysql za pomocą polecenia docker pull.
 
-![opis alternatywny]("../images/docker")
+![opis alternatywny]("ITE/GC_L05/images/docker pull busybox.png")
 
 
