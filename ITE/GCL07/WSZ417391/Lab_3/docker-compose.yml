@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  app:
+      build: 
+        context: .
+        dockerfile: Dockerfile.compose
+      container_name: node-compose
+      ports:
+      - "3000:3000"
+      command: ["npm", "start"]
+      restart: always
+  test:
+      build: 
+        context: .
+        dockerfile: Dockerfile.compose
+      container_name: node-compose-test
+      command: ["npm", "test"]
+      depends_on:
+      - app
