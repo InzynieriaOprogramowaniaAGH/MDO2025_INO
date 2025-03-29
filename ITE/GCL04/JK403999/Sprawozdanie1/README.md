@@ -176,17 +176,18 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
 	* sklonuj repozytorium
 	* Skonfiguruj środowisko i uruchom *build*
 
-          ![Budowanie irssi za pomocą mesona](Images3/meson_build.png "Budowanie irssi za pomocą mesona")  
+     ![Budowanie irssi za pomocą mesona](Images3/meson_build.png "Budowanie irssi za pomocą mesona")  
 
 	* uruchom testy
 
-          ![Uruchomienie testów](Images3/irssi_tests.png "Uruchomienie testów")  
+     ![Uruchomienie testów](Images3/irssi_tests.png "Uruchomienie testów")  
      
 2. Stwórz dwa pliki `Dockerfile` automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:
 	* Kontener pierwszy ma przeprowadzać wszystkie kroki aż do *builda*
 
           Zawartość pliku Dockerfile.bld:
 
+          '''
           **FROM fedora**
 
           **RUN dnf -y install git meson gcc glib2-devel openssl-devel ncurses-devel perl-ExtUtils-Embed**
@@ -194,26 +195,29 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
           **WORKDIR /irssi**
           **RUN meson Build**
           **RUN ninja -C Build**
+          '''
 
           Efekt wykonania polecenia: **docker build -t irssibld -f Dockerfile.bld .** :
 
-          ![Stworzenie obrazu na podstawie pliku Dockerfile.bld](Images3/Dockerfile_build.png "Stworzenie obrazu na podstawie pliku Dockerfile.bld")  
+     ![Stworzenie obrazu na podstawie pliku Dockerfile.bld](Images3/Dockerfile_build.png "Stworzenie obrazu na podstawie pliku Dockerfile.bld")  
 
 	* Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić *builda*!)
 
         Zawartość pliku Dockerfile.test:
 
+          '''
           **FROM irssibld**
           **RUN ninja -C Build test**
+          '''
 
           Efekt wykonania polecenia: **docker build -t irssitest -f Dockerfile.test .** :
 
-          ![Stworzenie obrazu na podstawie pliku Dockerfile.test](Images3/Dockerfile_test.png "Stworzenie obrazu na podstawie pliku Dockerfile.test")  
+     ![Stworzenie obrazu na podstawie pliku Dockerfile.test](Images3/Dockerfile_test.png "Stworzenie obrazu na podstawie pliku Dockerfile.test")  
 
 
 3. Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?
 
-          ![Wdrożone i działające na kontenerze irssi](Images3/irssi.png "Wdrożone i działające na kontenerze irssi")
+     ![Wdrożone i działające na kontenerze irssi](Images3/irssi.png "Wdrożone i działające na kontenerze irssi")
 
 ---
 
@@ -241,9 +245,9 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
     * *Bind mount* z lokalnym katalogiem?
     * Kopiowanie do katalogu z woluminem na hoście (`/var/lib/docker`)?
           
-          Repozytorium zostało skopiowane na wolumin wejściowy używając polecenia **docker cp** będąc na hoście
+     Repozytorium zostało skopiowane na wolumin wejściowy używając polecenia **docker cp** będąc na hoście
 
-          ![Kopiowanie repo do woluminu](Images4/copy_to_vol.png "Kopiowanie repo do woluminu")
+     ![Kopiowanie repo do woluminu](Images4/copy_to_vol.png "Kopiowanie repo do woluminu")
 
 * Uruchom build w kontenerze - rozważ skopiowanie repozytorium do wewnątrz kontenera
 
@@ -262,6 +266,23 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
 
 * Przedyskutuj możliwość wykonania ww. kroków za pomocą `docker build` i pliku `Dockerfile`. (podpowiedź: `RUN --mount`)
 
+     Możemy użyć wieloetapowego budowania, aby dodatkowo mieć czyste zbudowane środowisko:
+
+     '''
+     FROM fedora # etap 1 (budowanie)
+     ...
+     *INSTALL DEPENDENCIES* ...
+     RUN --mount=type=bind ...  # dzieki temu możemy tymczasowo przypiąć folder z repo z hosta, do obrazu
+     *BUILD* ...
+     ...
+     FROM fedora # etap 2 (tworzenie kontenera, zaczynamy od czystego systemu, bez zbędnych narzędzi budowania)
+     COPY ...
+     VOLUME ...
+     ...
+     '''
+
+     W ten sposób możemy wykonać wszystkie poprzednie kroki, z użyciem pliku Dockerfile, należy tylko wywołać odpowiednie komendy 
+     Docker build (etap 1), a następnie Docker run (etap 2)
 
 
 ### Eksponowanie portu
@@ -300,11 +321,11 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
      Aby połączyć musimy uruchomić serwer jeszcze raz, podając przekierowany port tak jak, w pierwszym przypadku.
      Z hosta następnie możemy połączyć się w następujący sposób (oczywiście uprzednio musimy zainstalować iperf3 także na hoście) :
 
-     ![Połączenie z serwerem z hosta](Images4/client_conn_from_host.png "Połączenie z serwerem z hosta")     
+     ![Połączenie z serwerem z hosta](Images4/conn_from_host.png "Połączenie z serwerem z hosta")     
 
 * Przedstaw przepustowość komunikacji lub problem z jej zmierzeniem (wyciągnij log z kontenera, woluminy mogą pomóc)
 
-          Przepustowość komunikacji z kontenera w stworzonej sieci (sposób drugi ) wynosi około 10 Gbit/s, a przepustowość z kontenera sposobem pierwszym, lub przepustowość z hosta wynosi około 7 Gbit/s
+     Przepustowość komunikacji z kontenera w stworzonej sieci (sposób drugi ) wynosi około 10 Gbit/s, a przepustowość z kontenera sposobem pierwszym, lub przepustowość z hosta wynosi około 7 Gbit/s
 
 * Opcjonalnie: odwołuj się do kontenera serwerowego za pomocą nazw, a nie adresów IP
 
