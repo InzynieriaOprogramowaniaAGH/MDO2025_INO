@@ -2,10 +2,7 @@
 
 ---
 
-- [Wprowadzenie](#wprowadzenie)
-- [Instalacja](#instalacja)
-- [Konfiguracja](#konfiguracja)
-- [Zakończenie](#zakonczenie)
+
 
 
 ## Laboratorium 2 - Git, Docker
