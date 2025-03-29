@@ -5,7 +5,7 @@
 
 1. - [Laboratorium 1 - Wprowadzenie, Git, Gałęzie, SSH](#laboratorium-2---git-docker)
 2. - [Laboratorium 2 - Git, Docker](#laboratorium-2---git-docker)
-3. - [Laboratorium 3 -Dockerfiles, kontener jako definicja etapu]
+3. - [Laboratorium 3 -Dockerfiles, kontener jako definicja etapu](#laboratorium-2---git-docker)
 
 ## Laboratorium 2 - Git, Docker
 
