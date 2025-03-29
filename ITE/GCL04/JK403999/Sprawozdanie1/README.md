@@ -69,15 +69,17 @@ Należało też nadać mu uprawnienia do uruchamiania:
 
 * Umieść treść githooka w sprawozdaniu.  
 
-**#!/usr/bin/bash**
-**commit_msg_file=$1**
-**#cat $commit_msg_file**
-**count=$(grep -c '^JK403999' "$commit_msg_file")**
-**#echo $count**
-**if [ "$count" -eq 0 ]; then**
-        **echo >&2 Commit musi zaczynac sie od inicjałów i numeru albumu**
-        **exit 1**
-**fi**
+```
+#!/usr/bin/bash
+commit_msg_file=$1
+#cat $commit_msg_file
+count=$(grep -c '^JK403999' "$commit_msg_file")
+#echo $count
+if [ "$count" -eq 0 ]; then
+        echo >&2 Commit musi zaczynac sie od inicjałów i numeru albumu
+        exit 1
+fi
+```
 
 * W katalogu dodaj plik ze sprawozdaniem  
 * Dodaj zrzuty ekranu (jako inline)  
