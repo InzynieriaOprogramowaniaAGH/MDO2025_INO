@@ -249,3 +249,107 @@ Sprawozdanie z lab 2. Git, Docker
       ```sh
       cp Dockerfile ~/MDO2025_INO/INO/GCL02/PK417538/Sprawozdanie1/Dockerfile
       ```
+
+# Sprawozdanie 3
+
+Sprawozdanie z lab 3. Dockerfiles, kontener jako definicja etapu
+
+## Wykonanie
+### Wybór oprogramowania na zajęcia
+* Znajdź repozytorium z kodem dowolnego oprogramowania:
+  * Wybrano repozytorium "pytest-examples".
+
+* Sklonuj niniejsze repozytorium, przeprowadź build programu (doinstaluj wymagane zależności):
+  ```bash
+  git clone https://github.com/pydantic/pytest-examples.git
+  sudo apt update
+  sudo apt install -y python3 python3-pip make git
+  sudo apt install python3-poetry
+  export PATH="$HOME/.local/bin:$PATH"
+  wget -qO- https://astral.sh/uv/install.sh | sh
+  make install
+  ```
+  * `git clone` - klonuje repozytorium.
+  * `apt update` - aktualizuje listę pakietów.
+  * `apt install` - instaluje wymagane pakiety.
+  * `make install` - instaluje zależności projektu.
+
+* Uruchom testy jednostkowe dołączone do repozytorium:
+  ```bash
+  make test
+  ```
+  * `make test` - wykonuje testy jednostkowe.
+
+### Przeprowadzenie buildu w kontenerze
+Ponów ww. proces w kontenerze, interaktywnie.
+1. Wykonaj kroki `build` i `test` wewnątrz wybranego kontenera bazowego. Tj. wybierz "wystarczający" kontener, np. `ubuntu` dla aplikacji C lub `node` dla Node.js.
+   * Uruchom kontener:
+     ```bash
+     docker run -it ubuntu:latest /bin/bash
+     ```
+     * `docker run -it` - uruchamia kontener w trybie interaktywnym.
+   * Podłącz do niego TTY celem rozpoczęcia interaktywnej pracy.
+   * Zaopatrz kontener w wymagania wstępne:
+     ```bash
+     apt-get update && apt-get install -y git python3 python3-pip make
+     apt-get update && apt-get install -y python3-poetry
+     export PATH="$HOME/.local/bin:$PATH"
+     apt-get update && apt-get install -y pipx && pipx install uv
+     ```
+     * `apt-get install` - instaluje pakiety.
+   * Sklonuj repozytorium:
+     ```bash
+     git clone https://github.com/pydantic/pytest-examples.git /app
+     ```
+     * `git clone` - pobiera kod źródłowy.
+   * Skonfiguruj środowisko i uruchom *build*:
+     ```bash
+     cd /app
+     make install
+     ```
+     * `cd /app` - przechodzi do katalogu projektu.
+     * `make install` - instaluje zależności.
+   * Uruchom testy:
+     ```bash
+     make test
+     ```
+     * `make test` - wykonuje testy.
+
+2. Stwórz dwa pliki `Dockerfile` automatyzujące kroki powyżej:
+   * Kontener pierwszy ma przeprowadzać wszystkie kroki aż do *builda*:
+     ```dockerfile
+     FROM ubuntu:latest
+     RUN apt-get update && apt-get install -y \
+       git \
+       python3 \
+       python3-pip \
+       make \
+       && rm -rf /var/lib/apt/lists/*
+     RUN apt-get update && apt-get install -y python3-poetry
+     ENV PATH="/root/.local/bin:${PATH}"
+     RUN apt-get update && apt-get install -y pipx && pipx install uv
+     RUN git clone https://github.com/pydantic/pytest-examples.git /app
+     WORKDIR /app
+     RUN make install
+     ```
+     * `FROM` - określa obraz bazowy.
+     * `RUN` - wykonuje polecenia w kontenerze.
+     * `WORKDIR` - ustawia katalog roboczy.
+
+   * Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić *builda*!):
+     ```dockerfile
+     FROM pytest-examples-build:latest
+     WORKDIR /app
+     CMD [ "make" , "test" ]
+     ```
+     * `FROM` - wykorzystuje obraz utworzony wcześniej.
+     * `CMD` - określa domyślne polecenie do wykonania.
+
+3. Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?
+   ```bash
+   docker build -f Dockerfile.test -t pytest-examples-test .
+   docker run --rm pytest-examples-test
+   ```
+   * `docker build` - buduje obraz z pliku `Dockerfile.test`.
+   * `docker run --rm` - uruchamia kontener i usuwa go po zakończeniu.
+
