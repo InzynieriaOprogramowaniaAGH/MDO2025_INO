@@ -59,3 +59,5 @@ Uruchomiono kontener w trybie interaktywnym poleceniem `sudo docker run -it fedo
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20run%20-it%20fedora%20sh.png?raw=true)
 
 *Rys. 8 uruchomienie kontenera w trybie interaktywnym*
+
+## Laboratorium 3 - Dockerfiles, kontener jako definicja etapu
