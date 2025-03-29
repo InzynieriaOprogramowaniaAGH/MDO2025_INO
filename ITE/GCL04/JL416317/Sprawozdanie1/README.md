@@ -186,3 +186,153 @@ git merge JL416317
 Przykładowy wynik wciągniętych zmian (bez występujących konfliktów) powinien wyglądać tak:
 
 ![Screen z git merge](screenshots/Git_merge.png)
+
+## Instalacja platformy Docker i narzędzia Docker Compose
+
+Do zarządzania kontenerami wykorzystamy platformę `Docker`. Aby ją zainstalować w systemie `Ubuntu Server 24.04`, wykorzystując repozytorium dystrybucji i bez wykorzystania `snap` dostępnego w `Ubuntu`, należy wpisać komende:
+```
+sudo apt install docker.io
+```
+
+Dodatkowo doinstalujemy `docker compose`:
+```
+sudo apt install docker-compose
+```
+
+Aby być pewnym że instalacja przeszła pomyślnie możemy wpisać
+```
+docker --version
+```
+
+I powinniśmy dostać wynik w stylu:
+
+![Screen z docker version](screenshots/Docker_version.png)
+
+Możemy teraz się zalogować lub zarejestrować do serwisu [Docker Hub](https://hub.docker.com/), aby w pełni móc korzystać z platformy `Docker`.
+
+## Pobieranie obrazów kontenerów z DockerHub
+Docker Hub zawiera wiele gotowych obrazów z których będziemy korzystać. Aby je pobrać na lokalną maszynę należy skorzystać z komendy `docker pull`. Przykładowo aby pobrać obrazy: `hello-world`, `busybox`, `ubuntu` i `mysql`, musimy wywołać odpowiednio komendy:
+```
+docker pull hello-world
+docker pull busybox
+docker pull ubuntu:latest
+docker pull mysql
+```
+
+Aby zobaczyć czy obrazy poprawnie zostały pobrane, możemy wpisać komendę:
+```
+docker images
+```
+
+Przykładowy wynik powinien wyglądać następująco:
+
+![Screen z docker images](screenshots/Docker_images.png)
+
+## Uruchamianie kontenerów z obrazów
+Do zaprezentowania uruchamiania kontenerów z obrazów, posłużymy się wcześniej pobranym obrazem `busybox`.
+
+Aby uruchomić kontener, korzystamy z komendy:
+```
+docker run IMAGE_NAME
+```
+
+Czyli aby uruchomić nasz `busybox`, wpisujemy:
+```
+docker run busybox
+```
+
+Kontener został uruchomiony ale został od razu zamkniety dlatego po wpisniu:
+```
+docker ps
+```
+Nie zobaczymy go w uruchiomonych kontenerach. Nie jest to błąd, ponieważ kod zakończenia jest równy 0. Dzieje się tak, ponieważ nie przypisaliśmy mu żadnego terminalu a to dla `busybox` oznacza koniec działania.
+
+Aby to naprawić, możemy skorzystać z parametru `-t` przypisującego terminal, oraz parametru `-i` oznaczającego uruchomienie kontenera w trybie interaktywnym, czyli będziemy znajdować się "w środku" kontenera po jego uruchomieniu. Cała komenda wygląda następująco:
+```
+docker run -it busybox
+```
+
+Teraz pracując w kontenerze, możemy np. wywołać jego wersję:
+```
+busybox --help
+```
+
+![Screen z busybox help](screenshots/Busybox_help.png)
+
+
+W podobny sposób możemy uruchamiać inne obrazu np. `ubuntu`.
+```
+docker run -it ubuntu
+```
+
+Dla testu możemy zaktualizować pakiety:
+
+![Screen z Docker apt update](screenshots/Docker_apt_update.png)
+
+Możemy też zobaczyć działające procesy takie jak `PID 1`:
+
+![Screen z ps z kontenera](screenshots/Docker_ubuntu_ps.png)
+
+Widzimy, że `PID 1` jest `bash` a nie tak jak na hoście `init`. Oznacza to że kontener nie jest pełnoprawnym systemem, ale wszystko co na nim pracuje o tym nie wie. Potwierdzają to wpisy z `ps` na hoście, które pokazują uruchomiony kontener jako zwykły proces.
+
+## Tworzenie własnych obrazów
+
+Docker umożliwia tworzenie własnych, przygotowanych pod nasze potrzeby, obrazów z których możemy włączyć kontenery. Robimy to poprzez utworzenie pliku konfiguracyjnego naszego obrazu, przeważnie plik ten nazywa się `Dockerfile`.
+
+Aby utworzyć kontener, który pobierze repozytorium naszego przedmiotu z `GitHub`, możemy stworzyć następujący plik:
+
+``` dockerfile
+#Bazujemy na gotowym obrazie ubuntu 22.04
+FROM ubuntu:22.04 
+
+#Aktualizujemy pakiety i pobieramy git
+RUN apt update && apt install -y git && apt clean 
+
+#Ustawiamy katalog roboczy
+WORKDIR /app
+
+#Klonujemy repozytorium
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+```
+
+Następnie musimy zbudować obraz. Przechodzimy do katalogu w którym znajduje się nasz `Dockerfile` i wpisujemy komende:
+```
+docker build -t mdo2025-image .
+```
+Parametr `-t` oznacza `tag` naszego obrazu, czyli jego nazwę i ewentualnie wersję.
+
+Po poprawnym zbudowaniu, uruchamiamy obraz i sprawdzamy czy nasze pobrane repozytorium znajduje się w katalogu `/app`:
+```
+docket run -it mdo2025-image
+```
+```
+ls /app
+```
+
+Powinniśmy zobaczyć katalog z naszym repozytorium:
+
+![Screen z ls na kontenerze pobierającym repozytorum](screenshots/Docker_ls_git_repo.png)
+
+## Usuwanie kontenerów i obrazów
+Aby zobaczyć wszystkie kontenery (te uruchomione i zatrzymane) wpisujemy:
+```
+docker ps -a
+```
+Do usunięcia ich wykorzystujemy komendę `docker rm` i ID kontenera, np.
+```
+docker rm 82baef09382a
+```
+
+Do wyświetlenia obrazów, wykorzystujemy komendę:
+```
+docker images
+```
+
+A do usuwania `docker rmi` i ID obrazu lub jego nazwy, np.
+```
+docker rmi ubuntu:latest
+```
+
+Przykładowe usuwanie kontenerów i obrazów wygląda następująco:
+
+![Screen z docker rmi i docker rm](screenshots/Docker_rm.png)
