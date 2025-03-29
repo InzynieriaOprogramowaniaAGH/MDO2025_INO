@@ -4,7 +4,7 @@
 
 ## Laboratorium 2 - Git, Docker
 
-Laboratoria dotyczyły zagadnień konteneryzacji przy użyciu platformy Docker, obejmujących pobieranie i budowanie obrazów, tworzenie plików Dockerfile oraz uruchamiania kontenerów. 
+Laboratoria dotyczyły zagadnień konteneryzacji przy użyciu Dockera, obejmujących pobieranie i budowanie obrazów, tworzenie plików Dockerfile oraz uruchamiania kontenerów. 
 
 ---
 
