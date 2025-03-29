@@ -336,3 +336,139 @@ docker rmi ubuntu:latest
 Przykładowe usuwanie kontenerów i obrazów wygląda następująco:
 
 ![Screen z docker rmi i docker rm](screenshots/Docker_rm.png)
+
+## Uruchamiane aplikacji .net8 na maszynie lokalnej
+Do uruchomienia aplikacji `.net8` na maszynie, potrzebujemy zainstalować środowisko `dotnet`:
+```
+sudo apt install dotnet-sdk-8.0
+```
+
+Następnie pobieramy nasze repozytorium. W moim przypadku:
+```
+git clone https://github.com/JakubLatawiec/weatherapp-backend.git
+```
+
+W katalogu repozytorium wywołujemy komende:
+```
+dotnet restore
+```
+
+A następnie przechodzimy do katalogu `WeatherForecast.Api` i wpisujemy:
+```
+dotnet run
+```
+
+Aplikacja powinna działać:
+
+![Screen z curl z aplikacji na lokalnej maszynie](screenshots/Curl_local_machine.png)
+
+Testy również:
+```
+dotnet test WeatherForecast.Tests
+```
+
+![Screen z testów na lokalnej maszynie](screenshots/Dotnet_test_local.png)
+
+## Uruchamiane aplikacji .net8 na obrazie Docker
+
+Aby uruchomić aplikację `.net8` na obrazie `Docker` przez terminal, należy pobrać odpowiedni obraz:
+```
+docker pull mcr.microsoft.com/dotnet/sdk:8.0
+```
+
+Uruchomienie z obrazu z terminalem odbywa się przez komendę (z przekierowaniem portów):
+```
+docker run -it -p 5099:5099 mcr.microsoft.com/dotnet/sdk:8.0 bash
+```
+
+Tworzymy folder `/app` i pobieramy w nim repozytorium:
+```
+mkdir /app
+git clone https://github.com/JakubLatawiec/weatherapp-backend.git
+```
+
+Podobnie jak w poprzednim kroku, uruchamiamy `dotnet restore`.
+
+Aby kontener działał poprawnie, musimy podać adres IP na 0.0.0.0 przy uruchamianiu aplikacji:
+```
+dotnet run --urls=http://0.0.0.0:5099
+```
+
+Testy uruchamiamy w identyczny sposób: `dotnet test WeatherForecast.Api`.
+
+Wyniki powinny być identyczne:
+
+![Screen z curl na docker image](screenshots/Curl_docker_image.png)
+
+![Screen z testów na docker image](screenshots/Dotnet_test_docker_image.png)
+
+## Uruchamiane aplikacji .net8 budując Dockerfile
+Do uruchomienia aplikacji przez budowanie obrazów `Dockerfile` wykorzytamy 3 pliki:
+- Dockerfile.build - pobierający repozytorium i budujący projekt
+- Docker.test - uruchamiający testy projektu
+- Docker.publish - uruchamiający serwer z gotową aplikacją
+
+Dockerfile.build:
+``` dockerfile
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+WORKDIR /src
+
+# Klonowanie repozytorium
+RUN git clone https://github.com/JakubLatawiec/weatherapp-backend.git
+
+WORKDIR /src/weatherapp-backend
+
+# Przywrócenie zależności
+RUN dotnet restore WeatherForecast.Api/WeatherForecast.Api.csproj
+
+# Budowanie
+RUN dotnet build WeatherForecast.Api/WeatherForecast.Api.csproj -c Release -o /app/build
+```
+```
+docker build -f Dockerfile.build -t weatherapp-build .
+```
+
+Dockerfile.test:
+``` dockerfile
+FROM weatherapp-build AS test
+
+WORKDIR /src/weatherapp-backend
+
+# Uruchomienie testów
+RUN dotnet test WeatherForecast.Tests
+```
+```
+docker build -f Dockerfile.test -t weatherapp-test .
+```
+
+Dockerfile.publish:
+``` dockerfile
+FROM weatherapp-build AS publish
+
+WORKDIR /src/weatherapp-backend
+
+RUN dotnet publish WeatherForecast.Api/WeatherForecast.Api.csproj -c Release -o /app/publish /p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+
+WORKDIR /app
+COPY --from=publish /app/publish .
+
+EXPOSE 5099
+ENTRYPOINT ["dotnet", "WeatherForecast.Api.dll"]
+```
+```
+docker build -f Dockerfile.publish -t weatherapp-publish .
+```
+
+Zbudowanie obrazu dla testów powinno zwrócić ich poprawne wykonanie:
+
+![Screen z testów przez Dockerfile](screenshots/Dotnet_test_dockerfile.png)
+
+A zbudowanie obrazu dla publish powinno dać nam dostęp do aplikacji:
+```
+docker run -p 8080:8080  weatherapp-publish
+```
+![Screen z docker run dla publish](screenshots/Dotnet_publish_run.png)
+![Screen z curl dla Dockerfile](screenshots/Curl_dockerfile.png)
