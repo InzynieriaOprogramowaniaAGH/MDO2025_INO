@@ -28,14 +28,22 @@ Uruchomiono kontener z obrazem Fedora przy użyciu polecenia `sudo docker run -i
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dnf%20upgrade%20-y.png?raw=true)
 
+*Rys. 5 aktualizacja pakietów systemowych*
+
 Następnie zbudowano kontener przy użyciu Dockerfile, który aktualizuje system i instaluje Git za pomocą menedżera pakietów dnf (`dnf -y upgrade && dnf -y install git`), czyści pamięć podręczną, a potem klonuje repozytorium git.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/Dockerfile.png?raw=true)
+
+*Rys. 6 zbudowanie kontenera za pomocą Dockerfile*
 
 Polecenie `sudo docker build -t fedora .` buduje obraz na podstawie instrukcji zawartych w pliku Dockerfile.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20build%20fedora.png?raw=true)
 
+*Rys. 7 zbudowanie obrazu fedora*
+
 Uruchomiono kontener w trybie interaktywnym poleceniem `sudo docker run -it fedora /bin/bash`, a następnie wyświetlono zawartość katalogu roboczego.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20run%20-it%20fedora%20sh.png?raw=true)
+
+*Rys. 8 uruchomienie kontenera w trybie interaktywnym*
