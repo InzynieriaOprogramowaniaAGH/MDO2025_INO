@@ -15,3 +15,5 @@ Uruchomiono kontener z obrazem busybox w trybie interaktywnym i wyświetlono inf
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20run%20busybox.png?raw=true)
 
 Uruchomiono kontener z obrazem Fedora przy użyciu polecenia `sudo docker run -it fedora sh`. Po wejściu do kontenera zaktualizowano pakiety systemowe za pomocą `dnf update`. Następnie wykonano `ps -ef` i wyświetlono proces PID1.
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20run%20fedora.png?raw=true)
