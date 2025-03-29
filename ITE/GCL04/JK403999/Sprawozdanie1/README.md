@@ -185,9 +185,9 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
 2. Stwórz dwa pliki `Dockerfile` automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:
 	* Kontener pierwszy ma przeprowadzać wszystkie kroki aż do *builda*
 
-          Zawartość pliku Dockerfile.bld:
+     Zawartość pliku Dockerfile.bld:
 
-          '''
+          
           **FROM fedora**
 
           **RUN dnf -y install git meson gcc glib2-devel openssl-devel ncurses-devel perl-ExtUtils-Embed**
@@ -195,22 +195,22 @@ Obrazy dockera można pobrać poleceniem: **docker pull <nazwa_obrazu>**
           **WORKDIR /irssi**
           **RUN meson Build**
           **RUN ninja -C Build**
-          '''
+          
 
-          Efekt wykonania polecenia: **docker build -t irssibld -f Dockerfile.bld .** :
+     Efekt wykonania polecenia: **docker build -t irssibld -f Dockerfile.bld .** :
 
      ![Stworzenie obrazu na podstawie pliku Dockerfile.bld](Images3/Dockerfile_build.png "Stworzenie obrazu na podstawie pliku Dockerfile.bld")  
 
 	* Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić *builda*!)
 
-        Zawartość pliku Dockerfile.test:
+     Zawartość pliku Dockerfile.test:
 
-          '''
+          
           **FROM irssibld**
           **RUN ninja -C Build test**
-          '''
+          
 
-          Efekt wykonania polecenia: **docker build -t irssitest -f Dockerfile.test .** :
+     Efekt wykonania polecenia: **docker build -t irssitest -f Dockerfile.test .** :
 
      ![Stworzenie obrazu na podstawie pliku Dockerfile.test](Images3/Dockerfile_test.png "Stworzenie obrazu na podstawie pliku Dockerfile.test")  
 
