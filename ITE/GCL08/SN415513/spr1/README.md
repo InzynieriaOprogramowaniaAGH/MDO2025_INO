@@ -272,3 +272,127 @@ history
   231  docker ps -a
   232  sudo docker ps -a
   233  history
+
+# LAB 03
+
+## Wybór oprogramowania na zajęcia
+
+Wybrano repozytorium:
+https://github.com/weechat/weechat  
+Korzystano z instrukcji dostarczonych przez developera
+https://weechat.org/files/doc/weechat/stable/weechat_user.en.html#introduction
+
+```
+git clone https://github.com/weechat/weechat.git
+```
+![](lab3/1.png)
+
+## zależoności, build programu
+```
+sudo apt update
+sudo apt install -y gcc g++ clang cmake pkgconf libncurses-dev libcurl4-gnutls-dev libgcrypt20-dev libgnutls28-dev zlib1g-dev gettext ca-certificates libcjson-dev libzstd-dev libaspell-dev python3-dev libperl-dev ruby-dev tcl-dev guile-3.0-dev libnode-dev libxml2-dev libargon2-dev libsodium-dev asciidoctor libcpputest-dev
+```
+![](lab3/2.png)
+
+build:
+```
+mkdir build
+cd build
+cmake .. -DENABLE_PHP=OFF -DENABLE_LUA=OFF -DENABLE_TESTS=ON
+make
+sudo make install
+```
+![](lab3/3.png)
+![](lab3/4.png)
+
+## testy:
+```
+ctest -V
+```
+![](lab3/5.png)
+
+## uruchomienie alpikacji
+![](lab3/6.png)
+
+### Build w kontenerze
+```
+docker run -it --name ubuntu ubuntu:latest /bin/bash
+```
+![](lab3/7.png)
+w kontenerze:
+```
+apt update
+apt install -y git gcc g++ clang cmake pkgconf libncurses-dev libcurl4-gnutls-dev libgcrypt20-dev libgnutls28-dev zlib1g-dev gettext ca-certificates libcjson-dev libzstd-dev libaspell-dev python3-dev libperl-dev ruby-dev tcl-dev guile-3.0-dev libnode-dev libxml2-dev libargon2-dev libsodium-dev asciidoctor libcpputest-dev locales
+```
+
+podczas apt-installl należy wskazać strefę czasową. 
+konfiguracja:
+```
+sudo locale-gen en_US.UTF-8
+
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+```
+
+```
+git clone https://github.com/weechat/weechat.git
+cd weechat
+mkdir build
+cd build
+cmake .. -DENABLE_PHP=OFF -DENABLE_LUA=OFF -DENABLE_TESTS=ON
+make
+make install
+ctest -V
+```
+![](lab3/8.png)
+![](lab3/9.png)
+![](lab3/10.png)
+![](lab3/11.png)
+![](lab3/12.png)
+aplikacja:
+![](lab3/13.png)
+
+	
+
+## Dockergile do builda
+```
+FROM ubuntu:latest
+
+RUN apt-get update && apt install -y git gcc g++ clang cmake pkgconf libncurses-dev libcurl4-gnutls-dev libgcrypt20-dev libgnutls28-dev zlib1g-dev gettext ca-certificates libcjson-dev libzstd-dev libaspell-dev python3-dev libperl-dev ruby-dev tcl-dev guile-3.0-dev libnode-dev libxml2-dev libargon2-dev libsodium-dev asciidoctor libcpputest-dev
+
+WORKDIR /app
+RUN git clone https://github.com/weechat/weechat.git
+
+WORKDIR /app/weechat
+RUN mkdir build
+WORKDIR /app/weechat/build
+
+RUN cmake .. -DENABLE_PHP=OFF -DENABLE_LUA=OFF -DENABLE_TESTS=ON && make && make install
+
+```
+
+
+```
+docker build -t weechat-build -f Dockerfile.build .
+```
+![](lab3/14.png)
+## Kontener tyko do testu (bazuje na pierwszym z buildem)
+```
+FROM weechat-build
+
+WORKDIR /app/weechat/build
+
+RUN ctest -V
+```
+
+```
+docker build -t weechat-test -f Dockerfile.test .
+```
+![](lab3/15.png)
+
+## Rzeczy które się działy w obu kontenerach
+![](lab3/16.png)
+
+   
+
