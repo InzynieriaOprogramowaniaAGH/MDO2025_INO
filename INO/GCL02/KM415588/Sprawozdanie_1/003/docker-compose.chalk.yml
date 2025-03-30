@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  builder:
+    build:
+      context: .
+      dockerfile: dockerfile.chalkbuild
+
+  tester:
+    build:
+      context: .
+      dockerfile: dockerfile.chalktest
+    depends_on:
+      - builder
