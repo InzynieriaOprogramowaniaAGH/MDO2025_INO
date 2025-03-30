@@ -1,4 +1,4 @@
-## Labolatorium nr. 1
+## Labolatorium 1 Wprowadzenie, Git, Gałęzie, SSH
 ## 1) Instalacja Git i kluczy SSH Aby rozpocząć pracę z systemem Git oraz zapewnić bezpieczne połączenie przez SSH, zainstalowano odpowiednie narzędzia.
 ![image](https://github.com/user-attachments/assets/de868aad-30c9-49da-9446-c1c1a274cba5)
 
@@ -42,7 +42,7 @@ Zmieniono połączenie z repozytorium na SSH:
 ![image](https://github.com/user-attachments/assets/80e9c452-a24f-46ed-89e3-49ab220374d7)
 ![image](https://github.com/user-attachments/assets/fd2f3037-08ce-4a95-bc99-1ffe370bc127)
 ![image](https://github.com/user-attachments/assets/77337adc-6852-41c6-83eb-cc4b61b9d9a4)
-## Laboratorium 2
+## Laboratorium 2 Git, Docker
 1) Zainstalowano oprogramowanie Docker, na systemie Ubuntu, poprzez polecenie:
 
           sudo dnf install -y docker.
@@ -121,7 +121,7 @@ Budowanie obrazów
 Sprawdzenie pierwszego kontenera (pytest-build)
 ![image](https://github.com/user-attachments/assets/6330d016-43de-443e-b896-418cc1ae8b29)
 
-## Laboratorium 4
+## Laboratorium 4 Dodatkowa terminologia w konteneryzacji, instancja Jenkins
 1) Przygotowanie woluminów wejściowego i wyjściowego oraz podłączenie ich do kontenera bazowego
 ![image](https://github.com/user-attachments/assets/ed43521d-720c-48e9-98f5-90220c938b18)
 
