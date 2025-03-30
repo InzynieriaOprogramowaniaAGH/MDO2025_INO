@@ -1,7 +1,5 @@
-FROM fedora
+FROM node
 
-RUN dnf -y install git npm
-RUN dnf -y update
 RUN git clone https://github.com/LitoMore/chalk-pipe
 WORKDIR /chalk-pipe
 

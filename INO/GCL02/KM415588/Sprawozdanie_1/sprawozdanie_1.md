@@ -119,6 +119,10 @@ Na zdjęciu nie widać zakończenia wywołania merge, ale się nie powiódł ze 
 
 ## Laboratorium 2 - Git,Docker
 
+### Wprowadzenie
+
+Zajęcia zajmowały sie zapoznaniem sie z narzędziem Docker - obrazami, kontenerami - oraz automatyzacją tworzenia gotowych do użytku obrazów przy użyciu Dockerfile-i.
+
 ### 1️⃣ Instalacja Dockera:
 ```bash
 sudo dnf install docker
@@ -264,3 +268,149 @@ git add .
 git commit -m "KM415588: sprawozdanie i zdjęcia"
 git push origin KM415588
 ```
+
+## Laboratorium 3 - Dockerfiles, kontener jako definicja etapu
+
+### Wprowadzenie
+
+Celem labolatorioum było lepsze zapoznanie się z działaniem Dockerfile-ów oraz z narzedziem Docker-compose i lepsze zrozumienie działania obrazów i ich możliwości.
+
+### 1️⃣ Znalezienie repozytorium z wbudowanymi testami:
+
+Do realizacji ćwiczenia wybrałem bibliotekę chalk-pipe posiadającą:
+- skrypty npm run build i npm test
+- testami AVA
+- licencją MIT
+
+LINK: https://github.com/LitoMore/chalk-pipe
+
+![repo_photo](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/img/repo_photo.png)
+
+#### Pomoc ChatGPT
+Do znalezienia repo wykorzystana pomoc ChatGPT:
+- Zadane pytanie:
+Proszę czy mógłbys mi pomóc znaleźć repozytorium umozliwiające testy jednostkowe w dowolnym środowisku i z uzyciem dowolnego narzędzi (npm, ninja, pytest)
+W odpowiedzi uzyskałem kilka repozytoriów a to było jedno z nich.
+
+### 2️⃣ Testy na własnym OS:
+
+Na początku sklonowałem uaktualniłem środowisko, skopiowałem repozytorium i spróbowałem uruchomić testy:
+
+```bash
+sudo dnf -y update
+git clone https://github.com/LitoMore/chalk-pipe
+cd chalk-pipe
+npm install
+``` 
+W terminalu otrzymałem jednak komunikat o nie posiadaniu narzędzia npm - doinstalowałem je i ponowiłem próbę:
+
+```bash
+sudo dnf -y install npm
+npm install
+```
+
+![OS_NPM](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/img/OS_NPM.png)
+
+Tym razem udał się wstępny etap, więc przeszedłem do dalszych kroków:
+
+```bash
+npm run build && npm test
+```
+
+![NPM_test](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/img/NPM_TEST.png)
+
+Jak widzimy testy przebiegły poprawnie
+
+### 3️⃣ Napisanie Dockerfile-ów:
+
+Ze względu na fakt używania npm do testów nie potrzebuję pełnego OS, ale mogę uruchomić swoje testy na Node.js - spowoduje to zmniejszenie wykorzystywanego konteneru i uprości pisanie Dockerfile - nie muszę instalować dodatkowych pakietów. Pierwszy Dockerfile służący do budowy wygląda następująco:
+```dockerfile
+FROM node
+
+RUN git clone https://github.com/LitoMore/chalk-pipe
+WORKDIR /chalk-pipe
+
+RUN npm install
+RUN npm run build
+```
+
+Po czym uruchamiam w konsoli budowanie obrazu chalk-build:
+
+```bash
+sudo docker build -f dockerfile.chalkbuild . -f chalk-build
+```
+
+![docker-build-chalk](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/img/chalk_build.png)
+
+Jak widzimy na zdjęciu powyżej budowa obrazu przebiegła pozytywwnie. Przechodzę do napisania drugiego dockerfile-u:
+
+```dockerfile
+FROM chalk-build
+WORKDIR /chalk-pipe
+RUN npm test > test_output.log || true
+CMD ["cat", "test_output.log"]
+```
+
+Nowy obraz będzie korzystał z poprzedniego i będzie uruchamiał testy a wyniki, które wypisałyby sie w konsoli wpisze do pliku test_output.log. Przy utworzeniu kontenera na podstawie tego obrazu wynik testów wypisze się w konsoli:
+
+```bash
+sudo docker build -t chalk-test -f dockerfile.chalktest .
+sudo docker run -it chalk-test
+```
+
+![chalk_test_dockefile](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/img/chalk_test.png)
+
+### 4️⃣ Zakres rozszerzony docker-compose:
+
+Na początku napisałem plik docker-compose.chalk.yml:
+
+```docker-compose
+version: '3.7'
+
+services:
+  builder:
+    build:
+      context: .
+      dockerfile: dockerfile.chalkbuild
+
+  tester:
+    build:
+      context: .
+      dockerfile: dockerfile.chalktest
+    depends_on:
+      - builder
+```
+
+Kompozycja będzie tworzyła dwie usługi - pierwszą na bazie dockerfile.chalkbuild, a drugą na podstawie dockerfile.chalktest. Skróci to nasze wywołanie i sprawdzenie działania testów do jednej komendy - uwzględniam jednak również instalacje docker compose:
+
+```bash
+sudo dnf -y install docker-compose
+sudo docker-compose -f docker-compose.chalk.yml up --build
+```
+
+![chalk_test_compose1](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/img/docker-compose-test1.png)
+
+![chalk_test_dockefile](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/img/docker-compose-res2.png)
+
+Jak widać na zdjęciachwdrożenie kompozycji przebiegło pozytywnie.
+
+#### Przygotowanie do wdrożenia (deploy): dyskusje
+W przypadku wybranego przeze mnie repozytorium nie ma sensu publikować go jako kontener - jest to biblioteka wykorzystywana do działania z innymi programami a nie sama w sobie. O ile jescze do przeprowadzenia takiej konteneryzacji jw. nadaje się w zupełności to budowanie konteneru z chalk-pipe jako produktem, mija sie z celem.
+
+Pomimo tego faktu porzeprowadzę dalsze rozważania i dywagacje tak, jakbym przygotowywał gotowy kontener z chalk-pipe jako produktem:
+
+- przygotowanie finalnego artefaktu:
+
+    jest to bibliotek, więc lepiej aby finalnym artefaktem była paczka .tgz lub skompilowana wersja. Skupie się na wersji w paczce - pakowania dokonać możemy poleceniem:
+
+    ```bash
+    npm pack
+    ```
+
+- czyszczenie kontenera:
+
+    tu moje rozważania przestają mieć zastosowanie do wybranego przeze mnie repo. Ale tak - standarodowo powinno sie czyścić kontener przed opulikowaniem aplikacji w formie kontenerowej. Konieczne jest usunięcie testów, zależności deweloperskich, plików źródłowych oraz niepotrzebnych plików cache. Najlepszym podejściem jest jednka zastosowanie tzw. ścieżki deploy and publish. Utworzyć dodatkowy dockerfile, bazujący na czystym obrazie i dostarczający urzytkowniką tylko wysylekcjonowane fragmenty, które pozostały by po oczszczaniu pełnego kontenera.
+
+- dystrybucja programu:
+
+    Przyjmując, iż tworzylibyśmy deploy oparty na JavaScript/TypeScript (czyli gdyby chalk-pipe nie była biblioteką, ale aplikacja do konteneryzacji) to najelpiej utworzyć paczkę .tgz. Jak już powyżej opisałem możemy to osiągnąc jesnym poleceniem npm pack, ale nic nie zatrzymuje nas przed napisaniem dodatkowego dockerfile, po którego zbuildowaniu artefaktem będzie paczka.
