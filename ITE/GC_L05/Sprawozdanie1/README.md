@@ -26,6 +26,10 @@ Laboratoria dotyczyły konfiguracji Git i SSH, klonowania repozytorium przez HTT
 
 *Rys. 3 sklonowanie zdalnego repozytorium git*
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/generowanie%20klucza%20ssh.png?raw=true)
+
+*Rys. 4 generowanie kluczy ssh*
+
 ---
 ## Laboratorium 2 - Git, Docker
 
