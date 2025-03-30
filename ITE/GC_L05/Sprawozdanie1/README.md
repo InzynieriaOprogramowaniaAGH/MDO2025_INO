@@ -21,6 +21,9 @@
 
 *Rys. 2 wyświetlenie wersji klienta ssh*
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/klonowanie%20repozytorium%20git%20za%20pomoc%C4%85%20https.png?raw=true)
+
+*Rys. 3 sklonowanie zdalnego repozytorium git*
 
 ---
 ## Laboratorium 2 - Git, Docker
