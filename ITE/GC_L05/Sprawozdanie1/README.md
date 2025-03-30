@@ -26,13 +26,17 @@ Na początku zainstalowano git-a  oraz obsługę kluczy ssh i wyświetlono infor
 
 Następnie sklonowano repozytorium przy użyciu protokołu HTTPS, a autoryzację wykonano za pomocą personal access token, który został wprowadzony w adresie URL komendy klonowania. Token PAT wygenerowano na platformie github wybierając opcje `Settings`>`Developer settings` > `Personal access tokens` i generując nowy token.
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/wygenerowanie%20tokenu%20PAT.png?raw=true)
+
+*Rys. 3 wygenerowanie i zpaisanie nowego tokenu*
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/klonowanie%20repozytorium%20git%20za%20pomoc%C4%85%20https.png?raw=true)
 
-*Rys. 3 sklonowanie zdalnego repozytorium git*
+*Rys. 4 sklonowanie zdalnego repozytorium git*
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/generowanie%20klucza%20ssh.png?raw=true)
 
-*Rys. 4 generowanie kluczy ssh*
+*Rys. 5 generowanie kluczy ssh*
 
 ---
 ## Laboratorium 2 - Git, Docker
