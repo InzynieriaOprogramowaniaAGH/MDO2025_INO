@@ -239,3 +239,6 @@ Następnie sklonowano repozytorium na wolumin wejściowy przez skopiowanie lokal
 
 Utworzono dedykowaną sieć mostkową i uruchomiono serwer `iperf3` w kontenerze, dołączając kontener do utworzonej wcześniej sieci.
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20network%20create%20bridge-net.png?raw=true)
+
+*Rys. 4 utworzenie sieci*
