@@ -17,6 +17,11 @@
 
 *Rys. 1 sprawdzenie wersji git*
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/zainstalowanie%20kluczy%20ssh.png?raw=true)
+
+*Rys. 2 wyświetlenie wersji klienta ssh*
+
+
 ---
 ## Laboratorium 2 - Git, Docker
 
