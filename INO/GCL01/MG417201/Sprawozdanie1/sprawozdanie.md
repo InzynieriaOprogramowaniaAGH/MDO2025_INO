@@ -478,6 +478,13 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
 
   - Dockerfile.test.irssi
 
+    ```Dockerfile
+    FROM irssi_build AS irssi_test
+
+    WORKDIR /irssi
+
+    RUN ninja -C Build test
+    ```
     <div align="center">
       <img src="screens3/18.jpg" alt="irssi build">
     </div>
