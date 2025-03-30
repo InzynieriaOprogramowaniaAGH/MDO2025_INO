@@ -51,8 +51,15 @@ git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 
 ## 9. Hook commit-msg
 
+
+![screen](./ss9.png)
+
 ## 10. Test działania hooka
+
+![screen](./ss10.png)
 
 ## 11. Push zmian
 
 ## 12. Historia komend
+
+![screen](./ss10.png)
