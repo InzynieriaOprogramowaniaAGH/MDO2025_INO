@@ -61,6 +61,12 @@ Aby pobrać zdalnie repozytorium, wskazano plik z kluczem prywatnym przed polece
 
 *Rys. 8 sklonowanie zdalnego repozytorium za pomocą ssh*
 
+Następnie skonfigurowano uwierzytelnianie dwuskładnikowe na Githubie.
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/MFA.png?raw=true)
+
+*Rys. 9 konfiguracja 2FA*
+
 ### Git hook (commit-msg)
 
 Ostatnim krokiem było stworzenie katalogu ze swoimi inicjałami i numerem indeksu oraz  napisanie git hooka weryfikującego, że każdy "commit message" zaczyna się od "inicjały & nr indexu" (w moim wypadku to "AN417592"). Treść tego skryptu znajduje się poniżej.
