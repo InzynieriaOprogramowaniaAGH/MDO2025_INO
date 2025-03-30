@@ -49,6 +49,10 @@ Autoryzacja zakończyła się sukcesem i udało się nawiązać połączenie SSH
 
 *Rys. 6 uwierzytelnienie za pomocą ssh*
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/git%20clone%20ssh.png?raw=true)
+
+*Rys. 7 sklonowanie zdalnego repozytorium za pomocą ssh*
+
 ---
 ## Laboratorium 2 - Git, Docker
 
