@@ -1,6 +1,10 @@
 # Sprawozdanie 1 z przedmiotu DevOps
 
-### **Kierunek: Inżynieria Obliczeniowa Autor: Adam Borek Grupa 1**
+### **Kierunek: Inżynieria Obliczeniowa**
+
+### **Autor: Adam Borek**
+
+### **Grupa 1**
 
 ---
 
