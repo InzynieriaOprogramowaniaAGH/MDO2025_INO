@@ -92,3 +92,5 @@ W kontenerze doinstalowano wymagane zależności, uruchomiono `build` poleceniem
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/npm%20install.png)
 
 *Rys. 5 instalacja npm*
+
+![](![image](https://github.com/user-attachments/assets/ce6d8071-5994-42fe-9e90-c50c0e8d04e1)
