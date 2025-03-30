@@ -63,7 +63,7 @@ git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 git checkout DR416985
 ```
 
-![screen](./DR41)
+![screen](./DR41.png)
 
 
 ## 7. Włączenie 2FA
