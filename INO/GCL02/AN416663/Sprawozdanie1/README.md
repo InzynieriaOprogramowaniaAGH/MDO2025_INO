@@ -20,7 +20,9 @@ Data wykonania: 30.03. 2025 r.
 ![Zrzut ekranu 4](screenshots/4.PNG)
 10. W katalogu stworzyłam przykładowy plik Sprawozdanie1.md dodałam przykładowy tekst oraz spróbowałam wysłać zmiany w następujący sposób:
 ![Zrzut ekranu 5](screenshots/5.PNG)
-12. Próba wypchnięcia mojej gałęzi okazała się niepowodzeniem ze względu na uprawnieia w repozytorium przedmiotowym:
+11. Plik został zapisany jednak nie mógł zostać wypchnięty:
+![Zrzut ekranu 7](screenshots/7.PNG)   
+13. Próba wypchnięcia mojej gałęzi oraz  okazała się niepowodzeniem ze względu na uprawnieia w repozytorium przedmiotowym:
 ![Zrzut ekranu 6](screenshots/6.PNG)
 
 
