@@ -28,7 +28,7 @@ Następnie sklonowano repozytorium przy użyciu protokołu HTTPS, a autoryzację
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/wygenerowanie%20tokenu%20PAT.png?raw=true)
 
-*Rys. 3 wygenerowanie i zpaisanie nowego tokenu*
+*Rys. 3 wygenerowanie i zapisanie nowego tokenu*
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/klonowanie%20repozytorium%20git%20za%20pomoc%C4%85%20https.png?raw=true)
 
