@@ -16,6 +16,8 @@ Laboratoria dotyczyły konfiguracji Git i SSH, klonowania repozytorium przez HTT
 
 ---
 
+### 1. Klonowanie repozytorium za pomocą HTTPS i personal access token
+
 Na początku zainstalowano git-a  oraz obsługę kluczy ssh i wyświetlono informację o wersji.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/zainstalowanie%20gita.png)
@@ -35,6 +37,8 @@ Następnie sklonowano repozytorium przy użyciu protokołu HTTPS, a autoryzację
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/klonowanie%20repozytorium%20git%20za%20pomoc%C4%85%20https.png?raw=true)
 
 *Rys. 4 sklonowanie zdalnego repozytorium git*
+
+### 2. Weryfikacja dostępu do repozytorium jako uczestnik i klonowanie przy użyciu klucza SSH
 
 W kolejnym kroku wygenerowano klucz SSH o typie Ed25519 zabezpieczony hasłem. Otrzymano parę kluczy (prywatny - id_ed25519 oraz publiczny - id_ed25519.pub) zapisaną w katalogu ~/.ssh 
 
@@ -61,13 +65,15 @@ Aby pobrać zdalnie repozytorium, wskazano plik z kluczem prywatnym przed polece
 
 *Rys. 8 sklonowanie zdalnego repozytorium za pomocą ssh*
 
+### 3. Konfiguracja 2FA (uwierzytelniania dwuskładnikowego)
+
 Następnie skonfigurowano uwierzytelnianie dwuskładnikowe na Githubie.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/MFA.png?raw=true)
 
 *Rys. 9 konfiguracja 2FA*
 
-### Git hook (commit-msg)
+### 4. Git hook (commit-msg)
 
 Ostatnim krokiem było stworzenie katalogu ze swoimi inicjałami i numerem indeksu oraz  napisanie git hooka weryfikującego, że każdy "commit message" zaczyna się od "inicjały & nr indexu" (w moim wypadku to "AN417592"). Treść tego skryptu znajduje się poniżej.
 
