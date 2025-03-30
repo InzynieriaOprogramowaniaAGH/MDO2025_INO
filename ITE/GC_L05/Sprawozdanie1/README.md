@@ -4,10 +4,10 @@
 # Spis Treści
 
 1. - [Laboratorium 1 - Wprowadzenie, Git, Gałęzie, SSH](#laboratorium-1---wprowadzenie-git-gałęzie-ssh)
-   1.1 - [Klonowanie repozytorium za pomocą HTTPS i personal access token](#klonowanie-repozytorium-za-pomocą-HTTPS-i-personal-access-token)
-   1.2 - [Weryfikacja dostępu do repozytorium jako uczestnik i klonowanie przy użyciu klucza SSH](#weryfikacja-dostępu-do-repozytorium-jako-uczestnik-i-klonowanie-przy-użyciu-klucza-SSH)
-   1.3 - [Konfiguracja 2FA](#konfiguracja-2fa)
-   1.4 - [Git hook (commit-msg)](#git-hook-(commit-msg))
+  - 1.1 - [Klonowanie repozytorium za pomocą HTTPS i personal access token](#klonowanie-repozytorium-za-pomocą-HTTPS-i-personal-access-token)
+  - 1.2 - [Weryfikacja dostępu do repozytorium jako uczestnik i klonowanie przy użyciu klucza SSH](#weryfikacja-dostępu-do-repozytorium-jako-uczestnik-i-klonowanie-przy-użyciu-klucza-SSH)
+  - 1.3 - [Konfiguracja 2FA](#konfiguracja-2fa)
+  - 1.4 - [Git hook (commit-msg)](#git-hook-(commit-msg))
 2. - [Laboratorium 2 - Git, Docker](#laboratorium-2---git-docker)
 3. - [Laboratorium 3 - Dockerfiles](#laboratorium-3---dockerfiles)
 4. - [Laboratorium 4 - Dodatkowa terminologia w konteneryzacji](#laboratorium-4---dodatkowa-terminologia-w-konteneryzacji)
