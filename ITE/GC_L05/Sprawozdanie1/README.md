@@ -42,18 +42,24 @@ W kolejnym kroku wygenerowano klucz SSH o typie Ed25519 zabezpieczony hasłem. O
 
 *Rys. 5 generowanie kluczy ssh*
 
+Potem skopiowano ten klucz i w githubie wybrano opcje `Settings`>`SSH and GPG keys`> `New SSH key`. Wklejono skopiowany klucz i zapisano.
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dodanie%20klucza%20ssh%20do%20githuba.png?raw=true)
+
+*Rys. 6 dodanie wygenerowanego klucza ssh do githuba"
+
 Następnie użyto polecenia `ssh -i ssh_key -T git@github.com`, po czym wprowadzono hasło (passphrase) do klucza prywatnego.
 Autoryzacja zakończyła się sukcesem i udało się nawiązać połączenie SSH z Githubem, co potwierdza komunikat „Hi LadyAmely! You've successfully authenticated.”.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/zalogowanie%20do%20githuba%20za%20pomoc%C4%85%20ssh.png?raw=true)
 
-*Rys. 6 uwierzytelnienie za pomocą ssh*
+*Rys. 7 uwierzytelnienie za pomocą ssh*
 
 Aby pobrać zdalnie repozytorium, wskazano plik z kluczem prywatnym przed poleceniem `git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git`, które klounuje repozytorium przez SSH. Po wprowadzeniu  hasło do klucza i poprawnym uiwerzytelnieniu repozytorium zostało pobrane lokalnie.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/git%20clone%20ssh.png?raw=true)
 
-*Rys. 7 sklonowanie zdalnego repozytorium za pomocą ssh*
+*Rys. 8 sklonowanie zdalnego repozytorium za pomocą ssh*
 
 ### Git hook (commit-msg)
 
