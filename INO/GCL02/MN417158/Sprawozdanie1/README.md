@@ -2,22 +2,23 @@
 
 ## Zadanie 1:
 
-### 1. Po zainstalowaniu i skonfigurowaniu systemu Fedora Server na maszynie wirtualnej połączyłem się z nim przez wiersz poleceń w systemie Windows za pomocą polecenia:
+1. Po zainstalowaniu i skonfigurowaniu systemu Fedora Server na maszynie wirtualnej połączyłem się z nim przez wiersz poleceń w systemie Windows za pomocą polecenia:
 ```sh
 ssh root@192.168.100.38
-``` 
-
-![Interfejs systemu Fedora oraz ip z którym się łączymy][screenshots/zrzut1.png]
+```
+ 
+**Zrzut ekranu:**
+![Interfejs systemu Fedora oraz ip z którym się łączymy][screenshots/Zrzut1.png]
 
 Kolejnym krokiem jest instalacja klienta Git poprzez polecenie
 ```sh
 sudo dnf install git
 ```
-### 2. Następnie sklonowałem repozytorium przez HTTPS i Personal Access Token:
+2. Następnie sklonowałem repozytorium przez HTTPS i Personal Access Token:
 ```sh
 git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 ```
-### 3. Utworzyłem dwa klucze SSH w tym jeden zabezpieczony hasłem używając komendy:
+3. Utworzyłem dwa klucze SSH w tym jeden zabezpieczony hasłem używając komendy:
 ```sh
 ssh-keygen -t ed25519 -C "milosznowak25@gmail.com"
 ```
@@ -28,13 +29,13 @@ ssh-add ~/.ssh/id_ed25519
 ```
 **Zrzut ekranu:**
 
-![Utworzone klucze na Github](screenshots/zrzut2.png)
+![Utworzone klucze na Github](screenshots/Zrzut2.png)
 
 Upewniłem się że mam dostęp do repozytorium:
 
 **Zrzut ekranu:**
 
-![Komenda ssh -T git@github.com](screenshots/zrzut3.png)
+![Komenda ssh -T git@github.com](screenshots/Zrzut3.png)
 Następnie sklonowałem repozytorium za pomocą SSH:
 ```sh
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
@@ -42,4 +43,4 @@ git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 
 **Zrzut ekranu:**
 
-![Sklonowane repozytorium widoczne w systemie Fedora](screenshots/zrzut4.png)
+![Sklonowane repozytorium widoczne w systemie Fedora](screenshots/Zrzut4.png)
