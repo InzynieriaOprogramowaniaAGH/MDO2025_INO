@@ -12,6 +12,8 @@
 3. - [Laboratorium 3 - Dockerfiles](#laboratorium-3---dockerfiles)
 4. - [Laboratorium 4 - Dodatkowa terminologia w konteneryzacji](#laboratorium-4---dodatkowa-terminologia-w-konteneryzacji)
      - [Zachowywanie stanu](#zachowywanie-stanu)
+     - [Eksponowanie portu](#eksponowanie-portu)
+     - [Instancja Jenkins](#instancja-jenkins)
 
 ---
 
@@ -240,6 +242,8 @@ Następnie sklonowano repozytorium na wolumin wejściowy przez skopiowanie lokal
 
 *Rys. 3 klonowanie repozytorium na wolumin wejściowy*
 
+### Eksponowanie portu
+
 Utworzono dedykowaną sieć mostkową i uruchomiono serwer `iperf3` w kontenerze, dołączając kontener do utworzonej wcześniej sieci.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20network%20create%20bridge-net.png?raw=true)
@@ -267,6 +271,8 @@ Pobrano i wyświetlono logi kontenera poleceniem `sudo docker logs iperf_server`
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20logs%20iperf_server.png?raw=true)
 
 *Rys. 8 monitorowanie logów*
+
+### Instancja Jenkins
 
 
 Utworzono sieć przy użyciu polecenia `docker network create` dla jenkinsa.
