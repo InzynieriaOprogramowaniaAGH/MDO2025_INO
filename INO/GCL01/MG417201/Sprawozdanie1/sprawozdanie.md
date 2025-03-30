@@ -283,6 +283,61 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
 
 ***
 ## Laboratorium 3
+**1. Wybór oprogramowania na zajęcia**
+
+- W trakcie zajęć korzystaliśmy z _**irssi**_ oraz _**node-js-dummy-test**_, natomiast do samodzielnej pracy wybrałem oprogramowanie _**redis**_, będące bazą danych NoSQL.
+
+**2. Instalacja oprogramowania**
+
+- Aby zainstalować wymienione w poprzednim punkcie oprogramowanie należało sklonować je za pomocą polecenia `git clone`.
+
+<div align="center">
+  <img src="screens3/1.jpg" alt="klonowanie irssi i node-js-dummy-test">
+</div>
+
+<div align="center">
+  <img src="screens3/8.jpg" alt="klonowanie redis">
+</div>
+
+- Po sklonowaniu repozytoriów należało przeprowadzić build, zainstalować wszystkie potrzebne zależności oraz przeprowadzić testy:
+  - Dla _**irssi**_ należało:
+    - Zainstalować manualnie wszystkie brakujące zależności, a następnie użyć poleceń:
+    - `meson Build`, aby przeprowadzić build
+    <div align="center">
+      <img src="screens3/3.jpg" alt="irssi build">
+    </div>
+    - `ninja -C Build && sudo ninja -C Build install`
+    - `ninja test`, aby przeprowadzić testy
+    <div align="center">
+      <img src="screens3/4.jpg" alt="irssi tests">
+    </div>
+  - Dla _**node-js-dummy-test**_:
+    - `npm install`, aby zainstalować wszystkie potrzebne zależności
+    <div align="center">
+      <img src="screens3/5.jpg" alt="instalacja zależności dla node-js-dummy-test">
+    </div>
+    - `npm start`, aby uruchomić program
+    <div align="center">
+      <img src="screens3/6.jpg" alt="node-js-dummy-test running">
+    </div>
+    - `npm test`, aby przeprowadzić testy
+    <div align="center">
+      <img src="screens3/7.jpg" alt="node-js-dummy-test test">
+    </div>
+  - Dla _**redis**_:
+    - `sudo dnf install gcc make jemalloc-devel tcl`, aby zainstalować potrzebne zależności
+    - `make`, aby przeprowadzić build programu
+    <div align="center">
+      <img src="screens3/9.jpg" alt="redis build">
+    </div>
+    - `make test`, aby przeprowadzić testy
+    <div align="center">
+      <img src="screens3/10.jpg" alt="redis tests">
+    </div>
+
+**3. Przeprowadzenie buildu w kontenerze**
+
+
 
 
 ***
