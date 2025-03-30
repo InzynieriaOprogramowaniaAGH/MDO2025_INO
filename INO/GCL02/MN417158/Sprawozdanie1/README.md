@@ -9,7 +9,7 @@ ssh root@192.168.100.38
  
 **Interfejs systemu Fedora oraz ip z którym się połączyłem:**
 
-![Zrzut1][screenshots/Zrzut1.png]
+![Zrzut1](screenshots/Zrzut1.png)
 
 Kolejnym krokiem jest instalacja klienta Git poprzez polecenie
 ```sh
@@ -130,3 +130,6 @@ następnie po ```sh dnf install procps -y```
 9. Wyczyśiłem wszystkie obrazy ```sh docker rmi $(docker images - q)``` 
 
 ![Zrzut16](screenshots/Zrzut16.png)
+
+## Zadanie 3:
+
