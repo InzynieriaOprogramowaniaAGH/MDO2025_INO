@@ -24,7 +24,7 @@ Na początku zainstalowano git-a  oraz obsługę kluczy ssh i wyświetlono infor
 
 *Rys. 2 wyświetlenie wersji klienta ssh*
 
-Następnie sklonowano repozytorium przy użyciu protokołu HTTPS, a autoryzację wykonano za pomocą personal access token, który został wprowadzony w adresie URL komendy klonowania. 
+Następnie sklonowano repozytorium przy użyciu protokołu HTTPS, a autoryzację wykonano za pomocą personal access token, który został wprowadzony w adresie URL komendy klonowania. Token PAT wygenerowano na platformie github wchodząc w opcję ustawienia, a następnie 
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/klonowanie%20repozytorium%20git%20za%20pomoc%C4%85%20https.png?raw=true)
 
