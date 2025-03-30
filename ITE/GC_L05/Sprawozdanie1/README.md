@@ -14,6 +14,7 @@
 
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/zainstalowanie%20gita.png)
+
 *Rys. 1 sprawdzenie wersji git*
 
 ---
