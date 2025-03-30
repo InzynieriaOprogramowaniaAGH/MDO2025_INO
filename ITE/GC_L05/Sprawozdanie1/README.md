@@ -231,6 +231,8 @@ Na początku utworzono poleceniem `docker create volume` dwa  woluminy (wejścio
 
 *Rys. 2 uruchomienie kontenera i podłączenie woluminu wejściowego*
 
+Następnie sklonowano repozytorium na wolumin wejściowy przez skopiowanie lokalnego katalogu z repozytorium do odpowiedniego katalogu wewnątrz kontenera za pomocą polecenia `docker cp` ( `docker cp M000225_IN0/ dinput:/mnt/input`). 
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20cp.png?raw=true)
 
 *Rys. 3 klonowanie repozytorium na wolumin wejściowy*
