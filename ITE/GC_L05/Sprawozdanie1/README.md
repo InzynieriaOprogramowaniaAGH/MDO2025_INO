@@ -256,6 +256,9 @@ Następnie uruchomiono nowy kontener o nazwie iperf_client w sieci bridge_net, d
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/iperf%20localhost.png?raw=true)
 
 *Rys. 7 połączenie spoza kontenera*
+
+Pobrano i wyświetlono logi kontenera poleceniem `sudo docker logs iperf_server`.
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20logs%20iperf_server.png?raw=true)
 
 *Rys. 8 monitorowanie logów*
