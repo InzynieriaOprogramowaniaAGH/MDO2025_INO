@@ -1,6 +1,9 @@
 FROM fedora:latest AS build
 
-RUN dnf update -y && dnf install -y git cmake g++
+RUN dnf update -y && dnf install -y \
+cmake \
+g++ \
+git
 
 WORKDIR /app
 RUN git clone --recursive https://github.com/doctest/doctest.git .
