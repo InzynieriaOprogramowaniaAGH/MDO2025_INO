@@ -1,0 +1,3 @@
+FROM node_build_container
+
+RUN npm test
