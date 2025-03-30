@@ -134,13 +134,21 @@ Sklonuj repozytorium na wolumin wejściowy
 ![image](https://github.com/user-attachments/assets/f59e35f5-eac1-40cb-b583-2bf3ac43f506)
 Repozytorium zostało sklonowane bez użycia kontenera czy bind mount, ale poprzez zapis w katalogu woluminu na hoście (/var/lib/docker/volumes/input/_data). Dzięki temu sklonowane pliki będą dostępne dla kontenerów korzystających z tego woluminu.
 
-Uruchom build w kontenerze - rozważ skopiowanie repozytorium do wewnątrz kontenera
+Uruchom build w kontenerze 
+![image](https://github.com/user-attachments/assets/78cfba96-1748-4593-84eb-094c97647a78)
+
+Skopiowałem repozytorium do wewnątrz kontenera
+![image](https://github.com/user-attachments/assets/3a70c3cc-2838-4feb-b250-e3244865377c)
 
 Zapisz powstałe/zbudowane pliki na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera.
 ![image](https://github.com/user-attachments/assets/1207ad9c-15ac-4209-82aa-f734ef880b79)
+![image](https://github.com/user-attachments/assets/0aa6fce0-0ad6-4b2a-81cb-0c7586f6166b)
+
 
 Pamiętaj udokumentować wyniki.
 Ponów operację, ale klonowanie na wolumin wejściowy przeprowadź wewnątrz kontenera (użyj gita w kontenerze)
+
+
 Przedyskutuj możliwość wykonania ww. kroków za pomocą docker build i pliku Dockerfile. (podpowiedź: RUN --mount)
 
 
