@@ -102,9 +102,10 @@ W kontenerze doinstalowano wymagane zależności, uruchomiono `build` poleceniem
 *Rys. 7 uruchomienie testów*
 
 
-Kolejnym krokiem było utworzenie dwóch plików Dockerfile (`Dockerfile.build` i `Dockerfile.test`), które miały zautomatyzować powyższy proces.
+Kolejnym krokiem było utworzenie dwóch plików Dockerfile (`Dockerfile.build` i `Dockerfile.test`), które miały zautomatyzować powyższy proces. Utworzony kontener z użyciem Dockerfile.build przeprowadza wszystkie powyższe kroki do momentu wykonania build, z kolei kontener drugi utworzony z Dockerfile.test wykonuje testy, ale bez build.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/cat%20Dockerfile.build.png?raw=true)
+
 *Rys. 8 plik Dockerfile, ktory wykonuje instrukcje do momentu build*
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20build%20image.png?raw=true)
