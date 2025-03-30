@@ -493,11 +493,29 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
 
   - Dockerfile.build.nodejs
 
+    ```Dockerfile
+    FROM node:latest AS nodejs_build
+
+    RUN git clone https://github.com/devenes/node-js-dummy-test.git 
+
+    WORKDIR /node-js-dummy-test
+
+    RUN npm install
+    ```
+
     <div align="center">
       <img src="screens3/19.jpg" alt="irssi build">
     </div>
 
   - Dockerfile.test.nodejs
+
+    ```Dockerfile
+    FROM nodejs_build AS nodejs_test
+
+    WORKDIR /node-js-dummy-test
+
+    RUN npm test
+    ```
 
     <div align="center">
       <img src="screens3/20.jpg" alt="irssi build">
@@ -507,11 +525,32 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
 
   - Dockerfile.build.redis
 
+    ```Dockerfile
+    FROM ubuntu:latest AS redis_build
+
+    RUN apt update && apt install -y \
+        build-essential tcl git
+
+    RUN git clone https://github.com/redis/redis.git
+
+    WORKDIR /redis
+
+    RUN make
+    ```
+
     <div align="center">
       <img src="screens3/21.jpg" alt="irssi build">
     </div>
 
   - Dockerfile.test.redis
+
+    ```Dockerfile
+    FROM redis_build AS redis_test
+
+    WORKDIR /redis
+
+    RUN make test
+    ```
 
     <div align="center">
       <img src="screens3/22.jpg" alt="irssi build">
