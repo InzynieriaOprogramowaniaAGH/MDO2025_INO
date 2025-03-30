@@ -37,6 +37,7 @@ Upewniłem się że mam dostęp do repozytorium:
 **Komenda ssh -T git@github.com:**
 
 ![Zrzut3](screenshots/Zrzut3.png)
+
 Następnie sklonowałem repozytorium za pomocą SSH:
 ```sh
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
@@ -45,3 +46,40 @@ git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 **Repozytorium widoczne w systemie Fedora po sklonowaniu:**
 
 ![Zrzut4](screenshots/Zrzut4.png)
+
+4. Kolejnym krokiem było przełączenie się na gałąź "main", a następnie na gałąź swojej grupy. Zrobiłem to kolejno poleceniami:
+```sh
+git checkout main
+git checkout GCL02
+```
+Następnie utworzyłem własną gałąź:
+```sh
+git checkout -b MN417158
+```
+I upewniłem się że znajduję się na nowo utworzonej gałęzi:
+```sh
+git branch
+```
+
+**Aktualna gałąź:**
+
+![Zrzut5](screenshots/Zrzut5.png)
+
+5. Pracę na nowej gałęzi rozpocząłem od utworzenia nowego katalogu o takiej samej nazwie jak moja gałąź ```sh mkdir MN417158```
+
+6. W nim utworzyłem skrypt git hook, którego zadaniem jest sprawdzanie czy każdy mój commit zaczyna się od moich inicjałów i numeru grupy ```sh nano commit-msg.sh```
+
+**Treść skryptu git hook:**
+
+![Zrzut6](screenshots/Zrzut8.png)
+
+Utworzony skrypt przekopiowałem do odpowiedniego pliku z innymi skryptami .git/hook aby działał poprawnie, a następnie nadałem mu odpowiednie uprawnienia za pomocą ```sh chmod +x .git/hooks/commit-msg```
+
+**Sprawdzenie poprawnego kopiowania i nadania skryptowi uprawnień:**
+
+![Zrzut7](screenshots/Zrzut6.png)
+
+**Działanie skryptu w przypadku błędnej treści commitu:**
+
+![Zrzut8](screenshots/Zrzut7.png)
+
