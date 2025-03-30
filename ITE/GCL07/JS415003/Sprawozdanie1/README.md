@@ -119,3 +119,72 @@ Niestety źle przemyślałem sprawę i w przypadku pierwszych laboratoriów zapo
     <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/002-Class/10.png" title="Foldery" />
 
 ## 003-Class
+* Znajdź repozytorium z kodem dowolnego oprogramowania
+
+Ja wykorzystałem na te laboratoria repozytoria pokazywane przez pana na zajęciach: irssi i node.
+
+* Sklonuj niniejsze repozytorium, przeprowadź build programu (doinstaluj wymagane zależności)
+<img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_1.png"/>
+<img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_3.png"/>
+
+* Uruchom testy jednostkowe dołączone do repozytorium
+<img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_4.png"/>
+
+    A tutaj historia komend:
+
+    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_5.png"/>
+
+### Przeprowadzenie buildu w kontenerze
+Ponów ww.  proces w kontenerze, interaktywnie.
+1. Wykonaj kroki `build` i `test` wewnątrz wybranego kontenera bazowego. Tj. wybierz "wystarczający" kontener, np ```ubuntu``` dla aplikacji C lub ```node``` dla Node.js
+	* uruchom kontener
+	* podłącz do niego TTY celem rozpoczęcia interaktywnej pracy
+	* zaopatrz kontener w wymagania wstępne (jeżeli proces budowania nie robi tego sam)
+    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_6.png"/>
+
+	* sklonuj repozytorium
+
+        <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_7.png"/>
+	* Skonfiguruj środowisko i uruchom *build*
+
+        Tutaj po kolei tylko dodawałem zależności do komendy do pobrania.
+        <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_12.png"/>
+
+        Tutaj zestawienie wszystkich komend użytych przeze mnie na kontenerze.
+        <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_13.png"/>
+
+2. Stwórz dwa pliki `Dockerfile` automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:
+	* Kontener pierwszy ma przeprowadzać wszystkie kroki aż do *builda*
+
+        [Dockerfile.irssibld](./003-Class/Dockerfile.irssibld)
+
+        [Dockerfile.nodebld](./003-Class/Dockerfile.nodebld)
+
+        <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_14.png"/>
+        <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_15.png"/>
+        Tutaj po kolei kroki tworzenia obrazu irssi i niżej pokażę że kontenery rzeczywiście się uruchamiają i testy przechodzą.
+
+        Tutaj w przypadku node.
+        <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_17.png"/>
+
+	* Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić *builda*!)
+
+        [Dockerfile.irssitest](./003-Class/Dockerfile.irssitest)
+
+        [Dockerfile.nodetest](./003-Class/Dockerfile.nodetest)
+
+        Tworzenie obrazu dla irssi.
+        <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_16.png"/>
+
+        Tutaj dla node.
+        <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_18.png"/>
+3. Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?
+
+    Tutaj pokazanie utworzonych kontenerów i ich poprawnej pracy za pomocą sprawdzenia czy testy się uruchamiają.
+    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_19.png"/>
+    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_20.png"/>
+    <img src="/home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/lab3_21.png"/>
+
+    A żeby odpowiedziec na pytanie, to w takim kontenerze pracuje minimalne środowisko potrzebne dla działania danych repozytoriów.
+
+## 004-Class
