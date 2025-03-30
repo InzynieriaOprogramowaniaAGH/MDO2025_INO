@@ -4,7 +4,7 @@ Celem zajęć była instalacja i zapoznanie się z programem Docker.
 Wykonanie zadań zacząłem od instalacji Dockera z repozytorium `apt`.  
 Aby zweryfikować poprawność instalacji użyłem polecenia `docker run hello-world`
 
-W celu przygotowania do kolejnych części ćwiczenia pobrałem obrazy `busybox`, `ubuntu`, oraz `mysql`.
+W celu przygotowania do kolejnych części ćwiczenia pobrałem obrazy `busybox`, `ubuntu`, oraz `mysql` korzystając z polecenia `docker pull <obraz>`.
 
 <hr>
 
@@ -14,7 +14,7 @@ Przy włączeniu w trybie interaktywnym, dostajemy konsolę z której możemy ko
 
 ![](Screenshot1.png)
 
-Następnie uruchomiłem obraz `ubuntu`. Pomimo działania w sposób przypominający Linuxa, pierwszym procesem w kontenerze nie jest `init`, ale `bash`.
+Następnie za pomoca polecenia `docker run --tty --interactive ubuntu` uruchomiłem obraz `ubuntu` w trybie interaktywnym. Pomimo działania w sposób przypominający Linuxa, pierwszym procesem w kontenerze nie jest `init`, ale `bash`.
 
 ![](Screenshot2.png)
 

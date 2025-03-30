@@ -1,7 +1,14 @@
 # Sprawozdanie z laboratorium 3
 Celem zajęć było zapoznanie się ze sposobami tworzenia kontenerów przy użyciu plików `Dockerfile`.
 
-Wykonanie zadań rozpocząłem od uruchomienia obrazu `Ubuntu` w dockerze, manualnego przygotowania systemu, pobrania [przykładowego kodu](https://github.com/SkaneroOo/kagikachi) z GitHuba, oraz przeprowadzenia buildu i uruchomienia testów. 
+Wykonanie zadań rozpocząłem od uruchomienia obrazu `rust` w dockerze w trybie interaktywnym, pobrania kodu z GitHuba, oraz przeprowadzenia buildu i uruchomienia testów. 
+```bash
+docker run --tty --interactive rust:1.85.0
+# git clone https://github.com/SkaneroOo/kagikachi
+# cd kagikachi
+# cargo build --release
+# cargo test
+```
 ![](image.png)![](image-2.png)![](image-1.png)
 
 Na powyższych zrzutach ekranu widać, że wszystko zadziałało tak jak powinno i testy wykonały się bezbłędnie.  
@@ -20,7 +27,7 @@ WORKDIR /kagikachi
 RUN cargo build --release
 ```
 
-Po zbudowaniu obrazu i uruchomieniu kontenera w trybie interaktywnym można potwierdzić, że obraz został zbudowany poprawnie.
+Po zbudowaniu obrazu za pomocą polecenia `docker build -t build:latest -f Dockerfile.build .` i uruchomieniu kontenera w trybie interaktywnym można potwierdzić, że obraz został zbudowany poprawnie.
 ![](image-3.png)
 
 Następnie utworzony został plik `Dockerfile.test` bazujący na wcześniej zbudowanym obrazie uruchamiający testy oprogramowania
@@ -51,11 +58,12 @@ services:
       additional_contexts:
         build: "service:build"
 ```
+W celu zbudowania kontenerów korzystając z `compose.yaml`, należy użyć polecenia `docker compose build`.
+
 Ponieważ `test` wymaga wcześniejszego zbudowania obrazu `build`, podajemu jako dodatkowy kontekst, że `build` pochodzi z serwisu `build`. Inaczej Docker może próbować pobrać obraz `build` z repozytoriów.
 
 <hr>
 
 W przypadku aplikacji użytej podczas tych zajęć, aby móc opublikować gotowy obraz jako kontener, należałoby wykonać kilka dodatkowych kroków.  
-Po pierwsze, gotową binarkę należałoby przenieść do innej lokalizacji, np. `/` albo `/bin`, aby umożliwić prostsze uruchomienie programu.  
-Dodatkowo, ponieważ aplikacja jest aplikacją sieciową, należałoby otworzyć w kontenerze port pozwalający na połączenie się z tą aplikacją.  
-W celu zmiejszenia ostatecznego rozmiaru obrazu, trzeba by również usunąć pozostałości po buildzie, oraz narzędzia, które już nie są potrzebne (`curl`, `git`, `build-essential` i toolchain rusta).
+Ponieważ aplikacja jest aplikacją sieciową, należałoby otworzyć w kontenerze port pozwalający na połączenie się z tą aplikacją.  
+Zbudowane pliki należałoby również przenieść do nowego kontenera, aby zmniejszyć ostateczny rozmiar kontenera.
