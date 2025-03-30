@@ -319,16 +319,43 @@ Aby sprawdzić poprawność działania zweryfikowałem, ze katalog build znajduj
 ![alt text](./lab4/git-volume-output.png)
 
 ### 2. Eksponowanie portu
-* Zapoznaj się z dokumentacją https://iperf.fr/
-* Uruchom wewnątrz kontenera serwer iperf (iperf3)
-* Połącz się z nim z drugiego kontenera, zbadaj ruch
-* Zapoznaj się z dokumentacją `network create` : https://docs.docker.com/engine/reference/commandline/network_create/
-* Ponów ten krok, ale wykorzystaj własną dedykowaną sieć mostkową. Spróbuj użyć rozwiązywania nazw
-* Połącz się spoza kontenera (z hosta i spoza hosta)
-* Przedstaw przepustowość komunikacji lub problem z jej zmierzeniem (wyciągnij log z kontenera, woluminy mogą pomóc)
-* Opcjonalnie: odwołuj się do kontenera serwerowego za pomocą nazw, a nie adresów IP
+Rozpocząłem od uruchomienia kontenera na bazie fedory, a następnie zainstalowałem tam iperf i uruchomiłem serwer na domyślnym porcie.
+![alt text](./lab4/iperf_server-start.png)
+
+Następnie otworzyłem nowe okno terminala i uruchomiłem kontener z którego będę się łączył do poprzedniego.
+![alt text](./lab4/iperf_client-start.png)
+
+Na hoście sprawdziłem kontenera serwerowego.
+![alt text](./lab4/inspect-ip.png)
+
+A następnie na kliencie wykonałem test połączenia z serwerem z kontenera klienta.
+![alt text](./lab4/connection-to-server.png)
+
+
+
+Po zapoznaniu się z dokumentacją `network create` utworzyłem dedykowaną sieć mostkową w której kontenery będą mogły komunikować się za pomocą nazw hostów zamiast IP.
+![alt text](./lab4/network-create.png)
+
+Uruchomiłem serwer i klienta w utworzonej sieci.
+![alt text](./lab4/network-server.png)
+![alt text](./lab4/network-client.png)
+
+A następnie przetestowałem połączenie się wewnątrz klienta do serwera poprzez nazwę `iperf_server`.
+![alt text](./lab4/iperf-client-connection-by-name.png)
+
+Wykonałem połączenie spoza kontenera z hosta.
+![alt text](./lab4/iperf-connection-host.png)
+
+Aby wykonać połączenie spoza hosta uruchomiłem nowy serwer z mapowaniem portów i wykonałem połączenie z terminala z komputera. Niestety pomimo wielu prób, mapowania portów, restartowania serwera i wielokrotnych prób nie udało mi się połączyć z serwerem spoza hosta.
+![alt text](./lab4/iperf-terminal-macos.png)
+
+Przepustowość komunikacji wynosiła dla połączenia z hosta oraz z kontenera klienta odpowiednio 92.7 i 92.5 Gbits/sec.
+![alt text](./lab4/przepustowosc-host-client.png)
 
 ### 3. Instancja Jenkins
-* Zapoznaj się z dokumentacją  https://www.jenkins.io/doc/book/installing/docker/
-* Przeprowadź instalację skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND
-* Zainicjalizuj instację, wykaż działające kontenery, pokaż ekran logowania
+Zainstalowałem skonteneryzowaną instancję jenkinsa z pomocnikiem DIND. Uruchomiłem kontener w tle i zmapowałem porty oraz zamontowałem wolumen do trwałego przechowywania danych. Dzięki fladze -v umoliwiłem tez Jenkinsowi uruchamianie zadań wykorzystujących dockera. Wykazałem, ze Jenkins jest działającym kontenerem.
+![alt text](./lab4/jenkins-run.png)
+
+Przy próbie połączenia się z homepage Jenkinsa okazało się, ze na moim komputerze takze Apache nasłuchuje na porcie 8080. Zmieniłem port na 8081 i uruchomiłem kontener jeszcze raz.
+Następnie w przeglądarce przeszedłem pod adres `http://localhost:8081/` i otrzymałem dostęp do ekranu logowania.
+![alt text](./lab4/jenkins-login-screen.png)
