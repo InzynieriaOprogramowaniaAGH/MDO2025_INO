@@ -1,4 +1,5 @@
 # **Sprawozdanie 1** - Metodyki DevOps
+_________________________________________________________________________________________________________________________________________________________________
 ## **LAB 1** - Wprowadzenie, Git, Gałęzie, SSH
 ### Przygotowanie
 Przed rozpoczęciem kolejnych zajęć laboratoryjnych musiałam skonfigurować odpowiednie środowisko pracy. W tym celu, zgodnie z zaleceniami, utworzyłam maszynę wirtualną z systemem Fedora przy użyciu programu Hyper-V.
@@ -153,6 +154,7 @@ Próba wciągnięcia mojej gałęzi do gałęzi grupowej (GCL02) nie powiodła s
 
 Korzystając już z wcześniej poznanych komend dokończyłam sprawozdanie i dodałam do zdalnego repozytorium.
 
+_________________________________________________________________________________________________________________________________________________________________
 ## **LAB 2** - Git, Docker
 ### Wykonane zadania
 #### Cel
@@ -311,3 +313,173 @@ git push origin KK416269
 ```
 
 ![image](https://github.com/user-attachments/assets/a7661e21-b5e8-46ed-a20d-57da3b370241)
+_________________________________________________________________________________________________________________________________________________________________
+## **LAB 3** - Dockerfiles, kontener jako definicja etapu
+### Wykonane zadania
+#### Cel
+Celem tych laboratoriów była nauka tworzenia i wykorzystywania plików Dockerfile do automatyzacji budowania i testowania programów w kontenerach
+
+#### Wybór oprogramowania na zajęcia
+
+Znalezione przeze mnie Repozytorium to *Redis*, serwer struktur danych (https://github.com/redis/redis.git). Wybrałam go ze względu na dużą popularność i dokładny opis korzystania z repozytorium w pliku README.md. Sczegółowo wyjaśnia, czym jest Redis, jak przeprowadzić kompilację (build), jakie zależności są wymagane, jak uruchomić testy itp.
+
+- [x] **Znajdź repozytorium z kodem dowolnego oprogramowania, które:**
+  - **dysponuje otwartą licencją**
+  
+  Licencja: dostępny na licencji BSD 3-Clause (otwartoźródłowy)
+    
+  - **jest umieszczone wraz ze swoimi narzędziami Makefile tak, aby możliwe był uruchomienie w repozytorium czegoś na kształt make build oraz make test. Środowisko Makefile jest dowolne. Może to być automake, meson, npm, maven, nuget, dotnet, msbuild...**
+  
+  Posiada w swoim repozytorium plik Makefile do kompilacji (poleceniem `make build`).
+    
+  - **Zawiera zdefiniowane i obecne w repozytorium testy, które można uruchomić np. jako jeden z "targetów" Makefile'a. Testy muszą jednoznacznie formułować swój raport końcowy (gdy są obecne, zazwyczaj taka jest praktyka)**
+ 
+  Repozytorium znajdują się też testy, które można zgodnie z repo urchomić za pomocą komendy `make test`.
+
+
+- [x] **Sklonuj niniejsze repozytorium, przeprowadź build programu (doinstaluj wymagane zależności)**
+
+Tą część ćwiczenia przeprowadziłam na irssi (redis użyję w drugiej części ćwiczenia).
+
+`git clone https://github.com/irssi/irssi.git`
+
+Weszłam do katalogu z pobranym repozytorium (`cd irssi`) i spróbowałam wykonać `meson Build`. Komenda ta tworzy katalog Build, i będą tam umieszczone pliki kompilacji. Sprawdza też czy są pobrane wszystkie wymagane zależności. 
+
+![image](https://github.com/user-attachments/assets/fc948cfe-e3b4-461d-90d2-0391dc0117ed)
+
+Brakowało jednak wielu zależności które doinstalowałam (dla usprawnienia w jednej) w kolejnej komendzie.
+
+`sudo dnf install meson gcc glib2-devel ninja openssl-devel utf8proc-devel ncurses-devel perl-ExtUtils-Embed`
+
+Opis pakietów (chat GPT):
+
+meson – narzędzie do konfiguracji budowy oprogramowania.
+
+gcc – kompilator języka C, potrzebny do budowania kodu źródłowego.
+
+glib2-devel – biblioteka GLib, używana przez Irssi.
+
+ninja – narzędzie do szybkiej kompilacji kodu (Meson używa go w tle).
+
+openssl-devel – biblioteki OpenSSL wymagane do obsługi szyfrowania.
+
+utf8proc-devel – biblioteka do obsługi tekstu w UTF-8.
+
+ncurses-devel – biblioteka do obsługi interfejsu tekstowego w terminalu.
+
+perl-ExtUtils-Embed – moduł Perla wymagany przez Irssi.
+
+![image](https://github.com/user-attachments/assets/4e14295c-9b9d-4352-bcf0-4a3c37f5ca25)
+
+Tym samym wróciłam do kroku z  `meson Build`, a następnie zgodnie z README repozytorium wprowadziłam komednę `ninja -C Build` (uruchamia proces budowy)
+oraz `sudo ninja -C Build install` (kopiuje plik wykonywalny do katalogu `/usr/local/bin/` skąd system szyka programów).
+
+![image](https://github.com/user-attachments/assets/7192852d-f3ca-4cc1-bf3a-555b3e0ebf45)
+
+![image](https://github.com/user-attachments/assets/a67ebd8e-970e-4ab1-b022-9bf8964727f8)
+
+- [x] **Uruchom testy jednostkowe dołączone do repozytorium**
+
+w katalogu Build wpisałam komendę `ninja test` która przeprowadza testy. Przeszły one pomyślnie.
+
+![image](https://github.com/user-attachments/assets/8d9b8889-de9d-4b94-b56c-a8cb0c988e43)
+
+
+#### Przeprowadzenie buildu w kontenerze
+Ponów ww. proces w kontenerze, interaktywnie.
+Tą część ćwiczenia przeprowadziłam na repozytorium node. 
+
+- [x] **Wykonaj kroki build i test wewnątrz wybranego kontenera bazowego. Tj. wybierz "wystarczający" kontener, np ubuntu dla aplikacji C lub node dla Node.js**
+
+  - **Uruchom kontener & Podłącz do niego TTY celem rozpoczęcia interaktywnej pracy**
+
+Pobrałam obraz Node.js: `docker pull node` i uruchomiłam interktywnie `sudo docker run -it node bash`.
+
+![image](https://github.com/user-attachments/assets/8d99cdc0-93cd-4f69-801f-047587b33794)
+
+  - **Zaopatrz kontener w wymagania wstępne (jeżeli proces budowania nie robi tego sam)**
+
+Zaktualizowałam listę dostępnych pakietów, pobrałam `git` ktry przyda się do sklonowania repozytorium oraz `sudo`.
+``` bash
+apt update
+apt install -y git
+apt install sudo
+```
+
+![image](https://github.com/user-attachments/assets/94d42bbd-bf13-4698-bef8-33d5384224e8)
+
+![image](https://github.com/user-attachments/assets/4ae63204-f03d-43c8-9cd2-ad3c56a1d4e3)
+
+
+  - **Sklonuj repozytorium**
+
+Sklonowałam komendą `git clone https://github.com/devenes/node-js-dummy-test.git`
+
+![image](https://github.com/user-attachments/assets/50b02d9b-9cc7-46b6-bd8d-58bde75fcf16)
+
+
+  - **Skonfiguruj środowisko i uruchom build & uruchom testy**
+
+`npm install` instaluje potrzebne zależności zapisane w pliku `package.json.`
+
+`npm test` uruchamia testy. Jak widać na zrzucie ekranu, wszystkie testy przeszły poprawnie.
+
+![image](https://github.com/user-attachments/assets/310fd347-2154-4180-87ba-854cbfbc7211)
+
+- [x] **Stwórz dwa pliki Dockerfile automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:**
+
+Tą część ćwiczenia przeprowadziłam na wybranym przeze mnie repozytorium redis.
+
+  - **Kontener pierwszy ma przeprowadzać wszystkie kroki aż do builda**
+
+Kod pliku `Dockerfile.build` :
+
+```bash
+FROM ubuntu
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    tcl \
+    git \
+    libssl-dev \
+    libsystemd-dev \
+    make \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN git clone https://github.com/redis/redis.git /redis
+
+WORKDIR /redis
+
+RUN make
+
+```
+
+Komenda do uruchomienia: `docker build -t redis_build_container -f ./Dockerfile.build .`
+
+![image](https://github.com/user-attachments/assets/f46a1890-195b-4978-b210-be402db2ea86)
+
+
+  - **Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić builda!)**
+
+Kod pliku `Docker.test` bazuje na wcześniej utworzonym kontenerze z kodem aplikacji i uruchamia testy.
+
+```bash
+FROM redis_build_container
+
+RUN make test 
+```
+
+Komenda uruchamiająca: `docker build -t redis_test_container -f ./Dockerfile.test .  `
+
+![image](https://github.com/user-attachments/assets/9c8a1f66-031e-42c1-801d-706698797415)
+
+- [x] **Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?** 
+
+`docker images` pokazało czy stworzyły się szablony (obrazy) do tworzenia kontenerów.
+Pojawiły się obrazy redis_build_container oraz redis_test_container. 
+Mogłam też wpisać komendę `docker ps` która poakzałaby listę działających kontenerów (ss z sprawdzania innego kontenera).
+![image](https://github.com/user-attachments/assets/873661f0-6e98-499c-91cc-fae24b769623)
+
+![image](https://github.com/user-attachments/assets/efb6281c-2e99-4fa0-9281-e62a3df70e84)
+
