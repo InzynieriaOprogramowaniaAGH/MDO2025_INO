@@ -93,4 +93,6 @@ W kontenerze doinstalowano wymagane zależności, uruchomiono `build` poleceniem
 
 *Rys. 5 instalacja npm*
 
-![](![image](https://github.com/user-attachments/assets/ce6d8071-5994-42fe-9e90-c50c0e8d04e1)
+(![image](https://github.com/user-attachments/assets/ce6d8071-5994-42fe-9e90-c50c0e8d04e1)
+
+*Rys. 6 wykonanie skryptu budowania*
