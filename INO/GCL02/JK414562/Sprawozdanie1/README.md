@@ -114,22 +114,22 @@ Na systemie Ubuntu zainstalowano oprogramowanie Docker przy użyciu polecenia:
 ![image](https://github.com/user-attachments/assets/e20e7844-e404-49cb-93df-707d5aad8194)
 
 ### 6) Uruchomienie kontenera i praca interaktywna
-7)      docker run --name pytest-container -it ubuntu:latest bash
+        docker run --name pytest-container -it ubuntu:latest bash
 ![image](https://github.com/user-attachments/assets/669b086a-1a2e-4a49-8b13-8ec5bc822b52)
 
-### 8)Przygotowanie środowiska w kontenerze
+### 7)Przygotowanie środowiska w kontenerze
 ![image](https://github.com/user-attachments/assets/7b57c28c-11ca-4968-a7c4-e5c2513b81e1)
 ![image](https://github.com/user-attachments/assets/802c8fea-221a-4d5c-b0a7-dab0891b7334)
 
-### 9)Sklonowałem repozytorium
+### 8)Sklonowałem repozytorium
 ![image](https://github.com/user-attachments/assets/fdaa641c-55fb-42a3-a027-5f3f7cca9675)
-### 10)Skonfigurowałem środowisko i uruchomilem build
+### 9)Skonfigurowałem środowisko i uruchomilem build
 ![image](https://github.com/user-attachments/assets/77239e69-cc41-4737-9d29-d997f958732e)
 
-### 11)Uruchomilem testy
+### 10)Uruchomilem testy
 ![image](https://github.com/user-attachments/assets/8d5e1137-bee2-47df-a44a-018bd2f734c1)
 
-### 12)Stwórz dwa pliki Dockerfile automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:
+### 11)Stwórz dwa pliki Dockerfile automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:
 - Kontener pierwszy ma przeprowadzać wszystkie kroki aż do builda
 ![image](https://github.com/user-attachments/assets/b2b5d0ba-753e-4c27-8a91-a273e790f774)
 - Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić builda!)
@@ -193,15 +193,15 @@ Budowanie obrazu Docker z obsługą testów w pytest
 ### 1) Zapoznałem się z dokumentacją https://www.jenkins.io/doc/book/installing/docker/
 ### 2) Przeprowadź instalację skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND
 ### 3) Utworzyłem sieć poleceniem
-4)      docker network create jenkins
-### 5) Uruchomiłem kontener Jenkins docker run -d --name jenkins --network jenkins \ w tej sieci
+      docker network create jenkins
+### 4) Uruchomiłem kontener Jenkins docker run -d --name jenkins --network jenkins \ w tej sieci
 ![image](https://github.com/user-attachments/assets/7b32f282-f62d-4e39-b6b3-e0b5f38dce35)
-### 6) Sprawdziłem, że kontener działa (docker ps), co jest potwierdzeniem zainicjalizowanej instancji Jenkinsa.
+### 5) Sprawdziłem, że kontener działa (docker ps), co jest potwierdzeniem zainicjalizowanej instancji Jenkinsa.
 ![image](https://github.com/user-attachments/assets/22a9ece0-d5b3-417f-b86b-d19bd48c5f97)
 
-### 7) Uzyskanie hasła administratora Jenkins
+### 6) Uzyskanie hasła administratora Jenkins
 ![image](https://github.com/user-attachments/assets/ca9ecdc0-b663-41a6-aa6e-14b766fd887c)
-### 8) Wszedłem na strone https://localhost:8080 i zalogowałem się z użyciem hasła
+### 7) Wszedłem na strone https://localhost:8080 i zalogowałem się z użyciem hasła
 ![image](https://github.com/user-attachments/assets/f154662f-fccb-4e3a-ba04-d635bc00d998)
 ![image](https://github.com/user-attachments/assets/8e543bd6-7c67-4103-ae4f-39e76fb32285)
 
