@@ -1,14 +1,8 @@
 #!/usr/bin/sh
-#
-# Hook commit-msg: sprawdza, czy commit message zaczyna się od określonego prefiksu
-
-# Wymagany prefiks
 required_prefix="JW414829"
 
-# Pobranie pierwszej linii komunikatu z pliku przekazanego jako pierwszy argument
 first_line=$(head -n1 "$1")
 
-# Sprawdzenie, czy pierwsza linia zaczyna się od wymaganego prefiksu
 case "$first_line" in
   "$required_prefix"*)
     ;;
