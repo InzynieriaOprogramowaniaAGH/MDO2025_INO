@@ -234,6 +234,7 @@ cd irssi
 meson Build
 ninja -C Build && ninja -C Build test
 ```
+![alt text](class3/3.png)
 
 ## 2. Create Dokerfiles for build & test
 
@@ -255,6 +256,7 @@ Create image:
 ```sh
 docker build -f Dockerfile.irssi_b -t irssi-build .
 ```
+![alt text](class3/2.png)
 
 Create test [Dockerfile.irssi_t](class3/Dockerfile.irssi_t)
 ```Dockerfile
@@ -268,6 +270,7 @@ Create image:
 ```sh
 docker build -f Dockerfile.irssi_t --no-cache -t irssi-tests .
 ```
+![alt text](class3/1.png)
 
 # Class 4
 ## 1. State persistance
