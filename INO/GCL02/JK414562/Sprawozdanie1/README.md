@@ -79,22 +79,80 @@ Zmieniono połączenie z repozytorium na SSH:
 9) Utworzony plik Dockerfile został dodany do katalogu Sprawozdanie1 wewnątrz repozytorium na gałęzi JK414562.
 
 LEKCJA 3: Dockerfiles, kontener jako definicja etapu
-1) Wybór oprogramowania
-Do przeprowadzenia ćwiczenia wybrano repozytorium python-examples
+Wybór oprogramowania
+Do przeprowadzenia ćwiczenia wybrano repozytorium python-examples które skonowałem poleceniem:
 
-          które skonowałem poleceniem:
-   ![image](https://github.com/user-attachments/assets/1422f88f-440d-4f53-b9c7-f72f239c2baa)
-zawierające oprogramowanie na otwartej licencji, spełniające następujące wymagania:
+![image](https://github.com/user-attachments/assets/1422f88f-440d-4f53-b9c7-f72f239c2baa)
 
--Jest dostępne publicznie i posiada otwartą licencję.
--Zawiera skrypt Makefile umożliwiający kompilację (make build) oraz uruchomienie testów (make test).
--Posiada testy jednostkowe z jednoznacznym raportem wyników.
-Repozytorium zostało sklonowane, a następnie przeprowadzono kompilację
-     make
-Sklonuj niniejsze repozytorium, przeprowadź build programu (doinstaluj wymagane zależności)
+Sklonowanie niniejszego repozytrium 
+![image](https://github.com/user-attachments/assets/a5341b98-07a8-411a-8e45-194e61dea0dc)
+
+Doinstalowanie wymaganych zależności 
+![image](https://github.com/user-attachments/assets/3cec14be-88ad-4f79-80a4-b32db60aa4d6)
+
+Przeprowadź build programu (doinstaluj wymagane zależności)
+![image](https://github.com/user-attachments/assets/d33092ce-393b-4f41-ba0b-b49153553a18)
 
 Uruchom testy jednostkowe dołączone do repozytorium
-![image](https://github.com/user-attachments/assets/cdf9235c-2dd7-40c8-b327-a315d6019087)
+![image](https://github.com/user-attachments/assets/e20e7844-e404-49cb-93df-707d5aad8194)
+
+Uruchomienie kontenera i praca interaktywna
+
+     docker run --name pytest-container -it ubuntu:latest bash
+![image](https://github.com/user-attachments/assets/669b086a-1a2e-4a49-8b13-8ec5bc822b52)
+
+Przygotowanie środowiska w kontenerze
+![image](https://github.com/user-attachments/assets/7b57c28c-11ca-4968-a7c4-e5c2513b81e1)
+![image](https://github.com/user-attachments/assets/802c8fea-221a-4d5c-b0a7-dab0891b7334)
+
+Sklonowałem repozytorium
+![image](https://github.com/user-attachments/assets/fdaa641c-55fb-42a3-a027-5f3f7cca9675)
+Skonfiguruj środowisko i uruchom build
+![image](https://github.com/user-attachments/assets/77239e69-cc41-4737-9d29-d997f958732e)
+
+uruchom testy
+![image](https://github.com/user-attachments/assets/8d5e1137-bee2-47df-a44a-018bd2f734c1)
+
+Stwórz dwa pliki Dockerfile automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:
+Kontener pierwszy ma przeprowadzać wszystkie kroki aż do builda
+![image](https://github.com/user-attachments/assets/b2b5d0ba-753e-4c27-8a91-a273e790f774)
+Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić builda!)
+![image](https://github.com/user-attachments/assets/a509bfe7-153e-454b-9745-05a4ee5b5cd6)
+Budowanie obrazów 
+![image](https://github.com/user-attachments/assets/8f8ead0c-fd8b-4bcf-98a7-ba09d6a1fd2e)
+Sprawdzenie pierwszego kontenera (pytest-build)
+![image](https://github.com/user-attachments/assets/6330d016-43de-443e-b896-418cc1ae8b29)
+
+###Laboratorium 4
+Przygotowanie woluminów wejściowego i wyjściowego oraz podłączenie ich do kontenera bazowego
+![image](https://github.com/user-attachments/assets/ed43521d-720c-48e9-98f5-90220c938b18)
+
+Uruchomienie kontenera Ubuntu z zamontowanymi woluminami wejściowym (input:/mnt/input) i wyjściowym (output:/mnt/output). 
+ ![image](https://github.com/user-attachments/assets/999dfa20-7fcb-495a-bf94-9163fafc2649)
+
+Sklonuj repozytorium na wolumin wejściowy
+![image](https://github.com/user-attachments/assets/f59e35f5-eac1-40cb-b583-2bf3ac43f506)
+Repozytorium zostało sklonowane bez użycia kontenera czy bind mount, ale poprzez zapis w katalogu woluminu na hoście (/var/lib/docker/volumes/input/_data). Dzięki temu sklonowane pliki będą dostępne dla kontenerów korzystających z tego woluminu.
+
+Uruchom build w kontenerze - rozważ skopiowanie repozytorium do wewnątrz kontenera
+
+Zapisz powstałe/zbudowane pliki na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera.
+![image](https://github.com/user-attachments/assets/1207ad9c-15ac-4209-82aa-f734ef880b79)
+
+Pamiętaj udokumentować wyniki.
+Ponów operację, ale klonowanie na wolumin wejściowy przeprowadź wewnątrz kontenera (użyj gita w kontenerze)
+Przedyskutuj możliwość wykonania ww. kroków za pomocą docker build i pliku Dockerfile. (podpowiedź: RUN --mount)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
