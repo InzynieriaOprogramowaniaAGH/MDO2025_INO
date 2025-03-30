@@ -9,6 +9,9 @@
      - [Konfiguracja 2FA](#konfiguracja-2fa)
      - [Git hook (commit-msg)](#git-hook-(commit-msg))
 2. - [Laboratorium 2 - Git, Docker](#laboratorium-2---git-docker)
+     - [Pobieranie obrazów](#pobieranie-obrazów)
+     - [Uruchamianie kontenerów](#uruchamianie-kontenerów)
+     - [Budowanie własnego obrazu Dockerfile](#Budowanie-własnego-obrazu-Dockerfile)
 3. - [Laboratorium 3 - Dockerfiles](#laboratorium-3---dockerfiles)
      - [Wybór oprogramowania na zajęcia](#wybór-oprogramowania-na-zajęcia)
      - [Przeprowadzenie buildu w kontenerze](#przeprowadzenie-buildu-w-kontenerze)
@@ -109,6 +112,8 @@ Laboratoria dotyczyły zagadnień konteneryzacji przy użyciu Dockera, obejmują
 
 ---
 
+### Pobieranie obrazów
+
 W systemie Fedora zaktualizowano system i zainstalowano Docker.  Następnie pobrano obrazy hello-world, busybox, fedora oraz mysql za pomocą polecenia `docker pull`. 
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20pull%20busybox.png?raw=true)
@@ -120,6 +125,8 @@ W systemie Fedora zaktualizowano system i zainstalowano Docker.  Następnie pobr
 *Rys. 2 pobranie obrazu fedora*
 
 Polecenie `docker pull` pobiera obraz kontenera z zdalnego rejestru i zapisuje go lokalnie. Dzięki temu można później uruchamiać kontenery na podstawie pobranego obrazu.
+
+### Uruchamianie kontenerów
 
 W kolejnym kroku uruchomiono kontener z obrazem busybox w trybie interaktywnym i wyświetlono informację o wersji. Polecenie `docker run -it busybox sh` uruchamia nowy kontener na podstawie obrazu **busybox** i otwiera interaktywną sesję terminalową. Dzięki opcji `-it` można wykonywać polecenia w powłoce **sh** bezpośrednio w środowisku kontenera.
 
@@ -136,6 +143,8 @@ Następnie uruchomiono drugi kontener z obrazem fedora. Po wejściu do kontenera
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dnf%20upgrade%20-y.png?raw=true)
 
 *Rys. 5 aktualizacja pakietów systemowych*
+
+### Budowanie własnego obrazu Dockerfile
 
 Kontener zbudowano przy użyciu pliku Dockerfile, który aktualizuje system i instaluje Git za pomocą menedżera pakietów dnf (`dnf -y upgrade && dnf -y install git`), czyści pamięć podręczną, a potem klonuje repozytorium git.
 
