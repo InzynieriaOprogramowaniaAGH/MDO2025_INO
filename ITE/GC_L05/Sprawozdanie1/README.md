@@ -10,7 +10,8 @@
      - [Git hook (commit-msg)](#git-hook-(commit-msg))
 2. - [Laboratorium 2 - Git, Docker](#laboratorium-2---git-docker)
 3. - [Laboratorium 3 - Dockerfiles](#laboratorium-3---dockerfiles)
-     - [Wybór oprogramowania na zajęcia](#wybór-oprogramowania-na-zajęcia) 
+     - [Wybór oprogramowania na zajęcia](#wybór-oprogramowania-na-zajęcia)
+     - [Przeprowadzenie buildu w kontenerze](#przeprowadzenie-buildu-w-kontenerze)
 4. - [Laboratorium 4 - Dodatkowa terminologia w konteneryzacji](#laboratorium-4---dodatkowa-terminologia-w-konteneryzacji)
      - [Zachowywanie stanu](#zachowywanie-stanu)
      - [Eksponowanie portu](#eksponowanie-portu)
@@ -172,6 +173,8 @@ Na począku sklonowano repozytorium `libuv` zawierające plik Makefile, a nastę
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/make.png?raw=true)
 
 *Rys. 2 build za pomocą make*
+
+### Przeprowadzenie buildu w kontenerze
 
 Następnie pobrano obraz node, uruchomiono kontener w trybie interaktywnym i sklonowano repozytorium `react-boilerplate`.
 
