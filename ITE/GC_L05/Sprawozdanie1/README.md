@@ -42,6 +42,9 @@ W kolejnym kroku wygenerowano klucz SSH o typie Ed25519 zabezpieczony hasłem. O
 
 *Rys. 5 generowanie kluczy ssh*
 
+Następnie użyto polecenia `ssh -i ssh_key -T git@github.com`, po czym wprowadzono hasło (passphrase) do klucza prywatnego.
+Autoryzacja zakończyła się sukcesem i udało się nawiązać połączenie SSH z Githubem, co potwierdza komunikat „Hi LadyAmely! You've successfully authenticated.”.
+
 ---
 ## Laboratorium 2 - Git, Docker
 
