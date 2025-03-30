@@ -25,9 +25,14 @@ Data wykonania: 30.03. 2025 r.
 13. Próba wypchnięcia mojej gałęzi oraz  okazała się niepowodzeniem ze względu na uprawnieia w repozytorium przedmiotowym:
 ![Zrzut ekranu 6](screenshots/6.PNG)
 
-
-
 ## Laboratorium 2
+1. Laboratorium 2 przebiega w parciu o narzędzie Docker.  Docker umożliwia prace z aplikacjami w kontenerach, czyli izolowanych środowiskach. Pozwalają na uruchamianie aplikacji w różnych środowiskach. Pierwszym krokiem jest przygotowanie środowiska pracy:
+   - Zainstalowałam oprogramowanie Docker za pomocą dnf install
+   - zarejestrowałam się na stronie https://hub.docker.com/, zapoznałam się z dostępnymi obrazami. Pobrałam obrazy:  hello-world, busybox, ubuntu, fedora, mysql
+![Zrzut ekranu 8](screenshots/8.PNG)
+2. Uruchomiam kontener z obrazu hello-word. Poniżej zamieszczam efekt takiego uruchomienia:
+![Zrzut ekranu 9](screenshots/9.PNG)
+4. Ponownie uruchamiam kontener z obrazu busybox, tym razem interaktywnie (-it)
 
 ## Laboratorium 3
 
