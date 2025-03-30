@@ -134,22 +134,68 @@ Sklonuj repozytorium na wolumin wejściowy
 ![image](https://github.com/user-attachments/assets/f59e35f5-eac1-40cb-b583-2bf3ac43f506)
 Repozytorium zostało sklonowane bez użycia kontenera czy bind mount, ale poprzez zapis w katalogu woluminu na hoście (/var/lib/docker/volumes/input/_data). Dzięki temu sklonowane pliki będą dostępne dla kontenerów korzystających z tego woluminu.
 
-Uruchom build w kontenerze 
-![image](https://github.com/user-attachments/assets/78cfba96-1748-4593-84eb-094c97647a78)
+#Uruchom build w kontenerze 
+![image](https://github.com/user-attachments/assets/85fd0734-cb0d-42c6-b6c3-f8409d4294f5)
+#Wykonano hatch build, co wygenerowało pakiety .whl i .tar.gz
+![image](https://github.com/user-attachments/assets/dc777161-63c3-421c-83ff-1c915d67f891)
 
-Skopiowałem repozytorium do wewnątrz kontenera
+
+#Skopiowałem repozytorium do wewnątrz kontenera
 ![image](https://github.com/user-attachments/assets/3a70c3cc-2838-4feb-b250-e3244865377c)
 
-Zapisz powstałe/zbudowane pliki na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera.
+#Zapisz powstałe/zbudowane pliki na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera.
 ![image](https://github.com/user-attachments/assets/1207ad9c-15ac-4209-82aa-f734ef880b79)
 ![image](https://github.com/user-attachments/assets/0aa6fce0-0ad6-4b2a-81cb-0c7586f6166b)
 
+#Ponów operację, ale klonowanie na wolumin wejściowy przeprowadź wewnątrz kontenera (użyj gita w kontenerze)
+![image](https://github.com/user-attachments/assets/f2d13143-90ce-4aa4-abdc-09571f3009ce)
 
-Pamiętaj udokumentować wyniki.
-Ponów operację, ale klonowanie na wolumin wejściowy przeprowadź wewnątrz kontenera (użyj gita w kontenerze)
+
+#Przedyskutuj możliwość wykonania ww. kroków za pomocą docker build i pliku Dockerfile. (podpowiedź: RUN --mount)
+#Zawartość pliku Dockerfile
+![image](https://github.com/user-attachments/assets/de3f40f1-5377-4b81-9c10-3842b479c421)
+Budowanie obrazu Docker z obsługą testów w pytest
+![image](https://github.com/user-attachments/assets/737029f0-2ca2-4704-8801-88454adee496)
+
+##Eksponowanie portu
+#Zapoznalem się z dokumentacją https://iperf.fr/
+#Uruchomienie serwera iperf3 wewnątrz kontenera, z eksponowaniem portu 5201.
+![image](https://github.com/user-attachments/assets/38fffff8-9c35-41ca-8fe1-ff4cb1efd439)
+
+#Utworzenie dedykowanej sieci mostkowej o nazwie my_bridge.
+![image](https://github.com/user-attachments/assets/386e86cf-1c11-4725-b824-cbee74a8edfe)
+
+Połącz się z nim z drugiego kontenera, zbadaj ruch
+![image](https://github.com/user-attachments/assets/7f3441a8-115e-4bca-bc15-90b9fba9d933)
+
+Ponów ten krok, ale wykorzystaj własną dedykowaną sieć mostkową (zamiast domyślnej). Spróbuj użyć rozwiązywania nazw
+![image](https://github.com/user-attachments/assets/118a1bb5-8a4b-481c-b132-24d024bc0c43)
+
+Połącz się spoza kontenera (z hosta i spoza hosta)
+
+Przedstaw przepustowość komunikacji lub problem z jej zmierzeniem
+![image](https://github.com/user-attachments/assets/a2907492-2455-4c73-9d01-0274dc1a8cef)
+
+##Instancja Jenkins
+#Zapoznałem się z dokumentacją https://www.jenkins.io/doc/book/installing/docker/
+#Przeprowadź instalację skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND
+#Utworzyłem sieć poleceniem
+     docker network create jenkins
+#Uruchomiłem kontener Jenkins docker run -d --name jenkins --network jenkins \ w tej sieci
+![image](https://github.com/user-attachments/assets/7b32f282-f62d-4e39-b6b3-e0b5f38dce35)
+#Sprawdziłem, że kontener działa (docker ps), co jest potwierdzeniem zainicjalizowanej instancji Jenkinsa.
+#Uzyskanie hasła administratora Jenkins
+![image](https://github.com/user-attachments/assets/ca9ecdc0-b663-41a6-aa6e-14b766fd887c)
+#Wszedłem na strone https://localhost:8080 i zalogowałem się z użyciem hasła
+![image](https://github.com/user-attachments/assets/f154662f-fccb-4e3a-ba04-d635bc00d998)
+![image](https://github.com/user-attachments/assets/8e543bd6-7c67-4103-ae4f-39e76fb32285)
 
 
-Przedyskutuj możliwość wykonania ww. kroków za pomocą docker build i pliku Dockerfile. (podpowiedź: RUN --mount)
+
+
+
+
+
 
 
 
