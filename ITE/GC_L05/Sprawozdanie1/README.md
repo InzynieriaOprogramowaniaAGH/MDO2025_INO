@@ -272,4 +272,6 @@ Pobrano i wyświetlono logi kontenera poleceniem `sudo docker logs iperf_server`
 
 *Rys. 10 pobranie obrazu jenkinsa*
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20run%20jenkins.png?raw=true)
 
+*Rys. 11 uruchomienie kontenera w tle*
