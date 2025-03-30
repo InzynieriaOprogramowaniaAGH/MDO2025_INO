@@ -17,32 +17,32 @@ Potwierdzenie sprarowania kluczy z gitem
 ![s3](../Sprawozdanie1/Sprawozdanie1_img/s1_3.png)
 
 Konfiguracja klucza SSH na GitHubie
-![s3](../Sprawozdanie1/Sprawozdanie1_img/s1_4.png)
+![s4](../Sprawozdanie1/Sprawozdanie1_img/s1_4.png)
 
 Konfiguracja 2FA
-![s3](../Sprawozdanie1/Sprawozdanie1_img/s1_5.png)
+![s4](../Sprawozdanie1/Sprawozdanie1_img/s1_5.png)
 
-**Sklonowanie repozytorium za pomocą HTTPS**
+**2. Sklonowanie repozytorium za pomocą HTTPS**
 
-![s3](../Sprawozdanie1/Sprawozdanie1_img/s1_6.png)
+![s5](../Sprawozdanie1/Sprawozdanie1_img/s1_6.png)
 
-**Przełączenie na gałąź main**
+**3. Przełączenie na gałąź main**
 
-![s3](../Sprawozdanie1/Sprawozdanie1_img/s1_7.png)
+![s6](../Sprawozdanie1/Sprawozdanie1_img/s1_7.png)
 
 
-**Utworzenie lokalnej gałęzi**
+**4. Utworzenie lokalnej gałęzi**
 
-![s3](../Sprawozdanie1/Sprawozdanie1_img/s1_8.png)
+![s8](../Sprawozdanie1/Sprawozdanie1_img/s1_8.png)
 
 Utworzenie katalogu
+![s9](../Sprawozdanie1/Sprawozdanie1_img/s1_9.png)
 
-![s3](../Sprawozdanie1/Sprawozdanie1_img/s1_9.png)
 
+**5. Praca na lokalnej gałęzi**
 
-**Praca na lokalnej gałęzi**
 Utworzenie nowego git hooka
-![s3](../Sprawozdanie1/Sprawozdanie1_img/s1_10.png)
+![s10](../Sprawozdanie1/Sprawozdanie1_img/s1_10.png)
 
 Treść git hooka
 ```bash
@@ -52,4 +52,210 @@ if ! grep -q "WZ417828" "$1"; then
   exit 1
 fi
 ```
+Sprawdzenie poprawności działania
 
+![s3](../Sprawozdanie1/Sprawozdanie1_img/s1_13.png)
+
+**6. Wypchnięcie gałęzi**
+
+![s3](../Sprawozdanie1/Sprawozdanie1_img/s1_12.png)
+
+
+<br>
+
+## Laboratorium nr 2
+
+**1. Instalacja Dockera**
+
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_1.png)
+
+Dodanie użytkownika do grupy (żeby nie musieć urochamiać za pomocą sudo)
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_2.png)
+
+Weryfikacja czy docker jest poprwanie zainstalowany i czy działa 
+```bash
+[wzacharski@vbox MDO2025_INO]$ docker --version
+Docker version 27.3.1, build 2.fc41
+[wzacharski@vbox MDO2025_INO]$ docker run hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+e6590344b1a5: Pull complete 
+Digest: sha256:bfbb0cc14f13f9ed1ae86abc2b9f11181dc50d779807ed3a3c5e55a6936dbdd5
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+```
+
+Zalogowanie się do dockera
+
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_3.png)
+
+**2. Pobieranie obrazów**
+
+Hello-world
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_4.png)
+
+busybox
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_5.png)
+
+ubuntu
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_6.png)
+
+fedora
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_7.png)
+
+mysql
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_8.png)
+
+**3. Odpalenie busybox**
+
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_9.png)
+
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_10.png)
+
+wywołaenie rumeru wersji
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_11.png)
+
+**4. Urochomienie obrazu systemu operacyjnego**
+
+Procesy wewnątrz kontenera
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_12.png)
+
+Procesy hosta
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_13.png)
+
+Aktualizacja pakietów w konenerze
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_14.png)
+
+
+
+**5. Stworzenie dockerfile**
+
+Treść
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_15.png)
+
+
+Zbudowanie obrazu
+```bash
+$ docker build -t fedora_git .
+```
+
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_16.png)
+
+Urochomienie obrazu w konenerze i sprawdzenie, czy zostało pobrane repozytorium
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_17.png)
+
+**6. Działające konenery**
+
+![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_18.png)
+
+można również wykorzystać polecenie ```bash
+$ sudo docker ps -a```
+
+## Laboratorium nr 3
+
+**1. Przygotowanie plików, na którym będzie odbywać się praca**
+
+Sklonowanie repozytorium
+![s1](../Sprawozdanie1/Sprawozdanie3_img/s3_1.png)
+
+Zbudowanie projektu
+![s1](../Sprawozdanie1/Sprawozdanie3_img/s3_2.png)
+
+Uruchomienie testów
+![s1](../Sprawozdanie1/Sprawozdanie3_img/s3_3.png)
+
+**2. Zbudwanie programu w kontenerze**
+
+Uruchomienie kontenera
+![s1](../Sprawozdanie1/Sprawozdanie3_img/s3_4.png)
+
+Sklonowanie repozytorium za pomocą HTTPS
+![s1](../Sprawozdanie1/Sprawozdanie3_img/s3_5.png)
+
+Zbudowanie plików
+![s1](../Sprawozdanie1/Sprawozdanie3_img/s3_6.png)
+
+Uruchomienie testów
+![s1](../Sprawozdanie1/Sprawozdanie3_img/s3_7.png)
+
+
+**3. Utworzenie plików Dockerfile**
+
+Plik Dockerfile_build zawierający i budujący repozytorium
+![s1](../Sprawozdanie1/Sprawozdanie3_img/s3_8.png)
+
+Plik Dockerfile_test uruchuchamiający tesy
+![s1](../Sprawozdanie1/Sprawozdanie3_img/s3_9.png)
+
+Zbudowanie obrazu Dockerfile_build
+![s1](../Sprawozdanie1/Sprawozdanie3_img/s3_10.png)
+
+Zbudowanie obrazu Dockerfile_test
+![s1](../Sprawozdanie1/Sprawozdanie3_img/s3_11.png)
+
+Uruchomienie kontenera zawierającego testy
+![s1](../Sprawozdanie1/Sprawozdanie3_img/s3_12.png)
+
+## Laboratorium nr 4
+
+**1. Przygotowanie woluminu wejściowego i wyjściowego**
+
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_1.png)
+
+**2. Uruchomienie kontenera**
+
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_2.png)
+
+Zainstalowanie niezbędnych narzędzi w kontenerze (bez gita)
+<br>
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_3.png)
+
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_4.png)
+
+**3. Sklonowanie repozytorium do tymczasowego kontenera i przeniesienie do woluminu wejściowego**
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_5.png)
+Ze względu na tymczasowe przeznaczenie kontenera i mały rozmiar zadania wykorzystałem obraz alpine.
+
+**4. Zbudowanie projektu w kontenerze**
+
+Skopiowanie plików repozytorium z woluminu wejściowego 
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_6.png)
+
+Zbudowanie projektu wewnątrz kontenera za pomocą make
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_7.png)
+
+
+**5. Skopiowanie zbudowanych plików do woluminu wyjściowego**
+
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_8.png)
+
+**6. Klonowanie repozytorium wewnątrz konenera**
+
+Instalacja gita
+<br>
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_9.png)
+
+
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_10.png)
+
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_11.png)
