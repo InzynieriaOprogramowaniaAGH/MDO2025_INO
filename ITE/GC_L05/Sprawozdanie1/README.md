@@ -100,3 +100,5 @@ W kontenerze doinstalowano wymagane zależności, uruchomiono `build` poleceniem
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/npm%20test.png?raw=true)
 
 *Rys. 7 uruchomienie testów*
+
+Polecenie `sudo docker build -f Dockerfile.build -t build-image .` tworzy nowy obraz Dockera o nazwie `build-image`, korzystając z instrukcji zawartych w pliku Dockerfile.build i kontekstu bieżącego katalogu (.). W trakcie tego procesu wykonywane są kolejne kroki określone w Dockerfile, takie jak instalacja potrzebnych pakietów, sklonowanie repozytorium i  build aplikacji.
