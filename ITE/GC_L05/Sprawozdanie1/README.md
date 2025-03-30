@@ -264,9 +264,14 @@ Pobrano i wyświetlono logi kontenera poleceniem `sudo docker logs iperf_server`
 
 *Rys. 8 monitorowanie logów*
 
+
+Utworzono sieć przy użyciu polecenia `docker network create` dla jenkinsa.
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20network%20create%20jenkins.png?raw=true)
 
 *Rys. 9 utworzenie nowej sieci*
+
+Następnie pobrano i uruchomiono obraz jenkinsa przy użyciu polecenia `docker:dind`.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20pull%20jenkins.png?raw=true)
 
