@@ -53,7 +53,9 @@ Host github.com
 
 ## 6. Klonowanie repozytorium przez SSH
 
+```sh
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+```
 
 
 ## 7. Przejście na swojego brancha
@@ -69,6 +71,18 @@ git checkout DR416985
 
 ## 9. Hook commit-msg
 
+```sh
+#!/bin/bash
+MESSAGE=$(cat $1)
+if [[ ! $MESSAGE =~ ^DR416985 ]]; then
+  echo "ERROR: Commit message must zaczynać się od 'DR416985'"
+  exit 1
+fi
+```
+
+Nadanie uprawnien
+
+![screen](./chmod.png)
 
 
 
