@@ -221,15 +221,14 @@ Laboratoria dotyczyły użycia woluminów Dockera do budowania projektu i przech
 
 ---
 
-Na początku utworzono poleceniem `docker create volume` dwa  woluminy (wejściowy i wyjściowy), a następnie podłączono je do kontenera bazowego. (*Rys. 2* pokazuje uruchomienie i podłączenie do kontenera woluminu wejściowego)
-
+Na początku utworzono poleceniem `docker create volume` dwa  woluminy (wejściowy i wyjściowy), a następnie podłączono je do kontenera bazowego. 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/tworzenie%20wolumin%C3%B3w.png?raw=true)
 
 *Rys. 1 utworzenie woluminów wejściowego i wyjściowego*
 
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20create%20volume%20output.png?raw=true)
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20run%20builder.png?raw=true)
 
-*Rys. 2 uruchomienie kontenera i podłączenie woluminu wejściowego*
+*Rys. 2 uruchomienie kontenera i podłączenie woluminów*
 
 Następnie sklonowano repozytorium na wolumin wejściowy przez skopiowanie lokalnego katalogu z repozytorium do odpowiedniego katalogu wewnątrz kontenera za pomocą polecenia `docker cp` ( `docker cp M000225_IN0/ dinput:/mnt/input`). 
 
