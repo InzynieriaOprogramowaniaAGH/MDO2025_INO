@@ -193,6 +193,10 @@ Wykonano możliwość wykonania ww. kroków za pomocą docker build i pliku Dock
 
 ![Opis obrazka](lab4_screenshots/7.png)
 
+Sklonowanie repozytorium na wolumin wejściowy zostało wykonane za pomocą kontenera, do którego zamontowano wolumin. Repozytorium zostało sklonowane do katalogu /mnt/input, a dane pozostały w woluminie, co zapewniło ich trwałość po zakończeniu życia kontenera.
+
+W przypadku używania Docker BuildKit, --mount pozwala na zamontowanie woluminu podczas budowania obrazu. Dzięki temu można sklonować repozytorium bez konieczności uruchamiania kontenera w trybie interaktywnym. Użycie docker build i --mount w Dockerfile było rozważane, ale napotkałem trudności z jego działaniem, co zmusiło mnie do użycia tradycyjnego podejścia z uruchamianiem kontenera w trybie interaktywnym i ręcznym klonowaniem repozytorium.
+
 Dockerfile
 ```sh
 FROM node:16-alpine
