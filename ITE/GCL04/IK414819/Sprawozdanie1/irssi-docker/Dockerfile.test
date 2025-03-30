@@ -1,0 +1,6 @@
+# Dockerfile.test
+FROM irssi-builder
+
+WORKDIR /app/irssi
+
+CMD ["meson", "test", "-C", "build"]
