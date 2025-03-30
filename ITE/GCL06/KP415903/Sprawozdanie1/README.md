@@ -1,6 +1,6 @@
 # Sprawozdanie
 
-## Wprowadzenie, Git, Gałęzie, SSH
+## Lab 1. Wprowadzenie, Git, Gałęzie, SSH
 
 ### 1. Instalacja klienta Git i obsługi kluczy SSH
 
@@ -87,7 +87,7 @@ fi
 ```
 
 ---
-## Git, Docker
+## Lab 2. Git, Docker
 
 ### 1. Instalacja Dockera w systemie Linux
 
@@ -236,3 +236,267 @@ sudo docker rmi $(sudo docker images -q)  # Usunięcie wszystkich obrazów
 
 ![Usunięcie wszystkich obrazów Dockera](ss/2/9-docker-rmi.png)
 
+---
+## Lab 3. Dockerfiles, kontener jako definicja etapu
+
+### 1. Wybór oprogramowania na zajęcia
+
+Znalezienie repozytorium z kodem dowolnego oprogramowania (https://github.com/devenes/node-js-dummy-test) i sklonowanie go.
+
+```bash
+git clone https://github.com/devenes/node-js-dummy-test
+```
+
+![Sklonowanie repozytorium](ss/3/1-git-clone.png)
+
+Przeprowadzenie buildu programu (+ doinstalowanie wymaganych zależności).
+
+```bash
+docker build -t lab3-dummy-test .
+docker run -it lab3-dummy-test /bin/sh
+```
+
+![Zbudowanie obrazu przy użyciu gotowego Dockerfile](ss/3/2-docker-build.png)
+![Uruchomienie kontenera w trubie interaktywnym](ss/3/3-docker-run.png)
+
+```bash
+npm install
+npm run
+npm test
+```
+
+![Instalacja zależności](ss/3/4-npm-install.png)
+![Sprawdzenie możliwości uruchomienia](ss/3/5-npm-run.png)
+![Uruchomienie testów](ss/3/6-npm-test.png)
+
+Wykonanie `build` oraz `test` wewnątrz kontenera bazowego, w tym przypadku `node`. Uruchomienie kontenera z oficjalnego obrazu `node`, który zapewnia środowisko do uruchamiania aplikacji napisanych w Node.js. Następnie instalacja podstawowych narzędzi.
+
+```bash
+docker run -it node /bin/bash
+apt update install -y git make
+```
+
+![Uruchomienie kontenera bazowego](ss/3/7-docker-run-apt.png)
+
+Sklonowanie repozytorium.
+
+```bash
+git clone https://github.com/devenes/node-js-dummy-test app
+```
+
+![Sklonowanie repozytorium](ss/3/8-git-clone-app.png)
+
+Instalacja wymagań.
+
+```bash
+cd app
+npm install
+```
+
+
+![Instalacja zależności](ss/3/10-npm-install.png)
+
+Uruchomienie testów.
+
+```bash
+npm test
+```
+
+![Uruchomienie testów](ss/3/11-npm-test.png)
+
+Stworzenie dwóch plików `Dockerfile`, którę będą automatyzować wykonanie powyższych kroków.
+
+Pierwszy kontener przeprowadza wszystkie kroki aż do `build`.
+
+```dockerfile
+FROM node
+
+WORKDIR /app
+RUN git clone https://github.com/devenes/node-js-dummy-test . 
+RUN npm install
+
+CMD ["npm", "start"]
+```
+
+Drugi kontener bazuje na pierwszym i uruchamia testy.
+
+```dockerfile
+FROM nodebuild
+
+CMD ["npm", "test"]
+```
+
+Zbudowanie obrazów na podstawie `Dokcerfiles`.
+
+![Budowa obrazu pierwszego kontenera](ss/3/12-docker-build.png)
+![Budowa obrazu drugiegoo kontenera](ss/3/13-docker-build.png)
+
+Weryfikacja poprawności wykonania testów.
+
+![Przeprowadzenie testów](ss/3/14-docker-run-test.png)
+
+Różnica między obrazem a kontenerem:
+
+Obraz to definicja środowiska, która zawiera wszystkie zależności aplikacji. Innymi słowami - wzorzec do tworzenia kontenerów.
+
+Kontener to uruchomiona instancja obrazu. Jest to działające środowisko aplikacji, w którym można wykonywać operacje.
+
+Co pracuje w takim kontenerze?
+
+W kontenerze działa środowisko Node.js wraz z aplikacją pobraną z repozytorium. Ostatecznie proces wdrażania w kontenerze polega na zbudowaniu środowiska, uruchomieniu aplikacji i przeprowadzeniu testów, co zostało zweryfikowane poprzez działające komendy Dockera i wyniki testów aplikacji.
+
+---
+## Lab 4. Dodatkowa terminologia w konteneryzacji, instancja Jenkins
+
+### 1. Zachowywanie stanu
+
+Aby zapewnić trwałość danych pomiędzy restartami kontenerów, wykorzystano mechanizm woluminów Docker. Utworzono dwa woluminy:
+
+vol1 – przechowujący wejściowe pliki kodu źródłowego,
+vol2 – przechowujący wyniki kompilacji.
+
+Utworzenie woluminów: wejściowego i wyjściowego.
+
+```bash
+docker volume create vol1
+docker volume create vol2
+```
+
+![Utworzenie woluminów: wejściowego i wyjściowego.](ss/4/1-docker-volume-create.png)
+
+Uruchomienie kontenera z podpiętymi woluminami i instalacja zależności.
+
+```bash
+docker run -it -v vol1:/input -v vol2:/output ubuntu bash
+```
+
+![Uruchomienie kontenera z woluminami](ss/4/2-docker-run-vol.png)
+
+Klonowanie repozytorium na wolumin (z hosta)
+
+```bash
+docker volume inspect vol1`
+```
+
+![Sprawdzenie szczegółów woluminu](ss/4/3-docker-volume-inspect.png)
+
+Sklonowanie repozytorium do folderu który zawiera dane woluminu wejściowego ("Mountpoint").
+
+```bash
+git clone https://github.com/irssi/irssi.git /var/lib/docker/volumes/vol1/_data
+```
+
+![Sklonowanie repozytorium](ss/4/4-git-clone.png)
+
+Zbudowanie programu w folderze woluminu wejściowego:
+
+```bash
+meson Build
+```
+
+![Wykonanie buildu](ss/4/5-build.png)
+
+Przeniesienie builda do kontenera wyjściowego.
+
+```bash
+cp -r /input /output
+```
+
+![Przeniesienie builda](ss/4/6-cp.png)
+
+Weryfikacja poprawności przeniesienia na hoście.
+
+```bash
+sudo ls /var/lib/docker/volumes/vol2/_data
+```
+
+![Weryfikacja poprawności przeniesienia](ss/4/7-sudo-ls.png)
+
+Powtórka operacji tym razem z klonowaniem wewnątrz kontenera.
+
+```bash
+apt install -y git
+git clone https://github.com/irssi/irssi.git
+```
+
+![Instalacja git'a](ss/4/8-apt-install.png)
+![Sklonowanie repozytorium](ss/4/9-git-clone.png)
+
+Alternatywnie, można byłoby zautomatyzować ten proces za pomocą `Dockerfile`, wykorzystując `RUN --mount`.
+
+```bash
+FROM ubuntu
+WORKDIR /app
+RUN --mount=type=volume,target=/input git clone https://github.com/irssi/irssi.git /input
+RUN --mount=type=volume,target=/output meson /input /output
+```
+
+
+
+
+
+Instalowanie `iperf3` i uruchomienie serwera `iperf` w kontenerze. Uruchomienie konteneru z serwerem `iperf3` w tle, który będzie nasłuchiwał na porcie 5201. Używamy obrazu networkstatic/iperf3, aby uruchomić serwer iperf3 w kontenerze. Port 5201 jest otwarty na zewnątrz, aby umożliwić połączenie z serwerem.
+
+```bash
+docker run --rm -d --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+```
+
+![Uruchomienie kontenera z iperf3](ss/4/10-iperf3.png)
+
+Połączenie z serwerem iperf3 z drugiego kontenera:
+
+```bash
+ip=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-server)
+sudo docker run -it --rm networkstatic/iperf3 -c $ip
+```
+
+![Połączenie z serwerem z drugiego kontenera](ss/4/11-ip-docker-run.png)
+
+Tworzymy nową sieć mostkową o nazwie *bridge-net*, która będzie używana do połączenia kontenerów w izolowanej sieci:
+
+```bash
+docker network ls
+docker network create -d bridge bridge-net
+```
+
+Uruchomienie serwera *iperf3* w kontenerze na nowej sieci mostkowej:
+
+```bash
+docker run -it --rm --name iperf-server --network bridge-net ubuntu
+apt update && apt install -y iperf3
+iperf3 -s
+```
+
+![Uruchomienie serwera iperf3](ss/4/12-docker-run-server.png)
+![Uruchomienie serwera iperf3](ss/4/13-iperf3-s.png)
+
+Uruchomienie klienta *iperf3* w drugim kontenerze, który łączy się z serwerem:
+
+```bash
+docker run -it --rm --name iperf-me2 --network bridge-net ubuntu
+iperf3 -c iperf-server
+```
+
+![Uruchomienie instancji klienta iperf3](ss/4/14-run-me2.png)
+![Przedstawienie przepustowości komunikacji](ss/4/15-iperf3-c.png)
+
+Tworzymy nową sieć jenkins dla instancji *Jenkinsa*:
+
+```bash
+docker network create jenkins
+```
+
+![Stworzenie sieci jenkins](ss/4/16-docker-network.png)
+
+Uruchamienie instancji Jenkinsa z dostępem do Dockera w kontenerze:
+
+```bash
+docker run --privileged --name jenkins-dind -d -p 8080:8080 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock jenkins/jenkins:lts
+docker ps
+```
+
+![Uruchomienie instancji](ss/4/17-jenkins-ps.png)
+
+Weryfikacja poprawności instalacji, aby uzyskać dostęp do interfejsu logowania:
+
+![Ekran logowania Jenkinsa](ss/4/18-jenkins-login.png)
