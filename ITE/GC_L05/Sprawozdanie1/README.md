@@ -282,4 +282,8 @@ Pobrano i wyświetlono logi kontenera poleceniem `sudo docker logs iperf_server`
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20ps.png?raw=true)
 
-*Rys. 13 wyświetlenie działających kontenerów
+*Rys. 13 wyświetlenie działających kontenerów*
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20exec%20jenkinsci%20blueocean.png?raw=true)
+
+*Rys. 14 uruchomienie w kontenerze jenkins-blueocean i wyświetlenie hasła administratora jenkinsa*
