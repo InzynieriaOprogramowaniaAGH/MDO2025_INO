@@ -7,8 +7,9 @@
 ssh root@192.168.100.38
 ```
  
-**Zrzut ekranu:**
-![Interfejs systemu Fedora oraz ip z którym się łączymy][screenshots/Zrzut1.png]
+**Interfejs systemu Fedora oraz ip z którym się połączyłem:**
+
+![Zrzut1][screenshots/Zrzut1.png]
 
 Kolejnym krokiem jest instalacja klienta Git poprzez polecenie
 ```sh
@@ -27,20 +28,20 @@ Dodałem utworzony klucz do SSH agent:
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
 ```
-**Zrzut ekranu:**
+**Utworzone klucze na Github:**
 
-![Utworzone klucze na Github](screenshots/Zrzut2.png)
+![Zrzut2](screenshots/Zrzut2.png)
 
 Upewniłem się że mam dostęp do repozytorium:
 
-**Zrzut ekranu:**
+**Komenda ssh -T git@github.com:**
 
-![Komenda ssh -T git@github.com](screenshots/Zrzut3.png)
+![Zrzut3](screenshots/Zrzut3.png)
 Następnie sklonowałem repozytorium za pomocą SSH:
 ```sh
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 ```
 
-**Zrzut ekranu:**
+**Repozytorium widoczne w systemie Fedora po sklonowaniu:**
 
-![Sklonowane repozytorium widoczne w systemie Fedora](screenshots/Zrzut4.png)
+![Zrzut4](screenshots/Zrzut4.png)
