@@ -14,6 +14,8 @@
 
 Laboratoria dotyczyły konfiguracji Git i SSH, klonowania repozytorium przez HTTPS oraz SSH, generowania kluczy SSH (innych niż RSA) z zabezpieczeniem hasłem, a także konfiguracji 2FA i tworzenia Git hooka weryfikującego commit message.
 
+Na początku zainstalowano git-a i wyświetlono informację o wersji.
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/zainstalowanie%20gita.png)
 
 *Rys. 1 sprawdzenie wersji git*
