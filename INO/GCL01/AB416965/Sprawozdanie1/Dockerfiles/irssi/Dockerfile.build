@@ -1,0 +1,8 @@
+FROM fedora:latest
+
+RUN sudo dnf install -y git cmake autoconf automake gcc gcc-c++ make git glib2-devel ncurses-devel openssl-devel perl perl-devel utf8proc utf8proc-devel meson libotr
+RUN git clone https://github.com/irssi/irssi.git
+WORKDIR /irssi/
+RUN meson Build
+run ninja -C Build
+

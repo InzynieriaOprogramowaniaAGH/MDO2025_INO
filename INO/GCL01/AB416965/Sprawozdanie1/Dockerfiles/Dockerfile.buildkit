@@ -1,0 +1,12 @@
+FROM ubuntu:latest
+
+RUN apt update && apt install -y cmake gcc g++ make
+
+WORKDIR /cJSON
+
+RUN --mount=type=bind,source=./temp_in,target=/mnt/v1_in \
+    --mount=type=bind,source=./temp_out,target=/mnt/v2_out,rw \
+    cp -r /mnt/v1_in/* . && \
+    mkdir build && cd build && \
+    cmake .. && make && \
+    cp cJSON_test /mnt/v2_out/
