@@ -247,6 +247,8 @@ Utworzono dedykowaną sieć mostkową i uruchomiono serwer `iperf3` w kontenerze
 
 *Rys. 5 uruchomienie serwera iperf3 w kontenerze*
 
+Następnie uruchomiono nowy kontener o nazwie iperf_client w sieci bridge_net, działający jako klient iperf, który łączy się z serwerem o nazwie iperf_server dzięki automatycznemu rozwiązywaniu nazw. 
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/po%C5%82%C4%85czenie%20z%20serwerem%20z%20drugiego%20kontenera.png?raw=true)
 
 *Rys. 6 połączenie z serwerem z drugiego kontenera*
