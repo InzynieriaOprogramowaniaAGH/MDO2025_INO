@@ -22,7 +22,7 @@ Zmieniono połączenie z repozytorium na SSH:
    
 ![image](https://github.com/user-attachments/assets/57dc43cd-e823-4096-8191-ee9de9853dd6)
 ## 5) Stworzenie nowej gałęzi Utworzono nową gałąź o nazwie KP415903, odgałęziając ją od gałęzi grupowej.
- git checkout -b JK414562
+     git checkout -b JK414562
 ![image](https://github.com/user-attachments/assets/85e12db4-9757-4345-9e2c-b952912b19bc)
 
 ## 6)Stworzono skrypt commit-msg, który wymusza, by każdy komunikat commit zawierał wstęp z inicjałami i numerem indeksu użytkownika. Skrypt został zapisany w katalogu .git/hooks/ i nadano mu prawa wykonywalności.
