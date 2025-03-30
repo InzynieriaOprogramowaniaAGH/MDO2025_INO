@@ -253,6 +253,8 @@ Następnie uruchomiono nowy kontener o nazwie iperf_client w sieci bridge_net, d
 
 *Rys. 6 połączenie z serwerem z drugiego kontenera*
 
+Po uruchomienia na hoście polecenia `iperf3 -c localhost` klient iperf3 próbuje połączyć się z serwerem, który jest dostępny na porcie 5201, ponieważ serwer został wystawiony na hosta przez opcję -p 5201:5201 w poleceniu uruchamiającym kontener serwera.
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/iperf%20localhost.png?raw=true)
 
 *Rys. 7 połączenie spoza kontenera*
