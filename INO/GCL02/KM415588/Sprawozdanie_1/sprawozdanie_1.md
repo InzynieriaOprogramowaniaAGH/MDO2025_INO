@@ -392,7 +392,7 @@ sudo docker-compose -f docker-compose.chalk.yml up --build
 
 ![chalk_test_dockefile](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/img/docker-compose-res2.png)
 
-Jak widać na zdjęciachwdrożenie kompozycji przebiegło pozytywnie.
+Jak widać na zdjęciach wdrożenie kompozycji przebiegło pozytywnie.
 
 #### Przygotowanie do wdrożenia (deploy): dyskusje
 W przypadku wybranego przeze mnie repozytorium nie ma sensu publikować go jako kontener - jest to biblioteka wykorzystywana do działania z innymi programami a nie sama w sobie. O ile jescze do przeprowadzenia takiej konteneryzacji jw. nadaje się w zupełności to budowanie konteneru z chalk-pipe jako produktem, mija sie z celem.
