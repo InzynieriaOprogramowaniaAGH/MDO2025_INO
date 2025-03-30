@@ -277,6 +277,8 @@ Następnie pobrano i uruchomiono obraz jenkinsa przy użyciu polecenia `docker:d
 
 *Rys. 10 pobranie obrazu jenkinsa*
 
+Uruchomiono kontener „docker:dind” o nazwie „jenkins-docker” w trybie uprzywilejowanym, dołączając go do sieci „jenkins” i udostępniając port 2376 do zdalnej komunikacji. Jednocześnie montowane są woluminy z certyfikatami i danymi Jenkinsa. Umożliwia to bezpieczne połączenie Dockera z Jenkinsem.
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20run%20jenkins.png?raw=true)
 
 *Rys. 11 uruchomienie kontenera w tle*
