@@ -4,7 +4,7 @@
 # Spis Treści
 
 1. - [Laboratorium 1 - Wprowadzenie, Git, Gałęzie, SSH](#laboratorium-1---wprowadzenie-git-gałęzie-ssh)
-   - [Klonowanie repozytorium za pomocą HTTPS i personal access token](#klonowanie-repozytorium-za-pomocą-HTTPS-i-personal-access-token)
+  1.1. - [Klonowanie repozytorium za pomocą HTTPS i personal access token](#klonowanie-repozytorium-za-pomocą-HTTPS-i-personal-access-token)
    - [Weryfikacja dostępu do repozytorium jako uczestnik i klonowanie przy użyciu klucza SSH](#weryfikacja-dostępu-do-repozytorium-jako-uczestnik-i-klonowanie-przy-użyciu-klucza-SSH)
    - [Konfiguracja 2FA](#konfiguracja-2fa)
    - [Git hook (commit-msg)](#git-hook-(commit-msg))
