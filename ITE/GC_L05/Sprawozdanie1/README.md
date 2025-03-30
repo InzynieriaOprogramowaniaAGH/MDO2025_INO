@@ -4,9 +4,13 @@
 # Spis Treści
 
 1. - [Laboratorium 1 - Wprowadzenie, Git, Gałęzie, SSH](#laboratorium-1---wprowadzenie-git-gałęzie-ssh)
+   1.1 - [Klonowanie repozytorium HTTPS i personal access token](#klonowanie-repozytorium-https-i-personal-access-token)
+   1.2 - [Weryfikacja dostępu do repozytorium jako uczestnik i klonowanie przy użyciu klucza SSH](#weryfikacja-dostępu-do-repozytorium-jako-uczestnik-i-klonowanie-przy-użyciu-klucza-SSH)
+   1.3 - [Konfiguracja 2FA](#konfiguracja-2fa)
+   1.4 - [Git hook (commit-msg)](#git-hook-(commit-msg))
 2. - [Laboratorium 2 - Git, Docker](#laboratorium-2---git-docker)
-3. - [Laboratorium 3 -Dockerfiles](#Laboratorium-3---Dockerfiles)
-4. - [Laboratorium 4 -Dodatkowa terminologia w konteneryzacji](#laboratorium-4---Dodatkowa-terminologia-w-konteneryzacji)
+3. - [Laboratorium 3 - Dockerfiles](#laboratorium-3---dockerfiles)
+4. - [Laboratorium 4 - Dodatkowa terminologia w konteneryzacji](#laboratorium-4---dodatkowa-terminologia-w-konteneryzacji)
 
 ---
 
@@ -16,7 +20,7 @@ Laboratoria dotyczyły konfiguracji Git i SSH, klonowania repozytorium przez HTT
 
 ---
 
-### 1. Klonowanie repozytorium za pomocą HTTPS i personal access token
+### Klonowanie repozytorium za pomocą HTTPS i personal access token
 
 Na początku zainstalowano git-a  oraz obsługę kluczy ssh i wyświetlono informację o wersji.
 
@@ -38,7 +42,7 @@ Następnie sklonowano repozytorium przy użyciu protokołu HTTPS, a autoryzację
 
 *Rys. 4 sklonowanie zdalnego repozytorium git*
 
-### 2. Weryfikacja dostępu do repozytorium jako uczestnik i klonowanie przy użyciu klucza SSH
+### Weryfikacja dostępu do repozytorium jako uczestnik i klonowanie przy użyciu klucza SSH
 
 W kolejnym kroku wygenerowano klucz SSH o typie Ed25519 zabezpieczony hasłem. Otrzymano parę kluczy (prywatny - id_ed25519 oraz publiczny - id_ed25519.pub) zapisaną w katalogu ~/.ssh 
 
@@ -65,7 +69,7 @@ Aby pobrać zdalnie repozytorium, wskazano plik z kluczem prywatnym przed polece
 
 *Rys. 8 sklonowanie zdalnego repozytorium za pomocą ssh*
 
-### 3. Konfiguracja 2FA (uwierzytelniania dwuskładnikowego)
+### Konfiguracja 2FA (uwierzytelniania dwuskładnikowego)
 
 Następnie skonfigurowano uwierzytelnianie dwuskładnikowe na Githubie.
 
@@ -73,7 +77,7 @@ Następnie skonfigurowano uwierzytelnianie dwuskładnikowe na Githubie.
 
 *Rys. 9 konfiguracja 2FA*
 
-### 4. Git hook (commit-msg)
+### Git hook (commit-msg)
 
 Ostatnim krokiem było stworzenie katalogu ze swoimi inicjałami i numerem indeksu oraz  napisanie git hooka weryfikującego, że każdy "commit message" zaczyna się od "inicjały & nr indexu" (w moim wypadku to "AN417592"). Treść tego skryptu znajduje się poniżej.
 
