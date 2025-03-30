@@ -190,9 +190,170 @@ Plik Dockerfile znajduje się w podfolderze lab2.
 
 ##Zajęcia 3
 
+#0#
+Repozytorium, które wybrałem to sds (simple dynamic string) do języka C.
 
+Po pobraniu kompilujemy repozytorium w następujący sposób.
 
+![gitting_sds](lab3/make_on_machine.png)
 
+Następnie uruchamiamy testy.
+
+![testing](lab3/running_tests_on_machine.png)
+
+#1#
+Tworzymy Docerfile.
+
+![Dockerfile](lab3/dockerfile_without_repo.png)
+
+Buildujemy kontener.
+
+![building](lab3/building_docker_file.png)
+
+Instalujemy potrzebne dependencies.
+
+![installing](lab3/installing_gcc_make.png)
+
+Po sklonowaniu repozytorium odpalamy make.
+
+![making](lab3/make_in_docker.png)
+
+A następnie testy.
+
+![testing](lab3/running_test_in_docker.png)
+
+#2#
+Tworzymy 2 pliki Dockerfile.
+
+![1st_file](lab3/dpckerfile_with_repo.png)
+
+![2nd_file](lab3/dockrfile_to_run_tests.png)
+
+Następnie je budujemy. Na początku nalezly zbudować plik tworzący kontener.
+
+![1st_building](lab3/building_docker_file_wih_repo.png)
+
+![2nd_build](lab3/building_test_dockerfile.png)
+
+#3#
+Aby zweryfikować, czy build przebiegł pomyślnie wchodzimy w kontener i odpalamy testy.
+
+![test_time](lab3/verifing_test_dockerfile.png)
+
+#extra#
+Aby uprościć wszystko do 1 pliku, uywamy Docker compose w następujący sposób.
+
+Tworzymy plik yml.
+![ymling](lab3/creating_yml.png)
+
+W środku powinna znaleźć się następująca zawartość.
+![uilding](lab3/yml_contents.png)
+
+Composujemy plik yml, co w tym wypadku automatycznie odpali take testy.
+
+![testing](lab3/verifing_yml.png)
 
 
 ##Zajęcia 4
+
+#1#
+Tworzymy woluminy w następujący sposób.
+
+![voluming](lab4/creating_entry_exit_volumes.png)
+
+Klonujemy repozytorium na wolumin wejściowy.
+
+![gitting](lab4/cloning_repo_to_entry_volume.png)
+
+Teraz tworzymy dockerfile bez git'a, ale z wymaganymi dependencjami.
+
+![gitless](lab4/creating_docker_file_without_git.png)
+
+Następnie naley zbudować container.
+
+![building](lab4/buildig_gitless_container.png)
+
+Odpalamy container z podpiętymi woluminami.
+
+![running](lab4/running_gitless_container_with_volumes.png)
+
+Po uzyciu make kopiujemy zawartość woluminu wejściowego na wolumin wyjściowy, oraz container.
+
+![exit_vol](lab4/copying_repo_to_exit_volume.png)
+
+![cont](lab4/copying_repo_to_gitless_container.png)
+
+Ponawiamy kroki, jednak tym razem klonujemy repozytorium wewnątrz kontenera, następnie wykonujemy make i kopiujemy zawartość.
+
+![mak_n_cop](lab4/making_n_coping.png)
+
+#2#
+
+Pobieramy obraz iperf3.
+
+![iperfing](lab4/pulling_iper3_image.png)
+
+Odpalamy server i sprawdzamy jego ip.
+
+![iperf_time](lab4/running_1st_iperf3_server.png)
+
+![ip](lab4/getting_1st_server_ip.png)
+
+Łączymy się z serwerem.
+
+![connecting](lab4/connecting_to_1st_iperf_server.png)
+
+Teraz nalęzy stworzyć sieć mostkową.
+
+![bridging](lab4/iperf_bridge_creating.png)
+
+Następnie nalezy dokonać połączenia mostkowego.
+
+![bridging_time](lab4/iperf3_bridge_running.png)
+
+Aby połączyć się z kontenerem spoza kontenera, najpierw tworzymy server.
+
+![serving](lab4/creating_server_to_connect_to_from_host.png)
+
+Teraz łączymy się po localhost'ie.
+
+![conning](lab4/connecting_from_host.png)
+
+Kolejnympoleceniem jest zapisać logi połączenia. Zaczynamy od stwrzenia odpowiednich woluminów.
+
+![voling](lab4/iperf_log_volumes.png)
+
+Teraz odpalamy połączenie z przekierowaniem wyników do woluminów.
+
+![running](lab4/capturing_connection_on_volumes.png)
+
+Wyświetlamy zawartość logów.
+
+![1st](lab4/printing_vol_logs1.png)
+![2nd](lab4/printing_vol_logs2.png)
+
+#3#
+Tworzymy sieć dla jenkins'a.
+
+#[neting](lab4/creating_network_for_jenkins.png)
+
+Odpalamy Server, wraz z dind.
+
+![run](lab4/running_jenkins_with_dind.png)
+![rin](lab4/running_jenkins.png)
+
+Sprawdzamy hasło jenkinsa.
+
+![pass](lab4/getting_jenkins_pass.png)
+
+Upewniamy się, ze server pracuje.
+
+![checking](lab4/verifing_if_jenkins_is_up.png)
+
+Teraz w vs Code frwardujemy port, aby móc wyświetlić stronę na naszym komputerze.
+
+![forwarding](lab4/forwarding_port.png)
+
+Odpalamy stronę jenkins'a przez localhost i logujemy się hasłem z powyszego punktu.
+
+![jenking](lab4/jenkins_mainpage.png)
