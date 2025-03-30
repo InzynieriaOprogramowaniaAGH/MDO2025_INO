@@ -76,3 +76,9 @@ Na począku sklonowano repozytorium `libuv` zawierające plik Makefile, a nastę
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/make.png?raw=true)
 
 *Rys. 2 build za pomocą make*
+
+Następnie pobrano obraz node, uruchomiono kontener w trybie interaktywnym i sklonowano repozytorium `react-boilerplate`.
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20pull%20node.png?raw=true)
+
+*Rys. 3 pobranie obrazu node*
