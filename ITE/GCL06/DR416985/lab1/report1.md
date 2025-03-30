@@ -116,7 +116,7 @@ docker pull ubuntu
 docker pull mysql
 ```
 
-![screen](./pull)
+![screen](./pull.png)
 
 ## Uruchomienie kontenerów
 ```ssh
