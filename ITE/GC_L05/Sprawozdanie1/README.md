@@ -250,3 +250,7 @@ Utworzono dedykowaną sieć mostkową i uruchomiono serwer `iperf3` w kontenerze
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/po%C5%82%C4%85czenie%20z%20serwerem%20z%20drugiego%20kontenera.png?raw=true)
 
 *Rys. 6 połączenie z serwerem z drugiego kontenera*
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/iperf%20localhost.png?raw=true)
+
+*Rys. 7 monitorowanie logów:*
