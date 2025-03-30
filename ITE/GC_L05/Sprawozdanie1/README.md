@@ -57,7 +57,7 @@ Aby pobrać zdalnie repozytorium, wskazano plik z kluczem prywatnym przed polece
 
 ### Git hook (commit-msg)
 
-Poniżej znajduje się skrypt hooka, który weryfikuje, czy commit message zaczyna się od "AN417592":
+Ostatnim krokiem było stworzenie katalogu ze swoimi inicjałami i numerem indeksu oraz  napisanie git hooka weryfikującego, że każdy "commit message" zaczyna się od "inicjały & nr indexu" (w moim wypadku to "AN417592"). Treść tego skryptu znajduje się poniżej.
 
 ```bash
 #!/bin/sh
