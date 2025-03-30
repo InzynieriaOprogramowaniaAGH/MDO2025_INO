@@ -49,6 +49,8 @@ Autoryzacja zakończyła się sukcesem i udało się nawiązać połączenie SSH
 
 *Rys. 6 uwierzytelnienie za pomocą ssh*
 
+Aby pobrać zdalnie repozytorium, wskazano plik z kluczem prywatnym przed poleceniem `git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git`, które klounuje repozytorium przez SSH. Po wprowadzeniu  hasło do klucza i poprawnym uiwerzytelnieniu repozytorium zostało pobrane lokalnie.
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/git%20clone%20ssh.png?raw=true)
 
 *Rys. 7 sklonowanie zdalnego repozytorium za pomocą ssh*
