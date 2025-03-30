@@ -1,4 +1,8 @@
 ## Labolatorium 1 Wprowadzenie, Git, Gałęzie, SSH
+0) Przygotowałam środowisko pracy
+Uruchomiłem maszynę wirtualną z systemem Linux Ubuntu w Oracle VirtualBox.
+Połączyłem się z nią zdalnie za pomocą SSH.
+Skonfigurowałem Visual Studio Code, używając rozszerzenia Remote - SSH.
 ## 1) Instalacja Git i kluczy SSH Aby rozpocząć pracę z systemem Git oraz zapewnić bezpieczne połączenie przez SSH, zainstalowano odpowiednie narzędzia.
 ![image](https://github.com/user-attachments/assets/de868aad-30c9-49da-9446-c1c1a274cba5)
 
