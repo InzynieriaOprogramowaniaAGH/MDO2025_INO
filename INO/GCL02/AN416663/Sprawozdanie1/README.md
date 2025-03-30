@@ -32,8 +32,30 @@ Data wykonania: 30.03. 2025 r.
 ![Zrzut ekranu 8](screenshots/8.PNG)
 2. Uruchomiam kontener z obrazu hello-word. Poniżej zamieszczam efekt takiego uruchomienia:
 ![Zrzut ekranu 9](screenshots/9.PNG)
-4. Ponownie uruchamiam kontener z obrazu busybox, tym razem interaktywnie (-it)
-
+3. Ponownie uruchamiam kontener z obrazu busybox, tym razem interaktywnie (-it). Uruchomienie kontenera w trybie interaktywnym pozwala na bezpośrednią interakcję z terminalem kontenera. Poniżej przykład uruchomienia:
+![Zrzut ekranu 10](screenshots/10.PNG)
+4. Sprawdziłam wersji systemu w kontenerze, jest to możliwe dzięki trybowi interaktywnemu:
+![Zrzut ekranu 11](screenshots/11.PNG)
+5. Uruchomiłam obraz systemu ubuntu w kontenerze:
+![Zrzut ekranu 12](screenshots/12.PNG)
+6. Sprawdziłam procesy Dockera i PID1 w kontenerze.
+Procesy w kontenerze, czyli tylko procesy uruchomione wewnątrz niego: 
+![Zrzut ekranu 14](screenshots/14.PNG)
+Procesy Docera na hoście. Widać uruchomiony kontener oraz inne procesy dockera działające na hoście.
+![Zrzut ekranu 13](screenshots/13.PNG)
+7. Zaaktualizowałam pakiety, a następnie wyszłam z kontenera polecenie exit
+![Zrzut ekranu 15](screenshots/15.PNG)
+8. Następnie utworzyłam plik Docerfile. Znajduje się on w folderze Sprawozdaniem1. Dockerfile buduje system i klonuje repo.
+9. Zbudowałam i uruchomiłam Dockerfile, wobec czego został uruchomiony w trybie interaktywnym kontener z systemem Ubuntu.
+![Zrzut ekranu 16](screenshots/16.PNG)
+![Zrzut ekranu 17](screenshots/17.PNG)
+10. Sprawdzam uruchomione kontenery (nie działające), za pomocą polecenia docker ps -a. Urochomione kontenery to takie, które mogą być zarówno uruchomione, jak i zatrzymane. Oto efekt wywołania tego polecenia. W kolumnie STATUS można sprawdzić które kontenery są zatrzymane (Exited).
+![Zrzut ekranu 18](screenshots/18.PNG)
+11. Po wykoannym zadaniu należy pamiętać by posprzątać po sobie:
+    - Usunęłam kontenery
+![Zrzut ekranu 19](screenshots/19.PNG)      
+    - Usunęłam obrazy
+![Zrzut ekranu 20](screenshots/20.PNG)
 ## Laboratorium 3
 
 ## Laboratorium 4
@@ -43,5 +65,6 @@ W ramach laboratorium korzystałam do wykonania ćwiczenia narzędzia ChatGPT - 
 Narzędzie zostało wykorzystane do 
 - Korekty tekstu pisanego sprawozdania.
 - Wytłumaczenia zagadnień poznawanych w ramach zajęć.
+- Pomoc przy tworzeniu plików
 Odpowiedzi były weryfikowane osobiście przeze mnie.
 
