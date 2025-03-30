@@ -242,3 +242,7 @@ Utworzono dedykowaną sieć mostkową i uruchomiono serwer `iperf3` w kontenerze
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20network%20create%20bridge-net.png?raw=true)
 
 *Rys. 4 utworzenie sieci*
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20run%20iperf_server.png?raw=true)
+
+*Rys. 5 uruchomienie serwera iperf3 w kontenerze*
