@@ -306,8 +306,8 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
     <div align="center">
       <img src="screens3/3.jpg" alt="irssi build">
     </div>
-    - `ninja -C Build && sudo ninja -C Build install`,
-    - `ninja test`, aby przeprowadzić testy
+    - `ninja -C Build && sudo ninja -C Build install`
+    - `ninja test` aby przeprowadzić testy
     <div align="center">
       <img src="screens3/4.jpg" alt="irssi tests">
     </div>
