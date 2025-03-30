@@ -220,3 +220,7 @@ Na końcu uruchomiono kontener w celu sprawdzenia poprawnego działania.
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20create%20volume%20input.png?raw=true)
 
 *Rys. 1 utworzenie woluminów wejściowego i wyjściowego*
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20create%20volume%20output.png?raw=true)
+
+*Rys. 2 uruchomienie kontenera i podłączenie woluminu wejściowego*
