@@ -126,16 +126,27 @@ sama operacja <code style="color:rgb(35, 186, 101);"> git merge</code> powiodła
 
 ![alt text](<./img/docker account.png>)
 
+Na stronie Docker Hub możemy znaleść wiele przykladowych już zbudowanych obrazów które możemy pobrać i wykorzystać do własnych celów.
+
 ## 3. Pobranie obrazów <code style="color:rgb(35, 186, 101);"> hello-world</code>, <code style="color:rgb(35, 186, 101);"> busybox</code>, <code style="color:rgb(35, 186, 101);"> ubuntu</code> lub <code style="color:rgb(35, 186, 101);"> fedora</code>, <code style="color:rgb(35, 186, 101);"> mysql</code>
 
+Aby zacząć korzystać z dockera należy najpierw go uruchomić, czynność tą pokazano poniżej.
 
 ![alt text](<./img/docker start.png>)
 
+Z dockera będziemy korzystali nie raz dlatego przy użyciu nastepującego polecenia ustawiamy go tak aby uruchamiał się przy każdym starcie systemu:
+
     sudo systemctl enable docker
+
+Żeby upewnić się czy docker uruchomi siępoprawnie możemy wykorzystać polecenie  <code style="color:rgb(35, 186, 101);"> status</code>
 
 ![alt text](<./img/docker status.png>)
 
+Kolejną akcją która może nam ułatwić poźniejszą pracę z dockerem będzie nadanie odpowiednich przywilejów urzytkownikowi tak aby każdorazowe podawanie hasła nie było konieczne
+
 ![alt text](<./img/docker usermod.png>)
+
+Pobranie odpowiednich obrazów:
 
 ![alt text](<./img/docker pull.png>)
 
@@ -145,27 +156,41 @@ sama operacja <code style="color:rgb(35, 186, 101);"> git merge</code> powiodła
 
 ![alt text](<./img/run busybox.png>)
 
+Podłączenie się do kontenera interaktywnie i wywołanie numeru wersji:
+
 ![alt text](<./img/busybox --help.png>)
 
-![alt text](<./img/docker ps busybox.png>),
+![alt text](<./img/docker ps busybox.png>)
 
 ## 5. Uruchomienie "system w kontenerze" 
 
 ![alt text](<./img/run fedora .png>)
 
+Prezentacja <code style="color:rgb(35, 186, 101);"> PID1</code> w kontenerze. (Działanie to wymagało doinstalowania odpowieniego pakietu)
+
 ![alt text](<./img/fedora ps -aux .png>)
 
+Procesy dockera obecne na hoście:
+
 ![alt text](<./img/ps aux.png>)
+
+Aktualizacja pakietów w kontenerze:
 
 ![alt text](<./img/dnf update -y.png>)
 
 ![alt text](<./img/dnf update summary.png>)
+
+Wyjście z kontenera za pomocą polecenia:
 
     exit
 
 ## 6. Własnoręcznie tworzenie, zbudowanie i uruchomienie prostego plik Dockerfile bazującego na wybranym systemie i sklonowanie repozytorium.
 
 ![alt text](./img/dockerfile.png)
+
+Polecenie <code style="color:rgb(35, 186, 101);"> FROM fedora:latest</code> ustawia najnowszy obraz Fedory jako bazę kontenera. Następnie <code style="color:rgb(35, 186, 101);"> RUN dnf update -y && dnf install -y git && dnf clean all </code> aktualizuje system, instaluje Git i czyści pamięć podręczną menedżera pakietów, aby zmniejszyć rozmiar obrazu. Polecenie <code style="color:rgb(35, 186, 101);"> WORKDIR /app </code> ustawia katalog <code style="color:rgb(35, 186, 101);"> /app </code> jako bieżący katalog roboczy w kontenerze. Kolejna linijka <code style="color:rgb(35, 186, 101);"> RUN git clone</code> klonuje repozytorium z GitHuba do katalogu <code style="color:rgb(35, 186, 101);"> /app/MDO2025_INO</code>. Na końcu <code style="color:rgb(35, 186, 101);"> CMD ["/bin/bash"] </code> ustawia domyślne uruchomienie powłoki Bash po starcie kontenera.
+
+Budowanie obrazu i uruchamianie z niego kontenera:
 
 ![alt text](<./img/docker bulid.png>)
 
@@ -180,6 +205,10 @@ sama operacja <code style="color:rgb(35, 186, 101);"> git merge</code> powiodła
 ![alt text](<./img/docker rm.png>)
 
 ## 8. Wyczyszczenie obrazów
+
+Możliwe za pomocą:
+
+    docker rmi -f $(docker images -aq)
 
 # Zajęcia 03
 
@@ -233,11 +262,13 @@ sama operacja <code style="color:rgb(35, 186, 101);"> git merge</code> powiodła
 
 # Zajęcia 04
 
+## Wykorzystanie woluminów do przenoszenia danych między kontenerami 
+
 ![alt text](<./img/volume create.png>)
 
 ![alt text](./img/dockerfile.bld.png)
 
-![alt text](<./img/ocker build.png>)
+![alt text](<./img/docker build.png>)
 
     docker run -it --name build-container \
     -v input_volume:/mnt/input \
@@ -260,6 +291,8 @@ sama operacja <code style="color:rgb(35, 186, 101);"> git merge</code> powiodła
 
 ![alt text](<./img/run f.png>)
 
+## Komunikacja sieciowa oraz eksponowanie portów
+
 ![alt text](<./img/iperf3 network test.png>)
 
     docker network create my_network
@@ -275,6 +308,8 @@ sama operacja <code style="color:rgb(35, 186, 101);"> git merge</code> powiodła
 ![alt text](<./img/downloading iperf3.png>)
 
 ![alt text](<./img/iperf windows.png>)
+
+## Instalacja i uruchomienie Jenkins
 
 ![alt text](<./img/run jenkins.png>)
 
