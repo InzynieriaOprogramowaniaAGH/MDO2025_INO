@@ -7,24 +7,34 @@ W ramach pierwszego zadania wykonano pełną konfigurację środowiska Git, SSH 
 ---
 
 ## 1. Instalacja Gita i SSH
-
+```sh
 git --version
-
+```
+```sh
 ssh -V
-
+```
+```sh
 ls
-
+```
 
 ![sreen1](./ss1.png)
 
 ## 2. Klonowanie repozytorium przez HTTPS
 
+```sh
 git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+```
+![screen](./gitclone.png)
 
 ## 3. Generowanie kluczy SSH
 
+```sh
 ssh-keygen -t ed25519 -C "drusin@student.agh.edu.pl"
 ssh-keygen -t ecdsa -b 521 -C "drusin@student.agh.edu.pl"
+```
+
+![screen](./gkluczy.png)
+
 
 ## 4. Dodanie klucza do GitHuba
 
@@ -45,21 +55,30 @@ Host github.com
 
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 
+
+## 7. Przejście na swojego brancha
+```sh
+git checkout DR416985
+```
+
+![screen](./DR41)
+
+
 ## 7. Włączenie 2FA
 
-## 8. Praca na branchu
 
 ## 9. Hook commit-msg
 
 
-![screen](./ss9.png)
+
 
 ## 10. Test działania hooka
-
-![screen](./ss10.png)
+[screen](./testhook.png)
 
 ## 11. Push zmian
 
-## 12. Historia komend
+![screen](./push.png)
 
-![screen](./ss10.png)
+
+
+
