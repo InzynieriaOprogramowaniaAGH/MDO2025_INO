@@ -168,45 +168,45 @@ services:
 # Zajęcia 04
 ## 1. Zachowywanie stanu
 Przygotowano woluminy wejściowy i wyjściowy i podłączono je do kontenera bazowego
-![Opis obrazka](lab1_screenshots/1.png)
+![Opis obrazka](lab4_screenshots/1.png)
 
 Uruchomiono kontener, zainstalowano niezbędne wymagania wstępne i sklonowano repozytorium na wolumin wejściowy
-![Opis obrazka](lab1_screenshots/2.png)
+![Opis obrazka](lab4_screenshots/2.png)
 
-![Opis obrazka](lab1_screenshots/3.png)
+![Opis obrazka](lab4_screenshots/3.png)
 
-![Opis obrazka](lab1_screenshots/4.png)
+![Opis obrazka](lab4_screenshots/4.png)
 
 Zapisano powstałe/zbudowane pliki na woluminie wyjściowym
-![Opis obrazka](lab1_screenshots/5.png)
+![Opis obrazka](lab4_screenshots/5.png)
 
 Po zapisaniu wyników w output_volume, sprawdzenie dostępności danych w innym kontenerze
-![Opis obrazka](lab1_screenshots/6.png)
+![Opis obrazka](lab4_screenshots/6.png)
 
 Dołączanie woluminów przy uruchamianiu kontenera umożliwiło zachowanie stanu aplikacji, np. zapis logów do woluminu, który przeżywa restart kontenera.
 
 Wykonano możliwość wykonania ww. kroków za pomocą docker build i pliku Dockerfile
-![Opis obrazka](lab1_screenshots/7.png)
+![Opis obrazka](lab4_screenshots/7.png)
 
 ## 2. Eksponowanie portu
 Uruchomiono wewnątrz kontenera serwer iperf
-![Opis obrazka](lab1_screenshots/8.png)
+![Opis obrazka](lab4_screenshots/8.png)
 
 Wykonano test przepustowości sieci za pomocą narzędzia iperf3
-![Opis obrazka](lab1_screenshots/9.png)
+![Opis obrazka](lab4_screenshots/9.png)
 
 Połączono się z hosta
-![Opis obrazka](lab1_screenshots/test.png)
+![Opis obrazka](lab4_screenshots/test.png)
 
 W tym rozdziale zapomniałem porobić niektóre zrzuty ekranu ale używane przeze mnie komendy znajdują się w history.txt.
 
 ## 3. Instancja Jenkins
 Uruchomiono kontener DIND, zbudowano obraz jenkinsa przy użyciu Dockerfila podanego w dokumentacji, stworzono kontener
-![Opis obrazka](lab1_screenshots/10.png)
+![Opis obrazka](lab4_screenshots/10.png)
 
-![Opis obrazka](lab1_screenshots/11.png)
+![Opis obrazka](lab4_screenshots/11.png)
 
 Uruchomiono jenkins w przeglądarce, odblokowano kodem z konsoli i utworzono konta admina
-![Opis obrazka](lab1_screenshots/j1.png)
+![Opis obrazka](lab4_screenshots/j1.png)
 
-![Opis obrazka](lab1_screenshots/j2.png)
+![Opis obrazka](lab4_screenshots/j2.png)
