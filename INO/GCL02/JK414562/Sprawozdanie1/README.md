@@ -197,6 +197,8 @@ Budowanie obrazu Docker z obsługą testów w pytest
 ### 5) Uruchomiłem kontener Jenkins docker run -d --name jenkins --network jenkins \ w tej sieci
 ![image](https://github.com/user-attachments/assets/7b32f282-f62d-4e39-b6b3-e0b5f38dce35)
 ### 6) Sprawdziłem, że kontener działa (docker ps), co jest potwierdzeniem zainicjalizowanej instancji Jenkinsa.
+![image](https://github.com/user-attachments/assets/22a9ece0-d5b3-417f-b86b-d19bd48c5f97)
+
 ### 7) Uzyskanie hasła administratora Jenkins
 ![image](https://github.com/user-attachments/assets/ca9ecdc0-b663-41a6-aa6e-14b766fd887c)
 ### 8) Wszedłem na strone https://localhost:8080 i zalogowałem się z użyciem hasła
