@@ -82,3 +82,7 @@ Następnie pobrano obraz node, uruchomiono kontener w trybie interaktywnym i skl
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20pull%20node.png?raw=true)
 
 *Rys. 3 pobranie obrazu node*
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/git%20clone%20react-boil.png?raw=true)
+
+*Rys. 4 sklonowanie repozytorium react-boilerplate
