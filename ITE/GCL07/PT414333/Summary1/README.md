@@ -268,3 +268,152 @@ Create image:
 ```sh
 docker build -f Dockerfile.irssi_t --no-cache -t irssi-tests .
 ```
+
+# Class 4
+## 1. State persistance
+
+Create [Dockerfile.build](class4/Dockerfile.build)
+```Dockerfile
+FROM ubuntu
+
+RUN apt -y update && \
+    apt -y install meson gcc libglib2.0-dev libssl-dev libncurses-dev libutf8proc-dev libperl-dev
+
+WORKDIR /app
+```
+
+Build image from it.
+```sh
+docker build -f Dockerfile.build -t build .
+```
+![alt text](class4/1.png)
+
+
+Create new volumes
+```sh
+docker volume create build-in
+docker vloume create build-out
+```
+![alt text](class4/2.png)
+
+Clone repository to `build-in` volume
+```sh
+cd /var/lib/docker/volumes/build-in/_data
+git clone https://github.com/irssi/irssi.git .
+```
+![alt text](class4/3.png)
+
+
+Create build container
+```sh
+docker run -it -v build-in:/app -v build-out:/app-out --name Build build
+
+# Inside docker
+meson ../app-out && ninja -C ../app-out
+```
+![alt text](class4/4.png)
+
+In order to provide srource code into container I mounted 2 volumes and cloned repository into input volume.  
+
+## 2. Port exposing
+Create iperf-server container:
+```sh
+docker pull networkstatic/iperf3
+docker run -it -d --name iperf3-server -p 5201:5201 networkstatic/iperf3 -s
+```
+![alt text](class4/5.png)
+
+Connection create client container
+```sh
+docker run -it --name iperf3-client networkstatic/iperf3 -c 127.17.0.3
+```
+![alt text](class4/6.png)
+
+Create iperf network
+```sh
+docker network create iperf3-network
+```
+![alt text](class4/7.png)
+
+Create new containers in custom network
+```sh
+docker run -d --name iperf3-server-net -p 5201:5201 --network iperf3-network networkstatic/iperf3 -s
+docker run -it --name iperf3-client-net --network iperf3-network networkstatic/iperf3 -c iperf3-server-net
+```
+![alt text](class4/8.png)
+
+Test from host
+```sh
+iperf3 -c localhost
+```
+![alt text](class4/9.png)
+
+
+Get logs from iperf server.
+```sh
+docker logs iperf3-server-net
+```
+![alt text](class4/10.png)
+
+## 3. Jenkins setup
+
+Create jenkins network
+```sh
+docker network create jenkins
+```
+![alt text](class4/11.png)
+
+DIND container startup
+```sh
+docker run \
+  --name jenkins-docker \
+  --rm \
+  --detach \
+  --privileged \
+  --network jenkins \
+  --network-alias docker \
+  --env DOCKER_TLS_CERTDIR=/certs \
+  --volume jenkins-docker-certs:/certs/client \
+  --volume jenkins-data:/var/jenkins_home \
+  --publish 2376:2376 \
+  docker:dind \
+  --storage-driver overlay2
+```
+![alt text](class4/12.png)
+
+Create custom Jenkins image [Dockerfile.jenkins](class4/Dockerfile.jenkins)
+```sh
+cd ITE/GCL07/PT414333/Summary1/class4
+docker build -f Dockerfile.jenkins -t myjenkins-blueocean:2.492.2-1 .
+```
+![alt text](class4/13.png)
+
+Run Jenkins container
+```sh
+docker run \
+  --name jenkins-blueocean \
+  --restart=on-failure \
+  --detach \
+  --network jenkins \
+  --env DOCKER_HOST=tcp://docker:2376 \
+  --env DOCKER_CERT_PATH=/certs/client \
+  --env DOCKER_TLS_VERIFY=1 \
+  --publish 8080:8080 \
+  --publish 50000:50000 \
+  --volume jenkins-data:/var/jenkins_home \
+  --volume jenkins-docker-certs:/certs/client:ro \
+  myjenkins-blueocean:2.492.2-1
+```
+![alt text](class4/14.png)
+![alt text](class4/15.png)
+
+
+Open Jenkins in browser
+![alt text](class4/16.png)
+
+Get initail admin password
+```sh
+cat /var/lib/docker/volumes/jenkins-data/_data/secrets/initialAdminPassword
+```
+![alt text](class4/17.png)
+![alt text](class4/18.png)
