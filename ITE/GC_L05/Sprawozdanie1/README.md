@@ -284,6 +284,8 @@ Pobrano i wyświetlono logi kontenera poleceniem `sudo docker logs iperf_server`
 
 *Rys. 13 wyświetlenie działających kontenerów*
 
+Uruchomiono kontener `jenkins-blueocean` i za pomocą `cat` wyświetlono zawartość pliku `/var/jenkins_home/secrets/initialAdminPassword`, aby uzyskać hasło administratora potrzebne do pierwszego logowania do Jenkinsa.
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20exec%20jenkinsci%20blueocean.png?raw=true)
 
 *Rys. 14 uruchomienie w kontenerze jenkins-blueocean i wyświetlenie hasła administratora jenkinsa*
