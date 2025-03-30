@@ -108,6 +108,10 @@ Kolejnym krokiem było utworzenie dwóch plików Dockerfile (`Dockerfile.build` 
 
 *Rys. 8 plik Dockerfile, ktory wykonuje instrukcje do momentu build*
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/cat%20Dockerfile.test.png?raw=true)
+
+*Rys. 9 plik Dockerfile, ktory wykonuje testy*
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20build%20image.png?raw=true)
 
 *Rys. 10 budowa obrazu z użyciem Dockerfile*
