@@ -1,0 +1,11 @@
+services:
+  build:
+    image: build
+    build:
+      dockerfile: Dockerfile.build
+  test:
+    image: test
+    build:
+      dockerfile: Dockerfile.test
+      additional_contexts:
+        build: "service:build"
