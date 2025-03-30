@@ -117,3 +117,9 @@ Kolejnym krokiem było utworzenie dwóch plików Dockerfile (`Dockerfile.build` 
 *Rys. 10 budowa obrazu z użyciem Dockerfile*
 
 Polecenie `sudo docker build -f Dockerfile.build -t build-image .` tworzy nowy obraz Dockera o nazwie `build-image`, korzystając z instrukcji zawartych w pliku Dockerfile.build i kontekstu bieżącego katalogu (.). W trakcie tego procesu wykonywane są kolejne kroki określone w Dockerfile, takie jak instalacja potrzebnych pakietów, sklonowanie repozytorium i  build aplikacji.
+
+Na końcu uruchomiono kontener w celu sprawdzenia poprawnego działania.
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/uruchomienie%20kontenera%20test.png)
+
+*Rys. 11 uruchomienie kontenera i sprawdzenie działania*
