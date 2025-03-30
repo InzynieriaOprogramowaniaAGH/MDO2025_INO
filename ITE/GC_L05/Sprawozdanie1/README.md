@@ -252,7 +252,7 @@ Następnie uruchomiono nowy kontener o nazwie iperf_client w sieci bridge_net, d
 
 *Rys. 6 połączenie z serwerem z drugiego kontenera*
 
-Po uruchomienia na hoście polecenia `iperf3 -c localhost` klient iperf3 próbuje połączyć się z serwerem, który jest dostępny na porcie 5201, ponieważ serwer został wystawiony na hosta przez opcję -p 5201:5201 w poleceniu uruchamiającym kontener serwera.
+Po uruchomieniu na hoście polecenia `iperf3 -c localhost` klient iperf3 próbuje połączyć się z serwerem, który jest dostępny na porcie 5201, ponieważ serwer został wystawiony na hosta przez opcję -p 5201:5201 w poleceniu uruchamiającym kontener serwera.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/iperf%20localhost.png?raw=true)
 
@@ -282,6 +282,8 @@ Uruchomiono kontener „docker:dind” o nazwie „jenkins-docker” w trybie up
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20run%20jenkins.png?raw=true)
 
 *Rys. 11 uruchomienie kontenera w tle*
+
+W koljenym kroku wpisnao polecenie, które uruchamia kontener z Jenkinsa (z wtyczką Blue Ocean) w sieci „jenkins”, publikując porty 8080 i 50000, i konfigurując zmienne środowiskowe do połączenia z Dockerem. 
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/uruchomienie%20kontenera%20z%20obrazem%20jenkinsci%20blueocean.png?raw=true)
 
