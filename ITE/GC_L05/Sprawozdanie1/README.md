@@ -237,4 +237,5 @@ Następnie sklonowano repozytorium na wolumin wejściowy przez skopiowanie lokal
 
 *Rys. 3 klonowanie repozytorium na wolumin wejściowy*
 
+Utworzono dedykowaną sieć mostkową i uruchomiono serwer `iperf3` w kontenerze, dołączając kontener do utworzonej wcześniej sieci.
 
