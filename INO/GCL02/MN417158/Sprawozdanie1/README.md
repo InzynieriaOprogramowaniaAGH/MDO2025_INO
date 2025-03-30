@@ -127,9 +127,48 @@ następnie po ```sh dnf install procps -y```
 
 ![Zrzut15](screenshots/Zrzut15.png)
 
-9. Wyczyśiłem wszystkie obrazy ```sh docker rmi $(docker images - q)``` 
-
+9. Wyczyśiłem wszystkie obrazy ```sh docker rmi $(docker images - q)```
+ 
 ![Zrzut16](screenshots/Zrzut16.png)
 
 ## Zadanie 3:
+
+1. Do wykonania zadania konieczny był wybór oprogramowania dysponującego otwartą licencją oraz umożliwia zbudowanie i wykonanie testów na aplikacji. W moim przypadku wybór padł na aplikację [Chalk](https://github.com/chalk/chalk?tab=readme-ov-file) Jest to biblioteka dla Node.js która umożliwia stylizowanie tekstu za pomocą konsoli.
+
+2. Sklonowałem repozytorium na system Fedora ```sh git clone https://github.com/chalk/chalk.git```
+
+Następnie po wejściu do katalogu z aplikacją zbudowałem ją poprzez ```sh npm install```
+
+Uruchomiłem testy ```sh npm test```
+
+![Zrzut17](screenshots/Zrzut17.png)
+
+3. Ponowiłem to działanie, tym razem jednak wykonałem te kroki interaktywnie w kontenerze. Poleceniem ```sh docker run -it --rm ubuntu bash```
+uruchomiłem kontener na obrazie ubuntu. Następnie pobrałem konieczne zależności ```sh apt-get update && apt-get install -y git nodejs npm```
+
+4. Przeprowadziłem build i testy tak samo jak poza kontenerem:
+
+![Zrzut18](screenshots/Zrzut18.png)
+
+![Zrzut19](screenshots/Zrzut19.png)
+
+5. Ostatnim zadaniem było zautomatyzowanie poprzednich kroków poprzez stworzenie dwóch Dockerfile [Dockerfile.build](files/Dockerfilechalk.build) [Dockerfile.test](files/Dockerfilechalk.test)
+
+6. Następnie zbudowałem obraz, który będzie odpowiadał za klonowanie repozytorium i instalację aplikacji poleceniem ```sh docker build -f Dockerfilechalk.build -t buildnode .```
+
+Potem zbudowałem drugi, bazujący na pierwszym, obraz mający za zadanie przeprowadzić testy ```sh docker build -f Dockerfilechalk.test -t testnode .```
+
+**Budowanie obrazu buildnode:**
+
+![Zrzut20](screenshots/Zrzut20.png)
+
+**Budowanie obrazu testnode:**
+
+![Zrzut21](screenshots/Zrzut21.png)
+
+7. Uruchomiłem kontener na podstawie obrazu testnode i sprawdziłem jego poprawne działanie. Kontener jest uruchomioną instancją utworzonego wcześniej obrazu. W kontenerze pracują procesy zdefiniowane w obrazie. Testy wykonały się prawidłowo:
+
+![Zrzut22](screenshots/Zrzut22.png)
+
+## Zadanie 4:
 
