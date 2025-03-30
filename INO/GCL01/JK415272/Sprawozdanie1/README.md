@@ -348,7 +348,192 @@ Lodash jest biblioteką JavaScript przeznaczoną do wykorzystania w aplikacjach 
 
 Ćwiczenie pozwoliło na zapoznanie się z procesem konteneryzacji oprogramowania oraz automatyzacją procesu budowania i testowania kodu wewnątrz kontenerów. Dzięki zastosowaniu `Dockerfile` i `Docker Compose` udało się w pełni zautomatyzować uruchamianie i testowanie kodu Lodash, co znacząco ułatwia procesy CI/CD.
 
+---
+Ćwiczenie 4: Dodatkowa terminologia w konteneryzacji, instancja Jenkins
 
+Zachowywanie stanu w Dockerze
+
+Krok 1: Utworzenie wolumenów input i output
+Na początek tworzymy dwa wolumeny:
+
+```bash
+docker volume create input
+docker volume create output
+```
+
+Sprawdzenie, czy wolumeny zostały utworzone:
+
+```bash
+docker volume ls
+```
+
+Krok 2: Uruchomienie kontenera bazowego node
+
+```bash
+docker run -it --name node-container \
+  -v input:/app/input \
+  -v output:/app/output \
+  node bash
+```
+
+`-v input:/app/input` – montujemy wolumen wejściowy w `/app/input`.
+`-v output:/app/output` – montujemy wolumen wyjściowy w `/app/output`.
+`node` – używamy oficjalnego obrazu Node.js, ponieważ zawiera wszystkie niezbędne zależności do budowania projektu.
+
+Krok 3: Sklonowanie repozytorium na wolumin input: Klonowanie repozytorium na hoście i kopiowanie do woluminu
+
+```bash
+git clone https://github.com/lodash/lodash ~/input_repo
+docker cp ~/input_repo node-container:/app/input
+```
+
+Sprawdzenie zawartości woluminu:
+
+```bash
+docker exec -it node-container ls /app/input
+```
+
+Opcja 2: Klonowanie repozytorium w kontenerze pomocniczym
+
+```bash
+docker run --rm -v input:/app alpine/git clone https://github.com/lodash/lodash /app
+```
+
+Sprawdzenie zawartości:
+
+```bash
+docker run --rm -v input:/app busybox ls /app
+```
+
+Krok 4: Uruchomienie builda w kontenerze node
+
+```bash
+docker exec -it node-container bash -c "
+  cd /app/input &&
+  npm install &&
+  npm run build &&
+  cp -r dist /app/output"
+```
+
+Sprawdzamy zawartość output:
+
+```bash
+docker run --rm -v output:/app busybox ls /app
+```
+
+Krok 5: Automatyzacja procesu w Dockerfile z RUN --mount
+Dockerfile:
+
+```dockerfile
+FROM node:latest
+WORKDIR /app
+RUN --mount=type=bind,target=/app git clone https://github.com/lodash/lodash /app
+RUN cd /app && npm install && npm run build
+```
+
+Budowanie obrazu:
+
+```bash
+docker build -t node-builder .
+docker run -v output:/app/output node-builder
+```
+
+---
+
+Eksponowanie portu i testowanie sieci
+
+Krok 1: Uruchomienie serwera iperf3 w kontenerze
+
+```bash
+docker run -d --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+```
+
+Serwer iperf3 nasłuchuje na porcie 5201, umożliwiając testowanie przepustowości sieci.
+
+Krok 2: Znalezienie IP kontenera
+
+```bash
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-server
+```
+
+Krok 3: Uruchomienie klienta i test połączenia
+
+```bash
+docker run --rm ubuntu bash -c "apt update && apt install -y iperf3 && iperf3 -c <TWOJE_IP>"
+```
+
+Krok 4: Tworzenie Dockerfile do iperf3
+
+```dockerfile
+FROM ubuntu:22.04
+RUN apt update && apt install -y iperf3
+```
+
+Krok 5: Tworzenie sieci Docker
+
+```bash
+docker network create --driver bridge iperf-net
+```
+
+Krok 6: Serwer i klient w jednej sieci
+
+```bash
+docker build -t iperf-ready -f Dockerfile.iperf .
+docker run -d --name iperf-server --network iperf-net iperf-ready iperf3 -s
+docker run --rm --network iperf-net iperf-ready iperf3 -c iperf-server
+```
+
+Krok 7: Połączenie z hosta
+
+```bash
+iperf3 -c $(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-server)
+```
+
+Krok 8: Logi do woluminu
+
+```bash
+docker run --rm --network iperf-net -v $(pwd)/output:/output iperf-ready bash -c "iperf3 -c iperf-server > /output/results.txt"
+cat output/results.txt
+```
+
+Krok 9: Połączenie z innej maszyny
+
+```bash
+docker run -d --name iperf-server --network iperf-net -p 5201:5201 iperf-ready iperf3 -s
+iperf3 -c <IP_HOSTA>
+```
+
+---
+
+Konfiguracja Jenkinsa
+
+Krok 1: Tworzenie sieci dla Jenkinsa
+
+```bash
+docker network create jenkins-net
+```
+
+Krok 2: Uruchomienie jenkins-dind (Docker in Docker)
+
+```bash
+docker run -d --name jenkins-dind --network jenkins-net --privileged docker:dind
+```
+
+Krok 3: Uruchomienie Jenkinsa
+
+```bash
+docker volume create jenkins_home
+
+docker run -d --name jenkins \
+  --network jenkins-net \
+  -p 8080:8080 -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  jenkins/jenkins:lts
+```
+
+Krok 4: Uruchomienie Jenkinsa
+
+Otworzenie ekranu logowania 
 
 
 
