@@ -85,6 +85,10 @@ Następnie pobrano obraz node, uruchomiono kontener w trybie interaktywnym i skl
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/git%20clone%20react-boil.png?raw=true)
 
-*Rys. 4 sklonowanie repozytorium react-boilerplate
+*Rys. 4 sklonowanie repozytorium react-boilerplate*
 
 W kontenerze doinstalowano wymagane zależności, uruchomiono `build` poleceniem `npm run build` oraz testy za pomocą polecenia `npm test`.
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/npm%20install.png)
+
+*Rys. 5 instalacja npm*
