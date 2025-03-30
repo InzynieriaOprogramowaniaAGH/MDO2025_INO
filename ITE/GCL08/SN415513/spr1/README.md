@@ -394,5 +394,54 @@ docker build -t weechat-test -f Dockerfile.test .
 ## Rzeczy które się działy w obu kontenerach
 ![](lab3/16.png)
 
+# LAB 04
+
+## Stworzenie dwóch woluminów
+![](lab4/1.png)
+
+## Uruchomienie kontenera bez gita
+![](lab4/2.png)
+
+## Podłącznie woluminow do kontenera, sprawdzenie poprawnosci
+![](lab4/3.png)
+
+## Sprawdzenie ścieżki do voluminu wejściowego
+![](lab4/4.png)
+
+## Sklonowanie na wolumin
+![](lab4/5.png)
+
+## Sprawdzenie poprawnosci klonowania w kontenerze
+![](lab4/6.png)
+
+## Zbudowanie aplikacji w kontenerze
+![](lab4/7.png)
+
+## Skopiowanie na wolumin wyjściowy
+![](lab4/8.png)
+## Odpalenie kontenera (alpine) z dołączonym woluminem wyjściowym
+Build znajduje się w oczekiwanym miejscu.
+![](lab4/9.png)
+
+## Instalacja iperf3 na kontenerze ubuntu
+![](lab4/11.png)
+
+## Utworzenie sieci i podłączenie dwóch kontenerów
+![](lab4/12.png)
+
+## Test połączenia z kontenera klienckiego do serwerowego
+![](lab4/13.png)
+
+## Podmiana mostka
+![](lab4/14.png)
+
+## Ponowny test z klienta do serwera
+![](lab4/15.png)
+
+## Test spoza kontenera
+![](lab4/16.png)
+
+
+
    
 
