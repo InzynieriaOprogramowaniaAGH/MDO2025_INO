@@ -55,6 +55,26 @@ Aby pobrać zdalnie repozytorium, wskazano plik z kluczem prywatnym przed polece
 
 *Rys. 7 sklonowanie zdalnego repozytorium za pomocą ssh*
 
+### Git hook (commit-msg)
+
+Poniżej znajduje się skrypt hooka, który weryfikuje, czy commit message zaczyna się od "AN417592":
+
+```bash
+#!/bin/sh
+
+commit_msg_file="$1"
+required_prefix="AN417592"
+
+first_line=$(head -n 1 "$commit_msg_file")
+
+if echo "$first_line" | grep -q "^$required_prefix"; then
+  exit 0
+else
+  echo "ERROR: Commit message musi zaczynać się od '$required_prefix'."
+  exit 1
+fi
+
+```
 ---
 ## Laboratorium 2 - Git, Docker
 
