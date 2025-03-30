@@ -253,4 +253,6 @@ Utworzono dedykowaną sieć mostkową i uruchomiono serwer `iperf3` w kontenerze
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/iperf%20localhost.png?raw=true)
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20logs%20iperf_server.png?raw=true)
+
 *Rys. 7 monitorowanie logów:*
