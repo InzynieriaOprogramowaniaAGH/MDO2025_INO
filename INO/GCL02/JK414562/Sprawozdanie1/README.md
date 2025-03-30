@@ -78,6 +78,26 @@ Zmieniono połączenie z repozytorium na SSH:
 
 9) Utworzony plik Dockerfile został dodany do katalogu Sprawozdanie1 wewnątrz repozytorium na gałęzi JK414562.
 
+LEKCJA 3: Dockerfiles, kontener jako definicja etapu
+1) Wybór oprogramowania
+Do przeprowadzenia ćwiczenia wybrano repozytorium python-examples
+
+          które skonowałem poleceniem:
+   ![image](https://github.com/user-attachments/assets/1422f88f-440d-4f53-b9c7-f72f239c2baa)
+zawierające oprogramowanie na otwartej licencji, spełniające następujące wymagania:
+
+-Jest dostępne publicznie i posiada otwartą licencję.
+-Zawiera skrypt Makefile umożliwiający kompilację (make build) oraz uruchomienie testów (make test).
+-Posiada testy jednostkowe z jednoznacznym raportem wyników.
+Repozytorium zostało sklonowane, a następnie przeprowadzono kompilację
+     make
+Sklonuj niniejsze repozytorium, przeprowadź build programu (doinstaluj wymagane zależności)
+
+Uruchom testy jednostkowe dołączone do repozytorium
+![image](https://github.com/user-attachments/assets/cdf9235c-2dd7-40c8-b327-a315d6019087)
+
+
+
 
 
 
