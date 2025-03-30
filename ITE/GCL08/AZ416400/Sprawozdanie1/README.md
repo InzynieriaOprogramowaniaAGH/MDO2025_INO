@@ -230,3 +230,58 @@ sama operacja <code style="color:rgb(35, 186, 101);"> git merge</code> powiodła
 ## 3. Wykazanie, że kontener wdraża się i pracuje poprawnie. 
 
 ![alt text](<./img/run irssibldv2.png>)
+
+# Zajęcia 04
+
+![alt text](<./img/volume create.png>)
+
+![alt text](./img/dockerfile.bld.png)
+
+![alt text](<./img/ocker build.png>)
+
+    docker run -it --name build-container \
+    -v input_volume:/mnt/input \
+    -v output_volume:/mnt/output \
+    build_img /bin/bash
+
+![alt text](<./img/build container.png>)
+
+![alt text](<./img/run repo_cloning.png>)
+
+![alt text](<./img/git clone input.png>)
+
+![alt text](<./img/irrsi coppied.png>)
+
+![alt text](<./img/ninja -c build to coppy.png>)
+
+![alt text](./img/coppied.png)
+
+    docker run –rm -v output_volume:/mnt/output fedora ls /mnt/output
+
+![alt text](<./img/run f.png>)
+
+![alt text](<./img/iperf3 network test.png>)
+
+    docker network create my_network
+
+![alt text](<./img/ip a.png>)
+
+![alt text](<./img/ipref3 custom network.png>)
+
+![alt text](<./img/iperf3 host.png>)
+
+    docker run --rm -it -p 5201:5201 --name iperf3-server fedora bash
+
+![alt text](<./img/downloading iperf3.png>)
+
+![alt text](<./img/iperf windows.png>)
+
+![alt text](<./img/run jenkins.png>)
+
+![alt text](<./img/docker ps jenkins.png>)
+
+![alt text](<./img/jenkins webside.png>)
+
+    docker exec jenkins-dind cat /var/jenkins_home/secrets/initialAdminPassword
+
+![alt text](<./img/jenkins logedin.png>)
