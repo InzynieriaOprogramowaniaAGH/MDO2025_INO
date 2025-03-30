@@ -217,6 +217,10 @@ Na końcu uruchomiono kontener w celu sprawdzenia poprawnego działania.
 
 ## Laboratorium 4 - Dodatkowa terminologia w konteneryzacji
 
+Laboratoria dotyczyły użycia woluminów Dockera do budowania projektu i przechowywania stanu aplikacji, testowania komunikacji między kontenerami (iperf3 i sieć mostkowa) oraz instalacji Jenkinsa jako środowiska CI/CD.
+
+---
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20create%20volume%20input.png?raw=true)
 
 *Rys. 1 utworzenie woluminów wejściowego i wyjściowego*
