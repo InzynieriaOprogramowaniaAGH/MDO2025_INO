@@ -1,0 +1,266 @@
+1  ip a
+    2  sudo dnf install git -y
+    3  git --version
+    4  sudo dnf install openssh-clients -y
+    5  ssh-keygen -t ed25519 -C "lucjawuls@gmail.com""
+    6  ssh-keygen -t ed25519 -C "lucjawuls@gmail.com"
+    7  eval "$(ssh-agent -s)"
+    8  ssh-add ~/.ssh/id_ed25519
+    9  cat ~/.ssh/id_ed25519.pub
+   10  ssh -T git@github.com
+   11  ssh-add -L
+   12  ssh -vT git@github.com
+   13  ssh-add -D
+   14  ssh-add ~/.ssh/id_ed25519
+   15  ssh-add -L
+   16  ssh -i ~/.ssh/id_ed25519 -T git@github.com
+   17  ssh-keygen -lf ~/.ssh/id_ed25519.pub
+   18  cat ~/.ssh/id_ed25519.pub
+   19  ssh -T git@github.com
+   20  git config --global user.name "Łucja Wuls"
+   21  git config --global user.email "lucjawuls@gmail.com"
+   22  git config --global --list
+   23  git clone git@github.com:InzynierniaOprogramowaniaAGH/MDO2025_INO.git
+   24  git clone git@github.com:InzynierniaOprogramowaniaAGH/MDO2025_INO
+   25  ssh-add -L
+   26  ssh -T git@github.com
+   27  ssh-add ~/.ssh/id_ed25519
+   28  git clone git@github.com:InzynierniaOprogramowaniaAGH/MDO2025_INO
+   29  ssh -T git@github.com
+   30  eval `ssh-agent -s`
+   31  git clone git@github.com:InzynierniaOprogramowaniaAGH/MDO2025_INO
+   32  ssh-add ~/.ssh/id_ed25519
+   33  git clone git@github.com:InzynierniaOprogramowaniaAGH/MDO2025_INO
+   34  git clone git@github.com:InzynierniaOprogramowaniaAGH/MDO2025_INO.git
+   35  ls
+   36  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   37  ls
+   38  cd MDO2025_INO/
+   39  ls
+   40  cat README
+   41  cat README.md
+   42  cat READMEs
+   43  git checkout main
+   44  ls
+   45  git checkout main
+   46  git checkout -b GCL08
+   47  git push origin LW417490
+   48  git chechout -b LW417490
+   49  git checkout -b LW417490
+   50  ls
+   51  git branch
+   52  cd GCL08
+   53  git checkout GCL08
+   54  git branch
+   55  clear
+   56  git checkout main
+   57  git branch
+   58  git checkout GCL08
+   59  git branch
+   60  git checkout LW417490 
+   61  git branch
+   62  ls
+   63  cd INO
+   64  pwd
+   65  ls -l
+   66  git status
+   67  git pull
+   68  pwd
+   69  ls -l
+   70  git checkout main
+   71  git pull
+   72  pwd
+   73  ls -la
+   74  git push origin LW417490 
+   75  ls
+   76  git branch -r
+   77  cd MDO2025_INO/
+   78  git branch -r
+   79  git branch -a
+   80  git branch -D LW417490
+   81  git branch -a
+   82  git checkout remote/origin/GCL08
+   83  git checkout remotes/origin/GCL08
+   84  git branch -a
+   85  ls
+   86  git checkout LW417490
+   87  git checkout -b LW417490
+   88  git branch -a
+   89  ls
+   90  cd ITE
+   91  ls
+   92  cd GCL08/
+   93  ls
+   94  cd LW417490/
+   95  mkdir Sprawozdanie1
+   96  ls
+   97  touch README.md
+   98  ls
+   99  cd Sprawozdanie1/
+  100  touch README.md
+  101  ls
+  102  cd MDO2025_INO/
+  103  ls
+  104  cd ITE
+  105  ls
+  106  sudo dnf install -y moby-engine
+  107  docker version
+  108  docker --version
+  109  docker images
+  110  sudo system ctl start docker
+  111  sudo systemctl start docker
+  112  sudo systemctl enable docker
+  113  docker images
+  114  sudo docker images
+  115  docker pull hello-world
+  116  sudo docker pull hello-world
+  117  sudo usermod -aG docker $USER
+  118  new grp docker
+  119  newgrp docker
+  120  docker ps
+  121  sudo docker ps
+  122  ps aux | grep docker
+  123  docker ps
+  124  sudo docker ps
+  125  docker ps -a
+  126  sudo docker ps -a
+  127  docker pull busybox
+  128  docker pull fedora
+  129  docker pull mysql
+  130  docker images
+  131  docker run busybox
+  132  docker ps -a
+  133  docker run -ite busybox
+  134  docker run -it busybox
+  135  docker run -it fedora
+  136  ls
+  137  cd GCL08/LW417490/Sprawozdanie1/
+  138  ls
+  139  cd ..
+  140  ls
+  141  cd Sprawozdanie1/
+  142  ls
+  143  docker build -t my_fedora .
+  144  docker images
+  145  docker run -it my_fedora
+  146  docker rm -f $(docker ps -aq)
+  147  docker ps -a
+  148  history
+  149  git status
+  150  ls
+  151  cd MDO2025_INO/
+  152  git status
+  153  cd ITE/GCL08/LW417490/
+  154  ls
+  155  git status
+  156  git add .
+  157  git status
+  158  git commit -m "Lab 1-3"
+  159  cd ../../..
+  160  ls
+  161  cd ..\
+  162  ls
+  163  cd ..
+  164  ls
+  165  cd MDO2025_INO/
+  166  ls -a
+  167  cd .git/hooks/
+  168  ls
+  169  touche commithook
+  170  touch commit-msg
+  171  ls
+  172  nano commit-msg
+  173  chmod +x commit-msg
+  174  cd ../../..
+  175  cd MDO2025_INO/ITE/GCL08/LW417490/
+  176  git status
+  177  git add .
+  178  git status
+  179  git add .
+  180  git status
+  181  git commit -m "LW417490 Lab3"
+  182  docker run --rm --name irssi-test-container irssi-test
+  183  ;s
+  184  ls
+  185  cd MDO2025_INO/
+  186  cd ITE/
+  187  ls
+  188  cd GCL08/
+  189  cd LW417490/
+  190  cd Sprawozdanie1/
+  191  ls
+  192  docker run --rm --name irssi-test-container irssi-test
+  193  docker build -t irssi-test -f Dockerfile.test .
+  194  sudo dnf install -y git meson ninja-build gcc
+  195  sudo dnf install -y docker
+  196  git clone https://github.com/irssi/irssi
+  197  cd irssi
+  198  meson Build
+  199  meson setup Build
+  200  meson setup build
+  201  ninja -C build
+  202  ninja -C Build
+  203  sudo dnf install -y git meson ninja-build gcc glib2-devel ncurses-devel perl libtool autoconf automake pkg-config
+  204  meson Build
+  205  ninja -C Build
+  206  meson test -C build
+  207  meson test -C Build
+  208  docker run --name irssi-build-container irssi-build
+  209  ls
+  210  cd ..
+  211  ls
+  212  cd ...
+  213  cd ..
+  214  ls
+  215  cd MDO2025_INO/
+  216  ls
+  217  cd ITE/
+  218  ls
+  219  cd GCL08/
+  220  ls
+  221  cd LW417490/
+  222  ls
+  223  cd Sprawozdanie1/
+  224  ls
+  225  docker build -t irssi-build -f Dockerfile.build .
+  226  cat Dockerfile.build
+  227  docker build -t irssi-build -f Dockerfile.build .
+  228  docker run -it --name irssi-build-container irssi-build /bin/bash
+  229  git push --set-upstream origin LW417490
+  230  ls
+  231  cd M
+  232  cd MDO2025_INO/
+  233  ls
+  234  git push --set-upstream origin LW417490
+  235  git merge LW417490
+  236  git push origin HEAD:GCL08
+  237  docker ps -a
+  238  history
+  239  git clone https://github.com/irssi/irssi
+  240  ls
+  241  cd MDO2025_INO/
+  242  ls
+  243  cd ITE
+  244  ls
+  245  cd GCL08/LW417490/
+  246  ls
+  247  cd..
+  248  cd ..
+  249  cd irssi/
+  250  ls
+  251  sudo dnf -y install gcc glib2-devel openssl-devel perl-devel ncurses-devel meson ninja
+  252  meson Build
+  253  ninja -C Build
+  254  ninja -C Build test
+  255  docker pull ubuntu:latest
+  256  docker run -it --name my_build ubuntu:latest /bin/bash
+  257  history
+  258  cd ..
+  259  ls MDO2025_INO/ITE/GCL08/LW417490/Sprawozdanie1/
+  260  docker build -t build_image -f Dockerfile.irssibld .
+  261  ls
+  262  cd MDO2025_INO/ITE/GCL08/LW417490/Sprawozdanie1/
+  263  docker build -t build_image -f Dockerfile.irssibld .
+  264  docker build -t test_image -f Dockerfile.test .
+  265  docker run --rm --name test_container test_image
+  266  history

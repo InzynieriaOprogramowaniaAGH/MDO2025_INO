@@ -1,0 +1,123 @@
+   1  ip a
+    2  sudo dnf install git -y
+    3  git --version
+    4  sudo dnf install openssh-clients -y
+    5  ssh-keygen -t ed25519 -C "lucjawuls@gmail.com""
+    6  ssh-keygen -t ed25519 -C "lucjawuls@gmail.com"
+    7  eval "$(ssh-agent -s)"
+    8  ssh-add ~/.ssh/id_ed25519
+    9  cat ~/.ssh/id_ed25519.pub
+   10  ssh -T git@github.com
+   11  ssh-add -L
+   12  ssh -vT git@github.com
+   13  ssh-add -D
+   14  ssh-add ~/.ssh/id_ed25519
+   15  ssh-add -L
+   16  ssh -i ~/.ssh/id_ed25519 -T git@github.com
+   17  ssh-keygen -lf ~/.ssh/id_ed25519.pub
+   18  cat ~/.ssh/id_ed25519.pub
+   19  ssh -T git@github.com
+   20  git config --global user.name "Łucja Wuls"
+   21  git config --global user.email "lucjawuls@gmail.com"
+   22  git config --global --list
+   23  git clone git@github.com:InzynierniaOprogramowaniaAGH/MDO2025_INO.git
+   24  git clone git@github.com:InzynierniaOprogramowaniaAGH/MDO2025_INO
+   25  ssh-add -L
+   26  ssh -T git@github.com
+   27  ssh-add ~/.ssh/id_ed25519
+   28  git clone git@github.com:InzynierniaOprogramowaniaAGH/MDO2025_INO
+   29  ssh -T git@github.com
+   30  eval `ssh-agent -s`
+   31  git clone git@github.com:InzynierniaOprogramowaniaAGH/MDO2025_INO
+   32  ssh-add ~/.ssh/id_ed25519
+   33  git clone git@github.com:InzynierniaOprogramowaniaAGH/MDO2025_INO
+   34  git clone git@github.com:InzynierniaOprogramowaniaAGH/MDO2025_INO.git
+   35  ls
+   36  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   37  ls
+   38  cd MDO2025_INO/
+   39  ls
+   40  cat README
+   41  cat README.md
+   42  cat READMEs
+   43  git checkout main
+   44  ls
+   45  git checkout main
+   46  git checkout -b GCL08
+   47  git push origin LW417490
+   48  git chechout -b LW417490
+   49  git checkout -b LW417490
+   50  ls
+   51  git branch
+   52  cd GCL08
+   53  git checkout GCL08
+   54  git branch
+   55  clear
+   56  git checkout main
+   57  git branch
+   58  git checkout GCL08
+   59  git branch
+   60  git checkout LW417490 
+   61  git branch
+   62  ls
+   63  cd INO
+   64  pwd
+   65  ls -l
+   66  git status
+   67  git pull
+   68  pwd
+   69  ls -l
+   70  git checkout main
+   71  git pull
+   72  pwd
+   73  ls -la
+   74  git push origin LW417490 
+   75  ls
+   76  git branch -r
+   77  cd MDO2025_INO/
+   78  git branch -r
+   79  git branch -a
+   80  git branch -D LW417490
+   81  git branch -a
+   82  git checkout remote/origin/GCL08
+   83  git checkout remotes/origin/GCL08
+   84  git branch -a
+   85  ls
+   86  git checkout LW417490
+   87  git checkout -b LW417490
+   88  git branch -a
+   89  ls
+   90  cd ITE
+   91  ls
+   92  cd GCL08/
+   93  ls
+   94  cd LW417490/
+   95  mkdir Sprawozdanie1
+   96  ls
+   97  touch README.md
+   98  ls
+   99  cd Sprawozdanie1/
+  100  touch README.md
+  101  ls
+  102  docker pull busybox
+  103  docker pull fedora
+  104  docker pull mysql
+  105  docker images
+  106  docker run busybox
+  107  docker ps -a
+  108  docker run -ite busybox
+  109  docker run -it busybox
+  110  docker run -it fedora
+  111  ls
+  112  cd GCL08/LW417490/Sprawozdanie1/
+  113  ls
+  114  cd ..
+  115  ls
+  116  cd Sprawozdanie1/
+  117  ls
+  118  docker build -t my_fedora .
+  119  docker images
+  120  docker run -it my_fedora
+  121  docker rm -f $(docker ps -aq)
+  122  docker ps -a
+  123  history
