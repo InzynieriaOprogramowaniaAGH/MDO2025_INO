@@ -147,7 +147,7 @@ docker pull <nazwa-obrazu>
 ```
 sudo usermod -aG docker $USER
 ```
-![obraz](KM/lab2/logowanie%20docker.png)
+![obraz](KM/lab2/pobieranie_ubuntu.png)
 ```
 docker images
 ```
