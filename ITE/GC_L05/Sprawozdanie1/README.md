@@ -48,6 +48,7 @@ Autoryzacja zakończyła się sukcesem i udało się nawiązać połączenie SSH
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/zalogowanie%20do%20githuba%20za%20pomoc%C4%85%20ssh.png?raw=true)
 
 *Rys. 6 uwierzytelnienie za pomocą ssh*
+
 ---
 ## Laboratorium 2 - Git, Docker
 
