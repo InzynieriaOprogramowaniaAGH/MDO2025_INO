@@ -108,9 +108,84 @@ Ponieżej zamieszczono źle, oraz poprawnie zformułowane message dla commita.
 
 ##Zajęcia 2
 
+#1#
+Aby zainstalować korzystamy z wybranego manager'a pakietów (yum, apt, dnf, etc), oraz słowem docker, np. 
 
+sudo yum install docker 
 
+#2#
+Dokonujemy rejestracji na stronie DockerHub.com. Po operacji powinniśmy zobaczyć taki obraz
 
+![dockerhub-register](lab2/dockerhub_register.png)
+
+#3#
+Pobieramy obrazy w następujący sposób.
+
+![installing_images](lab2/installing_images.png)
+
+#4#
+Odpalamy i sprawdzamy wersje busybox w następujący sposób.
+
+![using_busybox](lab2/using_busybox.png)
+
+#5#
+#Załączanie dockera#
+Odpalamy kontener w następujący sposób.
+
+![running_container](lab2/running_ubuntu_docker.png)
+
+#Sprawdzanie procesów
+Aby sprawdzić aktualne procesy, uzywamy komendy top w następujący sposób.
+
+![top](lab2/docker_processes.png)
+
+Z kolei PID1 pokazujemy komendą podaną ponizej.
+
+![pit](lab2/docker_pid_1.png)
+
+#Aktualizowanie pakietów#
+Aby zaktualizować pakiety wykonujemy następujące polecenie w terminalu.
+
+![update](lab2/updating_docker_image.png)
+
+#Wychodzenie#
+Aby wyjść uzywamy komendy exit.
+
+![exit](lab2/exiting_docker_image.png)
+
+#6#
+Tworzymy Dockerfile.
+
+![creating_dockerfile](lab2/creatinga_dockerfile.png)
+
+Następnie budujemy kontener.
+
+![building](lab2/building_dockerfile.png)
+
+Odpalamy w trybie interaktywnym, oraz sprawdzamy czy repozytorium jest sklonowane.
+
+![interactive](lab2/running_dockerfile.png)
+
+Upewniamy się, e git jest pobrany.
+
+![git_check](lab2/dockerfile_verifing_git.png)
+
+#7#
+Aby wylistować kontenery, naley wywołać podaną nizej komendę.
+
+![listing](lab2/listing_containers.png)
+
+Usuwanie kontenerów odbywa się w następujący sposób.
+
+![delteing](lab2/deleting_containers.png)
+
+#8#
+Aby usunąć obrazy, nalezy wykonać ponizsą komendę.
+
+![img_del](lab2/deleting_images.png)
+
+#9#
+Plik Dockerfile znajduje się w podfolderze lab2.
 
 
 ##Zajęcia 3
