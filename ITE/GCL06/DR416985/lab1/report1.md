@@ -31,6 +31,8 @@ ssh-keygen -t ecdsa -b 521 -C "drusin@student.agh.edu.pl"
 Dodano klucz publiczny id_ed25519.pub do ustawień GitHuba.
 
 
+![screen](./ss4.png)
+
 ## 5. Konfiguracja pliku SSH
 
 Host github.com
