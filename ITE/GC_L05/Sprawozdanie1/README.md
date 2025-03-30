@@ -36,6 +36,8 @@ Następnie sklonowano repozytorium przy użyciu protokołu HTTPS, a autoryzację
 
 *Rys. 4 sklonowanie zdalnego repozytorium git*
 
+W kolejnym kroku wygenerowano klucz SSH o typie Ed25519 zabezpieczony hasłem. Otrzymano parę kluczy (prywatny - id_ed25519 oraz publiczny - id_ed25519.pub) zapisaną w katalogu ~/.ssh 
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/generowanie%20klucza%20ssh.png?raw=true)
 
 *Rys. 5 generowanie kluczy ssh*
