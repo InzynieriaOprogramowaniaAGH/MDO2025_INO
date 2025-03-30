@@ -222,6 +222,7 @@ Laboratoria dotyczyły użycia woluminów Dockera do budowania projektu i przech
 ---
 
 Na początku utworzono poleceniem `docker create volume` dwa  woluminy (wejściowy i wyjściowy), a następnie podłączono je do kontenera bazowego. 
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/tworzenie%20wolumin%C3%B3w.png?raw=true)
 
 *Rys. 1 utworzenie woluminów wejściowego i wyjściowego*
