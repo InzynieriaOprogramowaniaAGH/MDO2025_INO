@@ -279,3 +279,7 @@ Pobrano i wyświetlono logi kontenera poleceniem `sudo docker logs iperf_server`
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/uruchomienie%20kontenera%20z%20obrazem%20jenkinsci%20blueocean.png?raw=true)
 
 *Rys. 12 uruchomienie kontenera z obrazem „jenkinsci/blueocean:latest” w tle*
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20ps.png?raw=true)
+
+*Rys. 13 wyświetlenie działających kontenerów
