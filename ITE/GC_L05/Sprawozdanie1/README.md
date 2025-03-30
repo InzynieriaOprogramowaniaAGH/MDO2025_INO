@@ -263,3 +263,8 @@ Pobrano i wyświetlono logi kontenera poleceniem `sudo docker logs iperf_server`
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20logs%20iperf_server.png?raw=true)
 
 *Rys. 8 monitorowanie logów*
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20network%20create%20jenkins.png?raw=true)
+
+*Rys. 9 utworzenie nowej sieci*
+
