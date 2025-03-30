@@ -1,5 +1,5 @@
 # Sprawozdanie 1 – DR416985
-
+# LAB1
 ## Opis
 
 W ramach pierwszego zadania wykonano pełną konfigurację środowiska Git, SSH oraz repozytorium zdalnego z uwzględnieniem wymagań dotyczących kluczy, 2FA i hooków.
@@ -43,22 +43,16 @@ Dodano klucz publiczny id_ed25519.pub do ustawień GitHuba.
 
 ![screen](./ss4.png)
 
-## 5. Konfiguracja pliku SSH
 
-Host github.com
-  User git
-  HostName github.com
-  IdentityFile ~/.ssh/id_ed25519
-  IdentitiesOnly yes
 
-## 6. Klonowanie repozytorium przez SSH
+## 5. Klonowanie repozytorium przez SSH
 
 ```sh
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 ```
 
 
-## 7. Przejście na swojego brancha
+## 6. Przejście na swojego brancha
 ```sh
 git checkout DR416985
 ```
@@ -87,12 +81,77 @@ Nadanie uprawnien
 
 
 ## 10. Test działania hooka
-[screen](./testhook.png)
+
+```sh
+chmod +x .git/hooks/commit-msg
+git add .
+git commit -m "test"
+git add .
+git commit -m "DR416985.."
+
+```
+![screen](./testhook.png)
+
 
 ## 11. Push zmian
-
+```sh
+git push origin DR416985
+```
 ![screen](./push.png)
 
+# Lab 2
+
+## Zainstalowanie dockera
+
+```sh
+sudo dnf install docker -y
+```
+![screen](./docker.png)
+## Pobranie wymaganych obrazów
+
+```sh
+docker pull hello-world
+docker pull busybox
+docker pull ubuntu
+docker pull mysql
+```
+
+![screen](./pull)
+
+## Uruchomienie kontenerów
+```ssh
+docker run ubuntu
+```
+
+### Interaktywne uruchomienie
+```sh
+docker run -it ubuntu
+```
+
+![screen](./run.png)
+## Tworzenie dockerfile
+
+## Budowanie i urucomienie obrazu
+
+```sh
+docker build -t ubuntu .
+```
+
+![screen](./ubuntu.png)
+
+## Czyszczenie konternerów i obrazów
+
+```sh
+dcoker rm $(docker ps -aq)
+docker rmi $(docker imgaes -q)
+```
+![screen](./u1.png)
+Jeden z konteów był wciąż uruchomiony więc się nie usunoł
+
+```sh
+dcoker rm -f c10e92bac8f0
+```
+![screen](./u2.png)
 
 
 
