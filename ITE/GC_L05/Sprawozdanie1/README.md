@@ -87,4 +87,4 @@ Następnie pobrano obraz node, uruchomiono kontener w trybie interaktywnym i skl
 
 *Rys. 4 sklonowanie repozytorium react-boilerplate
 
-W kontenerze doinstalowano wymagane zależności, 
+W kontenerze doinstalowano wymagane zależności, uruchomiono `build` poleceniem `npm run build` oraz testy za pomocą polecenia `npm test`.
