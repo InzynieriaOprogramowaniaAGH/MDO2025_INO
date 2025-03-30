@@ -1,4 +1,3 @@
-## Labolatorium 1 Wprowadzenie, Git, Gałęzie, SSH
 ## Laboratorium 1: Wprowadzenie, Git, Gałęzie, SSH
 
 ### 0) Przygotowanie środowiska pracy
@@ -16,8 +15,6 @@ Aby rozpocząć pracę z systemem Git oraz zapewnić bezpieczne połączenie prz
 
 ### 2) Repozytorium przedmiotowe zostało sklonowane za pomocą polecenia `git clone`, początkowo używając protokołu HTTPS:
 git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
-     ![image](https://github.com/user-attachments/assets/860f0afb-e664-4c8b-8742-ce2a3192a443)
-
 ![image](https://github.com/user-attachments/assets/860f0afb-e664-4c8b-8742-ce2a3192a443)
 
 ### 3) Generowanie kluczy SSH i zmiana połączenia na SSH
@@ -31,17 +28,22 @@ Zmieniono połączenie z repozytorium na SSH:
 ![image](https://github.com/user-attachments/assets/1325dd9c-7578-49f9-a49f-ff0e4b276a05)
 
 
-4) Zmiana gałęzi Po skonfigurowaniu połączenia SSH przełączono się na gałąź główną i gałąź dedykowaną dla grupy.
+### 4) Zmiana gałęzi
+Po skonfigurowaniu połączenia SSH przełączono się na gałąź główną i gałąź dedykowaną dla grupy.
 
-         git checkout main
-         git checkout GCL02
+git checkout main git checkout GCL02
    
 ![image](https://github.com/user-attachments/assets/57dc43cd-e823-4096-8191-ee9de9853dd6)
-5) Stworzenie nowej gałęzi Utworzono nową gałąź o nazwie KP415903, odgałęziając ją od gałęzi grupowej.
-     git checkout -b JK414562
+
+
+### 5) Stworzenie nowej gałęzi
+Utworzono nową gałąź o nazwie `KP415903`, odgałęziając ją od gałęzi grupowej.
+git checkout -b JK414562
 ![image](https://github.com/user-attachments/assets/85e12db4-9757-4345-9e2c-b952912b19bc)
 
-## 6)Stworzono skrypt commit-msg, który wymusza, by każdy komunikat commit zawierał wstęp z inicjałami i numerem indeksu użytkownika. Skrypt został zapisany w katalogu .git/hooks/ i nadano mu prawa wykonywalności.
+
+### 6) Stworzono skrypt `commit-msg`, który wymusza, by każdy komunikat commit zawierał wstęp z inicjałami i numerem indeksu użytkownika. Skrypt został zapisany w katalogu `.git/hooks/` i nadano mu prawa wykonywalności.
+    mkdir -p .git/hooks cd .git/hooks touch pre-commit nano pre-commit chmod +x pre-commit
     mkdir -p .git/hooks
     cd .git/hooks
     touch pre-commit
