@@ -1,0 +1,5 @@
+FROM redis_build AS redis_test
+
+WORKDIR /redis
+
+RUN make test

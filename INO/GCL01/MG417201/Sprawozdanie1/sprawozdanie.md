@@ -300,15 +300,19 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
 </div>
 
 - Po sklonowaniu repozytoriów należało przeprowadzić build, zainstalować wszystkie potrzebne zależności oraz przeprowadzić testy:
+
   - Dla _**irssi**_ należało:
+
     - Zainstalować manualnie wszystkie brakujące zależności, a następnie użyć poleceń:
+
     - `meson Build`, aby przeprowadzić build
+
+    - `ninja -C Build && sudo ninja -C Build install`
 
     <div align="center">
       <img src="screens3/3.jpg" alt="irssi build">
     </div>
 
-    - `ninja -C Build && sudo ninja -C Build install`
     - `ninja test`, aby przeprowadzić testy
 
     <div align="center">
@@ -316,6 +320,7 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
     </div>
 
   - Dla _**node-js-dummy-test**_:
+
     - `npm install`, aby zainstalować wszystkie potrzebne zależności
 
     <div align="center">
@@ -335,6 +340,7 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
     </div>
 
   - Dla _**redis**_:
+
     - `sudo dnf install gcc make jemalloc-devel tcl`, aby zainstalować potrzebne zależności
     - `make`, aby przeprowadzić build programu
 
@@ -343,15 +349,166 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
     </div>
 
     - `make test`, aby przeprowadzić testy
-    
+
     <div align="center">
       <img src="screens3/10.jpg" alt="redis tests">
     </div>
 
 **3. Przeprowadzenie buildu w kontenerze**
 
+- Aby przeprowadzić build w kontenerze należy:
+
+  - Uruchomić go:
+
+    - Dla _**irssi**_ oraz **_redis_** można wykorzystać _**ubuntu**_:
+      - `docker run -it --name irssi_build ubuntu bash`
+      - `docker run -it --name redis_build ubuntu bash`
+
+    - Dla **_node-js-dummy-test_** natomiast należy wykorzystać kontener **_node_**:
+
+      - `docker run -it --name node_test node bash`
+
+  - Zainstalować wymagane pakiety poleceniem:
+
+    - Dla _**irssi**_:
+
+      - `apt update && apt install -y build-essential meson ninja-build git perl pkg-config \ libglib2.0-dev libssl-dev libncurses-dev`
+
+    - Dla **_redis_**:
+
+      - `apt update && apt install -y build-essential tcl git`
+
+  - Sklonować repozytorium
+
+    - Dla _**irssi**_:
+
+      - `git clone https://github.com/irssi/irssi.git`
+
+    - Dla _**node-js-dummy-test**_:
+
+      - `git clone https://github.com/devenes/node-js-dummy-test`
+
+    - Dla **_redis_**:
+
+      - `git clone https://github.com/redis/redis.git`
+
+  - Uruchomić build
+
+    - Dla _**irssi**_:
+
+      - `meson Build`
+      - `ninja -C Build && sudo ninja -C Build install`
+
+      <div align="center">
+        <img src="screens3/11.jpg" alt="irssi build">
+      </div>
+
+    - Dla _**node-js-dummy-test**_:
+
+      - `npm install`
+
+      <div align="center">
+        <img src="screens3/13.jpg" alt="irssi build">
+      </div>
+
+    - Dla **_redis_**:
+
+      - `make`
+
+      <div align="center">
+        <img src="screens3/15.jpg" alt="irssi build">
+      </div>
+
+  - I na końcu uruchomić testy
+
+    - Dla _**irssi**_:
+
+      - `ninja -C Build test`
+
+      <div align="center">
+        <img src="screens3/12.jpg" alt="irssi build">
+      </div>
+
+    - Dla _**node-js-dummy-test**_:
+
+      - `npm test`
+
+      <div align="center">
+        <img src="screens3/14.jpg" alt="irssi build">
+      </div>
+
+    - Dla **_redis_**:
+
+      - `make test`
+      
+      <div align="center">
+        <img src="screens3/16.jpg" alt="irssi build">
+      </div>
 
 
+**4. Automatyzacja powyższych kroków**
+
+- Aby zautomatyzować cały proces tworzenia builda i przeprowadzania testów należy dla każdego programu stworzyć dwa pliki Dockerfile:
+
+  - Pierwszy, który będzie przeprowadzał wszystkie kroki do builda
+
+  - Drugi, który będzie bazował na pierwszym i będzie wykonywał testy
+
+- Dla _**irssi**_ będą one wyglądać następująco:
+
+  - Dockerfile.build.irssi
+
+    ```Dockerfile
+    FROM ubuntu:latest AS irssi_build
+
+    RUN apt update && apt install -y \
+        build-essential meson ninja-build git perl pkg-config \
+        libglib2.0-dev libssl-dev libncurses-dev
+
+    RUN git clone https://github.com/irssi/irssi.git
+
+    WORKDIR /irssi
+
+    RUN meson Build 
+    RUN ninja -C Build && ninja -C Build install
+    ```
+    <div align="center">
+      <img src="screens3/17.jpg" alt="irssi build">
+    </div>
+
+  - Dockerfile.test.irssi
+
+    <div align="center">
+      <img src="screens3/18.jpg" alt="irssi build">
+    </div>
+
+- Dla _**node-js-dummy-test**_ będą one wyglądać następująco:
+
+  - Dockerfile.build.nodejs
+
+    <div align="center">
+      <img src="screens3/19.jpg" alt="irssi build">
+    </div>
+
+  - Dockerfile.test.nodejs
+
+    <div align="center">
+      <img src="screens3/20.jpg" alt="irssi build">
+    </div>
+
+- Dla _**redis**_ będą one wyglądać następująco:
+
+  - Dockerfile.build.redis
+
+    <div align="center">
+      <img src="screens3/21.jpg" alt="irssi build">
+    </div>
+
+  - Dockerfile.test.redis
+
+    <div align="center">
+      <img src="screens3/22.jpg" alt="irssi build">
+    </div>
 
 ***
 ## Laboratorium 4
