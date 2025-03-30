@@ -83,3 +83,50 @@ Utworzony skrypt przekopiowałem do odpowiedniego pliku z innymi skryptami .git/
 
 ![Zrzut8](screenshots/Zrzut7.png)
 
+7. Ostatnim krokiem było dodanie, zacommitowanie i wysłanie wykonanych zmian na zdalne repozytorium:
+```sh
+git add MN417158
+git commit -m "MN417158"
+git push origin MN41758
+```
+
+## Zadanie 2:
+
+1. Zainstalowałem oprogramowanie Docker na systemie Fedora za pomocą polecenia ```sh sudo dnf install -y docker```
+2. Następnie zarejestrowałem się w Docker Hub:
+
+![Zrzut9](screenshots/Zrzut9.png)
+
+3. Kolejnym krokiem było pobranie obrazów hello-world, busybox, ubuntu, fedora oraz mysql używając ```sh docker pull```
+
+**Wyświetlenie pobranych obrazów:**
+
+![Zrzut10](screenshots/Zrzut10.png)
+
+4. Następnie uruchomiłem kontener z obrazu busybox i wypisałem w nim komunikat aby pokazać efekt jego uruchomienia ```sh docker run busybox echo "Hello!"```
+
+
+![Zrzut11](screenshots/Zrzut11.png)  
+
+5. Podłaczyłem sie do kontenera w sposób interaktywny i wywołałem numer wersji ```sh docker run -it busybox sh```
+
+![Zrzut12](screenshots/Zrzut12.png)
+
+6. Uruchomiłem kontener z obrazu fedora za pomocą ```sh docker run -it fedora bash```
+następnie po ```sh dnf install procps -y```
+
+**Wyświetliłem PID1 w kontenerze, zaktualizowałem pakiety i opuściłem kontener**
+
+![Zrzut13](screenshots/Zrzut13.png)
+
+7. Utworzyłem własny Dockerfile [Plik1](files/Dockerfile) następnie za jego pomocą zbudowałem i uruchomiłem kontener na którym znajdowało się sklonowane repozytorium.
+
+![Zrzut14](screenshots/Zrzut14.png)
+
+8. Wyczyściłem wszystkie uruchomione kontenery ```sh docker rm $(docker ps - aq)```
+
+![Zrzut15](screenshots/Zrzut15.png)
+
+9. Wyczyśiłem wszystkie obrazy ```sh docker rmi $(docker images - q)``` 
+
+![Zrzut16](screenshots/Zrzut16.png)
