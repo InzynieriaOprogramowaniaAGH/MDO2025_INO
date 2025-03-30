@@ -6,7 +6,7 @@
 1. - [Laboratorium 1 - Wprowadzenie, Git, Gałęzie, SSH](#laboratorium-2---git-docker)
 2. - [Laboratorium 2 - Git, Docker](#laboratorium-2---git-docker)
 3. - [Laboratorium 3 -Dockerfiles](#Laboratorium-3---Dockerfiles)
-4. - [Laboratorium 4 -Dodatkowa terminologia w konteneryzacji, instancja Jenkins](#laboratorium-2---git-docker)
+4. - [Laboratorium 4 -Dodatkowa terminologia w konteneryzacji](#laboratorium-4---Dodatkowa-terminologia-w-konteneryzacji)
 
 ---
 ## Laboratorium 2 - Git, Docker
@@ -123,3 +123,5 @@ Na końcu uruchomiono kontener w celu sprawdzenia poprawnego działania.
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/uruchomienie%20kontenera%20test.png)
 
 *Rys. 11 uruchomienie kontenera i sprawdzenie działania*
+
+## Laboratorium 4 - Dodatkowa terminologia w konteneryzacji
