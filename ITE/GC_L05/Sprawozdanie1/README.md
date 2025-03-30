@@ -11,6 +11,7 @@
 2. - [Laboratorium 2 - Git, Docker](#laboratorium-2---git-docker)
 3. - [Laboratorium 3 - Dockerfiles](#laboratorium-3---dockerfiles)
 4. - [Laboratorium 4 - Dodatkowa terminologia w konteneryzacji](#laboratorium-4---dodatkowa-terminologia-w-konteneryzacji)
+     - [Zachowywanie stanu](#zachowywanie-stanu)
 
 ---
 
@@ -220,6 +221,8 @@ Na końcu uruchomiono kontener w celu sprawdzenia poprawnego działania.
 Laboratoria dotyczyły użycia woluminów Dockera do budowania projektu i przechowywania stanu aplikacji, testowania komunikacji między kontenerami (iperf3 i sieć mostkowa) oraz instalacji Jenkinsa jako środowiska CI/CD.
 
 ---
+
+### Zachowywanie stanu
 
 Na początku utworzono poleceniem `docker create volume` dwa  woluminy (wejściowy i wyjściowy), a następnie podłączono je do kontenera bazowego. 
 
