@@ -303,35 +303,47 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
   - Dla _**irssi**_ należało:
     - Zainstalować manualnie wszystkie brakujące zależności, a następnie użyć poleceń:
     - `meson Build`, aby przeprowadzić build
+
     <div align="center">
       <img src="screens3/3.jpg" alt="irssi build">
     </div>
-    - `ninja -C Build && sudo ninja -C Build install`
 
+    - `ninja -C Build && sudo ninja -C Build install`
     - `ninja test`, aby przeprowadzić testy
+
     <div align="center">
       <img src="screens3/4.jpg" alt="irssi tests">
     </div>
+
   - Dla _**node-js-dummy-test**_:
     - `npm install`, aby zainstalować wszystkie potrzebne zależności
+
     <div align="center">
       <img src="screens3/5.jpg" alt="instalacja zależności dla node-js-dummy-test">
     </div>
+
     - `npm start`, aby uruchomić program
+
     <div align="center">
       <img src="screens3/6.jpg" alt="node-js-dummy-test running">
     </div>
+
     - `npm test`, aby przeprowadzić testy
+
     <div align="center">
       <img src="screens3/7.jpg" alt="node-js-dummy-test test">
     </div>
+
   - Dla _**redis**_:
     - `sudo dnf install gcc make jemalloc-devel tcl`, aby zainstalować potrzebne zależności
     - `make`, aby przeprowadzić build programu
+
     <div align="center">
       <img src="screens3/9.jpg" alt="redis build">
     </div>
+
     - `make test`, aby przeprowadzić testy
+    
     <div align="center">
       <img src="screens3/10.jpg" alt="redis tests">
     </div>
