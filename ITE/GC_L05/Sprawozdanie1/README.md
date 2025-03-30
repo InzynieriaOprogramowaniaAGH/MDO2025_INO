@@ -101,4 +101,7 @@ W kontenerze doinstalowano wymagane zależności, uruchomiono `build` poleceniem
 
 *Rys. 7 uruchomienie testów*
 
+
+Kolejnym krokiem było utworzenie dwóch plików Dockerfile (`Dockerfile.build` i `Dockerfile.test`), które miały zautomatyzować powyższy proces.
+
 Polecenie `sudo docker build -f Dockerfile.build -t build-image .` tworzy nowy obraz Dockera o nazwie `build-image`, korzystając z instrukcji zawartych w pliku Dockerfile.build i kontekstu bieżącego katalogu (.). W trakcie tego procesu wykonywane są kolejne kroki określone w Dockerfile, takie jak instalacja potrzebnych pakietów, sklonowanie repozytorium i  build aplikacji.
