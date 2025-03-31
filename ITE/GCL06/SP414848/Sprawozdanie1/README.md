@@ -90,7 +90,7 @@ Obrazy standardowo pobrano za pomocą 'docker pull'
 ## 6. Utworzenie pliku Dockerfile i sklonowanie repozytorium
 
 ### Kod Dockerfile:
-```
+```Dockerfile
 FROM ubuntu:latest
 RUN apt update && apt install -y git
 WORKDIR /app
@@ -153,7 +153,7 @@ Następnie możemu już przejść do testów - sqlite posiada wiele targetów do
 ## 2. Automatyzacja budowania i testów za pomocą Dockerfile
 
 ### Kod Dockerfile.build:
-```
+```Dockerfile
 FROM fedora:40
 
 RUN dnf install -y git gcc make tcl-devel
@@ -170,7 +170,7 @@ RUN make
 ![Dockerfile.build](screens/lab3-5.png)
 
 ### Kod Dockerfile.test:
-```
+```Dockerfile
 FROM sqlite-build
 
 RUN useradd -m testuser
@@ -207,7 +207,7 @@ Kontener sam w sobie jest to widoczny w systemie hosta proces, jest on jednak mo
 
 W kontenerze pracuje środowisko ustalone według obrazu, na podstawie którego uruchomiono kontener, zazwyczaj jest to minimalne środowisko potrzebne do uruchomienia danej aplikacji.
 
-# Zajęcia 04
+# Zajęcia 04 - Zachowanie stanu
 
 ## 1. Obraz bazowy (bez gita)
 
@@ -265,7 +265,7 @@ Próbowano za pomocą 'RUN --mount=type=bind' połączyć uprzednio utworzone ka
 
 ### Dockerfile z 'RUN --mount'
 
-```
+```Dockerfile
 FROM fedora:40
 
 RUN dnf install -y git gcc make tcl-devel
@@ -296,3 +296,108 @@ Oznaczało by to że na etapie budowania nie jest możliwe zapisanie danych na m
 również inne typy mount'ów nie wydają się pomocne. Także nie znalazłem możliwości przeprowadzenia kroków za pomocą 'docker build' i Dockerfile.
 
 Również wyczerpująca rozmowa z `dockerdocsAI` nie przyniosła lepszych rezultatów.
+
+# Zajęcia 04 - Eksponowanie portu
+
+## 1. Instalacja iperf3, uruchomienie na kontenerze w trybie serwera ('-s')
+
+`iperf3` sntandardowo instalowano 'dnf install'.
+
+![iperf3 server](screens/lab4-10.png)
+
+## 2. Uruchomienie iperf3 na drugim kontenerze w trybie klienta ('-c'), komunikacja z serwerem
+
+![iperf3 client](screens/lab4-11.png)
+
+Bardzo wysoka przepustowość (średnio ponad 50 gigabitów/s), jest tak wysoka ponieważ kontenery działają w tej samej sieci wewnętrznej (krótka ścieżka pakietów).
+
+### Ruch na serwerze:
+
+![iperf3 server 2](screens/lab4-12.png)
+
+## 3. Utworzenie własnej sieci mostkowanej
+
+![tworzenie sieci](screens/lab4-13.png)
+
+## 4. Uruchomienie kontenerów w sieci
+
+### Kontener serwerowy
+
+![serwer w sieci](screens/lab4-14.png)
+
+### Kontener kliencki
+
+![klient w sieci](screens/lab4-15.png)
+
+## 5. Komunikacja z serwerem za pomocą nazwy kontenera
+
+### Od storny klienta - użyto nazwy zamiast IP
+
+![klient w sieci - komunikacja](screens/lab4-16.png)
+
+### Od storny serwera
+
+![serwer w sieci - komunikacja](screens/lab4-17.png)
+
+Również bardzo wysoka przepustowość - kontenery działają w tej samej sieci wewnętrznej (krótka ścieżka pakietów).
+
+## 5. Komunikacja z serwerem - z hosta i spoza hosta
+
+### Uruchomienie kontenera serwera z mapowaniem portu (domyślny dla iperf3 - 5201) - aby był widoczny poza siecią dockera
+
+![serwer - mapowanie portów](screens/lab4-18.png)
+
+### Połączenie z hosta na konkretny (zmapowany) port ('-p')
+
+Łączymy się na `localhost` gdyż host sam udostępnia port.
+
+![połączenie z hosta](screens/lab4-19.png)
+
+Również bardzo wysoka przepustowość - ścieżka pakietów dalej jest krótka, kontener serwera działa bezpośrednio na hoście.
+
+
+### Połączenie spoza hosta
+
+Łączymy się na ip hosta (adres ip maszyny wirtualnej) wraz z udostępnianym przez hosta portem (5201).
+
+![połączenie spoza hosta](screens/lab4-20.png)
+
+Dużo niższa przepustowość - wynika z tego, że połączenie przeprowadzano z maszyny wirtualnej (ubuntu) na maszynę wirtualną (host - fedora).
+
+Pakiety musiały przejść z jednej maszyny wirtualnej na drugą i jeszcze dodatkowo na sieć wewnętrzną dockera.
+
+# Zajęcia 04 - Instancja Jenkins
+
+### Wszytkie kroki przeprowadzono krok po kroku z dokumentacją: https://www.jenkins.io/doc/book/installing/docker/
+
+## 1. Tworzenie sieci dla jenkins'a
+
+```
+docker network create jenkins
+```
+
+## 2. Pobranie obrazu docker:dind i uruchomienie kontenera
+
+![dind](screens/lab4-21.png)
+
+## 3. Dockerfile dla jenkinsa (Dockerfile.jenkins)
+
+![Dockerfile.jenkins](screens/lab4-22.png)
+
+## 4. Build: Dockerfile.jenkins
+
+![Dockerfile.jenkins build](screens/lab4-23.png)
+
+## 5. Działająca instancja
+
+![instancja jenkins](screens/lab4-24.png)
+
+## 6. uzyskanie hasła do logowania
+
+![hasło jenkins](screens/lab4-25.png)
+
+## 7. Panel Jenkinsa
+
+![panel jenkins](screens/lab4-26.png)
+
+---
