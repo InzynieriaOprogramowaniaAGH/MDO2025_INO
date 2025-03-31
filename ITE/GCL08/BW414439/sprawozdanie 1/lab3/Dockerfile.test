@@ -1,0 +1,5 @@
+FROM build-i
+
+WORKDIR /irssi
+
+RUN meson test -C Build
