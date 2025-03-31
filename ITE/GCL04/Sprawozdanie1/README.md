@@ -1,6 +1,6 @@
-**SPRAWOZDANIE 1
+**SPRAWOZDANIE 1**
 
-Monika Krakowska, Informatyka Techniczna **
+**Monika Krakowska, Informatyka Techniczna **
 
 
 
