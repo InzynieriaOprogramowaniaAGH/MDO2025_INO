@@ -304,7 +304,7 @@ sudo docker network create jenkins
 Następnie pobrano i uruchomiono obraz jenkinsa przy użyciu polecenia `docker:dind`.
 
 ```
-sudo docker pull jenkins\jenkins
+sudo docker pull jenkins/jenkins
 ```
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20pull%20jenkins.png?raw=true)
