@@ -300,7 +300,8 @@ docker run --rm node-deploy
 
 ## Tworzenie i budowanie obrazu
 
-![lab4-dockerfile](lab4_17.png)
+
+
 Przygotowano Dockerfile, który pobiera repozytorium Node.js i wykonuje instalację oraz testy:
 
 ```Dockerfile
@@ -312,13 +313,17 @@ RUN npm test
 ```
 
 Obraz zbudowano komendą:
+
 ```sh
 docker build -t node-base .
 ```
 
+![lab4-dockerfile](lab4_17.png)
+
 ## Tworzenie woluminów i uruchomienie kontenera
 
-![lab4-volumes](lab4_18.png)
+![lab4-volumes](nowe.png)
+
 ```sh
 docker volume create input_volume
 docker volume create output_volume
@@ -328,7 +333,7 @@ docker run -it --name base-cont -v input_volume:/input -v output_volume:/output 
 
 ## Skopiowanie repozytorium do kontenera
 
-![lab4-docker-cp](lab4_5.png)
+
 ```sh
 docker cp node-js-dummy-test base-cont:/input
 ```
