@@ -1,4 +1,4 @@
-Sprawozdanie
+Notatki do sprawozdania
 
 Tresc hooka:
 #!/bin/bash
