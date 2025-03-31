@@ -5,20 +5,36 @@ Monika Krakowska, Informatyka Techniczna **
 
 
 **Instalacja klienta Git i obsługi kluczy SSH:**
+
+
 W celu zainstalowania Git i SSH wpisałam poniższe komendy:
+
 -sudo dnf install git
+
 ![Instalacja gita](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/sudo%20dnf%20install%20git.png)
+
 -sudo dnf install openssh-server
+
 ![Instalacja ssh](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/sudo%20dnf%20install%20ssh.png)
+
 kolejno sprawdziłam ich wersje, aby upewnić się ze zostały poprawnie zainstalowane: 
+
 -git -–version 
+
 -ssh -V
+
 ![Sprawdzenie wersji](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/wersje%20git%20i%20ssh.png)
+
 Oraz wykonałam globalną konfigurację użytkownika, dzięki czemu każdy commit który wykonam, będzie podpisany imieniem i nazwiskiem oraz moim adresem e-mail.
+
 -git config --global user.name “Monika Krakowska”
+
 -git config --global user.email “monikakrak@student.agh.edu.pl”
+
 ![configi](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/git%20config.png)
+
 Sprawdziłam poprawne działanie SSH:
+
 -sudo systemctl status sshd
 ![systemctl status](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/systemctl%20status.png)
 Oraz polaczylam klienta z serwerem korzystając z polecenia:
