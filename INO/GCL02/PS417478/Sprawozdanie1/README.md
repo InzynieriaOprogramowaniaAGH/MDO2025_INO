@@ -117,6 +117,7 @@ sudo docker run -it busybox sh
 ```
 ![zdj3](screenshots/3.png)
 Wyjście `exit`
+
 Poleceniem sprawdzam że istnieje:
 ```bash
 sudo docker ps -a
