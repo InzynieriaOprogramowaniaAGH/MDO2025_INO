@@ -165,6 +165,51 @@ services:
 
 ![Opis obrazka](lab_3_dockerfile/3_3.png)
 
+## Na zajęciach wykonano również tą instrukcję dla repozytorium irssi (przedstawiam w skrócie)
+
+![Opis obrazka](lab_3_dockerfile/1.png)
+
+![Opis obrazka](lab_3_dockerfile/2.png)
+
+![Opis obrazka](lab_3_dockerfile/3.png)
+
+![Opis obrazka](lab_3_dockerfile/4.png)
+
+![Opis obrazka](lab_3_dockerfile/10.png)
+
+![Opis obrazka](lab_3_dockerfile/11.png)
+
+![Opis obrazka](lab_3_dockerfile/12.png)
+
+![Opis obrazka](lab_3_dockerfile/13.png)
+
+Dockerfile.irssi
+```sh
+FROM ubuntu:latest
+RUN apt-get update && apt-get install -y \
+    git \
+    meson \
+    build-essential \
+    ninja-build \
+    pkg-config \
+    libglib2.0-dev \
+    libncurses5-dev \
+    libssl-dev
+RUN git clone https://github.com/irssi/irssi /irssi
+WORKDIR /irssi
+RUN meson setup build
+WORKDIR /irssi/build
+RUN ninja
+CMD ["bash"]
+```
+
+Dockerfile.irssitest
+```sh
+FROM irssi-build
+WORKDIR /irssi/build
+CMD ["ninja", "test"]
+```
+
 # Zajęcia 04
 ## 1. Zachowywanie stanu
 Przygotowano woluminy wejściowy i wyjściowy i podłączono je do kontenera bazowego
