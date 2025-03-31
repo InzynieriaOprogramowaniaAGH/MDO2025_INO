@@ -77,5 +77,5 @@ gdzie:
 ![devops_docker2](https://github.com/user-attachments/assets/293150d5-1dd1-476f-b494-60395f02a704)
 ### Aktualizacja pakietów w kontenerze Fedory
 ![devops_docker4](https://github.com/user-attachments/assets/eb9c92b3-c486-45c1-b1a9-e7cd68c3ff10)
-### nie pamietam 2
+### Usunięcie wszystkich obrazów
 ![wyczyszcone](https://github.com/user-attachments/assets/42013427-01cc-4707-acdc-ff5191d526a3)
