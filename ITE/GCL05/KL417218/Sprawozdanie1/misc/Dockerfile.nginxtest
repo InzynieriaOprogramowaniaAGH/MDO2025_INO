@@ -10,4 +10,5 @@ RUN git clone https://github.com/nginx/nginx-tests
 
 WORKDIR /nginx-tests
 
+# działa poza kontenerem, w kontenerze za każdym razem wyrzuca 403 Forbidden
 RUN prove -v .
