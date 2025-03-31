@@ -77,8 +77,8 @@ Wypchanie zmian:
 ```bash
 git push origin PS417478
 ```
-
 (Niestety ćwiczenie 1 nie zawiera screenów z terminala ze względu na to, że zapomniałam je zrobić)
+
 ---
 ## Lab 2 - Git, Docker
 1. Instalacja Dockera w systemie linuksowym
