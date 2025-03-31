@@ -4,8 +4,14 @@ Julia Piśniakowska
 Sprawozdanie przedstawia rezultaty wykonanych ćwiczeń 1-4 w ramach zajęć metodyki DevOps, skupiających się na wdrożeniu narzędzi do zarządzania wersjami i konteneryzacji. Początkowo przeprowadzono instalację systemu Fedora wraz z konfiguracją Git i uwierzytelniania SSH. W ramach pracy z repozytorium wykonano operacje klonowania, zarządzania gałęziami oraz synchronizacji zmian ze zdalnym repozytorium.
 Następne etapy obejmowały instalację i konfigurację środowiska Docker do pracy z kontenerami. Zrealizowano zadania polegające na pobieraniu i uruchamianiu istniejących obrazów, tworzeniu własnych definicji w Dockerfile, budowaniu obrazów oraz testowaniu ich funkcjonalności. Przeanalizowano również zarządzanie procesami wewnątrz kontenerów. Sprawozdanie kończy się opisem automatyzacji procesów budowy i uruchamiania aplikacji przy użyciu narzędzia Docker Compose.
 
-### LAB 1
-## Git Hook
+## LAB 1
+
+Wygenerowanie SSH bez hasła i z hasłem
+![devops1](https://github.com/user-attachments/assets/fa86b741-0aa6-4e32-9d33-b4d1356203a9)
+![devops2](https://github.com/user-attachments/assets/71c2f648-af5a-43a1-be79-64d72ca8e196)
+
+
+### Git Hook
 \`\`\`bash
 #!/bin/bash
 commit_msg=$(head -n1 "$1")
@@ -17,13 +23,13 @@ if [[ ! $commit_msg =~ $pattern ]]; then
 fi
 \`\`\`
 
-### LAB 2
+## LAB 2
 
-## busyyyy box box stop
+### busyyyy box box stop
 ![devops_docker](https://github.com/user-attachments/assets/fdf54491-927c-46f9-9817-ba78e469f85f)
-## busy box
+### busy box
 ![devops_docker2](https://github.com/user-attachments/assets/293150d5-1dd1-476f-b494-60395f02a704)
-## nie pamietam
+### nie pamietam
 ![devops_docker4](https://github.com/user-attachments/assets/eb9c92b3-c486-45c1-b1a9-e7cd68c3ff10)
-## nie pamietam
+### nie pamietam
 ![wyczyszcone](https://github.com/user-attachments/assets/42013427-01cc-4707-acdc-ff5191d526a3)
