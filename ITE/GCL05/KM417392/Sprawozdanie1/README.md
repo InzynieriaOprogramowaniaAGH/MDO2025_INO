@@ -89,7 +89,10 @@ chmod +x commit-msg
 *Skrypt sprawdza, czy wiadomość commit zawiera wymagany prefiks. Jeśli nie, commit jest odrzucany z odpowiednim komunikatem.*
 
 ![obraz](KM/lab1/zajecia/dziala_hook.png)
+
 *Sprawdzenie poprawności działania*
+
+- [commit-msg]([https://github.com/TwojeRepozytorium/sciezka/do/Dockerfile.build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab1/commit-msg))
 
 ### 7. Gałęzie cd.
 - w katalogu ```KM417392``` utworzono folder "Sprawozdanie1" oraz w nim umieszczono ważne pliki (Readme.md oraz zrzuty ekranu - folder "KM")
