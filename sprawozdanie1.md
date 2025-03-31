@@ -36,6 +36,41 @@ fi
 
 ## LAB 2
 
+Pobranie obrazów hello-world, busybox, ubuntu lub fedora, mysql
+
+Obrazy pobieramy komendą:
+```docker pull <nazwa_obrazu>```
+
+Pobranie obrazów hello-world, busybox, ubuntu, mysql
+
+```docker pull hello-world```
+
+```docker pull busybox```
+
+```docker pull mysql```
+
+```docker pull ubuntu```
+
+Pobrane obrazy można wyświetlić poleceniem:
+
+```docker images```
+![image](https://github.com/user-attachments/assets/f665004d-2c3f-470b-91e1-c7a793afbb48)
+
+* Efekt uruchomienia kontenera
+
+Uruchamiamy nowy kontener Docker z obrazem BusyBox, który będzie działał w tle (demon) i będzie miał nazwę "busybox-container".
+
+```docker run -d --name busybox-container busybox```
+
+gdzie:
+
+*docker run* - komenda do uruchamiania nowego kontenera na podstawie obrazu
+
+*-d* - opcja, która oznacza tryb działania w tle (demon)
+
+*--name busybox-container* - nadaje kontenerowi nazwę *"busybox-container"*
+
+*busybox* - nazwa obrazu, na podstawie którego zostanie uruchomiony kontener
 ### busyyyy box box stop
 ![devops_docker](https://github.com/user-attachments/assets/fdf54491-927c-46f9-9817-ba78e469f85f)
 ### busy box
