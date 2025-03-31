@@ -136,14 +136,19 @@ Do zajęć wykorzystuje autorskie repozytorium [https://github.com/CALLmeDOMIN/t
 
 ![1](../reports/images/r3/1.png)
 ![2](../reports/images/r3/2.png)
-
-<!-- TODO BUILD -->
-
+![2_2](../reports/images/r3/2_2.png)
 ![3](../reports/images/r3/3.png)
 
 ## 1. Przeprowadzenie tych samych kroków w kontenerze
 
-<!-- TODO Kontener -->
+![9](../reports/images/r3/9.png)
+![10](../reports/images/r3/10.png)
+![11](../reports/images/r3/11.png)
+![12](../reports/images/r3/12.png)
+![13](../reports/images/r3/13.png)
+![14](../reports/images/r3/14.png)
+![15](../reports/images/r3/15.png)
+![16](../reports/images/r3/16.png)
 
 ## 2. Pliki Dockerfile automatyzujące procesy
 
@@ -167,8 +172,6 @@ Do zajęć wykorzystuje autorskie repozytorium [https://github.com/CALLmeDOMIN/t
 Plik [compose.yml](./3/compose.yml)
 
 ![6](../reports/images/r3/6.png)
-
-<!-- TODO Dyskusja -->
 
 # CWL4
 
@@ -222,7 +225,7 @@ Stworzenie [Dockerfile.iperf](./4/Dockerfile.iperf) do automatyzacji procesu bud
 
 ### Podłączenie kontenerem klienckim przy użyciu tego samego obrazu
 
-<!-- TODO Dodać komentarz o znalezieniu IP -->
+Aby odszukać ip kontenera możemy wykorzystać komende `docker inspect` - IP znajduje się w polu `NetworkSettings`
 
 ![10](../reports/images/r4/10.png)
 
@@ -244,11 +247,13 @@ Stworzenie [Dockerfile.iperf](./4/Dockerfile.iperf) do automatyzacji procesu bud
 
 ### Połączenie do kontenera spoza hosta
 
-<!-- TODO połącz spoza hosta -->
+Połączenie z maszyny Windows (WSL2)
 
-### Logi servera
+![24](../reports/images/r4/24.png)
 
-<!-- TODO Przedstaw przepustowość komunikacji lub problem z jej zmierzeniem (wyciągnij log z kontenera, woluminy mogą pomóc) -->
+### Logi serwera
+
+Przepusotowość jest prezentowana w logach serwera
 
 ![15](../reports/images/r4/15.png)
 
@@ -259,8 +264,6 @@ Stworzenie [Dockerfile.iperf](./4/Dockerfile.iperf) do automatyzacji procesu bud
 ![16](../reports/images/r4/16.png)
 
 ### Uruchomienie kontenera DIND
-
-<!-- TODO DODAĆ KOMENTARZ CO TO JEST -->
 
 ![17](../reports/images/r4/17.png)
 ![18](../reports/images/r4/18.png)
@@ -284,7 +287,3 @@ Odpalenie jenkins w przeglądarce, odblokowanie kodem z konsoli i utworzenie kon
 
 ![22](../reports/images/r4/22.png)
 ![23](../reports/images/r4/23.png)
-
-<!-- TODO Zakres rozszerzony ????? -->
-
-## 6.
