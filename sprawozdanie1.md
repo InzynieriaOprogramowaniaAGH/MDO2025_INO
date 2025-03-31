@@ -71,7 +71,7 @@ gdzie:
 *--name busybox-container* - nadaje kontenerowi nazwę *"busybox-container"*
 
 *busybox* - nazwa obrazu, na podstawie którego zostanie uruchomiony kontener
-### Wersja BusyBox
+### Odpalenie BusyBox
 ![devops_docker](https://github.com/user-attachments/assets/fdf54491-927c-46f9-9817-ba78e469f85f)
 ### Wersja BusyBox
 ![devops_docker2](https://github.com/user-attachments/assets/293150d5-1dd1-476f-b494-60395f02a704)
