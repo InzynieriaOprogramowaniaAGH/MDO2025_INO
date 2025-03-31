@@ -3,7 +3,9 @@
 ## obsługa kluczy ssh
 pierwszym krokiem było utworzenie dwóch par kluczy ssh przy pomocy komedy ```ssh-keygen``` podając typ klucza i mail. następnie podano nazwy i hasła kluczy
 ![ssh1](sceendump/L1/1-key.PNG)
+
 ![ssh1](sceendump/L1/2-key2.PNG)
+
 ## dodanie kluczy do githuba
 
 W opcjach, w zakładce SSH and GPG keys dodano jeden z utworzonych kluczy ssh
@@ -34,6 +36,7 @@ Tworzymy plik o nazwie commit-msg z poniższą treścią, aby wymusić żeby tre
 Aby git hook działał należy go umieścić w .git/hooks zaczynając od root'a repozytorium, a także dodać uprawnienia do wykonywania pliku.
 
 - próba utworzenia nieprawidłowego commita
+
 ![bad-commit](sceendump/L1/9-gitHookTest.PNG)
 
 ## Pushowanie do zdalnego repozytorium
@@ -41,6 +44,7 @@ Aby git hook działał należy go umieścić w .git/hooks zaczynając od root'a 
 Aby dodać brancha do zdalenego repozytorium należy wykonac następującją komendę
 
 ```git push --set-upstream miejsce_odgałężenia gałąź```
+
 ![git-push](sceendump/L1/10-git-push.PNG)
 
 
@@ -126,7 +130,8 @@ Make wymaga cc
 
 Po zainstalowaniu wymaganych programów można zbudować i przetestować aplikacje
 
-![make-workig](sceendump/L3/3.5-make works.PNG)
+![make-workig](sceendump/L3/3.5-make-works.PNG)
+
 ![test-koneter](sceendump/L3/3.5-runrest.PNG)
 
 ## Tworzenie obrazów do budowania i testowania aplikacji
@@ -151,7 +156,9 @@ Tworzymy woluminy w następujący sposób.
 Klonujemy repozytorium na wolumin wejściowy, przy pomocy kontenera pomocniczego
 
 ![gitting](sceendump/L4/4.3-kontener-clone.PNG)
+
 ![gitting2](sceendump/L4/4.4-getgit.PNG)
+
 ![cloning](sceendump/L4/4.5-getRepo.PNG)
 
 Teraz tworzymy dockerfile bez git'a, ale z wymaganymi dependencjami.
@@ -203,11 +210,12 @@ Tworzenie serwera w nowej sieci
 # Cz 3 - Jenkins
 Tworzymy sieć dla jenkins'a.
 
-#[neting](sceendump/L4/4c/4c-1-network.PNG)
+![neting](sceendump/L4/4c/4c-1-network.PNG)
 
 Odpalamy Server, wraz z dind.
 
 ![run](sceendump/L4/4c/4c-2-jenkinsrun.PNG)
+
 ![run2](sceendump/L4/4c/4c-4-jenkinsrun2.PNG)
 
 Upewniamy się, ze server pracuje.
