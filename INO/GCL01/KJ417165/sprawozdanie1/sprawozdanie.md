@@ -51,3 +51,6 @@ Gałąź grupowa jest chroniona, więc push został odrzucony.
 
 ![alt text](screens/screens1/image11.png)
 
+## Laboratorium 2
+
+
