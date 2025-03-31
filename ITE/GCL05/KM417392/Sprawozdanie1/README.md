@@ -175,7 +175,7 @@ ps aux
 ```
 ![obraz](KM/lab2/lab2_cz2/procesy_dockera.png)
 
-- Następnie zaktualizowano pakiety i za pomocą ```exit``` opuściło kontener.
+- Następnie zaktualizowano pakiety i za pomocą ```exit``` opuszczono kontener.
 ```
 apt update
 apt upgrade
@@ -197,6 +197,7 @@ docker build -t nowy_obraz .
 - Aktualizuje liste pakietów, instaluje Git'a, usuwa niepotrzebne pliki tymczasowe po instalacji
 - Klonuje repozytorium
 - Ustanawia katalog roboczy w kontenerze na /MDO2025_INO
+- [Dockerfile](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab2/Dockerfile)
 ```
 FROM ubuntu:latest
 
@@ -239,7 +240,8 @@ docker images
 ## Zajęcia 03: Dockerfiles, kontener jako definicja etapu
 
 Do ćwiczeń wykorzystano repozytorium: https://github.com/mruby/mruby
-mruby to lekka implementacja języka Ruby, zgodna z częścią standardu ISO i kompatybilna składniowo z Ruby 3.x (z wyjątkiem dopasowywania wzorców).
+
+**mruby** to lekka implementacja języka Ruby, zgodna z częścią standardu ISO i kompatybilna składniowo z Ruby 3.x (z wyjątkiem dopasowywania wzorców).
 
 Repozytorium spełnia zadane wymagania:
 - posiada otwartą licencję: MIT license 
@@ -274,17 +276,17 @@ rake all test
 Wykorzystano kontener ```ubuntu```, najnowszą wersje.
 - uruchomiono kontener w trybie interaktywnym ```-it```
 ```
-
+docker run -it ubuntu
 ```
 ![obraz](KM/lab3/6.png)
 - sklonowano repozytorium
 ```
-
+git clone https://github.com/mruby/mruby.git
 ```
 ![obraz](KM/lab3/8.png)
 - zainstalowano wymagane zależności
 ```
-
+sudo apt install rake
 ```
 ![obraz](KM/lab3/7.png)
 - uruchomiono build
@@ -300,6 +302,7 @@ rake all test
 ![obraz](KM/lab3/10.png)
 ### Dockerfile build
 1. Stworzono nowy plik ```Dockerfile.build```
+- [Dockerfile.build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/lab3-wazne-pliki/Dockerfile.build)
 Dockerfile zawiera cały proces buildowania:
 - używa bazowy obraz ubuntu
 - pobiera i instaluje niezbędne zależności
@@ -308,10 +311,6 @@ Dockerfile zawiera cały proces buildowania:
 - uruchamia ```rake```, który kompiluje kod 
   
 ![obraz](KM/lab3/12.png)
-
-
-### Dockerfile test
-
 
 2. Zbudowano nowy obraz ```my_mruby_build```
 ```
@@ -323,10 +322,14 @@ docker build -f Dockerfile.build -t my_mruby_build .
 
 ### Dockerfile test
 1. Stworzono nowy plik ```Dockerfile.test```
+- [Dockerfile.test](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/lab3-wazne-pliki/Dockerfile.test)
 Dockerfile zajmuje się jedynie przeprowadzeniem testów (nie robi builda)
 Bazuje na ```my_mruby_build```.
 ![obraz](KM/lab3/15.png)
 2. Zbudowano nowy obraz ```my_mruby_test```
+```
+docker build -f Dockerfile.test -t my_mruby_test .
+```
 ![obraz](KM/lab3/16.png)
 ![obraz](KM/lab3/18.png)
 4. Po wejściu do kontenera automatycznie testy zaczynają się wykonywać. 
@@ -335,8 +338,8 @@ Bazuje na ```my_mruby_build```.
 
 *Do sprawozdania załączam również dwa Dockerfile ```build```, ```test```, dla repozytorium podanego na zajęciach*
 **Node-js-dummy-test** 
-
-
+- [Dockerfile.nodebld](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/dummy-node/Dockerfile.nodebld)
+- [Dockerfile.nodetest](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/dummy-node/Dockerfile.nodetest)
 
 ## Zajęcia 04: Dodatkowa terminologia w konteneryzacji, instancja Jenkins 
 
@@ -348,6 +351,7 @@ Do testowania wykorzystano repozytorium: https://github.com/lttr/simple-npm-weba
 - node.js (do budowania aplikacji)
 - npm
 - brak gita
+- [Dockerfile](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab4/lab4-wazne-pliki/Dockerfile)
 
 ![obraz](KM/lab4/1_Dockerfile.png)
 
@@ -397,6 +401,8 @@ RUN apk add --no-cache git
 WORKDIR /app
 CMD [ "sh" ]
 ```
+- [Dockerfile.cd](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab4/lab4-wazne-pliki/Dockerfile.cd)
+
 Zbudowano nowy obraz:
 ![obraz](KM/lab4/9_budowanie_git.png)
 ```
@@ -414,7 +420,8 @@ cp -r dist/* /mnt/output
 ### RUN --mount
 1. W ramach przetestowania mozliwości RUN --mount utworzono folder ```test``` i dodano do niego "plik_testowy".
 ![obraz](KM/lab4/moun1.png)
-2. Napisano prosty Dockerfile
+2. Dodatkowo stworzono prosty Dockerfile
+- [Dockerfile](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab4/lab4-wazne-pliki/mount_doc/Dockerfile)
 ```                                                   
 FROM ubuntu:latest
 
@@ -475,6 +482,7 @@ docker logs iperf-server
 iperf3 -c 172.19.0.2 > wynik_iperf.txt
 ```
 ![obraz](KM/lab4/logi.png)
+- [wynik_iperf.txt](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab4/lab4-wazne-pliki/wynik_iperf.txt)
 
 ### Instancja Jenkins
 Zgodnie z dokumentacją, proces konfiguracji Jenkinsa za pomocą Dockera obejmuje kilka kroków, w tym tworzenie nowej sieci i woluminu, a następnie uruchomienie samego kontenera Jenkinsa. 
