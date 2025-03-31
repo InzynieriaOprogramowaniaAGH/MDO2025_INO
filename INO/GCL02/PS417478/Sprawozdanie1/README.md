@@ -1,9 +1,9 @@
 # Sprawozdanie 1 
 ## Lab 1 - Wprowadzenie, Git, Gałęzie, SSH
 ### 1. Instalacja klijenta Git i obsługa kluczy SSH
-Po intsalacji systemu Fedora i konfiguracji, sprawdziłam adres IP mojego serwera i wykorzystując Visual Studio Code, połączyłam się przez SSH, sklonowałam repozytorium poleceniem:
+Po intsalacji systemu Fedora i konfiguracji, sprawdziłam adres IP mojego serwera i wykorzystując Visual Studio Code, połączyłam się przez SSH, zainstalowałam git:
 ```bash
-sudo dnf install git`
+sudo dnf install git
 ```
 Sprawdziłam poprawność instalacji:
 ```bash
