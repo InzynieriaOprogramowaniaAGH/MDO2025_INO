@@ -1,5 +1,7 @@
 # Zajęcia 01
 
+Celem poniższych kroków jest zapoznanie się i konfiguracja środowiska `git` oraz łączenie z usługą ssh.
+
 Niestety nie robiłem na bierząco zrzutów ekranu do pierwszych zajęć, więc wiekszość zrzutów to fragmenty historii poleceń.
 
 ## 1. Instalacja git i obsługi ssh
@@ -56,6 +58,8 @@ Git poprawnie wyrzuca błąd gdy wiadomość się nie zgadza z ustawionym wzorce
 (wybrano gałąź grupową jako 'base' - lewy górny róg)
 
 # Zajęcia 2
+
+Celem poniższych kroków jest zapoznanie się z podstawowym działaniem docker (pobieranie obrazów, uruchamianie kontenerów, zapoznanie się z Dockerfile).
 
 ## 1. Instalacja Dockera
 
@@ -121,6 +125,8 @@ Do usuwania obrazów - 'docker rmi'
 # Zajęcia 03
 
 Do przeprowadzenia poniższych zadań użyto repozytorium `sqlite`: https://github.com/sqlite/sqlite 
+
+Celem poniższych kroków jest przprowadzenie procesu budowania i testowania aplikacji w kontenerze oraz automatyzajca procesu za pomocą Dockerfile.
 
 ## 1. Proces budowania i testowania w kontenerze
 
@@ -208,6 +214,8 @@ Kontener sam w sobie jest to widoczny w systemie hosta proces, jest on jednak mo
 W kontenerze pracuje środowisko ustalone według obrazu, na podstawie którego uruchomiono kontener, zazwyczaj jest to minimalne środowisko potrzebne do uruchomienia danej aplikacji.
 
 # Zajęcia 04 - Zachowanie stanu
+
+Celem poniższych kroków jest zapoznanie się z działaniem woluminów i ich wykorzystaniem w dockerze.
 
 ## 1. Obraz bazowy (bez gita)
 
@@ -299,9 +307,21 @@ Również wyczerpująca rozmowa z `dockerdocsAI` nie przyniosła lepszych rezult
 
 # Zajęcia 04 - Eksponowanie portu
 
+Kroki mają na celu:
+
+- Instalację iPerf3 - uruchomienie serwera i testowanie jego działania w kontenerze.
+
+- Test komunikacji - między kontenerami w domyślnej sieci Dockera.
+
+- Tworzenie własnej sieci - konfiguracja dedykowanej sieci mostkowanej.
+
+- Uruchomienie kontenerów - w dedykowanej sieci dla testów przepustowości.
+
+- Eksponowanie portów - umożliwienie komunikacji z serwerem z hosta i spoza hosta.
+
 ## 1. Instalacja iperf3, uruchomienie na kontenerze w trybie serwera ('-s')
 
-`iperf3` sntandardowo instalowano 'dnf install'.
+`iperf3` standardowo instalowano 'dnf install'.
 
 ![iperf3 server](screens/lab4-10.png)
 
@@ -369,6 +389,8 @@ Pakiety musiały przejść z jednej maszyny wirtualnej na drugą i jeszcze dodat
 # Zajęcia 04 - Instancja Jenkins
 
 ### Wszytkie kroki przeprowadzono krok po kroku z dokumentacją: https://www.jenkins.io/doc/book/installing/docker/
+
+Poniższe kroki pozwolą przeprowadzić instalację skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND, oraz uruchomić jego instancje i zalogować się do panelu. 
 
 ## 1. Tworzenie sieci dla jenkins'a
 
