@@ -1,0 +1,6 @@
+#!/bin/bash
+MESSAGE=$(cat "$1")
+if [[! "$MESSAGE" =~^JZ415998 ]]; then
+	echo "Error: Commit message must start with 'JZ415998'"
+	exit 1
+fi

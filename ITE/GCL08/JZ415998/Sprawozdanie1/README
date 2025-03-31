@@ -1,0 +1,36 @@
+# Sprawozdanie 1
+
+# Tytuł: Wprowadzenie, Git, Gałęzie, SSH
+
+## Cel ćwiczeń: Praktyczne zapoznanie się z systemem kontroli wersji Git oraz mechanizmami autoryzacji za pomocą kluczy SSH i tokenów dostępu.
+
+### Instalacja środowiska wykonawczego - Virtual Box + Fedora Server Edition
+
+Ćwiczenia rozpoczęliśmy od instalacji Virtual Box. W nim należało zainstalować system Fedora bez GUI. Dla naszych potrzeb należało przydzielić minimum 2Gb
+RAM. Dysk natomiast powinień mieć wielkość 36Gb przy dynamicznej alokacji. Po wykonaniu tych kroków naszą ostatnia czynnością przed rozpoczęciem instalacji systytemu
+było założenie kont odpowiednio dla root i użytkownika. Po zainstalowaniu systemu przeszliśmy do instalacji SSH i SFTP za pomocą komend:
+
+-sudo dnf install -y openssh-server
+-sudo systemctl enable --now sshd
+
+Następnym krokie, była weryfikacja połączenia za pomocą SSH, w tym celu należało użyć komendy:
+
+-ip a
+
+Aby odczytać adres IPv4, który za pomocą cmd / putty umożliwiał zewnętrzne połączenie z VM. W CMD należało wpisać "ssh ...nazwa użytkownika...@...ip...".
+Po poprawnym połączeniu otrzymaliśmy ...
+
+![Zrzut ekranu z terminala](ssh.png)
+
+Następnie za pomocą komendy "sftp ...nazwa użytkownika...@...ip..." łączliśmy sie z VM za pomocą SFTP.
+
+![Zrzut ekranu z terminala](sftp.png)
+
+Oraz łączliśmy się również za pomocą SFTP poprzez program FileZilla
+
+![Zrzut ekranu z Filezilla](filezilla.png)
+
+Po dokładnej weryfikacji połączeń przeszliśmy do połączenia się z Visual Studio Code za pomocą rozszerzenia Remote SSH, dzięki tej czynności posiadamy
+łatwiejszy dostęp do plików VM oraz do szybszej i prostszej kontroli nad nimi.
+
+![Remote SSH VSC](remotessh.png)
