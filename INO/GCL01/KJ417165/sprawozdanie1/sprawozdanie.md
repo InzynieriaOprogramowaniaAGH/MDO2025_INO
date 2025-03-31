@@ -53,4 +53,49 @@ Gałąź grupowa jest chroniona, więc push został odrzucony.
 
 ## Laboratorium 2
 
+1. Instalacja dockera za pomocą 'sudo dnf install -y dnf-plugins-core':
 
+![alt text](screens/screens2/1.png)
+
+2. Sprawdzenie czy Docker jest poprawnie zainstalowany komendami 'sudo systemctl enable --now docker' oraz 'sudo docker version':
+
+![alt text](screens/screens2/2.png)
+
+3. Pobranie obrazów 'hello-world', 'busybox', 'ubuntu', 'fedora' oraz 'mysql' komendą 'docker pull':
+
+![alt text](screens/screens2/3.png)
+
+4. Pobrane obrazy:
+
+![alt text](screens/screens2/4.png)
+
+5. Uruchomienie kontenera z obrazu 'busybox' oraz 'ubuntu' poleceniem 'docker run', sprawdzenie PID1:
+
+![alt text](screens/screens2/5.png)
+
+6. Aktualizacja pakietów:
+
+![alt text](screens/screens2/6.png)
+
+7. Lista wszystkich kontenerów, polecenie 'docker ps -a':
+
+![alt text](screens/screens2/7.png)
+
+8. Tworzenie swojego Dockerfile w nowym pliku, który klonuje repozytorium:
+
+![alt text](screens/screens2/8.png)
+
+9. Budowanie obrazu, polecenie 'docker build -t moj-obraz .':
+
+![alt text](screens/screens2/9.png)
+
+10. Usuwanie:
+
+* kontenery, 'docker rm $(docker ps -aq)'
+* obrazy, 'docker rm $(docker images -q)'
+
+![alt text](screens/screens2/10.png)
+
+11. Dodanie Dockerfile do folderu 'Sprawozdanie1' w repozytorium:
+
+![alt text](screens/screens2/11.png)
