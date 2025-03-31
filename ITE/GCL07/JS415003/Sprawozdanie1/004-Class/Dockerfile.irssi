@@ -1,0 +1,16 @@
+FROM fedora:42
+
+RUN dnf -y update && \
+    dnf -y install meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils*
+    
+RUN --mount=type=bind,source=input_volume,target=/input \
+    --mount=type=bind,source=output_volume,target=/output \
+    cd /input && \
+    tar -xzf irssi-source.tar.gz && \
+    cd irssi-master && \
+    meson Build && \
+    ninja -C Build && \
+    cp -r Build/* /output/
+
+WORKDIR /irssi
+CMD ["irssi"]
