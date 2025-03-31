@@ -294,7 +294,7 @@ Pobrano i wyświetlono logi kontenera poleceniem `sudo docker logs iperf_server`
 Utworzono sieć przy użyciu polecenia `docker network create` dla jenkinsa.
 
 ```
-sudo docker network create bridge_net
+sudo docker network create jenkins
 ```
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20network%20create%20jenkins.png?raw=true)
