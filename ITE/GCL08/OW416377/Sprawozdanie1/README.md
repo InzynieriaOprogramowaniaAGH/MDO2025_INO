@@ -165,7 +165,6 @@ sudo dnf install -y docker
 
 ![Uruchomienie dockera](zrzuty_ekranu1/docker_uruchomienie.png)
 
-
 ## **2. Rejestracja w Docker Hub**
 Zarejestrowałam się w Docker Hub poprzez konto na Githubie, a następnie zalogowałam się w terminalu.
 ![Konto w DockerHub](zrzuty_ekranu1/konto_w_dockerhub.png)
@@ -431,7 +430,7 @@ sudo docker images
 ```
 ![Zbudowane obrazy](zrzuty_ekranu_lab3/pokazanie_zbudowanych_obrazów.png)
 
-### **Sprawdzenie działania kontenerów**
+### **Sprawdzenie działania kontenerów:**
 
 ### Kontener budujący
 Do wykazania poprawnej instalacji zależności w kontenerze uruchomiłam go w trybie interaktywnym oraz sprawdziłam, czy katalog `node_modules` został uwtworzony.
@@ -564,9 +563,9 @@ ls -l /var/lib/docker/volumes/wyjsciowy/_data
 Aby sklonować repozytorium na wolumin wejściowy z poziomu kontenera, potrzebny jest zainstalowany `git` wewnątrz kontenera.
 Obraz node:slim nie zaweira domyślnie `git`, dlatego musiałabym go wcześniej zainstalować za pomocą:
 ```bash
-apt update && apt install git
+sudo apt update && apt install git
 ```
-Kroki wykonania byłyby niemal identyczne jak wcześniej, z taką różnicą, że zamaist wykonywać polecenie `git clone` z poziomu hosta (w osobnym terminalu, po przejściu do katalogu `/var/lib/docker/volumes/wejsciowy/_data`), wykonywałabym je bezpośrednio wewnątrz kontenera `kontenerlab4`, przechodząc do katalogu `/input`.
+Kroki wykonania byłyby niemal identyczne jak wcześniej, z taką różnicą, że zamiast wykonywać polecenie `git clone` z poziomu hosta (w osobnym terminalu, po przejściu do katalogu `/var/lib/docker/volumes/wejsciowy/_data`), wykonywałabym je bezpośrednio wewnątrz kontenera `kontenerlab4`, przechodząc do katalogu `/input`.
 
 ### 1.7 Dyskusja dotycząca wykonania ww. kroków za pomocą `docker build` i pliku `Dockerfile`
 Klonowanie repozytorium i instalacja zależności mogłyby zostać zautomatyzowane z użyciem pliku `Dockerfile`, polecenia `dockerfile build` oraz funkcji `RUN --mount`, która dostępna jest w Docker BuildKit.
@@ -628,7 +627,8 @@ sudo docker network create --driver bridge moja_siec_mostkowa
 ```
 ![Utworznie sieci mostkowej](zrzuty_ekranu_lab4/eksponowanie_portow/utworzenie_mojej_sieci_mostkowej.png)
 
-Ponownie uruchamiam kontener serwerowy i kliencki tylko w `moja_siec_mostkowa`, to umożliwi wykorzystanie nazw kontenerów zamiast adresów ip.
+Ponownie uruchamiam kontener serwerowy i kliencki tylko w `moja_siec_mostkowa`, to umożliwi wykorzystanie nazw kontenerów zamiast adresów IP.
+
 Uruchomienie kontenera serwerowego:
 ```bash
 sudo docker run --rm -it --name iperf-serwer --network moja_siec_mostkowa networkstatic/iperf3 -s
@@ -665,12 +665,13 @@ iperf3 -c localhost -p 5201
 ![Nawiązanie połaczenia](zrzuty_ekranu_lab4/eksponowanie_portow/nawiazanie_polaczenia_z_hostem.png)
 
 * Połączenie się spoza hosta:
+
 Do łączenia spoza hosta wykorzystałam komputer, na którym działa maszyna wirtualna.
 Zainstalowałam na komputerze w odpowiednim katalogu serwer iperf3 oraz aby upewnić się, że został zainstalowany sprawdziłam jego wersję.
 ![Instalacja iperf3](zrzuty_ekranu_lab4/eksponowanie_portow/zainstalowanie_iperf3_na_komputerze.png)
 ![Sprawdzenie wersji iperf3](zrzuty_ekranu_lab4/eksponowanie_portow/weryfikacja_instalacji_iperf3_na_komputerze.png)
 
-Następnie sprawdziłam adres IP maszyny za pomocą
+Następnie sprawdziłam adres IP maszyny za pomocą:
 ```bash
 ip a
 ```
@@ -681,11 +682,14 @@ i nawiązałam połączenie:
 ```bash
 iperf3 -c 192.168.18.97 -p 5201
 ```
+Wynik nawiązania połaczenia spoza hosta - komputer:
 ![Nawiazanie polaczenia spoza hosta komputer](zrzuty_ekranu_lab4/eksponowanie_portow/nawiazanie_polaczenia_spoza_hosta_komputer.png)
+
+Wynik nazwiązania połączenia spoza hosta - kontener serwerowy:
 ![Nawizanie polaczenia spoza hosta serwer](zrzuty_ekranu_lab4/eksponowanie_portow/nawiazanie_polaczenia_spoza_hosta_serwer.png)
 
 ### 2.5 Przedstawienie przepustowości komunikacji lub problemu z jej zmierzeniem (log z kontenera)
-Utworzyłam wolumin, w którym zapisany zostanie log działania serwera.
+Utworzyłam wolumin `logi`, w którym zapisany zostanie log działania serwera.
 ```bash
 sudo docker volume create logi
 ```
@@ -751,7 +755,7 @@ sudo docker ps
 ```
 ![Potwierdzenie uruchomienie kontenera](zrzuty_ekranu_lab4/jenkins/potwierdzenie_uruchomienia_jenkinsa.png)
 
-Następnie przygotowałam Dockerfile `Dockerfile.jenkins`.
+Następnie przygotowałam Dockerfile [Dockerfile.jenkins](lab4_pliki/Dockerfile.jenkins).
 Utworzyłam katalog lab4_pliki, a w nim plik `Dockerfile.jenkins`.
 
 ![Terminal utworzenie katalogu i pliku](zrzuty_ekranu_lab4/jenkins/tworzenie_katalogu_i_pliku.png)
@@ -818,7 +822,8 @@ Po uruchomieniu konsoli, za pomocą:
 ```bash 
 cat /var/jenkins_home/secrets/initialAdminPassword
 ```
-wyświetliłam hasło.
+wyświetliłam hasło:
+
 ![Wyświetlenie hasła](zrzuty_ekranu_lab4/jenkins/wyswietlenie_hasla_jenkins.png)
 
 Po wpisaniu hasła administratora w przeglądarce przeszłam do strony Jenkinsa, pominęłam dostosowywanie Jenkinsa i kontynuowałam jako admin.
