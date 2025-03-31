@@ -27,14 +27,19 @@ Aby skonfigurować dostęp SSH, wygenerowano dwa klucze SSH inne niż RSA. Jeden
    ```bash
    ssh-keygen -t ed25519 -C "mój_email@example.com"
    ```
+   ![ZAJ1](screenshot/ZAJ1_1.png)
+
 2. Uruchomienie agenta SSH:
    ```bash
    eval "$(ssh-agent -s)"
    ```
+   ![ZAJ1](screenshot/ZAJ1_2.png)
+   
 3. Dodanie klucza do agenta:
    ```bash
    ssh-add ~/.ssh/id_ed25519
    ```
+    ![ZAJ1](screenshot/ZAJ1_3.png)
 4. Skopiowanie klucza publicznego:
    ```bash
    cat ~/.ssh/id_ed25519.pub
@@ -50,12 +55,18 @@ Przełączono się na gałąź main, a następnie na gałąź swojej grupy:
 git checkout main
 git checkout -b GCL01
 ```
+
+![ZAJ1](screenshot/ZAJ1_4.png)
+ 
 Utworzono nową gałąź o nazwie JK415272 od gałęzi grupowej:
 ```bash
 git checkout -b JK415272
 ```
+
 Oraz przełączono się na nią.
 
+![ZAJ1](screenshot/ZAJ1_5.png)
+ 
 W katalogu właściwym dla grupy utworzono nowy katalog o tej samej nazwie:
 ```bash
 mkdir JK415272
@@ -79,11 +90,15 @@ if [[ "$COMMIT_MSG" != $EXPECTED_PREFIX* ]]; then
   exit 1
 fi
 ```
+ ![ZAJ1](screenshot/ZAJ1_7.png)
+ 
 Następnie sprawdzono poprawność hooka:
 ```bash
 git commit -m "JK415272: test commit"
 ```
 
+ ![ZAJ1](screenshot/ZAJ1_8.png)
+ 
 ### Wysyłanie zmian do repozytorium
 Dodano zmiany do stagingu komendą:
 ```bash
@@ -93,14 +108,20 @@ Oraz wykonano poprawny commit:
 ```bash
 git commit -m "JK415272: Dodano nowe pliki"
 ```
+ ![ZAJ1](screenshot/ZAJ1_9.png)
+
 Wysłano zmiany do zdalnego repozytorium:
 ```bash
 git push origin JK415272
 ```
+ ![ZAJ1](screenshot/ZAJ1_10.png)
+
 Następnie spróbowano wyciągnąć gałąź do gałęzi grupowej:
 ```bash
 git merge JK415272
 ```
+
+![ZAJ1](screenshot/ZAJ1_11.png)
 
 ## Ćwiczenie 2: Instalacja i konfiguracja Dockera
 
@@ -110,6 +131,8 @@ Pierwszym krokiem było zainstalowanie Dockera w systemie Linux. Użyto do tego 
 ```bash
 sudo dnf install docker -y
 ```
+
+![ZAJ2](screenshot/ZAJ2_1.png)
 
 Po zakończeniu instalacji usługa Dockera została skonfigurowana do automatycznego uruchamiania przy starcie systemu:
 
@@ -122,7 +145,7 @@ Następnie sprawdzono status usługi, aby upewnić się, że Docker działa popr
 ```bash
 sudo systemctl status docker
 ```
-
+![ZAJ2](screenshot/ZAJ2_2.png)
 ---
 
 ## Pobieranie obrazów Dockera
@@ -134,6 +157,10 @@ sudo docker pull busybox
 sudo docker pull mysql
 sudo docker pull ubuntu
 ```
+![ZAJ2](screenshot/ZAJ2_3.png)
+![ZAJ2](screenshot/ZAJ2_4.png)
+![ZAJ2](screenshot/ZAJ2_5.png)
+![ZAJ2](screenshot/ZAJ2_6.png)
 
 Każdy z tych obrazów zawiera system plików oraz środowisko uruchomieniowe wymagane do działania aplikacji lub usług.
 
@@ -148,11 +175,14 @@ Uruchomiono kontener na bazie obrazu `busybox` w trybie interaktywnym:
 sudo docker run -it busybox --name busybox busybox
 ```
 
+![ZAJ2](screenshot/ZAJ2_7.png)
+
 Po uruchomieniu kontenera zweryfikowano jego działanie, sprawdzając wersję systemu wewnątrz kontenera:
 
 ```bash
 busybox | head -n 1
 ```
+![ZAJ2](screenshot/ZAJ2_8.png)
 
 Komenda ta została użyta w celu wyodrębnienia pierwszej linii wyjściowej polecenia busybox, co pozwoliło na szybkie zidentyfikowanie wersji zainstalowanego pakietu Busybox.
 
@@ -166,8 +196,9 @@ exit
 Podobnie uruchomiono kontener na bazie obrazu `ubuntu` w trybie interaktywnym:
 
 ```bash
-sudo docker run -it ubuntu bash
+sudo docker run -it ubuntu ubuntuy /bin/bash
 ```
+
 
 Po uruchomieniu sprawdzono procesy uruchomione wewnątrz kontenera, w tym proces `PID 1`, który jest głównym procesem kontenera:
 
@@ -175,17 +206,21 @@ Po uruchomieniu sprawdzono procesy uruchomione wewnątrz kontenera, w tym proces
 ps aux
 ```
 
+![ZAJ2](screenshot/ZAJ2_9.png)
+
 Następnie wyświetlono listę wszystkich procesów Dockera na hoście:
 
 ```bash
 sudo docker ps -a
 ```
+![ZAJ2](screenshot/ZAJ2_10.png)
 
 Aby zaktualizować pakiety wewnątrz kontenera, wykonano:
 
 ```bash
 apt update && apt upgrade -y
 ```
+![ZAJ2](screenshot/ZAJ2_11.png)
 
 Po zakończeniu pracy w kontenerze użyto polecenia `exit`, aby go opuścić.
 
@@ -210,11 +245,15 @@ Obraz został zbudowany i oznaczony jako `moj-obraz`:
 sudo docker build -t moj-obraz .
 ```
 
+![ZAJ2](screenshot/ZAJ2_12.png)
+
 Po zakończeniu procesu budowania uruchomiono kontener na podstawie nowo utworzonego obrazu:
 
 ```bash
 sudo docker run -it moj-obraz
 ```
+
+![ZAJ2](screenshot/ZAJ2_13.png)
 
 ---
 
@@ -231,6 +270,7 @@ Aby usunąć kontenery, użyto komendy:
 ```bash
 sudo docker rm <nazwa-kontenera>
 ```
+![ZAJ2](screenshot/ZAJ2_14.png)
 
 Dzięki temu usunięto wszystkie kontenery, zwalniając miejsce na dysku.
 
@@ -253,6 +293,8 @@ Pierwszym krokiem było sklonowanie wybranego repozytorium z GitHub. W tym przyp
 git clone https://github.com/lodash/lodash
 ```
 
+![ZAJ3](screenshot/ZAJ3_1.png)
+
 Po sklonowaniu repozytorium zainstalowano wymagane zależności do uruchomienia projektu:
 
 ```bash
@@ -260,13 +302,20 @@ sudo dnf install nodejs npm -y
 npm install
 ```
 
+![ZAJ3](screenshot/ZAJ3_2.png)
+
+
 Po zakończonej instalacji uruchomiono testy jednostkowe, aby zweryfikować poprawność działania kodu:
 
 ```bash
 npm test
 ```
 
+![ZAJ3](screenshot/ZAJ3_3.png)
+
 Wynik testów wskazywał na ich poprawne przejście (`test pass`).
+
+![ZAJ3](screenshot/ZAJ3_4.png)
 
 ---
 
@@ -280,12 +329,16 @@ Aby powtórzyć powyższy proces w kontenerze, wykonano następujące kroki:
    docker run -it node bash
    ```
 
+   ![ZAJ3](screenshot/ZAJ3_5.png)
+
 2. Wewnątrz kontenera sklonowano repozytorium:
 
    ```bash
    git clone https://github.com/lodash/lodash
    cd lodash
    ```
+
+   ![ZAJ3](screenshot/ZAJ3_6.png)
 
 3. Zainstalowano zależności oraz przeprowadzono build aplikacji:
 
@@ -294,13 +347,20 @@ Aby powtórzyć powyższy proces w kontenerze, wykonano następujące kroki:
    npm run build
    ```
 
-4. Uruchomiono testy jednostkowe:
+   ![ZAJ3](screenshot/ZAJ3_7.png)
+   ![ZAJ3](screenshot/ZAJ3_8.png)
+
+5. Uruchomiono testy jednostkowe:
 
    ```bash
    npm test
    ```
 
+   ![ZAJ3](screenshot/ZAJ3_9.png)
+
 Podobnie jak w środowisku lokalnym, testy zakończyły się sukcesem.
+
+![ZAJ3](screenshot/ZAJ3_10.png)
 
 ---
 
@@ -309,13 +369,21 @@ Podobnie jak w środowisku lokalnym, testy zakończyły się sukcesem.
 Aby zautomatyzować proces budowania i testowania aplikacji, stworzono dwa pliki `Dockerfile`.
 
 ### Plik `Dockerfile.build`
+
+![ZAJ3](screenshot/ZAJ3_11.png)
+
 Plik ten definiuje proces budowania aplikacji. Na jego podstawie utworzono obraz przy użyciu polecenia:
 
 ```bash
 sudo docker build -t my-node-app -f Dockerfile.build .
 ```
 
+![ZAJ3](screenshot/ZAJ3_12.png)
+
 ### Plik `Dockerfile.test`
+
+![ZAJ3](screenshot/ZAJ3_13.png)
+
 Drugi plik `Dockerfile` bazuje na pierwszym i odpowiada za uruchamianie testów. Obraz testowy uruchomiono poleceniem:
 
 ```bash
@@ -323,6 +391,8 @@ sudo docker run --rm my-node-app-test
 ```
 
 Testy również zakończyły się sukcesem.
+
+![ZAJ3](screenshot/ZAJ3_14.png)
 
 ---
 
@@ -334,7 +404,11 @@ Aby ułatwić zarządzanie kontenerami, przygotowano plik `docker-compose.yml`, 
 docker-compose up --build
 ```
 
+![ZAJ3](screenshot/ZAJ3_15.png)
+
 Testy ponownie zakończyły się sukcesem, co potwierdziło poprawność automatyzacji procesu.
+
+![ZAJ3](screenshot/ZAJ3_16.png)
 
 ---
 
@@ -349,7 +423,7 @@ Lodash jest biblioteką JavaScript przeznaczoną do wykorzystania w aplikacjach 
 Ćwiczenie pozwoliło na zapoznanie się z procesem konteneryzacji oprogramowania oraz automatyzacją procesu budowania i testowania kodu wewnątrz kontenerów. Dzięki zastosowaniu `Dockerfile` i `Docker Compose` udało się w pełni zautomatyzować uruchamianie i testowanie kodu Lodash, co znacząco ułatwia procesy CI/CD.
 
 ---
-Ćwiczenie 4: Dodatkowa terminologia w konteneryzacji, instancja Jenkins
+## Ćwiczenie 4: Dodatkowa terminologia w konteneryzacji, instancja Jenkins
 
 Zachowywanie stanu w Dockerze
 
@@ -360,6 +434,9 @@ Na początek tworzymy dwa wolumeny:
 docker volume create input
 docker volume create output
 ```
+
+
+![ZAJ4](screenshot/ZAJ4_1.png)
 
 Sprawdzenie, czy wolumeny zostały utworzone:
 
@@ -376,6 +453,8 @@ docker run -it --name node-container \
   node bash
 ```
 
+![ZAJ4](screenshot/ZAJ4_2.png)
+
 `-v input:/app/input` – montujemy wolumen wejściowy w `/app/input`.
 `-v output:/app/output` – montujemy wolumen wyjściowy w `/app/output`.
 `node` – używamy oficjalnego obrazu Node.js, ponieważ zawiera wszystkie niezbędne zależności do budowania projektu.
@@ -387,23 +466,14 @@ git clone https://github.com/lodash/lodash ~/input_repo
 docker cp ~/input_repo node-container:/app/input
 ```
 
+![ZAJ4](screenshot/ZAJ4_3.png)
+
 Sprawdzenie zawartości woluminu:
 
 ```bash
 docker exec -it node-container ls /app/input
 ```
-
-Opcja 2: Klonowanie repozytorium w kontenerze pomocniczym
-
-```bash
-docker run --rm -v input:/app alpine/git clone https://github.com/lodash/lodash /app
-```
-
-Sprawdzenie zawartości:
-
-```bash
-docker run --rm -v input:/app busybox ls /app
-```
+![ZAJ4](screenshot/ZAJ4_4.png)
 
 Krok 4: Uruchomienie builda w kontenerze node
 
@@ -415,11 +485,15 @@ docker exec -it node-container bash -c "
   cp -r dist /app/output"
 ```
 
+![ZAJ4](screenshot/ZAJ4_5.png)
+
 Sprawdzamy zawartość output:
 
 ```bash
 docker run --rm -v output:/app busybox ls /app
 ```
+
+![ZAJ4](screenshot/ZAJ4_6.png)
 
 Krok 5: Automatyzacja procesu w Dockerfile z RUN --mount
 Dockerfile:
@@ -431,12 +505,16 @@ RUN --mount=type=bind,target=/app git clone https://github.com/lodash/lodash /ap
 RUN cd /app && npm install && npm run build
 ```
 
+![ZAJ4](screenshot/ZAJ4_7.png)
+
 Budowanie obrazu:
 
 ```bash
 docker build -t node-builder .
 docker run -v output:/app/output node-builder
 ```
+
+![ZAJ4](screenshot/ZAJ4_8.png)
 
 ---
 
@@ -450,17 +528,22 @@ docker run -d --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
 
 Serwer iperf3 nasłuchuje na porcie 5201, umożliwiając testowanie przepustowości sieci.
 
+
 Krok 2: Znalezienie IP kontenera
 
 ```bash
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-server
 ```
 
+![ZAJ4](screenshot/ZAJ4_9.png)
+
 Krok 3: Uruchomienie klienta i test połączenia
 
 ```bash
-docker run --rm ubuntu bash -c "apt update && apt install -y iperf3 && iperf3 -c <TWOJE_IP>"
+docker run --rm ubuntu bash -c "apt update && apt install -y iperf3 && iperf3 -c 172.17.0.3"
 ```
+![ZAJ4](screenshot/ZAJ4_10.png)
+
 
 Krok 4: Tworzenie Dockerfile do iperf3
 
@@ -469,11 +552,14 @@ FROM ubuntu:22.04
 RUN apt update && apt install -y iperf3
 ```
 
+![ZAJ4](screenshot/ZAJ4_11.png)
+
 Krok 5: Tworzenie sieci Docker
 
 ```bash
 docker network create --driver bridge iperf-net
 ```
+
 
 Krok 6: Serwer i klient w jednej sieci
 
@@ -483,11 +569,16 @@ docker run -d --name iperf-server --network iperf-net iperf-ready iperf3 -s
 docker run --rm --network iperf-net iperf-ready iperf3 -c iperf-server
 ```
 
+![ZAJ4](screenshot/ZAJ4_12.png)
+![ZAJ4](screenshot/ZAJ4_13.png)
+
 Krok 7: Połączenie z hosta
 
 ```bash
 iperf3 -c $(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-server)
 ```
+
+![ZAJ4](screenshot/ZAJ4_14.png)
 
 Krok 8: Logi do woluminu
 
@@ -496,12 +587,18 @@ docker run --rm --network iperf-net -v $(pwd)/output:/output iperf-ready bash -c
 cat output/results.txt
 ```
 
+![ZAJ4](screenshot/ZAJ4_15.png)
+
 Krok 9: Połączenie z innej maszyny
+
+
 
 ```bash
 docker run -d --name iperf-server --network iperf-net -p 5201:5201 iperf-ready iperf3 -s
 iperf3 -c <IP_HOSTA>
 ```
+
+![ZAJ4](screenshot/ZAJ4_19.png)
 
 ---
 
@@ -512,6 +609,8 @@ Krok 1: Tworzenie sieci dla Jenkinsa
 ```bash
 docker network create jenkins-net
 ```
+
+![ZAJ4](screenshot/ZAJ4_16.png)
 
 Krok 2: Uruchomienie jenkins-dind (Docker in Docker)
 
@@ -531,9 +630,13 @@ docker run -d --name jenkins \
   jenkins/jenkins:lts
 ```
 
+![ZAJ4](screenshot/ZAJ4_17.png)
+
 Krok 4: Uruchomienie Jenkinsa
+
 
 Otworzenie ekranu logowania 
 
+![ZAJ4](screenshot/ZAJ4_18.png)
 
 
