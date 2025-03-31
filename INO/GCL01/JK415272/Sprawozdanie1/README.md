@@ -292,6 +292,7 @@ Pierwszym krokiem było sklonowanie wybranego repozytorium z GitHub. W tym przyp
 ```bash
 git clone https://github.com/lodash/lodash
 ```
+Wybrano repozytorium Lodash, ponieważ jest to popularna biblioteka JavaScript, szeroko stosowana w projektach wymagających operacji na tablicach, obiektach i funkcjach. Posiada dobrze zdefiniowany proces budowy i testowania z użyciem npm, co pozwala na łatwe zintegrowanie jej w pipeline CI/CD.
 
 ![ZAJ3](screenshot/ZAJ3_1.png)
 
@@ -397,6 +398,8 @@ Testy również zakończyły się sukcesem.
 ---
 
 ## Automatyzacja procesu za pomocą Docker Compose
+
+![ZAJ3](screenshot/ZAJ3_21.png)
 
 Aby ułatwić zarządzanie kontenerami, przygotowano plik `docker-compose.yml`, który pozwala na uruchomienie wszystkich procesów jednym poleceniem:
 
@@ -518,6 +521,8 @@ docker run -v output:/app/output node-builder
 
 ---
 
+W sprawozdaniu przedstawiono dwa podejścia do realizacji zadania: ręczne wykonywanie operacji za pomocą docker run, docker exec oraz automatyzację procesu przy użyciu Dockerfile i RUN --mount. Podejście manualne daje większą kontrolę nad poszczególnymi krokami, umożliwiając łatwe debugowanie, jednak jest mniej wygodne w kontekście automatyzacji. Z kolei wykorzystanie Dockerfile pozwala na powtarzalne i przewidywalne budowanie obrazu, co jest szczególnie przydatne w systemach CI/CD. Dzięki RUN --mount można dynamicznie podłączać woluminy podczas budowy obrazu, eliminując konieczność wcześniejszego kopiowania plików. To podejście jest bardziej efektywne i pozwala uniknąć zbędnych operacji, dlatego jest zalecane w przypadku automatycznego wdrażania, podczas gdy podejście manualne może być wygodniejsze do testowania zmian lokalnie.
+
 Eksponowanie portu i testowanie sieci
 
 Krok 1: Uruchomienie serwera iperf3 w kontenerze
@@ -583,13 +588,14 @@ iperf3 -c $(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}
 Krok 8: Logi do woluminu
 
 ```bash
-docker run --rm --network iperf-net -v $(pwd)/output:/output iperf-ready bash -c "iperf3 -c iperf-server > /output/results.txt"
-cat output/results.txt
+docker run --rm --network iperf-net -v /var/lib/docker/volumes/myvolume/_data:/output iperf-ready bash -c "iperf3 -c iperf-server > /output/ipref.log"
+cat /var/lib/docker/volumes/myvolume/_data/ipref.log
+
 ```
 
 ![ZAJ4](screenshot/ZAJ4_15.png)
 
-Krok 9: Połączenie z innej maszyny
+Krok 9: Połączenie z poza hosta
 
 
 
