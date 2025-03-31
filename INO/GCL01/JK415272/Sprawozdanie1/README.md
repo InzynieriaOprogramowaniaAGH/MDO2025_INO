@@ -399,7 +399,7 @@ Testy również zakończyły się sukcesem.
 
 ## Automatyzacja procesu za pomocą Docker Compose
 
-![ZAJ3](screenshot/ZAJ3_21.png)
+![ZAJ3](screenshot/ZAJ4_21.png)
 
 Aby ułatwić zarządzanie kontenerami, przygotowano plik `docker-compose.yml`, który pozwala na uruchomienie wszystkich procesów jednym poleceniem:
 
@@ -644,5 +644,9 @@ Krok 4: Uruchomienie Jenkinsa
 Otworzenie ekranu logowania 
 
 ![ZAJ4](screenshot/ZAJ4_18.png)
+
+Wykazanie działających kontenerów
+
+![ZAJ4](screenshot/ZAJ4_20.png)
 
 
