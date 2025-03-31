@@ -483,3 +483,348 @@ sudo docker volume create wyjsciowy
 ```
 
 ![Utworzenie woluminu wyjsciowego](zrzuty_ekranu_lab4/utworzenie_woluminu_wyjsciowego.png)
+
+Wyświetlenie utworzonych woluminów.
+![Woluminy](zrzuty_ekranu_lab4/pokazanie_utworzonych_woluminow.png)
+
+### 1.2 Utworzenie konteneru bazowego `kontenerlab4` oraz podłączenie do niego woluminów
+Wykorzystałam obraz node w wersji slim, ponieważ ma zależności potrzebne do budowy projektu i nie ma zainstalowanego gita.
+
+```bash
+sudo docker run -it -v wejsciowy:/input -v wyjsciowy:/output --name kontenerlab4 node:slim /bin/bash
+```
+![Utworzenie kontenerlab4](zrzuty_ekranu_lab4/utworzenie_kontenerlab4_podpiecie_woluminow.png)
+
+Dodatkowo sprawdziłam wersję `node`, `npm` i `git`, aby upewnić się czy napewno posiada potrzebne zależności i nie ma gita.
+
+```bash
+node -v
+npm -v
+git -v
+```
+![Sprawdzenie wersji](zrzuty_ekranu_lab4/wersja_node_npm_git.png)
+
+### 1.3 Sklonowanie repozytorium na wolumin wejściowy
+Aby sklonować repozytorium na wolumin wejściowy, najpierw sprawdziłam jego lokalizację na hoście za pomocą polecenia:
+
+```bash
+sudo docker volume inspect wejsciowy
+```
+![Ścieżka do woluminu wejściowego](zrzuty_ekranu_lab4/sciezka_do_woluminu_wejsciowego.png)
+
+Następnie aby uzyskać dostęp i przejść do katalogu woluminu, musiałam przełączyć się na użytkownika root przy pomocy
+```bash
+sudo su
+cd /var/lib/docker/volumes/wejsciowy/_data
+```
+ponieważ `cd` nie działa w połączeniu z `sudo` i polecenie `sudo cd /ścieżka` nie zmieni katalogu w aktualnej sesji. 
+![Przejście do katalogu](zrzuty_ekranu_lab4/uprawnienia_admin_przejscie_do_katalogu_woluminu_wejsciowego.png)
+
+Po przejściu do odpowiedniego folderu i użyłam:
+```bash
+git clone
+```
+aby sklonować repozytorium bezpośrednio do woluminu.
+
+![Sklonowanie repo](zrzuty_ekranu_lab4/sklonowanie_repo_wolumin_wejsciowy.png)
+
+### 1.4 Uruchomienie buildu w kontenerze
+W projekcie nie ma osobnego kroku "build", ale konieczna jest instalacja zależności.
+Dlatego po przejściu do katalogu z repozytorium instaluję wymagane biblioteki.
+
+```bash
+cd input
+cd node-js-dummy-test
+npm install
+```
+![Instalacja zależności](zrzuty_ekranu_lab4/instalacja_zaleznosci_jako_build.png)
+
+### 1.5 Zapisanie plików na woluminie wyjściowym
+Dzięki skopiowaniu zawartości woluminu wejściowego na wyjściowy, wynik będzie dostępny poza kontenerem.
+
+```bash
+cp -r /input/ /output
+```
+![Zapisanie na wolumin wyjsciowy](zrzuty_ekranu_lab4/zapisanie_na_wolumin_wyjsciowy.png)
+
+Weryfikacja zawartości woluminów z poziomu hosta.
+Dla woluminu wejściowego:
+```bash
+ls -l /var/lib/docker/volumes/wejsciowy/_data
+```
+![Zawartość woluminu wejsciowego](zrzuty_ekranu_lab4/wejsciowy_weryfikacja_zawartosci.png)
+
+Dla woluminu wyjściowego:
+```bash
+ls -l /var/lib/docker/volumes/wyjsciowy/_data
+```
+![zawartość woluminu wyjściowego](zrzuty_ekranu_lab4/wyjsciowy_weryfikacja_zawartosci.png)
+
+### 1.6 Klonowanie na wolumin wejściowy wewnątrz kontenera
+Aby sklonować repozytorium na wolumin wejściowy z poziomu kontenera, potrzebny jest zainstalowany `git` wewnątrz kontenera.
+Obraz node:slim nie zaweira domyślnie `git`, dlatego musiałabym go wcześniej zainstalować za pomocą:
+```bash
+apt update && apt install git
+```
+Kroki wykonania byłyby niemal identyczne jak wcześniej, z taką różnicą, że zamaist wykonywać polecenie `git clone` z poziomu hosta (w osobnym terminalu, po przejściu do katalogu `/var/lib/docker/volumes/wejsciowy/_data`), wykonywałabym je bezpośrednio wewnątrz kontenera `kontenerlab4`, przechodząc do katalogu `/input`.
+
+### 1.7 Dyskusja dotycząca wykonania ww. kroków za pomocą `docker build` i pliku `Dockerfile`
+Klonowanie repozytorium i instalacja zależności mogłyby zostać zautomatyzowane z użyciem pliku `Dockerfile`, polecenia `dockerfile build` oraz funkcji `RUN --mount`, która dostępna jest w Docker BuildKit.
+Funkcja `RUN --mount` umożliwia tymczasowe montowanie woluminów w czasie budowania obrazu, co pozwala na klonowanie repozytorium, instalację zależności oraz zapisywanie ich do wskazanego katalogu. Zastosowanie jej jest niezbędne, ponieważ w standardowym procesie budowania obrazu Docker nie zapewnia dostępu do woluminów kontenera. 
+
+
+## **2. Eksponowanie portu**
+
+### 2.1 Uruchomienie serwera iperf wewnątrz kontenera
+Na początku pobrałam obraz iperf (iperf3):
+
+```bash
+sudo docker pull networkstatic/iperf3
+```
+![Obraz iperf](zrzuty_ekranu_lab4/eksponowanie_portow/pobranie_obrazu_iperf.png)
+
+Następnie uruchomiłam serwer iperf wewnątrz kontenera:
+```bash
+sudo docker run --name iperf-serwer -p 5201:5201 networkstatic/iperf3 -s
+```
+![Uruchomienie serweru](zrzuty_ekranu_lab4/eksponowanie_portow/uruchomienie_kontenera_serwer.png)
+
+### 2.2 Połącznie się poprzez drugi kontener
+Aby połączyć się z serwerem za pomocą drugiego kontenera, najpierw sprawdziłam adres kontenera z serwerem:
+```bash
+sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-serwer
+```
+![Sprawdzenie adresu](zrzuty_ekranu_lab4/eksponowanie_portow/sprawdzenie_adresu_konteneru_serwer.png)
+
+Następnie w osobnym terminalu uruchomiłam drugi kontener iperf i nawiązałam połączenie:
+```bash
+sudo docker run --name iperf-client networkstatic/iperf3 -c 172.17.0.2
+```
+![Uruchomienie drugiego kontenera](zrzuty_ekranu_lab4/eksponowanie_portow/uruchomienie_drugiego_kontenera.png)
+
+Wynik połączenie w kontenerze z serwerem:
+![Wynik polaczenia](zrzuty_ekranu_lab4/eksponowanie_portow/wynik_polaczenia_w_kontenerze_serwer.png)
+
+Wynik połączenia w drugim kontenerze:
+![Wynik polaczenia](zrzuty_ekranu_lab4/eksponowanie_portow/wynik_polaczenia_drugi_kontener_client.png)
+
+### 2.3 Wykorzystanie własnej dedykowanej sieci mostkowej zamiast domyślnej
+Na początku zatrzymałam i usunęłam utworzone wcześniej kontenery:
+```bash
+sudo docker stop iperf-client
+sudo docker stop iperf-serwer
+```
+![Zatrzymanie kontenerów](zrzuty_ekranu_lab4/eksponowanie_portow/zatrzymanie_kontenerow.png)
+
+```bash
+sudo docker rm iperf-client
+sudo docker rm iperf-serwer
+```
+![Usuniecie kontenerow](zrzuty_ekranu_lab4/eksponowanie_portow/usuniecie_kontenerow.png)
+
+Następnie utworzyłam własną sieć mostkową:
+```bash
+sudo docker network create --driver bridge moja_siec_mostkowa
+```
+![Utworznie sieci mostkowej](zrzuty_ekranu_lab4/eksponowanie_portow/utworzenie_mojej_sieci_mostkowej.png)
+
+Ponownie uruchamiam kontener serwerowy i kliencki tylko w `moja_siec_mostkowa`, to umożliwi wykorzystanie nazw kontenerów zamiast adresów ip.
+Uruchomienie kontenera serwerowego:
+```bash
+sudo docker run --rm -it --name iperf-serwer --network moja_siec_mostkowa networkstatic/iperf3 -s
+```
+![Uruchomienie serwerowego](zrzuty_ekranu_lab4/eksponowanie_portow/uruchomienie_serwera_w_mojejsiecimostkowej.png)
+
+Uruchomienie kontenera klienta w osobnym terminalu:
+```bash
+sudo docker run --rm --name iperf-client --network moja_siec_mostkowa networkstatic/iperf3 -c iperf-serwer
+```
+![Uruchomienie klienta](zrzuty_ekranu_lab4/eksponowanie_portow/uruchomienie_klienta_w_mojejsiecimostkowej.png)
+
+### 2.4 Łącznie się spoza kontenera (z hosta i spoza hosta)
+* Połączenie się z hosta:
+
+Najpierw uruchomiłam kontener serwerowy z flagą -p, aby wyeksponować port i możliwe było nawiązanie połączenia.
+
+```bash
+sudo docker run --name iperf-serwer -p 5201:5201 networkstatic/iperf3 -s
+```
+![Uruchomienie serwerowego poza](zrzuty_ekranu_lab4/eksponowanie_portow/utworzenie_serwerowego_poza.png)
+
+Następnie otworzyłam nowy terminal i zainstalowałam iperf3 na hoście:
+```bash
+sudo dnf install iperf3
+```
+![Instalacja iperf3](zrzuty_ekranu_lab4/eksponowanie_portow/instalacja_iperf3_fedora.png)
+
+ i nawiązałam połączenie serwera z hostem:
+
+```bash
+iperf3 -c localhost -p 5201
+```
+![Nawiązanie połaczenia](zrzuty_ekranu_lab4/eksponowanie_portow/nawiazanie_polaczenia_z_hostem.png)
+
+* Połączenie się spoza hosta:
+Do łączenia spoza hosta wykorzystałam komputer, na którym działa maszyna wirtualna.
+Zainstalowałam na komputerze w odpowiednim katalogu serwer iperf3 oraz aby upewnić się, że został zainstalowany sprawdziłam jego wersję.
+![Instalacja iperf3](zrzuty_ekranu_lab4/eksponowanie_portow/zainstalowanie_iperf3_na_komputerze.png)
+![Sprawdzenie wersji iperf3](zrzuty_ekranu_lab4/eksponowanie_portow/weryfikacja_instalacji_iperf3_na_komputerze.png)
+
+Następnie sprawdziłam adres IP maszyny za pomocą
+```bash
+ip a
+```
+![Sprawdzenie adresu IP maszyny](zrzuty_ekranu_lab4/eksponowanie_portow/sprawdzenie_adresu_ip_maszyny.png)
+
+i nawiązałam połączenie:
+
+```bash
+iperf3 -c 192.168.18.97 -p 5201
+```
+![Nawiazanie polaczenia spoza hosta komputer](zrzuty_ekranu_lab4/eksponowanie_portow/nawiazanie_polaczenia_spoza_hosta_komputer.png)
+![Nawizanie polaczenia spoza hosta serwer](zrzuty_ekranu_lab4/eksponowanie_portow/nawiazanie_polaczenia_spoza_hosta_serwer.png)
+
+### 2.5 Przedstawienie przepustowości komunikacji lub problemu z jej zmierzeniem (log z kontenera)
+Utworzyłam wolumin, w którym zapisany zostanie log działania serwera.
+```bash
+sudo docker volume create logi
+```
+![Utworzenie woluminu](zrzuty_ekranu_lab4/eksponowanie_portow/utworzenie_woluminu_na_logi.png)
+
+Następnie uruchomiłam kontener serwera i podłączyłam do niego utworzony wolumin `logi`, a także wskazałam miejsce, w którym serwer ma zapisywać logi ze swojego działania.
+
+```bash
+sudo docker run --rm -it --name iperf-server -p 5201:5201 -v logi:/logs networkstatic/iperf3 -s --logfile /logs/iperf-serwer.log
+```
+![Uruchomienie kontenera serwerowego](zrzuty_ekranu_lab4/eksponowanie_portow/uruchomienie_kontenera_serwerowego_z_woluminem_logi.png)
+
+Następnie nawiązałam połączenie z serwerem spoza hosta, aby zaprezentować przepustowość komunikacji:
+```bash
+iperf3 -c 192.168.18.97 -p 5201
+```
+Wynik na komputerze:
+![Nawiazanie polaczenia spoza hosta komputer](zrzuty_ekranu_lab4/eksponowanie_portow/nawiazanie_polaczenia_spoza_hosta_komputer_v2.png)
+
+Logi zapisane są w pliku, który możemy otworzyć za pomocą:
+```bash
+sudo nano /var/lib/docker/volumes/logi/_data/iperf-serwer.log
+```
+![Otworzenie pliku z logami](zrzuty_ekranu_lab4/eksponowanie_portow/otworzenie_pliku_z_logami.png)
+![Plik z logami zawartość](zrzuty_ekranu_lab4/eksponowanie_portow/plik_z_logami.png)
+
+## **3. Instancja Jenkins**
+
+### 3.1 Instalacja skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND
+Na początku pobrałam obraz dind:
+```bash
+sudo docker pull docker:dind
+```
+![Pobranie obrazu dind](zrzuty_ekranu_lab4/jenkins/pobranie_obrazu_dind.png)
+
+Następnie utworzyłam sieć dla Jenkinsa:
+```bash
+sudo docker network create jenkins
+```
+![Utworzenie sieci](zrzuty_ekranu_lab4/jenkins/utworzenie_sieci_jenkins.png)
+
+Uruchomiłam instancję Jenkinsa z pomocnikiem DIND:
+```bash
+sudo docker run \
+--name jenkins-docker \
+--rm \
+--detach \
+--privileged \
+--network jenkins \
+--network-alias docker \
+--env DOCKER_TLS_CERTDIR=/certs \
+--volume jenkins-docker-certs:/certs/client \
+--volume jenkins-data:/var/jenkins_home \
+--publish 2376:2376 \
+docker:dind \
+--storage-driver overlay2
+```
+![Uruchomienie instancji Jenkins](zrzuty_ekranu_lab4/jenkins/uruchomienie_jenkins_z_dind.png)
+
+Kontener uruchomił się prawidłowo:
+```bash
+sudo docker ps
+```
+![Potwierdzenie uruchomienie kontenera](zrzuty_ekranu_lab4/jenkins/potwierdzenie_uruchomienia_jenkinsa.png)
+
+Następnie przygotowałam Dockerfile `Dockerfile.jenkins`.
+Utworzyłam katalog lab4_pliki, a w nim plik `Dockerfile.jenkins`.
+
+![Terminal utworzenie katalogu i pliku](zrzuty_ekranu_lab4/jenkins/tworzenie_katalogu_i_pliku.png)
+
+```bash
+FROM jenkins/jenkins:2.492.2-jdk17
+USER root
+RUN apt-get update && apt-get install -y lsb-release ca-certificates curl && \
+    install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
+    chmod a+r /etc/apt/keyrings/docker.asc && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+    https://download.docker.com/linux/debian $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" \
+    | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && apt-get install -y docker-ce-cli && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+USER jenkins
+RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
+```
+Następnie zbudowałam obraz:
+```bash
+sudo docker build -t myjenkins-blueocean:2.492.2-1 --file Dockerfile.jenkins .
+```
+![Zbudowanie obrazu Jenkins](zrzuty_ekranu_lab4/jenkins/zbudowanie_obrazu_jenkins.png)
+
+Uruchomiłam kontener na podstawie obrazu:
+```bash
+sudo docker run \
+  --name jenkins-blueocean \
+  --restart=on-failure \
+  --detach \
+  --network jenkins \
+  --env DOCKER_HOST=tcp://docker:2376 \
+  --env DOCKER_CERT_PATH=/certs/client \
+  --env DOCKER_TLS_VERIFY=1 \
+  --publish 8080:8080 \
+  --publish 50000:50000 \
+  --volume jenkins-data:/var/jenkins_home \
+  --volume jenkins-docker-certs:/certs/client:ro \
+  myjenkins-blueocean:2.492.2-1
+```
+![Uruchomienie kontenera na podstawie obrazu](zrzuty_ekranu_lab4/jenkins/uruchomienie_kontenera_na_podstawie_obrazu.png)
+
+Sprawdziłam stan kontenerów:
+```bash
+sudo docker ps -a
+```
+![Sprawdzenie stanu kontenerów](zrzuty_ekranu_lab4/jenkins/sprawdzenie_stanu_uruchomionych_kontenerow.png)
+
+### 3.2 Uruchomienie Jenkinsa w przeglądarce
+Aby uruchomić Jenkinsa w przeglądarce weszłam na adres maszyny:
+```bash
+http://192.168.18.97:8080
+```
+![Uruchomienie Jenkinsa w przegladarce](zrzuty_ekranu_lab4/jenkins/uruchomienie_jenkinsa_w_przegladarce.png)
+
+Następnie przeszłam do konsoli jenkins-docker:
+```bash
+sudo docker exec -it jenkins-docker /bin/sh
+```
+![Uruchomienie konsoli dind](zrzuty_ekranu_lab4/jenkins/uruchomienie_konsoli_dind.png)
+
+Po uruchomieniu konsoli, za pomocą:
+```bash 
+cat /var/jenkins_home/secrets/initialAdminPassword
+```
+wyświetliłam hasło.
+![Wyświetlenie hasła](zrzuty_ekranu_lab4/jenkins/wyswietlenie_hasla_jenkins.png)
+
+Po wpisaniu hasła administratora w przeglądarce przeszłam do strony Jenkinsa, pominęłam dostosowywanie Jenkinsa i kontynuowałam jako admin.
+
+Ekran logowania:
+![Ekran logowania](zrzuty_ekranu_lab4/jenkins/ekran_logowania.png)
+
+Ekran po zalogowaniu:
+![Ekran konta](zrzuty_ekranu_lab4/jenkins/konto_jenkins.png)
