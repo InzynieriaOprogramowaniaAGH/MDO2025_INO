@@ -1,0 +1,12 @@
+#!/bin/bash
+
+commit_msg=$(cat "$1")
+required_prefix="DS417321"
+
+if ! [[ "$commit_msg" =~ ^$required_prefix ]]; then
+    echo "ERROR: Commit message must start with '$required_prefix'"
+    echo "Your commit message: $commit_msg"
+    exit 1
+fi
+
+exit 0

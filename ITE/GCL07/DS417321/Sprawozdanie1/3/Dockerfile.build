@@ -1,0 +1,9 @@
+FROM node:22
+
+RUN git clone https://github.com/CALLmeDOMIN/traffic_lights
+
+WORKDIR /traffic_lights
+
+RUN npm install -g pnpm && pnpm install
+
+RUN ["pnpm", "build"]
