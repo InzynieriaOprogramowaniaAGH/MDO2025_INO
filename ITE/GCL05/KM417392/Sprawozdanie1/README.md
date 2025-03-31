@@ -263,7 +263,7 @@ Do testowania wykorzystano repozytorium: https://github.com/lttr/simple-npm-weba
 - npm
 - brak gita
 
-![obraz](KM/lab4/1_Dockerfilepng)
+![obraz](KM/lab4/1_Dockerfile.png)
 
 i zbudowano nowy obraz:
 ```
@@ -387,7 +387,6 @@ Logi zostały zapisane do pliku "wynik_iperf.txt"
 docker logs iperf-server
 iperf3 -c 172.19.0.2 > wynik_iperf.txt
 ```
-![obraz](KM/lab4/zapis_logow.png)
 ![obraz](KM/lab4/logi.png)
 
 ### Instancja Jenkins
