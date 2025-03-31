@@ -1,0 +1,3 @@
+FROM node:slim
+
+WORKDIR /create-react-app
