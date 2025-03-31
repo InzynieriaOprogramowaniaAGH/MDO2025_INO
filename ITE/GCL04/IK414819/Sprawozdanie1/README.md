@@ -1,37 +1,53 @@
-Sprawozdanie 1
+# Sprawozdanie 1
 
-Lab 1
+## Lab 1
 
-Zainstalowałem klienta git i obsługę kluczy SSH
-Sklonowałem repozytorium przedmiotu za pomocą HTTPS i personal access token. Wygenerowanie i zapisanie nowego tokenu:
-    git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
- Następnie stworzyłem 2 klucze SSH, inne niż RSA i jeden z nich zabezpieczyłem hasłem. 
-    ssh-keygen
+Zainstalowałem klienta Git i obsługę kluczy SSH.  
+Sklonowałem repozytorium przedmiotu za pomocą HTTPS i personal access token:
 
-Weryfikacja dostępu do repozytorium jako uczestnik i klonowanie przy użyciu klucza SSH
-W koljenym kroku wygenerowano klucz SSH o typie ed25519 zabezpieczony hasłem. Otrzymałem 2 klucze; prywatny i publiczny które zostały zapisane w folderze ssh.
-8  ssh-keygen -t ed25519 -C "igorkita2003@gmail.com". 
- Potem skopiowano ten klucz i w githubie wybrano opcje Settings>SSH and GPG keys> New SSH key. Wklejono skopiowany klucz i zapisano.
+```bash
+git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+```
+
+Następnie stworzyłem 2 klucze SSH, inne niż RSA i jeden z nich zabezpieczyłem hasłem:
+
+```bash
+ssh-keygen
+```
+
+Weryfikacja dostępu do repozytorium jako uczestnik i klonowanie przy użyciu klucza SSH:  
+Wygenerowano klucz SSH typu **ed25519** zabezpieczony hasłem. Otrzymałem 2 klucze (prywatny i publiczny), zapisane w folderze `.ssh`:
+
+```bash
+ssh-keygen -t ed25519 -C "igorkita2003@gmail.com"
+```
+
+Następnie dodałem klucz do GitHuba:  
+`Settings > SSH and GPG keys > New SSH key`
 
 ![Zrzut ekranu przedstawiający klucz SSH](kluczSSH.jpg)
 
+Repozytorium zostało ponownie sklonowane z użyciem SSH:
 
-
-Skonfigurowałem klucz SSH, aby mieć dostęp do GitHuba, sklonowałem repozytorium z wykorzystaniem protokołu SSH za pomocą polecenia:
+```bash
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
-Dzięki temu po poprawnym uwierzytelnieniu repozytorium zostało pobrane lokalnie.
-Następnie skonfigurowałem 2FA:
+```
+
+Skonfigurowałem również 2FA:
 
 ![alt text](skonfigurowanie2FA.jpg)
 
-Git Hook - commit -msg:
-Ostatnim krokiem było stworzenie katalogu ze swoimi inicjałami i numerem indeksu oraz napisanie git hooka weryfikującego, że każdy "commit message" zaczyna się od "inicjały & nr indexu" (w moim wypadku to "IK414819"). Treść tego skryptu znajduje się poniżej.
-    
-   ```python 
-   #!/usr/bin/python
+---
+
+### Git Hook - commit message
+
+Stworzyłem katalog ze swoimi inicjałami i numerem indeksu oraz napisałem hooka sprawdzającego poprawność commit message:
+
+```python
+#!/usr/bin/python
 import sys
 
-with open(sys.argv[1],'r') as file:
+with open(sys.argv[1], 'r') as file:
     commit_msg = file.read().strip()
 
 is_correct_msg = commit_msg.startswith("IK414819")
@@ -43,169 +59,196 @@ if not is_correct_msg:
 sys.exit(0)
 ```
 
+---
 
-Lab 2 
+## Lab 2
 
-Zaaktualizowałem system Fefora, następnie zarejestrowałem się w usłudze Docker Hub, zainstalowałem w swoim środowisku Dockera i pobrałem następujące obrazy: hello-world, busybox, fedora oraz mysql, używając do tego polecenia: sudo docker run "odpowiednia nazwa". 
-W kolejnym kroku uruchomiono kontener z obrazem busybox w trybie interaktywnym i wyświetlono informację o wersji
+Zaktualizowałem system Fedora.  
+Zarejestrowałem się w Docker Hub i zainstalowałem Dockera.  
+Pobrałem obrazy: `hello-world`, `busybox`, `fedora`, `mysql`:
+
+```bash
+sudo docker run <nazwa_obrazu>
+```
+
+Uruchomiłem kontener z obrazem **busybox** w trybie interaktywnym i wyświetliłem wersję:
 
 ![alt text](numer_wersji_busybox.jpg)
 
-Następnie uruchomiłem system w kontenerze (czyli w moim przypadku kontener z obrazu Fedora).
+Uruchomiłem system Fedora w kontenerze:
+
 ![alt text](wejscie_fedora2.jpg)
 
- Doinstalowałem w systemie ps, żeby wykonać ps aux. 
+Zainstalowałem `ps` i wykonałem `ps aux`:
+
 ![alt text](ps_aux.jpg)
 
- Następnie wyświetliłem proces P1D1:
+Wyświetliłem proces P1D1:
 
 ![alt text](P1D1.jpg)
 
-Zaktualizowałem pakiety i przeszedłem do dalszej części poleceń
+---
 
-Budowanie własnego obrazu Dockerfile
-Kontener zbudowałem przy użyciu pliku Dockerfile, który aktualizuje system i instaluje Git za pomocą menedżera pakietów dnf. W pliku Dockerfile użyłem poleceń (dnf -y upgrade && dnf -y install git, git clone "nasze repozytorium"). Plik ten umieściłem również w folderze Sprawozdanie1 zgodnie z wymaganiami. Następnie budowałem obraz na podstawie instrukcji zawartych w pliku Dockerfile poleceniem docker build -t my_image
+### Budowanie obrazu z Dockerfile
 
-![alt text](image-2.png)
+Stworzyłem plik `Dockerfile`, który:
 
+- aktualizuje system
+- instaluje Git
+- klonuje repozytorium
+
+Użyłem polecenia:
+
+```bash
+docker build -t my_image .
+```
+
+![alt text](image-2.png)  
 ![alt text](docker_build2.jpg)
-Uruchomiłem kontener w trybie interaktywnym poleceniem :
-sudo docker run -- name my_image -it my_image /bin/bash
-Na powyższym zdjęciu widzimy, że nasze repozytorium zostało pobrane, zatem krok został zrealizowany poprawnie.
 
-Następnie uruchomiłem kontenery i je wyczyściłem.
+Uruchomiłem kontener:
 
-![alt text](uruchomione.jpg)
+```bash
+sudo docker run --name my_image -it my_image /bin/bash
+```
 
-![alt text](czyszczenie_kontenerow.jpg)
+Repozytorium zostało poprawnie pobrane.  
+Następnie uruchomiłem i wyczyściłem kontenery:
+
+![alt text](uruchomione.jpg)  
+![alt text](czyszczenie_kontenerow.jpg)  
 ![alt text](usuniete-wszystkie_kontenery.jpg)
 
-W kolejnym kroku wyczyściłem obrazy
+Oczyściłem obrazy:
 
 ![alt text](usuwanie_obrazow_docker.jpg)
 
+---
 
-Lab 3
+## Lab 3
 
-Na te zajęcia wybrałem oprogramowanie irssi napisane w języku C. Na początku skolnowałem repozytorium do folderu który nazwałem irssi. Zainstalowałem potrzebne Dependencies , przeprowadziłem build i uruchomiłem testu jednostkowe dołączone do repozytorium.
+Wybrałem oprogramowanie **irssi** napisane w C.
 
-![alt text](klonowanie_repozytorium_irssi.jpg)
+1. Skonowałem repozytorium do folderu `irssi`
+2. Zainstalowałem zależności
+3. Wykonałem build
+4. Uruchomiłem testy jednostkowe
 
-![alt text](meson_compile_cbuild.jpg)
-
+![alt text](klonowanie_repozytorium_irssi.jpg)  
+![alt text](meson_compile_cbuild.jpg)  
 ![alt text](meson_test_ok.jpg)
 
-Po wykonaniu tych kroków przeszedłem do przeprowadzenia buildu w kontenerze. Wybrałem kontener Ubuntu dla aplikacji w C i wykonałem kroki bulid oraz test w kontenerze.
+---
 
-Uruchomiłem kontener poleceniem docker run -it ubuntu /bin/bash. 
-![alt text](uruchamiam_kontener_lab_3.jpg)
+### Build w kontenerze
 
-Następnie zainstalowałem wymgane zaelżności do zbudowania aplikacji w C, takie jak kompilator C git, make i inne biblioteki. Skorzystałem w tym przypadku z poleceń:
+Uruchomiłem kontener Ubuntu:
 
+```bash
+docker run -it ubuntu /bin/bash
+```
+
+Zainstalowałem zależności:
+
+```bash
 apt update
 apt install -y gcc make git pkg-config libtool libssl-dev libncurses-dev perl perl-modules
 apt install -y cmake
 apt install -y libglib2.0-dev
+```
 
-
-
-Następnie sklonowałem repozytorium w kontenerze:
+Sklonowałem repozytorium w kontenerze:
 
 ![alt text](klonuje_irssi_kontenerze.jpg)
 
-Po sklonowaniu rozpocząłem konfigurowanie środowiska i uruchomiłem build. Zainstalowałem meson oraz ninja w kontenerze:
+Zainstalowałem `meson` oraz `ninja`:
 
 ![alt text](install_MesoniNinja_kontener.jpg)
 
-Następnie uruchomiłem testy jednostkowe:
+Uruchomiłem testy jednostkowe:
 
 ![alt text](testy_jednostkowe_irssi.jpg)
 
-Wszystkie testy wyszły poprawnie.
+---
 
-Po wykonaniu poprzednich operacji przeszedłem do stworzenia 2 plików typu Dockerfile, których zadaniem było automatyzowanie wykonanych przeze mnie powyżej z uwzględnieniem wymagań:
-Kontener pierwszy ma przeprowadzać wszystkie kroki aż do builda
-Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić builda!)
+### Dockerfile
 
-W tym celu stworzyłem te pliki Dockerfile, które umieściłem w osobnym folderze irssi-docker. Na ich podstawie najpierw zbudowałem obraz z pierwszego Dockerfila, następnie zdudowałem obraz testowy a na końcu uruchomiłem kontener testowy:
+Stworzyłem dwa pliki:
 
-![alt text](budowa_dockerfile_biuld_lab3.jpg)
+1. **Dockerfile.build** – wykonuje build
+2. **Dockerfile.test** – wykonuje testy (bez builda)
 
-![alt text](budowa_dockerfile_test_lab3.jpg)
+Zbudowałem obrazy:
 
+![alt text](budowa_dockerfile_biuld_lab3.jpg)  
+![alt text](budowa_dockerfile_test_lab3.jpg)  
 ![alt text](wynik_test_ostateczny_lab_3.jpg)
 
-Kontener pracuje poprawnie wszystkie testy dały wynik pozytywny. Dockerfile.biuld buduje irssi, natomiast Dockerfile.test uruchamia testy lecz nie robi builda.
+---
 
-Obraz Dockera jest statycznym plikiem, który zawiera wszystkie zależności i instrukcje niezbędne do uruchomienia aplikacji. Po utworzeniu obrazu na podstawie Dockerfile, staje się on gotowy do użycia w kontenerze. Kontener to uruchomiona instancja obrazu, która działa na systemie operacyjnym hosta i może wykonywać zdefiniowane w obrazie zadania, takie jak uruchamianie aplikacji, kompilowanie kodu czy przeprowadzanie testów. W przypadku mojej aplikacji irssi, kontener utworzony z obrazu irssi-test uruchamia testy jednostkowe aplikacji, a po ich zakończeniu kontener jest usuwany.
+## Lab 4
 
+### Woluminy
 
+Stworzyłem woluminy:
 
-Lab 4
+```bash
+docker volume create irssi_input
+docker volume create irssi_output
+```
 
-Na tym laboratorium zajmowałem się woluminami. Początkowo podłączyłem je do kontenera bazowego. (docker volume create irssi_input)
-(docker volume create irssi_output)
- Sklonowałem repozytorium na wolumin wejściowy.
+Sklonowałem repozytorium na wolumin wejściowy:
 
-![alt text](build2_lab4.jpg)
-
+![alt text](build2_lab4.jpg)  
 ![alt text](wgrywanie-repo_do_wolumenu-wejsciowego_lab4.jpg)
-
-Zrobiłem to za pomocą kopiowania do katalogu z woluminem na hoście (var/lib/docker)
 
 Uruchomiłem build w kontenerze:
 
-![alt text](poczatek_buildowania_wkontenerze_lab4.jpg)
-
+![alt text](poczatek_buildowania_wkontenerze_lab4.jpg)  
 ![alt text](koniec_buildowania_Wkontenerze_lab4.jpg)
 
-Po wykonaniu tego builda zapisłem powstałe pliki a w zasadzie przeniosłem ja na wolumin wyjściowy
+Przeniosłem build na wolumin wyjściowy:
 
 ![alt text](przeniesienie_buildu_do_wolumenu_output_lab4.jpg)
 
-Operacja klonowania na wolumin wejściowy wewnątrz kontenera będzie wyglądała analogicznie. Dodatkowo
-w celu automatyzacji całego procesu można posłużyć się Dockerfile oraz mechanizmem RUN --mount, który jest dostępny przy użyciu polecenia docker build z flagą --mount=type=.... Pozwala to na tymczasowe podłączanie zasobów (np. katalogów z hosta lub woluminów) tylko na czas wykonywania danej instrukcji RUN, bez trwałego kopiowania ich do obrazu.
+Można to zautomatyzować w `Dockerfile` przy użyciu:
 
-W kolejnej części ćwiczenia zająłem się iperf. Uruchomiłem wewnątrz kontenera serwer iperf.
+```bash
+RUN --mount=type=volume ...
+```
+
+---
+
+### iperf
+
+Uruchomiłem serwer **iperf** w kontenerze:
 
 ![alt text](uruchomienie_serwera_iperf_lab4.jpg)
 
-Odpaliłem klienta i testowałem przepustowość:
+Uruchomiłem klienta i przetestowałem przepustowość (~30 Gbit/s):
 
 ![alt text](odpalenie_klienta_testowanie_przepustowosci_lab4.jpg)
 
-Przepustowość wynosi około 30 Gbit/s
-
-Po zaznajomieniu sie z dokumentacją network create połączyłem się z własną dedykowaną siecią mostkową:
+Podłączyłem kontener do własnej sieci mostkowej (~25 Gbit/s):
 
 ![alt text](testowanie_iperf_wlasna_siecia.jpg)
 
-Tutaj przepustowość wynosiła około 25 Gbit/s
-
-Połączyłem się również na Fedorze w celu porównania. Zainstalowałem tam iperf:
+Na Fedorze przepustowość była niższa:
 
 ![alt text](instal_iperf_na_fedorze_lab4.jpg)
 
-Na Fedorze przepustowość spadła.
+Z Windowsa połączyłem się przez SSH:
 
-Połączyłem się także z poza hosta z Windowsa wykorzystując tunel SSH
-
-![alt text](tunel_ssh_windows_fedora_lab4.jpg)
-
-I sprawdziłem połączenie z innego hosta (windows)
-
+![alt text](tunel_ssh_windows_fedora_lab4.jpg)  
 ![alt text](laczenie_sie_zinnego_hosta_windows_lab4.jpg)
 
+---
 
-Instancja Jenkins
+### Jenkins
 
-W tej części zapoznałem się z instancją Jenkins. Przeprowadziłem instalacjęskonteneryzowanej instancji Jenkonsa z pomocnikiem DIND. Zainicjalizowałem instancję
+Zainstalowałem instancję Jenkins z DIND.  
+Zainicjalizowałem interfejs i przeszłem przez konfigurację:
 
-![alt text](haslo_do_inicjalizacji_jenkins_lab4.jpg)
-
-![alt text](Jenkins_UI_inicjalizacja_lab4.jpg)
-
-
+![alt text](haslo_do_inicjalizacji_jenkins_lab4.jpg)  
+![alt text](Jenkins_UI_inicjalizacja_lab4.jpg)  
 ![alt text](dashboard_zainstalowanego_jenkinsa_lab4.jpg)
-
-Z powyższych zrzutów ekranu jasno wynika, że ćwiczenie zostało zrealizowane poprawnie.
