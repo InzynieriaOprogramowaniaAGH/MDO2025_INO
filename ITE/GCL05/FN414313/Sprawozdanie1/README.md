@@ -185,18 +185,16 @@ CMD ["/bin/bash"]
 
 ![ss1](screeny/class003/Screenshot_1.png)
 ![ss2](screeny/class003/Screenshot_2.png)
-![ss5](screeny/class003/Screenshot_5.png)
+![ss6](screeny/class003/Screenshot_6.png)
 ![ss3](screeny/class003/Screenshot_3.png)
 ![ss4](screeny/class003/Screenshot_4.png)
 
 ##  Uruchomienie testów
-
-![ss6](screeny/class003/Screenshot_6.png)
+![ss5](screeny/class003/Screenshot_5.png)
 
 ## ponowienie ww. procesów z pomocą kontenerowego TTY
 
 ![ss7](screeny/class003/Screenshot_7.png)
-![ss8](screeny/class003/Screenshot_8.png)
 ![ss9](screeny/class003/Screenshot_9.png)
 ![ss10](screeny/class003/Screenshot_10.png)
 ![ss11](screeny/class003/Screenshot_11.png)
@@ -337,10 +335,11 @@ CMD ["/bin/bash"]
 ## klonowanie repozytorium na wolumin zewnętrzny z pomocą kontenera `alpine/git`
 
 ![ss4](screeny/class004/Screenshot_4.png)
-![ss5](screeny/class004/Screenshot_5.png)
 
 ## Uruchomienie builda w kontenerze (skopiowanie repozytorium do kontenera) (skopiowanie builda do woluminu wyjściowego)
 
+
+![ss5](screeny/class004/Screenshot_5.png)
 ![ss6](screeny/class004/Screenshot_6.png)
 ![ss7](screeny/class004/Screenshot_7.png)
 ![ss8](screeny/class004/Screenshot_8.png)
@@ -375,8 +374,7 @@ CMD ["/bin/bash"]
 
 ![ss25](screeny/class004/Screenshot_25.png)
 ![ss26](screeny/class004/Screenshot_26.png)
-![ss27](screeny/class004/Screenshot_27.png)
-![ss28](screeny/class004/Screenshot_28.png)
+
 
 # Instalacja Jenkins
 
@@ -417,7 +415,8 @@ volumes:
   dind_storage:
 
 ```
-
+![ss27](screeny/class004/Screenshot_27.png)
+![ss28](screeny/class004/Screenshot_28.png)
 ![ss29](screeny/class004/Screenshot_29.png)
 ![ss30](screeny/class004/Screenshot_30.png)
 ![ss31](screeny/class004/Screenshot_31.png)
