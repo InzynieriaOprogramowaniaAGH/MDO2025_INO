@@ -310,6 +310,7 @@ Dockerfile zawiera cały proces buildowania:
 - ustawia katalog roboczy na ```/mruby```
 - uruchamia ```rake```, który kompiluje kod 
 - [Dockerfile.build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/lab3-wazne-pliki/Dockerfile.build) 
+
 ![obraz](KM/lab3/12.png)
 
 2. Zbudowano nowy obraz ```my_mruby_build```
