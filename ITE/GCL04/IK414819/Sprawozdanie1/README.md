@@ -84,3 +84,55 @@ W kolejnym kroku wyczyściłem obrazy
 
 
 Lab 3
+
+Na te zajęcia wybrałem oprogramowanie irssi napisane w języku C. Na początku skolnowałem repozytorium do folderu który nazwałem irssi. Zainstalowałem potrzebne Dependencies , przeprowadziłem build i uruchomiłem testu jednostkowe dołączone do repozytorium.
+
+![alt text](klonowanie_repozytorium_irssi.jpg)
+
+![alt text](meson_compile_cbuild.jpg)
+
+![alt text](meson_test_ok.jpg)
+
+Po wykonaniu tych kroków przeszedłem do przeprowadzenia buildu w kontenerze. Wybrałem kontener Ubuntu dla aplikacji w C i wykonałem kroki bulid oraz test w kontenerze.
+
+Uruchomiłem kontener poleceniem docker run -it ubuntu /bin/bash. 
+![alt text](uruchamiam_kontener_lab_3.jpg)
+
+Następnie zainstalowałem wymgane zaelżności do zbudowania aplikacji w C, takie jak kompilator C git, make i inne biblioteki. Skorzystałem w tym przypadku z poleceń:
+
+apt update
+apt install -y gcc make git pkg-config libtool libssl-dev libncurses-dev perl perl-modules
+apt install -y cmake
+apt install -y libglib2.0-dev
+
+
+
+Następnie sklonowałem repozytorium w kontenerze:
+
+![alt text](klonuje_irssi_kontenerze.jpg)
+
+Po sklonowaniu rozpocząłem konfigurowanie środowiska i uruchomiłem build. Zainstalowałem meson oraz ninja w kontenerze:
+
+![alt text](install_MesoniNinja_kontener.jpg)
+
+Następnie uruchomiłem testy jednostkowe:
+
+![alt text](testy_jednostkowe_irssi.jpg)
+
+Wszystkie testy wyszły poprawnie.
+
+Po wykonaniu poprzednich operacji przeszedłem do stworzenia 2 plików typu Dockerfile, których zadaniem było automatyzowanie wykonanych przeze mnie powyżej z uwzględnieniem wymagań:
+Kontener pierwszy ma przeprowadzać wszystkie kroki aż do builda
+Kontener drugi ma bazować na pierwszym i wykonywać testy (lecz nie robić builda!)
+
+W tym celu stworzyłem te pliki Dockerfile, które umieściłem w osobnym folderze irssi-docker. Na ich podstawie najpierw zbudowałem obraz z pierwszego Dockerfila, następnie zdudowałem obraz testowy a na końcu uruchomiłem kontener testowy:
+
+![alt text](budowa_dockerfile_biuld_lab3.jpg)
+
+![alt text](budowa_dockerfile_test_lab3.jpg)
+
+![alt text](wynik_test_ostateczny_lab_3.jpg)
+
+Kontener pracuje poprawnie wszystkie testy dały wynik pozytywny. Dockerfile.biuld buduje irssi, natomiast Dockerfile.test uruchamia testy lecz nie robi builda.
+
+Obraz Dockera jest statycznym plikiem, który zawiera wszystkie zależności i instrukcje niezbędne do uruchomienia aplikacji. Po utworzeniu obrazu na podstawie Dockerfile, staje się on gotowy do użycia w kontenerze. Kontener to uruchomiona instancja obrazu, która działa na systemie operacyjnym hosta i może wykonywać zdefiniowane w obrazie zadania, takie jak uruchamianie aplikacji, kompilowanie kodu czy przeprowadzanie testów. W przypadku mojej aplikacji irssi, kontener utworzony z obrazu irssi-test uruchamia testy jednostkowe aplikacji, a po ich zakończeniu kontener jest usuwany.
