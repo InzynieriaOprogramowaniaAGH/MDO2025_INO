@@ -1,0 +1,18 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y git gcc make
+
+WORKDIR /build
+
+# Budowania i kopiowanie
+RUN --mount=type=bind,source=./input/cJSON,target=/mnt/input \
+    cp -r /mnt/input/* . && \
+    make && \
+    mkdir -p /output && \
+    cp lib*.so* *.h /output/
+
+# Punkt montowania dla wyników
+VOLUME /output
+
+# Pokazuje zawartość wyników
+CMD ls -l /output && echo "Kopiuj pliki ręcznie: docker cp <container>:/output ./"
