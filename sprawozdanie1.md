@@ -82,4 +82,35 @@ gdzie:
 
 ## LAB 3
 
+Wybrałam zaproponowane repo:
+```https://github.com/devenes/node-js-dummy-test```
+
+Repozytorium dysponuje otwartą licencją:
+```https://github.com/devenes/node-js-dummy-test?tab=Apache-2.0-1-ov-file```
+
+## Przeprowadzenie buildu w kontenerze
+
+1. Wykonaj kroki `build` i `test` wewnątrz wybranego kontenera bazowego (```node``` dla Node.js)
+	* uruchom kontener
+	* podłącz do niego TTY celem rozpoczęcia interaktywnej pracy
+	* zaopatrz kontener w wymagania wstępne (jeżeli proces budowania nie robi tego sam)
+
+Uruchamiam kontener poleceniem:
+
+```docker run -it nazwa_obrazu_kontenera node bash```
+
+gdzie:
+
+*-i* - umożliwia interaktywne wejście do kontenera (opzwala na wprowadzanie poleceń)
+
+*-t* - umożliwia interaktywną pracę z konsolą
+
+*--name* - opcją *name* nadaje nazwę nowoutworzonemu kontenerowi
+
+Po zainstalowaniu zależności przechodzimy do uruchomienia testów jednostkowych za pomocą polecenia:
+
+```npm test```
+
+![testy](https://github.com/user-attachments/assets/c959a213-c246-439c-9c89-c22799d06481)
+
 docker testy auuu
