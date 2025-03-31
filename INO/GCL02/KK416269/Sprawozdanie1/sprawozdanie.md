@@ -483,3 +483,253 @@ Mogłam też wpisać komendę `docker ps` która poakzałaby listę działający
 
 ![image](https://github.com/user-attachments/assets/efb6281c-2e99-4fa0-9281-e62a3df70e84)
 
+_________________________________________________________________________________________________________________________________________________________________
+## **LAB 4** - Dodatkowa terminologia w konteneryzacji, instancja Jenkins
+
+### Wykonanie
+#### Cel
+Celem tych ćwiczeń jest praktyczne zapoznanie się z wykorzystaniem woluminów i sieci w Dockerze do zarządzania danymi i komunikacją między kontenerami. 
+Dodatkowo ćwiczenia poruszają zakres instalacji i konfiguracji Jenkinsa.
+
+#### Zachowywanie stanu
+
+- [x] **Przygotuj woluminy wejściowy i wyjściowy, o dowolnych nazwach, i podłącz je do kontenera bazowego (np. tego, z którego rozpoczynano poprzednio pracę). Kontener bazowy to ten, który umie budować nasz projekt (ma zainstalowane wszystkie dependencje, git nią nie jest)**
+
+Dzięki woluminom możemy trwale przechowywać dane w Dockerze potrzbnych do kontenerów. Są one niezależne od ich cyklu życia, więc dane w woluminach nie znikną gdy usuniemy kontener. Dzięki temu można przechowywać pliki i dzielić je między kontenerami.
+
+Najpierw stworzyłam woluminy o nazwach input_volume i output_volume poleceniami 
+
+```bash
+docker volume create input_volume
+docker volume create output_volume
+```
+
+Następnie uruchmiłam kontener oparty na ubuntu `build_container` interaktywnie i podłączyłam woluminy. W /input kontenera będzie zapisywany kod źródłowy, a w /output będą zapisywane skompilowane pliki.
+
+```bash
+docker run -it --name build_container \
+  -v input_volume:/input \
+  -v output_volume:/output \
+  ubuntu:latest /bin/bash
+```
+
+![image](https://github.com/user-attachments/assets/b1e709f6-c736-4eee-995a-f71da801bd9a)
+
+- [x] **Uruchom kontener, zainstaluj/upewnij się że istnieją niezbędne wymagania wstępne (jeżeli istnieją), ale bez gita**
+
+Wewnątrz kontenera uruchomiłam komendę `apt update && apt install -y build-essential curl` która zaktualizowała listę pakietów i pobrała niezbędne zależności bez gita. 
+
+![image](https://github.com/user-attachments/assets/c27b5261-e186-457d-9b24-9e7f31c6ac69)
+
+- [x] **Sklonuj repozytorium na wolumin wejściowy**
+
+  - **Opisz dokładnie, jak zostało to zrobione - wybrałam Wolumin/kontener pomocniczy**
+  
+Komendą: `docker run --rm -v input_volume:/input alpine/git clone https://github.com/redis/redis /input` skopiowalam repo na wolumin wejściowy korzystając z wolumina pomocniczego. Komenda stworzyła nowy lekki kontener oparty na alpine, który zawiera tylko git. Następnie montuje wolumin `input_volume` do katalogu /input w kontenerze, i klonuje repozytorium z GitHub (redis) do tego katalogu.
+
+![image](https://github.com/user-attachments/assets/c28cf159-149e-45d6-a516-f112323c2434)
+
+- [x] **Uruchom build w kontenerze - rozważ skopiowanie repozytorium do wewnątrz kontenera**
+
+Uruchomiłam build w konetnerze za pomocą: `make`. Nie kopiowałam repozytroium do kontenera, gdyż jest już ono dostępne na woluminie.
+
+![image](https://github.com/user-attachments/assets/75b6ef75-a51e-483e-9661-02449f505836)
+
+- [x] **Zapisz powstałe/zbudowane pliki na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera.**
+
+Aby zapisać zbudowane pliki na woluminie wyjściowym, użyłam komendy: `make install DESTDIR=/output`. Pliki wynikowe zostały zapisane w katalogu /output wewnątrz kontenera, który jest powiązany z woluminem output_volume.
+
+![image](https://github.com/user-attachments/assets/27bedb59-6cba-4c51-bba2-80a1a134566e)
+
+
+- [x] **Pamiętaj udokumentować wyniki.**
+
+Sprawdziłam dostępność plików w kontenerze w odpowiednim katalogu `/output/bin` za pomocą `ls`.
+Następnie po wyjściu z kontenera kolejną komendą `docker run --rm -v output_volume:/output ubuntu ls /output/bin` uruchomiłam nowy, tymczasowy kontener i sprawdziłam zawartość woluminu wyjściowego - pliki znajdują się na woluminie i sa dostępne nawet po usunięciu pierwotnego kontenera.
+
+![image](https://github.com/user-attachments/assets/9a775440-62ec-4ca5-8c9f-60b09e602b7c)
+
+- [x] **Ponów operację, ale klonowanie na wolumin wejściowy przeprowadź wewnątrz kontenera (użyj gita w kontenerze)**
+
+Wewnątrz kontenera w folderze `/input/repo` odpaliłam komendę `git clone https://github.com/redis/redis.git` która sklonowała repo za pomocą gita.
+
+![image](https://github.com/user-attachments/assets/842e3d7e-66b5-4aa5-a10f-8112f260e66d)
+
+- [x] **Przedyskutuj możliwość wykonania ww. kroków za pomocą docker build i pliku Dockerfile. (podpowiedź: RUN --mount)**
+
+Dzięki `RUN --mount=type=cache` w poniższym dockerfile mogłam stworzyć Dockerowi miejsce (`tmp/git-cache`) w którym pobierze repozytorium, i jeśli przy kolejnym docker buildzie pliki będą tam dostępne, nie będzie pobierał ich ponownie. Dodatkowa komenda `--depth=1` sprawia że git pobiera tylko najnowszy commit, więc będzie to dużo szybsze. 
+
+```bash
+FROM ubuntu:latest
+
+RUN apt update && apt install -y build-essential git
+
+RUN --mount=type=cache,target=/tmp/git-cache \
+    git clone --depth=1 https://github.com/redis/redis.git /redis
+
+WORKDIR /redis
+
+RUN --mount=type=bind,src=/output,dst=/output \
+    make && make install DESTDIR=/output
+
+VOLUME ["/output"]
+```
+a następnie komendy do bildu i uruchomienia: `docker build -t redis_builder .` oraz `docker run --rm redis_builder`.
+
+![image](https://github.com/user-attachments/assets/5af55f71-3fce-4679-891c-9e6f6505b531)
+
+
+#### Eksponowanie portu
+iperf/iperf3 to narzędzia służące do testowania wydajności sieci komputerowych. iperf3 jest nowszym narzędziem i działa tak:
+  - Uruchamia jeden komputer w trybie serwera, który nasłuchuje połączeń przychodzących
+  - Uruchamia drugi komputer w trybie klienta, który łączy się z serwerem i wykonuje testy wydajnościowe
+
+- [x] **Uruchom wewnątrz kontenera serwer iperf (iperf3)**
+
+Uruchamiam kontener z serwerem iperf3, który będzie nasłuchiwał połączenia przychodzące na porcie 5201:
+Dla lepszego zrozumienia: 
+  - `-p 5201:5201` – mapowanie portu hosta na port kontenera
+  - `networkstatic/iperf3 -s` – użycie obrazu iperf3 w trybie serwera
+
+`docker run --name iperf3-server -d --rm -p 5201:5201 networkstatic/iperf3 -s`
+
+![image](https://github.com/user-attachments/assets/c07c5202-3f04-48e5-9e1c-e05ad61015bf)
+
+- [x] **Połącz się z nim z drugiego kontenera, zbadaj ruch**
+Teraz uruchamiam klienta iperf3 w innym kontenerze w trybie klienta (-c) i łączymy się z serwerem na IP 172.17.0.1 (domyślny adres mostka docker0)
+`docker run --rm networkstatic/iperf3 -c 172.17.0.1`
+
+![image](https://github.com/user-attachments/assets/a496e3bb-c910-4866-a8fd-cb0cc12bf889)
+
+![image](https://github.com/user-attachments/assets/5328e998-9f99-4521-8d7f-c33b66113d3c)
+
+- [x] **Zapoznaj się z dokumentacją network create : https://docs.docker.com/engine/reference/commandline/network_create/**
+
+Network create jest używane w Dockerze do tworzenia nowych sieci w kontenerach, umożliwia uruchamianie kontenerów w różnych sieciach, ułatwia zarządzanie połączeniami między nimi i konfigurację ich interakcji.
+
+- [x] **Ponów ten krok, ale wykorzystaj własną dedykowaną sieć mostkową (zamiast domyślnej). Spróbuj użyć rozwiązywania nazw**
+
+Tworzę sieć mostkową o nazwie bridge_network `docker network create --driver bridge bridge_network`
+
+Komenda niżej tworzy nowy konetener, przypisuje go do utworzonej sieci mostkowej (--network bridge_network) i instaluje iperf3.
+`docker run -d --name iperf-server --network bridge_network -p 5201:5201 ubuntu sh -c "apt update && apt install -y iperf3 && iperf3 -s"`
+
+![image](https://github.com/user-attachments/assets/d9719547-2b6e-4a91-8c45-b2b6ce7f5e6d)
+
+- [x] **Połącz się spoza kontenera (z hosta i spoza hosta)**
+
+Udało mi połączyć się z hosta: `docker run -it networkstatic/iperf3 -c 172.21.241.33`
+
+![image](https://github.com/user-attachments/assets/aeb0229b-cfb4-42c0-bbe6-5463586bee73)
+
+- [x] **Przedstaw przepustowość komunikacji lub problem z jej zmierzeniem (wyciągnij log z kontenera, woluminy mogą pomóc)**
+
+Aby sprawdzić przepustowość połączenia, można pobrać logi z kontenera serwera:
+`docker logs iperf-server`
+
+Wyniki:
+```bash
+[root@KaoinaFedora kaoina]# docker logs iperf-server
+-----------------------------------------------------------
+Server listening on 5201 (test #1)
+-----------------------------------------------------------
+Accepted connection from 172.19.0.1, port 54840
+[  5] local 172.19.0.2 port 5201 connected to 172.19.0.1 port 54852
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec  3.25 GBytes  27.9 Gbits/sec                  
+[  5]   1.00-2.00   sec  3.16 GBytes  27.1 Gbits/sec                  
+[  5]   2.00-3.00   sec  2.86 GBytes  24.5 Gbits/sec                  
+[  5]   3.00-4.00   sec  3.09 GBytes  26.6 Gbits/sec                  
+[  5]   4.00-5.00   sec  3.11 GBytes  26.7 Gbits/sec                  
+[  5]   5.00-6.00   sec  3.13 GBytes  26.9 Gbits/sec                  
+[  5]   6.00-7.00   sec  3.35 GBytes  28.8 Gbits/sec                  
+[  5]   7.00-8.00   sec  3.25 GBytes  27.9 Gbits/sec                  
+[  5]   8.00-9.00   sec  3.12 GBytes  26.8 Gbits/sec                  
+[  5]   9.00-10.00  sec  3.07 GBytes  26.4 Gbits/sec                  
+[  5]  10.00-10.00  sec  3.12 MBytes  14.1 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.00  sec  31.4 GBytes  27.0 Gbits/sec                  receiver
+-----------------------------------------------------------
+Server listening on 5201 (test #2)
+-----------------------------------------------------------
+Accepted connection from 172.21.241.33, port 57230
+[  5] local 172.19.0.2 port 5201 connected to 172.21.241.33 port 57246
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec  2.38 GBytes  20.4 Gbits/sec                  
+[  5]   1.00-2.00   sec  2.17 GBytes  18.6 Gbits/sec                  
+[  5]   2.00-3.00   sec  2.08 GBytes  17.9 Gbits/sec                  
+[  5]   3.00-4.00   sec  2.16 GBytes  18.6 Gbits/sec                  
+[  5]   4.00-5.00   sec  2.14 GBytes  18.3 Gbits/sec                  
+[  5]   5.00-6.00   sec  2.15 GBytes  18.4 Gbits/sec                  
+[  5]   6.00-7.00   sec  2.34 GBytes  20.1 Gbits/sec                  
+[  5]   7.00-8.00   sec  2.34 GBytes  20.1 Gbits/sec                  
+[  5]   8.00-9.00   sec  2.12 GBytes  18.2 Gbits/sec                  
+[  5]   9.00-10.00  sec  2.18 GBytes  18.7 Gbits/sec                  
+[  5]  10.00-10.00  sec   640 KBytes  3.65 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.00  sec  22.1 GBytes  18.9 Gbits/sec                  receiver
+-----------------------------------------------------------
+Server listening on 5201 (test #3)
+-----------------------------------------------------------
+Accepted connection from 172.21.241.33, port 38114
+[  5] local 172.19.0.2 port 5201 connected to 172.21.241.33 port 38128
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec  1.19 GBytes  10.2 Gbits/sec                  
+[  5]   1.00-2.00   sec  1.11 GBytes  9.55 Gbits/sec                  
+[  5]   2.00-3.00   sec  1.36 GBytes  11.7 Gbits/sec                  
+[  5]   3.00-4.00   sec  1.47 GBytes  12.6 Gbits/sec                  
+[  5]   4.00-5.00   sec  1.61 GBytes  13.9 Gbits/sec                  
+[  5]   5.00-6.00   sec  1.65 GBytes  14.2 Gbits/sec                  
+[  5]   6.00-7.00   sec  1.68 GBytes  14.4 Gbits/sec                  
+[  5]   7.00-8.00   sec  1.66 GBytes  14.2 Gbits/sec                  
+[  5]   8.00-9.00   sec  1.46 GBytes  12.6 Gbits/sec                  
+[  5]   9.00-10.00  sec  1.63 GBytes  14.0 Gbits/sec                  
+[  5]  10.00-10.00  sec  2.00 MBytes  11.9 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.00  sec  14.8 GBytes  12.7 Gbits/sec                  receiver
+
+```
+
+#### Instancja Jenkins
+
+- [x] **Przeprowadź instalację skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND**
+
+Tworzę nową sieć Docker o nazwie jenkins `docker network create jenkins`
+
+Teraz uruchamiamy kontener Jenkins LTS z danymi w woluminie (`-v jenkins_home:/var/jenkins_home`):
+
+`docker run -d --name jenkins --network jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts`
+
+W efekcie Jenkins startuje i jest dostępny na porcie 8080 (port 50000 umożliwia komunikację Jenkinsa z agentami którzy wykonują buildy, testy) 
+
+![image](https://github.com/user-attachments/assets/dedc32ce-9fd6-4684-9672-dd733efce18b)
+
+Uruchamiamy teraz kontener Docker-in-Docker i podłączamy go do sieci Jenkins. Musimy mu dać podwyższone uprawnienia aby włączyć docker wenątrz kontenera. Zapiszemy też dane Dockera w woluminie.
+
+```bash
+docker run -d --name dind --network jenkins \
+  --privileged \
+  -v /var/lib/docker \
+  docker:dind
+```
+
+![image](https://github.com/user-attachments/assets/7895c0f2-51ae-4534-a3cd-2737656a0e30)
+
+Teraz czas na uzyskanie hasła administratora Jenkins:
+
+`docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword`
+
+![image](https://github.com/user-attachments/assets/b012625c-cd44-43ff-a946-741ff1007e71)
+
+- [x] **Zainicjalizuj instację, wykaż działające kontenery, pokaż ekran logowania**
+
+Sprawdzamy działanie kontenera: `docker ps` 
+
+![image](https://github.com/user-attachments/assets/b57b2124-27da-4e7f-a1b7-d23b2ad7f02c)
+
+Obraz logowania:
+
+![image](https://github.com/user-attachments/assets/35223cd0-2f4f-47f9-899f-8d5493ea87a6)
