@@ -13,7 +13,7 @@
   
 ### Uruchomienie 
 * Konfiguracja wstępna i pierwsze uruchomienie
-  * Utwórz projekt, który wyświetla uname
+  * Utwórz projekt, który wyświetla `uname`
   * Utwórz projekt, który zwraca błąd, gdy... godzina jest nieparzysta
   * Pobierz obraz kontenera `ubuntu` (stosując `docker pull`)
 * Utwórz "prawdziwy" projekt, który:
