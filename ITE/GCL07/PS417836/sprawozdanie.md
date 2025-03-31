@@ -1,2 +1,0 @@
-Sprawozdanie
-Autor: Paweł Socała
