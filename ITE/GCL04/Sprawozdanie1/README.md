@@ -1,12 +1,12 @@
-**SPRAWOZDANIE 1**
+###SPRAWOZDANIE 1
 
-**Monika Krakowska, Informatyka Techniczna**
-
-
+##Monika Krakowska, Informatyka Techniczna
 
 
 
-**Instalacja klienta Git i obsługi kluczy SSH:**
+
+
+#Instalacja klienta Git i obsługi kluczy SSH:
 
 
 W celu zainstalowania Git i SSH wpisałam poniższe komendy:
