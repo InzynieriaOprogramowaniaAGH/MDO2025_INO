@@ -1,0 +1,4 @@
+FROM fedora:latest
+
+RUN dnf --assumeyes install meson gcc glib2-devel openssl-devel utf8proc* ncurses* perl-Ext*
+

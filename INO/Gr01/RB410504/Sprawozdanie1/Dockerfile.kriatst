@@ -1,0 +1,5 @@
+FROM kriabld
+
+RUN yarn lint
+RUN yarn tsc
+RUN yarn test
