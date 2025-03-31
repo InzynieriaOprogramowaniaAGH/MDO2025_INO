@@ -1,12 +1,12 @@
-### SPRAWOZDANIE 1
+# SPRAWOZDANIE 1
 
 ## Monika Krakowska, Informatyka Techniczna
 
 
 
 
-
-# Instalacja klienta Git i obsługi kluczy SSH:
+## LAB 1
+### Instalacja klienta Git i obsługi kluczy SSH:
 
 
 W celu zainstalowania Git i SSH wpisałam poniższe komendy:
@@ -51,7 +51,7 @@ Udało się uzyskać połączenie.
 
 
 
-**Personal Access Token:**
+### Personal Access Token:
 
 
 Na platformie GitHub sekcji ustawień Personal Access Token dodałam nowy token
@@ -75,7 +75,7 @@ włączyłam opcję „enable two-factor authentication” i wybrałam opcje apl
 
 
 
-**Klonowanie repozytorium za pomocą HTTPS:**
+### Klonowanie repozytorium za pomocą HTTPS:
 
 
 -git clone
@@ -102,7 +102,7 @@ Ponownie weryfikuję połączenie:
 
 
 
-**Praca na gałęziach:**
+### Praca na gałęziach:
 
 
 Przełączyłam się na gałąź main a nastęnie gałąż swojej grupy:
@@ -129,7 +129,7 @@ Utworzyłam odpowiednie foldery do sprawozdań, zrzutów ekranu i plików oraz d
 
 
 
-**Git Hooks**
+### Git Hooks
 
 
 Napisałam Git hooka korzystając z przykładowych githook’ów w folderze .git/hooks i w tym samym folderze zapisałam go jako commit-msg.
@@ -161,7 +161,7 @@ Niepoprawny message commit:
 
 
 
-**Wysyłanie zmian na GitHuba**
+### Wysyłanie zmian na GitHuba
 
 
 Wszystkie potrzebne zmiany wprowadziłam na GitHub
