@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/a61fed2f-0571-4b13-975e-6fa4ab3c0400)# Sprawozdanie z przedmiotu Metodyki DevOps z laboratorium nr 1-4
+![image](https://github.com/user-attachments/assets/970840bb-e9da-4054-9d6e-b55a72ead83d)![image](https://github.com/user-attachments/assets/a61fed2f-0571-4b13-975e-6fa4ab3c0400)# Sprawozdanie z przedmiotu Metodyki DevOps z laboratorium nr 1-4
 Sprawozdanie wykonała: Amelia Nalborczyk, nr grupy: 2.
 Data wykonania: 30.03. 2025 r.
 ## Laboratorium 1  
@@ -140,13 +140,31 @@ Procesy Dockera na hoście. Widać uruchomiony kontener oraz inne procesy docker
 6. Tym razem uruchomiłam kontener z zainstalowanym Gitem. Powstałe pliki przeniosłam na wolumin wyjściowy:
  ![Zrzut ekranu 38](screenshots/38.PNG)
 7. W tym przypadku również istnieje możliwość by zautomatyzować cały proces, poprzez plik Dockerfile. Aby zoptymalizować budowanie obrazu można wykorzystać 'RUN --mount'. Opcja ta oszczędza zbędnego pobierania tych samych danych przy każdym buildzie.
+8. Następną częścią ćwiczenia było eksponowanie portu. Zaczęłam od stworzenia sieci bridged, a następnie uruchomiłam serwer iperf wewnątrz kontenera jak poniżej:
+ ![Zrzut ekranu 39](screenshots/39.PNG)
+9. Z uruchomionym kontenerem połączyłam się za pomocą drugiego kontenera w tej samej sieci. Wynik tego połaczeia:
+ ![Zrzut ekranu 40](screenshots/40.PNG)
+10. W kolejnym kroku łącze się z kontenerem z hosta. Potrzepne do tego było stworzenie sieci mostkowej. Wynik drugiego sposobu połączenia:
+ ![Zrzut ekranu 41](screenshots/41.PNG)
+Największą przepustowość uzyskano w dedykowanej sieci mostkowej, gdzie kontenery mogły komunikować się bezpośrednio. Połączenia między hostem a kontenerem miały nieco niższą przepustowość.
+11. Następnie przechodzę do kolejnej sekcji ćwiczenia związanej z instancją Jenkins. Aby uruchomić instancję Jenkinsa w kontenerze Docker, wykorzystano obraz jenkins. Dodatkowo, aby Jenkins mógł uruchamiać kontenery wewnątrz siebie, skonfigurowano pomocnika Docker-in-Docker (dind): 'docker run -d --name jenkins --network jenkins \
+  -p 8080:8080 -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  jenkins/jenkins:lts'
+12.  Zweryfikowałam czy kontener działa poprawnie oraz porałam hasło do pierwszego logowania Jenkins 
+ ![Zrzut ekranu 42](screenshots/42.PNG)
+13. W przeglądarce loguje się do Jenkins wpisując ' http://127.0.0.1:8080', następnie używam zapisanego hasła, ekran logowanie wyglądał następujaco:
+ ![Zrzut ekranu 43](screenshots/43.PNG)
+14. I po poprawnym zalogowaniu:
+ ![Zrzut ekranu 44](screenshots/44.PNG)
+ 
 
 
-## Użycie narzędzi GenAI
+## Użycie narzędzi AI
 W ramach laboratorium korzystałam do wykonania ćwiczenia narzędzia ChatGPT - model 4o. 
 Narzędzie zostało wykorzystane do 
 - Korekty tekstu pisanego sprawozdania.
 - Wytłumaczenia zagadnień poznawanych w ramach zajęć.
-- Pomoc przy tworzeniu plików, znalezienia repozytorium do sklonowania
-Odpowiedzi były weryfikowane osobiście przeze mnie  oraz doświadczalnie.
+- Pomoc przy tworzeniu plików, znalezienia repozytorium do sklonowania.
+Odpowiedzi były weryfikowane osobiście przeze mnie.
 
