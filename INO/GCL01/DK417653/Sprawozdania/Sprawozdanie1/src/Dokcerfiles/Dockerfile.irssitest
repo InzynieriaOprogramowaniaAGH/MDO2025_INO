@@ -1,0 +1,3 @@
+FROM irssi
+WORKDIR /irssi/Build
+CMD ninja test
