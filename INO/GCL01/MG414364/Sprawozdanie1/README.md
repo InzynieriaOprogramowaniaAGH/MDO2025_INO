@@ -165,13 +165,13 @@ Na koniec zbadałem ruch\
 ![alt text](image-27.png)
 
 3. Stworzyłem sieć mostkową (o nazwie `donut`)
-![alt text](image-28.png)
+![alt text](image-28.png)\
 Połączyłem się z drugiego dockera:\
 ![alt text](image-29.png)\
 Oraz z hosta:\
 ![alt text](image-30.png)\
 
-W obu przypadkach prędkości są bardzo wysokie i nie ma z nimi problemu.
+W obu przypadkach prędkości są conajmniej satysfakcjonujące i nie ma z nimi problemu.
 
 
 ### Jenkins
