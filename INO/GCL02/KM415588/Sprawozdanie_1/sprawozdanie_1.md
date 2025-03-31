@@ -414,3 +414,105 @@ Pomimo tego faktu porzeprowadzę dalsze rozważania i dywagacje tak, jakbym przy
 - dystrybucja programu:
 
     Przyjmując, iż tworzylibyśmy deploy oparty na JavaScript/TypeScript (czyli gdyby chalk-pipe nie była biblioteką, ale aplikacja do konteneryzacji) to najelpiej utworzyć paczkę .tgz. Jak już powyżej opisałem możemy to osiągnąc jesnym poleceniem npm pack, ale nic nie zatrzymuje nas przed napisaniem dodatkowego dockerfile, po którego zbuildowaniu artefaktem będzie paczka.
+
+## Laboratorium 4 - Dodatkowa terminologia w konteneryzacji, instancja Jenkins
+
+### Wprowadzenie:
+
+Celem jest zapoznanie się z możliowściami woluminów, eksponowania portów oraz instancji Jenkins
+
+### 1️⃣ Zachowanie stanu:
+#### 1. Tworzenie woluminów:
+
+Zgodnie z instrukcją tworzę dwa woluminy wejściowy i wyjściowy:
+
+```bash
+sudo docker volume create volin && sudo docker colume create volout
+```
+
+![vol_create](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/volume_ls1.png)
+
+#### 2. Klonowanie chalk-pipe na wolumin wejściowy i uruchomienie konteneru:
+
+Możemy skopiować repozytorium na wolumin wejściowy pomijając kopiowanie repozytorium bez instalowania usługi git na kontenerze. Wykonamy to poniższym poleceniem:
+
+```bash
+sudo docker run --rm -v volin:/repo alpine/git clone https://github.com/LitoMore/chalk-pipe /repo
+```
+
+W wydruku otrzymamy standardowe komunikaty o klonowaniu repo:
+
+![volin_repo](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/volin_repo.png)
+
+Następnie uruchamiamy kontener:
+
+```bash
+sudo docker run -it --rm -v volin:/src -v volout:/build node:18-alpine sh
+```
+
+![volin_repo_conm](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/volin_volout_con.png)
+
+Jak widzimy repo zostało pozytywnie sklonowane. Dalej możemy wykonać standardowy npm install, run build i test - zwrócą one takie same wyniki jak przy postępowaniu na dwóch kontenerach. Na końcu kpoiujemy pliki do katalogu build:
+
+```bash
+npm install
+npm run build
+npm test
+cp -r distribution/ ../build
+```
+
+Folder skopiował się poprawnie, co możemy sprawdzic uruchamiając kontener z woluminem volout:
+
+```bash
+sudo docker tun -it --rm -v volout:/build alpine sh
+cd build
+ls
+```
+
+![volout](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/volout.png)
+
+#### 3. Klonowanie chalk pipe w kontenerze
+
+Usuwamy i tworzymy voluminy z poprzedniego punktu. Następnie uruchamiamy kontener (pomijam krok z klonowaniem repo na volin):
+
+
+```bash
+sudo docker run -it --rm -v volin:/repo -v volout:/build node:18-alpine sh
+```
+
+Po wejściu do /repo i wykonaniu ls widzimy pusty katalog:
+
+![con_git](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/container_git.png)
+
+Dalej przeprowadzamy więć klonowanie repo i wszystkie polecenia npm:
+
+```bash
+apk add git
+git clone https://github.com/LitoMore/chalk-pipe /repo
+cd repo
+npm install
+npm run build
+npm test
+```
+
+![con_wyn](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/con_run_build.png)
+
+Jak widzimy testy przebiegły poprawnie. Dalej możemy ponownie wykonać kopie do /buil i uruchomić kontener z volout - uzyskamy taki sam wynik jak wcześniej. Na końcu usuwamy oba woluminy
+
+```bash
+sudo docker volume rm volin volout
+```
+
+#### 4. Dywagacje
+Istnieje jeszcze jedna opcja wykonania powyższych kroków przy użyciu dockerfile i RUN --mount. Piszemy poniższy dockerfile:
+
+```dockerfile
+FROM node:18
+
+RUN --mount=type=bind,target=/src,source=./chalk-pipe,rw \
+    cd /src && npm install && npm run build && cp -r distribution /out
+```
+
+Zautomatyzuje to budowanie aplikacji a RUN ---mount połączy kontener z local hostem i prześle mu katalog src a wyniki zapisze w katalog out - utworzy się nowy w folderze z którego wywołujemy nasz dockerfile - musimy w nim też sklonowane chalk-pipe.
+
+![dock-chalk-pipe](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/cahlk-pipe.png)
