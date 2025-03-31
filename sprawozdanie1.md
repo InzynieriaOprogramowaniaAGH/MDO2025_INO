@@ -54,7 +54,7 @@ Pobranie obrazów hello-world, busybox, ubuntu, mysql
 Pobrane obrazy można wyświetlić poleceniem:
 
 ```docker images```
-![image](https://github.com/user-attachments/assets/f665004d-2c3f-470b-91e1-c7a793afbb48)
+![image](https://github.com/user-attachments/assets/d0245840-845f-48ce-af76-fe862be37959)
 
 * Efekt uruchomienia kontenera
 
@@ -71,7 +71,7 @@ gdzie:
 *--name busybox-container* - nadaje kontenerowi nazwę *"busybox-container"*
 
 *busybox* - nazwa obrazu, na podstawie którego zostanie uruchomiony kontener
-### busyyyy box box stop
+### Busybox
 ![devops_docker](https://github.com/user-attachments/assets/fdf54491-927c-46f9-9817-ba78e469f85f)
 ### busy box
 ![devops_docker2](https://github.com/user-attachments/assets/293150d5-1dd1-476f-b494-60395f02a704)
