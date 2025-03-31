@@ -340,7 +340,7 @@ docker cp node-js-dummy-test base-cont:/input
 
 ## Instalacja zależności i uruchomienie testów w kontenerze
 
-![sc](./lab4_18.pngm)
+![sc](./lab4_18.png)
 ```sh
 cd /input/node-js-dummy-test
 npm install
