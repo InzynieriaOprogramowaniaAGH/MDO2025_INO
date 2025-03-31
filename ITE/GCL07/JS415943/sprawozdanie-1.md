@@ -114,3 +114,77 @@ WORKDIR /app
 
 CMD ["/bin/bash"]
 ```
+
+Zbudowałem obraz
+![docker-build](/ITE/GCL07/JS415943/lab2/docker-my-image-build.png)
+
+A następnie uruchomiłem i sprawdziłem sklonowane rezpozytorium oraz gita
+![my-image](/ITE/GCL07/JS415943/lab2/docker-my-image.png)
+
+### 6. Sprawdzenie nie uruchomionych obrazów i wyczyszczenie ich
+![docker-clean](/ITE/GCL07/JS415943/lab2/docker-clean.png)
+
+## Zajęcia 03
+
+### 1. Wybór repozytorium
+
+Wybrałem i sklonowałem repozytorium zlib.
+
+![](/ITE/GCL07/JS415943/lab3/zlib-clone.png)
+
+Zainstalowałem wymagane pakiety, zbudowałem oraz uruchomiłem testy
+
+![](/ITE/GCL07/JS415943/lab3/install.png)
+![](/ITE/GCL07/JS415943/lab3/configure-build.png)
+![](/ITE/GCL07/JS415943/lab3/make-test.png)
+
+### 2. Przeprowadzenie buildu w kontenerze
+
+Uruchomiłem interaktywnie kontener ubuntu 
+
+![](/ITE/GCL07/JS415943/lab3/ubuntu-latest.png)
+
+Sklonowałem repozytorium
+
+![](/ITE/GCL07/JS415943/lab3/ubuntu-clone.png)
+
+Ponownie skonfigurowałem, zbudowałem i uruchomiłem testy
+```bash
+git clone https://github.com/madler/zlib.git
+cd zlib
+./configure
+make
+make test
+```
+![](/ITE/GCL07/JS415943/lab3/ubuntu-build.png)
+
+### 3. Stworzenie plików Dockerfile dla zautomatyzowania wcześniejszych kroków
+
+Plik `Dockerfile.build`
+```bash
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y git gcc make
+
+RUN git clone https://github.com/madler/zlib.git /src/zlib
+
+WORKDIR /src/zlib
+RUN ./configure && make
+```
+Plik `Dockerfile.test`
+```bash
+FROM zlib-build
+
+WORKDIR /src/zlib
+
+RUN make test
+```
+
+Zbudowałem oba obrazy
+```bash
+sudo docker build -f Dockerfile.build -t zlib-build .
+sudo docker build -f Dockerfile.test -t zlib-test .ls
+```
+Testy przeszły pomyślnie więc utworzył się obraz zlib-test
+
+![](/ITE/GCL07/JS415943/lab3/docker-test.png)
