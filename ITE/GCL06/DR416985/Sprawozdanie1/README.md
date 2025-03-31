@@ -153,5 +153,132 @@ dcoker rm -f c10e92bac8f0
 ```
 ![screen](./u2.png)
 
+# LAB 3
 
+### Oprogramowanie
+**irssi, Node-js-dummy-test**
+
+### klnowanie repo 
+```sh
+git clone https://github.com/irssi/irssi.git
+```
+
+### Instalacja potrzebnych zależności 
+
+```sh
+ dnf install -y meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils* cmake libgcrypt-config libgcrypt libotr-devel cap_enter-devel pkg-config
+```
+### Zbudowanie aplikacji i testy
+
+```sh
+meson build
+ninja test
+```
+### Zbudowanie irssi w kontenerze
+
+```sh
+dokcer run -it --rm fedora bash
+git clone https://github.com/irssi/irssi.git
+dnf -y install meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel cmake pkg-config libssl-devel perl-devel perl-ExtUtils*
+meson build
+ninja -C build
+```
+
+### Dockerfile
+
+
+
+**irssi-build.Dockerfile**
+
+```sh
+ FROM fedora
+ RUN dnf -y update && dnf -y install git meson ninja* gcc glib2-devel utf8proc* ncurses* perl-Ext*
+ RUN git clone https://github.com/irssi/irssi.git
+ WORKDIR /irssi
+ RUN meson Build
+ RUN ninja -C /irssi/Build
+```
+
+**irssi-test.Dockerfile**
+
+```sh
+ FROM irssi-builder
+ WORKDIR /irssi/Build
+ RUN ninja test
+```
+
+### Budowanie obrazu
+
+```sh
+docker build -t irssi-builder -f ./irssi-build.Dockerfile .
+```
+
+**Kontener uruchamiamy poleceniem**
+
+```sh
+docker run irssi-builder
+```
+**Testujemy kontener**
+
+```sh
+ docker build -t irssi-tester -f ./irssi-test.Dockerfile .
+```
+
+**Podgląd zbudowanych obrazów kontenera**
+
+
+### Aplikacja w Nodzie
+
+**Interaktywne uruchomienie kontenera**
+
+```sh
+sudo docker run --rm -it node /bin/bash
+```
+**Akutalizacja pakietów, instalacja zależności + testy**
+
+```sh
+apt-get update
+npm install
+npm run test
+```
+
+### Dockerfile
+
+**node-build.Dockerfile**
+
+```sh
+FROM node
+RUN git clone https://github.com/devenes/node-js-dummy-test
+WORKDIR /node-js-dummy-test
+RUN npm install
+```
+**node-test.Dockerfile**
+
+```sh
+FROM node-builder
+RUN npm test
+```
+
+**node-deploy.Dockerfile**
+```sh
+FROM node-builder
+CMD ["npm","start"]
+```
+
+**Budowanie obrazów**
+```sh
+docker build -t node-builder -f ./node-build.Dockerfile .
+docker build -t node-tester -f ./node-test.Dockerfile .
+docker build -t node-deploy -f ./node-deploy.Dockerfile .
+```
+
+**uruchomienie aplikacji**
+
+```sh
+docker run --rm node-deploy
+```
+
+**Podglą obrazów konternerów**
+
+# LAB 4
 
