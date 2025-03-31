@@ -1,2 +1,2 @@
-FROM nodebld
+FROM coscos
 RUN npm test
