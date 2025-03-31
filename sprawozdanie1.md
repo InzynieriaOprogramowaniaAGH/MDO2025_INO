@@ -6,7 +6,18 @@ Następne etapy obejmowały instalację i konfigurację środowiska Docker do pr
 
 ## LAB 1
 
-Wygenerowanie SSH bez hasła i z hasłem
+### Instalacja Gita:
+   ```bash
+   sudo dnf install git -y
+   ```
+Repozytorium projektu zostało skopiowane przy użyciu polecenia 'git clone', korzystając początkowo z protokołu HTTPS
+
+### Klonowanie repozytorium
+```bash
+git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+```
+
+### Wygenerowanie SSH bez hasła i z hasłem
 ![devops1](https://github.com/user-attachments/assets/fa86b741-0aa6-4e32-9d33-b4d1356203a9)
 ![devops2](https://github.com/user-attachments/assets/71c2f648-af5a-43a1-be79-64d72ca8e196)
 
