@@ -340,9 +340,7 @@ docker cp node-js-dummy-test base-cont:/input
 
 ## Instalacja zależności i uruchomienie testów w kontenerze
 
-![lab4-npm-install](lab4_6.png)
-
-![lab4-npm-test](lab4_7.png)
+![sc](./lab4_18.pngm)
 ```sh
 cd /input/node-js-dummy-test
 npm install
@@ -354,13 +352,6 @@ npm test
 ![lab4-copy-output](lab4_8.png)
 ```sh
 cp -r /input/node-js-dummy-test /output/
-```
-
-## Test wystawienia portu
-
-![lab4-iperf-pull](lab4_9.png)
-```sh
-docker pull networkstatic/iperf3
 ```
 
 Serwer:
