@@ -81,27 +81,84 @@ git push origin PS417478
 
 ---
 ## Lab 2 - Git, Docker
-1. Instalacja Dockera w systemie linuksowym
+### 1. Instalacja Dockera 
+```bash
+sudo dnf install -y dnf-plugins-core
+sudo dnf install -y docker
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+Sprawdzenie instalacji:
+```bash
+docker --version
+```
+### 2. Rejestracja w Docker i logowanie 
+Po zarejestrowaniu się na stronie Docker Hub zalogowałam się na fedorze:
+```bash
+docker login
+```
+### 3. Pobranie obrazów hello-world, busybox, fedora, mysql
+Poleceniami:
+```bash
+sudo docker pull hello-world
+sudo docker pull busybox
+sudo docker pull fedora
+sudo docker pull mysql
+```
+Sprawdzenie:
+```bash
+sudo docker images
+```
+![zdj2](screenshots/2.png)
 
-użyj repozytorium dystrybucji, jeżeli to możliwe (zamiast Community Edition)
-rozważ niestosowanie rozwiązania Snap (w Ubuntu)
-Zarejestruj się w Docker Hub i zapoznaj z sugerowanymi obrazami
-Pobierz obrazy hello-world, busybox, ubuntu lub fedora, mysql
-Uruchom kontener z obrazu busybox
-Pokaż efekt uruchomienia kontenera
-Podłącz się do kontenera interaktywnie i wywołaj numer wersji
-Uruchom "system w kontenerze" (czyli kontener z obrazu fedora lub ubuntu)
-Zaprezentuj PID1 w kontenerze i procesy dockera na hoście
-Zaktualizuj pakiety
-Wyjdź
-Stwórz własnoręcznie, zbuduj i uruchom prosty plik Dockerfile bazujący na wybranym systemie i sklonuj nasze repo.
-Kieruj się dobrymi praktykami
-Upewnij się że obraz będzie miał git-a
-Uruchom w trybie interaktywnym i zweryfikuj że jest tam ściągnięte nasze repozytorium
-Pokaż uruchomione ( != "działające" ) kontenery, wyczyść je.
-Wyczyść obrazy
-Dodaj stworzone pliki Dockefile do folderu swojego Sprawozdanie1 w repozytorium.
+### 4. Uruchomienie kontenerów
+```bash
+sudo docker run -it busybox sh
+```
+![zdj3](screenshots/3.png)
+Wyjście `exit`
+Poleceniem sprawdzam że istnieje:
+```bash
+sudo docker ps -a
+```
+![zdj4](screenshots/4.png)
 
+### 5. Tworzenie własnego Dockerfile
+Poleceniem:
+```bash
+nano Dockerfile
+```
+Mój dockerfile wygląda następująco:
+```bash
+FROM fedora:latest
+
+RUN dnf update -y && dnf install -y git && dnf clean all
+
+WORKDIR /app
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+
+CMD ["/bin/bash"]
+```
+Buduje obraz:
+```bash
+sudo docker built -t my-fedora-image .
+```
+![zdj5](screenshots/5.png)
+
+Nastepnie poleceniami jak wyżej sprawdzam liste kontenerów, zatrzymuje je i usuwam:
+```bash
+sudo docker ps -a
+sudo docker image prune -a -f
+```
+![zdj6](screenshots/6.png)
+![zdj7](screenshots/7.png)
+
+### 6. Dodanie utworzonych plików:
+```bash
+git add .
+git commit -m "PS417478: docker"
+git push origin PS417478
+```
 --- 
 ## Lab 3
 
