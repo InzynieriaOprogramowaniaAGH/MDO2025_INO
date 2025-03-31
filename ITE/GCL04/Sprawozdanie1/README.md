@@ -1,11 +1,7 @@
 # SPRAWOZDANIE 1
 
-## Monika Krakowska, Informatyka Techniczna
 
-
-
-
-## LAB 1
+### LAB 1
 ### Instalacja klienta Git i obsługi kluczy SSH:
 
 
