@@ -1,0 +1,5 @@
+FROM my_mruby_build
+
+WORKDIR /mruby
+
+RUN rake all test

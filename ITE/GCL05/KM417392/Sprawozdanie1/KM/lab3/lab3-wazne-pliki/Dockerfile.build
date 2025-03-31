@@ -1,0 +1,9 @@
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y build-essential git rake
+
+RUN git clone https://github.com/mruby/mruby.git /mruby
+
+WORKDIR /mruby
+
+RUN rake
