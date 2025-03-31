@@ -79,6 +79,7 @@ git push origin PS417478
 ```
 (Niestety ćwiczenie 1 nie zawiera screenów z terminala ze względu na to, że zapomniałam je zrobić)
 
+
 ---
 ## Lab 2 - Git, Docker
 ### 1. Instalacja Dockera 
@@ -160,6 +161,8 @@ git add .
 git commit -m "PS417478: docker"
 git push origin PS417478
 ```
+
+
 --- 
 ## Lab 3
 
