@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    restart: unless-stopped
+    privileged: true
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_HOST=tcp://dind:2375
+      - DOCKER_TLS_CERTDIR=""
+    depends_on:
+      - dind
+
+  dind:
+    image: docker:dind
+    restart: unless-stopped
+    privileged: true
+    environment:
+      - DOCKER_TLS_CERTDIR=""
+    volumes:
+      - dind_storage:/var/lib/docker
+
+volumes:
+  jenkins_home:
+  dind_storage:

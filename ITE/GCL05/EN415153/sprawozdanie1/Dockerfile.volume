@@ -1,0 +1,9 @@
+FROM fedora:latest AS build
+
+RUN dnf update -y && dnf install -y \
+cmake \
+g++
+
+WORKDIR /app
+
+CMD ["/bin/bash"]
