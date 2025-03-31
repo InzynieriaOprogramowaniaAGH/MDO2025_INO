@@ -1,0 +1,3 @@
+FROM program
+WORKDIR /app/cJSON
+CMD ["make", "test"]
