@@ -361,10 +361,92 @@ W pierwszej kolejności przygotowane zostały dwa woluminy - wejściowy i wyjśc
 
 ![Utworzenie woluminów](004-Class/ss/1.png)
 
-Czyste repozytorium przedmiotu zostało ponownie sklonowane - do folderu `repo`:
+Czyste repozytorium projektu zostało ponownie sklonowane - zawartość znalazła się bezpośrednio w folderze `repo`:
 
 ![Sklonowanie repozytorium](004-Class/ss/2.png)
 
-W celu skopiowania sklonowanego repozytorium na wolumin wejściowy z hosta przygotowany został kontener oparty o `hello-world` z podpiętym woluminem `input-volume`. Kontener ten nie był i nie musi być nigdy uruchamiany - służy on tylko do interakcji z woluminem wejściowym poprzez `docker cp`, stąd nadana mu nazwa `input-interface`. Takie rozwiązanie pozwala na oszczędzenie zasobów - obraz `hello-world` jest bardzo lekki, waży tylko nieco ponad 10kB. 
+W celu skopiowania sklonowanego repozytorium na wolumin wejściowy z hosta przygotowany został kontener oparty o `hello-world` z podpiętym woluminem `input-volume`. Kontener ten nie był i nie musi być nigdy uruchamiany - służy on tylko do interakcji z woluminem wejściowym poprzez `docker cp`, stąd nadana mu nazwa `input-interface`. Takie rozwiązanie pozwala na oszczędzenie zasobów - obraz `hello-world` jest bardzo lekki, waży tylko nieco ponad 10kB, a także procesor nie jest obciążany przez to, że kontener nie jest uruchamiany. 
 
 ![Skopiowanie repozytorium na wolumin wejściowy](004-Class/ss/3.png)
+
+Ponieważ na maszynie nie istnieje jeszcze obraz `gcc` (wygodnie posiadający wszystkie wymagane przez projekt zależności), został on pobrany: 
+
+![Pobranie obrazu `gcc`](004-Class/ss/4.png)
+
+Następnie utworzono i uruchomiono kontener oparty o czysty obraz `gcc`. Do kontenera zostały podłączone woluminy `input-volume` oraz `output-volume`. Kontener uruchomiono bez flagi `--rm`, w razie sytuacji, gdy będzie potrzebne ponowne jego uruchomienie bez tworzenia nowego i powtarzania kolejnych kroków:
+```bash
+docker run -it --name toasty-builder -v input-volume:/input -v output-volume:/output gcc bash
+```
+
+![Utworzenie kontenera `gcc` z podłączonymi woluminami](004-Class/ss/5.png)
+
+Wewnątrz kontenera oprócz zależności sprawdzono wylistowano również zawartość katalogu `/`. Jak widać, woluminy `input` oraz `output` zostały podłączone:
+
+![Wylistowanie zawartości kontenera](004-Class/ss/6.png)
+
+Repozytorium z woluminu wejściowego skopiowano do kontenera (parametr `-a` oraz `.` na końcu ścieżki wejściowej oznacza skopiowanie całej zawartości włącznie z ukrytymi plikami i katalogami):
+
+![Skopiowanie repozytorium z woluminu na kontener](004-Class/ss/7.png)
+
+W skopiowanym katalogu repozytorium zbudowano projekt oraz testy. `Makefile` jest napiasny tak, że automatycznie uruchomił testy, wynik działania jednego z nich został zawarty na poniższym zrzucie:
+
+![Zbudowanie projektu i testów](004-Class/ss/8.png)
+
+Zbudowane pliki - bibliotekę statyczną oraz testy, a także istniejący wcześniej plik nagłówkowy skopiowano na wolumin wyjściowy:
+
+![Skopiowanie plików na wolumin wyjściowy](004-Class/ss/9.png)
+
+Okazuje się, że w kontenerze opartym na obrazie `gcc` domyślnie dostępny jest też `git`, dlatego też nie musiał być instalowany. Przy jego pomocy zostało ponownie sklonowane repozytorium projektu i umieszczone na woluminie wejściowym:
+
+![Klonowanie repozytorium wewnątrz kontenera](004-Class/ss/10.png)
+
+Po wykonaniu tego zadania rodzi się pytanie - czy można wykonać powyższe czynności za pomocą `docker build` i pliku `Dockerfile`? Otóż można, przy użyciu `RUN --mount`. Taki plik `Dockerfile` wyglądałby mniej więcej tak:
+```Dockerfile
+FROM gcc
+
+RUN --mount=type=bind,source=input-volume,target=/input \
+    git clone https://github.com/badzianga/toasty.git /input
+
+COPY /input .
+
+WORKDIR /toasty
+
+RUN make && make test
+
+RUN --mount=type=bind,source=output-volume,target=/output \
+    cp -r build /output && cp src/toasty.h /output/toasty.h
+```
+
+Plik ten nie był testowany, jednakże zamysł został przedstawiony.
+
+### 2. Eksponowanie portu
+
+W pierwszej kolejności został pobrany obraz `iperf3`:
+
+![Pobranie obrazu `iperf3`](004-Class/ss/11.png)
+
+Następnie został uruchomiony kontener bazujący na nowo pobranym obrazie:
+
+![Stworzenie kontenera `iperf-server`](004-Class/ss/12.png)
+
+![Uruchomiony kontener `iperf-server`](004-Class/ss/13.png)
+
+Dla kontenera `iperf-server` sprawdzony został adres IP:
+
+![Adres IP kontenera `iperf-server`](004-Class/ss/14.png)
+
+Znając adres możliwe było połączenie z serwerem, dlatego też utworzono drugi kontener bazujący na `iperf3` o nazwie `iperf-client` i połączono się z serwerem:
+
+![Połączenie klienta z serwerem `iperf`](004-Class/ss/15.png)
+
+W następnym kroku została utworzona własna sieć mostkowana, która przede wszystkim umożliwi odwoływanie się do kontenerów po nazwach zamiast adresów IP:
+
+![Utworzenie sieci](004-Class/ss/16.png)
+
+Jak widać na poniższym zrzucie, polecenie zadziałało, a sieć powstała:
+
+![Lista dostępnych sieci](004-Class/ss/17.png)
+
+Wcześniej utworzony kontener `iperf-server` został wyłączony i usunięty przy użyciu rozszerzenia Docker w VSCodium. Ponownie utworzono kontener o tej samej nazwie, lecz tym razem umieszczając go w sieci `iperf-network`:
+
+![Utworzenie kontenera `iperf-server` w sieci `iperf-network`](004-Class/ss/18.png)
