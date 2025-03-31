@@ -1,0 +1,34 @@
+docker volume create input-volume
+docker volume create output-volume
+docker volume ls
+git clone https://github.com/badzianga/toasty.git repo
+docker container create --name input-interface -v input-volume:/root hello-world
+docker cp repo input-interface:/root/repo
+docker image pull gcc
+docker run -it --name toasty-builder -v input-volume:/input -v output-volume:/output gcc bash
+docker pull networkstatic/iperf3
+man docker run
+docker run -d --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+docker inspect iperf-server | grep IPAddress
+docker run -it --rm --name iperf-client networkstatic/iperf3 -c 172.17.0.2
+docker network create --driver bridge iperf-network
+docker run -d --name iperf-server -p 5201:5201 --network iperf-network networkstatic/iperf3 -s
+docker run -it --rm --name iperf-client --network iperf-network networkstatic/iperf3 -c iperf-server
+sudo dnf install -y iperf3
+docker inspect iperf-server | grep IPAddress
+iperf3 -c 172.19.0.2
+ip addr show
+docker volume create iperf-logs
+docker run -d --name iperf-server -p 5201:5201 --network iperf-network -v iperf-logs:/logs networkstatic/iperf3 -s --logfile /logs/server.log
+docker run -it --rm --name iperf-client --network iperf-network networkstatic/iperf3 -c iperf-server
+docker inspect iperf-server | grep IPAddress
+iperf3 -c 172.19.0.2
+docker run -it --rm -v iperf-logs:/logs ubuntu sh
+docker image pull docker:dind
+docker network create jenkins
+docker run --name jenkins-docker --rm --detach --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home --publish 2376:2376 docker:dind --storage-driver overlay2
+nano Dockerfile
+docker build -t myjenkins-blueocean:2.492.2-1 .
+docker run --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro myjenkins-blueocean:2.492.2-1
+docker ps
+exit
