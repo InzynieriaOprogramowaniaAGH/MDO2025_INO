@@ -1,6 +1,6 @@
 # Sprawozdanie 
 
-# Pierwsze zajęcia
+# Pierwsze zajęcia - Wprowadzenie, Git, Gałęzie, SSH
 
 ## Logowanie do serwera
 ![Ss 0](sources/screen1/1-9.png)
@@ -54,7 +54,7 @@
 ![Ss 16](sources/screen1/1-16.png)
 
 
-# Drugie zajęcia
+# Drugie zajęcia - Git, Docker
 ## Instalacja Dockera `sudo dnf install -y docker`
 ![Ss 17](sources/screen2/2-0.png)
 
@@ -101,4 +101,6 @@ docker run -it new_image
 ## Umieszczenie pliku „Dockerfile” w katalogu „Sprawozdanie1”
 ![Ss 28](sources/screen2/2-11.png)
 
-# Trzecie zajęcia
+# Trzecie zajęcia - Dockerfiles, kontener jako definicja etapu
+
+

@@ -1,5 +1,4 @@
-FROM irssi_builder as irssi_tester
+FROM cjson_builder
 
-# Uruchomienie testów jednostkowych
-WORKDIR /irssi
-CMD ["ninja", "-C", "Build", "test"]
+WORKDIR /app/build
+CMD ["ctest"]
