@@ -1,4 +1,4 @@
-# Sprawozdanie 
+# Sprawozdanie 1
 
 # Pierwsze zajęcia - Wprowadzenie, Git, Gałęzie, SSH
 
@@ -102,5 +102,61 @@ docker run -it new_image
 ![Ss 28](sources/screen2/2-11.png)
 
 # Trzecie zajęcia - Dockerfiles, kontener jako definicja etapu
+
+## Oprogramowanie: cJSON
+
+## Klonowanie repozytorium
+![Ss 29](sources/screen3/3-1.png)
+
+## Instalacja zależności
+![Ss 30](sources/screen3/3-2.png)
+
+## Budowa projektu
+![Ss 31](sources/screen3/3-3.png)
+![Ss 32](sources/screen3/3-4.png)
+![Ss 33](sources/screen3/3-5.png)
+![Ss 34](sources/screen3/3-6.png)
+
+## Testowanie projektu
+![Ss 35](sources/screen3/3-7.png)
+
+## Uruchomienie kontenera Ubuntu i instalacja wymaganych zależności
+![Ss 36](sources/screen3/3-8.png)
+
+## Powtórzenie całego poprzedniego procesu na tym kontenerze
+![Ss 37](sources/screen3/3-9.png)
+
+![Ss 38](sources/screen3/3-10.png)
+
+![Ss 39](sources/screen3/3-11.png)
+
+![Ss 40](sources/screen3/3-12.png)
+
+## Tworzenie Dockerfile.build
+```Dockerfile.build
+FROM ubuntu:latest
+RUN apt update && apt install -y git cmake gcc g++ make
+WORKDIR /app
+RUN git clone https://github.com/DaveGamble/cJSON.git .
+RUN mkdir build && cd build && cmake .. && make
+```
+## Budowa tego obrazu
+![Ss 41](sources/screen3/3-13.png)
+
+## Tworzenie Dockerfile.test
+```Dockerfile.test
+FROM cjson_builder
+
+WORKDIR /app/build
+CMD ["ctest"]
+```
+## Budowa tego obrazu
+![Ss 42](sources/screen3/3-14.png)
+
+## Uruchomienie testów
+![Ss 43](sources/screen3/3-15.png)
+
+## Działające obrazy
+![Ss 44](sources/screen3/3-16.png)
 
 
