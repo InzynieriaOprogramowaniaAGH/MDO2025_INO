@@ -1,0 +1,2 @@
+FROM buildirssi
+RUN ninja -C Build test

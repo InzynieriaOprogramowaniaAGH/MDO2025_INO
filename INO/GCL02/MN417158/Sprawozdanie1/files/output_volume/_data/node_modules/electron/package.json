@@ -1,0 +1,29 @@
+{
+  "author": "Jake Luer <jake@alogicalparadox.com>",
+  "name": "electron",
+  "description": "A simple command-line interface framework for node.js.",
+  "keywords": [ "cli", "command", "option", "parser", "argv" ],
+  "homepage": "http://alogicalparadox.com/electron",
+  "license": "MIT",
+  "version": "0.4.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/logicalparadox/electron.git"
+  },
+  "main": "./index",
+  "scripts": {
+    "test": "make test"
+  },
+  "dependencies": {
+      "drip": "1.1.x"
+  },
+  "devDependencies": {
+      "mocha": "*"
+    , "chai": "*"
+    , "chai-spies": "*"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}

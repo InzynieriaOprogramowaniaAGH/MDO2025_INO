@@ -1,0 +1,20 @@
+-----------------------------------------------------------
+Server listening on 5201 (test #1)
+-----------------------------------------------------------
+Accepted connection from 192.168.100.77, port 56978
+[  5] local 172.18.0.2 port 5201 connected to 192.168.100.77 port 56979
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec   244 MBytes  2.04 Gbits/sec                  
+[  5]   1.00-2.00   sec   252 MBytes  2.11 Gbits/sec                  
+[  5]   2.00-3.00   sec   252 MBytes  2.11 Gbits/sec                  
+[  5]   3.00-4.00   sec   254 MBytes  2.13 Gbits/sec                  
+[  5]   4.00-5.00   sec   252 MBytes  2.12 Gbits/sec                  
+[  5]   5.00-6.00   sec   247 MBytes  2.07 Gbits/sec                  
+[  5]   6.00-7.00   sec   250 MBytes  2.09 Gbits/sec                  
+[  5]   7.00-8.00   sec   254 MBytes  2.13 Gbits/sec                  
+[  5]   8.00-9.00   sec   254 MBytes  2.13 Gbits/sec                  
+[  5]   9.00-10.00  sec   178 MBytes  1.49 Gbits/sec                  
+[  5]  10.00-10.00  sec   383 KBytes  1.85 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.00  sec  2.38 GBytes  2.04 Gbits/sec                  receiver
