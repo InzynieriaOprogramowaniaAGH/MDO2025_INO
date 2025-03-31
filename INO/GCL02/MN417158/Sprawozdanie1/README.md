@@ -208,9 +208,8 @@ git clone https://github.com/chalk/chalk.git /var/lib/docker/volumes/input_volum
 
 ![Zrzut28](screenshots/Zrzut28.png)
 
-7. Powtórzyłem klonowanie repozytorium tym razem bezpośrednio na kontenerze. W tym celu zainstalowałem gita ```sh apt-get update && apt-get install -y git```  
+7. Powtórzyłem klonowanie repozytorium tym razem bezpośrednio na kontenerze. W tym celu zainstalowałem gita ```sh apt-get update && apt-get install -y git```  ``` ```
 
-```
 8. Sklonowałem repozytorium na wolumin wyjściowy i tak jak poprzednio po zbudowaniu aplikacji efekty przekopiowałem na wolumin wyjściowy:
 
 ![Zrzut29](screenshots/Zrzut29.png)
