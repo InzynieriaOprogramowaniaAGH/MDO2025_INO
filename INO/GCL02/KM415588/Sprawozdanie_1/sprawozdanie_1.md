@@ -482,7 +482,7 @@ sudo docker run -it --rm -v volin:/repo -v volout:/build node:18-alpine sh
 
 Po wejściu do /repo i wykonaniu ls widzimy pusty katalog:
 
-![con_git](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/container_git.png)
+![con_git](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/container_git.png)
 
 Dalej przeprowadzamy więć klonowanie repo i wszystkie polecenia npm:
 
@@ -495,7 +495,7 @@ npm run build
 npm test
 ```
 
-![con_wyn](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/con_run_build.png)
+![con_wyn](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/cahlk-pipe.png)
 
 Jak widzimy testy przebiegły poprawnie. Dalej możemy ponownie wykonać kopie do /buil i uruchomić kontener z volout - uzyskamy taki sam wynik jak wcześniej. Na końcu usuwamy oba woluminy
 
