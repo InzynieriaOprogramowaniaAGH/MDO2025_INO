@@ -442,7 +442,7 @@ sudo docker run --rm -v volin:/repo alpine/git clone https://github.com/LitoMore
 
 W wydruku otrzymamy standardowe komunikaty o klonowaniu repo:
 
-![volin_repo](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/volin_repo.png)
+![volin_repo](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/volin_repo.png)
 
 Następnie uruchamiamy kontener:
 
@@ -450,7 +450,7 @@ Następnie uruchamiamy kontener:
 sudo docker run -it --rm -v volin:/src -v volout:/build node:18-alpine sh
 ```
 
-![volin_repo_conm](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/volin_volout_con.png)
+![volin_repo_conm](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/volin_volout_con.png)
 
 Jak widzimy repo zostało pozytywnie sklonowane. Dalej możemy wykonać standardowy npm install, run build i test - zwrócą one takie same wyniki jak przy postępowaniu na dwóch kontenerach. Na końcu kpoiujemy pliki do katalogu build:
 
@@ -469,7 +469,7 @@ cd build
 ls
 ```
 
-![volout](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/volout.png)
+![volout](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/volout.png)
 
 #### 3. Klonowanie chalk pipe w kontenerze
 
@@ -482,7 +482,7 @@ sudo docker run -it --rm -v volin:/repo -v volout:/build node:18-alpine sh
 
 Po wejściu do /repo i wykonaniu ls widzimy pusty katalog:
 
-![con_git](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/container_git.png)
+![con_git](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/container_git.png)
 
 Dalej przeprowadzamy więć klonowanie repo i wszystkie polecenia npm:
 
@@ -495,7 +495,7 @@ npm run build
 npm test
 ```
 
-![con_wyn](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/cahlk-pipe.png)
+![con_wyn](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/con_run_build.png)
 
 Jak widzimy testy przebiegły poprawnie. Dalej możemy ponownie wykonać kopie do /buil i uruchomić kontener z volout - uzyskamy taki sam wynik jak wcześniej. Na końcu usuwamy oba woluminy
 
