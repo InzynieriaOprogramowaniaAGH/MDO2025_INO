@@ -37,7 +37,7 @@ git checkout main git checkout GCL02
 
 
 ### 5) Stworzenie nowej gałęzi
-Utworzono nową gałąź o nazwie `KP415903`, odgałęziając ją od gałęzi grupowej.
+Utworzono nową gałąź o nazwie `JK414562`, odgałęziając ją od gałęzi grupowej.
 git checkout -b JK414562
 ![image](https://github.com/user-attachments/assets/85e12db4-9757-4345-9e2c-b952912b19bc)
 
