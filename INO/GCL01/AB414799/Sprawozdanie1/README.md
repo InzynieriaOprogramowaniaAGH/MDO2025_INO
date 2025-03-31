@@ -8,11 +8,15 @@
 ## Klonowanie repozytorium za pomocą HTTPS
 ![Ss 1](sources/screen1/1-12.png)
 
-## Generowanie dwóch kluczy SSH
+## Generowanie dwóch kluczy SSH za pomocą komend poniżej
+Inne niż RSA i jeden z nich został zabezpieczony hasłem
+
 ![Ss 2](sources/screen1/1-0.png)
 ![Ss 3](sources/screen1/1-1.png)
 
 ## Klonowanie repozytorium z wykorzystaniem SSH
+Po ustawieniu klucza SSH repozytorium zostało sklonowane za pomocą protokołu SSH.
+
 ![Ss 4](sources/screen1/1-13.png)
 
 ## Aktywacja weryfikacji dwuetapowej (2FA)
@@ -56,6 +60,8 @@
 
 # Drugie zajęcia - Git, Docker
 ## Instalacja Dockera `sudo dnf install -y docker`
+Docker został zainstalowany zgodnie z oficjalnymi instrukcjami, wykorzystując repozytorium dystrybucji.
+
 ![Ss 17](sources/screen2/2-0.png)
 
 ## Pobieranie obrazów „hello-world”, „busybox”, „ubuntu” i „mysql”
@@ -66,10 +72,15 @@
 ![Ss 20](sources/screen2/2-3.png)
 
 ## Start systemu „ubuntu” i analiza procesów Dockera
+Weryfikacja procesu PID 1 w kontenerze:
+
 ![Ss 21](sources/screen2/2-4.png)
 
-## Aktualizacja pakietów `ubuntu`:
+## Aktualizacja pakietów `ubuntu` komendą `apt update && apt upgrade -y`:
 ![Ss 22](sources/screen2/2-5.png)
+
+### Po tej czynności należało wyjść z kontenera poprzez komendę `exit`
+
 
 ## Tworzenie pliku `Dockerfile`:
 ```Dockerfile
@@ -103,27 +114,49 @@ docker run -it new_image
 
 # Trzecie zajęcia - Dockerfiles, kontener jako definicja etapu
 
-## Oprogramowanie: cJSON
+### Oprogramowanie: cJSON
 
 ## Klonowanie repozytorium
 ![Ss 29](sources/screen3/3-1.png)
 
-## Instalacja zależności
+## Instalacja zależności poprzez komendę
+### `sudo dnf install gcc cmake make`
+   - `sudo` → Uruchamia polecenie z uprawnieniami administratora.  
+   - `dnf install` → Używa menedżera pakietów `dnf` do instalacji oprogramowania.  
+   - `gcc` → Kompilator języka C/C++.  
+   - `cmake` → Narzędzie do zarządzania procesem budowania oprogramowania.  
+   - `make` → Narzędzie do kompilacji kodu na podstawie plików makefile.  
 ![Ss 30](sources/screen3/3-2.png)
 
 ## Budowa projektu
+### Stworzenie specjalnego folderu o nazwie `build` w któym wykonujemy dalsze czynności
+
+### `cmake ..`
+   - Konfiguruje projekt CMake, generując pliki makefile w katalogu nadrzędnym (`..`).
+   **Używane do przygotowania środowiska kompilacji na podstawie plików CMakeLists.txt.**
+     
 ![Ss 31](sources/screen3/3-3.png)
 ![Ss 32](sources/screen3/3-4.png)
+
+### `make`
+   - Kompiluje kod źródłowy zgodnie z plikami makefile wygenerowanymi przez CMake.
+   **Uruchamia proces budowania projektu.**
+     
 ![Ss 33](sources/screen3/3-5.png)
+
 ![Ss 34](sources/screen3/3-6.png)
 
 ## Testowanie projektu
+### `ctest`
+   - Uruchamia testy jednostkowe zdefiniowane w konfiguracji CMake.
+   **Służy do automatycznego testowania skompilowanego kodu.**
+     
 ![Ss 35](sources/screen3/3-7.png)
 
-## Uruchomienie kontenera Ubuntu i instalacja wymaganych zależności
+## Uruchomienie kontenera Ubuntu w sposób interaktywny dzięki parametrowi -it i instalacja wymaganych zależności
 ![Ss 36](sources/screen3/3-8.png)
 
-## Powtórzenie całego poprzedniego procesu na tym kontenerze
+## Powtórzenie całego poprzedniego procesu budowy i testu na tym kontenerze
 ![Ss 37](sources/screen3/3-9.png)
 
 ![Ss 38](sources/screen3/3-10.png)
@@ -131,6 +164,8 @@ docker run -it new_image
 ![Ss 39](sources/screen3/3-11.png)
 
 ![Ss 40](sources/screen3/3-12.png)
+
+### Po wyjściu z kontenera ubuntu należało zautomatyzować proces poprzez utworzenie dwóch plików Dockerfile
 
 ## Tworzenie Dockerfile.build
 ```Dockerfile.build
@@ -141,6 +176,11 @@ RUN git clone https://github.com/DaveGamble/cJSON.git .
 RUN mkdir build && cd build && cmake .. && make
 ```
 ## Budowa tego obrazu
+### `docker build -t cjson_tester -f Dockerfile.test`
+   - `-t cjson_builder` → Nadaje nazwę i tag obrazowi Docker (np. `cjson_builder`).
+   - `-f Dockerfile.build` → Określa konkretny plik Dockerfile do użycia zamiast domyślnego (`Dockerfile`).
+   **Stosowane, aby zbudować obraz Dockera na podstawie niestandardowego pliku konfiguracji.**
+     
 ![Ss 41](sources/screen3/3-13.png)
 
 ## Tworzenie Dockerfile.test
@@ -151,9 +191,15 @@ WORKDIR /app/build
 CMD ["ctest"]
 ```
 ## Budowa tego obrazu
+### `docker build -t cjson_tester -f Dockerfile.test`
+   - `-t cjson_tester` → Nadaje nazwę i tag obrazowi Docker (np. `cjson_tester`).
+   - `-f Dockerfile.test` → Określa konkretny plik Dockerfile do użycia zamiast domyślnego (`Dockerfile`).
+   **Stosowane, aby zbudować obraz Dockera na podstawie niestandardowego pliku konfiguracji.**
+     
 ![Ss 42](sources/screen3/3-14.png)
 
 ## Uruchomienie testów
+### `docker run -t cjson_tester`
 ![Ss 43](sources/screen3/3-15.png)
 
 ## Działające obrazy
