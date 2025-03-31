@@ -138,35 +138,36 @@ sudo dnf update -y
 ```
 ![alt text](1_2/image.png)
 
-### Instalacja dockera
+### Instalacja dockera (według dokumentacji)
 ```sh
-sudo dnf install docker -y
+sudo dnf -y install dnf-plugins-core
 ```
-![alt text](1_2/image-1.png)
+![alt text](1_2/image-21.png)
 
-### Uruchomienie i włączenie usługi dockera
 ```sh
-systemctl start docker
-systemctl enable docker
+sudo dnf-3 config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
 ```
-![alt text](1_2/image-2.png)
+![alt text](1_2/image-22.png)
 
-### Sprawdzenie statusu usługi
 ```sh
-systemctl status docker
+dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
-![alt text](1_2/image-3.png)
+![alt text](1_2/image-23.png)
 
-### Historia poleceń
-![alt text](1_2/image-4.png)
+```sh
+systemctl enable --now docker
+```
+![alt text](1_2/image-24.png)
+
+```sh
+docker ps
+```
+![alt text](1_2/image-25.png)
 
 ## 2. Zaloguj się do Docker Hub
 
 ### Logowanie do dockera
-```sh
-docker login
-```
-![alt text](1_2/image-5.png)
+![alt text](image.png)
 
 ## 3. Pobierz obrazy
 
