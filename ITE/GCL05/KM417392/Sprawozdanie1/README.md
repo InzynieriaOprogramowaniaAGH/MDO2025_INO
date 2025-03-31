@@ -92,7 +92,7 @@ chmod +x commit-msg
 
 *Sprawdzenie poprawności działania*
 
-- [commit-msg]([https://github.com/TwojeRepozytorium/sciezka/do/Dockerfile.build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab1/commit-msg))
+- [commit-msg](https://github.com/TwojeRepozytorium/sciezka/do/Dockerfile.build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab1/commit-msg)
 
 ### 7. Gałęzie cd.
 - w katalogu ```KM417392``` utworzono folder "Sprawozdanie1" oraz w nim umieszczono ważne pliki (Readme.md oraz zrzuty ekranu - folder "KM")
