@@ -4,6 +4,7 @@
 Niestety źle przemyślałem sprawę i w przypadku pierwszych laboratoriów zapomniałem robić screenów więc postarałem się zrobić później takie screeny które pokazują, że zainstalowałem odpowiednie rzeczy i ustawiłem na githubie.
 
 1. Zainstaluj klienta Git i obsługę kluczy SSH
+
     ![](001-Class/lab1_1.png) 
 
 2. Sklonowanie repozytorium za pomocą HTTPS i personal access token.
@@ -17,6 +18,9 @@ Niestety źle przemyślałem sprawę i w przypadku pierwszych laboratoriów zapo
 
    - Skonfiguruj klucz SSH jako metodę dostępu do GitHuba
    ![](001-Class/lab1_5.png)
+
+    Tutaj dowód, że poprawnie ustawiłem klucz SSH i passphrase.
+   ![](001-Class/lab1_10.png)
 
    - Sklonuj repozytorium z wykorzystaniem protokołu SSH
 
@@ -196,8 +200,12 @@ Ponów ww.  proces w kontenerze, interaktywnie.
     Później podłączyłem moje woluminy do kontenera fedora_build.
     ![](004-Class/lab4_2.png)
 
+* Uruchom kontener, zainstaluj niezbędne wymagania wstępne (jeżeli istnieją), ale *bez gita*
+
     Kolejny krok to wstępne przygotowanie kontenera fedora.
     ![](004-Class/lab4_3.png)
+
+* Sklonuj repozytorium na wolumin wejściowy (opisz dokładnie, jak zostało to zrobione)
 
     Sklonowanie repozytorium irssi na wolumin wejściowy.
     ![](004-Class/lab4_4.png)
@@ -205,10 +213,108 @@ Ponów ww.  proces w kontenerze, interaktywnie.
     Tutaj sprawdzenie czy repozytorium sklonowało się poprawnie.
     ![](004-Class/lab4_5.png)
 
-* Uruchom kontener, zainstaluj niezbędne wymagania wstępne (jeżeli istnieją), ale *bez gita*
-* Sklonuj repozytorium na wolumin wejściowy (opisz dokładnie, jak zostało to zrobione)
+    Przekopiowanie w środku kontenera repo z wolumina wejściowego.
+    ![](004-Class/lab4_7.png)
+
 * Uruchom build w kontenerze - rozważ skopiowanie repozytorium do wewnątrz kontenera
+
+    Po kolei kroki buildowania repozytorium irssi w kontenerze.
+    ![](004-Class/lab4_8.png)
+    ![](004-Class/lab4_9.png)
+
 * Zapisz powstałe/zbudowane pliki na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera.
-* Pamiętaj udokumentować wyniki.
+
+    Tutaj krok przekopiowania zbuildowanych plików na wolumin wyjściowy.
+    ![](004-Class/lab4_10.png)
+
 * Ponów operację, ale klonowanie na wolumin wejściowy przeprowadź wewnątrz kontenera (użyj gita w kontenerze)
+
+    Pierwszy krok instalacja gita w kontenerze.
+    ![](004-Class/lab4_11.png)
+
+    Krok klonowania.
+
+    ![](004-Class/lab4_12.png)
+
 * Przedyskutuj możliwość wykonania ww. kroków za pomocą `docker build` i pliku `Dockerfile`. (podpowiedź: `RUN --mount`)
+
+### Eksponowanie portu
+* Uruchom wewnątrz kontenera serwer iperf (iperf3)
+
+    W pierwszym kroku instalacja serwera iperf3 na kontenerze fedory.
+    ![](004-Class/lab4_13.png)
+
+* Połącz się z nim z drugiego kontenera, zbadaj ruch
+
+    Wpierw sprawdzenie ip dla mojego kontenera dla serwera i klienta.
+    ![](004-Class/lab4_14.png)
+    ![](004-Class/lab4_16.png)
+
+    Później z drugiego kontenera klienckiego sprawdzenie ruchu pomiędzy nimi.
+    ![](004-Class/lab4_15.png)
+
+    Tutaj na serwerze wyniki.
+
+    ![](004-Class/lab4_17.png)
+
+* Ponów ten krok, ale wykorzystaj własną dedykowaną sieć mostkową. Spróbuj użyć rozwiązywania nazw
+
+    Po stworzeniu mojej sieci tutaj pokazanie podłączenia kontenerów do sieci.
+
+    ![](004-Class/lab4_18.png)
+
+    ![](004-Class/lab4_19.png)
+
+    Pokazanie mojej sieci mynetwork z kontenerami podłączonymi.
+
+    ![](004-Class/lab4_20.png)
+
+    Pokazanie ruchu w tej sieci pomiędzy tymi kontenerami.
+
+    ![](004-Class/lab4_21.png)
+
+* Połącz się spoza kontenera (z hosta i spoza hosta)
+
+    Tutaj połączenie się z hosta z kontenerem serwerowym, który nasłuchuje.
+
+    ![](004-Class/lab4_22.png)
+
+    Tutaj z innej maszyny ubuntu do mojej maszyny fedory.
+
+    ![](004-Class/lab4_31.png)
+
+### Instancja Jenkins
+* Przeprowadź instalację skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND
+* Zainicjalizuj instację, wykaż działające kontenery, pokaż ekran logowania 
+
+    Pierwszy krok to pullowanie jenkinsa oraz docker:dind.
+
+    ![](004-Class/lab4_24.png)
+
+    ![](004-Class/lab4_25.png)
+
+    Później stworzenie sieci jenkins_network.
+
+    ![](004-Class/lab4_26.png)
+
+    Później stworzenie Dockerfile z dokumentacji [Dockerfile.jenkins](./004-Class/Dockerfile.jenkins)
+
+    Tworzenie obrazu.
+
+    ![](004-Class/lab4_28.png)
+
+    Utworzenie kontenera komendą z dokumentacji.
+
+    ![](004-Class/lab4_29.png)
+
+    Dowód na pomyślne utworzenie.
+
+    ![](004-Class/lab4_30.png)
+
+    Otwieranie strony logowania do jenkinsa.
+
+    ![](004-Class/lab4_32.png)
+
+    Pomyślne zalogowanie.
+
+    ![](004-Class/lab4_33.png)

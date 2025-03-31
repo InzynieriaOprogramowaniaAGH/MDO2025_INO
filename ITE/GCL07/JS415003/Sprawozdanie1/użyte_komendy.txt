@@ -1,0 +1,311 @@
+ 1  ls
+    2  cd MDO2025_INO/
+    3  git remote -v
+    4  git fetch
+    5  git remote set-url origin git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+    6  git remote -v
+    7  git fetch
+    8  git branch
+    9  git branch remote
+   10  git branch
+   11  git branch -d remote
+   12  git branch
+   13  ls
+   14  cd ITE/
+   15  ls
+   16  cd GCL07/
+   17  cd JS415003/
+   18  cp ~/Desktop/Sprawozdanie_1_Jakub_Sadłowski ~/MDO2025_INO/ITE/GCL07/JS415003/
+   19  cp ~/Pulpit/Sprawozdanie_1_Jakub_Sadłowski ~/MDO2025_INO/ITE/GCL07/JS415003/
+   20  cp ~/Users/jakub/Desktop/Sprawozdanie_1_Jakub_Sadłowski ~/MDO2025_INO/ITE/GCL07/JS415003/
+   21  cp C:/Users/jakub/Desktop/Sprawozdanie_1_Jakub_Sadłowski ~/MDO2025_INO/ITE/GCL07/JS415003/
+   22  cp C:/Users/jakub/Desktop/Sprawozdanie_1_Jakub_Sadłowski.docx ~/MDO2025_INO/ITE/GCL07/JS415003/
+   23  cp ~/Users/jakub/Desktop/Sprawozdanie_1_Jakub_Sadłowski.docx ~/MDO2025_INO/ITE/GCL07/JS415003/
+   24  cp ~/Pulpit/Sprawozdanie_1_Jakub_Sadłowski.docx ~/MDO2025_INO/ITE/GCL07/JS415003/
+   25  cp ~/Desktop/Sprawozdanie_1_Jakub_Sadłowski.docx ~/MDO2025_INO/ITE/GCL07/JS415003/
+   26  ls
+   27  git branch
+   28  git pull
+   29  cat > sprawozdanie.md
+   30  ls
+   31  nano sprawozdanie.md 
+   32  nano commit-msg-hook.sh 
+   33  nano sprawozdanie.md 
+   34  ls -l ~/.ssh/
+   35  cat ~/.ssh/config
+   36  ssh-keygen -p -f ~/.ssh/id_ed25519
+   37  ssh-keygen -p -f ~/.ssh/github_ed25519
+   38  git fetch
+   39  git config --global user.email "jakub.sadlowski@gmail.com"
+   40  git config --global user.name "JakubSadlowski"
+   41  ls
+   42  locale
+   43  git remote -v
+   44  sudo dnf install docker
+   45  docker pull hello-world
+   46  docker
+   47  docker start
+   48  docker pull busybox
+   49  sudo systemctl status docker
+   50  sudo systemctl start docker
+   51  sudo systemctl enable docker
+   52  docker pull busybox
+   53  sudo systemctl docker pull busybox
+   54  sudo docker pull busybox
+   55  sudo docker pull ubuntu
+   56  sudo docker pull hello-world
+   57  docker run --rm -it busybox
+   58  sudo docker run --rm -it busybox
+   59  id -u
+   60  docker ps
+   61  sudo docker ps
+   62  docker run --rm -it busybox
+   63  sudo docker run --rm -it busybox
+   64  sudo docker run --rm -it ubuntu
+   65  sudo docker images
+   66  sudo usermod -aG docker $USER
+   67  exit
+   68  docker build -t mdo-repo .
+   69  ls
+   70  cd ITE
+   71  ls
+   72  cd GCL07/
+   73  cd JS415003/
+   74  ls
+   75  docker build -t mdo-repo .
+   76  docker ps
+   77  docker build -t mdo-repo .
+   78  docker ps
+   79  docker run -it --name mdo-kontener mdo-repo
+   80  docker ps
+   81  docker run -it --name mdo-kontener mdo-repo
+   82  docker ps
+   83  docker ps a
+   84  docker ps -a
+   85  git -a
+   86  docker run
+   87  docker ps -a
+   88  docker run 0e2bb6fd7964
+   89  docker ps -a
+   90  docker rm mdo-kontener
+   91  docker ps -a
+   92  docker run -it --name mdo-kontener mdo-repo
+   93  docker ps -a
+   94  docker rm mdo-kontener
+   95  docker ps
+   96  docker ps -a
+   97  docker rmi mdo-repo
+   98  git config pull.rebase false
+   99  git pull origin JS415003
+  100  docker build -t bld001 -f ./Dockerfile.irssibuild
+  101  docker build -t bld001 -f /home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/Dockerfile.irssibuild
+  102  docker build -t bld001 -f ./Dockerfile.irssibuild .
+  103  docker build -t bld001 -f /home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie1/003-Class/Dockerfile.irssibuild .
+  104  git status
+  105  rm -f .git/index
+  106  git reset --mixed
+  107  git status
+  108  git fsck --full
+  109  git gc --prune=now
+  110  git remote prune origin
+  111  git fsck --full
+  112  git fetch --all --prune
+  113  git reset --hard origin/main  # Zmień 'main' na właściwą gałąź
+  114  cd ..
+  115  rm -rf MDO2025_INO
+  116  ls
+  117  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  118  ls
+  119  cd MDO2025_INO/
+  120  ls
+  121  chmod +x commit-msg-hook.sh
+  122  cd ITE/
+  123  cd GCL07/
+  124  cd JS415003/
+  125  chmod +x commit-msg-hook.sh
+  126  cd ~/MDO2025_INO
+  127  git rev-parse --show-toplevel
+  128  ls -la .git/hooks
+  129  cp ITE/GCL07/JS415003/commit-msg-hook.sh .git/hooks/commit-msg
+  130  chmod +x .git/hooks/commit-msg
+  131  git reset --soft HEAD~1
+  132  git gc --prune=now
+  133  ls -la
+  134  ls -l ~/.ssh/id_*
+  135  ls -l ~/.ssh
+  136  git branch
+  137  git branch main
+  138  git checkout main
+  139  git remote prune origin
+  140  git branches
+  141  git branche
+  142  git branch
+  143  git fetch --all --prune
+  144  git branch -r
+  145  rm -rf .git/refs/remotes/origin/JS415003
+  146  git branch -r
+  147  git fetch --all --prune
+  148  git branch
+  149  git checkout main
+  150  git checkout GCL07
+  151  git checkout JS415003
+  152  git clone https://github.com/irssi/irssi $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)
+  153  sudo git clone https://github.com/irssi/irssi $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)
+  154  sudo rm -rf $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)/*
+  155  sudo git clone https://github.com/irssi/irssi $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)
+  156  cd ..
+  157  ls
+  158  sudo cp -r ~/irssi/* $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)/
+  159  ls $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)
+  160  sudo ls $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)
+  161  cp -r ~/irssi_v2 /var/lib/docker/volumes/input_volume/_data/
+  162  sudo cp -r ~/irssi_v2 /var/lib/docker/volumes/input_volume/_data/
+  163  ls /var/lib/docker/volumes/input_volume/_data/
+  164  sudo ls /var/lib/docker/volumes/input_volume/_data/
+  165  docker volume inspect input_volume
+  166  cd /var/lib/docker/volumes/input_volume/_data
+  167  sudo cd /var/lib/docker/volumes/input_volume/_data
+  168  ls
+  169  sudo cd /var/lib/docker/volumes/input_volume/_data
+  170  sudo rm -rf /var/lib/docker/volumes/input_volume/_data/irssi
+  171  docker volume inspect input_volume
+  172  sudo git clone https://github.com/irssi/irssi.git $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)
+  173  sudo rm -rf /var/lib/docker/volumes/input_volume/_data/*
+  174  sudo git clone https://github.com/irssi/irssi.git $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)
+  175  sudo rm -rf /var/lib/docker/volumes/input_volume/_data/irssi
+  176  sudo rm -rf /var/lib/docker/volumes/input_volume/_data/irssi_v2
+  177  sudo git clone https://github.com/irssi/irssi.git $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)
+  178  sudo ls $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)
+  179  rm -rf /mnt/input
+  180  ls /mnt/input
+  181  docker build -t test001 -f ./Dockerfile.irssitest .
+  182  cd ITE/
+  183  cd GCL07/
+  184  cd JS415003/
+  185  ls
+  186  cd Sprawozdanie1/
+  187  cd 003-Class/
+  188  docker build -t test001 -f ./Dockerfile.irssitest .
+  189  docker start test001
+  190  cd ..
+  191  git clone https://github.com/devenes/node-js-dummy-test
+  192  ls
+  193  cd node-js-dummy-test/
+  194  npm install
+  195  sudo dnf install nodejs npm
+  196  npm install
+  197  sudo dnf install sqlite-devel
+  198  npm install
+  199  cd ..
+  200  cd MDO2025_INO/
+  201  cd ITE/
+  202  cd GCL07/
+  203  cd JS415003/
+  204  cd Sprawozdanie1/
+  205  cd 003-Class/
+  206  docker build -t bld002 -f ./Dockerfile.nodebld .
+  207  docker pull node 22.14.0
+  208  docker pull node:22.14.0
+  209  docker build -t bld002 -f ./Dockerfile.nodebld .
+  210  docker build -t test002 -f ./Dockerfile.nodetest .
+  211  docker run bld002
+  212  docker run -d bld002
+  213  docker ps -a
+  214  docker run -d --rm bld002
+  215  docker ps -a
+  216  docker run -d test001
+  217  docker run -d test002
+  218  docker ps -a
+  219  docker logs
+  220  docker logs 169911e2371e
+  221  docker logs facfb0c73464
+  222  docker log facfb0c73464
+  223  docker ps -a
+  224  docker logs 169911e2371e
+  225  docker run test002
+  226  docker ps -a
+  227  docker logs 60baed155c2a
+  228  docker build -t test002 -f ./Dockerfile.nodetest .
+  229  docker run test002
+  230  docker build -t bld002 -f ./Dockerfile.nodebld .
+  231  docker build -t test001 -f ./Dockerfile.irssitest .
+  232  docker run test001
+  233  cd ..
+  234  docker volume ls
+  235  cd 004-Class/
+  236  docker run --rm -v input_volume:/data alpine/git clone https://github.com/irssi/irssi.git /data
+  237  ls
+  238  docker run -it --name fedora_build     -v input_volume:/mnt/input     -v output_volume:/mnt/output     fedora:42 bash
+  239  docker volume -ls
+  240  docker volume ls
+  241  input_volume ls
+  242  docker create input
+  243  docker volume create input
+  244  docker volume create output
+  245  docker volume ls
+  246  docker rm input_volume
+  247  docker volume rm input_volume
+  248  docker volume rm output_volume
+  249  docker volume -f rm input_volume
+  250  docker volume rm -f input_volume
+  251  docker ps -a --filter volume=output_volume
+  252  docker volume rm -f input_volume
+  253  docker volume rm -f output_volume
+  254  docker volume ls
+  255  cd ..
+  256  ls
+  257  mkdir irssi_v2
+  258  ls
+  259  git clone https://github.com/irssi/irssi /irssi_v2
+  260  sudo git clone https://github.com/irssi/irssi /irssi_v2
+  261  cd irssi_v2/
+  262  ls
+  263  cd ..
+  264  ls
+  265  docker volume rm input
+  266  docker volume rm output
+  267  docker volume create output_volume
+  268  docker volume create input_volume
+  269  docker volume ls
+  270  docker run -it --name fedora_build     -v input_volume:/mnt/input     -v output_volume:/mnt/output     fedora:42 bash
+  271  cd ITE/
+  272  cd GCL07/
+  273  cd JS415003/
+  274  cd Sprawozdanie1/
+  275  cd 004-Class/
+  276  docker build   --mount type=bind,source=$(pwd)/input_volume,target=/input_volume   --mount type=bind,source=$(pwd)/output_volume,target=/output_volume   -t irssi-custom .
+  277  docker ps -a
+  278  docker inspect -f'{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 2b942cf26233
+  279  docker run -it --name irssi bld001 /bin/bash
+  280  cd ITE/
+  281  cd GCL07/
+  282  cd JS415003/
+  283  cd Sprawozdanie1/
+  284  cd 004-Class/
+  285  DOCKER_BUILDKIT=1 docker build --mount type=bind,source=$(pwd)/input_volume,target=/input_volume   --mount type=bind,source=$(pwd)/output_volume,target=/output_volume   -t irssi-custom .
+  286  docker buildx build   --mount type=bind,source=$(pwd)/input_volume,target=/input_volume   --mount type=bind,source=$(pwd)/output_volume,target=/output_volume   -t irssi-custom .
+  287  sudo dnf install docker-buildx
+  288  docker buildx build   --mount type=bind,source=$(pwd)/input_volume,target=/input_volume   --mount type=bind,source=$(pwd)/output_volume,target=/output_volume   -t irssi-custom .
+  289  DOCKER_BUILDKIT=1 docker build   --progress=plain   -t irssi-custom .
+  290  DOCKER_BUILDKIT=1 docker build --progress=plain -f Dockerfile.irssi -t irssi-custom .
+  291  docker run --name iperf-server -d -p 5201:5201 networkstatic/iperf3 -s
+  292  docker logs iperf-server
+  293  docker inspect iperf-server | grep IPAddress
+  294  history all
+  295  history help
+  296  history 200
+  297  docker start -it fedora_build
+  298  docker start --help
+  299  docker start -ai fedora_build
+  300  docker run -it --name iperf3_client --network mynetwork fedora bash
+  301  docker ps -a
+  302  docker inspect -f'{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 2b942cf26233
+  303  docker inspect -f'{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 4d8b994ee176
+  304  docker network create mynetwork
+  305  docker run -it --name iperf3_server --network mynetwork fedora_build bash
+  306  docker run -it --name iperf3_server --network mynetwork fedora bash
+  307  docker run -it --network mynetwork --name iperf3_server -p 5201:5201 fedora bash
+  308  ip a
+  309  curl http://localhost:8080
+  310  cat /var/jenkins_home/secrets/initialAdminPassword
+  311  docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
