@@ -515,4 +515,4 @@ RUN --mount=type=bind,target=/src,source=./chalk-pipe,rw \
 
 Zautomatyzuje to budowanie aplikacji a RUN ---mount połączy kontener z local hostem i prześle mu katalog src a wyniki zapisze w katalog out - utworzy się nowy w folderze z którego wywołujemy nasz dockerfile - musimy w nim też sklonowane chalk-pipe.
 
-![dock-chalk-pipe](https//github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/cahlk-pipe.png)
+![dock-chalk-pipe](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/cahlk-pipe.png)
