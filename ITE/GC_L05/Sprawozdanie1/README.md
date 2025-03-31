@@ -154,6 +154,16 @@ Kontener zbudowano przy użyciu pliku Dockerfile, który aktualizuje system i in
 
 Polecenie `sudo docker build -t fedora .` buduje obraz na podstawie instrukcji zawartych w pliku Dockerfile.
 
+```
+FROM fedora:latest
+
+RUN dnf -y upgrade && dnf -y install git && dnf clean all
+WORKDIR /app
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH.MDO2025_INO.git
+CMD [/bin/bash]
+
+```
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20build%20fedora.png?raw=true)
 
 *Rys. 7 zbudowanie obrazu fedora*
