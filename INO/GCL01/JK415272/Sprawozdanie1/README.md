@@ -606,6 +606,21 @@ iperf3 -c <IP_HOSTA>
 
 ![ZAJ4](screenshot/ZAJ4_19.png)
 
+
+Przeprowadzono testy wydajności sieci w środowisku Docker przy użyciu narzędzia iperf3, analizując przepustowość między kontenerami oraz pomiędzy hostem a kontenerami.
+
+Zaobserwowano, że w większości przypadków przepustowość sieci była na wysokim poziomie, osiągając wartości od 6 Gbit/s do nawet 10 Gbit/s w konfiguracji z dedykowaną siecią Docker Bridge. Wartości te wskazują na efektywną komunikację między kontenerami, co potwierdza poprawność konfiguracji sieciowej.
+
+Zmiany przepustowości w poszczególnych testach wynikają z:
+
+Lokalizacji klienta i serwera – bezpośrednie połączenie w tej samej sieci Docker osiągało wyższą wydajność (7–10 Gbit/s) w porównaniu do połączeń przez mostek sieciowy Dockera.
+
+Obciążenia sieci – widoczne były spadki (np. do 3–4 Gbit/s) oraz okresowe wzrosty do 11 Gbit/s, co wskazuje na dynamiczne zarządzanie zasobami przez Dockera.
+
+Retransmisji pakietów (Retr) – niewielka liczba retransmisji w niektórych testach (np. 10–15) sugeruje momentowe przeciążenia, jednak nie miały one dużego wpływu na ogólną wydajność.
+
+Topologia sieci opierała się na dedykowanej sieci Docker Bridge (iperf-net), umożliwiającej izolowaną i stabilną komunikację między kontenerami. Testy pokazują, że wydajność sieci Dockera w takich warunkach jest wysoka i odpowiednia do większości zastosowań wymagających dużej przepustowości.
+
 ---
 
 Konfiguracja Jenkinsa
