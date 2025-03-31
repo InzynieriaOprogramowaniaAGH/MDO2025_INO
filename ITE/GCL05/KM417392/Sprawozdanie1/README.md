@@ -234,3 +234,178 @@ docker images
 
 
 ## Zajęcia 03: Dockerfiles, kontener jako definicja etapu
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Zajęcia 04: Dodatkowa terminologia w konteneryzacji, instancja Jenkins 
+
+Do testowania wykorzystano repozytorium: https://github.com/lttr/simple-npm-webapp-starter
+
+### Woluminy
+
+1. Na początku stworzono plik Dockerfile - kontener bazowy, który ma:
+- node.js (do budowania aplikacji)
+- npm
+- brak gita
+
+![obraz](KM/lab4/1_Dockerfilepng)
+
+i zbudowano nowy obraz:
+```
+docker build -t node-builder .
+```
+2. Następnie utworzono woluminy: ```wejsciowy``` oraz ```wyjsciowy```
+```
+docker volume create wejscie
+docker volume create wyjscie
+```
+![obraz](KM/lab4/2_stworzenie_woluminow.png)
+
+3. Uruchamiono kontener bazowy z woluminami
+```
+docker run -it --rm -v wejscie:/mnt/wejscie -v wyjscie:/mnt/wyjscie --name builder node-builder 
+```
+Po wejściu do kontenera znajduje się w '/app' i mam dostęp do `/mnt/wejscie` i `/mnt/wyjscie`
+![obraz](KM/lab4/4_dostepdoMNT.png)
+
+4. Sklonowano repozytorium (z zewnątrz kontenera)
+```
+git clone https://github.com/lttr/simple-npm-webapp-starter.git
+docker run -v wejscie:/mnt/wejscie -v "$(pwd)/simple-npm-webapp-starter":/tmp/repo alpine cp -r /tmp/repo/. /mnt/wejscie
+docker start -ia 8b071a78241f
+```
+Pliki z lokalnego katalogu ```simple-npm-webapp-starter``` zostają skopiowane do wolumenu wejscie **za pomocą kontenera** alpine. Po zakończeniu operacji kontener zostaje automatycznie usunięty.
+
+![obraz](KM/lab4/5_klonowanie_zewn.png)
+Skopiowano zawartość plików na wolumin wyjściowy
+![obraz](KM/lab4/6_skopiowane_pliki.png)
+![obraz](KM/lab4/7_kopiowanie_wyjscie.png)
+
+- *Można sprawdzić zawartość kontenera z hosta*
+![obraz](KM/lab4/8_sprawdzenie-z-hosta.png)
+```
+docker run -v wyjscie:/mnt/wyjscie alpine ls /mnt/wyjscie
+```
+### Klonowanie wewnątrz kontenera
+Stworzyłam do testowania dwa inne woluminny: ```input```, ```output```. 
+1. Pracę rozpoczęto od stworzenia nowego Dockerfile'a z gitem
+```
+FROM node:20-alpine
+
+RUN apk add --no-cache git
+WORKDIR /app
+CMD [ "sh" ]
+```
+Zbudowano nowy obraz:
+![obraz](KM/lab4/9_budowanie_git.png)
+```
+docker build -t node-builder-git .
+```
+2. Uruchomiono kontener i sklonowano repozytorium wewnątrz kontenera
+```
+docker run -it --rm -v input:/mnt/input -v output:/mnt/output node-builder-git
+git clone https://github.com/lttr/simple-npm-webapp-starter.git /mnt/input
+cd /mnt/input
+cp -r dist/* /mnt/output
+```
+![obraz](KM/lab4/10_klon_wewn.png)
+![obraz](KM/lab4/11_klon_wewn1.png)
+### RUN --mount
+1. W ramach przetestowania mozliwości RUN --mount utworzono folder ```test``` i dodano do niego "plik_testowy".
+![obraz](KM/lab4/moun1.png)
+2. Napisano prosty Dockerfile
+```                                                   
+FROM ubuntu:latest
+
+WORKDIR /app
+
+RUN mkdir test
+```
+3. Zbuildowano nowy obraz i przetestowano
+```
+docker run -it --rm --volume /home/kasiam/wejscie:/app/test obraz-mount-test
+docker run -it --rm --mount type=bind,src=/home/kasiam/wejscie, dst=/app/test obraz-mount-test
+```
+![obraz](KM/lab4/mount2.png)
+![obraz](KM/lab4/mount-bind.png)
+
+Wykorzystano ```--volume```  (uproszczona metoda montowania katalogów) oraz ```--mount```. 
+Obie metody powoliły na wymiane foldery pomiędzy docker, a hostem. 
+
+### Eksponowanie portu - serwer **iperf3**
+- Pracę rozpoczęto od stworzenia sieci mostkowej(bridge) (docker domyślnie tworzy sieć typu bridge, można tyez dodać ```--driver```) o nazwie ```mynet``` 
+(umożliwia kontenerom komunikację za pomocą nazw, a nie tylko adresów IP.
+- Następnie uruchomiono serwer **iperf3** poprzez stworzenie nowego kontenera (```-d``` - daemon, kontener działa w tle), nadano mu nazwe ```iperf-server```
+- ```--network mynet``` podłącza kontener do sieci mynet i używa obrazu ```networkstatic/iperf3```
+- Uruchomienie **iperf3** w trybie klienta i łączy się z serwerem - ```-c iperf-server``` (używa nazwy kontenera, zamiast adres IP)
+```
+docker network create mynet
+docker run -d --rm --name iperf-server --network mynet networkstatic/iperf3 -s
+docker run --rm --network mynet networkstatic/iperf3 -c iperf-server
+```
+![obraz](KM/lab4/Port2.png)
+Zainstalowano **iperf3** na hoście i sprawdzono adres IP serwera na kontenerze.
+1) Połączenie z hosta:
+```
+sudo apt update && sudo apt install -y iperf3
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-server
+iperf3 -c 172.20.0.2
+```
+![obraz](KM/lab4/port3.png)
+
+![obraz](KM/lab4/port4.png)
+
+![obraz](KM/lab4/port5.png)
+
+2) Wystawienie portu iperf3 na hosta:
+Poniższym poleceniem  uruchamiono kontener Docker, który działa jako serwer iperf3.
+Serwer ten nasłuchuje na porcie 5201, czekając na połączenia od klientów iperf3. Dzięki temu, można testować przepustowość sieci między tym kontenerem a innymi maszynami.
+![obraz](KM/lab4/port-iperf)
+```
+docker run -d -p 5201:5201 networkstatic/iperf3 -s
+```
+kontener iperf3 działa jako serwer i nasłuchuje na porcie 5201, zarówno w kontenerze, jak i na hoście.
+![obraz](KM/lab4/port6.png)
+
+Logi zostały zapisane do pliku "wynik_iperf.txt"
+```
+docker logs iperf-server
+iperf3 -c 172.19.0.2 > wynik_iperf.txt
+```
+![obraz](KM/lab4/zapis_logow.png)
+![obraz](KM/lab4/logi.png)
+
+### Instancja Jenkins
+Zgodnie z dokumentacją, proces konfiguracji Jenkinsa za pomocą Dockera obejmuje kilka kroków, w tym tworzenie nowej sieci i woluminu, a następnie uruchomienie samego kontenera Jenkinsa. 
+1. Najpierw utworzonoo osobną sieć Docker o nazwie "jenkins" dla Jenkinsa.
+2. Wolumeny w Dockerze są używane do przechowywania danych, które muszą byc przechowywane niezależnie od stanu kontenera. Wolumin będzie przechowywał dane Jenkinsa
+3. Ostatecznie uruchomiono kontener Docker na bazie obrazu ```jenkins/jenkins:lts```. Dodano również ```--privileged``` aby nadać uprawnienia kontenerowi.
+4. W logach można było odnaleźć hasło
+5. Zmapowano port 8080 kontenera na port 8080 hosta, co umożliwia dostęp do interfejsu Jenkinsa przez przeglądarkę na porcie 8080
+```
+docker network create jenkins
+docker volume create jenkins-data
+docker run -d --name jenkins-docker --rm --privileged --network jenkins -v jenkins-data:/var/jenkins_home -p 8080:8080 jenkins/jenkins:lts
+
+docker logs jenkins-docker 
+```
+![obraz](KM/lab4/jen-1.png)
+![obraz](KM/lab4/jenkins3.png)
+
+
+
