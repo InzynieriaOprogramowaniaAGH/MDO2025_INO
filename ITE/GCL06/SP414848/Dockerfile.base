@@ -2,14 +2,14 @@ FROM fedora:40
 
 RUN dnf install -y git gcc make tcl-devel
 
-RUN --mount=type=volume,target=/input,source=input_vol
+RUN mkdir /app
 
 WORKDIR /input
-RUN git clone https://github.com/sqlite/sqlite
 
-WORKDIR /input/sqlite
-RUN ./configure
-RUN make
-
-RUN --mount=type=volume,target=/output,source=output_vol
-RUN cp -r /input/sqlite /output/sqlite
+RUN --mount=type=bind,source=./input-host,target=/input,rw \
+    --mount=type=bind,source=./output-host,target=/output,rw \
+    git clone https://github.com/sqlite/sqlite /input/sqlite && \
+    cd /input/sqlite && \
+    ./configure && make && \
+    cp -r ./* /app && \
+    cp -r ./* /output

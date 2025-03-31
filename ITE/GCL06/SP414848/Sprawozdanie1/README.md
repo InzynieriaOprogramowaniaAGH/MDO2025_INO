@@ -203,12 +203,96 @@ Kontener to natomiast dynamiczne środowisko uruchomione na bazie obrazu w któr
 
 ## 4. Co pracuje w kontenerze
 
-W kontenerze pracuje widoczny w systemie hosta proces, jest on jednak mocno odizolowany - nie ma dostępu do procesów, ustawień, plików etc. hosta, jednakże korzysta z jego zasobów (CPU, RAM, sieć etc.).
+Kontener sam w sobie jest to widoczny w systemie hosta proces, jest on jednak mocno odizolowany - nie ma dostępu do procesów, ustawień, plików etc. hosta, jednakże korzysta z jego zasobów (CPU, RAM, sieć etc.).
+
+W kontenerze pracuje środowisko ustalone według obrazu, na podstawie którego uruchomiono kontener, zazwyczaj jest to minimalne środowisko potrzebne do uruchomienia danej aplikacji.
 
 # Zajęcia 04
 
-## 1.
+## 1. Obraz bazowy (bez gita)
 
-## 2.
+![Dockerfile.base](screens/lab4-1.png)
 
-## 3.
+## 2. Tworzenie nowych woluminów
+
+![Tworzenie woluminów](screens/lab4-2.png)
+
+## 3. Dopiowanie repozytorium na wolumin
+
+### Podejście do kopiowania
+
+Kopiowanie wykonano za pomocą polecenia 'docker cp' (docker copy), w tym celu utworzono tymczasowy kontener z podpiętym woluminem wejściowym, następnie sklonowano repozytorium na hoście i użyto odpowiedniego polecenia (jak na zrzucie).
+
+Uruchomino jeszcze kontener testowy z podpiętym wolumiem wejściowym aby zobaczyć czy kopiowanie rzeczywiście się powiodło.
+
+### Wykonanie
+
+![Kopiowanie, test](screens/lab4-3.png)
+
+Usunięto niepotrzebne kontenery.
+
+![Usuwanie](screens/lab4-4.png)
+
+## 4. Uruchomienie kontenera bazowego z podpiętymi woluminami (wejściowym i wyjściowym)
+
+![Uruchamianie kontenera](screens/lab4-5.png)
+
+## 5. Przeprowadzenie budowania na wolumienie wejściowym, kopiowanie zbudowanej aplikacji do kontenera
+
+![Build, kopiowanie](screens/lab4-6.png)
+
+## 6. Kopiowanie zbudowanej aplikacji na wolumin wyjściowy
+
+Z uwagi na to że sqlite buduje się bezpośrednio do katalogu repozytorium (brak folderu na zbudowane pliki np. /build) 
+najprościej będzie skopiować cały katalog ze zbudowanymi plikami.
+
+![Uruchamianie kontenera](screens/lab4-7.png)
+
+## 7. Klonowanie w kontenerze
+
+Aby wykonać klonowanie w kontenerze wystarczy doinstalować git'a, można dodać jego instalację w Dockerfile lub po prostu zainstalować w kontenerze bazowym ręcznie,
+następnie w kontenerze z podpiętymi woluminami wystarczy sklonować repozytorium z katalogu woluminu wejściowego (jak na zrzucie ekranu).
+
+![Klonowanie w kontenerze](screens/lab4-8.png)
+
+Budowanie i kopiowanie na wolumin wyjściowy - bez zmian.
+
+## 8. Dyskusja o wykonaniu kroków za pomocą 'docker build' i Dockerfile
+
+Przeprowadzono próby wykonania kroków za pomocą Dockerfile i 'docker build'.
+
+Próbowano za pomocą 'RUN --mount=type=bind' połączyć uprzednio utworzone katalogi z hosta na kontener (jak w poniższym Dockerfile).
+
+### Dockerfile z 'RUN --mount'
+
+```
+FROM fedora:40
+
+RUN dnf install -y git gcc make tcl-devel
+
+RUN mkdir /app
+
+WORKDIR /input
+
+RUN --mount=type=bind,source=./input-host,target=/input,rw \
+    --mount=type=bind,source=./output-host,target=/output,rw \
+    git clone https://github.com/sqlite/sqlite /input/sqlite && \
+    cd /input/sqlite && \
+    ./configure && make && \
+    cp -r ./* /app && \
+    cp -r ./* /output
+
+```
+
+Jednak pomimo tego że w kontenerze znajduje się poprawnie zbudowana aplikacja (w /app), to na hoście nie zaszły zmiany.
+
+Z dokumentacji wyczytałem że:
+
+https://docs.docker.com/build/cache/optimize/#use-bind-mounts
+
+`Bind mounts are read-only by default. If you need to write to the mounted directory, you need to specify the rw option. However, even with the rw option, the changes are not persisted in the final image or the build cache. The file writes are sustained for the duration of the RUN instruction, and are discarded after the instruction is done.`
+
+Oznaczało by to że na etapie budowania nie jest możliwe zapisanie danych na maszynie hosta za pomocą bind mount'ów,
+również inne typy mount'ów nie wydają się pomocne. Także nie znalazłem możliwości przeprowadzenia kroków za pomocą 'docker build' i Dockerfile.
+
+Również wyczerpująca rozmowa z `dockerdocsAI` nie przyniosła lepszych rezultatów.
