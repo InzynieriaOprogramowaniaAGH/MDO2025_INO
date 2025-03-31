@@ -1,0 +1,14 @@
+
+FROM my-python-build as build
+
+FROM python:3.10
+
+WORKDIR /app
+
+COPY --from=build /app /app
+
+
+ENV PATH="/app/venv/bin:$PATH"
+
+
+CMD ["pytest", "tests"]

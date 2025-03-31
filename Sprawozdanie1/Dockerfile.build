@@ -1,0 +1,11 @@
+FROM python:3.10
+RUN pip install black==23.3.0
+RUN apt-get update && apt-get install -y python3-venv
+WORKDIR /app
+COPY . .
+RUN python3 -m venv venv
+RUN venv/bin/pip install --upgrade pip && venv/bin/pip install .
+
+RUN make build || true  # Jeśli `make build` nie istnieje, kontener nie kończy działania
+
+ENV PATH="/app/venv/bin:$PATH"
