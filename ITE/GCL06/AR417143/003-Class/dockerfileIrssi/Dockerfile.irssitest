@@ -1,0 +1,2 @@
+FROM bld001
+RUN ninja -C Build test

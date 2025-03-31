@@ -1,0 +1,11 @@
+FROM fedora:42
+
+RUN dnf -y update && \
+    dnf -y install meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel \
+    perl-ExtUtils-MakeMaker perl-ExtUtils-Embed git && \
+    dnf clean all && rm -rf /var/cache/dnf
+
+RUN git clone https://github.com/irssi/irssi.git
+WORKDIR /irssi
+RUN meson setup Build
+RUN ninja -C Build
