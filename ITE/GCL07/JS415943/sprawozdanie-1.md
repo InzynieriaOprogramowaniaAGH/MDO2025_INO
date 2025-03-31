@@ -30,7 +30,7 @@ git checkout  GCL07
 git checkout -b JS415943
 ```
 
-Następnie utworzono podfolder z inicjałami, numerem indeksu oraz sprawozdniem:
+Następnie utworzono podfolder z inicjałami, numerem indeksu oraz sprawozdaniem:
 ```bash
 mkdir JS415943
 cd JS415943
@@ -75,7 +75,7 @@ Oraz przetestowano działanie
 
 Zainstalowałem dockera poprzez polecenie 
 ```bash
-sudo dnt -y install docker
+sudo dnf -y install docker
 ```
 
 ### 2. Pobranie obrazów `hello-world`, `busybox`, `ubuntu`, `fedora` oraz `mysql` 
@@ -161,7 +161,7 @@ make test
 ### 3. Stworzenie plików Dockerfile dla zautomatyzowania wcześniejszych kroków
 
 Plik `Dockerfile.build`
-```bash
+```Dockerfile
 FROM ubuntu:latest
 
 RUN apt-get update && apt-get install -y git gcc make
@@ -172,7 +172,7 @@ WORKDIR /src/zlib
 RUN ./configure && make
 ```
 Plik `Dockerfile.test`
-```bash
+```Dockerfile
 FROM zlib-build
 
 WORKDIR /src/zlib
@@ -188,3 +188,100 @@ sudo docker build -f Dockerfile.test -t zlib-test .ls
 Testy przeszły pomyślnie więc utworzył się obraz zlib-test
 
 ![](/ITE/GCL07/JS415943/lab3/docker-test.png)
+
+## Zajęcia 04
+
+## 1. Zachowywanie stanu
+### 1.1 Przygotowano woluminy wejściowy i wyjściowy
+
+`input_vol` i `output_vol`
+
+![](/ITE/GCL07/JS415943/lab4/input-output.png)
+![](/ITE/GCL07/JS415943/lab4/in-out-vol.png)
+
+Następnie utworzyłem i zbudowałem dockerfile `Dockerfile.nogit` zawierający wymagane pakiety ale bez gita
+```Dockerfile
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y \
+    gcc \
+    make \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /home/build
+```
+
+![](/ITE/GCL07/JS415943/lab4/docker-build.png)
+
+### 1.2 Uruchomiono kontener z przyłączeniem przygotowanych woluminów, sprawdzono czy zainstalowane są wszystkie dependencje oraz czy nie ma gita
+
+![](/ITE/GCL07/JS415943/lab4/docker-run2.png)
+
+### 1.3 Sklonowano repozytorium bezpośrednio do woluminu wejściowego
+Użyłem polecenia
+
+`sudo git clone https://github.com/madler/zlib.git $(sudo docker volume inspect --format '{{ .Mountpoint }}' input_vol)` 
+
+przez co klonowanie zostało wykonane bezpośrednio do katalogu woluminu, ponieważ
+
+`sudo docker volume inspect --format '{{ .Mountpoint }}' input_vol`
+
+zwraca ścieżkę w `/var/lib/docker/volumes/...`, czyli dokładne miejsce, w którym Docker przechowuje pliki danego woluminu.
+
+![](/ITE/GCL07/JS415943/lab4/docker-clone.png)
+![](/ITE/GCL07/JS415943/lab4/docker-zlib-ls.png)
+
+### 1.4 Uruchomiono build w kontenerze+
+![](/ITE/GCL07/JS415943/lab4/zlib-configure.png)
+
+### 1.5 Zapisano powstałe pliki na woluminie wyjściowym aby były dostępne po wyjściu z kontenera
+
+![](/ITE/GCL07/JS415943/lab4/docker-output-zlib-a-so-so1.png)
+
+### 1.6 Ponowiono operacje klonowania ale z środka kontenera
+
+![](/ITE/GCL07/JS415943/lab4/install-git.png)
+
+![](/ITE/GCL07/JS415943/lab4/libz-configure-inside.png)
+
+
+## 2. Eksponowanie portu
+
+### 2.1 Uruchomiłem kontener z iperf3 na domyślnym porcie i sprawdziłem czy jest on aktywny
+![](/ITE/GCL07/JS415943/lab4/iperf-download.png)
+
+### 2.2 Połączyłem się z kontenerem z innego kontenera
+![](/ITE/GCL07/JS415943/lab4/iperf-client-connect.png)
+
+### 2.3 Połączyłem się do kontenera z dedykowanej sieci mostkowej
+Utworzyłem sieć
+
+![](/ITE/GCL07/JS415943/lab4/network-create.png)
+
+Uruchomiłem serwer iperf oraz klienta w utworzonej sieci
+
+![](/ITE/GCL07/JS415943/lab4/iperf-network.png)
+
+![](/ITE/GCL07/JS415943/lab4/iperf-network-client.png)
+
+### 2.4 Połączyłem się do kontenera spoza niego
+
+![](/ITE/GCL07/JS415943/lab4/iperf-spoza.png)
+
+
+### 2.5 Zebrałem logi z kontenera
+![](/ITE/GCL07/JS415943/lab4/iperf-logs1.png)
+![](/ITE/GCL07/JS415943/lab4/iperf-logs2.png)
+
+
+## 3. Instalacja Jenkins
+
+### 3.1 Uruchomiłem oficjalny obraz
+![](/ITE/GCL07/JS415943/lab4/jenkins-docker-run.png)
+![](/ITE/GCL07/JS415943/lab4/jenkins-docker-ps.png)
+
+Po wejściu w przeglądarce na `http://192.168.100.40:8080` widoczna była strona logowania 
+
+![](/ITE/GCL07/JS415943/lab4/jenkins-login.png)
+
