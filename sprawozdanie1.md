@@ -1,5 +1,10 @@
-# Sprawozdanie lab 1
+# Sprawozdanie nr 1
+Julia Piśniakowska
+## Wstęp
+Sprawozdanie przedstawia rezultaty wykonanych ćwiczeń 1-4 w ramach zajęć metodyki DevOps, skupiających się na wdrożeniu narzędzi do zarządzania wersjami i konteneryzacji. Początkowo przeprowadzono instalację systemu Fedora wraz z konfiguracją Git i uwierzytelniania SSH. W ramach pracy z repozytorium wykonano operacje klonowania, zarządzania gałęziami oraz synchronizacji zmian ze zdalnym repozytorium.
+Następne etapy obejmowały instalację i konfigurację środowiska Docker do pracy z kontenerami. Zrealizowano zadania polegające na pobieraniu i uruchamianiu istniejących obrazów, tworzeniu własnych definicji w Dockerfile, budowaniu obrazów oraz testowaniu ich funkcjonalności. Przeanalizowano również zarządzanie procesami wewnątrz kontenerów. Sprawozdanie kończy się opisem automatyzacji procesów budowy i uruchamiania aplikacji przy użyciu narzędzia Docker Compose.
 
+### LAB 1
 ## Git Hook
 \`\`\`bash
 #!/bin/bash
@@ -12,7 +17,7 @@ if [[ ! $commit_msg =~ $pattern ]]; then
 fi
 \`\`\`
 
-# Sprawozdanie lab 2
+### LAB 2
 
 ## busyyyy box box stop
 ![devops_docker](https://github.com/user-attachments/assets/fdf54491-927c-46f9-9817-ba78e469f85f)
