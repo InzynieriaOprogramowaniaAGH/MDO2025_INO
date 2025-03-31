@@ -280,5 +280,119 @@ docker run --rm node-deploy
 
 **Podglą obrazów konternerów**
 
-# LAB 4
+
+
+# LAB4
+
+## Tworzenie i budowanie obrazu
+Przygotowano Dockerfile, który pobiera repozytorium Node.js i wykonuje instalację oraz testy:
+
+```Dockerfile
+FROM node AS node-builder
+RUN git clone https://github.com/devenes/node-js-dummy-test
+WORKDIR /node-js-dummy-test
+RUN npm install 
+RUN npm test
+```
+
+Obraz zbudowano komendą:
+```sh
+docker build -t node-base .
+```
+
+## Tworzenie woluminów i uruchomienie kontenera
+```sh
+docker volume create input_volume
+docker volume create output_volume
+
+docker run -it --name base-cont -v input_volume:/input -v output_volume:/output node-base bash
+```
+
+## Skopiowanie repozytorium do kontenera
+```sh
+docker cp node-js-dummy-test base-cont:/input
+```
+
+## Instalacja zależności i uruchomienie testów w kontenerze
+```sh
+cd /input/node-js-dummy-test
+npm install
+npm test
+```
+
+## Przeniesienie wyniku do woluminu wyjściowego
+```sh
+cp -r /input/node-js-dummy-test /output/
+```
+
+## Test wystawienia portu
+```sh
+docker pull networkstatic/iperf3
+```
+
+Serwer:
+```sh
+docker run -it --name docker1 -p 5201:5201 networkstatic/iperf3 -s
+```
+
+Z innego kontenera:
+```sh
+docker run -it --name drugi networkstatic/iperf3 -c 172.17.0.3
+```
+
+Z hosta:
+```sh
+iperf3 -c localhost -p 5201
+```
+
+Z innego hosta (np. Windows):
+```sh
+iperf3.exe -c 172.21.196.66 -p 5201
+```
+
+Zapis logów:
+```sh
+docker logs docker1 > logs.txt
+```
+
+## Jenkins
+Tworzenie własnej sieci:
+```sh
+docker network create jenkins
+```
+
+Dockerfile:
+```Dockerfile
+FROM jenkins/jenkins:2.440.2-jdk17
+USER root
+RUN apt-get update && apt-get install -y lsb-release
+RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc https://download.docker.com/linux/debian/gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.asc] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+RUN apt-get update && apt-get install -y docker-ce-cli
+USER jenkins
+RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
+```
+
+Budowanie:
+```sh
+docker build -t jenkins1 .
+```
+
+Uruchomienie DinD:
+```sh
+docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+```
+
+Uruchomienie Jenkinsa:
+```sh
+docker run   --name jenkins-ui   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   jenkins1
+```
+
+Hasło początkowe:
+```sh
+docker exec jenkins-ui cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+Po wpisaniu hasła można przejść do konfiguracji i instalacji pluginów.
+
 
