@@ -375,7 +375,8 @@ iperf3 -c 172.20.0.2
 2) Wystawienie portu iperf3 na hosta:
 Poniższym poleceniem  uruchamiono kontener Docker, który działa jako serwer iperf3.
 Serwer ten nasłuchuje na porcie 5201, czekając na połączenia od klientów iperf3. Dzięki temu, można testować przepustowość sieci między tym kontenerem a innymi maszynami.
-![obraz](KM/lab4/port-iperf)
+
+![obraz](KM/lab4/port-iperf.png)
 ```
 docker run -d -p 5201:5201 networkstatic/iperf3 -s
 ```
