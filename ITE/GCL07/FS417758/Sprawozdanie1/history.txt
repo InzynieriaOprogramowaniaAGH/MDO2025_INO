@@ -1,0 +1,356 @@
+ls
+pwd
+ls
+cat test.txt 
+mv test.txt test2.txt
+sudo dnf install git
+git config --global user.name "Filip"
+git config --global user.email "filipsmoron@wp.pl"
+ssh-keygen -t rsa -b 4096 -C "filipsmoron@wp.pl"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa.pub
+eval "$(ssh-agent -s)" ssh-add ~/.ssh/id_rsa.pub
+cat ~/.ssh/id_rsa.pub
+git clone git@github.com:Filip/github.com/github/copilot-docs.git
+git clone git@github.com:FilipSmoron/github.com/github/copilot-docs.git
+git clone git@github.com:FilipSmoron/https://github.com/github/copilot-docs.git
+ls
+pwd
+eval "$(ssh-agent -s)" ssh-add ~/.ssh/id_rsa.pub
+git config --global user.name "FilipSmoron"
+eval "$(ssh-agent -s)" ssh-add ~/.ssh/id_rsa.pub
+git clone git@github.com:FilipSmoron/https://github.com/github/copilot-docs.git
+git clone git@github.com:MiloszDebowski/Private.git
+git clone git@github.com:FilipSmoron/Testy-Projektu.git
+ls
+rm -p Testy-Projektu/
+git rm Testy-Projektu/
+git rm -p Testy-Projektu/
+man git
+git-rm Testy-Projektu/
+git rm Testy-Projektu/
+git -rm Testy-Projektu/
+git rm -p Testy-Projektu/
+git rm -p Testy-Projektu
+git rm -rf Testy-Projektu
+rm -rf Testy-Projektu/
+ls
+cd ..
+ls
+clear
+cd home
+mkdir test
+cd test/
+nano test3
+ip a
+history
+sudo apt update
+sudo apt install git -y
+sudo dnf install git openssh
+git --version
+ssh -V
+git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+cd MDO2025_INO
+ls
+cd ..
+ls
+rm MDO2025_INO/
+rm -rf MDO2025_INO/
+ls
+git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ls
+cd MDO2025_INO/
+git remote -v
+mkdir -p ~/.ssh
+cd ~/.ssh
+ssh-keygen -t ed25519 -C "filipsmoron@wp.pl"
+ls
+ssh-keygen -t ecdsa -b 521 -C "twoj_email@example.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+ssh-add ~/.ssh/id_ecdsa
+ssh-keygen -t ecdsa -b 521 -C "filipsmoron@wp.pl"
+ls
+rm id_ecdsa
+ls
+rm all
+rm *
+ssh-keygen -t ed25519 -C "filipsmoron@wp.pl"
+ls
+ssh-keygen -t ecdsa -b 521 -C "filipsmoron@wp.pl"
+ssh-keygen -t ed25519 -C "filipsmoron@wp.pl"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+ssh-add ~/.ssh/id_ecdsa
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+ssh-add ~/.ssh/id_ecdsa
+cat ~/.ssh/id_ed25519.pub
+ls
+cd ..
+ls
+rm .ssh/
+rm -rf .ssh/
+ls
+mkdir -p ~/.ssh
+cd ~/.ssh
+ssh-keygen -t ed25519 -C "filipsmoron@wp.pl"
+ssh-keygen -t ecdsa -b 521 -C "filipsmoron@wp.pl"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+ssh-add ~/.ssh/id_ecdsa
+cat ~/.ssh/id_ed25519.pub
+ssh -T git@github.com
+ssh -T FilipSmoron@github.com
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+ssh-add -l
+cat ~/.ssh/id_ed25519.pub
+ssh -T git@github.com
+ls
+cd ..
+ls
+rm -rf MDO2025_INO/
+git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+cd MDO2025_INO
+git checkout main
+git checkout GLC07
+git checkout GCL07
+git checkout -b KD232144
+mkdir GCL07/KD232144
+mkdir 07/KD232144
+mkdir GLC07/KD232144
+mkdir GCL07/KD232144
+ls
+cd ITE/
+ls
+cd GCL07/
+ls
+mkdir GCL07/KD232144
+cd ..
+mkdir GCL07/KD232144
+ls
+cd GCL07/
+ls
+cd KD232144/
+nano .git/hooks/commit-msg
+ls
+cd
+cd MDO2025_INO/ITE/GCL07/
+cd KD232144/
+cd ..
+git branch -d KD232144 
+git checkout main
+git branch -d KD232144 
+git checkout -b FS417758
+git branch -D KD232144 
+mkdir GCL07/FS417758
+cd ..
+ls
+cd GCL07/
+ls
+rm KD232144/
+cd ..
+mkdir GCL07/FS417758
+cd GCL07/FS417758/
+nano .git/hooks/commit-msg
+ls
+cd .git/hooks/
+touch pre-commit
+chmod +x pre-commit 
+nano pre-commit 
+ls
+git add .
+git commit -m "first commit"
+git push origin FS417758 
+git push ma
+git push 
+cd ..
+git push origin FS417758 
+git checkout FS417758 
+git push origin FS417758 
+git remote -v
+git push origin FS417758
+ssh-add -l
+ssh -T git@github.com
+git push origin FS417758
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
+chmod 700 ~/.ssh
+git push origin FS417758
+gh auth status
+gh auth login
+git push origin FS417758
+cd ..
+git push origin FS417758
+ls
+cd MDO2025_INO/
+ls
+cd ITE/
+ls
+cd GCL07/
+ls
+cd FS417758/
+ls
+ls Sprawozdanie1
+ls Sprawozdanie1ss/
+mkdir lab3
+cd lab3
+git clone https://github.com/irssi/irssi.git
+cd irssi/
+meson build
+meson Build
+dnf install meson
+meson build
+make
+meson Build
+dnf -y install meson gcc
+meson Build
+dnf -y install meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils*
+meson Build
+dnf -y install meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils* cmake libgcrypt-config libgcrypt
+meson Build
+man meson
+meson Build
+cd Build/
+ninja test
+cd ..
+meson Build
+meson setup --reconfigure
+meson setup --reconfigure Build
+dnf -y install libotr cap_enter
+meson setup --reconfigure Build
+dnf -y install meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils* cmake libgcrypt-config libgcrypt libotr-devel cap_enter-lc
+dnf -y install meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils* cmake libgcrypt-config libgcrypt libotr-devel cap_enter-develcd 
+meson setup --reconfigure Build
+dnf -y install libotr
+dnf -y install cap_enter
+meson setup --reconfigure Build
+meson Build
+cd Build
+ninja -C Build
+cd ..
+ninja -C Build
+ninja -C Build test
+dnf -y install pkg-config
+docker run -it --rm fedora bash
+touch irssi-build.Dockerfile
+ls
+nano irssi-build.Dockerfile 
+touch irssi-test.Dockerfile
+nano irssi-test.Dockerfile 
+docker build -t irssi-builder -f ./irssi-build.Dockerfile .
+nano irssi-build.Dockerfile 
+docker build -t irssi-builder -f ./irssi-build.Dockerfile .
+docker run irssi-builder
+docker build -t irssi-tester -f ./irssi-test.Dockerfile .
+docker images
+sudo docker run --rm -it node /bin/bash
+cd ..
+ls
+cd irssi/
+ls
+sudo docker run --rm -it node /bin/bash
+touch node-build.Dockerfile
+touch node-test.Dockerfile
+touch node-deploy.Dockerfile
+nano node-build.Dockerfile 
+nano node-test.Dockerfile 
+nano node-deploy.Dockerfile 
+docker build -t node-builder -f ./node-build.Dockerfile .
+docker build -t node-tester -f ./node-test.Dockerfile .
+docker build -t node-deploy -f ./node-deploy.Dockerfile .
+docker images
+docker run --rm node-deploy
+git add .
+git commit -m "FS417758 lab3"
+git push
+cd ..
+git push
+git add .
+git commit -m "FS417758 lab3"
+git push
+git add .
+git commit -m "FS417758 lab3"
+git push
+cd MDO2025_INO/ITE/GCL07/FS417758/lab4/jenkins/
+docker ps
+docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.440.2-1
+docker rm f8
+docker stop f8
+docker rm f8
+docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.440.2-1
+docker ps
+docker stop jenkins-blueocean
+docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.440.2-1
+docker rm c0
+docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.440.2-1
+cat Dockerfile 
+ls
+docker ps
+docker stop jenkins-blueocean 
+docker rm 4d
+docker build -t myjenkins-blueocean:2.440.2-1 .
+docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.440.2-1
+docker ps
+docker stop jenkins-blueocean 
+docker rm df
+docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+docker build -t myjenkins-blueocean:2.440.2-1 .
+docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.440.2-1
+docker ps
+docker stop jenkins-blueocean 
+docker stop jenkins-docker 
+docker rm 09 e5
+docker ps
+docker network ls
+docker network rm jenkins 
+docker network create jenkins
+docker network 
+docker network connect jenkins 
+docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+docker build -t myjenkins-blueocean:2.440.2-1 .
+docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.440.2-1
+cat Dockerfile 
+nano Dockerfile 
+docker ps
+docker rm 3f
+docker stop 3f
+docker stop 46
+docker rm 3f
+docker ps
+docker ps -a
+docker run --name jenkins-docker --rm --detach   --privileged --network jenkins --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind --storage-driver overlay2
+docker build -t myjenkins-blueocean:2.492.2-1 .
+docker ps
+docker build -t myjenkins-blueocean:2.492.2-1 .
+docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.2-1 
+docker volume ls
+docker volume rm jenkins-data 
+docker stop jenkins-blueocean 
+docker stop jenkins-docker 
+docker ps
+docker volume ls
+docker volume rm jenkins-data 
+docker rm c0
+docker volume rm jenkins-data 
+docker volume rm jenkins-docker-certs 
+docker run --name jenkins-docker --rm --detach   --privileged --network jenkins --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind --storage-driver overlay2
+docker build -t myjenkins-blueocean:2.492.2-1 .
+docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.2-1 
+docker network ls
+docker network inspect jenkins 
+docker volume ls
+docker logs jenkins-blueocean | grep -i "admin"
+\docker logs jenkins-blueocean | grep -i "admin"
+docker logs jenkins-blueocean | grep -i "admin"
+docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+git add .
+git commit -m "FS417758 lab4"
+git push
+history
+man history
+history export history.txt
+history -> history.txt
+cat history -> history.txt
+history -w ~/history.txt
