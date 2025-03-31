@@ -235,20 +235,103 @@ docker images
 
 ## Zajęcia 03: Dockerfiles, kontener jako definicja etapu
 
+Do ćwiczeń wykorzystano repozytorium: https://github.com/mruby/mruby
+mruby to lekka implementacja języka Ruby, zgodna z częścią standardu ISO i kompatybilna składniowo z Ruby 3.x (z wyjątkiem dopasowywania wzorców).
+
+Repozytorium spełnia zadane wymagania:
+- posiada otwartą licencję: MIT license 
+- posiada narzędzie do buildowania: ```rake```
+- posiada testy ```rake all test```
+
+1. Sklonowano repozytorium
+```
+git clone https://github.com/mruby/mruby.git
+```
+![obraz](KM/lab3/1.png)
+2. W folderze repozytorium zainstalowano wymagane zależności
+```
+sudo apt install rake
+```
+![obraz](KM/lab3/2.png)
+
+3. Przeprowadzono build programu
+```
+rake
+```
+![obraz](KM/lab3/3.png)
+
+4. Uruchomiono testy jednostkowe
+```
+rake all test
+```
+![obraz](KM/lab3/4.png)
+![obraz](KM/lab3/5.png)
+
+### Proces w kontenerze, interaktywnie
+Wykorzystano kontener ```ubuntu```, najnowszą wersje.
+- uruchomiono kontener w trybie interaktywnym ```-it```
+```
+
+```
+![obraz](KM/lab3/6.png)
+- sklonowano repozytorium
+```
+
+```
+![obraz](KM/lab3/8.png)
+- zainstalowano wymagane zależności
+```
+
+```
+![obraz](KM/lab3/7.png)
+- uruchomiono build
+```
+rake
+```
+![obraz](KM/lab3/9.png)
+- uruchomiono testy
+```
+rake all test
+```
+![obraz](KM/lab3/11.png)
+![obraz](KM/lab3/10.png)
+### Dockerfile build
+1. Stworzono nowy plik ```Dockerfile.build```
+Dockerfile zawiera cały proces buildowania:
+- używa bazowy obraz ubuntu
+- pobiera i instaluje niezbędne zależności
+- klonuje repozytorium
+- ustawia katalog roboczy na ```/mruby```
+- uruchamia ```rake```, który kompiluje kod 
+  
+![obraz](KM/lab3/12.png)
 
 
+### Dockerfile test
 
 
+2. Zbudowano nowy obraz ```my_mruby_build```
+```
+docker build -f Dockerfile.build -t my_mruby_build .
+```
+![obraz](KM/lab3/13.png)
 
+![obraz](KM/lab3/14.png)
 
+### Dockerfile test
+1. Stworzono nowy plik ```Dockerfile.test```
+Dockerfile zajmuje się jedynie przeprowadzeniem testów (nie robi builda)
+Bazuje na ```my_mruby_build```.
+![obraz](KM/lab3/15.png)
+2. Zbudowano nowy obraz ```my_mruby_test```
+![obraz](KM/lab3/16.png)
+![obraz](KM/lab3/18.png)
+4. Po wejściu do kontenera automatycznie testy zaczynają się wykonywać. 
+![obraz](KM/lab3/17.png)
+![obraz](KM/lab3/19.png)
 
-
-
-
-
-
-
-
+*Do sprawozdania załączam również dwa Dockerfile ```build```, ```test```, dla repozytorium podanego na zajęciach*
+**Node-js-dummy-test** 
 
 
 
