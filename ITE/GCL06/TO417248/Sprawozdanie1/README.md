@@ -435,7 +435,7 @@ Dla kontenera `iperf-server` sprawdzony został adres IP:
 
 ![Adres IP kontenera `iperf-server`](004-Class/ss/14.png)
 
-Znając adres możliwe było połączenie z serwerem, dlatego też utworzono drugi kontener bazujący na `iperf3` o nazwie `iperf-client` i połączono się z serwerem:
+Znając adres możliwe było połączenie z serwerem, dlatego też utworzono drugi kontener bazujący na `iperf3` o nazwie `iperf-client` (nazwa niepotrzebna, gdyż kontener i tak jest automatycznie usuwany, lecz jest nadawana dla przejrzystości) i połączono się z serwerem:
 
 ![Połączenie klienta z serwerem `iperf`](004-Class/ss/15.png)
 
@@ -450,3 +450,182 @@ Jak widać na poniższym zrzucie, polecenie zadziałało, a sieć powstała:
 Wcześniej utworzony kontener `iperf-server` został wyłączony i usunięty przy użyciu rozszerzenia Docker w VSCodium. Ponownie utworzono kontener o tej samej nazwie, lecz tym razem umieszczając go w sieci `iperf-network`:
 
 ![Utworzenie kontenera `iperf-server` w sieci `iperf-network`](004-Class/ss/18.png)
+
+Dalej ponownie utworzono kontener `iperf-client` również dołączając go do sieci `iperf-network` i od razu łącząc się z serwerem:
+
+![Utworzenie kontenera `iperf-client` w sieci `iperf-network`](004-Class/ss/19.png)
+
+Jak widać, korzystając z własnej sieci możliwe jest używanie nazw zamiast adresów IP dzięki DNS Dockera. Jest to bardzo wygodne ze względu na to, że adresy zmieniają się jeśli kontenery zostaną uruchomione w innej kolejności.
+
+W tym miejscu możliwym byłoby porównanie transferów oraz bitrate'ów, lecz w moim przypadku byłoby to niedokładne, gdyż pomiędzy pierwszym a drugim pomiarem zmuszony byłem zmienić swoją lokalizację tym samym zmieniając sieć.
+
+Przeprowadzono również połączenie z serwerem z hosta. Przed tym jednak konieczna była instalacja `iperf3`:
+
+![Instalacja `iperf3` na hoście](004-Class/ss/20.png)
+
+Ponieważ host nie znajduje się w tej samej sieci co kontener, konieczne było użyciu adresu serwera odczytanego przy użyciu polecenia `docker inspect iperf-server | grep IPAddress`:
+
+![Połączenie z serwerem z hosta](004-Class/ss/21.png)
+
+Tą samą operację przeprowadzono z urządzenia, na którym uruchomiona jest maszyna wirtualna. Najpierw zainstalowano `iperf3`:
+
+![Instalacja `iperf3` na fizycznym urządzeniu](004-Class/ss/22.png)
+
+Ponieważ maszyna wirtualna jest w tej samej sieci co urządzenie, na którym jest uruchomiona (poprzez wybranie mostkowanej karty sieciowej podczas tworzenia wirtualnej maszyny), połączenie powinno odbywać się z adresem tejże właśnie maszyny, który odczytano przy użyciu `ip addr show`:
+
+![Połączenie z serwerem z fizycznego urządzenia](004-Class/ss/23.png)
+
+Tutaj może pojawić się pytanie - "Dlaczego powyższe polecenie zadziałało, skoro na maszynie wirtualnej nie jest uruchomiony serwer `iperf3`?". Spowodowane jest to wystawieniem portu (flaga `-p`), które zostało przeprowadzone w trakcie uruchamiania kontenera serwera. Zapytanie przekierowywane jest do kontenera, a maszyna wirtualna jest w tym przypadku pośrednikiem.
+
+Ostatnim zadaniem było przedstawienie komunikacji jako logów z kontenera serwera. W tym celu najpierw utworzony został nowy wolumin `iperf-logs`:
+
+![Utworzenie nowego woluminu](004-Class/ss/24.png)
+
+Kontener `iperf-server` ponownie został zatrzymany i usunięty, po czym został utworzony na nowo przy pomocy poniższego polecenia (polecenie w formie tekstu oraz sformatowane dla poprawy czytelności):
+```bash
+docker run -d --name iperf-server \
+  -p 5201:5201 \
+  --network iperf-network \
+  -v iperf-logs:/logs \
+  networkstatic/iperf3 -s --logfile /logs/server.log
+```
+
+Poprzednie połączenia z serwerem zostały wykonane ponownie (bez dokumentowania zrzutami ekranu). Na szybko został utworzony kontener oparty o obraz `ubuntu`, do którego podłączono wolumin `iperf-logs`:
+
+![Kontener oparty o `ubuntu`](004-Class/ss/25.png)
+
+Ostatnie polecenie wypisało zawartość pliku z logami, którą dla wygody przedstawiono poniżej w formie tekstu:
+```
+-----------------------------------------------------------
+Server listening on 5201 (test #1)
+-----------------------------------------------------------
+Accepted connection from 172.19.0.3, port 48524
+[  6] local 172.19.0.2 port 5201 connected to 172.19.0.3 port 48540
+[ ID] Interval           Transfer     Bitrate
+[  6]   0.00-1.00   sec  3.77 GBytes  32.4 Gbits/sec                  
+[  6]   1.00-2.00   sec  3.73 GBytes  32.0 Gbits/sec                  
+[  6]   2.00-3.00   sec  3.67 GBytes  31.5 Gbits/sec                  
+[  6]   3.00-4.00   sec  3.66 GBytes  31.5 Gbits/sec                  
+[  6]   4.00-5.00   sec  3.77 GBytes  32.3 Gbits/sec                  
+[  6]   5.00-6.00   sec  3.76 GBytes  32.3 Gbits/sec                  
+[  6]   6.00-7.00   sec  3.66 GBytes  31.5 Gbits/sec                  
+[  6]   7.00-8.00   sec  3.61 GBytes  31.0 Gbits/sec                  
+[  6]   8.00-9.00   sec  3.73 GBytes  32.0 Gbits/sec                  
+[  6]   9.00-10.00  sec  3.64 GBytes  31.3 Gbits/sec                  
+[  6]  10.00-10.00  sec   384 KBytes  25.2 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  6]   0.00-10.00  sec  37.0 GBytes  31.8 Gbits/sec                  receiver
+-----------------------------------------------------------
+Server listening on 5201 (test #2)
+-----------------------------------------------------------
+Accepted connection from 172.19.0.1, port 38518
+[  6] local 172.19.0.2 port 5201 connected to 172.19.0.1 port 38534
+[ ID] Interval           Transfer     Bitrate
+[  6]   0.00-1.00   sec  3.47 GBytes  29.8 Gbits/sec                  
+[  6]   1.00-2.00   sec  3.53 GBytes  30.3 Gbits/sec                  
+[  6]   2.00-3.00   sec  3.57 GBytes  30.7 Gbits/sec                  
+[  6]   3.00-4.00   sec  3.57 GBytes  30.6 Gbits/sec                  
+[  6]   4.00-5.00   sec  3.62 GBytes  31.1 Gbits/sec                  
+[  6]   5.00-6.00   sec  3.67 GBytes  31.5 Gbits/sec                  
+[  6]   6.00-7.00   sec  3.49 GBytes  30.0 Gbits/sec                  
+[  6]   7.00-8.00   sec  3.46 GBytes  29.7 Gbits/sec                  
+[  6]   8.00-9.00   sec  3.52 GBytes  30.2 Gbits/sec                  
+[  6]   9.00-10.00  sec  3.47 GBytes  29.8 Gbits/sec                  
+[  6]  10.00-10.00  sec  3.94 MBytes  25.2 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  6]   0.00-10.00  sec  35.4 GBytes  30.4 Gbits/sec                  receiver
+-----------------------------------------------------------
+Server listening on 5201 (test #3)
+-----------------------------------------------------------
+Accepted connection from 192.168.0.18, port 34696
+[  6] local 172.19.0.2 port 5201 connected to 192.168.0.18 port 34698
+[ ID] Interval           Transfer     Bitrate
+[  6]   0.00-1.00   sec   817 MBytes  6.85 Gbits/sec                  
+[  6]   1.00-2.00   sec   856 MBytes  7.18 Gbits/sec                  
+[  6]   2.00-3.00   sec   915 MBytes  7.68 Gbits/sec                  
+[  6]   3.00-4.00   sec   892 MBytes  7.48 Gbits/sec                  
+[  6]   4.00-5.00   sec   885 MBytes  7.43 Gbits/sec                  
+[  6]   5.00-6.00   sec   874 MBytes  7.33 Gbits/sec                  
+[  6]   6.00-7.00   sec   879 MBytes  7.37 Gbits/sec                  
+[  6]   7.00-8.00   sec   915 MBytes  7.68 Gbits/sec                  
+[  6]   8.00-9.00   sec   919 MBytes  7.71 Gbits/sec                  
+[  6]   9.00-10.00  sec   872 MBytes  7.31 Gbits/sec                  
+[  6]  10.00-10.00  sec  2.05 MBytes  7.61 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  6]   0.00-10.00  sec  8.62 GBytes  7.40 Gbits/sec                  receiver
+```
+
+Jak widać, komunikacja kontener-kontener przebiegała z największą prędkością - 31.8 Gb/s. Komunikacja host-kontener niewiele gorzej, lecz gorzej - 30.4 Gb/s. Komunikacja urządzenie-host ma już znaczny spadek prędkości w porównaniu do poprzednich - 7.4 Gb/s.
+
+### 3. Instalacja Jenkins
+
+Na początku pobrany został obraz `docker:dind`:
+
+![`Pobieranie docker:dind`](004-Class/ss/26.png)
+
+Przed dalszą instalacją utworzona została sieć `jenkins`:
+
+![Utworzenie sieci `jenkins`](004-Class/ss/27.png)
+
+Następnie został utworzony kontener oparty o obraz `docker-dind` przy użyciu poniższego polecenia:
+```bash
+docker run --name jenkins-docker --rm --detach \
+  --privileged --network jenkins --network-alias docker \
+  --env DOCKER_TLS_CERTDIR=/certs \
+  --volume jenkins-docker-certs:/certs/client \
+  --volume jenkins-data:/var/jenkins_home \
+  --publish 2376:2376 \
+  docker:dind --storage-driver overlay2
+```
+
+![Utworzenie kontenera w oparciu o `docker:dind`](004-Class/ss/28.png)
+
+![Uruchomiony kontener](004-Class/ss/29.png)
+
+Kolejną czynnością było przygotowanie pliku Dockerfile tworzącego dostosowany obraz oparty o oficjalny obraz Jenkinsa. Zawartość pliku skopiowano ze strony dokumentacji Jenkinsa:
+```Dockerfile
+FROM jenkins/jenkins:2.492.2-jdk17
+USER root
+RUN apt-get update && apt-get install -y lsb-release ca-certificates curl && \
+    install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
+    chmod a+r /etc/apt/keyrings/docker.asc && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+    https://download.docker.com/linux/debian $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" \
+    | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && apt-get install -y docker-ce-cli && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+USER jenkins
+RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
+```
+
+Następnie obraz zbudowano przy użyciu następującego polecenia:
+```bash
+docker build -t myjenkins-blueocean:2.492.2-1 .
+```
+
+![Budowa obrazu Jenkinsa](004-Class/ss/30.png)
+
+Mając obraz utworzono na jego podstawie kontener przy użyciu poniższego polecenia:
+```bash
+docker run --name jenkins-blueocean --restart=on-failure --detach \
+  --network jenkins --env DOCKER_HOST=tcp://docker:2376 \
+  --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 \
+  --publish 8080:8080 --publish 50000:50000 \
+  --volume jenkins-data:/var/jenkins_home \
+  --volume jenkins-docker-certs:/certs/client:ro \
+  myjenkins-blueocean:2.492.2-1
+```
+
+![Uruchomienie kontenera Jenkins](004-Class/ss/31.png)
+
+Po wykonaniu powyższego polecenia w tle działa utworzony kontener razem z poprzednim (alternatywnie możliwe było użycie `docker ps` w celu sprawdzenia, czy eksponowanie portów działa, jednakże wyjście na konsolę było dosyć nieczytelne z powodu dużej ilości portów kontenera operatego o `myjenkins-blueocean`):
+
+![Uruchomione kontenery](004-Class/ss/32.png)
+
+Finalnie możliwe było przejście do ekranu logowania dostępnego pod adresem `localhost:8080`:
+
+![Ekran logowania Jenkins](004-Class/ss/33.png)
