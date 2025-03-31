@@ -20,7 +20,7 @@ ssh-keygen -t ed25519 -C "p.szlachta20@gmail.com"
 ```
 3. Konfiguracja kluczy SSH jako metodę dostępu do GitHuba:
 Dodałam je do Github (Settings -> SSH and GPG keeys -> new SSH key)
-![zdj1](MDO2025_INO/INO/GCL02/PS417478/Sprawozdanie1/screenshots/1.png)
+![zdj1](screenshots/1.png)
 
 4. Klonowanie repozytorium
 Poleceniem:
