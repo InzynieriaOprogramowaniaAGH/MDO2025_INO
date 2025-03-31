@@ -1,4 +1,4 @@
-### **Lab1**
+### **LAB1**
 Maszyna wirtualna
 ![](images/Pasted%20image%2020250312165842.png)
 
@@ -78,7 +78,7 @@ Branch:
 
 ---
 
-### LAB 2
+### **LAB 2**
 Aktualizowanie systemu:
 ![](images/Pasted%20image%2020250313181204.png)
 po to aby zainstalować dockera:![](images/Pasted%20image%2020250313182157.png)
@@ -138,3 +138,161 @@ Usunięciu kontenerów:
 
 Usunięcie obrazów:
 ![](images/Pasted%20image%2020250313213324.png)![](images/Pasted%20image%2020250313213343.png)
+
+---
+
+### **LAB3**
+#### Budowanie i testowanie projektu na maszynie:
+Klonowanie repo:
+![](images/Pasted%20image%2020250318201305.png)
+
+Instalowanie zależności:
+![](images/Pasted%20image%2020250318201554.png)
+![](images/Pasted%20image%2020250318201948.png)
+
+Kompilacja:
+![](images/Pasted%20image%2020250318202008.png)
+![](images/Pasted%20image%2020250318202040.png)
+
+Testy:
+![](images/Pasted%20image%2020250318202818.png)
+
+#### Ręczne budowanie i testowanie w kontenerze:
+Uruchomienie konterenra:
+![](images/Pasted%20image%2020250326165630.png)
+
+Instalacja zależności:
+![](images/Pasted%20image%2020250326170844.png)
+
+Stworzenie folderu:
+![](images/Pasted%20image%2020250326172233.png)
+
+Klonowanie repo:
+![](images/Pasted%20image%2020250326172435.png)
+
+Kompilacja:
+![](images/Pasted%20image%2020250326172517.png)
+![](images/Pasted%20image%2020250326172542.png)
+
+Testy:
+![](images/Pasted%20image%2020250326174514.png)
+#### Automatyzacja budowy i testowania w kontenerze:
+Dockerfiles:
+![](images/Pasted%20image%2020250318205531.png)
+![](images/Pasted%20image%2020250318204521.png)
+
+![](images/Pasted%20image%2020250318210340.png)
+![](images/Pasted%20image%2020250318210347.png)
+
+#### Budowa obrazu kontenera z aplikacją:
+![](images/Pasted%20image%2020250318211404.png)
+![](images/Pasted%20image%2020250318211434.png)
+
+Uruchomienie:
+![](images/Pasted%20image%2020250318211529.png)
+![](images/Pasted%20image%2020250318211511.png)
+
+
+### **LAB4**
+
+Przygotowanie woluminów: wejściowy i wyjściowy, i podłączenie ich do kontenera bazowego:
+![](images/Pasted%20image%2020250331200229.png)
+
+Uruchomienie kontera i zainstalowanie potrzebnych zależności:
+![](images/Pasted%20image%2020250331202021.png)
+![](images/Pasted%20image%2020250331201333.png)
+
+Sklonowanie repo na wolumin wejściowy:
+![](images/Pasted%20image%2020250331202319.png)
+
+Uruchomienie buildu w kontenerze:
+![](images/Pasted%20image%2020250331202436.png)
+![](images/Pasted%20image%2020250331202459.png)
+
+Zapisanie plików na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera:
+![](images/Pasted%20image%2020250331202939.png)![](images/Pasted%20image%2020250331203009.png)
+
+Usunięcie plików:
+ ![](images/Pasted%20image%2020250331212434.png)
+ 
+ Doinstalowanie gita w kontenerze:
+![](images/Pasted%20image%2020250331212541.png)
+
+Ponowne klonowanie w kontenerze:
+![](images/Pasted%20image%2020250331212728.png)
+
+Ponowne uruchomienie buildu w kontenerze:
+![](images/Pasted%20image%2020250331213908.png)
+![](images/Pasted%20image%2020250331213924.png)
+
+Ponowne zapisanie plików na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera:
+![](images/Pasted%20image%2020250331220123.png)
+
+Odpalenie wewnątrz kontenera serwer ipref:
+![](images/Pasted%20image%2020250331224544.png)
+
+
+Sprawdzenie adresu IP kontenera z serwerem:
+![](images/Pasted%20image%2020250331222746.png)
+
+Uruchomienie kontenera z klientem i nawiązanie połączenia:
+![](images/Pasted%20image%2020250331224649.png)
+
+Tworzenie własnej sieci:
+![](images/Pasted%20image%2020250331223154.png)
+
+Usuwanie starych kontenerów:
+![](images/Pasted%20image%2020250331223510.png)
+
+Ponowne odpalenie kontenera przy użyciu własnej sieci:
+![](images/Pasted%20image%2020250331223538.png)
+
+Nawiązanie połączenia:
+![](images/Pasted%20image%2020250331223846.png)
+
+Instalacja iperf3 na host'cie:
+![](images/Pasted%20image%2020250331225513.png)
+
+Łączenie się z hosta:
+![](images/Pasted%20image%2020250331225637.png)
+
+Zdobycie adresu IP maszyny:
+![](images/Pasted%20image%2020250331230227.png)
+
+Połączenie się z komputera z kontenerem działającym na maszynie wirtualnej:
+![](images/Pasted%20image%2020250331230345.png)
+
+Uruchomienie z woluminem na logi:
+![](images/Pasted%20image%2020250331230824.png)
+
+Po połączeniu nic nie zostało wypisane na serwerze:
+![](images/Pasted%20image%2020250331230948.png)
+
+Ponieważ informacje zostały zapisane do logów:
+![](images/Pasted%20image%2020250331231027.png)
+
+#### Jenkins:
+Stworzenie sieci mostkowej:
+![](images/Pasted%20image%2020250331231820.png)
+
+Stworzenie dwóch folderów potrzebnych do Jenkins:
+![](images/Pasted%20image%2020250331231938.png)
+
+Tworzenie kontenera Jenkins:
+![](images/Pasted%20image%2020250331232205.png)
+
+Stworzenie Dockerfile'a:
+![](images/Pasted%20image%2020250331232509.png)
+
+Tworzenie obrazu:
+![](images/Pasted%20image%2020250331232626.png)
+
+Uruchomienie Jenkinsa:
+![](images/Pasted%20image%2020250331233625.png)
+
+Wnętrze Jenkinsa (pokazanie uruchomionych kontenerów):
+![](images/Pasted%20image%2020250331233635.png)
+
+Uruchomiony Jenkins:
+![](images/Pasted%20image%2020250331233718.png)
+
