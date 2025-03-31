@@ -286,48 +286,76 @@ Wykorzytanie obrazu zbudowanego z wczeniejszego Dockerfile do stworzenia nowego:
 
 ## Wykorzystanie woluminów do przenoszenia danych między kontenerami 
 
+Przygotowanie woluminów: wejściowy i wyjściowy
+
 ![alt text](<./img/volume create.png>)
+
+Przygotowanie obrazu który będzie wykorzystany do stworzenia konteneru budującego nasz projekt:
 
 ![alt text](./img/dockerfile.bld.png)
 
 ![alt text](<./img/docker build.png>)
+
+Uruchonienie zdudowanego wyżej obrazu z podpiętymi do niego woluminai:
 
     docker run -it --name build-container \
     -v input_volume:/mnt/input \
     -v output_volume:/mnt/output \
     build_img /bin/bash
 
+Sprawdzenie poprawności działania:
+
 ![alt text](<./img/build container.png>)
 
+Uruchonienie drugiego kontenera który posłuży nam do klonowania repozytorium oraz jego konfiguracja:
+
 ![alt text](<./img/run repo_cloning.png>)
+
+Sklonowanie repozytorium w odpowiednim folderze:
 
 ![alt text](<./img/git clone input.png>)
 
 ![alt text](<./img/irrsi coppied.png>)
 
+Zdubowanie projektu w drugim kontenerze przeznaczonym do tego zadania utorzonym na samym początku zajęc:
+
 ![alt text](<./img/ninja -c build to coppy.png>)
+
+Przeniesienie zbudowaniego projektu na wolumin wyjściowy oraz potwierdzenie poprawnie wykonanego zadania:
 
 ![alt text](./img/coppied.png)
 
     docker run –rm -v output_volume:/mnt/output fedora ls /mnt/output
 
-![alt text](<./img/run f.png>)
-
 ## Komunikacja sieciowa oraz eksponowanie portów
 
+![alt text](<./img/run f.png>)
+
+Przeprowadzenie testu z wykorzystaniem programu iperf3 na dwóch oddielnych kontenerach w tej samej domyślnej sieci:
+
 ![alt text](<./img/iperf3 network test.png>)
+
+Utworzenie nowej sieci oraz kontenerów jej używających:
 
     docker network create my_network
 
 ![alt text](<./img/ip a.png>)
 
+Test łączności, (na zrzucie ekranu widać ip obu kontenerów):
+
 ![alt text](<./img/ipref3 custom network.png>)
 
+Łączność z Hostem:
+
 ![alt text](<./img/iperf3 host.png>)
+
+Ekspozycja portów:
 
     docker run --rm -it -p 5201:5201 --name iperf3-server fedora bash
 
 ![alt text](<./img/downloading iperf3.png>)
+
+Test połączenia poprzez wyeksponowany port:
 
 ![alt text](<./img/iperf windows.png>)
 
@@ -336,6 +364,8 @@ Wykorzytanie obrazu zbudowanego z wczeniejszego Dockerfile do stworzenia nowego:
 ![alt text](<./img/run jenkins.png>)
 
 ![alt text](<./img/docker ps jenkins.png>)
+
+Test działania Jenkins:
 
 ![alt text](<./img/jenkins webside.png>)
 
