@@ -1,5 +1,7 @@
 # Sprawozdanie nr 1
 
+## Miłosz Nowak Inżynieria Obliczeniowa 31.03.2025r.
+
 ## Zajęcia 01:
 
 1. Po zainstalowaniu i skonfigurowaniu systemu Fedora Server na maszynie wirtualnej połączyłem się z nim przez wiersz poleceń w systemie Windows za pomocą polecenia:
