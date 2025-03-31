@@ -214,13 +214,25 @@ Możliwe za pomocą:
 
 ## Wybór oprogramowania na zajęcia, sklonowanie jego repozytorium oraz przeprowadzenie testów
 
+Wykorzytanie podanego na zajęciach repozytorium do przeprowadzenia ćwiczenia: 
+
 ![alt text](<./img/git clone irssi.png>)
+
+Instalacja programu Meson: lekkiego narzędzia do budowania oprogramowania:
 
 ![alt text](<./img/dnf install meson.png>)
 
+Inicjalizacja katalogu <code style="color:rgb(35, 186, 101);"> build</code> w którym Meson skonfiguruje projekt i przygotuje go do kompilacji:
+
 ![alt text](<./img/meson build.png>)
 
+Meson automatycznie generuje pliki dla systemu Ninja, który odpowiada za efektywną kompilację projektu.
+
+System budowania przechodzi do wskazanego katalogu wsazanego w poleceniu i tam wykonuje kompilację zgodnie z konfiguracją wygenerowaną przez Meson:
+
 ![alt text](<./img/ninja -C Build.png>)
+
+Przeprowadzenie testów:
 
 ![alt text](<./img/ninja -C Build test.png>)
 
@@ -232,11 +244,17 @@ Możliwe za pomocą:
 
 ![alt text](<./img/gir clone fedora irssi.png>)
 
+Intalacja nezbędnych zależności w nowo powstałym kontenerze:
+
     dnf -y install git meson ninja gcc glib2-devel utf8proc-devel ncurses-devel perl-ExtUtil*
+
+Przeprowadzenie koniecznych czynności podobnie jak powyżej:
 
 ![alt text](<./img/fedora meson Build.png>)
 
 ![alt text](<./img/meson Build fin.png>)
+
+Wykonanie Buildu oraz tetów:
 
     ninja -C Build
 
@@ -248,7 +266,11 @@ Możliwe za pomocą:
 
      docker build -t irssibld -f ./Dockerfile.irssibld .
 
+Zbudowanie obrazu z Dockerfile. Poszczególne argumenty oznaczają kolejno: tag ktory przypisujemy do nowego obrazu, niestandardową nazwę pliku z ktorego budujemy obraz oraz katalog gdzie ten plik się znajduje 
+
 ![alt text](<./img/docker bilid dockerfile.irssibld.png>)
+
+Wykorzytanie obrazu zbudowanego z wczeniejszego Dockerfile do stworzenia nowego:
 
 ![alt text](./img/dockerfile.irssibldv2.png)
 
