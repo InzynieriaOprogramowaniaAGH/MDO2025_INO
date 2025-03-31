@@ -12,6 +12,7 @@ Weryfikacja dostępu do repozytorium jako uczestnik i klonowanie przy użyciu kl
 W koljenym kroku wygenerowano klucz SSH o typie ed25519 zabezpieczony hasłem. Otrzymałem 2 klucze; prywatny i publiczny które zostały zapisane w folderze ssh.
 8  ssh-keygen -t ed25519 -C "igorkita2003@gmail.com". 
  Potem skopiowano ten klucz i w githubie wybrano opcje Settings>SSH and GPG keys> New SSH key. Wklejono skopiowany klucz i zapisano.
+
 ![Zrzut ekranu przedstawiający klucz SSH](kluczSSH.jpg)
 
 
@@ -20,6 +21,7 @@ Skonfigurowałem klucz SSH, aby mieć dostęp do GitHuba, sklonowałem repozytor
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 Dzięki temu po poprawnym uwierzytelnieniu repozytorium zostało pobrane lokalnie.
 Następnie skonfigurowałem 2FA:
+
 ![alt text](skonfigurowanie2FA.jpg)
 
 Git Hook - commit -msg:
@@ -136,3 +138,74 @@ W tym celu stworzyłem te pliki Dockerfile, które umieściłem w osobnym folder
 Kontener pracuje poprawnie wszystkie testy dały wynik pozytywny. Dockerfile.biuld buduje irssi, natomiast Dockerfile.test uruchamia testy lecz nie robi builda.
 
 Obraz Dockera jest statycznym plikiem, który zawiera wszystkie zależności i instrukcje niezbędne do uruchomienia aplikacji. Po utworzeniu obrazu na podstawie Dockerfile, staje się on gotowy do użycia w kontenerze. Kontener to uruchomiona instancja obrazu, która działa na systemie operacyjnym hosta i może wykonywać zdefiniowane w obrazie zadania, takie jak uruchamianie aplikacji, kompilowanie kodu czy przeprowadzanie testów. W przypadku mojej aplikacji irssi, kontener utworzony z obrazu irssi-test uruchamia testy jednostkowe aplikacji, a po ich zakończeniu kontener jest usuwany.
+
+
+
+Lab 4
+
+Na tym laboratorium zajmowałem się woluminami. Początkowo podłączyłem je do kontenera bazowego. (docker volume create irssi_input)
+(docker volume create irssi_output)
+ Sklonowałem repozytorium na wolumin wejściowy.
+
+![alt text](build2_lab4.jpg)
+
+![alt text](wgrywanie-repo_do_wolumenu-wejsciowego_lab4.jpg)
+
+Zrobiłem to za pomocą kopiowania do katalogu z woluminem na hoście (var/lib/docker)
+
+Uruchomiłem build w kontenerze:
+
+![alt text](poczatek_buildowania_wkontenerze_lab4.jpg)
+
+![alt text](koniec_buildowania_Wkontenerze_lab4.jpg)
+
+Po wykonaniu tego builda zapisłem powstałe pliki a w zasadzie przeniosłem ja na wolumin wyjściowy
+
+![alt text](przeniesienie_buildu_do_wolumenu_output_lab4.jpg)
+
+Operacja klonowania na wolumin wejściowy wewnątrz kontenera będzie wyglądała analogicznie. Dodatkowo
+w celu automatyzacji całego procesu można posłużyć się Dockerfile oraz mechanizmem RUN --mount, który jest dostępny przy użyciu polecenia docker build z flagą --mount=type=.... Pozwala to na tymczasowe podłączanie zasobów (np. katalogów z hosta lub woluminów) tylko na czas wykonywania danej instrukcji RUN, bez trwałego kopiowania ich do obrazu.
+
+W kolejnej części ćwiczenia zająłem się iperf. Uruchomiłem wewnątrz kontenera serwer iperf.
+
+![alt text](uruchomienie_serwera_iperf_lab4.jpg)
+
+Odpaliłem klienta i testowałem przepustowość:
+
+![alt text](odpalenie_klienta_testowanie_przepustowosci_lab4.jpg)
+
+Przepustowość wynosi około 30 Gbit/s
+
+Po zaznajomieniu sie z dokumentacją network create połączyłem się z własną dedykowaną siecią mostkową:
+
+![alt text](testowanie_iperf_wlasna_siecia.jpg)
+
+Tutaj przepustowość wynosiła około 25 Gbit/s
+
+Połączyłem się również na Fedorze w celu porównania. Zainstalowałem tam iperf:
+
+![alt text](instal_iperf_na_fedorze_lab4.jpg)
+
+Na Fedorze przepustowość spadła.
+
+Połączyłem się także z poza hosta z Windowsa wykorzystując tunel SSH
+
+![alt text](tunel_ssh_windows_fedora_lab4.jpg)
+
+I sprawdziłem połączenie z innego hosta (windows)
+
+![alt text](laczenie_sie_zinnego_hosta_windows_lab4.jpg)
+
+
+Instancja Jenkins
+
+W tej części zapoznałem się z instancją Jenkins. Przeprowadziłem instalacjęskonteneryzowanej instancji Jenkonsa z pomocnikiem DIND. Zainicjalizowałem instancję
+
+![alt text](haslo_do_inicjalizacji_jenkins_lab4.jpg)
+
+![alt text](Jenkins_UI_inicjalizacja_lab4.jpg)
+
+
+![alt text](dashboard_zainstalowanego_jenkinsa_lab4.jpg)
+
+Z powyższych zrzutów ekranu jasno wynika, że ćwiczenie zostało zrealizowane poprawnie.
