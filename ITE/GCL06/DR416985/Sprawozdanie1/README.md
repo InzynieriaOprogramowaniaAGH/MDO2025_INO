@@ -170,11 +170,15 @@ git clone https://github.com/irssi/irssi.git
 ```
 ### Zbudowanie aplikacji i testy
 
+![lab3-meson-ninja](./lab3/Zrzut ekranu 2025-03-31 201737.png)
+
 ```sh
 meson build
 ninja test
 ```
 ### Zbudowanie irssi w kontenerze
+
+![lab3-docker-fedora](./lab3/Zrzut ekranu 2025-03-31 202557.png)
 
 ```sh
 dokcer run -it --rm fedora bash
@@ -209,6 +213,8 @@ ninja -C build
 
 ### Budowanie obrazu
 
+![lab3-docker-build](./lab3/Zrzut ekranu 2025-03-31 203529.png)
+
 ```sh
 docker build -t irssi-builder -f ./irssi-build.Dockerfile .
 ```
@@ -228,6 +234,8 @@ docker run irssi-builder
 
 
 ### Aplikacja w Nodzie
+
+![lab3-node-install](./lab3/Zrzut ekranu 2025-03-31 204407.png)
 
 **Interaktywne uruchomienie kontenera**
 
@@ -285,6 +293,8 @@ docker run --rm node-deploy
 # LAB4
 
 ## Tworzenie i budowanie obrazu
+
+![lab4-dockerfile](./lab4/Zrzut ekranu 2025-03-31 211935.png)
 Przygotowano Dockerfile, który pobiera repozytorium Node.js i wykonuje instalację oraz testy:
 
 ```Dockerfile
@@ -301,6 +311,8 @@ docker build -t node-base .
 ```
 
 ## Tworzenie woluminów i uruchomienie kontenera
+
+![lab4-volumes](./lab4/Zrzut ekranu 2025-03-31 212704.png)
 ```sh
 docker volume create input_volume
 docker volume create output_volume
@@ -309,11 +321,17 @@ docker run -it --name base-cont -v input_volume:/input -v output_volume:/output 
 ```
 
 ## Skopiowanie repozytorium do kontenera
+
+![lab4-docker-cp](./lab4/Zrzut ekranu 2025-03-31 212727.png)
 ```sh
 docker cp node-js-dummy-test base-cont:/input
 ```
 
 ## Instalacja zależności i uruchomienie testów w kontenerze
+
+![lab4-npm-install](./lab4/Zrzut ekranu 2025-03-31 212945.png)
+
+![lab4-npm-test](./lab4/Zrzut ekranu 2025-03-31 213606.png)
 ```sh
 cd /input/node-js-dummy-test
 npm install
@@ -321,11 +339,15 @@ npm test
 ```
 
 ## Przeniesienie wyniku do woluminu wyjściowego
+
+![lab4-copy-output](./lab4/Zrzut ekranu 2025-03-31 213911.png)
 ```sh
 cp -r /input/node-js-dummy-test /output/
 ```
 
 ## Test wystawienia portu
+
+![lab4-iperf-pull](./lab4/Zrzut ekranu 2025-03-31 214139.png)
 ```sh
 docker pull networkstatic/iperf3
 ```
@@ -356,6 +378,8 @@ docker logs docker1 > logs.txt
 ```
 
 ## Jenkins
+
+![lab4-jenkins-run](./lab4/Zrzut ekranu 2025-03-31 223017.png)
 Tworzenie własnej sieci:
 ```sh
 docker network create jenkins
