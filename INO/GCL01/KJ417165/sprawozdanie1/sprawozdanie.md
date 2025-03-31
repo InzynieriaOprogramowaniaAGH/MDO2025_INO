@@ -99,3 +99,84 @@ Gałąź grupowa jest chroniona, więc push został odrzucony.
 11. Dodanie Dockerfile do folderu 'Sprawozdanie1' w repozytorium:
 
 ![alt text](screens/screens2/11.png)
+
+## Laboratorium 3
+
+1. W trakcie zajęć korzystaliśmy z repozytoriów irssi, node-js-dummy-test oraz wybranego, w tym przypadku FFmpeg. Po instalacji za pomocą 'git clone' należało przeprowadzić coś na kształt 'make build' oraz 'make test'. W przypadku irssi należało wykonać polecenie 'meson test -C builddir', które przeprowadzało nam testy:
+
+![alt text](screens/screens3/1.png)
+
+2. Dla node-js-dummy-test należało wykonać polecenie 'npm install', które instalowało nam wszystkie zależności:
+
+![alt text](screens/screens3/2.png)
+
+3. Po wpisaniu 'npm start' uruchamialiśmy program, a po wpisaniu 'npm test' uruchamialiśmy testy:
+
+![alt text](screens/screens3/3.png)
+
+![alt text](screens/screens3/4.png)
+
+4. Dla FFmpeg należało wykonać polecenie 'make fate', aby uruchomić testy:
+
+![alt text](screens/screens3/5.png)
+
+5. Następnym krokiem było powtórzenie tych kroków wewnątrz kontenera. Za pomocą polecenia 'docker run -it --name irssi_build ubuntu bash' uruchomiliśmy kontener, a za pomocą 'apt update && apt install -y build-essential meson ninja-build git perl pkg-config libglib2.0-dev libssl-dev libncurses-dev' zaktualizowaliśmy wymagane pakiety(irssi):
+
+![alt text](screens/screens3/7.png)
+
+* Sklonowaliśmy repozytorium
+
+![alt text](screens/screens3/8.png)
+
+Analogicznie dla pozostałych repozytoriów.
+
+6. Testy:
+
+* irssi:
+
+![alt text](screens/screens3/9.png)
+![alt text](screens/screens3/10.png)
+
+* node-js-dummy-test:
+
+![alt text](screens/screens3/11.png)
+
+* FFmpeg:
+
+![alt text](screens/screens3/12.png)
+
+7. Aby zautomatyzować powyższe kroki należało utworzyć dwa pliki Dockerfile, pierwszy przeprowadzający wszystkie kroki do builda, drugi wykonywujący testy
+
+![alt text](screens/screens3/6.png)
+
+8. Zawartości plików Dockerfile.build:
+
+* irssi: 
+
+![alt text](screens/screens3/17.png)
+
+* node-js-dummy-test:
+
+![alt text](screens/screens3/19.png)
+
+* FFmpeg:
+
+![alt text](screens/screens3/15.png)
+
+9. Zawartości plików Dockerfile.test:
+
+* irssi: 
+
+![alt text](screens/screens3/18.png)
+
+* node-js-dummy-test:
+
+![alt text](screens/screens3/20.png)
+
+* FFmpeg:
+
+![alt text](screens/screens3/16.png)
+
+10. Testy po automatyzacji:
+
+![alt text](screens/screens3/14.png)
