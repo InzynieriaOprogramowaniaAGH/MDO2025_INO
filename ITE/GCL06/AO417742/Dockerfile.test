@@ -1,0 +1,6 @@
+
+FROM node-builder
+
+WORKDIR /app
+
+CMD ["npm", "test"]

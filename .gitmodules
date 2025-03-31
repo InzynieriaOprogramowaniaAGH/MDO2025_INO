@@ -1,0 +1,6 @@
+[submodule "ITE/GCL06/AO417742/irssi"]
+	path = ITE/GCL06/AO417742/irssi
+	url = https://github.com/irssi/irssi.git
+[submodule "ITE/GCL06/AO417742/node-js-dummy-test"]
+	path = ITE/GCL06/AO417742/node-js-dummy-test
+	url = https://github.com/devenes/node-js-dummy-test.git

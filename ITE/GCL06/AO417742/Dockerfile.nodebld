@@ -1,0 +1,8 @@
+FROM node:latest
+
+WORKDIR /app
+
+RUN git clone https://github.com/devenes/node-js-dummy-test.git
+WORKDIR /app/node-js-dummy-test
+RUN npm install
+CMD ["tail", "-f", "/dev/null"]

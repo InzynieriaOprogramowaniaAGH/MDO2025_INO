@@ -1,0 +1,3 @@
+FROM irssi-builder
+
+CMD ["meson", "test", "-C", "build"]
