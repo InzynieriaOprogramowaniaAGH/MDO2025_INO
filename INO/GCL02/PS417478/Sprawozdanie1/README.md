@@ -258,5 +258,5 @@ Formaty JAR/DEB/RPM są przydatne do pakowania bibliotek w linuxie.
 Można użyć osobnego kontenera do pakowania artefaktów. Fpm może pomóc w automatycznym generowaniu pakietów .deb i .rpm., w które warto pakowac program.
 
 --- 
-## Lab 4
+## Lab 4 - Dodatkowa terminologia w konteneryzacji, instancja Jenkins
 
