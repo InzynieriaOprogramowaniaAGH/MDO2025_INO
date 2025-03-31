@@ -1,6 +1,8 @@
 # Sprawozdanie 1
 #### Tomasz Oszczypko
 
+Wszystkie użyte polecenia na maszynie wirtualnej dostępne są w plikach `bash_history` w katalogach `00[1-4]-Class`. Historia jest wyczyszczona ze zbędnych poleceń/ Tworzone w trakcie laboratoriów pliki (np. Dockerfile) również są dostępne w tych samych katalogach.
+
 ## Zajęcia 01
 Celem laboratorium było skonfigurowanie usługi SSH umożliwiającej połączenie z GitHubem oraz zapoznanie się i przygotowanie własnej gałęzi w repozytorium git.
 
@@ -354,6 +356,8 @@ Finalnie możliwe jest zbudowanie i uruchomienie kontenera z testami przy użyci
 
 
 ## Zajęcia 04
+
+Celem laboratorium było nauczenie się pracy z woluminami i sieciami w Dockerze, a także zainstalowanie Jenkinsa wymaganego na kolejne laboratoria.
 
 ### 1. Zachowywanie stanu
 
