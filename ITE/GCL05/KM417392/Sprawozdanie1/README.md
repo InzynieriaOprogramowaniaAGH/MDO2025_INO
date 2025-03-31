@@ -302,14 +302,14 @@ rake all test
 ![obraz](KM/lab3/10.png)
 ### Dockerfile build
 1. Stworzono nowy plik ```Dockerfile.build```
-- [Dockerfile.build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/lab3-wazne-pliki/Dockerfile.build)
+
 Dockerfile zawiera cały proces buildowania:
 - używa bazowy obraz ubuntu
 - pobiera i instaluje niezbędne zależności
 - klonuje repozytorium
 - ustawia katalog roboczy na ```/mruby```
 - uruchamia ```rake```, który kompiluje kod 
-  
+- [Dockerfile.build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/lab3-wazne-pliki/Dockerfile.build) 
 ![obraz](KM/lab3/12.png)
 
 2. Zbudowano nowy obraz ```my_mruby_build```
@@ -322,9 +322,10 @@ docker build -f Dockerfile.build -t my_mruby_build .
 
 ### Dockerfile test
 1. Stworzono nowy plik ```Dockerfile.test```
-- [Dockerfile.test](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/lab3-wazne-pliki/Dockerfile.test)
+
 Dockerfile zajmuje się jedynie przeprowadzeniem testów (nie robi builda)
 Bazuje na ```my_mruby_build```.
+- [Dockerfile.test](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/lab3-wazne-pliki/Dockerfile.test)
 ![obraz](KM/lab3/15.png)
 2. Zbudowano nowy obraz ```my_mruby_test```
 ```
@@ -332,7 +333,8 @@ docker build -f Dockerfile.test -t my_mruby_test .
 ```
 ![obraz](KM/lab3/16.png)
 ![obraz](KM/lab3/18.png)
-4. Po wejściu do kontenera automatycznie testy zaczynają się wykonywać. 
+
+3. Po wejściu do kontenera automatycznie testy zaczynają się wykonywać. 
 ![obraz](KM/lab3/17.png)
 ![obraz](KM/lab3/19.png)
 
@@ -366,7 +368,7 @@ docker volume create wyjscie
 ```
 ![obraz](KM/lab4/2_stworzenie_woluminow.png)
 
-3. Uruchamiono kontener bazowy z woluminami
+3. Uruchomiono kontener bazowy z woluminami
 ```
 docker run -it --rm -v wejscie:/mnt/wejscie -v wyjscie:/mnt/wyjscie --name builder node-builder 
 ```
@@ -382,15 +384,19 @@ docker start -ia 8b071a78241f
 Pliki z lokalnego katalogu ```simple-npm-webapp-starter``` zostają skopiowane do wolumenu wejscie **za pomocą kontenera** alpine. Po zakończeniu operacji kontener zostaje automatycznie usunięty.
 
 ![obraz](KM/lab4/5_klonowanie_zewn.png)
-Skopiowano zawartość plików na wolumin wyjściowy
+
 ![obraz](KM/lab4/6_skopiowane_pliki.png)
+
+- Skopiowano zawartość plików na wolumin wyjściowy
 ![obraz](KM/lab4/7_kopiowanie_wyjscie.png)
 
-- *Można sprawdzić zawartość kontenera z hosta*
-![obraz](KM/lab4/8_sprawdzenie-z-hosta.png)
+- Sprawdzono zawartość kontenera z hosta
 ```
 docker run -v wyjscie:/mnt/wyjscie alpine ls /mnt/wyjscie
 ```
+![obraz](KM/lab4/8_sprawdzenie-z-hosta.png)
+
+
 ### Klonowanie wewnątrz kontenera
 Stworzyłam do testowania dwa inne woluminny: ```input```, ```output```. 
 1. Pracę rozpoczęto od stworzenia nowego Dockerfile'a z gitem
@@ -417,8 +423,10 @@ cp -r dist/* /mnt/output
 ```
 ![obraz](KM/lab4/10_klon_wewn.png)
 ![obraz](KM/lab4/11_klon_wewn1.png)
+
 ### RUN --mount
-1. W ramach przetestowania mozliwości RUN --mount utworzono folder ```test``` i dodano do niego "plik_testowy".
+
+1. W ramach testowania możliwości RUN --mount utworzono folder "wejscie" i dodano do niego testowy plik.
 ![obraz](KM/lab4/moun1.png)
 2. Dodatkowo stworzono prosty Dockerfile
 - [Dockerfile](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab4/lab4-wazne-pliki/mount_doc/Dockerfile)
@@ -438,14 +446,14 @@ docker run -it --rm --mount type=bind,src=/home/kasiam/wejscie, dst=/app/test ob
 ![obraz](KM/lab4/mount-bind.png)
 
 Wykorzystano ```--volume```  (uproszczona metoda montowania katalogów) oraz ```--mount```. 
-Obie metody powoliły na wymiane foldery pomiędzy docker, a hostem. 
+Obie metody pozwoliły na wymianę zawartości folderu pomiędzy Dockerem a hostem.
 
 ### Eksponowanie portu - serwer **iperf3**
-- Pracę rozpoczęto od stworzenia sieci mostkowej(bridge) (docker domyślnie tworzy sieć typu bridge, można tyez dodać ```--driver```) o nazwie ```mynet``` 
-(umożliwia kontenerom komunikację za pomocą nazw, a nie tylko adresów IP.
-- Następnie uruchomiono serwer **iperf3** poprzez stworzenie nowego kontenera (```-d``` - daemon, kontener działa w tle), nadano mu nazwe ```iperf-server```
-- ```--network mynet``` podłącza kontener do sieci mynet i używa obrazu ```networkstatic/iperf3```
-- Uruchomienie **iperf3** w trybie klienta i łączy się z serwerem - ```-c iperf-server``` (używa nazwy kontenera, zamiast adres IP)
+- Praca rozpoczęła się od stworzenia sieci mostkowej (bridge), której Docker używa domyślnie. Stworzono sieć o nazwie "mynet", umożliwiającą komunikację między kontenerami za pomocą nazw, a nie tylko adresów IP.
+
+- Następnie uruchomiono serwer ```iperf3``` w tle (przy użyciu opcji -d) w kontenerze o nazwie ```iperf-server```, podłączonym do sieci mynet.
+
+- Kontener klienta uruchomiono z ```iperf3``` w trybie klienta, łącząc się z serwerem po nazwie kontenera: ```-c iperf-server```.
 ```
 docker network create mynet
 docker run -d --rm --name iperf-server --network mynet networkstatic/iperf3 -s
@@ -453,7 +461,7 @@ docker run --rm --network mynet networkstatic/iperf3 -c iperf-server
 ```
 ![obraz](KM/lab4/Port2.png)
 Zainstalowano **iperf3** na hoście i sprawdzono adres IP serwera na kontenerze.
-1) Połączenie z hosta:
+1) Połączenie iperf3 z hosta:
 ```
 sudo apt update && sudo apt install -y iperf3
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-server
@@ -467,7 +475,7 @@ iperf3 -c 172.20.0.2
 
 2) Wystawienie portu iperf3 na hosta:
 Poniższym poleceniem  uruchamiono kontener Docker, który działa jako serwer iperf3.
-Serwer ten nasłuchuje na porcie 5201, czekając na połączenia od klientów iperf3. Dzięki temu, można testować przepustowość sieci między tym kontenerem a innymi maszynami.
+Serwer ten nasłuchuje na porcie 5201, czekając na połączenia od klientów iperf3. Dzięki temu, można testować przepustowość sieci.
 
 ![obraz](KM/lab4/port-iperf.png)
 ```
@@ -486,10 +494,10 @@ iperf3 -c 172.19.0.2 > wynik_iperf.txt
 
 ### Instancja Jenkins
 Zgodnie z dokumentacją, proces konfiguracji Jenkinsa za pomocą Dockera obejmuje kilka kroków, w tym tworzenie nowej sieci i woluminu, a następnie uruchomienie samego kontenera Jenkinsa. 
-1. Najpierw utworzonoo osobną sieć Docker o nazwie "jenkins" dla Jenkinsa.
+1. Najpierw utworzono osobną sieć Docker o nazwie "jenkins" dla Jenkinsa.
 2. Wolumeny w Dockerze są używane do przechowywania danych, które muszą byc przechowywane niezależnie od stanu kontenera. Wolumin będzie przechowywał dane Jenkinsa
 3. Ostatecznie uruchomiono kontener Docker na bazie obrazu ```jenkins/jenkins:lts```. Dodano również ```--privileged``` aby nadać uprawnienia kontenerowi.
-4. W logach można było odnaleźć hasło
+4. W logach odnaleziono hasło
 5. Zmapowano port 8080 kontenera na port 8080 hosta, co umożliwia dostęp do interfejsu Jenkinsa przez przeglądarkę na porcie 8080
 ```
 docker network create jenkins
