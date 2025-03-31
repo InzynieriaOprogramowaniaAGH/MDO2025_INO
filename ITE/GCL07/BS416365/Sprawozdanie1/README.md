@@ -1,4 +1,4 @@
-#Sprawozdanie 1
+**Sprawozdanie 1**
 
 Bartosz Skubel 416365
 ITE Gr. 7
@@ -77,7 +77,7 @@ Hook działa poprawnie i wszystkie commity muszą zaczynać się od `BS416365`.
 
 Dodano zdjęcia i sprawozdanie do katalogu `BS416365`.
 
-Wysłąno zmiany do repozytorium zdalnego.
+Wysłano zmiany do repozytorium zdalnego.
 
 ![Push](<Lab 1/8.png>)
 
@@ -89,7 +89,7 @@ Wysłąno zmiany do repozytorium zdalnego.
 
 ![Docker install](<Lab 2/1.png>)
 
-2. Zarejstrowano się w serwisie Docker Hub.
+2. Zarejestrowano się w serwisie Docker Hub.
    
 ![Docker Hub](<Lab 2/1.5.png>)
 
@@ -324,7 +324,7 @@ Instalowanie wymagań i klonowanie przy użyciu git:
 
 Potwierdzenie pobrania:
 
-![Potwierdzeie](<Lab 4/12.png>)
+![Potwierdzenie](<Lab 4/12.png>)
 
 Po buildzie skopiowano gotowe pliki na `vout2`:
 
@@ -332,7 +332,7 @@ Po buildzie skopiowano gotowe pliki na `vout2`:
 
 Potwierdzenie pobrania:
 
-![Potwierdzeie](<Lab 4/14.png>)
+![Potwierdzenie](<Lab 4/14.png>)
 
 3. Wykorzystanie `docker build` i pliku `Dockerfile.mountbuild`:
 
@@ -400,7 +400,7 @@ Następnie połączono się spoza hosta, czyli z Windowsa:
 
 ![Iperf3 - !host](<Lab 4/24.png>)
 
-Popłączenie odebrano poprawnie:
+Połączenie odebrano poprawnie:
 
 ![Iperf3 - !host - serwer](<Lab 4/25.png>)
 
@@ -432,4 +432,4 @@ Podczas zajęć wykorzystywano ChatGPT w wersji 4o głównie w celu sprawdzenia 
 
 **Problemy z zajęciami**
 
-W trakcie pracy nad zajęciami nr 04 maszyna wirtualna zamiast poprawnie wznowić pracę otrzymała nieodwracalny błąd, który zmusił mnie do odwzorowania poprzedniej zawartości za pomocą wcześniej zrobionych zrzutów ekranu, jednak nie możliwe było odzyskanie całej historii i plik z nią zawiera jedynie informacje potrzebne do odwzorowania obecnego stanu i pełną historię drugiej połowy zajęć 4.
+W trakcie pracy nad zajęciami nr 04 maszyna wirtualna zamiast poprawnie wznowić pracę otrzymała nieodwracalny błąd, który zmusił mnie do odwzorowania poprzedniej zawartości za pomocą wcześniej zrobionych zrzutów ekranu, jednak niemożliwe było odzyskanie całej historii i plik z nią zawiera jedynie informacje potrzebne do odwzorowania obecnego stanu i pełną historię drugiej połowy zajęć 4.
