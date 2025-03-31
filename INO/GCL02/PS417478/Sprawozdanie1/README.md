@@ -1,5 +1,5 @@
 # Sprawozdanie 1 
-## ** Lab 1 - Wprowadzenie, Git, Gałęzie, SSH **
+## Lab 1 - Wprowadzenie, Git, Gałęzie, SSH
 ### 1. Instalacja klijenta Git i obsługa kluczy SSH
 Po intsalacji systemu Fedora i konfiguracji, sprawdziłam adres IP mojego serwera i wykorzystując Visual Studio Code, połączyłam się przez SSH, sklonowałam repozytorium poleceniem:
 ```bash
@@ -162,10 +162,100 @@ git commit -m "PS417478: docker"
 git push origin PS417478
 ```
 
-
 --- 
-## Lab 3
+## Lab 3 - Dockerfiles, kontener jako definicja etapu
+### 1. Wybór oprogramowania
+Oprogramowanie cJSON [link](https://github.com/DaveGamble/cJSON):
+dysponuje otwartą licencją, ma Makefile, make, make test.
 
+### 2. Instalacja, budowanie i testowanie
+Poleceniami:
+```bash
+git clone https://github.com/DaveGamble/cJSON.git
+```
+w folderze cJSON, stworzyłam folder `build`, a w środku niego:
+```bash
+cmake ..
+```
+![zdj8](screenshots/8.png)
+Następnie po kolei zbudowałam i testowałam:
+```bash
+make
+ctests
+exit
+```
+![zdj9](screenshots/9.png)
+![zdj10](screenshots/10.png)
+![zdj11](screenshots/11.png)
+
+### 3. Dockerfile.build i Dockerfile.test
+Tworze plik o nazwie `Dockerfile.build`, który wygląda następująco:
+```bash
+FROM fedora:latest
+
+RUN dnf update -y && dnf install -y git cmake gcc gcc-c++ make
+
+WORKDIR /app
+RUN git clone https://github.com/DaveGamble/cJSON.git .
+RUN mkdir build && cd build && cmake .. && make
+```
+
+Tworze plik o nazwie `Dockerfile.test`, który wygląda następująco:
+```bash
+FROM cjson-build
+
+WORKDIR /app/build
+CMD ["ctest"]
+```
+
+buduje obrazy i uruchamiam testy odpowiednio po kolei:
+```bash
+docker build -t cjson-build -f Dockerfile.build .
+docker build -t cjson-test -f Dockerfile.test .
+docker run -it cjson-test
+```
+![zdj12](screenshots/12.png)
+![zdj13](screenshots/13.png)
+
+### 4. Docker Compose
+Połączone polecenia, dzieki którym nie potrzebuje uruchamiać każdego konterera ręcznie.
+
+Tworze plik o nazwie `docker-compose.yml`, który wygląda następująco:
+```bash
+version: '3'
+services:
+  build:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      - build
+```
+Następnie zbudowałam:
+```bash 
+docker-compose up --build
+```
+![zdj14](screenshots/14.png)
+![zdj15](screenshots/15.png)
+![zdj16](screenshots/16.png)
+
+### 5. Dodanie utworzonych plików:
+```bash
+git add .
+git commit -m "PS417478: dockerfile"
+git push origin PS417478
+```
+### 6. Dyskusja
+Program nie nadaje się do publikowania jako kontener, ponieważ głównym celem jest kompilacja i testowanie, a nie dystrybucja jako kontener.
+W procesie budowania generowane są np. biblioteki oraz pliki nagłówkowe. Gotowe artefakty mogą być zapakowane w np. .tar.gz.
+Jeśli kontener jest przeznaczony do publikacji, należy go oczyścić aby zostały jedynie pliki wynikowe (biblioteki czy nagłowki).
+Najlepiej jakby deploy-and-publish miał osobny plik dockerfile do gotowych artefaktów.
+Formaty JAR/DEB/RPM są przydatne do pakowania bibliotek w linuxie.
+Można użyć osobnego kontenera do pakowania artefaktów. Fpm może pomóc w automatycznym generowaniu pakietów .deb i .rpm., w które warto pakowac program.
 
 --- 
 ## Lab 4
