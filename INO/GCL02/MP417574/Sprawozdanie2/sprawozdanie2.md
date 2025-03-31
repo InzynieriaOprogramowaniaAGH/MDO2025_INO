@@ -123,6 +123,7 @@ Wybrałam `Ogólny projekt` oraz w zakładce `kroki budowania` -> `Uruchom powł
 ![projekt_p1](IMG5/p1.png)
 
 Zapisałam oraz uruchomiłam projekt.
+
 ![projekt_p1_wynik](IMG5/p1_wynik.png)
 
 Utworzyłam nowy projekt `p2` tym razem wybrałam opcję `Pipeline`.Bedzie to projekt który zwraca błąd, gdy godzina jest nieparzysta. W `Pipeline script` napisałam skrypt sprawdzający.
