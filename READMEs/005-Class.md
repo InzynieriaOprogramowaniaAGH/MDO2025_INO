@@ -25,7 +25,7 @@
 * Wpisz treść *pipeline'u* bezpośrednio do obiektu (nie z SCM - jeszcze!)
   * https://www.jenkins.io/doc/book/pipeline/syntax/
 * Spróbuj sklonować repo przedmiotowe (`MDO2025_INO`)
-* Zrób *checkout* do swojego pliku Dockerfile (na osobistej gałęzi)
+* Zrób *checkout* do swojego pliku Dockerfile (na osobistej gałęzi) właściwego dla *buildera* wybranego w poprzednim sprawozdaniu programu
 * Zbuduj Dockerfile
 * Uruchom stworzony *pipeline* drugi raz
  
