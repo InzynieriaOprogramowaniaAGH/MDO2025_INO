@@ -1,0 +1,8 @@
+t_msg_file=$1
+prefix="MP416070"  
+
+if ! grep -q "^$prefix" "$commit_msg_file"; then
+    echo "Błąd: Commit message musi zaczynać się od: $prefix"
+    exit 1
+fi
+
