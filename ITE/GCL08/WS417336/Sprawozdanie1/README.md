@@ -186,7 +186,7 @@ busy_banzai to serwer
 ![alt text](<Zdjecia/lab 4/Zrzut ekranu 2025-03-26 111301.png>)
 
 
-**Następnie wykorzystano ip hosta widoczne w VSC do podłaczęnia się ze stroną logowania Jenkinsa, do którego zalogowano się z pomocą hasła zdobytego z pomocą ```docker exec 2ea358106c5f cat /var/jenkins_home/secrets/initialAdminPassword```**
+**Następnie wykorzystano ip hosta widoczne w VSC do podłaczenia się ze stroną logowania Jenkinsa, do którego zalogowano się z pomocą hasła zdobytego z pomocą ```docker exec 2ea358106c5f cat /var/jenkins_home/secrets/initialAdminPassword```**
 
 ![alt text](<Zdjecia/lab 4/Zrzut ekranu 2025-03-26 111454.png>)
 ![alt text](<Zdjecia/lab 4/Zrzut ekranu 2025-03-26 111528.png>)
