@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                deleteDir()
+                sh "git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git"
+                dir("MDO2025_INO") { sh "git checkout JL416317" }
+            }
+        }
+        stage('Build') {
+            steps {
+                dir("MDO2025_INO/ITE/GCL04/JL416317/Sprawozdanie1/lab_3") {sh "docker build -t weatherapp-build -f Dockerfile.build ."}
+            }
+        }
+        stage('Test') {
+            steps {
+                dir("MDO2025_INO/ITE/GCL04/JL416317/Sprawozdanie1/lab_3") {sh "docker build -t weatherapp-test -f Dockerfile.test ."}
+            }
+        }
+        stage('Images check') {
+            steps {
+                sh "docker images"
+            }
+        }
+    }
+}
