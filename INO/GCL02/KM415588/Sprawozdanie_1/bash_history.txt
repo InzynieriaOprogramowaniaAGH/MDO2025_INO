@@ -1,0 +1,96 @@
+sudo dnf install -y git openssh
+git clone https://<TOKEN>@github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+clip < ~/.ssh/id_ed25519.pub
+clip < ~/.ssh/id_ecdsa.pub
+eval $(ssh-agent -s)
+ssh-add ~/.ssh/id_ed25519
+git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+cd MDO2025_INO
+git checkout main
+git pull origin main
+git checkout GCL02
+git pull origin GCL02
+git  checkout -b KM415588
+mkdir -p KM415588/Sprawozdanie_1
+cd KM415588/Sprawozdanie_1
+nano commit-msg
+cp ./commit-msg .git/hooks/commit-msg
+chmod +x .git/hooks/commit-msg
+git add .
+git commit -m "KM415588: sprawozdanie i zdjęcia"
+git push origin KM415588
+git checkout GCL02
+git pull origin GCL02
+git merge KM415588
+sudo dnf install docker
+docker login
+docker pull busybox
+docker pull hello-world
+docker pull fedora
+docker pull mysql
+docker images
+docker run -it busybox
+docker ps -a
+docker run -it fedora
+docker ps -a
+docker exec -it /bin/bash
+dnf install -y procps-ng
+ps
+dnf update -y
+docker build --buil-arg TOKEN=<PERSONAL_ACCESS_TOKEN#RĘCZNIE USUNIĘTY W PLIKU TXT> -t gitdockerfile .
+docker run -it gitdockerfile /bin/bash
+ls -al
+exit
+docker container prune
+docker stop fedora_con && docker rm fedora_con
+docker image prune
+sudo docker build -f dockerfile.chalkbuild . -f chalk-build
+sudo docker build -t chalk-test -f dockerfile.chalktest .
+sudo docker run -it chalk-test
+sudo dnf -y install docker-compose
+sudo docker-compose -f docker-compose.chalk.yml up --build
+npm pack
+sudo docker volume create volin && sudo docker colume create volout
+sudo docker run --rm -v volin:/repo alpine/git clone https://github.com/LitoMore/chalk-pipe /repo
+sudo docker run -it --rm -v volin:/src -v volout:/build node:18-alpine sh
+npm install
+npm run build
+npm test
+cp -r distribution/ ../build
+sudo docker tun -it --rm -v volout:/build alpine sh
+cd build
+ls
+sudo docker run -it --rm -v volin:/repo -v volout:/build node:18-alpine sh
+apk add git
+git clone https://github.com/LitoMore/chalk-pipe /repo
+cd repo
+npm install
+npm run build
+npm test
+sudo docker volume rm volin volout
+sudo docker run -d --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+sudo docker run -it --name iperf-server -p 5201:5201 fedora bash
+dnf -y install iperf3
+iperf3 -s
+sudo docker run --rm networkstatic/iperf3 -c 172.17.0.2
+sudo docker network create iperf-net
+sudo docker network connect iperf-net iperf-server
+sudo docker run --rm --network iperf-net networkstatic/iperf3 -c  iperf-server
+sudo snf -y install iperf3
+sudo iperf3 -c 172.17.0.2
+sudo iperf3 -c 127.0.0.1 -p 5201
+iperf3 -c <ip_wirtualnje_maszyny_z_kontenerem>
+sudo docker logs iperf-server
+sudo docker network create jenkins-network
+sudo docker volume create jenkins-docker-certs && sudo docker volume create jenkins-data
+sudo docker run --name jenkins-docker --rm --detach --priviliged --network jenkins-network --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home docker:dind
+sudo docker run --name jenkins-blue --rm --detach --network jekins-network --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro jenkins/jenkins:latest
+sudo docker ps -a
+sudo docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+sudo docker build -t chalk-pipe-builder -f dockerfile.builder .
+sudo docker run --rm -v volin:/repo -v volout:/mnt/output chalk-pipe-builder sh -c "cd /repo && npm install && npm test && cp -r . mnt/output/"
+docker run -it --rm -v volout:/mnt/output alpine sh
+ls /mnt/output
+sudo docker build -t ssh-fedora-image -f dockerfile.ssh .
+sudo docker run -d --name ssh-fedora -p 2222:22 ssh-fedora-image
+ssh root@localhost -p 2222
