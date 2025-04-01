@@ -17,7 +17,7 @@
 * Konfiguracja wstępna i pierwsze uruchomienie
   * Utwórz projekt, który wyświetla `uname`
   * Utwórz projekt, który zwraca błąd, gdy... godzina jest nieparzysta
-  * Pobierz obraz kontenera `ubuntu` (stosując `docker pull`)
+  * Pobierz w projekcie obraz kontenera `ubuntu` (stosując `docker pull`)
 
 ### Zadanie wstępne: obiekt typu pipeline
 🌵 Ciąg dalszy sprawozdania - zadanie do wykonania po wykazaniu działania Jenkinsa
@@ -37,16 +37,16 @@ Dla osób z wybranym projektem
 * Diagram będzie naszym wzrocem do porównania w przyszłości
 
 ### Pipeline: składnia
-Zadanie do wykonania, jeżeli poprawnie działa obiekt pipeline i udało się odnaleźć dostęp do plików Dockerfile
+Zadanie do wykonania, jeżeli poprawnie działa obiekt *pipeline* i udało się odnaleźć dostęp do plików Dockerfile
 * Definiuj pipeline korzystający z kontenerów celem realizacji kroków `build -> test`
 * Może, ale nie musi, budować się na dedykowanym DIND, ale może się to dziać od razu na kontenerze CI. Należy udokumentować funkcjonalną różnicę między niniejszymi podejściami
 * Docelowo, `Jenkinsfile` definiujący *pipeline* powinien być umieszczony w repozytorium. Optymalnie: w *sforkowanym* repozytorium wybranego oprogramowania
 
 ### Kompletny pipeline: wymagane składniki
-Kompletny pipeline (wprowadzenie) - do wykonania po ustaleniu kształu kroków `deploy` i `publish`
+Kompletny *pipeline* (wprowadzenie) - do wykonania po ustaleniu kształu kroków `deploy` i `publish`
 *  Kontener Jenkins i DIND skonfigurowany według instrukcji dostawcy oprogramowania
 *  Pliki `Dockerfile` wdrażające instancję Jenkinsa załączone w repozytorium przedmiotowym pod ścieżką i na gałęzi według opisu z poleceń README
-*  Zdefiniowany wewnątrz Jenkinsa obiekt projektowy „pipeline”, realizujący następujące kroki:
+*  Zdefiniowany wewnątrz Jenkinsa obiekt projektowy *pipeline*, realizujący następujące kroki:
   * Kontener `Builder`, który powinien bazować na obrazie zawierającym dependencje (`Dependencies`), o ile stworzenie takiego kontenera miało uzasadnienie. Obrazem tym może być np. baza pobrana z Docker Hub (jak obraz node lub 
 dotnet) lub obraz stworzony samodzielnie i zarejestrowany/widoczny w DIND (jak np. obraz oparty o Fedorę, doinstalowujący niezbędne zależności, nazwany Dependencies). Jeżeli, jak często w przypadku Node, nie ma różnicy między runtimowym obrazem a obrazem z dependencjami, proszę budować się w oparciu nie o latest, ale o **świadomie wybrany tag z konkretną wersją**
   * Obraz testujący, w ramach kontenera `Tester`
