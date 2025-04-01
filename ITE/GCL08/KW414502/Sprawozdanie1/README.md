@@ -107,3 +107,56 @@ RUN ninja -C Build test
 ![](lab3/2b.png)
 
 ### Lab 4
+
+#### Część 1
+1. Stworzyłem woluminy wejściowe i wyjściowe korzystając z `docker volume create`
+![](lab4/1.png)
+2. Skopiowałem Dockerfile z poprzednich laboratoriów i usunąłem z niego instalację gita
+```
+FROM fedora:42
+RUN dnf install -y \
+    meson \
+    ninja \
+    gcc \
+    glib2-devel \
+    openssl-devel \
+    utf8proc-devel \
+    ncurses-devel \
+    perl
+WORKDIR /irssi
+CMD ["/bin/bash"]
+```
+Za pomocą `docker run -it -v in:/mnt/in -v out:/mnt/out irssinogit` podpiąłem woluminy do stworzonego kontenera.
+
+3. Zbudowałem kontener, a repozytorium irssi sklonowałem na wolumin wejściowy `in`
+wykorzystując świeży kontener fedora:42 
+- `docker run it -v in:/mnt/in fedora:42` 
+![](lab4/2.png)
+Zbudowałem aplikację
+![](lab4/3.png)
+I skopiowałem powstałe pliki na wolumin `out`
+![](lab4/4.png)
+![](lab4/4b.png)
+
+4. Powyższe kroki można zrobić w Dockerfile'u z wykorzystaniem `RUN --mount`
+```
+FROM fedora:42
+RUN dnf install -y \
+    meson \
+    ninja \
+    gcc \
+    glib2-devel \
+    openssl-devel \
+    utf8proc-devel \
+    ncurses-devel \
+    perl
+RUN --mount=type=cache,target=/git_cache git clone https://github.com/irssi/irssi
+WORKDIR /irssi
+RUN meson Build
+RUN ninja -C Build 
+RUN mkdir -p /output && cp -r Build /output
+CMD ["/bin/bash"]
+```
+
+#### Część 2
+1. Pobrałem obraz iperf3
