@@ -38,6 +38,7 @@ Ciąg dalszy sprawozdania - zadania do wykonania po wykazaniu działania Jenkins
 #### Zadanie wstępne
 * Utwórz nowy obiekt typu `pipeline`
 * Wpisz treść pipeline'u bezpośrednio do obiektu (nie z SCM - jeszcze!)
+ * https://www.jenkins.io/doc/book/pipeline/syntax/
 * Spróbuj sklonować repo przedmiotowe
 * Zrób *checkout* do swojego pliku Dockerfile
 * Zbuduj Dockerfile
