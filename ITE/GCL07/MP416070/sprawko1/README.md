@@ -92,5 +92,5 @@ Następnie tworzymy commit zawierający dodane zmiany :
 ```git commit -m "MP416070 :  message"``
 
 To polecenie tworzy commit ale póki co jest on tylko lokalnie na naszej maszynie. Aby wysłać go na github należy 'wypchnąć' zmiany za pomocą komendy : 
-``` git push ```!
-[alt text](screeny/sshd_status.png)
+``` git push ```
+![alt text](screeny/sshd_status.png)
