@@ -204,3 +204,147 @@ A do usuwania docker rmi i ID obrazu lub jego nazwy, np.
 
 
 ![alt text](screeny/lab2_obrazy.png)
+
+## Dockerfiles i konteneryzacja - laboratorium 3
+
+### Wybór oprogramowania
+
+Do wykonania ćwiczenia zostało wybrane oprogramowanie irssi zaproponowane przez prowadzącego.
+
+Aby rozpocząć pracę sklonowano repozytorium irssi z github:
+
+```git clone https://github.com/irssi/irssi```
+
+## Instalacja zależności
+
+Następnie doinstalowano wymagane zależności aby umożliwić kompilacje aplikacji:
+``` sudo dnf -y install gcc glib2-devel openssl-devel perl-devel ncurses-devel meson ninja```
+
+
+![alt text](screeny/lab3_paczki1.png)
+
+
+Po zainstalowaniu zależności, zbudowano projekt przy użyciu meson oraz skompilowano przy pomocy ninja :
+
+
+
+![alt text](screeny/lab3-meson.png)
+
+
+![alt text](screeny/lab3-ninnja.png)
+
+Następnie uruchomiono testy w celu sprawdzenia poprawności działania:
+
+![alt text](screeny/lab3-testy.png)
+
+
+Następnie przechodzimy do powtórzenia tych samych kroków jednak w kontenerze.
+Pobieramy obraz fedore i tworzymy interaktywny kontener:
+
+```docker pull fedora:latest```
+
+
+```docker run -it --name lab3 fedora:latest /bin/bash```
+
+Wewnątrz kontenera pobieramy wszystkie niezbędne zależności: 
+
+
+```dnf -y install gcc glib2-devel openssl-devel ncurses-devel meson ninja```
+
+```dnf -y install perl-ExtUtils-Embed```
+
+Inicjalizujemy i konfigurujemy projekt przy pomocy komendy meson Build:
+
+
+![alt text](screeny/lab3-meson-kontener.png)
+
+
+Następnie kompilujemy oraz instalujemy projekt komendą 
+```ninja -C Build && ninja -C Build install```
+
+![alt text](screeny/lab3-ninja-kontener.png)
+
+
+
+Oraz uruchamiamy testy jednostkowe w celu weryfikacji poprawności kompilacji:
+
+```ninja -C Build test```
+
+![alt text](screeny/lab3-ninja-testkontener.png)
+
+Historia poleceń wewnątrz kontenera:
+```
+1  dnf -y install gcc glib2-devel openssl-devel ncurses-devel meson ninja
+    2  meson Build
+    3  git 
+    4  dnf -y git
+    5  dnf -y install git
+    6  git clone https://github.com/irssi/irssi
+    7  ls
+    8  cd ir
+    9  cd irssi/
+   10  meson Build
+   11  dnf install perl-ExtUtils-Embed
+   12  meson Build
+   13  ninja -C Build && ninja -C Build install
+   14  ninja -C Build test
+```
+
+## Budowanie kontenerów na podstawie Dockerfile
+
+Został stworzony plik Dockerfile automatyzujący przedstawiony powyżej proces. Utworzony plik Dockerfile przedstawiwa sie następująco :
+
+```
+FROM fedora:latest
+
+#pobranie wymaganych pakietow i repo
+RUN dnf -y install \
+gcc \
+glib2-devel \
+openssl-devel \
+ncurses-devel \
+meson \
+ninja \
+git \
+perl-ExtUtils-Embed 
+
+WORKDIR /app
+
+COPY . /app
+
+RUN meson setup builddir
+RUN ninja -C builddir
+```
+
+Następnie budujemy kontener na podstawie utworzonego Dockerfile, robimy to wykonując polecenie:
+
+```docker build -t build_image -f Dockerfile.build .```
+
+![alt text](screeny/lab3-dockerbuild.png)
+
+Tworzymy drugi plik Dockerfile.test na podstawie którego tworzony jest drugi kontener.
+
+```
+FROM build_image
+
+WORKDIR /app
+
+CMD ninja -C builddir test
+```
+
+Budowanie drugiego obrazu:
+
+```docker build -f Dockerfile.test . -t test_image```
+
+![alt text](screeny/lab3_dockertest.png)
+
+
+### Uruchomienie kontenera
+
+Aby przedstawiony plik Dockerfile.build zadziałał musi znajdować się on w tym samym folderze co plik meson.build w tym przypadku w folderze ./irssi/
+
+Uruchamiamy kontener poleceniem:
+
+```docker run --rm --name test_container test_image```
+
+![alt text](screeny/lab3-dockerrunfinal.png)
