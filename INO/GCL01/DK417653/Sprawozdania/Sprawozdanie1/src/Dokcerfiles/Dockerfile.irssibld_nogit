@@ -1,0 +1,9 @@
+FROM fedora:latest
+
+# bez gita
+RUN dnf -y install  meson ninja-build \
+    utf8proc-devel ncurses-devel gcc cmake \
+    openssl-devel perl-ExtUtils* glib2-devel
+    
+
+WORKDIR /irssi
