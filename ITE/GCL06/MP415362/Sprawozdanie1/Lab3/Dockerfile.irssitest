@@ -1,0 +1,2 @@
+FROM irssibuild
+CMD ["ninja", "-C", "Build", "test"]
