@@ -1,0 +1,15 @@
+FROM ubuntu
+
+RUN apt-get update && apt-get install -y \
+    sudo\
+    build-essential \
+    meson \
+    ninja-build \
+    pkg-config \
+    libglib2.0-dev \
+    libssl-dev \
+    perl \
+    ncurses-dev
+
+WORKDIR /irssi
+CMD ["/bin/bash"]
