@@ -603,3 +603,42 @@ Otrzymamy:
 ![iperf3_logs](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/iperf3_logs.png)
 
 ### 3️⃣ Instancja Jenkins:
+
+Na początku tworzymy sieć dokerową, woluminy wejściowe i wyjściowe, i uruchamiamy w niej DIND
+
+```bash
+sudo docker network create jenkins-network
+sudo docker volume create jenkins-docker-certs && sudo docker volume create jenkins-data
+sudo docker run --name jenkins-docker --rm --detach --priviliged --network jenkins-network --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home docker:dind
+sudo docker run --name jenkins-blue --rm --detach --network jekins-network --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro jenkins/jenkins:latest
+sudo docker ps -a
+```
+Otrzymujemy dwa kontenery:
+
+![jenkins_cons](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/jenkins_cons.png)
+
+Dalej pobieramy z kontenera jenkins-blue hasło administratora do pierwszego logowania:
+
+```bash
+sudo docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+A dalej na maszynie lokalnej wchodzimy pod adres http://<ip_maszyny_z_kontenerem>:8080
+
+Po wpisaniu hasła otrzymanego w konsoli otrzymamy:
+
+![jenkins_przegl](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/jenkins_przegl.png)
+
+Po wybraniu instalacji wtyczek domyślnych otrzymujemy okno:
+
+![jenkins_wtyk](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/jenkins_wtyczki.png)
+
+Po zainstalowaniu się wtyczek otrzymujemy:
+
+![jenkins_user](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/jenkins_user.png)
+
+A po zalogowaniu:
+
+![jenkins_aftre](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/jenkins_after.png)
+
+### 4️⃣ Zakres rozszerzony:
