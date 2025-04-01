@@ -1,11 +1,14 @@
-**LAB1
+LAB1
+
 1. Zainstalowanie klienta git i obsługi kluczy SSH
    Pracę rozpoczęto od instalacji klienta git i obsługi kluczy ssh
 ![image](https://github.com/user-attachments/assets/ff4fa743-ec04-48eb-a77d-9bc8bf06084c)
-3. Sklonowanie repozytorium przedmiotowego za pomocą HTTPS i personal access token
+
+2. Sklonowanie repozytorium przedmiotowego za pomocą HTTPS i personal access token
    Wygenerowano personal access token na platformie github w odpowiedniej sekcji, skopiowano link z protokołem HTTPS do repozytorium i sklonowano przedstawioną na zrzucie ekranu komendą.
 ![image](https://github.com/user-attachments/assets/c9151217-9d85-49fe-9d12-05e2f1e22f98)
-4. Generacja kluczy SSH
+
+3. Generacja kluczy SSH
    Wygenerowano 2 klucze SSH: Windows PC i SSH_password, z których jeden został zabezpieczomny hasłem.
 ![image](https://github.com/user-attachments/assets/3b3a2551-3743-4ade-a959-180eb4037b27)
    Skopiowano zawartość pliku wcześniej wygenerowanego klucza publicznego SSH i następnie wklejono na platformie Github, umożliwiając w ten sposób klonowanie repozytoriów bez potrzeby każdorazowego podawania hasła.
@@ -15,45 +18,55 @@
 ![image](https://github.com/user-attachments/assets/2c88ed5a-2293-480e-bfc3-8c2f5853df53)
    Zapewniono uwierzytelnianie dwuskładnikowe2FA (autentykacja dwuetapowa) za pomocą aplikacji na telefon, takiej jak Google Authenticator. Dzięki temu po podaniu hasła jest również konieczność podania jednorazowego kodu generowanego przez aplikację na telefonie, co zwiększa bezpieczeństwo konta.
 ![image](https://github.com/user-attachments/assets/2db07c9f-c24e-44d2-91ad-6b2633563ebe)
-5. Przełączenie na gałęzie.
+
+4. Przełączenie na gałęzie.
    Przełączono się na gałąź main, a następnie na gałąź swojej grupy - MDO2025_INO.
 ![image](https://github.com/user-attachments/assets/eaf8f1bb-21e3-4e36-8cfa-1269c997fdab)
    Utworzono w tym miejscu gałąź o nazwie NI409877 (inicjały i nr indeksu), a niej katalog o tej samej nazwie.
 ![image](https://github.com/user-attachments/assets/494b18fd-cf9a-4707-8fee-b3d58e9e4f66)
-6. Git hook
+
+5. Git hook
    Napisano Git hooka - skrypt weryfikujący, że każdy mój "commit message" zaczyna się od NI409877 i dodano go utworzonego katalogu.
 ![image](https://github.com/user-attachments/assets/406e9c78-006f-494e-bfbf-e0f0343b4c69)
-7. Wypchnięcie zmian na githuba
+
+6. Wypchnięcie zmian na githuba
    Gotowe pliki najpierw dodano za pomocą add do staging area, a następnie za pomocą commit zatwierdozno zmiany do lokalnej historii repozytorium. Za pomocą git push origin wypchnięto zmiany na githuba.
 ![image](https://github.com/user-attachments/assets/e9bdf424-9edb-45bc-ba1c-82f4d06f5661)
 ![image](https://github.com/user-attachments/assets/1b691d73-cd4f-4bb7-8281-d19d285ca245)
 
 
-**LAB 2
+LAB 2
+
 1. Instalacja Dockera
    Zainstalowano Dockera w systemie linuksowym i zarejestrowano się w DockerHub.
+
 2. Pobranie obrazów
    Obrazy Docker to szablony zawierające wszystkie niezbędne pliki, zależności i konfiguracje potrzebne do uruchomienia aplikacji lub systemu operacyjnego w kontenerze. Pobrano obrazy hello-world, busybox, ubuntu, fedora i mysql.
 ![image](https://github.com/user-attachments/assets/5325afdb-94a4-479d-bf94-d4fed6ef688d)
+
 3. Uruchomienie kontenera z obrazu busybox
    Kontener to lekkie, izolowane środowisko, które uruchamia aplikację wraz ze wszystkimi jej zależnościami, bez potrzeby instalowania ich bezpośrednio na systemie operacyjnym gospodarza.
    Podłączono się do kontenera busybox, uruchomiono go interaktywnie i pokazano nr wersji.
 ![image](https://github.com/user-attachments/assets/9120cad9-e396-4dab-88d0-cc05a125f2b6)
 ![image](https://github.com/user-attachments/assets/ff3297a3-7773-4bc3-bf31-389ecbbdaf89)
+
 4. Uruchomienie kontenera ubuntu
    Uruchomiono kontener z obrazu ubuntu, gdzie zaprezentowano PID1 i procesy dockera.
 ![image](https://github.com/user-attachments/assets/2fbc8e68-5111-4044-9a94-35edbb99eaab)
+
 5. Dockerfile
    Dockerfile to plik tekstowy zawierający instrukcje do automatycznego tworzenia obrazu Docker, definiujący jego konfigurację, zależności i sposób uruchamiania aplikacji.
    Stworzono nowy plik DOckerfile i zbudowano nowy obraz za pomocą build.
 ![image](https://github.com/user-attachments/assets/cc148f12-219f-41be-87a2-c3942f7e8655)
+
 6. Czyszczenie
    Pokazano działające kontenery i obrazy, a następnie wyczyszczono je
 ![image](https://github.com/user-attachments/assets/751b5b3e-5647-408a-8ead-cc87ea87aab3)
 ![image](https://github.com/user-attachments/assets/c110706f-5e5f-408d-87a2-1098cc72bf0c)
 
 
-**LAB3
+LAB3
+
 1. Do wykonania ćwiczenia wykorzystano 2 podane przez prowadzącego oprogramowania: irssi i node.js. Irssi to klient IRC działający w terminalu, który pozwala na komunikację w różnych sieciach IRC w systemach Unix/Linux. Jest ceniony za swoją prostotę, rozszerzalność i niskie zużycie zasobów.
 Node.js to środowisko uruchomieniowe dla JavaScript, które umożliwia uruchamianie aplikacji serwerowych i umożliwia programowanie po stronie serwera za pomocą JavaScriptu. Jest szeroko używane w tworzeniu nowoczesnych aplikacji webowych i usług internetowych.
 Sklonowano repozytorium irssi.
@@ -101,8 +114,10 @@ Po wejściu do kontenera automatycznie testy zaczynają się wykonywać.
 ![image](https://github.com/user-attachments/assets/17fdb1d3-eeb0-4802-b881-3b1b5f7c8dcc)
 
 
-**LAB4
+LAB4
+
 Do zadania wykorzystano repozytorium irssi podobnie jak na poprzednich laboratoriach.
+
 1. Woluminy
 Woluminy (volumes) to sposób przechowywania danych, które powinny być dostępne i trwałe, nawet po wyłączeniu kontenera.
 Bind mounts pozwalają na podpięcie lokalnych katalogów z systemu plików do kontenera.
