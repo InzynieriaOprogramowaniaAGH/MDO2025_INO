@@ -1,4 +1,4 @@
-#LAB1
+**LAB1
 1. Zainstalowanie klienta git i obsługi kluczy SSH
    Pracę rozpoczęto od instalacji klienta git i obsługi kluczy ssh
 ![image](https://github.com/user-attachments/assets/ff4fa743-ec04-48eb-a77d-9bc8bf06084c)
@@ -29,7 +29,7 @@
 ![image](https://github.com/user-attachments/assets/1b691d73-cd4f-4bb7-8281-d19d285ca245)
 
 
-#LAB 2
+**LAB 2
 1. Instalacja Dockera
    Zainstalowano Dockera w systemie linuksowym i zarejestrowano się w DockerHub.
 2. Pobranie obrazów
@@ -53,7 +53,7 @@
 ![image](https://github.com/user-attachments/assets/c110706f-5e5f-408d-87a2-1098cc72bf0c)
 
 
-#LAB3
+**LAB3
 1. Do wykonania ćwiczenia wykorzystano 2 podane przez prowadzącego oprogramowania: irssi i node.js. Irssi to klient IRC działający w terminalu, który pozwala na komunikację w różnych sieciach IRC w systemach Unix/Linux. Jest ceniony za swoją prostotę, rozszerzalność i niskie zużycie zasobów.
 Node.js to środowisko uruchomieniowe dla JavaScript, które umożliwia uruchamianie aplikacji serwerowych i umożliwia programowanie po stronie serwera za pomocą JavaScriptu. Jest szeroko używane w tworzeniu nowoczesnych aplikacji webowych i usług internetowych.
 Sklonowano repozytorium irssi.
@@ -101,7 +101,7 @@ Po wejściu do kontenera automatycznie testy zaczynają się wykonywać.
 ![image](https://github.com/user-attachments/assets/17fdb1d3-eeb0-4802-b881-3b1b5f7c8dcc)
 
 
-#LAB4
+**LAB4
 Do zadania wykorzystano repozytorium irssi podobnie jak na poprzednich laboratoriach.
 1. Woluminy
 Woluminy (volumes) to sposób przechowywania danych, które powinny być dostępne i trwałe, nawet po wyłączeniu kontenera.
