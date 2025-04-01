@@ -17,11 +17,11 @@ RUN apt update && apt install -y \
     perl cpanminus && \
     cpanm ExtUtils::Embed
 
-# Ustawienie katalogu roboczego
-WORKDIR /app
-
 # Skopiowanie całego kodu źródłowego do kontenera
 COPY . /app
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
 
 # Konfiguracja Meson
 RUN meson setup builddir
