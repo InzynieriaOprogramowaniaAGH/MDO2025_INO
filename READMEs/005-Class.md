@@ -11,7 +11,8 @@
   * Zaloguj się i skonfiguruj Jenkins
   * Zadbaj o archiwizację i zabezpieczenie logów
   
-### Uruchomienie 
+### Uruchomienie
+🌵 Zadanie do wykonania na ćwiczeniach
 * Konfiguracja wstępna i pierwsze uruchomienie
   * Utwórz projekt, który wyświetla `uname`
   * Utwórz projekt, który zwraca błąd, gdy... godzina jest nieparzysta
@@ -33,9 +34,8 @@
 * Może, ale nie musi, budować się na dedykowanym DIND, ale może się to dziać od razu na kontenerze CI. Należy udokumentować funkcjonalną różnicę między niniejszymi podejściami
 * Docelowo, `Jenkinsfile` definiujący *pipeline* powinien być umieszczony w repozytorium. Optymalnie: w *sforkowanym* repozytorium wybranego oprogramowania
 
-### Szczegóły
-Ciąg dalszy sprawozdania - zadania do wykonania po wykazaniu działania Jenkinsa
-#### Zadanie wstępne
+### Zadanie wstępne
+🌵 Ciąg dalszy sprawozdania - zadanie do wykonania po wykazaniu działania Jenkinsa
 * Utwórz nowy obiekt typu `pipeline`
 * Wpisz treść pipeline'u bezpośrednio do obiektu (nie z SCM - jeszcze!)
  * https://www.jenkins.io/doc/book/pipeline/syntax/
@@ -43,7 +43,8 @@ Ciąg dalszy sprawozdania - zadania do wykonania po wykazaniu działania Jenkins
 * Zrób *checkout* do swojego pliku Dockerfile
 * Zbuduj Dockerfile
 
-#### Kompletny pipeline: wymagane składniki
+### Kompletny pipeline: wymagane składniki
+Kompletny pipeline (wprowadzenie) - do wykonania po ustaleniu kształu kroków `deploy` i `publish`
 *  Kontener Jenkins i DIND skonfigurowany według instrukcji dostawcy oprogramowania
 *  Pliki `Dockerfile` wdrażające instancję Jenkinsa załączone w repozytorium przedmiotowym pod ścieżką i na gałęzi według opisu z poleceń README
 *  Zdefiniowany wewnątrz Jenkinsa obiekt projektowy „pipeline”, realizujący następujące kroki:
