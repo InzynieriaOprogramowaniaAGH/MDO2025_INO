@@ -160,3 +160,20 @@ CMD ["/bin/bash"]
 
 #### Część 2
 1. Pobrałem obraz iperf3
+Uruchomiłem kontener i połączyłem się z nim z innego kontenera
+![](lab4/5.png)
+![](lab4/6.png)
+W celu uzyskania adresu IP serwera użyłem komendy `docker inspect --format "{{ .NetworkSettings.IPAddress}}" iperf3`
+![](lab4/7.png)
+Połączenie:
+![](lab4/8.png)
+Serwer:
+![](lab4/9.png)
+
+Czynność powtórzyłem z wykorzystaniem sieci mostkowej
+![](lab4/10.png)
+![](lab4/10b.png)
+
+#### Część 3
+
+1. Uruchomiłem kontener jenkins zgodnie z dokumentacją
