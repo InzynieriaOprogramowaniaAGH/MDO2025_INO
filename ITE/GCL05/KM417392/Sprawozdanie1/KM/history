@@ -1,0 +1,1000 @@
+    8  rm -rf MDO2025_INO
+    9  rm -rf fem
+   10  ls
+   11  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   12  rm -rf MDO2025_INO
+   13  git config --global credential.helper
+   14  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   15  ssh-keygen -t ed25519 -C "katarzynamad@student.agh.edu.pl" -f ~/.ssh/id_ed25519_second
+   16  ls
+   17  cat ~/.ssh/id_ed25519.pub
+   18  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   19  rm -rf MDO2025_INO
+   20  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   21  ls
+   22  git checkout main
+   23  cd MDO2025_INO
+   24  git checkout main
+   25  git checkout GCL05
+   26  git branch -a
+   27  git checkout -b KM417392
+   28  rm -rf MDO2025_INO
+   29  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   30  cd MDO2025_INO
+   31  cd ..
+   32  ls
+   33  cd ..
+   34  rm -rf MDO2025_INO
+   35  ls
+   36  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   37  cd MDO2025_INO
+   38  git checkout main
+   39  git checkout a
+   40  git checkout -a
+   41  git branch -a
+   42  cd ..
+   43  rm -rf MDO2025_INO
+   44  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   45  git checkout -a
+   46  cd MDO2025_INO
+   47  git branch -a
+   48  git checkout GCL05
+   49  git branch -a
+   50  git checkout -b KM417392
+   51  git branch
+   52  mkdir KM417392
+   53  cd .git/hooks
+   54  touch commit-msg
+   55  ls
+   56  nano commit-msg
+   57  chmod +x commit-msg
+   58  cd ..
+   59  cd KM417392
+   60  cd ..
+   61  cd KM417392
+   62  cd ..
+   63  cd .git/hooks
+   64  ls
+   65  nano commit-msg
+   66  nano commit_msg.sample
+   67  nano pre_commit_sample
+   68  nano update.sample
+   69  cd ..
+   70  cd KM417392
+   71  mv .git/hooks/commit-msg KD232144/commit-msg
+   72  cd ..
+   73  mv .git/hooks/commit-msg KD232144/commit-msg
+   74  cd .git/hooks/commit-msg
+   75  cd .git/hooks
+   76  ls
+   77  rm commit-msg
+   78  ls
+   79  nano commit-msg.sample
+   80  cd ..
+   81  cd KM417392
+   82  cd ..
+   83  ls
+   84  cd ITE
+   85  ls
+   86  cd ..
+   87  rm KM417392
+   88  rm -r KM417392
+   89  ls
+   90  cd ITE
+   91  ls
+   92  cd GCL05
+   93  ls
+   94  mkdir KM417392
+   95  cd KM417392
+   96  touch commit-msg
+   97  nano commit-msg
+   98  chmod +x commit-msg
+   99  cp commit-msg ./git/hooks/
+  100  cd ..
+  101  ls
+  102  cd -git/hooks
+  103  cd .git/hooks
+  104  cp ~/MDO2025_INO/ITE/GCL05/KM417392/commit-msg .git/hooks/
+  105  cd.. 
+  106  cd ..
+  107  cp ~/MDO2025_INO/ITE/GCL05/KM417392/commit-msg .git/hooks/
+  108  cd .git/hooks
+  109  ls
+  110  cd ..
+  111  cd ITE
+  112  cd GCL05
+  113  cd KM417392
+  114  ls
+  115  git commit -m "Błędna wiadomość"
+  116  mkdir -p Sprawozdanie1/README.md
+  117  ls
+  118  cd MDO2025_INO
+  119  ls
+  120  cd ITE
+  121  ls
+  122  cd GCL05
+  123  ls
+  124  git status
+  125  cd .. 
+  126  cd ..
+  127  ls
+  128  rm MDO2025_INO
+  129  rm  -rf MDO2025_INO
+  130  ls
+  131  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  132  ls
+  133  sudo apt update
+  134  sudo apt install git openssh-client -y
+  135  rm  -rf MDO2025_INO
+  136  ls
+  137  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  138  ls
+  139  cd MDO2025_INO
+  140  ls
+  141  git checkout main
+  142  git checkout -b KM417392
+  143  ls
+  144  cd ..
+  145  rm  -rf MDO2025_INO
+  146  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  147  cd MDO2025_INO
+  148  ls
+  149  git checkout GCL05
+  150  ls
+  151  cd ITE
+  152  ls
+  153  cd GCL05
+  154  git checkout -b KM417392
+  155  ls
+  156  mkdir KM417392
+  157  ls
+  158  cd .
+  159  cd ..
+  160  cd .git/hooks
+  161  ls
+  162  touch commit-msg
+  163  nano commit_msg
+  164  ls
+  165  rm commit-msg
+  166  ls
+  167  rm commit_msg
+  168  nano commit-msg
+  169  ls -l commit-msg
+  170  chmod +x commit-msg
+  171  ls -l commit-msg
+  172  cp commit-msg /MDO2025_INO/ITE/GCL05/KM417392
+  173  cd ..
+  174  ls
+  175  cd ITE
+  176  ls
+  177  cd GCL05
+  178  ls
+  179  cd KM417392
+  180  ls
+  181  cd ..
+  182  mv ~/MDO2025_INO/.git/hooks/commit-msg ~/MDO2025_INO/ITE/GCL05/KM417392/
+  183  cd ITE
+  184  cd GCL05
+  185  cd KM417392
+  186  ls
+  187  touch Sprawozdanie.md
+  188  ls
+  189  ls 
+  190  ls
+  191  cd ..
+  192  ls
+  193  cd KM
+  194  ls
+  195  cd lab1
+  196  cd ..
+  197  mv KM /MDO2025_INO/ITE/GCL05/KM417392
+  198  ls /MDO2025_INO/ITE/GCL05/KM417392
+  199  ls ~/MDO2025_INO/ITE/GCL05/KM417392/
+  200  mv KM ~/MDO2025_INO/ITE/GCL05/KM417392/
+  201  cd MDO2025_INO
+  202  ls
+  203  cd ITE
+  204  cd GCL05
+  205  cd KM417392
+  206  ls
+  207  git status
+  208  git add .
+  209  ls
+  210  git status
+  211  git commit -m "add files"
+  212  git config --global user.email katarzynamad@student.agh.edu.pl
+  213  git config --global user-name katarzynamad09
+  214  git config --global user.name katarzynamad09
+  215  git commit -m "add files"
+  216  ls
+  217  nano commit-msg
+  218  ls 
+  219  cd ..
+  220  cd .git/hooks/commit-msg
+  221  cd .git/hooks
+  222  ls
+  223  touch commit-msg
+  224  nano commit-msg
+  225  chmod +x .git/hooks/commit-msg
+  226  cd ..
+  227  chmod +x .git/hooks/commit-msg
+  228  cd .git/hooks
+  229  ls
+  230  cd ..
+  231  ls
+  232  cd ITE
+  233  ls
+  234  cd GCL05
+  235  ls
+  236  cdKM417392
+  237  cd KM417392
+  238  ls
+  239  nano commit-msg
+  240  git status
+  241  git add .
+  242  git commit -m "com"
+  243  git commit -m "KM417392: pierwszy commit"
+  244  git checkout
+  245  git branch
+  246  git checkout GCL05
+  247  git merge KM417392
+  248  git checkout GCL05
+  249  git checkout KM417392
+  250  ls
+  251  git branch
+  252  cd ..
+  253  ls
+  254  git branch
+  255  git merge KM417392
+  256  ls
+  257  git branch
+  258  git push origin GCL05
+  259  git branch
+  260  git checkout KM417392
+  261  ls
+  262  git checkout GCL05
+  263  git merge KM417392
+  264  git push origin GCL05
+  265  git checkout KM417392
+  266  git push origin KM417392
+  267  cd ..
+  268  docker
+  269  sudo apt install docker.io
+  270  docker
+  271  docker login
+  272  docker pull hello-world
+  273  sudo docker pull hello-world
+  274  ls
+  275  sudo docker pull busybox
+  276  sudo docker pull ubuntu
+  277  sudo docker pull mysql
+  278  docker run -it busybox
+  279  sudo docker run -it busybox
+  280  ls
+  281  branch
+  282  git branch
+  283  cd MDO2025_INO
+  284  ls
+  285  git branch
+  286  cd ITE
+  287  ls
+  288  cd GCL05
+  289  ls
+  290  cd KM417392
+  291  ls
+  292  cd ..
+  293  mv ~/KM ~/MDO2025_INO/ITE/GCL05/KM417392/
+  294  cd KM
+  295  ls
+  296  mv ~/KM/lab2  ~/MDO2025_INO/ITE/GCL05/KM417392/KM
+  297  cd ..
+  298  cd MDO2025_INO
+  299  ls
+  300  cd ITE
+  301  ls
+  302  cd GCL05
+  303  ls
+  304  cd KM417392
+  305  ls
+  306  cd KM
+  307  ls
+  308  cd ..
+  309  git add .
+  310  git commit "417392: Dodanie lab2"
+  311  git commit -m "417392: Dodanie lab2"
+  312  git commit -m "KM417392: Dodanie lab2"
+  313  git push origin KM417392
+  314  git pull origin KM417392
+  315  git branch
+  316  git push origin KM417392
+  317  cd ..
+  318  git push origin KM417392
+  319  git branch
+  320  git checkout GCL05
+  321  git push origin KM417392
+  322  git merge KM417392
+  323  git push origin KM417392
+  324  git checkout KM417392
+  325  git push origin KM417392
+  326  git status
+  327  git pull origin KM417392
+  328  git push origin KM417392
+  329  cd KM417392
+  330  git push origin KM417392
+  331  git checkout KM417392
+  332  git checkout GCL05
+  333  git push origin KM417392
+  334  cd ..
+  335  git checkout KM417392
+  336  git push origin KM417392
+  337  git fetch origin
+  338  ls
+  339  git push origin KM417392
+  340  ls
+  341  git pull origin KM417392
+  342  git pull --no-rebase origin KM417392
+  343  git add .
+  344  git commit -m "KM417392: dodaj"
+  345  git push origin KM417392
+  346  cd MDO2025_INO
+  347  cd
+  348  ls
+  349  cd MDO2025_INO
+  350  ls
+  351  cd ITE
+  352  ls
+  353  cd GCL05
+  354  ls
+  355  cd KM417392
+  356  ls
+  357  cd Sprawozdanie1
+  358  ls
+  359  cd KM
+  360  ls
+  361  cd ..
+  362  git clone https://github.com/devenes/node-js-dummy-test.git
+  363  npm i
+  364  npm install
+  365  ls
+  366  cd node-js-dummy-test
+  367  ls
+  368  npm install
+  369  sudo apt install npm
+  370  cd node-js-dummy-test
+  371  npm install
+  372  sudo apt install npm nodejs -y
+  373  ps aux | grep apt
+  374  sudo kill -9 1384 1385 1386 1476 2647 2648 2649
+  375  sudo rm /var/lib/dpkg/lock
+  376  sudo rm /var/lib/dpkg/lock-frontend
+  377  sudo rm /var/lib/apt/lists/lock
+  378  sudo dpkg --configure -a
+  379  sudo apt update
+  380  sudo apt install nodejs npm -y
+  381  npm i 
+  382  npm run test
+  383  docker images
+  384  docker rm $(docker ps -aq)
+  385  docker stop $(docker ps -q)
+  386  docker ps -a
+  387  docker rmi $(docker images -q) -f
+  388  docker images
+  389  docker pull node
+  390  docker run -it --name wow node bash
+  391  cd ..
+  392  ls
+  393  cd MDO2025_INO
+  394  ;s
+  395  l
+  396  ls
+  397  cd ITE
+  398  ls
+  399  cd GCL05
+  400  ls
+  401  cd KM417392
+  402  ls
+  403  cd Sprawozdanie1
+  404  ls
+  405  nano Dockerfile.nodebld
+  406  docker build -t coscos -f Dockerfile.nodebld .
+  407  docker images
+  408  docker aux
+  409  docker --help
+  410  docker ps
+  411  docker ps -a
+  412  nano Dockerfile.nodebld
+  413  docker build -t coscos -f Dockerfile.nodebld .
+  414  lsdocker run -d --name automatic coscos
+  415  docker run -d --name automatic coscos
+  416  docker images
+  417  docker ps
+  418  ls
+  419  nano Dockerfile.nodetest
+  420  docker build -t costest -f Dockerfile.nodetest .
+  421  docker run --name costest-kontener costest
+  422  ls
+  423  docker ps -a
+  424  nano Dockerfile.cbuildd
+  425  history
+  426  docker run -it --name node-project -v wejscie:/app/input wyjscie:/app/input costest
+  427  docker run -it --name node-project -v wejscie:/app/input -v wyjscie:/app/input costest
+  428  docker run -it --name node-project -v wejscie:/app/input -v wyjscie:/app/output costest
+  429  docker ps
+  430  docker ps -a
+  431  docker system prune --all
+  432  docker ps -a
+  433  docker volume ls
+  434  git clone https://github.com/nodejs/http-parser /var/lib/docker/volumes/wejscie/_data
+  435  sudo git clone https://github.com/nodejs/http-parser /var/lib/docker/volumes/wejscie/_data
+  436  ls
+  437  nano Dockerfile.cbuildd
+  438  docker build -t http-parser --name Dockerfile.cbuildd
+  439  docker build -f Dockerfile.cbuildd -t http-parser .
+  440  docker run -it --name http-parser-container -v wejscie:/app/input -v wyjscie:/app/output http-parser
+  441  docker volume inspect wejscie
+  442  docker ps -a
+  443  docker start -ai 3b706d221b13 
+  444  ls
+  445  mkdir pliki
+  446  ls
+  447  mv Dockerfile.cbuildd pliki
+  448  ls
+  449  mv Dockerfile.ctest pliki
+  450  mv Dockerfile pliki
+  451  ls
+  452  nano Dokerfile
+  453  ls
+  454  rm Dokerfile
+  455  nano Dockerfile
+  456  docker volumes
+  457  docker volume
+  458  docker volume ps 
+  459  docker volume ls
+  460  docker volume rm wejscie wyjscie
+  461  docker volume ls
+  462  docker volume create wejscie
+  463  docker volume ls
+  464  docker volume create input
+  465  docker volume create output
+  466  docker volume ls
+  467  nano Dockerfile
+  468  docker ps -a --filter volume=wejscie --filter volume=wyjscie
+  469  docker stop 3b706d221b13
+  470  docker rm 3b706d221b13
+  471  docker volume rm wejscie wyjscie
+  472  docker volume rm input output
+  473  docker volume ls
+  474  nano Dockerfile
+  475  docker volume create wejscie
+  476  docker volume create wyjscie
+  477  docker run -it --rm -v wejscie:/mnt/wejscie -v wyjscie:/mnt/wyjscie --name builder node-builder
+  478  docker build -t node-builder .
+  479  docker run -it --rm -v wejscie:/mnt/wejscie -v wyjscie:/mnt/wyjscie --name builder node-builder
+  480  git clone https://github.com/lttr/simple-npm-webapp-starter.git
+  481  docker run --rm -v wejscie:/mnt/wejscie -v "$(pwd)/simple-npm-webapp-starter":/tmp/repo alpine cp -r /tmp/repo/. /mnt/wejscie
+  482  docker ps -a 
+  483  docker ps -a
+  484  ls
+  485  docker images
+  486  docker run -it -v wejscie:/mnt/wejscie -v wyjscie:/mnt/wyjscie --name builder node-builder
+  487  docker ps -a
+  488  docker start -ia 8b071a78241f
+  489  docker run -v wyjscie:/mnt/wyjscie alpine ls /mnt/wyjscie
+  490  docker ps -a
+  491  docker help
+  492  docker ps -a
+  493  docker rm bd320fffb845
+  494  docker ps -a
+  495  docker rm 17c6e55ced95
+  496  docker run --rm -v wyjscie:/mnt/wyjscie alpine ls /mnt/wyjscie
+  497  docker ps -a
+  498  ls
+  499  nano Dockerfile.cd
+  500  docker build -f Dockerfile.cd -t node-builder-git .
+  501  docker run -it -v wejscie:/mnt/wejscie -v wyjscie:/mnt/wyjscie node-builder-git
+  502  docker ps -a
+  503  docker rm node-builder
+  504  docker rm 8b071a78241f
+  505  docker run -it --rm -v wejscie:/mnt/wejscie -v wyjscie:/mnt/wyjscie node-builder-git
+  506  docker ps -a
+  507  docker rm d01e734a0ed9
+  508  ls
+  509  docker run -it --rm -v wejscie:/mnt/wejscie -v wyjscie:/mnt/wyjscie node-builder-git
+  510  docker create volume
+  511  docker volume create input 
+  512  docker volume create output
+  513  docker ps -a
+  514  docker run -it --rm -v input:/mnt/input -v output:/mnt/output node-builder-git
+  515  nano Dockerfile.mount
+  516  docker volume create volume-in
+  517  docker volume create volume-out
+  518  nano Dockerfile.mount
+  519  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  520  docker help
+  521  docker -v
+  522  git clone https://github.com/lttr/simple-npm-webapp-starter.git
+  523  curl -sSL https://github.com/docker/buildx/releases/download/v0.7.0/buildx-v0.7.0.linux-amd64 -o /usr/local/bin/buildx
+  524  sudo  curl -sSL https://github.com/docker/buildx/releases/download/v0.7.0/buildx-v0.7.0.linux-amd64 -o /usr/local/bin/buildx
+  525  curl: (23) Failure writing output to destination
+  526  sudo  curl -sSL https://github.com/docker/buildx/releases/download/v0.7.0/buildx-v0.7.0.linux-amd64 -o /usr/local/bin/buildx
+  527  sudo curl -sSL https://github.com/docker/buildx/releases/download/v0.7.0/buildx-v0.7.0.linux-amd64 -o /usr/local/bin/buildx
+  528  ls
+  529  buildx version
+  530  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  531  sudo curl -sSL https://github.com/docker/buildx/releases/download/v0.7.0/buildx-v0.7.0.linux-amd64 -o /usr/local/bin/buildx
+  532  sudo chmod +x /usr/local/bin/buildx
+  533  buildx version
+  534  sudo rm /usr/local/bin/buildx
+  535  sudo curl -sSL https://github.com/docker/buildx/releases/download/v0.7.0/buildx-v0.7.0.linux-amd64 -o /usr/local/bin/buildx
+  536  sudo chmod +x /usr/local/bin/buildx
+  537  buildx version
+  538  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  539  export DOCKER_BUILDKIT=1
+  540  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  541  docker buildx version
+  542  docker --version
+  543  ls
+  544  nano Dockerfile.mount
+  545  mkdir lab4
+  546  mv Dockerfile lab4
+  547  nano Dockerfile
+  548  DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 .
+  549  help
+  550  version
+  551  for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+  552  docker help
+  553  docker ps -a
+  554  docker --version
+  555  sudo apt-get update
+  556  sudo apt install docker-io
+  557  sudo apt install docker.io
+  558  docker login
+  559  docker ps -a
+  560  docker version
+  561  docker ps 
+  562  docker images
+  563  sudo systemctl start docker
+  564  sudo systemctl status docker
+  565  docker ps -a
+  566  ls
+  567  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  568  nano Dockerfile
+  569  sudo apt-get install docker-ce-cli
+  570  sudo apt-get install docker-buildx
+  571  docker buildx version
+  572  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  573  nano Dcokerfile
+  574  ls
+  575  nano Dockerfile.mount
+  576  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  577  docker volume ls
+  578  nano Dockerfile.mount
+  579  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  580  nano Dockerfile.mount
+  581  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  582  nano Dockerfile.mount
+  583  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  584  docker ps -a
+  585  docker images
+  586  docker run -it --rm -v input:/mnt/input -v output:/mnt/output node-builder-git
+  587  ls
+  588  docker volume
+  589  docker volume inspect wejscie
+  590  cd /var/lib/docker/volumes/wejscie/_data
+  591  ls
+  592  docker run -it -v wejscie:/mnt/wejscie -v wyjscie:/mnt/wyjscie node-builder-git
+  593  nano Dockerfile.mount
+  594  docker run -it -v wejscie:/mnt/wejscie -v wyjscie:/mnt/wyjscie node-builder-git
+  595  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  596  docker run --rm -v wejscie:/mnt/wejscie alpine ls /mnt/wejscie
+  597  docker run --rm -v input:/mnt/input alpine ls /mnt/input
+  598  docker run --rm -v wejscie:/mnt/wejscie alpine ls /mnt/wejscie
+  599  nano Dockerfile.mount
+  600  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  601  nano Dockerfile.mount
+  602  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  603  ls /mnt/input
+  604  docker run --rm -v input:/mnt/input alpine ls /mnt/input
+  605  nano Dockerfile.mount
+  606  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  607  RUN --mount=type=bind,source=/path/to/input,target=/mnt/input ls
+  608  docker run --rm -v /mnt/input:/mnt/input alpine ls /mnt/input
+  609  ls /mnt/input
+  610  ls
+  611  cd simple-npm-webapp-starter
+  612  ls
+  613  cd app
+  614  ls
+  615  cd ..
+  616  cd dist
+  617  ls
+  618  cd ..
+  619  docker network create mynet
+  620  docker run -d --rm --name iperf-server --network mynet networkstatic/iperf3 -s
+  621  docker run --rm --network mynet networkstatic/iperf3 -c iperf-server
+  622  docker ps -a
+  623  iperf3 -c d5911f4d0a4f
+  624  sudo apt install iperf3
+  625  cd ..
+  626  iperf3 -c d5911f4d0a4f
+  627  docker run -d -p 5201:5201 networkstatic/iperf3 -s
+  628  docker ps -a
+  629  iperf3 -c f4c50191f9d2
+  630  docker run -it --rm --name iperf-server networkstatic/iperf3 -s
+  631  docker stop iperf-server
+  632  docker rm iperf-server
+  633  docker rm d5911f4d0a4f f4c50191f9d2
+  634  docker ps - a
+  635  docker ps -a
+  636  docker rm f4c50191f9d2
+  637  docker stop f4c50191f9d2
+  638  docker rm f4c50191f9d2
+  639  docker run -it --rm --name iperf-server-2 networkstatic/iperf3 -s
+  640  docker run -it --rm --name iperf-server networkstatic/iperf3 -s
+  641  docker run -it --rm --link iperf-server:iperf-server networkstatic/iperf3 -c iperf-server
+  642  docker ps
+  643  docker ps -a 
+  644  docker run -it --rm --name iperf-server networkstatic/iperf3 -s
+  645  docker ps -a
+  646  docker run -it --rm --name iperf-server networkstatic/iperf3 -s
+  647  docker run -d --name iperf-server networkstatic/iperf3 -s
+  648  docker run -it --rm --link iperf-server:iperf-server networkstatic/iperf3 -c iperf-server
+  649  docker logs iperf-server
+  650  docker network create --driver bridge iperf-network
+  651  docker run -d --name iperf-server --network iperf-network networkstatic/iperf3 -s
+  652  docker rm -f iperf-server
+  653  docker ps -a
+  654  docker run -d --name iperf-server --network iperf-network networkstatic/iperf3 -s
+  655  docker run -it --rm --network iperf-network networkstatic/iperf3 -c iperf-server
+  656  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-server
+  657  iperf3 -c 172.19.0.2
+  658  docker run -it --rm --network iperf-network networkstatic/iperf3 -c iperf-server > wynik_iperf.txt
+  659  iperf3 -c 172.19.0.2 > wynik_iperf.txt
+  660  docker ps
+  661  docker rm -f iperf-server
+  662  docker ps
+  663  docker network create jenkins
+  664  docker volume create jenkins-data
+  665  docker run -d   --name jenkins-docker   --rm   --privileged   --network jenkins   -v jenkins-data:/var/jenkins_home   -p 8080:8080   jenkins/jenkins:lts
+  666  docker images
+  667  docker run -d --name jenkins-docker --privileged --network jenkins -v jenkins-data:/var/jenkins_home -p 8080:8080 jenkins/jenkins:lts
+  668  docker logs jenkins-docker
+  669  docker ps
+  670  ip a
+  671  docker ps
+  672  sudo ufw statusv
+  673  sudo ufw status
+  674  sudo ufw allow 8080/tcp
+  675  sudo ufw status
+  676  http://localhost:8080
+  677  docker exec -it jenkins-docker bash
+  678  curl http://localhost:8080
+  679  ip a
+  680  docker network inspect bridge
+  681  sudo ufw disable
+  682  docker inspect jenkins-docker | grep "IPAddress"
+  683  docker run --rm curlimages/curl 172.20.0.2:8080
+  684  ls
+  685  nano Dockerfile.mount
+  686  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  687  nano Dockerfile.mount
+  688  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  689  ls /mnt/input
+  690  docker run -it -v wejscie:/mnt/wejscie -v wyjscie:/mnt/wyjscie node-builder-git
+  691  nano Dockerfile.mount
+  692  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  693  nano Dockerfile.mount
+  694  DOCKER_BUILDKIT=1 docker build -f Dockerfile.mount --build-arg BUILDKIT_INLINE_CACHE=1 .
+  695  ls
+  696  nano Dockerfile
+  697  DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 .
+  698  nano Dockerfile
+  699  DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 .
+  700  nano Dockerfile
+  701  DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 .
+  702  nano Dockerfile
+  703  DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 .
+  704  mkdir wejscie
+  705  mkdir wyjscie
+  706  cd wejscie
+  707  touch plik
+  708  cd ..
+  709  nano Dockerfile
+  710  pwd 
+  711  nano Dockerfile
+  712  DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 .
+  713  nano Dockerfile
+  714  DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 .
+  715  nano Dockerfile
+  716  docker build -t mount-obraz .
+  717  docker run -it -volume /home/kasiam/wejscie:/app/test mount-obraz 
+  718  docker run -it -volume /home/kasiam/wejscie:/app/test mount-obraz .
+  719  docker run -it --volume /home/kasiam/wejscie:/app/test mount-obraz .
+  720  docker run -it --volume /home/kasiam/wejscie:/app/test mount-obraz 
+  721  ls
+  722  docker pull busybox
+  723  docker run -it busybox sh
+  724  docker busybox version
+  725  docker image busybox version
+  726  docker image inspect busybox
+  727  docker
+  728  docker images
+  729  docker images help
+  730  docker images --help
+  731  ls
+  732  rm -rf http-parser
+  733  docker ls 
+  734  docker ps -a
+  735  docker rm 54ae5b4c416d
+  736  docker run -it ubuntu bash
+  737  docker ps -a
+  738  docker run -it ubuntu bash
+  739  docker pull node
+  740  docker run -it node
+  741  docker run -it node bash
+  742  ls
+  743  docker run -it ubuntu:latest bash
+  744  ls
+  745  git clone https://github.com/boazsegev/facil.io.git
+  746  cd facil.io
+  747  sudo apt-get update
+  748  sudo apt-get install -y build-essential libssl-dev
+  749  make build
+  750  make test
+  751  cd ..
+  752  ls
+  753  rm -rf facil.io
+  754  git clone https://github.com/nodejs/http-parser.git
+  755  ls
+  756  cd http-parser
+  757  make
+  758  make test
+  759  cd ..
+  760  rm -rf httmp-parser
+  761  git clone https://github.com/draftbit/twitter-lite.git
+  762  ls 
+  763  rm -rf http-parser
+  764  cd twitter-lite
+  765  ls
+  766  npm i
+  767  npm start
+  768  npm run
+  769  npm test
+  770  cd ..
+  771  rm -rf twitter-lite
+  772  git clone https://github.com/malte-wessel/react-custom-scrollbars
+  773  ls
+  774  cd react-custom-scrollbars
+  775  npm i
+  776  npm start
+  777  spn run
+  778  npm run
+  779  npm test
+  780  cd ..
+  781  ls
+  782  rm -rf react-custom-scrollbars
+  783  git clone https://github.com/benc-uk/python-demoapp.git
+  784  ls
+  785  rm -rf python-demoapp
+  786  git clone https://github.com/Lukasveiga/todo-list-node-api
+  787  ls
+  788  cd todo-list-node-api
+  789  make install
+  790  npm install
+  791  npm tes
+  792  npm test
+  793  cd ..
+  794  ls
+  795  rm -rf todo-list-node-api
+  796  git clone https://github.com/taskrabbit/ReactNativeSampleApp.git
+  797  cd ReactNativeSampleAp
+  798  cd ReactNativeSampleApp
+  799  npm i
+  800  npm start
+  801  npm test
+  802  npm install
+  803  cd ..
+  804  ls
+  805  rm -rf ReactNativeSampleApp
+  806  git clone https://github.com/davidkroell/ytdl.git
+  807  ls
+  808  cd ytdl
+  809  npm i
+  810  npm test
+  811  cd ..
+  812  cd ytdl
+  813  nano Dockerfile
+  814  docker build -t ytdl-test .
+  815  docker run -it ytdl-test /bin/bash
+  816  ls
+  817  history
+  818  mv lab4 ~/MDO2025_INO/ITE/GCL05/KM417392/KM
+  819  cd  ~/MDO2025_INO/ITE/GCL05/KM417392/KM
+  820  ls
+  821  cd ..
+  822  ls
+  823  mv KM lab4
+  824  ls
+  825  branch status
+  826  git branch status
+  827  mv lab4 Sprawozdanie1
+  828  cd Sprawozdanie1
+  829  ls
+  830  mv lab4 KM
+  831  ls
+  832  cd KM
+  833  ls
+  834  cd ..
+  835  cd ~/
+  836  ls
+  837  nano Dockerfile.cd
+  838  cd wejscie
+  839  ls
+  840  cd ..
+  841  lab4-wazne-pliki
+  842  mkdir lab4-wazne-pliki
+  843  mv Dockerfile.cd lab4-wazne-pliki
+  844  mv mount_doc lab4-wazne-pliki
+  845  cd lab4-wazne-pliki
+  846  ls
+  847  cd ..
+  848  mv wejscie wyjscie lab4-wazne-pliki
+  849  cd lab4-wazne-pliki
+  850  ls
+  851  cd ..
+  852  cd pliki
+  853  ls
+  854  nano Dockerfile
+  855  ls
+  856  cd ..
+  857  ls
+  858  cd Dockerfile.mount
+  859  nano Dockerfile.mount
+  860  rm Dockerfile.mount
+  861  ls
+  862  cd KM
+  863  ls
+  864  cd lab1
+  865  ls
+  866  cd zajecia
+  867  ls
+  868  cd ~/
+  869  ls
+  870  mv lab4-wazne-pliki ~/MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab4
+  871  cd ~/MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab4
+  872  ls
+  873  cd ..
+  874  git branch
+  875  git branch -d status
+  876  git branch
+  877  git pull origin KM417392
+  878  git add .
+  879  ls
+  880  cd Sprawozdanie1
+  881  ls
+  882  cd KM
+  883  ls
+  884  cd ..
+  885  git commit -m "KM417392: lab4"
+  886  git push origin KM417392
+  887  cls
+  888  ls
+  889  cd 
+  890  cd ~/MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie1
+  891  ls
+  892  cd KM
+  893  ls
+  894  cd lab4
+  895  ls
+  896  mv Dockerfile lab4-wazne-pliki
+  897  cd ..
+  898  git add .
+  899  git commit -m "KM417392: poprawka lab4"
+  900  git push origin KM417392
+  901  cd Sprawozdanie1
+  902  cd KM
+  903  ls
+  904  rm lab4.png
+  905  ls
+  906  cd ..
+  907  git add .
+  908  git commit -m "KM417392: poprawka lab4.1"
+  909  git push origin KM417392
+  910  history
+  911  cd 
+  912  ls
+  913  mv wynik_iperf.txt ~/MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab4/lab4-wazne-pliki
+  914  ls
+  915  cd ytdl
+  916  ls
+  917  cd ..
+  918  rm -rf ytdl
+  919  git clone https://github.com/alt-romes/programmer-calculator.git
+  920  sudo make install
+  921  sudo apt-get install libncurses5-dev
+  922  make
+  923  ls
+  924  cd simple-npm-webapp-starter
+  925  ls
+  926  cd ..
+  927  cd programmer-calculator
+  928  sudo make install
+  929  make
+  930  sudo apt-get install libncurses5-dev
+  931  make
+  932  sudo make
+  933  ls
+  934  make
+  935  sudo chmod +w bin
+  936  make
+  937  pcalc
+  938  make
+  939  cd ..
+  940  rm -rf programmer-calculator
+  941  sudo rm -rf programmer-calculator
+  942  ls
+  943  git clone https://github.com/alt-romes/programmer-calculator
+  944  ls
+  945  cd programmer-calculator
+  946  ls
+  947  sudo make install
+  948  make
+  949  ps aux | grep pcalc
+  950  sudo kill 2086
+  951  sudo make install
+  952  make
+  953  cd ..
+  954  ls
+  955  rm -rf programmer-calculator
+  956  sudo rm -rf programmer-calculator
+  957  ls
+  958  sudo make uninstall
+  959  git clone https://github.com/allinurl/goaccess.git
+  960  cd goaccess
+  961  sudo apt-get install libncursesw5-dev
+  962  make
+  963  ls
+  964  cd ..
+  965  rm -rf goaccess
+  966  git clone https://github.com/mruby/mruby.git
+  967  cd mruby
+  968  ls
+  969  rake all test
+  970  sudo snap install ruby rake 
+  971  sudo apt-get install build-essential
+  972  make
+  973  rake all test
+  974  sudo apt install rake
+  975  rake all test
+  976  rake
+  977  docker run -it ubuntu
+  978  cd ..
+  979  nano Dockerfile.build
+  980  docker build -f Dockerfile.build -t my_mruby_build .
+  981  nano Dockerfile.build
+  982  docker ls
+  983  docker ps -a
+  984  docker ps 
+  985  docker rm 13aea3a2c8c8 be7f11168e5c 441be76f843e 9538292c7b58 eb4305402a0c
+  986  docker ps -a
+  987  docker images
+  988  nano Dockerfile.test
+  989  docker build -f Dockerfile.test -t my_mruby_test .
+  990  nano Dockerfile.test
+  991  docker run -it my_mruby_test rake all test
+  992  nano Dockerfile.test
+  993  docker run -it my_mruby_test rake all test
+  994  docker build -f Dockerfile.test -t my_mruby_test_popr .
+  995  docker run -it my_mruby_test_popr
+  996  docker images
+  997  docker run -it my_mruby_test_popr
+  998  docker run -it my_mruby_test
+  999  docker images
+ 1000  docker rmi my_mruby_test_popr
+ 1001  docker ps -a
+ 1002  history
+ 1003  ls
+ 1004  nano Dockerfile.build
+ 1005  ls
+ 1006  touch history
+ 1007  history > history
