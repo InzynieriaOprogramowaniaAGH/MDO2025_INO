@@ -102,7 +102,7 @@
 ![alt text](<Zdjecia/lab 4/Zrzut ekranu 2025-03-25 171031.png>)
 
 
-**Otworzono nowy konterer z woluminami - widać wejściowy oraz wyjściowy**
+**Otworzono nowy konterer (na podstawie nowego obrazu, który stworzono z nowego Dockerfile: Dockerfile.irssibuildvol) z woluminami - widać wejściowy oraz wyjściowy**
 
 ![alt text](<Zdjecia/lab 4/Zrzut ekranu 2025-03-25 194117.png>)
 
