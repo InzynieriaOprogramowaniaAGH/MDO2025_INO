@@ -340,7 +340,7 @@ docker inspect -f '{{ .NetworkSettings.Networks.bridge_network.IPAddress }}' ipe
 ```
 ![image](https://github.com/user-attachments/assets/029b172c-cdef-4921-a9e4-486f373d7f0c)
 
-Niestety nie udało się połączyć >:(
+Niestety nie udało się połączyć :(
 
 ![image](https://github.com/user-attachments/assets/84426a81-d733-43a1-a1e3-600e359132ab)
 
