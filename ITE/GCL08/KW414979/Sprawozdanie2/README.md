@@ -37,7 +37,7 @@ Grupa laboratoryjna: 8
 1. W panelu głównym `Jenkinsa` wybrałem opcję `Nowy projekt` a następnie wybrałem typ `pipeline` i nazwałem `show_uname`. Następnie napisałem pipeline wyświetlający `uname`:
 
     ![](2_3.png)
-
+  
     *  Treść:
 
             pipeline {
