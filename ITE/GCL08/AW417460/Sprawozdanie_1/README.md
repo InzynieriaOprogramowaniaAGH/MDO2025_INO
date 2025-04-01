@@ -101,7 +101,7 @@ b.	Sprawdzenie procesu PID 1
 
 c.	Sprawdzenie procesów dockera na hoście w osobnym terminalu
 
-![Zdjecie11](procesy dockera.png)
+![Zdjecie11](procesydockera.png)
 
 d.	Zaktualizowanie pakietow za pomocą polecenia dnf uptade -y
 e.	Wyjście z kontenera poleceniem exit
