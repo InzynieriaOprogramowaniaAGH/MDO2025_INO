@@ -1,0 +1,5 @@
+FROM redis_build
+
+RUN dnf install -y tcl which
+
+RUN make test
