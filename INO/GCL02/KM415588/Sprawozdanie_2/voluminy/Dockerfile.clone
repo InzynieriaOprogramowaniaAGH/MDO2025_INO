@@ -1,3 +1,0 @@
-FROM alpine/git
-WORKDIR /src
-CMD ["sh", "-c", "git clone https://github.com/ptracesecurity/pytest-example ."]

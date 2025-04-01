@@ -519,3 +519,87 @@ Zautomatyzuje to budowanie aplikacji a RUN ---mount połączy kontener z local h
 
 ### 2️⃣ Eksponowanie portu:
 
+#### 1. Tworzenie kontenera z usługą iperf3:
+
+Istnieją dwa sposoby na utworzenie takiego konteneru. Pierwszą z nich jest uruchomienie kontenera korzystającego bezpośrednio z obrazu iperf3:
+
+```bash
+sudo docker run -d --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+```
+
+![iperf_init](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/iperfinit.png)
+
+Jak widizmy na zdjęciu kontener utowrzył się poprawnie - w dalszych częściach ćwiczenia jest to główny sposób tworzenia konteneru, używany przeze mnie.
+
+Drugim sposobem jest uruchomienie kontenera w standardowy sposób na podstawie obrazu systmeu linuxowego i zainstalowanie na nim usługi iperf3 i uruchomienie - warto pamiętać przy tworzeniu również tego konteneru mapować go od razau na port 5201
+
+```bash
+sudo docker run -it --name iperf-server -p 5201:5201 fedora bash
+### w konsoli kontenera
+dnf -y install iperf3
+iperf3 -s
+```
+
+Możemy to również osiągnąc pisząc dedykowanego do tego Dockerfile, ale ja nie używałem tego sposobu wiele razy (uruchomiłem raz w celu przetestowania), więc nie napisałem takiego.
+
+#### 2. Łączenie z serwerem:
+
+- łączenie przy użyciu kontenera:
+
+  z serwerem na kontenerze możemy się połączyć korzystająć z innego konteneru w poniższy sposób:
+
+  ```bash
+  sudo docker run --rm networkstatic/iperf3 -c 172.17.0.2
+  ###opcjonalnie ale dłużej bo trzeba stworzyć sieć do komunikacji
+  sudo docker network create iperf-net
+  sudo docker network connect iperf-net iperf-server
+  sudo docker run --rm --network iperf-net networkstatic/iperf3 -c  iperf-server
+  ```
+  Tworzymy tutaj własną sieć mostkową. Jeśli połączenie przebiegnie poprawnie otrzymamy poniższy wydruk:
+
+  ![iperf-con](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/iperf3_con.png)
+
+- łączenie z localhosta:
+  
+  Jeśli chcemy połączyć się z localhosta w konsoli wpisujemy:
+
+  ```bash
+  ###jeśli nie mamy zainstalowanego iperf3
+  sudo snf -y install iperf3
+  sudo iperf3 -c 172.17.0.2
+  ```
+  Z loclahosta nie da się łączyć z serwerem na kontenerze po jego nazwie, ponieważ sieć iperf-net jest rozwiązaniem wewnątrz dockerowym, ale istnieje jeszcze jedna opcja:
+
+  ```bash
+  sudo iperf3 -c 127.0.0.1 -p 5201
+  ```
+
+  Wynik łączenia sie pierwszym sposobem:
+
+  ![iperf_local_host](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/localhost_iperf3.png)
+
+- łączenie z innego komputera:
+
+  Możemy się połączyć z innego komputera z serwerem na kontenerze. Musimy zadbac żeby kontener miał zmapowane porty na 5201 (opcja -p 5201:5201 przy tworzeniu kontenera). Następnie po zainstalowaniu iperf3 na komputerze, z którego chcemy się łączyć wykonujemy:
+
+  ```bash
+  iperf3 -c <ip_wirtualnje_maszyny_z_kontenerem>
+  ```
+
+  Wynik w moim przypadku:
+
+  ![iper3_my_mach](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/iperf3_my_mach.png)
+
+#### 3. Logi kontenera
+
+Możemy zbadać przepustowść komunikacji z kontenerem odczytując jego logi. Wykonujemy to poleceniem:
+
+```bash
+sudo docker logs iperf-server
+```
+
+Otrzymamy:
+
+![iperf3_logs](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/iperf3_logs.png)
+
+### 3️⃣ Instancja Jenkins:
