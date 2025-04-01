@@ -1,0 +1,8 @@
+#!/bin/bash
+
+COMMIT_MSG=$(cat "$1")
+
+if [[ ! "$COMMIT_MSG" =~ ^KL417218 ]]; then
+  echo "Błąd: Każdy commit message musi zaczynać się od 'KL417218'!"
+  exit 1
+fi

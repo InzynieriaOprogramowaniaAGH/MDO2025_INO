@@ -1,0 +1,5 @@
+FROM redis-build
+
+RUN apt update && apt install -y tcl && rm -rf /var/lib/apt/lists/*
+
+RUN make test

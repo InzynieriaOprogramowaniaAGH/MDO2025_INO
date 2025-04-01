@@ -1,0 +1,1 @@
+Ten folder zawiera pliki stworzone podczas zajęć, które nie są powiązane ze sprawozdaniem, ale wrzucam, aby był dowód wykonanej pracy. Przeglądać na własną odpowiedzialność :D

@@ -1,0 +1,3 @@
+FROM nodedummybuild
+
+RUN npm test
