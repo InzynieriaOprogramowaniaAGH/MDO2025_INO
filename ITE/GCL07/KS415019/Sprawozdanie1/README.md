@@ -308,7 +308,6 @@ RUN npm test
 
 ```bash
 sudo docker build -t kontener_test -f ./Dockerfile.test .
-
 ```
 ![Budowanie kontenera testowego](Zrzuty/LAB3/kontener_test.png)
 
@@ -339,9 +338,146 @@ ls -l node_modules
 ```bash
 sudo docker run --rm kontener_test bash
 ```
-### Wyonanie testu:
+### Wykonanie testu:
 
 ```bash
 npm test
 ```
 ![Test kontenera](Zrzuty/LAB3/weryfikacja_npm_test.png)
+
+## **Laboratorium 4**
+
+## 1. Zachowywanie stanu
+### Utworzono wolumin wejściowy in_vol i wyjściowy out_vol.
+
+```bash
+ sudo docker volume create in_vol
+ sudo docker volume create out_vol
+```
+![Tworzenie woluminów](Zrzuty/LAB4/tworzenie_vol.png)
+
+### Uruchomiono kontener bazowy oraz podłączono go do woluminów
+
+```bash
+ sudo docker run -it -v in_vol:/input -v out_vol:/output --name kontenerlab4 node:slim /bin/bash
+```
+![Kontener](Zrzuty/LAB4/zrzut.png)
+
+### Sklonowanie repozytorium na wolumin wejściowy in_vol
+
+Po sprawdzeniu lokalizacji pliku za pomocą:
+```bash
+ sudo docker volume inspect in_vol
+```
+![Inspect](Zrzuty/LAB4/inspect_invol.png)
+
+W odpowiednim katalogu przełączono się na root, aby sklonować repozytorium bezpośrednio do woluminu:
+
+```bash
+ git clone https://github.com/devenes/node-js-dummy-test.git
+```
+![Klonowanie repo](Zrzuty/LAB4/git_clone1.png)
+
+### Instalacja zależności w kontenerze
+
+```bash
+npm install
+```
+![Zaleznosci](Zrzuty/LAB4/zależności.png)
+
+### Zapisanie plików na woluminie in_vol
+
+```bash
+cp -r /input/ /output
+```
+### Weryfikacja poprawności
+
+```bash
+ls -l /var/lib/docker/volumes/in_vol/_data
+ls -l /var/lib/docker/volumes/out_vol/_data
+```
+![Weryfikacja](Zrzuty/LAB4/weryfikacja.png)
+
+### Klonowanie repozytorium na wolumin wewnątrz kontenera
+
+Instalacja gita wewnątrz kontenera:
+```bash
+sudo apt update && apt install git
+```
+![GIT](Zrzuty/LAB4/install_git.png)
+
+Różnica w stosunku do poprzedniej metody jest taka, że wcześniej przechodziło się do /var/lib/docker/volumes/in_vol/_data na hoście i tam wykonywało git clone. Teraz wszystko odbywa się wewnątrz kontenera.
+
+### Możliwość wykonania ww. kroków za pomocą docker build i pliku Dockerfile. 
+Zamiast klonować repozytorium i budować projekt „ręcznie” wewnątrz kontenera, wszystkie te kroki można zdefiniować w pliku Dockerfile i uruchomić za pomocą polecenia docker build. Dzięki temu proces jest w pełni zautomatyzowany. Mechanizm RUN --mount pozwala np. bezpiecznie korzystać z kluczy SSH do prywatnych repozytoriów, unikając ich trwałego zapisania w warstwach obrazu. Dodatkowo, w wieloetapowej konfiguracji  można oddzielić etap instalacji i kompilacji od finalnego obrazu, co zmniejsza rozmiar i zwiększa bezpieczeństwo gotowego kontenera.
+
+## 2. Eksportowanie portu
+
+
+### Pobrano iperf3:
+```bash
+sudo dnf -y install iperf3
+```
+![Instalacja iperf3](Zrzuty/LAB4/install_iperf3.png)
+
+###  Uruchomieno serwer wewnątrz nowego kontenera:
+```bash
+sudo docker run --name serwer1 -p 5201:5201 networkstatic/iperf3 -s
+```
+### Sprawdzono jego lokalizację:
+
+```bash
+sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' serwer1
+```
+![Sprawdzenie lokalizacji](Zrzuty/LAB4/inspect_serwer1.png)
+
+### Nawiązano połączenie z drugiego kontenera:
+
+```bash
+sudo docker run --name klient1  networkstatic/iperf3 -c 172.17.0.3
+```
+![Połączenie](Zrzuty/LAB4/polaczenie2.png)
+![Połączenie1](Zrzuty/LAB4/polaczenie.png)
+
+### Utworzono sieć mostkową:
+
+```bash
+sudo docker network create --driver bridge siec
+```
+![Sieć](Zrzuty/LAB4/siec.png)
+
+### Ponownie uruchomiono nowe kontenery z użyciem sieci:
+
+Kontener serwerowy:
+```bash
+sudo docker run --rm -it --name serwer --network siec networkstatic/iperf3 -s
+```
+Kontener klienta:
+```bash
+sudo docker run --rm -it --name klient --network siec networkstatic/iperf3 -c serwer
+```
+![Połączenie2](Zrzuty/LAB4/polaczenie4.png)
+![Połączenie3](Zrzuty/LAB4/polaczenie3.png)
+
+Wykazano przepustowość na poziomie około 28.1 Gbit/s.
+
+## 3. Instalacja Jenkinsa
+
+W celu uruchomienia środowiska Jenkins z dostępem do Dockera, wykorzystano kontener w trybie uprzywilejowanym z mapowaniem portów 8080 i 50000 (komunikacja z agentami), a także woluminami do zachowania danych Jenkinsa (jenkins_home) oraz umożliwienia Jenkinsowi korzystania z Dockera hosta poprzez mapowanie gniazda /var/run/docker.sock.
+
+```bash
+sudo docker run --priviliged --name jenkins-dind -d -p 8080:8080 -p 50000:50000 \
+-v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock \
+jenkins/jenkins:lts
+```
+![Instalacja Jenkins](Zrzuty/LAB4/jenkins.png)
+
+Kontener jenkins-dind został uruchomiony poprawnie.
+```bash
+sudo docker ps
+```
+![Dowód poprawnego uruchomienia](Zrzuty/LAB4/docker_ps.png)
+
+Poprawne połączenie się i dostęp do ekranu logowania:
+
+![Dowód poprawnego uruchomienia v2](Zrzuty/LAB4/jenkins_v2.png)
