@@ -642,3 +642,94 @@ A po zalogowaniu:
 ![jenkins_aftre](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/jenkins_after.png)
 
 ### 4️⃣ Zakres rozszerzony:
+
+#### 1. Komunikacja:
+
+Celem ćwiczenie jest zbudowanie kontenera służącego tylko do budowy. W tym celu napiszę przykładowy dockerfile działający dla mojego repo chalk-pipe:
+
+```dockerfile
+FROM node:20-alpine
+
+WORKDIR /app
+RUN npm install -g typescript
+
+CMD ["sh"]
+```
+
+W kontenerze brakuje gita, ale o to chodzi - chcemy żeby był jak najlżejszy i słuzył tylko do buildowania. Następnie tworzymy woluminy wejściowy (na który kopiujemy repo tak jak wcześniej podczas lab w sekcji [2. Klonowanie chalk-pipe na wolumin wejściowy](#2-klonowanie-chalk-pipe-na-wolumin-wej%C5%9Bciowy-i-uruchomienie-konteneru))
+
+Po przygotowaniu dockerfile i voluminów wpisujemy w terminalu komendy:
+
+```bash
+sudo docker build -t chalk-pipe-builder -f dockerfile.builder .
+sudo docker run --rm -v volin:/repo -v volout:/mnt/output chalk-pipe-builder sh -c "cd /repo && npm install && npm test && cp -r . mnt/output/"
+```
+
+Otrzymamy:
+
+![roz_builder](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/roz_builder.png)
+
+Po czym możemy sprawdzić czy utworzyły się pliki na voluminie wyjściowym:
+
+```bash
+docker run -it --rm -v volout:/mnt/output alpine sh
+### w kontenerze
+ls /mnt/output
+```
+
+![roz_out](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/roz_volout.png)
+
+#### 2. Usługi w rozumieniu systemu, kontenera i klastra
+
+Piszemy dockerfile.ssh w celu sprawienie, żeby komenda do uruchomienia kontenera była bardziej czytelna:
+
+```dockerfile
+FROM fedora:latest
+
+RUN dnf -y update &&  dnf -y install openssh-server passwd &&  dnf clean all
+RUN ssh-keygen -A
+RUN echo "root:root" | chpasswd
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN mkdir -p /var/run/sshd
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]
+```
+
+A potem wykonujemy komendy:
+
+```bash
+sudo docker build -t ssh-fedora-image -f dockerfile.ssh .
+sudo docker run -d --name ssh-fedora -p 2222:22 ssh-fedora-image
+### po utworzeniu sie kontenera w konsoli localhosta
+ssh root@localhost -p 2222
+### i wpisujemy hasło root
+```
+
+![roz_ssh](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM415588/INO/GCL02/KM415588/Sprawozdanie_1/004/img_4/roz_ssh.png)
+
+Zalety komuniakcji przez ssh z kontenerem:
+- Łatwy zdalny dostęp np scp
+- przydatne w CI/CD np. Jenkins SSH agent
+- debugowanie - możliwość podglądania logów tak jak na zwykłym serwerze
+- zdalne zarządzania
+
+Wady:
+- sprzecznośc z filozofią dockera
+- potencjalne niebezpieczeństwo - konieczność pilnowania i zarządzania dostępem
+- występują lepsze i bezpieczniejsze alternatywy
+
+Używanie tego rozwiązania ma sens przy używnaiu jako agent Jenkins, środowisko legacy czy przy debugu krótkoterminowym
+
+#### 3. Jenkins: zależność
+
+Co jest potrzebne, żeby Jenkins mógł budowac obrazy z Dockerfile:
+
+Musi mieć dostęp do dockera przez socketa lub DIND oraz opcjonalnie do docker CLI jeśli działa w swoim kontenerze.
+
+Co jest potrzebne w Jenkinsie by uruchomić Docker Compose:
+
+Oprócz tego co poprzednio potrzebny jest dodoatkowo dostęp do docker compose.
+
+## Wykorzystanie AI w pisaniu sprawozdania:
+
+Wykorzystałem ChatGPT do znalezienia Chalk-pipe oraz do konsultacji odnośnie poprawności kroków, które chcę podjąć.
