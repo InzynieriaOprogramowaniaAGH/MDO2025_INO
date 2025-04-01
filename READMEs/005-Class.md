@@ -22,11 +22,12 @@
 ### Zadanie wstępne: obiekt typu pipeline
 🌵 Ciąg dalszy sprawozdania - zadanie do wykonania po wykazaniu działania Jenkinsa
 * Utwórz nowy obiekt typu `pipeline`
-* Wpisz treść pipeline'u bezpośrednio do obiektu (nie z SCM - jeszcze!)
- * https://www.jenkins.io/doc/book/pipeline/syntax/
+* Wpisz treść *pipeline'u* bezpośrednio do obiektu (nie z SCM - jeszcze!)
+  * https://www.jenkins.io/doc/book/pipeline/syntax/
 * Spróbuj sklonować repo przedmiotowe
 * Zrób *checkout* do swojego pliku Dockerfile (na osobistej gałęzi)
 * Zbuduj Dockerfile
+* Uruchom stworzony *pipeline* drugi raz
  
 ### Opis celu
 Dla osób z wybranym projektem
