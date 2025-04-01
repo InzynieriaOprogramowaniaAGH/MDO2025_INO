@@ -35,7 +35,14 @@
 
 ### Szczegóły
 Ciąg dalszy sprawozdania - zadania do wykonania po wykazaniu działania Jenkinsa
-#### Wymagane składniki
+#### Zadanie wstępne
+* Utwórz nowy obiekt typu `pipeline`
+* Wpisz treść pipeline'u bezpośrednio do obiektu (nie z SCM - jeszcze!)
+* Spróbuj sklonować repo przedmiotowe
+* Zrób *checkout* do swojego pliku Dockerfile
+* Zbuduj Dockerfile
+
+#### Kompletny pipeline: wymagane składniki
 *  Kontener Jenkins i DIND skonfigurowany według instrukcji dostawcy oprogramowania
 *  Pliki `Dockerfile` wdrażające instancję Jenkinsa załączone w repozytorium przedmiotowym pod ścieżką i na gałęzi według opisu z poleceń README
 *  Zdefiniowany wewnątrz Jenkinsa obiekt projektowy „pipeline”, realizujący następujące kroki:
