@@ -733,3 +733,6 @@ Oprócz tego co poprzednio potrzebny jest dodoatkowo dostęp do docker compose.
 ## Wykorzystanie AI w pisaniu sprawozdania:
 
 Wykorzystałem ChatGPT do znalezienia Chalk-pipe oraz do konsultacji odnośnie poprawności kroków, które chcę podjąć.
+
+
+Na końcu pragnę dodać, iż plik z wykorzystanymi komendami może nie zawierac wszystkich wykorzystanych przeze mnie komend ze względu na konieczność postawienia serwera od nowa po realizacji instrukcji 3 - w trakcie realizowania 4 - problem poruszany przeze mnie na zajeciach.
