@@ -93,4 +93,114 @@ Następnie tworzymy commit zawierający dodane zmiany :
 
 To polecenie tworzy commit ale póki co jest on tylko lokalnie na naszej maszynie. Aby wysłać go na github należy 'wypchnąć' zmiany za pomocą komendy : 
 ``` git push ```
-![alt text](screeny/sshd_status.png)
+![alt text](screeny/git_status.png)
+
+Nasze wypchnięte zmiany możemy teraz włączyć do innej gałęzi. Najpierw musimy przełączyć się na gałąź do której chcemy wciągnąć te zmiany, np:
+
+```git checkout GCL07 ```
+
+Teraz za pomocą komendy git merge pobieramy zmiany z wybranej przez nas gałęzi:
+
+```git merge MP416070```
+
+Przykładowy wynik wciągniętych zmian:
+
+![alt text](screeny/git_merge.png)
+
+## Instalacja Dockera 
+
+Docker to platforma służąca do zarządzania kontenerami. Instalujemy ją poleceniem :
+``` sudo dnf install docker ```
+Możemy teraz się zalogować lub zarejestrować do serwisu Docker Hub, aby w pełni móc korzystać z platformy Docker.
+
+
+## Pobieranie obrazów konternerów 
+
+Do pobrania obrazów konternerów na lokalną maszynę posłuży nam komenda docker pull. Aby pobrać odpowiedni obraz wpisujemy tą komendę i nazwę obrazu np. :
+```
+docker pull hello-world
+docker pull busybox
+docker pull ubuntu:latest
+docker pull mysql
+```
+
+Aby zobaczyć pobrane obrazy:
+``` docker images```
+![alt text](screeny/docker_images.png)
+## Uruchamianie kontenerów 
+
+Aby uruchomić kontener korzystame z komendy:
+``` docker run busybox ```
+
+Kontener został uruchomiony ale odrazu zamknięty, po wpisaniu komendy docker ps nie zobaczymy żadnego uruchomionego kontenera. Dzieje się tak ponieważ nie przypisaliśmy terminala dla busybox'a. 
+Aby to naprawić, możemy skorzystać z parametru -t przypisującego terminal, oraz parametru -i oznaczającego uruchomienie kontenera w trybie interaktywnym, czyli będziemy znajdować się "w środku" kontenera po jego uruchomieniu. 
+```docker run -it busybox```
+![alt text](screeny/busybox.png)
+Pracując wewnątrz kontenera sprawdzamy jego wersję.
+
+Uruchamianie innych obrazów przebiega podobnie np. ubuntu:
+```docker run -it ubuntu```
+
+Dla testu sprawdzamy działające procesy oraz aktualizujemy pakiety.
+![alt text](screeny/docker_ubuntu.png)
+
+![alt text](screeny/docker_ubu_ps.png)
+
+## Tworzenie własnych obrazów
+
+Możemy stworzyć własny obraz poprzez stworzenie pliku Dockerfile.
+
+Aby utworzyć kontener, który pobierze repozytorium naszego przedmiotu z GitHub, możemy stworzyć następujący plik:
+
+```
+
+FROM fedora:latest
+
+# Autor obrazu (dobrze jest go dodać)
+LABEL maintainer="Michal majkel@student.agh.edu.pl"
+
+# Aktualizacja pakietów 
+RUN dnf update -y && dnf install -y git
+
+# Ustawiamy katalog roboczy wewnątrz kontenera
+WORKDIR /app
+
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+
+CMD ["/bin/bash"]
+```
+
+Następnie budujemy obraz w katalogu w który znajduje się nasz Dockerfile wpisujemy komende :
+```docker build -t my-image .```
+![alt text](screeny/lab2_build.png)
+
+
+Parametr -t oznacza tag naszego obrazu, czyli jego nazwę i ewentualnie wersję.
+
+Po zbudowaniu obrazu uruchamiamy go oraz sprawdzamy czy nasze repo zostało poprawnie pobrane: 
+
+```docket run -it my-image```
+
+![alt text](screeny/lab2_run.png)
+
+## Przykładowe usuwanie konternerów i obrazów
+
+Aby zobaczyć wszystkie kontenery (uruchomione i zatrzymane) komenda :
+```docker ps -a```
+
+Do usunięcia ich wykorzystujemy komendę docker rm i ID kontenera, np.:
+
+```docker rm 30yuefgfd99433a```
+
+
+![alt text](screeny/lab2_kontenery.png)
+
+
+Do wyświetlenia obrazów, wykorzystujemy komendę:
+```docker images```
+
+A do usuwania docker rmi i ID obrazu lub jego nazwy, np.
+```docker rmi ubuntu:latest```
+
+
+![alt text](screeny/lab2_obrazy.png)
