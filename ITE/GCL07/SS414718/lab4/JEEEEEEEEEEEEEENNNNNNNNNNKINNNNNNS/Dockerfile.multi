@@ -1,0 +1,12 @@
+# Stage 1: Build
+FROM node:18-alpine AS builder
+RUN apk update && apk add --no-cache git make
+WORKDIR /app
+RUN git clone https://github.com/devenes/node-js-dummy-test .
+RUN npm install
+
+# Stage 2: Final minimal
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app /app
+CMD ["node", "/src/index.js"]
