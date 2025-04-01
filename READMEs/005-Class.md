@@ -3,6 +3,7 @@
 ## Pipeline, Jenkins, izolacja etapów
 
 ### Przygotowanie
+🌵 Utwórz instancję Jenkins
 * Upewnij się, że na pewno działają kontenery budujące i testujące, stworzone na poprzednich zajęciach
 * Zapoznaj się z instrukcją instalacji Jenkinsa: https://www.jenkins.io/doc/book/installing/docker/
   * Uruchom obraz Dockera który eksponuje środowisko zagnieżdżone
@@ -17,10 +18,6 @@
   * Utwórz projekt, który wyświetla `uname`
   * Utwórz projekt, który zwraca błąd, gdy... godzina jest nieparzysta
   * Pobierz obraz kontenera `ubuntu` (stosując `docker pull`)
-* Utwórz "prawdziwy" projekt, który:
-  * klonuje nasze repozytorium
-  * przechodzi na osobistą gałąź
-  * buduje obrazy z dockerfiles i/lub komponuje via docker-compose
 
 ### Zadanie wstępne: obiekt typu pipeline
 🌵 Ciąg dalszy sprawozdania - zadanie do wykonania po wykazaniu działania Jenkinsa
@@ -28,7 +25,7 @@
 * Wpisz treść pipeline'u bezpośrednio do obiektu (nie z SCM - jeszcze!)
  * https://www.jenkins.io/doc/book/pipeline/syntax/
 * Spróbuj sklonować repo przedmiotowe
-* Zrób *checkout* do swojego pliku Dockerfile
+* Zrób *checkout* do swojego pliku Dockerfile (na osobistej gałęzi)
 * Zbuduj Dockerfile
  
 ### Opis celu
