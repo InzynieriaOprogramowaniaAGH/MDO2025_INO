@@ -1,0 +1,12 @@
+FROM fedora:42
+RUN dnf install -y \
+    meson \
+    ninja \
+    gcc \
+    glib2-devel \
+    openssl-devel \
+    utf8proc-devel \
+    ncurses-devel \
+    perl
+WORKDIR /irssi
+CMD ["/bin/bash"]

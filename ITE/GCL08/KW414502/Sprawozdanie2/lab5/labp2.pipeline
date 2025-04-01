@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Setup irssi') {
+            steps {
+                git branch: 'KW414502', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+        stage('Blabla'){
+            steps{
+                dir('ITE/GCL08/KW414502/Sprawozdanie1/lab3'){
+                    sh 'docker system prune -af && docker image prune -af && docker system prune -af --volumes && docker system df'
+                    sh 'docker build -t irssibld -f ./Dockerfile.irssibld .'
+            } 
+            }
+
+        }
+    }
+}
