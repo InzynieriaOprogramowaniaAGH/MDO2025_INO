@@ -1,5 +1,5 @@
-FROM sds-container
+FROM sds-img
 
 WORKDIR /app
 
-RUN ./sds-test
+CMD ["./sds-test"]
