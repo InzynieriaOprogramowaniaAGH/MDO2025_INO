@@ -1,8 +1,8 @@
 # Bazujemy na obrazie z wcześniejszego builda
-FROM build_image
+FROM irssi-build
 
 # Ustawienie katalogu roboczego
-WORKDIR /app
+WORKDIR /irrsi
 
 # Uruchomienie testów
 CMD ninja -C builddir test
