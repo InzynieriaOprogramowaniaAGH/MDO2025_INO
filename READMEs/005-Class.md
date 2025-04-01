@@ -11,7 +11,7 @@
   * Zaloguj się i skonfiguruj Jenkins
   * Zadbaj o archiwizację i zabezpieczenie logów
   
-### Uruchomienie
+### Zadanie wstępne: uruchomienie
 🌵 Zadanie do wykonania na ćwiczeniach
 * Konfiguracja wstępna i pierwsze uruchomienie
   * Utwórz projekt, który wyświetla `uname`
@@ -21,20 +21,8 @@
   * klonuje nasze repozytorium
   * przechodzi na osobistą gałąź
   * buduje obrazy z dockerfiles i/lub komponuje via docker-compose
-  
-### Sprawozdanie (wstęp)
-* Opracuj dokument z diagramami UML, opisującymi proces CI. Opisz:
-  * Wymagania wstępne środowiska
-  * Diagram aktywności, pokazujący kolejne etapy (collect, build, test, report)
-  * Diagram wdrożeniowy, opisujący relacje między składnikami, zasobami i artefaktami
-* Diagram będzie naszym wzrocem do porównania w przyszłości
-  
-### Pipeline
-* Definiuj pipeline korzystający z kontenerów celem realizacji kroków `build -> test`
-* Może, ale nie musi, budować się na dedykowanym DIND, ale może się to dziać od razu na kontenerze CI. Należy udokumentować funkcjonalną różnicę między niniejszymi podejściami
-* Docelowo, `Jenkinsfile` definiujący *pipeline* powinien być umieszczony w repozytorium. Optymalnie: w *sforkowanym* repozytorium wybranego oprogramowania
 
-### Zadanie wstępne
+### Zadanie wstępne: obiekt typu pipeline
 🌵 Ciąg dalszy sprawozdania - zadanie do wykonania po wykazaniu działania Jenkinsa
 * Utwórz nowy obiekt typu `pipeline`
 * Wpisz treść pipeline'u bezpośrednio do obiektu (nie z SCM - jeszcze!)
@@ -42,6 +30,20 @@
 * Spróbuj sklonować repo przedmiotowe
 * Zrób *checkout* do swojego pliku Dockerfile
 * Zbuduj Dockerfile
+ 
+### Opis celu
+Dla osób z wybranym projektem
+* Opracuj dokument z diagramami UML, opisującymi proces CI. Opisz:
+  * Wymagania wstępne środowiska
+  * Diagram aktywności, pokazujący kolejne etapy (collect, build, test, report)
+  * Diagram wdrożeniowy, opisujący relacje między składnikami, zasobami i artefaktami
+* Diagram będzie naszym wzrocem do porównania w przyszłości
+
+### Pipeline: składnia
+Zadanie do wykonania, jeżeli poprawnie działa obiekt pipeline i udało się odnaleźć dostęp do plików Dockerfile
+* Definiuj pipeline korzystający z kontenerów celem realizacji kroków `build -> test`
+* Może, ale nie musi, budować się na dedykowanym DIND, ale może się to dziać od razu na kontenerze CI. Należy udokumentować funkcjonalną różnicę między niniejszymi podejściami
+* Docelowo, `Jenkinsfile` definiujący *pipeline* powinien być umieszczony w repozytorium. Optymalnie: w *sforkowanym* repozytorium wybranego oprogramowania
 
 ### Kompletny pipeline: wymagane składniki
 Kompletny pipeline (wprowadzenie) - do wykonania po ustaleniu kształu kroków `deploy` i `publish`
