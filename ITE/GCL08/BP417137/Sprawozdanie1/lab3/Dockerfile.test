@@ -1,0 +1,5 @@
+FROM docker-build-irrsi
+
+WORKDIR /irssi
+
+CMD [ "ninja", "-C", "Build", "test" ]

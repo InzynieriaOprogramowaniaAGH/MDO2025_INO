@@ -1,0 +1,6 @@
+FROM ubuntu
+
+RUN apt -y update && \
+    apt -y install meson gcc libglib2.0-dev libssl-dev libncurses-dev libutf8proc-dev libperl-dev
+
+WORKDIR /app
