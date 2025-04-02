@@ -196,9 +196,54 @@ sudo docker image prune
 <br>
 
 # Lab 3 - Dockerfiles, kontener jako definicja etapu
+Do wykonania ćwiczeń wybrano repozytrium irssi: https://github.com/irssi/irssi
+
+<br>
+
+## Repozytorium irssi poza kontenerem
+Na początku ćwiczeń sklonowano repozytroium irssi poza kontenerem, zainstalowano potrzebne zależności oraz przeprowadzono build programu wraz z testami.
+
+```bash
+git clone https://github.com/irssi/irssi.git
+cd irssi
+sudo dnf install -y make automake autoconf gcc-c__ pkg-config ncurses-devel openssl-devel curl-devel perl-devel glib2-devel
+
+ninja -C build
+ninja -C build test
+```
+![irssi](lab_3/clone_poza_kontenerem_1.png)
+
+![irssi](lab_3/meson_build_poz_kontenerem.png)
+
+![irssi](lab_3/itssi_test_poza_kontenerem.png)
+
+<br>
+
+## Build irssi za pomocą stworzonych Dockerfiles
+
+Na początku stworzono pliki `Dockerfile` oraz `Dockerfile.test` (bazujący na `Dockerfile`). Pliki znajdują się w folderze `lab_3/docker_irssi`. 
 
 
+![dockerfile](lab_3/dockerfile_irss.png)
+
+![dockerfile_test](lab_3/dockerfile_irssi_test.png)
+
+<br>
+
+Następnie wykonano build oraz testy na kontenerze.
+
+```bash
+sudo docker run -it --name irssi-build-container irssi-docker /bin/bash
+
+sudo docker build -t irssi-test -f Dockerfile.test .
+```
+![dockerfile_build](lab_3/irrsi_build_run.png)
+
+![dockerfile_test](lab_3/irssi_test_build.png)
+
+> W samym kontenerze pracuje instancja systemu oraz wszystkie zależności i aplikacje potrzebne do działania. 
 
 
+<br>
 
 # Lab 4 - Dodatkowa terminologia w konteneryzacji, instancja Jenkins
