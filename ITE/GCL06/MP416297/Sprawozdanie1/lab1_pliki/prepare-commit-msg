@@ -1,0 +1,21 @@
+#!/usr/bin/sh
+#
+# Hook do przygotowania wiadomości commita.
+# Sprawdza, czy wiadomość commita zaczyna się od "MP416297".
+# Jeśli nie, dodaje ten prefiks na początku wiadomości.
+
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+SHA1=$3
+
+# Definiowanie wzorca inicjałów i nr indeksu
+PATTERN="^MP416297" 
+
+# Pobierz pierwszą linię wiadomości commita
+commit_msg=$(head -n 1 "$COMMIT_MSG_FILE")
+
+# Sprawdź, czy wiadomość zaczyna się od wymaganych inicjałów i nr indeksu
+if [[ ! "$commit_msg" =~ $PATTERN ]]; then
+# Dodaj inicjały i nr indeksu na początek wiadomości
+echo "MP416297 - $commit_msg" > "$COMMIT_MSG_FILE"
+fi
