@@ -1,0 +1,3 @@
+FROM buildswift
+
+RUN mvn test -Dtest=SwiftCodeUnitTests
