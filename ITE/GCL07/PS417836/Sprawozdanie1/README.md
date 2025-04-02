@@ -247,3 +247,142 @@ sudo docker build -t irssi-test -f Dockerfile.test .
 <br>
 
 # Lab 4 - Dodatkowa terminologia w konteneryzacji, instancja Jenkins
+
+## Stworzenie woluminów oraz kontenera bazowego
+Na początku ćwiczeń stworzono dwa woluminy: wejscie oraz wyjscie.
+
+```bash
+sudo docker volume create wejscie
+sudo docker volume create wyjscie
+```
+![woluminy](lab_4/stworzenie_woluminów.png)
+
+Następnie stworzono kontener bazowy `Dockerfile.irssivolumes` do połączenia go z woluminami. Na tym etapie kontener nie posiada zależności git ani repozytrium irssi.
+
+![irsivolumes_docker](lab_4/docker_volumes.png)
+
+<br>
+
+## Sklonowanie repozytrium na wolumin wejściowy
+Na początku tego kroku przeniesiono sie do folderu `/_data` wewnątrz woluminu i sklonowano do niego repozytrium irssi. Kolejno wykonano build oraz run kontenera razem z woluminami.
+
+```bash
+cd /var/lib/docker/volumes/wejscie/_data
+git clone https://github.com/irssi/irssi.git
+
+sudo docker build -t irssi-volumes -t Dockerfile.irssivolues .
+
+sudo docker run -it --rm wejscie:/input -v wyjscie:/output irssi-volues /bin/bash
+```
+![run](lab_4/git_clone_w_volume_wejscie.png)
+
+![build](lab_4/build_docker_bez_git.png)
+
+![run](lab_4/docker_bez_git_run.png)
+
+<br>
+
+## Zapisanie plików do woluminu wyjściowego
+Aby zbudowane pliki były dostępne poza kontenerem zapisano je w woluminie wyjściowym. Na końcu sprawdzono czy pliki rzeczywiście dostępne są poza kontenerem.
+
+```bash
+ninja -C /output
+
+ls -ls /var/lib/docker/volumes/wyjscie/_data
+```
+![wyjscie](lab_4/zapisanie_plików.png)
+
+![wyjscie](lab_4/sprawdzenie.png)
+
+<br>
+
+## Eksponowanie portu, serwer iperf3
+Na początku uruchomiono wewnątrz kontenera serwer iperf3, połączono się z nim za pomocą drugiego kontenera oraz zbadano ruch.
+
+```bash
+cd lab_4
+ls
+docker pull networkstatic/iperf3
+docker run -it -d --name iperf3-server -p 5201:5201 networkstatic/iperf3 -s
+
+docker run -it --name iperf3-client networkstatic/iperf3 -c 172.17.0.2
+```
+![wyjscie](lab_4/iperf_docker_pull_run.png)
+
+![wyjscie](lab_4/połączenie_z_kontenerem_clienta.png)
+
+<br>
+
+## Eksponowanie portu, stworzenie sieci
+W tym etapie stworzono customową sieć oraz dodano do niej nowe kontenery.
+
+```bash
+docker rn -d --name iperf3-server-net iperf3-network networkstatic/iperf3 -s
+
+docker run -it --name iperf3-client-net --network iperf3-network networkstatic/iperf3 -c iperf3-server-net
+```
+![kontenery](lab_4/tworzenie_kontenerów_w_network.png)
+
+<br>
+
+## Przepustowość komunikacji
+Sprawdzono przepustowość komunikacji między kontenerami w sieci poprzez ukazanie logów.
+
+```bash
+docker logs iperf3-server-net
+```
+![kontenery](lab_4/przepustowosc.png)
+
+<br>
+
+## Jenkins, inicjalizacja
+Na początku zapoznano się z dokuentacją Jenkinsa, a następnie przeprowadzono instalację. Plik `Docker.jenkins` znajduje się w folderze `lab_4`.
+
+```bash
+docker network create jenkins
+docker build -f Dockerfile.jenkins -t myjenkins-blueocean:2.492.2-1 .
+
+docker run \
+  --name jenkins-blueocean \
+  --restart=on-failure \
+  --detach \
+  --network jenkins \
+  --env DOCKER_HOST=tcp://docker:2376 \
+  --env DOCKER_CERT_PATH=/certs/client \
+  --env DOCKER_TLS_VERIFY=1 \
+  --publish 8080:8080 \
+  --publish 50000:50000 \
+  --volume jenkins-data:/var/jenkins_home \
+  --volume jenkins-docker-certs:/certs/client:ro \
+  myjenkins-blueocean:2.492.2-1
+
+  docker ps -a
+```
+Stworzenie sieci Jenkins:
+![jenkins](lab_4/jenkins_network_i_DIND.png)
+
+Stworzenie obrazu:
+![jenkins](lab_4/jenkins_build.png)
+
+Uruchomienie kontenera z pomocą DIND:
+![jenkins](lab_4/jenkins_kontener_run.png)
+
+Sprawdzenie czy kontener jest uruchomiony:
+![jenkins](lab_4/działające_kontenery.png)
+
+<br>
+
+## Jenkins w przeglądarce
+W tym etapie otworzono Jenkinsa w przeglądarce za pomocą adresu: https://localhost:8080
+
+
+![jenkins](lab_4/jenkins_1.png)  
+<br>
+Następnie zdobyto hasło do logowania i zalogowano się na stronie.
+
+```bash
+sudo cat /var/lib/docker/volumes/jenkins-data/_data/secret/initialAdinPassword
+```
+![jenkins](lab_4/jenkins_hasło.png)
+
+![jenkins](lab_4/jenkins2.png)
