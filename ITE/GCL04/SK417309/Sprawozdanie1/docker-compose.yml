@@ -1,0 +1,16 @@
+services:
+  build:
+    container_name: build-container
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+    tty: true
+
+  test:
+    container_name: test-container
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      - build
+    tty: true
