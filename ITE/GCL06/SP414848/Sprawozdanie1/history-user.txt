@@ -1,0 +1,442 @@
+    1  ls
+    2  cd
+    3  ls
+    4  cd MDO2025_INO/
+    5  ls
+    6  cd READMEs/
+    7  ls
+    8  code 001-Assignment.md 
+    9  code 001-Class.md 
+   10  git --version
+   11  git remote -v
+   12  git remote set-url origin git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   13  git fetch
+   14  git remote -v
+   15  git fetch
+   16  git checkout main
+   17  git pull
+   18  git branch
+   19  git checkout GCL06
+   20  git checkout SP414848
+   21  git checkout -b SP414848
+   22  git branch
+   23  cd ..
+   24  ls
+   25  cd ITE
+   26  ls
+   27  cd GCL06/
+   28  ls
+   29  mkdir SP414848
+   30  ls
+   31  cd SP414848/
+   32  code verify-commit-msg.sh
+   33  ls
+   34  cd MDO2025_INO/
+   35  cd ITE/
+   36  cd GCL06/
+   37  cd SP414848/
+   38  code verify-commit-msg.sh 
+   39  code ../../../READMEs/001-Class.md
+   40  ls -a
+   41  ls -la
+   42  chmod +x verify-commit-msg.sh 
+   43  ls -la
+   44  cp verify-commit-msg.sh ../../../.git/hooks/
+   45  ls
+   46  cd ../../../.git/hooks
+   47  ls -la
+   48  ls
+   49  cd ../../ITE/GCL06/SP414848/
+   50  code sprawozdanie1.md
+   51  git config --global user.email "szpolak@student.agh.edu.pl"
+   52  git config --global user.name "user123user321"
+   53  git reset --soft HEAD~1
+   54  code ../../../.git/hooks/verify-commit-msg.sh 
+   55  git reset --soft HEAD~1
+   56  ls ../../../.git/hooks/
+   57  czt ../../../.git/hooks/commit-msg.sample 
+   58  cat ../../../.git/hooks/commit-msg.sample 
+   59  sudo apt-get update
+   60  ls
+   61  code MDO2025_INO/READMEs/001-Class.md 
+   62  cd MDO2025_INO/ITE/GCL06/SP414848/
+   63  rm verify-commit-msg.sh 
+   64  git add .
+   65  git commit -m "SP414848 deleted usless file"
+   66  code ../../../READMEs
+   67  code ../../../READMEs/002-Class.md 
+   68  ls
+   69  docker pull hello-world
+   70  sudo docker pull hello-world
+   71  ls
+   72  docker pull hello-world
+   73  groups
+   74  sudo docker pull hellow-world
+   75  docker run -d mysql:latest
+   76  docker run -d mysql
+   77  docker run -d -e MYSQL_ROOT_PASSWORD=root mysql
+   78  docker run -d hello-world
+   79  docker run -d hello-worldxxxx
+   80  docker run hello-world
+   81  docker ps
+   82  docker ps -a
+   83  dokcer rm 44c 5b6 bec 967 802
+   84  docker rm 44c 5b6 bec 967 802
+   85  docker rmi busybox hello-world mysql obraz ubuntu
+   86  ls
+   87  git clone https://github.com/sqlite/sqlite
+   88  ls
+   89  cd sqlite/
+   90  ./configure
+   91  make
+   92  make test
+   93  cd ..
+   94  cd MDO2025_INO/ITE/GCL06/SP414848/
+   95  ls
+   96  code Dockerfile 
+   97  cd ..
+   98  cd SP414848/
+   99  code ../../../READMEs/002-Class.md 
+  100  ls
+  101  git fetch
+  102  ls
+  103  mkdir spr1
+  104  mv Dockerfile ./spr1
+  105  ls
+  106  cd spr1/
+  107  ls
+  108  cd ..
+  109  mv 'screeny sprawko.docx' ./spr1
+  110  mv sprawozdanie1.md ./spr1
+  111  ls
+  112  cd spr1/
+  113  history
+  114  history >> history.txt
+  115  ls
+  116  code history.txt 
+  117  mv history.txt history_lab_1-2.txt
+  118  ls
+  119  code history_lab_1-2.txt 
+  120  code sprawozdanie1.md 
+  121  rm 'screeny sprawko.docx' 
+  122  ls
+  123  cd screens/
+  124  ls
+  125  cd ..
+  126  git add .
+  127  git commit -m 'SP414848 sprawko update'
+  128  code ../../../../READMEs/003-Class.md 
+  129  ls
+  130  code ../../../../READMEs/003-Class.md 
+  131  cd ../../../../READMEs
+  132  ls
+  133  code 002-Class.md 
+  134  cd ..
+  135  ls
+  136  cd ITE/GCL06/SP414848/
+  137  cd spr1/
+  138  ls
+  139  cd ..
+  140  code ccc.txt
+  141  groups
+  142  cd MDO2025_INO/ITE/GCL06/SP414848/
+  143  docker pull hello-world
+  144  docker pull busybox
+  145  docker pull ubuntu
+  146  docker pull mysql
+  147  docker run busybox 
+  148  docker run -it busybox sh
+  149  docker tun -it ubuntu bash
+  150  docker run -it ubuntu bash
+  151  ls
+  152  ls 0la
+  153  ls -la
+  154  code Dockerfile
+  155  ls
+  156  docker build -t obraz .
+  157  docker run -it obraz
+  158  git add .
+  159  git commit -m "SP414848 - class 2 almost done"
+  160  code cc.txt
+  161  docker pull ubuntu
+  162  docker run -it ubuntu bash
+  163  docker ps - a
+  164  docker ps -a
+  165  docker rm 30
+  166  docker rmi ubuntu
+  167  docker pull fedora
+  168  docker run -it fedora:40 bash
+  169  docker ps -a
+  170  docker rm 9f
+  171  docker rmi fedora:40
+  172  docker rmi fedora
+  173  docker pull ubuntu:20.04
+  174  docker run -it ubuntu:20.04 bash
+  175  docker ps
+  176  docker run -it ubuntu:20.04 bash
+  177  ls
+  178  docker ps
+  179  cd spr1/
+  180  docker ps
+  181  cd ..
+  182  ls
+  183  docker pull fedora:40
+  184  docker run -it fedora:40
+  185  docker run -it fedora:40 bash
+  186  cd MDO2025_INO/ITE/GCL06/SP414848/
+  187  ls
+  188  docker build -t sqlite-build -f Dockerfile.build .
+  189  history
+  190  docker pss -a
+  191  docker ps -a
+  192  docker run 1c86 -i
+  193  docker start 1c86 -it
+  194  docker start 1c86
+  195  docker stop 1c86
+  196  docker start 1c86 bash
+  197  docker start 1c86
+  198  docker attach 1c86
+  199  docker rmi sqlite-build
+  200  docker build -f Dockerfile.build -t sqlite-build .
+  201  ls
+  202  cd MDO2025_INO/ITE/GCL06/SP414848/
+  203  ls
+  204  docker build -f Dockerfile.build -t sqlite-build .
+  205  docker build -f Dockerfile.test -t sqlite-test .
+  206  docker run --rm sqlite-test
+  207  ls
+  208  cd /home
+  209  ls
+  210  cd szymon/
+  211  ls
+  212  cd sqlite/
+  213  ls
+  214  rm -rf sqlite3
+  215  ls
+  216  rm -rf sqldiff
+  217  make test
+  218  ls
+  219  cd ../MDO2025_INO/ITE/GCL06/SP414848/
+  220  code /home/szymon/MDO2025_INO/READMEs/004-Class.md 
+  221  ls
+  222  mv spr1 Sprawozdanie1
+  223  ls
+  224  cd Sprawozdanie1/
+  225  ls
+  226  mv sprawozdanie1.md README.md
+  227  ls
+  228  code README.md 
+  229  ls
+  230  cd ..
+  231  docker volume create input_vol
+  232  docker volume create output_vol
+  233  ls
+  234  docker run -it fedora:40 bash
+  235  docker ps
+  236  docker ps -a
+  237  docker rm 1e\
+  238  docker rm 1e
+  239  ls -a
+  240  docker run -d --name copy_cont -v input_vol:/copy_data fedora:40 
+  241  git clone https://github.com/sqlite/sqlite
+  242  docker cp sqlite copy_cont:/copy_data
+  243  docker run -d --name test -v input_vol:/copy_data fedora:40 bash
+  244  docker rm test
+  245  docker run -d -tty --name test -v input_vol:/copy_data fedora:40 bash
+  246  docker run -it --name test -v input_vol:/copy_data fedora:40 bash
+  247  docker ps -a
+  248  docker rm copy_cont test
+  249  docker build -f Dockerfile.base -t sqlite-base .
+  250  docker run -d --name base-cont -v input_vol:/input -v output_vol:/output sqlite-base bash
+  251  docker rm base-cont 
+  252  docker run -d -it --name base-cont -v input_vol:/input -v output_vol:/output sqlite-base bash
+  253  docker rm base-cont
+  254  docker ps -a
+  255  docker rm base-cont
+  256  docker attach base-cont 
+  257  git add .
+  258  docker run -d -it --name base-cont -v input_vol:/input -v output_vol:/output sqlite-base bash
+  259  docker start 17166
+  260  docker attach 17166
+  261  docker ps -a
+  262  rm 17166
+  263  docker rm 17166
+  264  docker rmi sqlite-base
+  265  docker build -f Dockerfile.base -t sqlite-base .
+  266  cd MDO2025_INO/ITE/GCL06/SP414848/
+  267  ls
+  268  cd MDO2025_INO/ITE/GCL06/SP414848/
+  269  docker build -f Dockerfile.base -t sqlite-base .
+  270  docker run -it --name base-cont -v input_vol:/input -v output_vol:/output sqlite-base bash
+  271  cd sqlite/
+  272  ls
+  273  cd MDO2025_INO/ITE/GCL06/SP414848/
+  274  ls
+  275  rm -rf sqlite/
+  276  git clone https://github.com/sqlite/sqlite
+  277  ls
+  278  docker cp sqlite base-cont:/input
+  279  docker rm base-cont 
+  280  docker run -it --name base-cont -v input_vol:/input -v output_vol:/output sqlite-base bash
+  281  docker rm sqlite-base
+  282  docker rm base-cont
+  283  docker rmi sqlite-base
+  284  docker build -f Dockerfile.base -t sqlite-base .
+  285  docker run -it --name base-cont -v input_vol:/input -v output_vol:/output sqlite-base bash
+  286  docker rm base-cont
+  287  docker rmi sqlite-base
+  288  docker build -f Dockerfile.base -t sqlite-base .
+  289  export DOCKER_BUILDKIT=1
+  290  docker build -f Dockerfile.base -t sqlite-base .
+  291  DOCKER_BUILDKIT=1 docker build -f Dockerfile.base -t sqlite-base .
+  292  hissotry
+  293  hisotry
+  294  history
+  295  cd /home/szymon/.ssh/
+  296  ls
+  297  cat id_ecdsa
+  298  cat id_ecdsa.pub
+  299  cat id_ed25519.pub 
+  300  git remote -v
+  301  cd ../MDO2025_INO
+  302  git remote -v
+  303  history | head -21 | tail -9
+  304  history | head -21 | tail -10
+  305  ls
+  306  cd ITE/GCL06/SP414848/
+  307  ls
+  308  cd sqlite/
+  309  ls
+  310  make help
+  311  ./configure
+  312  make help
+  313  make
+  314  make help
+  315  make tcltest
+  316  cd ..
+  317  ls
+  318  rm -rf sqlite
+  319  history
+  320  DOCKER_BUILDKIT=1 docker build -f Dockerfile.base -t sqlite-base .
+  321  mkdir /input-host
+  322  mkdir input-host
+  323  mkdir output-host
+  324  ls
+  325  DOCKER_BUILDKIT=1 docker build -f Dockerfile.base -t sqlite-base .
+  326  cd input-host/
+  327  ls
+  328  cd ..
+  329  DOCKER_BUILDKIT=1 docker build -f Dockerfile.base -t sqlite-base .
+  330  ls
+  331  chmod -R 777 input-host/
+  332  chmod -R 777 output-host
+  333  DOCKER_BUILDKIT=1 docker build -f Dockerfile.base -t sqlite-base .
+  334  ls -la
+  335  DOCKER_BUILDKIT=1 docker build -f Dockerfile.base -t sqlite-base .
+  336  cd output-host/
+  337  ls
+  338  cd ..
+  339  docker run -it --name base-cont sqlite-base bash
+  340  cd input-host/
+  341  ls
+  342  cd ..
+  343  cd output-host/
+  344  ls
+  345  cd ..
+  346  history | find docker
+  347  history | grep docker
+  348  history | grep 'docker rm'
+  349  docker rm base-cont
+  350  history | grep 'docker build'
+  351  docker rmi sqlite-base
+  352  ls
+  353  cd input-host/
+  354  ls
+  355  cd ../output-host/
+  356  ls
+  357  cd ..
+  358  rm input-host/
+  359  rm -rf input-host/
+  360  rm -rf output-host/
+  361  mkdir input-host
+  362  mkdir output-host
+  363  ls
+  364  DOCKER_BUILDKIT=1 docker build -f Dockerfile.base -t sqlite-base .
+  365  cd input-host/
+  366  ls
+  367  DOCKER_BUILDKIT=1 docker build -f Dockerfile.base -t sqlite-base .
+  368  cd ..
+  369  DOCKER_BUILDKIT=1 docker build -f Dockerfile.base -t sqlite-base .
+  370  cd input-host/
+  371  ls
+  372  cd ..
+  373  DOCKER_BUILDKIT=1 docker build -f Dockerfile.base -t sqlite-base .
+  374  cd input-host/
+  375  ls
+  376  cd ..
+  377  cd output-host/
+  378  ls
+  379  DOCKER_BUILDKIT=1 docker build -f Dockerfile.base -t sqlite-base .
+  380  cd ..
+  381  DOCKER_BUILDKIT=1 docker build -f Dockerfile.base -t sqlite-base .
+  382  cd input-host/
+  383  ls
+  384  cd ../output-host/
+  385  ls
+  386  cd ..
+  387  docker run -it --rm -v $(pwd)/input-host:/input -v $(pwd)/output-host:/output base-cont
+  388  docker run -it --rm -v $(pwd)/input-host:/input -v $(pwd)/output-host:/output sqlite-base
+  389  cd output-host/
+  390  ls
+  391  cd ..
+  392  docker run -it --rm sqlite-base
+  393  cd output-host/
+  394  ls
+  395  cd ..
+  396  docker run -it --rm fedora:40 bash
+  397  histroy
+  398  history
+  399  docker network create test-network
+  400  docker run --network test-network --name iperf3-server --rm --it fedora:40 bash
+  401  docker run --network test-network --name iperf3-server --rm -it fedora:40 bash
+  402  docker run -p 5201:5201 --network test-network --name iperf3-server --rm -it fedora:40 bash
+  403  docker run --name jenkins-docker --rm --detach --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home --publish 2376:2376 docker:dind --storage-driver overlay
+  404  docker pull jenkins/jenkins:lts
+  405  date
+  406  sudo timedatectl set-ntp teur
+  407  sudo timedatectl set-ntp true
+  408  sudo timedatectl status
+  409  sudo ntpdate pool.ntp.org
+  410  timedatectl set-time "2025-03-31 21:30:00"
+  411  sudo timedatectl set-ntp false
+  412  timedatectl set-time "2025-03-31 21:30:00"
+  413  docker run --name jenkins-docker --rm --detach --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home --publish 2376:2376 docker:dind --storage-driver overlay
+  414  docker network ls
+  415  docker network create jenkins
+  416  docker run --name jenkins-docker --rm --detach --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home --publish 2376:2376 docker:dind --storage-driver overlay
+  417  docker build -t myjenkins-blueocean:2.440.2-1 -f Dockerfile.jenkins .
+  418  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.440.2-1
+  419  docker ps
+  420  docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+  421  docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+  422  curl localhost:8080
+  423  ls
+  424  rmdir input-host/
+  425  rmdir output-host/
+  426  ls
+  427  cd Sprawozdanie1/
+  428  ls
+  429  cd .
+  430  ls
+  431  cd ..
+  432  ls
+  433  mv Dockerfile.base ./Sprawozdanie1/
+  434  mv Dockerfile.build ./Sprawozdanie1/
+  435  mv Dockerfile.test ./Sprawozdanie1/
+  436  mv Dockerfile.jenkins ./Sprawozdanie1/
+  437  ls
+  438  cd Sprawozdanie1/
+  439  ls
+  440  rm history_lab_1-2.txt 
+  441  history
+  442  history >> history-user.txt

@@ -1,0 +1,100 @@
+    1  iip a
+    2  ip a
+    3  sudo dfn install git
+    4  sudo dnf install git
+    5  git --version
+    6  sudo dnf install openssh-clients
+    7  ls
+    8  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+    9  ls
+   10  cd MDO2025_INO/
+   11  ls
+   12  clear
+   13  ls
+   14  cd ..
+   15  clear
+   16  ls
+   17  sudo passwd szymon 
+   18  cat /etc/group | grep docker
+   19  groups szymon
+   20  ls
+   21  cd /home
+   22  ;s
+   23  ls
+   24  cd szymon/
+   25  cd sqlite/
+   26  sudo dnf update
+   27  sudo dnf install -y build-essential tcl
+   28  ls
+   29  sudo dnf install -y gcc make tcl-devel readline-devel
+   30  sudo usermod -aG wheel szymon
+   31  groups szymon
+   32  ps
+   33  history
+   34  ls
+   35  cd ..
+   36  ls
+   37  mkdir test
+   38  cd test/
+   39  git clome https://github.com/sqlite/sqlite.git
+   40  git clone https://github.com/sqlite/sqlite.git
+   41  cd sqlite/
+   42  make test
+   43  make
+   44  ls
+   45  ./configure
+   46  ls
+   47  make test
+   48  ls
+   49  cd ..
+   50  rm -rf test
+   51  ls
+   52  cd sqlite/
+   53  ls
+   54  cd ..
+   55  ps
+   56  cd sqlite/
+   57  ls
+   58  rm -rf sqlite3
+   59  ls
+   60  make test
+   61  ls
+   62  cd ..
+   63  cd /
+   64  ls
+   65  cd home/
+   66  ls
+   67  cd szymon/
+   68  ls
+   69  curl https:://google.com
+   70  curl https://google.com
+   71  history
+   72  page up
+   73  pageup
+   74  up
+   75  top
+   76  comand | less
+   77  ls
+   78  vim
+   79  ls
+   80  history
+   81  history |
+   82  history
+   83  history | tail -10
+   84  history | head 10
+   85  history | tail 10
+   86  history | tail 1-0
+   87  history | tail -10
+   88  history | head -10
+   89  history | head -6
+   90  history | head -6 | tail -1
+   91  history | head -6
+   92  history | head -10 | tail -3
+   93  history | head -20
+   94  history | head -30
+   95  disk
+   96  du
+   97  df -h
+   98  ls
+   99  cd MDO2025_INO/ITE/GCL06/SP414848/Sprawozdanie1/
+  100  history >> history-root.txt
