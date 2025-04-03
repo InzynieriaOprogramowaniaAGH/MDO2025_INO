@@ -24,6 +24,8 @@
 * Utwórz nowy obiekt typu `pipeline`
 * Wpisz treść *pipeline'u* bezpośrednio do obiektu (nie z SCM - jeszcze!)
   * https://www.jenkins.io/doc/book/pipeline/syntax/
+  * https://www.jenkins.io/doc/pipeline/steps/git/
+  * https://www.jenkins.io/doc/pipeline/examples/#unstash-different-dir
 * Spróbuj sklonować repo przedmiotowe (`MDO2025_INO`)
 * Zrób *checkout* do swojego pliku Dockerfile (na osobistej gałęzi) właściwego dla *buildera* wybranego w poprzednim sprawozdaniu programu
 * Zbuduj Dockerfile
