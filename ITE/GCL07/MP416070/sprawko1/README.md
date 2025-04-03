@@ -348,3 +348,200 @@ Uruchamiamy kontener poleceniem:
 ```docker run --rm --name test_container test_image```
 
 ![alt text](screeny/lab3-dockerrunfinal.png)
+
+## Laboratorium 4 - Dodatkowa terminologia w konteneryzacji, instancja Jenkins
+
+### Utworzenie wolumiów wejściowego i wyjściowego
+
+```
+docker volume create input_volume
+docker volume create output_volume
+```
+
+## Utworzenie kontenera bazowego na podstawie poprzedniego ćwiczenia (bez git)
+
+```
+FROM fedora:latest
+
+#pobranie wymaganych pakietow i repo
+RUN dnf -y install \
+gcc \
+glib2-devel \
+openssl-devel \
+ncurses-devel \
+meson \
+ninja \
+perl-ExtUtils-Embed 
+
+WORKDIR /app
+
+CMD ["/bin/bash"]
+
+```
+
+![alt text](screeny/lab4_iamge.png)
+
+## Uruchomienia kontenera bazowego wraz z utworzonymi woluminami
+
+docker run -it --name build-container \ 
+-v input_volume:/mny/input \ 
+-v output_volume:/mnt/output \ 
+build_image_no_git /bin/bash
+
+![alt text](screeny/lab4_iamge.png)
+
+## Sklonowanie repozytorium spoza kontenera na wolumin wejściowy
+
+Repozytorium zostało skopiowane poprzez bezpośrednie sklonowanie repozytorium do ścieżki powiązanej z woluminem komendą: 
+
+```
+sudo git clone https://github.com/irssi/irssi $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)
+```
+
+## Uruchmoienie build'a wewnątrz repo korzystając z woluminu wejściowego
+
+```
+cd mny/input/
+meson setup builddir
+ninja -C builddir
+```
+![alt text](screeny/lab4-meson.png)
+
+
+![alt text](screeny/lab4-ninja.png)
+
+
+## Przekopiowanie utworzonego katalogu builldir do woluminu wyjściowego 
+```
+cp -r /mny/input/builddir /mnt/output
+```
+
+
+![alt text](screeny/lab4-ninja-cp.png)
+
+## Weryfikacja poprwaności działania zapisanie w woluminie wyjściowym przy pomocy innego kontenera 
+```
+docker run --rm -v output_volume:/mnt/output alpine ls /mnt/output
+```
+
+
+![alt text](screeny/lab4-weryfikacja.png)
+
+Podsumowując najpierw skopiowano cały katalog builddir (wraz ze wszystkimi plikami i podkatalogami) z katalogu /mny/input do katalogu wyjściowego /mnt/output. Ten katalog jest podłączony jako wolumin Dockera, czyli dane są przechowywane poza kontenerem. Następnie uruchomiono nowy kontener Dockera (alpine), montując ten sam wolumin output_volume jako /mnt/output. Wewnątrz kontenera jest wyświetlana zawartość tego katalogu, co pozwala upewnić się, że dane zostały poprawnie skopiowane i zapisane w woluminie.
+
+
+Można wykonać przedstawione wcześniej kroki bezpośrednio w trakcie budowania obrazu Dockera za pomocą instrukcji RUN z opcją --mount w pliku Dockerfile. Mechanizm ten pozwala na podmontowanie zewnętrznych woluminów lub katalogów tymczasowych na czas budowania obrazu. W tym podejściu katalog builddir dostępny lokalnie na komputerze jest tymczasowo montowany w kontenerze budującym obraz, a jego zawartość kopiowana jest do docelowej lokalizacji wewnątrz kontenera. Pozwala to na efektywne wykorzystanie danych podczas budowania obrazu bez konieczności trwałego kopiowania ich do kontekstu budowania.
+
+## Eksportowanie portu
+
+Zainstalowano iperf3 na hoście. Następnie uruchomiono dwa kontenery oraz na każdym z nich zainstalowano iperf3.
+
+```
+docker run --rm --tty -i --name pierwszy fedora bash
+docker run --rm --tty -i --name drugi fedora bash
+```
+
+![alt text](screeny/lab4-iperf.png)
+
+## Komunikacja pomiędzy utworzonymi kontenerami 
+
+Po zainstalowaniu iperf3 na obu kontenerach zbadano ruch pomiędzy nimi. Na pierwszym kontenerze uruchomiono server:
+```
+iperf3 -s
+```
+
+Natomiast na kliencie :
+```
+iperf3 -c 172.17.0.2
+```
+![alt text](screeny/lab4-kontenery-komunikacja.png)
+
+Ruch sieciowy zadziałał poprawnie
+
+## Utworzenie dedykowanej sieci mostkowej
+
+```
+docker network create my_network
+```
+
+![alt text](screeny/lab4-wlasna-siec.png)
+
+
+## Uruchomienie kontenerów w utworzonej wcześniej sieci
+```
+docker run --rm --tty -i -- network=my_network --name pierwszy fedora bash
+docker run --rm --tty -i -- network=my_network --name drugi fedora bash
+```
+
+
+![alt text](screeny/lab4-kontenery-wsieci.png)
+
+
+Możliwe jest komunikowanie się wewnątrz tej samej sieci za pomocą nazw dlatego po włączeniu servera :
+```
+iperf3 -s
+```
+
+Na kliencie zadziałają obie komendy :
+```
+iperf3 -c pierwszy
+iperf3 -c 172.17.0.2
+```
+![alt text](screeny/lab4-kontenery-ruchsieciowycd.png)
+
+## Połączenie z serwerem iperf3 w kontenerze z hosta
+
+Żeby połączyć się z serwerem z hosta, wystarczy że podamy ip naszego serwera, DNS nie zadziała, ponieważ host i kontenery nie są w obrębie tej samej sieci mostkowanej
+
+```
+iperf3 -c 172.18.0.2
+```
+
+![alt text](screeny/lab4-iperf3-host-kontener.png)
+
+Przepustowości przesyłu danych widoczne i przedstawione są na screenach znajdujących się w sprawozdaniu.
+
+## Instalacja Jenkins
+
+Instalacja skonteneryzowanej wersji Jenkins z pomocnikiem DIND i inicjalizacja
+
+Tworzymy sieć aby Jenkins i DIND widziały się przez sieć Dockera.
+```
+docker network create jenkins
+```
+
+### Tworzymy pomocniczy kontener DIND
+```
+docker run --privileged --name jenkins-dind -d -p 8080:8080 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock jenkins/jenkins:lts
+```
+
+
+### Następnie tworzymy kontener Jenkins  
+```
+docker run --rm --name jenkins-blueocean \
+  --network jenkins \
+  -u root \
+  -d \
+  -p 8080:8080 -p 50000:50000 \
+  -v jenkins-data:/var/jenkins_home \
+  -v jenkins-docker-certs:/certs/client:ro \
+  -e DOCKER_HOST=tcp://jenkins-docker:2376 \
+  -e DOCKER_CERT_PATH=/certs/client \
+  -e DOCKER_TLS_VERIFY=1 \
+  jenkins/jenkins:lts
+```
+
+![alt text](screeny/lab4-dind-jenkins.png)
+
+### Hasło do odblokowania Jenkins 
+
+Hasło do odblokowania Jenkins można sprawdzić przy pomocy komendy: 
+
+```
+docker logs jenkins-blueocean
+```
+
+Przy pomocy tego klucza możemy zalogować się na Jenkins który jest hostowany na porcie :8080.
+
+![alt text](screeny/lab4-jenkins.png)
+

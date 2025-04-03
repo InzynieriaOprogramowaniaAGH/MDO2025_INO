@@ -1,0 +1,15 @@
+FROM fedora:latest
+
+#pobranie wymaganych pakietow i repo
+RUN dnf -y install \
+gcc \
+glib2-devel \
+openssl-devel \
+ncurses-devel \
+meson \
+ninja \
+perl-ExtUtils-Embed 
+
+WORKDIR /app
+
+CMD ["/bin/bash"]
