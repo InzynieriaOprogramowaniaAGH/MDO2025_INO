@@ -6,23 +6,42 @@ Niestety nie robiłem na bierząco zrzutów ekranu do pierwszych zajęć, więc 
 
 ## 1. Instalacja git i obsługi ssh
 
+Usługi zainstalowano za pomocą `dnf intall` + nazwa uługi (jak na zrzucie).
+
 ![Instalacja git, ssh](screens/lab1-1.png)
 
 ## 2. Sklonowanie repozytorium przedmiotowego
+
+Repozytorium można sklonować dzięki poleceniu `git clone`.
 
 ![sklonowanie repozytorium przez https](screens/lab1-2.png)
 
 ## 3. Tworzenie kluczy ssh i konfiguracja ssh jako metodę dostępu do GitHuba
 
-Utworzone klucze za pomocą 'ssh-keygen':
+Utworzone klucze ssh zabezpieczone hasłem za pomocą 'ssh-keygen':
+
+```
+ssh-keygen -t ed25519 -C "szpolak@student.agh.edu.pl"
+ssh-keygen -t ecdsa -b 521 -C "szpolak@student.agh.edu.pl"
+```
+
+Jako komentarz: email - dodanie komentarza pomaga zidentyfikować włściciela, gdybyśmy przechowywali kluczy innych użytkowników.
+
+Klucze domyślnie tworzą się w katalogu `~/.ssh`.
+
+### Utworzone klucze
 
 ![Utworzone klucze](screens/lab1-3.png)
 
-SSH jako metoda dostępu do githuba:
+### SSH jako metoda dostępu do githuba
+
+Teraz możemy dodać wygenerowany klucz jako metodę dostępu do w githubie: 
 
 ![ssh github](screens/lab1-4.png)
 
 ## 4. Przełączenie gałęzi na main -> grupową -> utworzenie nowej gałęzi
+
+Do przełącznia gałęzi wykorzystujemy polecenie `git checkout`.
 
 ![gałęzie](screens/lab1-5.png)
 
@@ -30,7 +49,7 @@ SSH jako metoda dostępu do githuba:
 
 ## 5. Praca na nowej gałęzi
 
-Utworzono katalog "SP414848" za pomocą 'mkdir' oraz napisano git hooka.
+Utworzono katalog "SP414848" za pomocą 'mkdir' oraz napisano git hooka, który wyrzuca błąd jeśli wiadomość commita nie rozpoczyna się zadanym ciągiem znaków (SP414848).
 
 ### Treść hooka:
 ```
@@ -53,6 +72,8 @@ Git poprawnie wyrzuca błąd gdy wiadomość się nie zgadza z ustawionym wzorce
 
 ## 6. Wystawienie Pull Request
 
+Pull Request wystawiamy z zakładki `Pull requests` na githubie, następnie przycisk `New pull request`.
+
 ![Pull Request](screens/lab1-7.png)
 
 (wybrano gałąź grupową jako 'base' - lewy górny róg)
@@ -71,7 +92,7 @@ Celem poniższych kroków jest zapoznanie się z podstawowym działaniem docker 
 
 ## 3. Pobieranie obrazów
 
-Obrazy standardowo pobrano za pomocą 'docker pull'
+Obrazy pobrano za pomocą 'docker pull':
 ```
   143  docker pull hello-world
   144  docker pull busybox
@@ -80,6 +101,8 @@ Obrazy standardowo pobrano za pomocą 'docker pull'
 ```
 ## 4. Uruchomienie obrazu `busybox`
 
+Obraz uruchamiamy poleceniem 'docker run':
+
 ![Pobrane obrazy i uruchomienie busyboxa](screens/lab2-3.png)
 
 (-it uruchamia obraz w trybie interaktywnym oraz przydziela terminal, sh na końcu polecenia uruchamia powłokę)
@@ -87,11 +110,17 @@ Obrazy standardowo pobrano za pomocą 'docker pull'
 
 ## 5. Uruchomienie obrazu `ubuntu`
 
+Uruchomiono interaktywnie obraz `ubuntu`, uruchomiono aktualizację menedżera pakietów 'apt' - połączenie sieciowe działa bez problemów.
+
 ![Komenda do uruchomienia](screens/lab2-4.png)
 
 ![Bash ubuntu](screens/lab2-5.png)
 
 ## 6. Utworzenie pliku Dockerfile i sklonowanie repozytorium
+
+Utworzono plik Dockerfile, jest plik konfiguracyjny używany do automatycznego tworzenia obrazów Dockera.
+
+Poniższy plik Dockerfile jest oparty na ubuntu i służy do klonowania repozytorium oraz uruchamia powłokę (oczywiście najpierw instaluje git'a). 
 
 ### Kod Dockerfile:
 ```Dockerfile
@@ -102,9 +131,11 @@ RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
 CMD ["/bin/bash"]
 ```
 
-Zbudowanie obrazu - 'docker build'
+Zbudowanie obrazu - 'docker build' ('-t' - nadaje wprowadzoną nazwę, '.' - wskazuje na katalog z plikiem Dockerfile, czyli obecny katalog), oraz uruchomienie 'docker run'.
 
 ![DockerFile](screens/lab2-6.png)
+
+Repozytorium poprawnie się sklonowało.
 
 ## 7. Uruchomienie kontenerów i usunięcie ich
 
@@ -112,21 +143,26 @@ Kontenery po uruchomieniu:
 
 ![Uruchomione kontenery](screens/lab2-7.png)
 
-Usunięcie za pomocą 'docker rm'
+Usunięcie za pomocą 'docker rm' (podajemy nazwę kontenera, bądź id lub jego fragment)
 
 ![Usuwanie kontenerów](screens/lab2-8.png)
 
 ## 8. Usunięcie obrazów
 
-Do usuwania obrazów - 'docker rmi'
+Do usuwania obrazów - 'docker rmi' z nazwą obrazu
 
 ![Usuwanie obrazów](screens/lab2-9.png)
 
 # Zajęcia 03
 
+Celem poniższych kroków jest przprowadzenie procesu budowania i testowania aplikacji w kontenerze oraz automatyzajca procesu za pomocą Dockerfile.
+
+## 0. Wybór repozytorium
+
 Do przeprowadzenia poniższych zadań użyto repozytorium `sqlite`: https://github.com/sqlite/sqlite 
 
-Celem poniższych kroków jest przprowadzenie procesu budowania i testowania aplikacji w kontenerze oraz automatyzajca procesu za pomocą Dockerfile.
+Wybrałem to repozytorium ponieważ SQLite jest lekki i nie wymaga konfiguracji serwera.
+Budowanie – mało zależności, proces budowania to tylko 2 polecenia. Testy – wiele różnorodnych testów z użyciem bazy w pamięci.
 
 ## 1. Proces budowania i testowania w kontenerze
 
@@ -136,7 +172,7 @@ Następnym krokiem jest przygotowanie środowiska do kompilacji, w sqlite aby to
 
 Ostatnim krokiem jest sama kompilacja, w sqlite aby zbudować większość komponentów wystarczy zwyczajnie uruchomić make na domyślny target (all) - 'make', ewentualnie 'make all'.
 
-### Zrzut przedstawiający polecenia potrzebne do poprawnego zbudowania sqlite
+### Zrzut przedstawiający polecenia potrzebne do poprawnego zbudowania sqlite (instalacja zależności, klonowanie repozytorium i proces budowania)
 
 ![Build](screens/lab3-1.png)
 
@@ -146,17 +182,19 @@ Do przeprowadzenia standardowych testów sqlite potrzebujemy jeszcze utworzyć n
 
 ![Tworzenie użytkownika](screens/lab3-2.png)
 
-Następnie możemu już przejść do testów - sqlite posiada wiele targetów do testowania, ja tutaj użyłem standardowego 'make test'.
+Następnie możemu już przejść do testów - sqlite posiada wiele targetów do testowania, ja tutaj użyłem domyślnego 'make test'.
 
 ### Uruchomienie testów
 
 ![Test](screens/lab3-3.png)
 
-### Raport z testów
+### Raport z testów (brak błędów)
 
 ![Raport](screens/lab3-4.png)
 
 ## 2. Automatyzacja budowania i testów za pomocą Dockerfile
+
+Proces można zautomatyzować dzięki plikom Dockerfile, jeden do budowania, drugi do testów.
 
 ### Kod Dockerfile.build:
 ```Dockerfile
@@ -175,6 +213,8 @@ RUN make
 
 ![Dockerfile.build](screens/lab3-5.png)
 
+('-f' pozwala wskazać na konkretny plik Dockerdile)
+
 ### Kod Dockerfile.test:
 ```Dockerfile
 FROM sqlite-build
@@ -188,6 +228,8 @@ WORKDIR /sqlite
 
 CMD ["make", "test"]
 ```
+
+Jako bazę Dockerfile do testów wskazujemy na obraz zbudowany na bazie Dockerfile.build.
 
 ### Zrzut przedstawiający kod oraz poprawne budowanie obrazu za pomocą pliku Dockerfile.test
 
@@ -223,9 +265,13 @@ Celem poniższych kroków jest zapoznanie się z działaniem woluminów i ich wy
 
 ## 2. Tworzenie nowych woluminów
 
+Woluminy to trwałe magazyny danych dla kontenerów Docker, które nie zależą od ich cyklu życia, oznacza to że kontener może pracować na podpiętym woluminie, a po jego wyłączeniu/usunięciu wszystko co zostało zapisane na woluminie dalej tam będzie.
+
+Woluminy tworzymy na pomocą `docker volume create` + nazwa woluminu.
+
 ![Tworzenie woluminów](screens/lab4-2.png)
 
-## 3. Dopiowanie repozytorium na wolumin
+## 3. Kopiowanie repozytorium na wolumin
 
 ### Podejście do kopiowania
 
@@ -242,6 +288,8 @@ Usunięto niepotrzebne kontenery.
 ![Usuwanie](screens/lab4-4.png)
 
 ## 4. Uruchomienie kontenera bazowego z podpiętymi woluminami (wejściowym i wyjściowym)
+
+Woluminy podpinamy flagą '-v', po niej podajemy odpowiednie mapowanie ({nazwa woluminu}:{ścieżka w kontenerze}).
 
 ![Uruchamianie kontenera](screens/lab4-5.png)
 
@@ -337,9 +385,13 @@ Bardzo wysoka przepustowość (średnio ponad 50 gigabitów/s), jest tak wysoka 
 
 ## 3. Utworzenie własnej sieci mostkowanej
 
+Sieć tworzymy poleceniem `docker network create` + nazwa sieci.
+
 ![tworzenie sieci](screens/lab4-13.png)
 
 ## 4. Uruchomienie kontenerów w sieci
+
+Aby uruchomić kontener w naszej sieci przy uruchamianiu dodajemy '--network' + nazwa sieci.
 
 ### Kontener serwerowy
 
