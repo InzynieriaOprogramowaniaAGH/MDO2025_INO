@@ -114,3 +114,6 @@ Po zainstalowaniu zależności przechodzimy do uruchomienia testów jednostkowyc
 ![testy](https://github.com/user-attachments/assets/c959a213-c246-439c-9c89-c22799d06481)
 
 docker testy auuu
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/JP416100/Dockerfile
+
