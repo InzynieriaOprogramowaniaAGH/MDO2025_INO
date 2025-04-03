@@ -1,0 +1,5 @@
+FROM bld003
+
+WORKDIR /app
+
+CMD npm test

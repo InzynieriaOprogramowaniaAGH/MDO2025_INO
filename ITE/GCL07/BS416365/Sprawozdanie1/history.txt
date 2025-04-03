@@ -1,0 +1,133 @@
+    1  eval "$(ssh-agent -s)"
+    2  ssh-add ~/.ssh/id_ed25519
+    3  cat ~/.ssh/id_ed25519.pub
+    4  ssh-keygen -t ecdsa -b 521 -C bskubel@student.agh.edu.pl
+    5  eval "$(ssh-agent -s)"
+    6  ssh-add ~/.ssh/id_ed25519
+    7  cat ~/.ssh/id_ed25519.pub
+    8  sudo systemctl status sshd
+    9  sudo firewall-cmd --state
+   10  sudo firewall-cmd --zone=public --add-port=22/tcp --permanent
+   11  sudo firewall-cmd --reload
+   12  ip a
+   13  ssh -T git@github.com
+   14  ip a
+   15  sudo systemctl status sshd
+   16  sudo firewall-cmd --state
+   17  sudo firewall-cmd --zone=public --add-port=22/tcp --permanent
+   18  sudo firewall-cmd --reload
+   19  ip a
+   20  ls
+   21  sudo dnf install -y tar
+   22  ip a
+   23  iperf3 -s
+   24  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+   25  dnf install git -y
+   26  sudo dnf install git -y
+   27  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+   28  git checkout BS416365
+   29  cd MDO2025_INO/
+   30  git checkout BS416365
+   31  cd ITE/GCL07/BS416365/
+   32  ls
+   33  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/16677f26ae56c638632c27b79e10a5ca8bfca4c4/ITE/GCL07/BS416365
+   34  sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+   35  sudo dnf install -y dnf-plugins-core
+   36  sudo dnf install -y docker
+   37  sudo systemctl start docker
+   38  sudo systemctl enable docker
+   39  docker --version 
+   40  docker pull hello-world
+   41  docker pull busybox
+   42  docker pull ubuntu
+   43  docker pull fedora
+   44  docker pull mysql
+   45  docker login
+   46  docker pull hello-world
+   47  docker pull busybox
+   48  docker pull ubuntu
+   49  docker pull fedora
+   50  docker pull mysql
+   51  sudo usermod -ag docker devops
+   52  sudo usermod -aG docker devops
+   53  docker pull hello-world
+   54  docker pull busybox
+   55  docker pull ubuntu
+   56  docker pull fedora
+   57  docker pull mysql
+   58  sudo usermod -aG docker BSkubel
+   59  sudo usermod -aG docker $(whoami)
+   60  docker pull hello-world
+   61  newgrp docker
+   62  docker images
+   63  docker pull hello-world
+   64  docker pull busybox
+   65  docker pull ubuntu
+   66  docker pull fedora
+   67  docker pull mysql
+   68  git clone https://github.com/irssi/irssi
+   69  cd irssi/
+   70  meson Build
+   71  sudo dnf install -y meson ninja-build gcc glib2 glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils-* cmake git
+   72  meson Build
+   73  sudo dnf libgcrypt-config
+   74  sudo dnf libgcrypt
+   75  ninja -C Build
+   76  ninja -C Build test
+   77  cd ..
+   78  git clone https://github.com/devenes/node-js-dummy-test.git
+   79  cd node-js-dummy-test/
+   80  sudo install -y nodejs npm
+   81  sudo dnf install -y nodejs npm
+   82  npm install
+   83  npm test
+   84  docker volume create vin
+   85  docker volume create vout
+   86  docker volume ls
+   87  docker run -it -v vin:/mnt/vin -v vout:mnt/vout fedora bash
+   88  cd ..
+   89  docker run -it -v vin:/mnt/vin -v vout:mnt/vout fedora bash
+   90  cd irssi/
+   91  docker volume ls
+   92  docker run -it -v vin:/mnt/vin -v vout:mnt/vout fedora bash
+   93  docker run -it -v vin:/mnt/vin -v vout:/mnt/vout fedora bash
+   94  docker volume create vin2
+   95  docker volume create vout2
+   96  docker run -it -v vin2:/mnt/vin2 -v vout2:/mnt/vout2 ubuntu bash
+   97  docker build -t mountbuild -f Dockerfile.mountbuild .
+   98  docker run -it --name iperf-server -p 5201
+   99  docker run -it --name iperf-server -p 520
+  100  docker run -it --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  101  iperf3 -s
+  102  docker run -it --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  103  docker run -it --rm --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  104  docker ps
+  105  docker -d iperf-server-net
+  106  docker ps
+  107  docker rm iperf-server-net
+  108  docker rm -f iperf-server-net
+  109  docker run -it --rm --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  110  docker ps
+  111  docker run -it --rm --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  112  docker run -it --rm --name iperf3-server -p 5201:5201 networkstatic/iperf3 -s
+  113  docker network create bridged-network
+  114  newgrp docker
+  115  iperf3 -c localhost
+  116  sudo dnf install iperf3
+  117  iperf3 -c localhost
+  118  iperf3 -s
+  119  ip a
+  120  docker logs iperf-server
+  121  docker network create bridged-network
+  122  docker run -d --name iperf-server-net --network bridged-network networkstatic/iperf3 -s
+  123  docker run -it --rm --network bridged-network
+  124  docker run -it --rm --network bridged-network networkstatic/iperf3 -c iperf-server-net
+  125  docker logs iperf-server
+  126  docker network create Jenkins
+  127  docker run -d --privilaged --name Jenkins-DIND --network Jenkins docker:dind
+  128  docker run -d --privileged --name Jenkins-DIND --network Jenkins docker:dind
+  129  docker run -d --name Jenkins --network Jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+  130  docker ps
+  131  history
+  132  cd MDO2025_INO/ITE/GCL07/BS416365/Sprawozdanie1/
+  133  history > history.txt
