@@ -1,0 +1,208 @@
+    1  pwd
+    2  ls
+    3  clear
+    4  sudo dnf install git openssh
+    5  ls
+    6  touch Lab
+    7  cd L
+    8  cd Lab
+    9  rm Lab 
+   10  clear
+   11  mkdir Lab
+   12  cd Lab/
+   13  mkdir 1
+   14  cd 1
+   15  clear
+   16  touch Kroki.md
+   17  cd ..
+   18  ls
+   19  cat id.txt 
+   20  rm id.txt 
+   21  clear
+   22  cd ~/.ssh/
+   23  ls
+   24  rm id_ed25519
+   25  rm id_ed25519.pub 
+   26  ls
+   27  clear
+   28  cd /home/wsz
+   29  clear
+   30  ls
+   31  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   32  ip add
+   33  CLEAR
+   34  clear
+   35  git clone https://<TOKEN>@github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git // <TOKEN> ponieważ commit nie chciał przejść
+   36  cd rm MDO2025_INO/
+   37  rm MDO2025_INO/
+   38  rm -fR MDO2025_INO/
+   39  clear
+   40  git clone https://<TOKEN>@github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git // <TOKEN> ponieważ commit nie chciał przejść
+   41  clear
+   42  ssh-keygen -h
+   43  ssh-keygen --help
+   44  ssh-keygen -t ed25519 -C wiktorszyszka.priv@gmail.com
+   45  cd ~/.ssh/
+   46  ls
+   47  rm id_ed25519
+   48  rm id_ed25519.pub 
+   49  clear
+   50  cd /home/wsz
+   51  clear
+   52  ls
+   53  clear
+   54  ssh-keygen -t ed25519 -C wiktorszyszka.priv@gmail.com
+   55  clear
+   56  ssh-keygen -t ecdsa -C wiktorszyszka.priv@gmail.com
+   57  clear
+   58  cd ~/.ssh/
+   59  l
+   60  ls
+   61  cat id_ed25519.pub 
+   62  cd /home/wsz/
+   63  clear
+   64  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   65  clear
+   66  rm -fR MDO2025_INO/
+   67  clear
+   68  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   69  git checkout main
+   70  pwd
+   71  cd MDO2025_INO/
+   72  git checkout main
+   73  clear
+   74  git checkout GCL07
+   75  git checkout -b WSZ417391
+   76  cd ITE/GCL07/
+   77  mkdir WSZ417391
+   78  LS
+   79  las
+   80  ls
+   81  cd ..
+   82  ls
+   83  cd ITE/
+   84  cd GCL07/
+   85  rm WSZ417391/
+   86  rm -fR WSZ417391/
+   87  clear
+   88  cd ..
+   89  clear
+   90  ls
+   91  clear
+   92  cd ITE/GCL07/
+   93  mkdir WSZ417391
+   94  ls
+   95  pwd
+   96  chmod +x .git/hooks/commit-msg
+   97  clear
+   98  chmod +x .git/hooks/commit-msg
+   99  clear
+  100  pwd
+  101  chmod +x .git/hooks/commit-msg
+  102  cd ..
+  103  ls
+  104  cd..
+  105  cd ..
+  106  ls
+  107  cd /home/wsz/MDO2025_INO
+  108  chmod +x .git/hooks/commit-msg
+  109  clear
+  110  ls
+  111  cd ITE/GCL07/WSZ417391/
+  112  ls
+  113  pwd
+  114  cd /home/wsz/MDO2025_INO
+  115  cat << 'EOF' > .git/hooks/commit-msg
+  116  ls
+  117  ls -ld .?*
+  118  cd .git/
+  119  ls
+  120  cd hooks/
+  121  ls
+  122  pwd
+  123  cat commit-msg.sample 
+  124  ls
+  125  clear
+  126  cd /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  127  clear
+  128  ls
+  129  pwd
+  130  clear
+  131  touch -p /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  132  touch --p /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  133  touch /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  134  ls /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  135  ls /home/wsz/MDO2025_INO/.git/hooks
+  136  rm /home/wsz/MDO2025_INO/.git/hooks
+  137  rm /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  138  clear
+  139  touch /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  140  ls /home/wsz/MDO2025_INO/.git/hooks
+  141  clear
+  142  cat /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  143  clear
+  144  nano /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  145  clear
+  146  chmod +x .git/hooks/commit-msg
+  147  clear
+  148  chmod +x /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  149  pwd
+  150  cp /home/wsz/MDO2025_INO/.git/hooks/commit-msg /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  151  ls
+  152  pwd
+  153  clear
+  154  cp /home/wsz/Lab/1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  155  cp -r /home/wsz/Lab/1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  156  ls
+  157  cd Lab_1/
+  158  ls
+  159  clear
+  160  ls -l /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  161  clea
+  162  rclear
+  163  clear
+  164  ls
+  165  pwd
+  166  git checkout GCL07
+  167  git checkout WSZ417391 
+  168  clear
+  169  git status
+  170  git add .
+  171  cd ..
+  172  git status
+  173  git reset
+  174  clear
+  175  git status
+  176  git add .
+  177  git status
+  178  git commit -m "Pierwszy commit"
+  179  git commit -m "WSZ417391: Pierwszy commit"
+  180  clear
+  181  git config --global user.email "wiktorszyszka.priv@gmail.com"
+  182  clear
+  183  git reset --soft HEAD~1
+  184  git s
+  185  git status
+  186  clear
+  187  git commit -m "WSZ417391: Pierwszy commit"
+  188  clear
+  189  git push origin GCL07
+  190  clear
+  191  git checkout GCL07
+  192  cd /home/wsz/
+  193  ls
+  194  cd Lab/
+  195  LS
+  196  ls
+  197  rm -rF 1
+  198  rm -fR 1
+  199  cp -r /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/Lab_1 /home/wsz/Lab/
+  200  ls
+  201  cd Lab_1/
+  202  ls
+  203  cd ..
+  204  ls
+  205  mkdir Lab_2
+  206  LS
+  207  ls
+  208  history > historia.txt
