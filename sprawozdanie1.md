@@ -1,5 +1,7 @@
 # Sprawozdanie nr 1
 Julia Piśniakowska
+System operacyjny: Fedora
+Wizualizacja: Hyper-V
 ## Wstęp
 Sprawozdanie przedstawia rezultaty wykonanych ćwiczeń 1-4 w ramach zajęć metodyki DevOps, skupiających się na wdrożeniu narzędzi do zarządzania wersjami i konteneryzacji. Początkowo przeprowadzono instalację systemu Fedora wraz z konfiguracją Git i uwierzytelniania SSH. W ramach pracy z repozytorium wykonano operacje klonowania, zarządzania gałęziami oraz synchronizacji zmian ze zdalnym repozytorium.
 Następne etapy obejmowały instalację i konfigurację środowiska Docker do pracy z kontenerami. Zrealizowano zadania polegające na pobieraniu i uruchamianiu istniejących obrazów, tworzeniu własnych definicji w Dockerfile, budowaniu obrazów oraz testowaniu ich funkcjonalności. Przeanalizowano również zarządzanie procesami wewnątrz kontenerów. Sprawozdanie kończy się opisem automatyzacji procesów budowy i uruchamiania aplikacji przy użyciu narzędzia Docker Compose.
@@ -143,4 +145,69 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/JP416100/Dockerf
 Dockerfile.build
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/JP416100/Dockerfile.build
 ![image](https://github.com/user-attachments/assets/1a862501-9cb1-45cb-a25b-b2aaa0aa22ad)
+
+## LAB 4
+Utworzenie wolumenów input i output
+
+```bash
+docker volume create wejde
+docker volume create wyjde
+```
+Sprawdzenie, czy wolumeny zostały utworzone:
+![image](https://github.com/user-attachments/assets/72126be5-dc7c-47ee-91e9-236ea30cc8c3)
+
+Uruchomienie kontenera bazowego node
+
+```bash
+docker run -it --name node-container \
+  -v wejde:/app/input \
+  -v wyjde:/app/output \
+  node bash
+```
+![image](https://github.com/user-attachments/assets/69035a3e-21a1-4ab9-ab0e-d3342fe3c099)
+
+Instalacja wymaganych narzędzi (bez gita!)
+W kontenerze Ubuntu:
+```apt update && apt install -y build-essential```
+wychodzimy z kontenera za pomocą ```exit```
+
+Klonowanie repozytorium na hoście i kopiowanie do woluminu
+
+```bash
+git clone https://github.com/lodash/lodash ~/input_repo
+docker cp ~/input_repo node-container:/app/input
+```
+Sprawdzenie zawartości woluminu:
+```bash
+docker exec -it node-container ls /app/input
+```
+![image](https://github.com/user-attachments/assets/7b8a5847-672b-4040-b4eb-313dace275a0)
+
+
+Uruchomienie builda w kontenerze node
+```bash
+docker exec -it node-container bash -c "
+  cd /app/input &&
+  npm install &&
+  npm run build &&
+  cp -r dist /app/output"
+```
+
+Sprawdzamy zawartość output:
+
+```bash
+docker run --rm -v output:/app busybox ls /app
+```
+![image](https://github.com/user-attachments/assets/394d6d3c-6d53-43a7-a37e-7719295e9231)
+
+automatyzacja z Dockerfilem
+![image](https://github.com/user-attachments/assets/145a1176-87ca-420b-b976-c48bb8512e09)
+
+Zbudowanie obrazu Dockera
+![image](https://github.com/user-attachments/assets/910a636d-3e19-4d0d-9401-7644c7bb7d49)
+
+sprawdzenie portu http://localhost:3000/
+![image](https://github.com/user-attachments/assets/652e2511-ced8-455b-bdd4-95f9f773add3)
+
+
 
