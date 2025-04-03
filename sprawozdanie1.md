@@ -206,8 +206,9 @@ automatyzacja z Dockerfilem
 Zbudowanie obrazu Dockera
 ![image](https://github.com/user-attachments/assets/910a636d-3e19-4d0d-9401-7644c7bb7d49)
 
-sprawdzenie portu http://localhost:3000/
-![image](https://github.com/user-attachments/assets/652e2511-ced8-455b-bdd4-95f9f773add3)
+`docker inspect iperf-server | grep IP`: Sprawdzenie adresu IP kontenera `iperf-server` na hoście, aby użyć go do połączenia się z kontenerem z zewnątrz.
+![image](https://github.com/user-attachments/assets/462d9943-e391-4d23-95d2-1fd813744d03)
+
 
 
 
