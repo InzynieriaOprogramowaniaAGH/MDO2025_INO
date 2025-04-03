@@ -25,7 +25,7 @@ ssh-keygen -t ed25519 -C "szpolak@student.agh.edu.pl"
 ssh-keygen -t ecdsa -b 521 -C "szpolak@student.agh.edu.pl"
 ```
 
-Jako komentarz: email - dodanie komentarza pomaga zidentyfikować włściciela, gdybyśmy przechowywali kluczy innych użytkowników.
+Jako komentarz: email - dodanie komentarza pomaga zidentyfikować włściciela, gdybyśmy przechowywali klucze innych użytkowników.
 
 Klucze domyślnie tworzą się w katalogu `~/.ssh`.
 
