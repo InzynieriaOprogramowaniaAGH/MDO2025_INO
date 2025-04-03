@@ -209,6 +209,19 @@ Zbudowanie obrazu Dockera
 `docker inspect iperf-server | grep IP`: Sprawdzenie adresu IP kontenera `iperf-server` na hoście, aby użyć go do połączenia się z kontenerem z zewnątrz.
 ![image](https://github.com/user-attachments/assets/462d9943-e391-4d23-95d2-1fd813744d03)
 
+Użycie IP maszyny wirtualnej
+![image](https://github.com/user-attachments/assets/04fc9760-cd5a-4243-9573-91894a73e548)
 
-
-
+```docker network create jenkins-net```
+Tworzę nową sieć Docker o nazwie jenkins-net. Dzięki tej sieci kontenery mogą komunikować się ze sobą w izolowanym środowisku.
+```docker run -d --name jenkins-dind --network jenkins-net --privileged docker:dind```
+Uruchamiam kontener w tle (-d) o nazwie jenkins-dind.
+Kontener korzysta z obrazu docker:dind (Docker-in-Docker), umożliwiającego uruchamianie instancji Dockera wewnątrz kontenera.
+Kontener jest połączony z siecią jenkins-net i ma uprawnienia --privileged, co pozwala mu na dostęp do bardziej zaawansowanych funkcji systemowych (np. uruchamianie Dockera w Dockerze).
+```docker volume create jenkins_home```
+Tworzy wolumen Docker o nazwie jenkins_home, który służy do przechowywania danych Jenkins, takich jak konfiguracje, wtyczki i inne pliki. Wolumen zapewnia trwałość danych między restartami kontenera.
+```docker run -d --name jenkins   --network jenkins-net   -p 8080:8080 -p 50000:50000   -v jenkins_home:/var/jenkins_home   jenkins/jenkins:lts```
+Mapuje porty: 8080 na 8080 i 50000 na 50000, aby umożliwić dostęp do interfejsu Jenkins i komunikację z agentami.
+Wolumen jenkins_home jest zamontowany do katalogu /var/jenkins_home w kontenerze, co zapewnia przechowywanie danych konfiguracyjnych Jenkinsa.
+To wszystko tworzy środowisko Jenkins z Dockerem w środku, umożliwiając uruchamianie i zarządzanie zadaniami CI/CD.
+![image](https://github.com/user-attachments/assets/09f091dd-7228-4533-bdf8-0999d0b4f744)
