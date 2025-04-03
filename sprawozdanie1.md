@@ -77,6 +77,24 @@ gdzie:
 ![devops_docker2](https://github.com/user-attachments/assets/293150d5-1dd1-476f-b494-60395f02a704)
 ### Aktualizacja pakietów w kontenerze Fedory
 ![devops_docker4](https://github.com/user-attachments/assets/eb9c92b3-c486-45c1-b1a9-e7cd68c3ff10)
+###Przygotowałam na zajęciach plik Dockerfile z następującą treścią i wrzuciłam go na repo:
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/JP416100/Dockerfile
+```
+# Użyj obrazu bazowego Fedora
+FROM fedora:latest
+
+# Zaktualizuj system i zainstaluj git
+RUN dnf -y update && dnf -y install git
+
+# Ustaw katalog roboczy
+WORKDIR /app
+
+# Skopiuj repozytorium z GitHuba (zmień na własne repozytorium)
+RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+
+# Ustaw domyślne polecenie, które zostanie uruchomione w kontenerze
+CMD ["/bin/bash"]
+```
 ### Usunięcie wszystkich obrazów
 ![wyczyszcone](https://github.com/user-attachments/assets/42013427-01cc-4707-acdc-ff5191d526a3)
 
@@ -113,24 +131,16 @@ Po zainstalowaniu zależności przechodzimy do uruchomienia testów jednostkowyc
 
 ![testy](https://github.com/user-attachments/assets/c959a213-c246-439c-9c89-c22799d06481)
 
-docker testy auuu
+Wszystkie testy przeszły pomyślnie.
 
-https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/JP416100/Dockerfile
-
-```
-# Użyj obrazu bazowego Fedora
-FROM fedora:latest
-
-# Zaktualizuj system i zainstaluj git
-RUN dnf -y update && dnf -y install git
-
-# Ustaw katalog roboczy
-WORKDIR /app
-
-# Skopiuj repozytorium z GitHuba (zmień na własne repozytorium)
-RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
-
-# Ustaw domyślne polecenie, które zostanie uruchomione w kontenerze
-CMD ["/bin/bash"]
-```
+## Stwórzyłam dwa pliki Dockerfile automatyzujące kroki powyżej.
+Dockerfile.test
+```docker build -t test-image -f Dockerfile.test .```
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/JP416100/Dockerfile.test
+![image](https://github.com/user-attachments/assets/dfa865ef-323e-46dc-81f2-10e008c667cf)
+![image](https://github.com/user-attachments/assets/239262d3-956f-48c3-a3c3-ac3dc3fe284f)
+```docker build -t build-image -f Dockerfile.build .```
+Dockerfile.build
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/JP416100/Dockerfile.build
+![image](https://github.com/user-attachments/assets/1a862501-9cb1-45cb-a25b-b2aaa0aa22ad)
 
