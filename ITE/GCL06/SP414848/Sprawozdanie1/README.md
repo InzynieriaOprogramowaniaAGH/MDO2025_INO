@@ -6,7 +6,7 @@ Niestety nie robiłem na bierząco zrzutów ekranu do pierwszych zajęć, więc 
 
 ## 1. Instalacja git i obsługi ssh
 
-Usługi zainstalowano za pomocą `dnf intall` + nazwa uługi (jak na zrzucie).
+Usługi zainstalowano za pomocą `dnf install` + nazwa uługi (jak na zrzucie).
 
 ![Instalacja git, ssh](screens/lab1-1.png)
 
