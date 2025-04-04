@@ -1,0 +1,13 @@
+# Bazowy obraz
+FROM fedora:latest
+
+# Instalacja wymaganych zależności
+RUN dnf install -y git meson ninja-build gcc glib2-devel ncurses-devel perl libtool autoconf automake pkg-config
+
+# Klonowanie repozytorium
+WORKDIR /app
+RUN git clone https://github.com/irssi/irssi && cd irssi
+
+# Konfiguracja i kompilacja
+WORKDIR /app/irssi
+RUN meson setup build && ninja -C build

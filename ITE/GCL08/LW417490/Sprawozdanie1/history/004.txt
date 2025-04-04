@@ -1,0 +1,60 @@
+341  cd MDO2025_INO/ITE/GCL08/LW417490/Sprawozdanie1/
+  342  docker volume create Vin
+  343  docker volume create Vout
+  344  docker run -it --name irssi_volume_container -v Vin:/irssi -v Vout/irssi/Build fedora bash
+  345  docker run -it --name irssi_volume_container -v Vin:/irssi -v Vout:/irssi/Build fedora bash
+  346  docker ps -a
+  347  docker rm 9c60d5ca86a7
+  348  docker run -it --name irssi_volume_container -v Vin:/irssi -v Vout:/irssi/Build fedora bash
+  349  docker ps -a
+  350  docker rm b615a53f4a65
+  351  docker volume ls
+  352  docker volume rm Vin Vout cb016112fff7ea3c0d56239c07e4e50f884caf8f045b546b080a727ae063a0fe
+  353  docker volume ls
+  354  docker volume inspect Vin
+  355  sudo cd /var/lib/docker/volumes/Vin/_data
+  356  sudo su
+  357  history 
+  358  docker run --rm -it --name client fedora bash
+  359  docker run --rm -it --network=my_net --name client fedora bash
+  360  history 
+  361  docker volume inspect Vout
+  362  sudo su
+  363  docker ps -a
+  364  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 
+  365  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' c98efae8649a 
+  366  docker network create my_net
+  367  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 1f76f1103a9b 
+  368  iperf3 -c 172.18.0.2 -p 5201
+  369  dnf -y install iperf3
+  370  sudo dnf -y install iperf3
+  371  docker ps -a
+  372  docker rm cb71c8e36f8f
+  373  docker ps -a
+  374  docker run -rm -it fedora --name server bash
+  375  docker run -it --rm fedora --name server bash
+  376  docker run -it --rm --name server fedora bash
+  377  docker run --rm -it --network=my_net --name server fedora bash
+  378  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.2-1
+  379  docker ps -a
+  380  docker rm e4713bc0338a
+  381  docker volumes ps
+  382  docker volumes ls
+  383  docker volume ls
+  384  docker volume rm Vin Vout 50cefcc21daf75f45a3b23c883e28c006ae64e7d8e54b7b973fe8de551d65dcd
+  385  docker volume create Vin
+  386  docker volume create Vout
+  387  docker volume ls
+  388  docker run -it --rm -v Vin:/input -v Vout:/output irssi-vol /bin/bash
+  389  docker run -it --rm -v Vin:/input -v Vout:/output fedora /bin/bash
+  390  docker network create jenkins
+  391  docker run exit
+  392  docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+  393  docker build -t myjenkins-blueocean:2.492.2-1 -f Dockerfile.jen .
+  394  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.2-1
+  395  ip a
+  396  ifconfig
+  397  docker exec 2ea358106c5f cat /var/jenkins_home/secrets/initialAdminPassword
+  398  docker ps -a
+  399  docker exec c8debe8ed6a7 cat /var/jenkins_home/secrets/initialAdminPassword
+  400  history
