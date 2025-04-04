@@ -16,7 +16,7 @@ Oliwia Wiatrowska
 ## **1. Przygotowanie**
 
 ### 1.1 Utworzenie instancji Jenkins
-Instancja Jenkins została utworzona w ramach poprzedniego laboratorium, stąd dokumentacja związana z instalacją Jenkinsa, przygotowaniem i uruchomieniem odpowiednich obrazów oraz logowaniem admina została przedstawiona w [!sprawozdaniu 1](../Sprawozdanie1/README.md).
+Instancja Jenkins została utworzona w ramach poprzedniego laboratorium, stąd dokumentacja związana z instalacją Jenkinsa, przygotowaniem i uruchomieniem odpowiednich obrazów oraz logowaniem admina została przedstawiona w [Sprawozdaniu 1](../Sprawozdanie1/README.md).
 
 #### Utworzenie użytkownika
 W poprzednim laboratorium admin został nazwany moim imieniem i nazwiskiem, zostało to zmienione ponownie na `admin`. Po naciśnięciu ikony z dzwoneczkiem, przeszłam do zarządzania jenkinsem i tam wybrałam opcję `Create User` i zajęłam się tworzeniem nowego użytkownika `Oliwia Wiatrowska`.
