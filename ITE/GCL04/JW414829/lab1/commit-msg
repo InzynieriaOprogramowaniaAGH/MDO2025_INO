@@ -1,0 +1,13 @@
+#!/usr/bin/sh
+required_prefix="JW414829"
+
+first_line=$(head -n1 "$1")
+
+case "$first_line" in
+  "$required_prefix"*)
+    ;;
+  *)
+    echo "Błąd: commit musi zaczynać się od '$required_prefix'." >&2
+    exit 1
+    ;;
+esac

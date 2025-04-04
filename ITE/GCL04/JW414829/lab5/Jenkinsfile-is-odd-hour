@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+    stages {
+        stage('check-hour') {
+            steps {
+                sh '''
+                    HOUR=$(date +%H)
+                    echo "Bieżąca godzina: $HOUR"
+                    if [ $((HOUR % 2)) -eq 1 ]; then
+                        echo "Błąd: godzina ($HOUR) jest nieparzysta."
+                        exit 1
+                    else
+                        echo "Godzina ($HOUR) jest parzysta. Kontynuacja."
+                    fi
+                '''
+            }
+        }
+    }
+}

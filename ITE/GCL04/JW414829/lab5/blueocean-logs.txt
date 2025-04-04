@@ -1,0 +1,310 @@
+ *  Executing task: docker logs --tail 1000 -f 7fbb1c802378851fe1bb038a45bc4f2b45e61d8dbe7c6fa17b1ff748ac1d8109 
+
+Running from: /usr/share/jenkins/jenkins.war
+webroot: /var/jenkins_home/war
+2025-04-03 19:05:41.111+0000 [id=1]     INFO    winstone.Logger#logInternal: Beginning extraction from war file
+2025-04-03 19:05:41.149+0000 [id=1]     WARNING o.e.j.ee9.nested.ContextHandler#setContextPath: Empty contextPath
+2025-04-03 19:05:41.182+0000 [id=1]     INFO    org.eclipse.jetty.server.Server#doStart: jetty-12.0.17; built: 2025-03-03T13:15:05.903Z; git: 14d19c268e4cb09afc312b5255a4cbb7a95c5cb6; jvm 17.0.14+7
+2025-04-03 19:05:41.446+0000 [id=1]     INFO    o.e.j.e.w.StandardDescriptorProcessor#visitServlet: NO JSP Support for /, did not find org.eclipse.jetty.ee9.jsp.JettyJspServlet
+2025-04-03 19:05:41.471+0000 [id=1]     INFO    o.e.j.s.DefaultSessionIdManager#doStart: Session workerName=node0
+2025-04-03 19:05:41.757+0000 [id=1]     INFO    hudson.WebAppMain#contextInitialized: Jenkins home directory: /var/jenkins_home found at: EnvVars.masterEnvVars.get("JENKINS_HOME")
+2025-04-03 19:05:41.822+0000 [id=1]     INFO    o.e.j.s.handler.ContextHandler#doStart: Started oeje9n.ContextHandler$CoreContextHandler@1ee29c84{Jenkins v2.492.3,/,b=file:///var/jenkins_home/war/,a=AVAILABLE,h=oeje9n.ContextHandler$CoreContextHandler$CoreToNestedHandler@7c8326a4{STARTED}}
+2025-04-03 19:05:41.836+0000 [id=1]     INFO    o.e.j.server.AbstractConnector#doStart: Started ServerConnector@2b87581{HTTP/1.1, (http/1.1)}{0.0.0.0:8080}
+2025-04-03 19:05:41.844+0000 [id=1]     INFO    org.eclipse.jetty.server.Server#doStart: Started oejs.Server@7d4f9aae{STARTING}[12.0.17,sto=0] @1126ms
+2025-04-03 19:05:41.845+0000 [id=24]    INFO    winstone.Logger#logInternal: Winstone Servlet Engine running: controlPort=disabled
+2025-04-03 19:05:41.907+0000 [id=23]    INFO    jenkins.model.Jenkins#<init>: Starting version 2.492.3
+2025-04-03 19:05:41.940+0000 [id=31]    INFO    jenkins.InitReactorRunner$1#onAttained: Started initialization
+2025-04-03 19:05:42.041+0000 [id=29]    INFO    jenkins.InitReactorRunner$1#onAttained: Listed all plugins
+2025-04-03 19:05:42.222+0000 [id=31]    SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed Loading plugin Token Macro Plugin v444.v52de7e9c573d (token-macro)
+java.io.IOException: Failed to load: Token Macro Plugin (token-macro 444.v52de7e9c573d)
+ - Plugin is missing: json-path-api (2.9.0-138.vc943da_d833b_6)
+        at hudson.PluginWrapper.resolvePluginDependencies(PluginWrapper.java:992)
+        at hudson.PluginManager$2$1$1.run(PluginManager.java:581)
+        at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+        at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:304)
+        at jenkins.model.Jenkins$5.runTask(Jenkins.java:1144)
+        at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:221)
+        at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:120)
+        at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.base/java.lang.Thread.run(Unknown Source)
+2025-04-03 19:05:42.223+0000 [id=30]    SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed Loading plugin Favorite v2.225.v68765b_b_a_1fa_3 (favorite)
+java.io.IOException: Failed to load: Favorite (favorite 2.225.v68765b_b_a_1fa_3)
+ - Failed to load: Token Macro Plugin (token-macro 444.v52de7e9c573d)
+        at hudson.PluginWrapper.resolvePluginDependencies(PluginWrapper.java:992)
+        at hudson.PluginManager$2$1$1.run(PluginManager.java:581)
+        at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+        at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:304)
+        at jenkins.model.Jenkins$5.runTask(Jenkins.java:1144)
+        at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:221)
+        at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:120)
+        at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.base/java.lang.Thread.run(Unknown Source)
+2025-04-03 19:05:42.223+0000 [id=30]    SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed Loading plugin REST Implementation for Blue Ocean v1.27.17 (blueocean-rest-impl)
+java.io.IOException: Failed to load: REST Implementation for Blue Ocean (blueocean-rest-impl 1.27.17)
+ - Failed to load: Favorite (favorite 2.225.v68765b_b_a_1fa_3)
+        at hudson.PluginWrapper.resolvePluginDependencies(PluginWrapper.java:992)
+        at hudson.PluginManager$2$1$1.run(PluginManager.java:581)
+        at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+        at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:304)
+        at jenkins.model.Jenkins$5.runTask(Jenkins.java:1144)
+        at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:221)
+        at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:120)
+        at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.base/java.lang.Thread.run(Unknown Source)
+2025-04-03 19:05:42.225+0000 [id=30]    SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed Loading plugin GitHub plugin v1.43.0 (github)
+java.io.IOException: Failed to load: GitHub plugin (github 1.43.0)
+ - Failed to load: Token Macro Plugin (token-macro 444.v52de7e9c573d)
+        at hudson.PluginWrapper.resolvePluginDependencies(PluginWrapper.java:992)
+        at hudson.PluginManager$2$1$1.run(PluginManager.java:581)
+        at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+        at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:304)
+        at jenkins.model.Jenkins$5.runTask(Jenkins.java:1144)
+        at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:221)
+        at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:120)
+        at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.base/java.lang.Thread.run(Unknown Source)
+2025-04-03 19:05:42.226+0000 [id=29]    SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed Loading plugin GitHub Branch Source Plugin v1815.v9152b_2ff7a_1b_ (github-branch-source)
+java.io.IOException: Failed to load: GitHub Branch Source Plugin (github-branch-source 1815.v9152b_2ff7a_1b_)
+ - Failed to load: GitHub plugin (github 1.43.0)
+        at hudson.PluginWrapper.resolvePluginDependencies(PluginWrapper.java:992)
+        at hudson.PluginManager$2$1$1.run(PluginManager.java:581)
+        at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+        at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:304)
+        at jenkins.model.Jenkins$5.runTask(Jenkins.java:1144)
+        at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:221)
+        at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:120)
+        at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.base/java.lang.Thread.run(Unknown Source)
+2025-04-03 19:05:42.230+0000 [id=32]    SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed Loading plugin Pipeline implementation for Blue Ocean v1.27.17 (blueocean-pipeline-api-impl)
+java.io.IOException: Failed to load: Pipeline implementation for Blue Ocean (blueocean-pipeline-api-impl 1.27.17)
+ - Failed to load: REST Implementation for Blue Ocean (blueocean-rest-impl 1.27.17)
+        at hudson.PluginWrapper.resolvePluginDependencies(PluginWrapper.java:992)
+        at hudson.PluginManager$2$1$1.run(PluginManager.java:581)
+        at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+        at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:304)
+        at jenkins.model.Jenkins$5.runTask(Jenkins.java:1144)
+        at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:221)
+        at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:120)
+        at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.base/java.lang.Thread.run(Unknown Source)
+2025-04-03 19:05:42.231+0000 [id=29]    SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed Loading plugin Bitbucket Pipeline for Blue Ocean v1.27.17 (blueocean-bitbucket-pipeline)
+java.io.IOException: Failed to load: Bitbucket Pipeline for Blue Ocean (blueocean-bitbucket-pipeline 1.27.17)
+ - Failed to load: Pipeline implementation for Blue Ocean (blueocean-pipeline-api-impl 1.27.17)
+        at hudson.PluginWrapper.resolvePluginDependencies(PluginWrapper.java:992)
+        at hudson.PluginManager$2$1$1.run(PluginManager.java:581)
+        at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+        at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:304)
+        at jenkins.model.Jenkins$5.runTask(Jenkins.java:1144)
+        at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:221)
+        at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:120)
+        at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.base/java.lang.Thread.run(Unknown Source)
+2025-04-03 19:05:42.231+0000 [id=29]    SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed Loading plugin Events API for Blue Ocean v1.27.17 (blueocean-events)
+java.io.IOException: Failed to load: Events API for Blue Ocean (blueocean-events 1.27.17)
+ - Failed to load: Pipeline implementation for Blue Ocean (blueocean-pipeline-api-impl 1.27.17)
+        at hudson.PluginWrapper.resolvePluginDependencies(PluginWrapper.java:992)
+        at hudson.PluginManager$2$1$1.run(PluginManager.java:581)
+        at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+        at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:304)
+        at jenkins.model.Jenkins$5.runTask(Jenkins.java:1144)
+        at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:221)
+        at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:120)
+        at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.base/java.lang.Thread.run(Unknown Source)
+2025-04-03 19:05:42.231+0000 [id=32]    SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed Loading plugin Git Pipeline for Blue Ocean v1.27.17 (blueocean-git-pipeline)
+java.io.IOException: Failed to load: Git Pipeline for Blue Ocean (blueocean-git-pipeline 1.27.17)
+ - Failed to load: Pipeline implementation for Blue Ocean (blueocean-pipeline-api-impl 1.27.17)
+        at hudson.PluginWrapper.resolvePluginDependencies(PluginWrapper.java:992)
+        at hudson.PluginManager$2$1$1.run(PluginManager.java:581)
+        at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+        at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:304)
+        at jenkins.model.Jenkins$5.runTask(Jenkins.java:1144)
+        at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:221)
+        at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:120)
+        at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.base/java.lang.Thread.run(Unknown Source)
+2025-04-03 19:05:42.232+0000 [id=31]    SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed Loading plugin GitHub Pipeline for Blue Ocean v1.27.17 (blueocean-github-pipeline)
+java.io.IOException: Failed to load: GitHub Pipeline for Blue Ocean (blueocean-github-pipeline 1.27.17)
+ - Failed to load: Pipeline implementation for Blue Ocean (blueocean-pipeline-api-impl 1.27.17)
+        at hudson.PluginWrapper.resolvePluginDependencies(PluginWrapper.java:992)
+        at hudson.PluginManager$2$1$1.run(PluginManager.java:581)
+        at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+        at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:304)
+        at jenkins.model.Jenkins$5.runTask(Jenkins.java:1144)
+        at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:221)
+        at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:120)
+        at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.base/java.lang.Thread.run(Unknown Source)
+2025-04-03 19:05:42.232+0000 [id=32]    SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed Loading plugin Blue Ocean Pipeline Editor v1.27.17 (blueocean-pipeline-editor)
+java.io.IOException: Failed to load: Blue Ocean Pipeline Editor (blueocean-pipeline-editor 1.27.17)
+ - Failed to load: Pipeline implementation for Blue Ocean (blueocean-pipeline-api-impl 1.27.17)
+        at hudson.PluginWrapper.resolvePluginDependencies(PluginWrapper.java:992)
+        at hudson.PluginManager$2$1$1.run(PluginManager.java:581)
+        at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+        at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:304)
+        at jenkins.model.Jenkins$5.runTask(Jenkins.java:1144)
+        at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:221)
+        at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:120)
+        at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.base/java.lang.Thread.run(Unknown Source)
+2025-04-03 19:05:42.233+0000 [id=32]    SEVERE  jenkins.InitReactorRunner$1#onTaskFailed: Failed Loading plugin Blue Ocean v1.27.17 (blueocean)
+java.io.IOException: Failed to load: Blue Ocean (blueocean 1.27.17)
+ - Failed to load: Bitbucket Pipeline for Blue Ocean (blueocean-bitbucket-pipeline 1.27.17)
+        at hudson.PluginWrapper.resolvePluginDependencies(PluginWrapper.java:992)
+        at hudson.PluginManager$2$1$1.run(PluginManager.java:581)
+        at org.jvnet.hudson.reactor.TaskGraphBuilder$TaskImpl.run(TaskGraphBuilder.java:175)
+        at org.jvnet.hudson.reactor.Reactor.runTask(Reactor.java:304)
+        at jenkins.model.Jenkins$5.runTask(Jenkins.java:1144)
+        at org.jvnet.hudson.reactor.Reactor$2.run(Reactor.java:221)
+        at org.jvnet.hudson.reactor.Reactor$Node.run(Reactor.java:120)
+        at jenkins.security.ImpersonatingExecutorService$1.run(ImpersonatingExecutorService.java:68)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+        at java.base/java.lang.Thread.run(Unknown Source)
+2025-04-03 19:05:43.428+0000 [id=31]    INFO    jenkins.InitReactorRunner$1#onAttained: Prepared all plugins
+2025-04-03 19:05:43.439+0000 [id=29]    INFO    jenkins.InitReactorRunner$1#onAttained: Started all plugins
+2025-04-03 19:05:43.476+0000 [id=30]    INFO    jenkins.InitReactorRunner$1#onAttained: Augmented all extensions
+2025-04-03 19:05:44.102+0000 [id=29]    INFO    jenkins.InitReactorRunner$1#onAttained: System config loaded
+2025-04-03 19:05:44.103+0000 [id=29]    INFO    jenkins.InitReactorRunner$1#onAttained: System config adapted
+2025-04-03 19:05:44.103+0000 [id=32]    INFO    jenkins.InitReactorRunner$1#onAttained: Loaded all jobs
+2025-04-03 19:05:44.108+0000 [id=31]    INFO    jenkins.InitReactorRunner$1#onAttained: Configuration for all jobs updated
+2025-04-03 19:05:44.142+0000 [id=31]    INFO    jenkins.install.SetupWizard#init: 
+
+*************************************************************
+*************************************************************
+*************************************************************
+
+Jenkins initial setup is required. An admin user has been created and a password generated.
+Please use the following password to proceed to installation:
+
+319b2b8e78b34a74b93a9778bfdd25b0
+
+This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
+
+*************************************************************
+*************************************************************
+*************************************************************
+
+2025-04-03 19:05:47.367+0000 [id=32]    INFO    jenkins.InitReactorRunner$1#onAttained: Completed initialization
+2025-04-03 19:05:47.411+0000 [id=23]    INFO    hudson.lifecycle.Lifecycle#onReady: Jenkins is fully up and running
+2025-04-03 19:06:47.160+0000 [id=17]    INFO    hudson.PluginManager#install: Starting installation of a batch of 20 plugins plus their dependencies
+2025-04-03 19:06:47.164+0000 [id=17]    INFO    hudson.model.UpdateSite$Plugin#deploy: Adding dependent install of json-path-api for plugin build-timeout
+2025-04-03 19:06:47.166+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of antisamy-markup-formatter on behalf of admin
+2025-04-03 19:06:47.167+0000 [id=17]    INFO    hudson.model.UpdateSite$Plugin#deploy: Adding dependent install of token-macro for plugin build-timeout
+2025-04-03 19:06:47.169+0000 [id=17]    INFO    hudson.model.UpdateSite$Plugin#deploy: Adding dependent install of resource-disposer for plugin ws-cleanup
+2025-04-03 19:06:47.170+0000 [id=17]    INFO    hudson.model.UpdateSite$Plugin#deploy: Adding dependent install of github for plugin github-branch-source
+2025-04-03 19:06:47.175+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading antisamy-markup-formatter
+2025-04-03 19:06:47.175+0000 [id=17]    INFO    hudson.model.UpdateSite$Plugin#deploy: Adding dependent install of metrics for plugin pipeline-graph-view
+2025-04-03 19:06:47.176+0000 [id=17]    INFO    hudson.model.UpdateSite$Plugin#deploy: Adding dependent install of trilead-api for plugin ssh-slaves
+2025-04-03 19:06:47.176+0000 [id=17]    INFO    hudson.model.UpdateSite$Plugin#deploy: Adding dependent install of eddsa-api for plugin trilead-api
+2025-04-03 19:06:47.177+0000 [id=17]    INFO    hudson.model.UpdateSite$Plugin#deploy: Adding dependent install of theme-manager for plugin dark-theme
+2025-04-03 19:06:48.898+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: antisamy-markup-formatter
+2025-04-03 19:06:48.899+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of json-path-api on behalf of admin
+2025-04-03 19:06:48.899+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading json-path-api
+2025-04-03 19:06:50.301+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: json-path-api
+2025-04-03 19:06:50.302+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of token-macro on behalf of admin
+2025-04-03 19:06:50.302+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading token-macro
+2025-04-03 19:06:51.275+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: token-macro
+2025-04-03 19:06:51.275+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of build-timeout on behalf of admin
+2025-04-03 19:06:51.276+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading build-timeout
+2025-04-03 19:06:52.314+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: build-timeout
+2025-04-03 19:06:52.314+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of timestamper on behalf of admin
+2025-04-03 19:06:52.315+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading timestamper
+2025-04-03 19:06:53.373+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: timestamper
+2025-04-03 19:06:53.373+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of resource-disposer on behalf of admin
+2025-04-03 19:06:53.374+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading resource-disposer
+2025-04-03 19:06:54.292+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: resource-disposer
+2025-04-03 19:06:54.292+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of ws-cleanup on behalf of admin
+2025-04-03 19:06:54.294+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading ws-cleanup
+2025-04-03 19:06:55.330+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: ws-cleanup
+2025-04-03 19:06:55.331+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of ant on behalf of admin
+2025-04-03 19:06:55.332+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading ant
+2025-04-03 19:06:56.306+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: ant
+2025-04-03 19:06:56.306+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of gradle on behalf of admin
+2025-04-03 19:06:56.306+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading gradle
+2025-04-03 19:06:57.636+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: gradle
+2025-04-03 19:06:57.636+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of workflow-aggregator on behalf of admin
+2025-04-03 19:06:57.637+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading workflow-aggregator
+2025-04-03 19:06:58.657+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: workflow-aggregator
+2025-04-03 19:06:58.657+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of github on behalf of admin
+2025-04-03 19:06:58.658+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading github
+2025-04-03 19:06:59.747+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: github
+2025-04-03 19:06:59.748+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of github-branch-source on behalf of admin
+2025-04-03 19:06:59.748+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading github-branch-source
+2025-04-03 19:07:00.945+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: github-branch-source
+2025-04-03 19:07:00.946+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of pipeline-github-lib on behalf of admin
+2025-04-03 19:07:00.946+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading pipeline-github-lib
+2025-04-03 19:07:01.939+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: pipeline-github-lib
+2025-04-03 19:07:01.940+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of metrics on behalf of admin
+2025-04-03 19:07:01.941+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading metrics
+2025-04-03 19:07:03.054+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: metrics
+2025-04-03 19:07:03.054+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of pipeline-graph-view on behalf of admin
+2025-04-03 19:07:03.054+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading pipeline-graph-view
+2025-04-03 19:07:04.788+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: pipeline-graph-view
+2025-04-03 19:07:04.788+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of eddsa-api on behalf of admin
+2025-04-03 19:07:04.790+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading eddsa-api
+2025-04-03 19:07:05.824+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: eddsa-api
+2025-04-03 19:07:05.825+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of trilead-api on behalf of admin
+2025-04-03 19:07:05.853+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading trilead-api
+2025-04-03 19:07:08.147+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: trilead-api
+2025-04-03 19:07:08.148+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of ssh-slaves on behalf of admin
+2025-04-03 19:07:08.148+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading ssh-slaves
+2025-04-03 19:07:09.145+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: ssh-slaves
+2025-04-03 19:07:09.146+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of matrix-auth on behalf of admin
+2025-04-03 19:07:09.152+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading matrix-auth
+2025-04-03 19:07:10.080+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: matrix-auth
+2025-04-03 19:07:10.081+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of pam-auth on behalf of admin
+2025-04-03 19:07:10.084+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading pam-auth
+2025-04-03 19:07:11.193+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: pam-auth
+2025-04-03 19:07:11.194+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of ldap on behalf of admin
+2025-04-03 19:07:11.194+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading ldap
+2025-04-03 19:07:13.361+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: ldap
+2025-04-03 19:07:13.361+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of email-ext on behalf of admin
+2025-04-03 19:07:13.361+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading email-ext
+2025-04-03 19:07:14.723+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: email-ext
+2025-04-03 19:07:14.723+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of theme-manager on behalf of admin
+2025-04-03 19:07:14.723+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading theme-manager
+2025-04-03 19:07:15.606+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: theme-manager
+2025-04-03 19:07:15.607+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Starting the installation of dark-theme on behalf of admin
+2025-04-03 19:07:15.608+0000 [id=79]    INFO    h.m.UpdateCenter$UpdateCenterConfiguration#download: Downloading dark-theme
+2025-04-03 19:07:16.572+0000 [id=79]    INFO    h.model.UpdateCenter$DownloadJob#run: Installation successful: dark-theme
+2025-04-03 19:07:16.573+0000 [id=79]    INFO    h.m.UpdateCenter$CompleteBatchJob#run: Completing installing of plugin batch…
+2025-04-03 19:07:16.575+0000 [id=79]    INFO    hudson.ClassicPluginStrategy#updateDependency: Updated dependency of git
+2025-04-03 19:07:16.575+0000 [id=79]    INFO    hudson.ClassicPluginStrategy#updateDependency: Updated dependency of mina-sshd-api-common
+2025-04-03 19:07:16.576+0000 [id=79]    INFO    hudson.ClassicPluginStrategy#updateDependency: Updated dependency of ssh-credentials
+2025-04-03 19:07:17.065+0000 [id=79]    INFO    h.p.b.g.GlobalTimeOutConfiguration#load: global timeout not set
+2025-04-03 19:07:18.273+0000 [id=79]    INFO    h.m.DownloadService$Downloadable#load: Obtained the updated data file for hudson.tasks.Ant.AntInstaller
+2025-04-03 19:07:19.346+0000 [id=79]    INFO    h.m.DownloadService$Downloadable#load: Obtained the updated data file for hudson.plugins.gradle.GradleInstaller
+2025-04-03 19:07:19.412+0000 [id=137]   INFO    jenkins.InitReactorRunner$1#onAttained: Started initialization
+2025-04-03 19:07:19.414+0000 [id=139]   INFO    jenkins.InitReactorRunner$1#onAttained: Listed all plugins
+2025-04-03 19:07:19.414+0000 [id=139]   INFO    jenkins.InitReactorRunner$1#onAttained: Prepared all plugins
+2025-04-03 19:07:19.414+0000 [id=139]   INFO    jenkins.InitReactorRunner$1#onAttained: Started all plugins
+2025-04-03 19:07:19.414+0000 [id=139]   INFO    jenkins.InitReactorRunner$1#onAttained: Augmented all extensions
+2025-04-03 19:07:19.420+0000 [id=140]   INFO    jenkins.InitReactorRunner$1#onAttained: System config loaded
+2025-04-03 19:07:19.420+0000 [id=140]   INFO    jenkins.InitReactorRunner$1#onAttained: System config adapted
+2025-04-03 19:07:19.451+0000 [id=140]   INFO    jenkins.InitReactorRunner$1#onAttained: Loaded all jobs
+2025-04-03 19:07:19.451+0000 [id=140]   INFO    jenkins.InitReactorRunner$1#onAttained: Configuration for all jobs updated
+2025-04-03 19:07:19.455+0000 [id=138]   INFO    jenkins.InitReactorRunner$1#onAttained: Completed initialization
+2025-04-03 19:07:19.456+0000 [id=79]    INFO    h.m.UpdateCenter$CompleteBatchJob#run: Completed installation of 24 plugins in 32 sec

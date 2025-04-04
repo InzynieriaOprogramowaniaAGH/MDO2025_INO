@@ -1,0 +1,10 @@
+pipeline {
+    agent any
+    stages {
+        stage('pull-ubuntu') {
+            steps {
+                sh 'docker pull ubuntu'
+            }
+        }
+    }
+}

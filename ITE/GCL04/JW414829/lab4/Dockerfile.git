@@ -1,0 +1,24 @@
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential \
+    meson \
+    ninja-build \
+    pkg-config \
+    libglib2.0-dev \
+    libssl-dev \
+    libncurses-dev \
+    perl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /irssi
+
+RUN --mount=type=cache,target=/git_cache \
+    git clone https://github.com/irssi/irssi .
+
+RUN meson setup build && ninja -C build
+
+RUN mkdir -p /output && cp -r build /output
+
+CMD ["/bin/bash"]
