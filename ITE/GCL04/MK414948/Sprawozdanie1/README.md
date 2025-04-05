@@ -259,7 +259,9 @@ I uruchamiamy zbudowany obrazw trybie interatywnym jak poprzedmio z busybox:
 Po wykonaniu polecenia ls możemy zobaczyc katalog z naszym repozytorium przedmiotowym. 
 
 Aby zobaczyc kontenery i obrazy możemy wykorzystać komendy:
+
 -sudo docker ps -a 
+
 -sudo docker images
 
 Sprzątam:
@@ -275,6 +277,7 @@ usuwanie obrazów
 (Niestety nie mam zrzutu ekranu z analalogicznego czysczenia obrazów)
 
 ### LAB 3
+
 
 Wykorzystam programy: irsii z https://github.com/irssi/irssi oraz To Do Web App z https://github.com/devenes/node-js-dummy-test
 
@@ -354,9 +357,69 @@ Plik Dockerfile.nodetest:
 
 Wszystko działa poprawnie.
 
+### Lab 4
+
+Zaczynam od stworzenia potrzebnych woluminów.
+
+-sudo docker volume create Vin
+-sudo docker volume create Vout
+
+![Create Vin, Vout](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Create%20Vin%20Vout.png)
+
+Budujemy obraz cloner:
+
+-sudo docker build -f Dockerfile.vol -t cloner
+
+![Cloner build]()
+
+Plik Dockerfile.vol:
+
+      FROM fedora:42
+      
+      RUN dnf update -y -y && dnf -y install git 
+      
+      WORKDIR /root/Volumes
+            
+      CMD git clone https://github.com/devenes/node-js-dummy-test /root/Volumes
+
+Teraz uruchomiłam kontener z obrazu cloner i zamontowałam mój wcześniej stworzony wolumin.
+
+-sudo docker run --rm-v Vin:/root/Volumes cloner
+
+![Cloner run]()
+
+Zbudowałam kolejny obraz o nazwie install:
+
+-sudo docker build -f Dockerfile.install -t install
+
+![Install build]()
+
+PLik Dockerfile.install:
+
+      FROM fedora:42
+      
+      VOLUME /root/TDWA
+      
+      VOLUME /root/OUT
+
+      RUN dnf update -y && dnf install -y nodejs
+
+      WORKDIR /root/TDWA/node-js-dummy-test
+
+      CMD npm install && cp -r /root/TDWA /root/OUT
+
+Na koniec uruchomiłam kontener install montując dwa woluminy:
+
+-sudo docker run -v Vin:/root.TDWA -v Vout:/root/OUT install
+
+![Vin Vout run]()
+
+Podsumowując stworzyliśmy dwa obrazy Docker i uruchomiliśmy kontenery z odpowiednimi woluminami, aby przechowywać dane między nimi. Dzięki temu buildy mogły zostać wykonane wewnątrz kontenera, a wyniki zosatały zapisane w woluminach Vin i Vout. 
+
+
+### Eksponowanie Portu
 
 
 
 
-
-
+### Instancja Jenkins
