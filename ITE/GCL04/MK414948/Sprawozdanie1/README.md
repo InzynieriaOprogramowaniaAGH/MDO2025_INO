@@ -9,11 +9,7 @@ W celu zainstalowania Git i SSH wpisałam poniższe komendy:
 
 -sudo dnf install git
 
-![Instalacja gita](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/sudo%20dnf%20install%20git.png)
-
 -sudo dnf install openssh-server
-
-![Instalacja ssh](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/sudo%20dnf%20install%20ssh.png)
 
 kolejno sprawdziłam ich wersje, aby upewnić się ze zostały poprawnie zainstalowane: 
 
@@ -21,7 +17,7 @@ kolejno sprawdziłam ich wersje, aby upewnić się ze zostały poprawnie zainsta
 
 -ssh -V
 
-![Sprawdzenie wersji](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/wersje%20git%20i%20ssh.png)
+![Instalacja Git i SSH](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/InstalacjaGITiSSH.png)
 
 Oraz wykonałam globalną konfigurację użytkownika, dzięki czemu każdy commit który wykonam, będzie podpisany imieniem i nazwiskiem oraz moim adresem e-mail.
 
@@ -35,7 +31,7 @@ Sprawdziłam poprawne działanie SSH:
 
 -sudo systemctl status sshd
 
-![systemctl status](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/systemctl%20status.png)
+![systemctl status](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/StatusSSH.png)
 
 Oraz polaczylam klienta z serwerem korzystając z polecenia:
 
@@ -76,13 +72,13 @@ włączyłam opcję „enable two-factor authentication” i wybrałam opcje apl
 
 -git clone
 
-![git clone](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/git%20clone%20https.png)
+![git clone](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20clone%20git.png)
 
 Sprawdziłam sposób polaczenia komenda 
 
 -git remote -v
 
-![git remote https](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/git%20remote%20https.png)
+![git remote https](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20clone%20https.png)
 
 Następnie wypróbowałam klonowanie repozytorium za pomocą SSH 
 
@@ -107,7 +103,7 @@ Przełączyłam się na gałąź main a nastęnie gałąż swojej grupy:
 
 -git checkout GCL04
 
-![wybranie gałęzi](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/git%20checkout.png)
+![wybranie gałęzi](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20checkout.png)
 
 Sprawdzam czy znajduję się na odpowiedniej gałęzi:
 
@@ -168,7 +164,7 @@ Przykładowe dodawanie zmian:
 
 
 ### LAB 2
-### Docker
+### Obrazy z Dockera
 
 Zainstalowałam Dockera, który przyda się nam do zarządzania kontenerami w kolejnych zadaniach. Wykorzystałam do tego celu polecenie:
 
@@ -230,8 +226,55 @@ Sprawdzam dzialające procesy:
 
 Wychodzę poelceniem exit
 
+### Własne obrazy 
 
+W kolejnym zadaniu celem będzie utworzenie własnego obrazu umożliwiających właczenie konteneru. 
 
+W celu utworzenia kontenera pobierającego nasze repo przedmiotowe utworzyłam następujący plik Dockerfile:
+      
+      FROM fedora:41
+      
+      RUN dnf update -y && dnf install git -y
+      
+      WORKDIR /app
+      
+      RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+      
+      CMD ["/bin/bash"]
 
+Kolejno budujemy obraz z naszego Dockerfile:
+
+-sudo docker build -t fedora
+
+Po fladze -t podaliśmy nazwę naszego tworzonego obrazu.
+
+![DockerBuild Fedora](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Docker%20Build%20Fedora.png)
+
+I uruchamiamy zbudowany obrazw trybie interatywnym jak poprzedmio z busybox:
+
+-sudo docker run -it fedora:
+
+![Docker run Fedora](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Docker%20Run%20Fedora.png)
+
+Po wykonaniu polecenia ls możemy zobaczyc katalog z naszym repozytorium przedmiotowym. 
+
+Aby zobaczyc kontenery i obrazy możemy wykorzystać komendy:
+-sudo docker ps -a 
+-sudo docker images
+
+Sprzątam:
+
+-sudo docker rm $(sudo docker ps -a -q)
+usuwanie kontenerów
+
+-sudo docker rmi $(sudo docker images -q)
+usuwanie obrazów
+
+![Sprzątanie](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Sprz%C4%85tanie.png)
+
+### LAB 3
+
+Wykorzystam programy: irsii z https://github.com/irssi/irssi oraz To Do Web App z https://github.com/devenes/node-js-dummy-test
+      
 
 
