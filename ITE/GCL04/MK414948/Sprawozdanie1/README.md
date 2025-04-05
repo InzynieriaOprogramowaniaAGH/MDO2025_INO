@@ -228,7 +228,7 @@ Wychodzę poelceniem exit
 
 ### Własne obrazy 
 
-W kolejnym zadaniu celem będzie utworzenie własnego obrazu umożliwiających właczenie konteneru. 
+W kolejnym zadaniu celem będzie utworzenie własnego obrazu umożliwiającego właczenie kontenera. 
 
 W celu utworzenia kontenera pobierającego nasze repo przedmiotowe utworzyłam następujący plik Dockerfile:
       
@@ -272,9 +272,91 @@ usuwanie obrazów
 
 ![Sprzątanie](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Sprz%C4%85tanie.png)
 
+(Niestety nie mam zrzutu ekranu z analalogicznego czysczenia obrazów)
+
 ### LAB 3
 
 Wykorzystam programy: irsii z https://github.com/irssi/irssi oraz To Do Web App z https://github.com/devenes/node-js-dummy-test
+
+Sklonowałam repozytorium, przeprowadziłam build i doinstalowałam wymagane zależności.
+
+-git clone https://github.com/irssi/irssi.git
+
+-git clone https://github.com/devenes/node-js-dummy-test.git 
+
+Przeprowadzamy buildy:
+
+-sudo docker build -t irssibld -f Dockerfile.irssibld
+
+![Build irssi](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Irssi%20build.png)
+
+Plik Dockerfile.irssibld:
+
+      FROM fedora:42
       
+      RUN dnf -y install git meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils*
+      
+      RUN git clone https://github.com/irssi/irssi
+      
+      WORKDIR /irssi
+      
+      RUN meson Build
+      RUN ninja -C Build
+
+Przeprowadziłąm buildy i testy:
+
+-sudo docker build -t irssitest -f Dockerfile.irssitest 
+
+![Build irssi test](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Irssi%20test%20build.png)
+
+Plik Dockerfile.irssitest:
+
+      FROM irssibld
+
+      RUN ninja -C Build test
+
+      CMD ["/bin/bash"]
+
+
+-sudo docker run -t irssitest
+
+![Test irssi](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Irssi%20test%20run.png)
+
+Oraz to samo dla drugiej aplikacji:
+
+-sudo docker build -t nodebld -f Dockerfile.nodebld
+
+![Nodebld](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Node%20build.png)
+
+Plik Dockerfile.nodebld:
+      
+      FROM node:22.14.0
+      
+      RUN git clone https://github.com/devenes/node-js-dummy-test
+      
+      WORKDIR /node-js-dummy-test
+
+      RUN npm install
+
+-sudo docker build -t nodetest -f Dockerfile.nodetest
+
+![Nodetest Build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Node%20test%20build.png)
+
+Plik Dockerfile.nodetest:
+
+      FROM nodebld
+      
+      RUN npm test
+
+-sudo docker run -it nodetest 
+
+![Nodetest run](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/node%20test%20run.png)
+
+Wszystko działa poprawnie.
+
+
+
+
+
 
 
