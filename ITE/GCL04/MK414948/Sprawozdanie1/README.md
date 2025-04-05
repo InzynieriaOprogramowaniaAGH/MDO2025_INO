@@ -370,7 +370,7 @@ Budujemy obraz cloner:
 
 -sudo docker build -f Dockerfile.vol -t cloner
 
-![Cloner build]()
+![Cloner build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Cloner%20buid.png)
 
 Plik Dockerfile.vol:
 
@@ -386,13 +386,13 @@ Teraz uruchomiłam kontener z obrazu cloner i zamontowałam mój wcześniej stwo
 
 -sudo docker run --rm-v Vin:/root/Volumes cloner
 
-![Cloner run]()
+![Cloner run](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Cloner%20run.png)
 
 Zbudowałam kolejny obraz o nazwie install:
 
 -sudo docker build -f Dockerfile.install -t install
 
-![Install build]()
+![Install build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Install%20build.png)
 
 PLik Dockerfile.install:
 
@@ -412,14 +412,96 @@ Na koniec uruchomiłam kontener install montując dwa woluminy:
 
 -sudo docker run -v Vin:/root.TDWA -v Vout:/root/OUT install
 
-![Vin Vout run]()
+![Vin Vout run](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Install%20run%20Vin%20Vout.png)
 
 Podsumowując stworzyliśmy dwa obrazy Docker i uruchomiliśmy kontenery z odpowiednimi woluminami, aby przechowywać dane między nimi. Dzięki temu buildy mogły zostać wykonane wewnątrz kontenera, a wyniki zosatały zapisane w woluminach Vin i Vout. 
 
 
 ### Eksponowanie Portu
 
+W tej części ćwiczeń wykorzystamy narzędzie do testowania wydaności sieci iperf3.
 
+Uruchamiam kontener z serwerem iperf3.
 
+-sudo docker run -d --rm --name iperf-server networksattic/iperf3 -s
+
+![run iperf3](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/run%20iperf3.png)
+
+Sprawdzam IP kontenera
+
+Uzyskałam adres: 172.17.0.2
+
+![Adres kontenera Iperf3](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Adres%20Iperf3.png)
+
+Uruchamiam klienta iperf3:
+
+docker urn --rm networkstatic/iper3 -c 172.17.0.2
+
+Przetestowałam połączenie podając IP.
+
+Uzyskane wyniki:
+
+![Test z IP](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Test%20z%20IP.png)
+
+Aby uniknac odwoływnaia się po nazwach kontenerów musimy stworzyć swoją sieć mostkową.
+
+Utworzłam sieć iperf-net-test, Uruchomiłam na nim server iperf--server-test i uruchomiłam klienta podając nazwę kontenera.
+
+![Stworzenie sieci](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/iperf-network-test.png)
+
+![Uruchomienie serwera](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/iperf-server-test.png)
+
+![Klient i wyniki](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Wyniki%20nazwa.png)
+
+Aby wyciagnac wyniki z testu polazenia do logow robie:
+
+-sudo docker logs iperf-server-test > iperf3_logs.log
+
+![logi](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/logi.png)
+
+Plik iperf3_logs.log:
+
+```
+-----------------------------------------------------------
+Server listening on 5201 (test #1)
+-----------------------------------------------------------
+Accepted connection from 172.18.0.3, port 52526
+[  5] local 172.18.0.2 port 5201 connected to 172.18.0.3 port 52536
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec  1.70 GBytes  14.6 Gbits/sec                  
+[  5]   1.00-2.00   sec  1.68 GBytes  14.4 Gbits/sec                  
+[  5]   2.00-3.00   sec  1.95 GBytes  16.7 Gbits/sec                  
+[  5]   3.00-4.00   sec  1.96 GBytes  16.8 Gbits/sec                  
+[  5]   4.00-5.00   sec  1.79 GBytes  15.4 Gbits/sec                  
+[  5]   5.00-6.00   sec  2.02 GBytes  17.4 Gbits/sec                  
+[  5]   6.00-7.00   sec  1.62 GBytes  13.9 Gbits/sec                  
+[  5]   7.00-8.00   sec  1.76 GBytes  15.1 Gbits/sec                  
+[  5]   8.00-9.00   sec  1.61 GBytes  13.8 Gbits/sec                  
+[  5]   9.00-10.00  sec  1.55 GBytes  13.3 Gbits/sec                  
+[  5]  10.00-10.00  sec  7.38 MBytes  13.8 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.00  sec  17.7 GBytes  15.2 Gbits/sec                  receiver
+-----------------------------------------------------------
+Server listening on 5201 (test #2)
+-----------------------------------------------------------
+Accepted connection from 172.18.0.1, port 40064
+[  5] local 172.18.0.2 port 5201 connected to 172.18.0.1 port 40070
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-1.00   sec  1.61 GBytes  13.8 Gbits/sec                  
+[  5]   1.00-2.00   sec  1.56 GBytes  13.4 Gbits/sec                  
+[  5]   2.00-3.00   sec  1.25 GBytes  10.8 Gbits/sec                  
+[  5]   3.00-4.00   sec  1.60 GBytes  13.7 Gbits/sec                  
+[  5]   4.00-5.00   sec  1.34 GBytes  11.5 Gbits/sec                  
+[  5]   5.00-6.00   sec  1.29 GBytes  11.0 Gbits/sec                  
+[  5]   6.00-7.00   sec  1.40 GBytes  12.0 Gbits/sec                  
+[  5]   7.00-8.00   sec  1.86 GBytes  16.0 Gbits/sec                  
+[  5]   8.00-9.00   sec  1.78 GBytes  15.3 Gbits/sec                  
+[  5]   9.00-10.00  sec  1.54 GBytes  13.2 Gbits/sec                  
+[  5]  10.00-10.00  sec   256 KBytes  1.08 Gbits/sec                  
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-10.00  sec  15.2 GBytes  13.1 Gbits/sec                  receiver
+```
 
 ### Instancja Jenkins
