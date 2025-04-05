@@ -9,11 +9,11 @@ W celu zainstalowania Git i SSH wpisałam poniższe komendy:
 
 -sudo dnf install git
 
-![Instalacja gita](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/sudo%20dnf%20install%20git.png)
+![Instalacja gita](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/sudo%20dnf%20install%20git.png)
 
 -sudo dnf install openssh-server
 
-![Instalacja ssh](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/sudo%20dnf%20install%20ssh.png)
+![Instalacja ssh](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/sudo%20dnf%20install%20ssh.png)
 
 kolejno sprawdziłam ich wersje, aby upewnić się ze zostały poprawnie zainstalowane: 
 
@@ -21,7 +21,7 @@ kolejno sprawdziłam ich wersje, aby upewnić się ze zostały poprawnie zainsta
 
 -ssh -V
 
-![Sprawdzenie wersji](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/wersje%20git%20i%20ssh.png)
+![Sprawdzenie wersji](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/wersje%20git%20i%20ssh.png)
 
 Oraz wykonałam globalną konfigurację użytkownika, dzięki czemu każdy commit który wykonam, będzie podpisany imieniem i nazwiskiem oraz moim adresem e-mail.
 
@@ -29,19 +29,19 @@ Oraz wykonałam globalną konfigurację użytkownika, dzięki czemu każdy commi
 
 -git config --global user.email “monikakrak@student.agh.edu.pl”
 
-![configi](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/git%20config.png)
+![configi](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20config.png)
 
 Sprawdziłam poprawne działanie SSH:
 
 -sudo systemctl status sshd
 
-![systemctl status](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/systemctl%20status.png)
+![systemctl status](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/systemctl%20status.png)
 
 Oraz polaczylam klienta z serwerem korzystając z polecenia:
 
 -ssh user@server_ip_adress
 
-![połączenie ssh](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/polaczenie%20ssh.png)
+![połączenie ssh](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/polaczenie%20ssh.png)
 
 Udało się uzyskać połączenie.
 
@@ -56,15 +56,15 @@ Utworzyłam dwa klucze SSH w tym co najmniej jeden zabezpieczony hasłem:
 
 -ssh-keygen
 
-![klucz1](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/generowanie%20klucza%201.png)
+![klucz1](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/generowanie%20klucza%201.png)
 
-![klucz2](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/generowanie%20klucza%202.png)
+![klucz2](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/generowanie%20klucza%202.png)
 
 Następnie skonfigurowałam go jako metodę dostępu do GitHuba
 
 W ustawienia weszłam w zakładkę SSH and GPG keys i dodałam klucze klikając opcję New SSH key.
 
-![dodany klucz](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/Dodany%20klucz.png)
+![dodany klucz](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Dodany%20klucz.png)
 
 Dodałam również 2fA- uwierzytelnianie dwuetapowe, w moim przypadku skorzystałam z aplikacji Google Authenticator na moim urządzeniu mobilnym. Wykonałam to w następujący sposób: w ustawieniach wybrałam zakładkę Password and authentication, 
 włączyłam opcję „enable two-factor authentication” i wybrałam opcje aplikacji uwierzytelniającej.
@@ -88,13 +88,13 @@ Następnie wypróbowałam klonowanie repozytorium za pomocą SSH
 
 -git clone
 
-![git clone](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/git%20clone%20git.png)
+![git clone](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20clone%20https.png)
 
 Ponownie weryfikuję połączenie:
 
 -git remote -v
 
-![git remote git](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/git%20remote%20git.png)
+![git remote git](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20clone%20git.png)
 
 
 
@@ -113,13 +113,13 @@ Sprawdzam czy znajduję się na odpowiedniej gałęzi:
 
 -git branch 
 
-![git branch](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/git%20branch.png)
+![git branch](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20branch.png)
 
 Utworzyłam własną gałąź nazywaną według wzoru „inicjały & nr indeksu”
 
 - git checkout -b
 
-![moja galaz](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/git%20checkout%20MK414948.png)
+![moja galaz](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20checkout%20MK414948.png)
 
 Utworzyłam odpowiednie foldery do sprawozdań, zrzutów ekranu i plików oraz dodałam moją pracę i utworzyłam pull request do gałęzi GCL04.
 
@@ -149,11 +149,11 @@ Przykłady poprawnego działania git hooka:
 
 Poprawny message commit:
 
-![hook poprawnie](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/githook%20poprawnie.png)
+![hook poprawnie](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/githook%20poprawnie.png)
 
 Niepoprawny message commit:
 
-![hook niepoprawny](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/githook%20niepoprawnie.png)
+![hook niepoprawnie](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/githook%20niepoprawnie.png)
 
 
 
@@ -164,7 +164,7 @@ Wszystkie potrzebne zmiany wprowadziłam na GitHub
 
 Przykładowe dodawanie zmian:
 
-![zmiany](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/dodawanie%20zmian.png)
+![zmiany](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/dodawanie%20zmian.png)
 
 
 ### LAB 2
@@ -189,6 +189,47 @@ Zarejestrowałam się w DockerHub, zapoznałam z sugerowanymi obrazami i zalogow
 Pobralam obrazy: hello-world, busybox, ubuntu, fedora, mysql.
 
 ![pobieranie obrazów](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/PobiernaieObraz%C3%B3w.png)
+
+Upewniam się, że obrazy zosatly poprawnie pobrane:
+
+-sudo docker images
+
+![pobrane obrazy](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/DockerObrazy.png)
+
+Uruchomiłam kontener busybox:
+
+-docker run busybox
+
+Kontener od razu się zamyka.
+
+Podłączam się do niego interaktywnie i wywołuje numer jego wersji:
+
+-docker run -it busybox
+
+-busybox -help
+
+![wersja busyboxa](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/BusyBoxWersja.png)
+
+Wychodzę z kontenera poleceniem exit.
+
+W taki sam sposob możemy przetestować inne kontenery.
+
+Dla przykladu przetestowałam również hello-world.
+
+![Hello from Docker](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/HelloFromDocker.png)
+
+Uruchomilam kontener w kontenerze- u nas z obrazu ubuntu i zaktualizowalam pakiety.
+
+![Aktualizajca pakietów w Ubuntu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/UbuntuAktualizacjaPakiet%C3%B3w.png)
+
+Sprawdzam dzialające procesy:
+
+-ps
+
+![ProcesyUbuntu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/UbuntuPID.png)
+
+Wychodzę poelceniem exit
+
 
 
 
