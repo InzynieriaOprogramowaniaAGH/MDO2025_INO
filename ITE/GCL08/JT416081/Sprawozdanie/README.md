@@ -6,7 +6,6 @@ Temat: Wprowadzenie, Git, Gałęzie, SSH
 
 Poszczególne wykonane kroki:
 1. Zainstalowałem klienta Git i obsługę kluczy SSH
-   Zainstalowałem najnowszą wersję Git oraz skonfigurowałem obsługę kluczy SSH w moim systemie. Dzięki temu mogłem w pełni korzystać z funkcjonalności systemu kontroli wersji i bezpiecznie łączyć się z repozytoriami.
 
    ![Git and SSH](image1.png)  
 
@@ -28,7 +27,7 @@ Poszczególne wykonane kroki:
 
    ![Sklonowanie repozytorium za pomocą SSH](image5.png)
 
-   Dodatkowo skonfigurowałem uwierzytelnianie dwuskładnikowe (2FA), by jeszcze bardziej zabezpieczyć konto (wybrałem opcję z podpieciem numeru telefonu)
+   Dodatkowo skonfigurowałem uwierzytelnianie dwuskładnikowe (2FA). Wybrałem opcję z podpieciem numeru telefonu
 4. Przełączyłem się na gałąź main, a potem na gałąź mojej grupy
 
    ![Branch mojej grupy](image6.png)
@@ -144,7 +143,7 @@ CMD ["/bin/bash"]
 
 ---ZAJĘCIA_03---
 
-Na potrzeby tego zadania znalazłem projekt json-c – jest to biblioteka C do obsługi JSON-a, rozwijana jako projekt open-source na GitHubie.
+Na potrzeby tego zadania znalazłem projekt json-c – jest to biblioteka C do obsługi JSON-a, rozwijana jako projekt open-source na GitHubie. 
 Repozytorium posiada otwartą licencję (MIT), a także zawiera kompletny system budowania oparty o CMake i Makefile. Dodatkowo dostępne są testy jednostkowe, które można odpalić jako cel make test.
 Sklonowanie repozytorium:
 
@@ -171,6 +170,7 @@ Po wejściu do kontenera doinstalowałem potrzebne pakiety:
    ![alt text](image29.png)
 
 Klonowanie repo i budowanie:
+Tutaj użyłem chata gpt, aby znalazł mi repozytorium spełniące odpowiednie warunki
 
    ![alt text](image30.png)
 
@@ -180,8 +180,10 @@ Testowanie:
 
    ![alt text](image32.png)
 
-Dockerfile do budowania i testowania
-Stworzyłem pierwszy Dockerfile, który wykonuje wszystkie kroki aż do zbudowania projektu:
+Dockerfile do budowania i testowania:
+Stworzyłem pierwszy Dockerfile, który wykonuje wszystkie kroki aż do zbudowania projektu.
+ENV DEBIAN_FRONTEND=noninteractive -> konieczne było dodanie zmiennej środowiskowej, aby proces instalacji nie był interaktywny
+W Dockerfile każde polecenie stanowi warstwę dlatego warto ograniczać ich ilość wrzucając np. instalację wszystkich zależności do jednego RUNa zamiast wszystko osobno
 
 ```
 FROM ubuntu:20.04
@@ -217,3 +219,133 @@ CMD ["make", "test"]
 ```
 
    ![alt text](image34.png)
+
+---ZAJĘCIA_04---
+
+Poszczególne wykonane kroki:
+
+Stworzyłem wolumin wejściowy i wyjściowy służące do przechowywania danych w sposób bezpieczny np. podczas usunięcia kontenera:
+
+   ![alt text](image35.png)
+
+   ![alt text](image36.png)
+   
+Uruchomiłem nowy kontener na bazie obrazu z wcześniejszych zajęć. Sprawdziłem, czy wszystkie wymagane zależności są zainstalowane:
+
+   ![alt text](image37.png)
+
+   ![alt text](image38.png)
+
+Dalszym krokiem było sklonowanie repozytorium na wolumin wejściowy. Zdecydowałem się na "metodę" Bind mount, która pozwala zamontować katalog lub plik z systemu plików gospodarza (hosta) w określonym miejscu wewnątrz kontenera
+
+   ![alt text](image39.png)
+
+Dalszym krokiem było przeprowadzenie buildu wewnątrz kontenera:
+
+  ![alt text](image40.png)
+
+Nieskolonowałem repo na nowo, tylko skopiowałem repo już z buildem z poprzedich zajęć. Stąd ten error: 
+
+  ![alt text](image41.png)
+
+Usunołem odpowiedni folder i przeprowadziłem build na nowo:
+
+  ![alt text](image42.png)
+
+  ![alt text](image43.png)
+
+Stworzone pliki zapisałem na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera:
+
+  ![alt text](image44.png)
+
+
+Następnie przeprowadziłem tą samą operację raz jeszcze, ale klonowanie na wolumin wejściowy przeprowadziłem wewnątrz kontenera za pomocą gita:
+
+  ![alt text](image45.png)
+
+Można zautomatyzować proces klonowania repozytorium, budowania projektu i kopiowania artefaktów, definiując te kroki w pliku Dockerfile. W wielostopniowym buildzie w pierwszym etapie należy zainstalować zależności, sklonować repo i skompilować kod. Następnie w kolejnym etapie trzeba skopiować stworzone pliki do finalnego obrazu. Użycie RUN --mount pozwala tymczasowo zamontować zasoby podczas budowy, co przyspiesza proces i umożliwia wykorzystanie cache. W ten sposób cały proces odbywa się automatycznie podczas docker build, bez konieczności ręcznego uruchamiania kontenera.
+
+W części "Eksponowanie portu" korzystałem z pomocy chata gpt
+W dalszej części zajeć uruchomiłem wewnątrz kontenera serwer iperf:
+
+  ![alt text](image46.png)
+
+  ![alt text](image47.png)
+
+Połączyłem się z nim z drugiego kontenera:
+
+   ![alt text](image48.png)
+
+   ![alt text](image49.png)
+
+Następnie zrobiłem ten krok ponownie ale tworząc własną sieć. Dzięki temu połączyłem się po nazwie DNS:
+
+   ![alt text](image50.png)
+
+   ![alt text](image51.png)
+
+   ![alt text](image52.png)
+
+   ![alt text](image53.png)
+
+
+Dalej połączyłem się spoza kontenera:
+
+  ![alt text](image54.png)
+
+
+W ostatniej części przeprowadiłem instalację skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND
+
+  ![alt text](image55.png)
+
+Użyty docker-compose.yml:
+
+```
+version: '3.8'
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    restart: unless-stopped
+    ports:
+      - "8080:8080"   
+      - "50000:50000" 
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    networks:
+      - jenkins-net
+    depends_on:
+      - dind
+    environment:
+      DOCKER_HOST: "tcp://dind:2375"
+
+  dind:
+    image: docker:dind
+    container_name: docker-dind
+    privileged: true
+    restart: unless-stopped
+    networks:
+      - jenkins-net
+    volumes:
+      - dind_storage:/var/lib/docker
+    environment:
+      DOCKER_TLS_CERTDIR: ""  
+    expose:
+      - "2375"
+
+networks:
+  jenkins-net:
+
+volumes:
+  jenkins_home:
+  dind_storage:
+```
+
+Zainicjalizowałem instację:
+- ekran logowania: 
+
+  ![alt text](image56.png)
+
+- działajace kontenery:
+
+  ![alt text](image57.png)

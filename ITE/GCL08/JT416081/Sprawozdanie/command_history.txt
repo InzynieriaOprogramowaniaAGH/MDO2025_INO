@@ -1,0 +1,465 @@
+    1  ld
+    2  ls
+    3  cd ..
+    4  ls
+    5  cd jakub
+    6  git --version
+    7  cd jakub
+    8  cd jakubsd
+    9  mkdir jakub
+   10  lsls
+   11  ls
+   12  touch jakub
+   13  ls
+   14  touch jakub1
+   15  ls
+   16  touch jakub1
+   17  git --version
+   18  ssh-keygen -t ed25519 -C "kuba.tylinski51@gmail.com"
+   19  ls -a
+   20  cd .ssh
+   21  ls
+   22  cat id_ed25519.pub
+   23  copy id_ed25519.pub
+   24  cat id_ed25519.pub
+   25  ssh -T git@github.com
+   26  ps a
+   27  ip a
+   28  ed_lft forever
+   29  [jakub@DESKTOP-JAKUB .ssh]$cd ..
+   30  cd .
+   31  cd ..
+   32  systemctl status sshd
+   33  ip a
+   34  logout
+   35  exit
+   36  chmod 600 ~/.ssh/authorized_keys
+   37  ls
+   38  cd ..
+   39  chmod 600 ~/.ssh/authorized_keys
+   40  ls -a
+   41  cd jakub
+   42  ls -a
+   43  chmod 600 ~/.ssh/authorized_keys
+   44  sudo chmod 600 ~/.ssh/authorized_keys
+   45  cd .ssh
+   46  ls
+   47  nano ~/.ssh/authorized_keys
+   48  exit
+   49  nano ~/.ssh/authorized_keys
+   50  sudo nano ~/.ssh/authorized_keys
+   51  sudo vi ~/.ssh/authorized_keys
+   52  chmod 600 ~/.ssh/authorized_keys
+   53  sudo chmod 600 ~/.ssh/authorized_keys
+   54  exit
+   55  ssh -i C:\Users\Jakub\.ssh\id_vm jakub@192.168.8.137
+   56  ssh -i "C:\Users\Jakub\.ssh\id_vm" jakub@192.168.8.137
+   57  ssh -i C:/Users/Jakub/.ssh/id_vm jakub@192.168.8.137
+   58  notepad C:\Users\Jakub\.ssh\config
+   59  exit
+   60  notepad++ C:\Users\Jakub\.ssh\config
+   61  notepad+ C:\Users\Jakub\.ssh\config
+   62  exit
+   63  ls
+   64  exit
+   65  ls
+   66  ls -a
+   67  cp /home/jakub/Informatyka_Techniczna/Grupa_8/JT416081 /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+   68  cp -r /home/jakub/Informatyka_Techniczna/Grupa_8/JT416081 /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+   69  cp -r /home/jakub/Informatyka_Techniczna/Grupa_8/JT416081/Sprawozdanie_1 /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+   70  git branch
+   71  cd MDO2025_INO
+   72  git branch
+   73  git add Sprawozdanie_1
+   74  cd ITE/GCL08/JT416081
+   75  git add
+   76  clear
+   77  cd ..
+   78  clear
+   79  git branch
+   80  git add .
+   81  git commit -m "JT416081 Sprawozdanie_1"
+   82  git config --global user.email "kuba.tylinski51@gmail.com"
+   83  git push origin JT416081
+   84  git status
+   85  git add .
+   86  git commit -m "JT416081 Sprawko_1"
+   87  git push origin JT416081
+   88  git add .
+   89  git status
+   90  git commit -m "JT416081 Sprawko_1 wersja z Pull Request"
+   91  git push origin JT416081
+   92  cd ..
+   93  mkdir XX
+   94  cp MDO2025_INO XX
+   95  cp -r  MDO2025_INO XX
+   96  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   97  cd XX
+   98  ls
+   99  cd MDO2025
+  100  ls
+  101  cd MDO2025_INO
+  102  ls
+  103  rmdir READMEs
+  104  ls
+  105  cp ITE ./MDO2025_INO
+  106  cp -r ITE ./MDO2025_INO
+  107  ls
+  108  cd ..
+  109  ls
+  110  cd MDO2025_INO
+  111  mkdir ITE
+  112  ls
+  113  cd ITE
+  114  mkdir GCL08
+  115  ls
+  116  cd GCL08
+  117  mkdir JT416081
+  118  ls
+  119  cd JT416081
+  120  mkdir Sprawozdanie_1
+  121  touch README.md
+  122  mv /home/jakub/XX/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1/image1.png /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  123  mv /home/jakub/XX/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1/image2.png /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  124  mv /home/jakub/XX/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1/image3.png /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  125  mv /home/jakub/XX/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1/image4.png /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  126  mv /home/jakub/XX/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1/image5.png /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  127  mv /home/jakub/XX/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1/image6.png /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  128  mv /home/jakub/XX/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1/image7.png /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  129  mv /home/jakub/XX/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1/image8.png /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  130  mv /home/jakub/XX/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1/image9.png /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  131  mv /home/jakub/XX/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1/image10.png /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  132  mv /home/jakub/XX/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1/image11.png /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  133  mv /home/jakub/XX/MDO2025_INO/ITE/GCL08/JT416081/commit-message-check.sh /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  134  mv /home/jakub/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1 /home/jakub/Sprawozdanie_1
+  135  mv /home/jakub/MDO2025_INO/ITE/GCL08/JT416081 /home/jakub/Sprawozdanie_1
+  136  cd ..
+  137  cd jakub
+  138  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  139  ls
+  140  cd MDO2025_INO
+  141  mkdir ITE
+  142  cd ITE
+  143  mkdir GCL08
+  144  cd GCL08
+  145  ls
+  146  mkdir JT416081
+  147  cd JT416081
+  148  cd ..
+  149  mv Sprawozdanie_1 /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  150  ls
+  151  cd MDO2025_INO
+  152  ls
+  153  cd ITE
+  154  cd GCL08
+  155  cd JT416081
+  156  ls
+  157  mkdir Sprawozdanie_2
+  158  cd ..
+  159  git branch
+  160  git branch -a
+  161  git checkout GCL08
+  162  git branch
+  163  git branch JT416081
+  164  git branch
+  165  git checkout JT416081
+  166  git branch -a
+  167  clear
+  168  git branch
+  169  git add .
+  170  git status
+  171  git commit -m "JT416081 Sprawozdanie_1"
+  172  git push origin JT416081
+  173  git checkout GCL08
+  174  git branch
+  175  git checkout GCL08
+  176  git merge --abort
+  177  git checkout GCL08
+  178  git rebase --abort
+  179  git checkout GCL08
+  180  git stash
+  181  git checkout GCL08
+  182  git stash pop
+  183  git add .
+  184  git stash push -u   # lub --include-untracked
+  185  git stash list   
+  186  git checkout JT416081
+  187  git stash show stash@{1}
+  188  git branch
+  189  git status
+  190  git push origin --delete JT416081
+  191  git branch
+  192  git checkout GCL08
+  193  git branch
+  194  git status
+  195  git branch
+  196  git add .
+  197  git status
+  198  git commir -m "JT416081 Mała poprawka"
+  199  git commit -m "JT416081 Mała poprawka"
+  200  git push origin JT4160081
+  201  git push origin JT416081
+  202  git pull origin JT416081
+  203  git pull --no-rebase origin JT416081
+  204  cd ..
+  205  ls
+  206  touch READMEmd
+  207  touch README.md
+  208  mv README.md /home/jakub/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_1
+  209  git status
+  210  cd MDO2025_INO
+  211  git status
+  212  git brach
+  213  git branch
+  214  cd ..
+  215  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  216  cd MDO2025_INO
+  217  mdkir ITE
+  218  mkdir ITE
+  219  cd ITE
+  220  cd GCL08
+  221  mkdir GCL08
+  222  cd GCL08
+  223  mkdir JT416081
+  224  cd JT416081
+  225  mkdir Sprawozdanie_1
+  226  mv /home/jakub/XD/ITE/GCL08/JT416081/Sprawozdanie_1 /home/jakub/MDO2025_INO/ITE/GCL08/JT416081
+  227  cd ..
+  228  ls
+  229  cd MDO2025_INO
+  230  git branch
+  231  git branch -a
+  232  git checkout GCL08
+  233  git branch
+  234  git branch JT416081
+  235  git branch
+  236  git checkout JT416081
+  237  git status
+  238  ls
+  239  cd ITE
+  240  ls
+  241  cd GCL08
+  242  ls
+  243  cd JT416081
+  244  ls
+  245  cd ..
+  246  git add .
+  247  git status
+  248  git commit -m "JT416081 Mała poprawka"
+  249  git  push origin JT416081
+  250  git push origin JT416081 --force
+  251  git branch
+  252  git status
+  253  git log --graph --oneline --decorate --all
+  254  git merge-base JT416081 GCl08
+  255  git merge-base JT416081 GCL08
+  256  git rev-parse GCL08
+  257  git status
+  258  git add .
+  259  git commit -m "JT416081 Update README style"
+  260  git push origin JT416081 
+  261  git checkout GCL08
+  262  git merge JT416081
+  263  git push origin GCL08
+  264  git checkout JT416081
+  265  git status
+  266  git branch
+  267  git add .
+  268  git status
+  269  git branch
+  270  git commit -m "Update class 1"
+  271  git push origin JT416081
+  272  git status
+  273  git add .
+  274  git commit -m "JT416081 Last update today"
+  275  git push origin JT416081
+  276  git status
+  277  cd ..
+  278  sudo dnf -y install dnf-plugins-core
+  279  sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+  280  sudo dnf remove podman runc
+  281  sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+  282  sudo dnf install -y dnf-plugins-core
+  283  sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+  284  l
+  285  ls
+  286  sudo dnf install docker-ce docker-ce-cli containerd.io
+  287  sudo systemctl enable --now docker
+  288  sudo systemctl status docker
+  289  docker --version
+  290  clear
+  291  sudo systemctl status docker
+  292  clear
+  293  docker --version
+  294  sudo systemctl status docker
+  295  clear
+  296  docker pull hello-world
+  297  sudo docker pull hello-world
+  298  sudo docker pull busybox
+  299  sudo docker pull ubuntu
+  300  sudo docker pull fedora
+  301  docker pull musql
+  302  sudo docker pull musql
+  303  sudo docker pull mysql
+  304  clear
+  305  docker images
+  306  sudo docker images
+  307  clear
+  308  sudo usermod -aG docker $USER
+  309  docker ps -a
+  310  docker top 67f7e671340c 
+  311  git branch
+  312  ls
+  313  cd  MDO2025_INO
+  314  ls
+  315  git branch
+  316  git pull origin main
+  317  git pull --no-rebase
+  318  git branch
+  319  git merge origin/main
+  320  docker ps -a
+  321  ls
+  322  history
+  323  docker ps
+  324  docker ps -a
+  325  docker images
+  326  docker run -it --name moj-builder json-c-builder
+  327  docker ps 
+  328  docker ps -a
+  329  docker volume create in
+  330  docker volume create out
+  331  history
+  332  ip -a
+  333  ip a
+  334  clear
+  335  docker run -it --rm  --name iperf_2 ubuntu:latest bash
+  336  docker ps
+  337  docker stop iperf_1
+  338  docker rm iperf_1
+  339  docker ps
+  340  docker ps -a
+  341  clear
+  342  docker run -it --rm --name iperf-client --network my_network ubuntu:latest bash
+  343  ls
+  344  cd MDO2025_INO
+  345  ls
+  346  cd ITE 
+  347  ls
+  348  cd GCL08
+  349  ls
+  350  cd JT416081
+  351  ls
+  352  cd Sprawozdanie
+  353  ls
+  354  touch command_history_lab_1.txt
+  355  touch command_history_lab_2.txt touch command_history_lab_3.txt touch command_history_lab_4.txt 
+  356  history
+  357  clear
+  358  cd ..
+  359  history
+  360  clear
+  361  docker volume ls
+  362  docker ps
+  363  docker volume ls -a
+  364  docker ps -a
+  365  docker images
+  366  docker ps -a
+  367  docker start moj-builder
+  368  docker ps -a
+  369  docker ps 
+  370  clear
+  371  docker ps
+  372  docker stop 02321749c8b5 
+  373  docker run -it --name base_container -v in:/mnt/input -v out:/mnt/output moj-builder /bin/bash
+  374  sudo docker run -it --name base_container -v in:/mnt/input -v out:/mnt/output moj-builder /bin/bash
+  375  docker images
+  376  docker run -it --name base_container -v in:/mnt/input -v out:/mnt/output json-c-builder /bin/bash
+  377  docker ps
+  378  docker run -it --name base_container -v in:/mnt/input -v out:/mnt/output json-c-builder /bin/bash
+  379  docker ps -a
+  380  docker run it base_cointainer /bin/bash
+  381  docker run -it base_cointainer /bin/bash
+  382  docker run -it base_container /bin/bash
+  383  docker start base_container
+  384  docker exec -it base_container /bin/bash
+  385  mdkir repo
+  386  mkdir repo
+  387  cd repo
+  388  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  389  docker ps
+  390  docker stop  base_container
+  391  docker rm base_container
+  392  docker ps -a
+  393  docker run -it --name base_container -v repo:/mnt/input -v out:/mnt/output json-c-builder /bin/bash
+  394  docker ps 
+  395  docker ps -a
+  396  docker rm   base_container
+  397  cd ..
+  398  docker run -it --name base_container -v /home/jakub/repo:/mnt/input -v out:/mnt/output json-c-builder /bin/bash
+  399  ls
+  400  cd ..
+  401  docker ps
+  402  docker ps -a
+  403  docker rm base_container
+  404  docker run -it --name base_container -v /home/jakub/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie/LAB_3/json-c:/mnt/input -v out:/mnt/output json-c-builder /bin/bash
+  405  sudo ls /var/lib/docker/volumes
+  406  cd out
+  407  cat out
+  408  cd var
+  409  cd ..
+  410  cdvar
+  411  cd var
+  412  cd lib
+  413  cd docker
+  414  sudo cd docker
+  415  cd volumes
+  416  ls
+  417  cd docker
+  418  sudo cd docker
+  419  sudo -i
+  420  cd ..
+  421  cd /var/lib/docker
+  422  ls
+  423  docker ps
+  424  docker ps -a
+  425  docker start base_container
+  426  docker exec -it base_container /bin/bash
+  427  ls
+  428  cd home
+  429  cd jakub
+  430  ls
+  431  clear
+  432  docker images
+  433  docker run -it --name iperf-1 -p 5201:5201 ubuntu:20.04 /bash
+  434  docker run -it --name iperf-1 -p 5201:5201 ubuntu:20.04 bash
+  435  docker ps
+  436  docker stop base_container
+  437  docker run -it --name iperf-1 -p 5201:5201 ubuntu:20.04 /bin/bash
+  438  docker ps
+  439  docker ps -a
+  440  docker exec -it iperf-1 /bin/bash
+  441  docker start iperf-1
+  442  ls
+  443  docker ps -a
+  444  clear
+  445  docker run -it --name iperf_1 -p 5201:5201 ubuntu:latest bash
+  446  docker ps
+  447  docker ps -a
+  448  docker rm iperf-1
+  449  docker ps -a
+  450  clear
+  451  docker network create my_network
+  452  docker run -it --rm --name iperf-server --network my_network ubuntu:latest bash
+  453  docker ps
+  454  docker ps -a
+  455  docker run -d     --name iperf-server     -p 5201:5201     ubuntu:20.04     sh -c "apt-get update && apt-get install -y iperf3 && iperf3 -s"
+  456  docker ps
+  457  docker logs iperf-server
+  458  docker ps
+  459  curl localhost:8080
+  460  docker logs iperf-server
+  461  docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+  462  docker ps 
+  463  clear
+  464  docker ps
+  465  history
