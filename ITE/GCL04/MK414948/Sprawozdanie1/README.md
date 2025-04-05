@@ -504,4 +504,30 @@ Accepted connection from 172.18.0.1, port 40064
 [  5]   0.00-10.00  sec  15.2 GBytes  13.1 Gbits/sec                  receiver
 ```
 
+Aby połączyc się do serwera iperf3 spoza hosta należy otworzyć port 
+
+![Otwarcie portu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/otwarcie%20portu.png)
+
+Oraz uruchomić serwer na tym otwartym porcie. Po czym połączyć się z innej masyzny w tej samej sieci co host.
+
+![Polączenie z innej maszyny](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/polaczenie%20z%20innej%20maszyny.png)
+
 ### Instancja Jenkins
+
+Utowrzyłam osobną sieć Docker dla Jenkinsa
+
+-sudo docker network create jenkins
+
+Uruchomiłam kotener DIND, a potem Jenkins;
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/jenkins%20run.png)
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/jenkins%20arun%202.png)
+
+Sprawdziłam haslo i zalogowałam się do strony. 
+
+![Zaloguj sie](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Odblokuj%20Jenkinsa.png)
+
+![Dostosuj Jenkinsa](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Dostosuj%20Jenkinsa.png)
+
+
