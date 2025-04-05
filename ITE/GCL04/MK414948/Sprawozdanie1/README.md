@@ -167,6 +167,28 @@ Przykładowe dodawanie zmian:
 ![zmiany](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/Sprawozdanie1/screenshoty/dodawanie%20zmian.png)
 
 
+### LAB 2
+### Docker
+
+Zainstalowałam Dockera, który przyda się nam do zarządzania kontenerami w kolejnych zadaniach. Wykorzystałam do tego celu polecenie:
+
+-sudo dnf install docker 
+
+Sprawdzilam wersję, żeby upewnić się, że insatlacja udała się.
+Uruchamiłam go i sprawdziłam status;
+
+-docker --version
+-sudo systemctl start docker
+-sudo systemctl status docker
+
+![instalacja dokcera](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/DockerWersja.png)
+
+Zarejestrowałam się w DockerHub, zapoznałam z sugerowanymi obrazami i zalogowałam:
+![logowanie](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/DockerLogowanie.png)
+
+Pobralam obrazy: hello-world, busybox, ubuntu, fedora, mysql.
+
+![pobieranie obrazów](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/PobiernaieObraz%C3%B3w.png)
 
 
 
