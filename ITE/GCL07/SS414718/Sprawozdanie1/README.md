@@ -39,6 +39,10 @@
     - [4.8. Odczyt logów](#48-odczyt-logów)
     - [4.9. Instalacja **Jenkins** (*bez DIND, bo nie umiem czytać*)](#49-instalacja-jenkins-bez-dind-bo-nie-umiem-czytać)
     - [4.10. Ekran logowania Jenkins](#410-ekran-logowania-jenkins)
+- [Dyskusje](#dyskusje)
+  - [Przygotowanie finalnego artefaktu](#przygotowanie-finalnego-artefaktu)
+  - [Wymagania w Jenkinsie](#wymagania-w-jenkinsie)
+  - [LLM](#llm)
 
 
 # Sprawozdanie z lab1
@@ -182,3 +186,39 @@
 - **Status:** *Jest, działa*
 - ![4.10](images/4/8.1.png)
 
+---
+
+
+# Dyskusje
+
+
+## Przygotowanie finalnego artefaktu
+
+- **Publikacja w formie kontenera:**  
+  Należy zastosować **multi-stage build** – w pierwszym etapie budowana jest aplikacja, a następnie kopiowane są jedynie finalne pliki do obrazu. Dzięki temu obraz staje się mniejszy i pozbawiony zbędnych elementów.
+
+- **Dedykowana ścieżka publikacji:**  
+  Możliwe jest wydzielenie osobnego Dockerfile lub etapu w pipeline, który odpowiada wyłącznie za publikację gotowego obrazu. Takie podejście upraszcza cały proces.
+
+- **Dystrybucja w formie pakietu:**  
+  W przypadku dystrybucji programu jako JAR, DEB, RPM lub EGG konieczny jest dodatkowy krok (np. w osobnym kontenerze lub etapie pipeline). Do tego celu można wykorzystać narzędzia, takie jak `fpm`, umożliwiające przygotowanie odpowiedniego formatu.
+
+## Wymagania w Jenkinsie
+
+- **Uruchomienie Dockerfile dla buildera:**
+  - Agent Jenkins powinien mieć zainstalowanego Dockera.
+  - Użytkownik Jenkins musi dysponować odpowiednimi uprawnieniami do uruchamiania poleceń Docker (np. poprzez członkostwo w grupie `docker`).
+  - Wykorzystywanie wtyczki **Docker Pipeline** ułatwia integrację z Dockerem.
+
+- **Uruchamianie Docker Compose:**
+  - Docker Compose musi być zainstalowany na agencie.
+  - Uruchamianie odbywa się za pomocą poleceń shellowych lub dedykowanych wtyczek, przy czym środowisko musi mieć zapewnione odpowiednie uprawnienia.
+
+## LLM
+- **Używanie Czata dżi pi ti podczas pracy**
+  - Całe sprawozdanie przeredagował pod kątem stylistycznym w markdownie
+    - >*Prompt: przeredaguj stylistycznie i dołączona treść sprawozdania*
+  - Troubleshooting
+  - Wytłumaczenie kontekstu instrukcji, uzupełnianie braków w mojej wiedzy 
+    - >*Prompt: wyłumacz mi dlaczego ....*
+  - Wielokrotne utrudnienie mi pracy poprzez tragiczne poprawienie komend Docker przy okazji labów 4 i fragmentu o zachowaniu stanu XDXD
