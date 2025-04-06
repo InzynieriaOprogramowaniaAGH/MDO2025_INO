@@ -256,7 +256,7 @@ Budowanie projektu w kontenerze:
 ![](resources/lab4/7.png)
 ![](resources/lab4/8.png)
 ![](resources/lab4/9.png)
-Projekt został zbudowany, teraz kopiuję plik cJSON_test do woluminu wyjściowego komendą:
+Projekt został zbudowany, teraz kopiuję katalog z buildem do woluminu wyjściowego komendą:
 ```bash
 cp -r build/ /app/output
 ```
