@@ -1,5 +1,3 @@
-## Tresc githooka
-
 #!/usr/bin/sh
 
 commit_message=$(cat "$1")
