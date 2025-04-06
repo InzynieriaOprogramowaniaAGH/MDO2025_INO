@@ -75,10 +75,10 @@
         echo "Hour is even: $HOUR"
       fi
       ```
-    - *Zrzut ekranu z godziną*:
+    - *Zrzut ekranu konsoli projektu z godziną*:
 
       ![Zrzut ekranu z godziną](media/m7_hour.png)
   - Utworzono projekt, który ściąga obraz ubuntu dockera, poleceniem `docker pull ubuntu`.
-    - *Zrzut ekranu projektu:*
+    - *Zrzut ekranu konsoli projektu:*
 
       ![Zrzut ekranu pull ubuntu](media/m8_pull.png)
