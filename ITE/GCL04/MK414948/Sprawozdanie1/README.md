@@ -11,7 +11,7 @@ W celu zainstalowania Git i SSH wpisałam poniższe komendy:
 
 -sudo dnf install openssh-server
 
-kolejno sprawdziłam ich wersje, aby upewnić się ze zostały poprawnie zainstalowane: 
+kolejno sprawdziłam ich wersje, aby upewnić się, że zostały poprawnie zainstalowane: 
 
 -git -–version 
 
@@ -19,7 +19,7 @@ kolejno sprawdziłam ich wersje, aby upewnić się ze zostały poprawnie zainsta
 
 ![Instalacja Git i SSH](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/InstalacjaGITiSSH.png)
 
-Oraz wykonałam globalną konfigurację użytkownika, dzięki czemu każdy commit który wykonam, będzie podpisany imieniem i nazwiskiem oraz moim adresem e-mail.
+Wykonałam globalną konfigurację użytkownika, dzięki czemu każdy commit który wykonam, będzie podpisany imieniem i nazwiskiem oraz moim adresem e-mail.
 
 -git config --global user.name “Monika Krakowska”
 
@@ -33,7 +33,7 @@ Sprawdziłam poprawne działanie SSH:
 
 ![systemctl status](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/StatusSSH.png)
 
-Oraz polaczylam klienta z serwerem korzystając z polecenia:
+Oraz połączyłam klienta z serwerem korzystając z polecenia:
 
 -ssh user@server_ip_adress
 
@@ -42,13 +42,12 @@ Oraz polaczylam klienta z serwerem korzystając z polecenia:
 Udało się uzyskać połączenie.
 
 
-
 ### Personal Access Token:
 
 
-Na platformie GitHub sekcji ustawień Personal Access Token dodałam nowy token
+Na platformie GitHub w sekcji ustawień "Personal Access Token" dodałam nowy token.
 
-Utworzyłam dwa klucze SSH w tym co najmniej jeden zabezpieczony hasłem:
+Utworzyłam dwa klucze SSH w tym jeden zabezpieczony hasłem:
 
 -ssh-keygen
 
@@ -56,15 +55,13 @@ Utworzyłam dwa klucze SSH w tym co najmniej jeden zabezpieczony hasłem:
 
 ![klucz2](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/generowanie%20klucza%202.png)
 
-Następnie skonfigurowałam go jako metodę dostępu do GitHuba
+Następnie skonfigurowałam go jako metodę dostępu do GitHuba.
 
-W ustawienia weszłam w zakładkę SSH and GPG keys i dodałam klucze klikając opcję New SSH key.
+W ustawieniach w zakładce "SSH and GPG keys" dodałam klucze klikając opcję "New SSH key".
 
 ![dodany klucz](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Dodany%20klucz.png)
 
-Dodałam również 2fA- uwierzytelnianie dwuetapowe, w moim przypadku skorzystałam z aplikacji Google Authenticator na moim urządzeniu mobilnym. Wykonałam to w następujący sposób: w ustawieniach wybrałam zakładkę Password and authentication, 
-włączyłam opcję „enable two-factor authentication” i wybrałam opcje aplikacji uwierzytelniającej.
-
+Dodałam również 2fA- uwierzytelnianie dwuetapowe, w moim przypadku skorzystałam z aplikacji Google Authenticator na moim urządzeniu mobilnym.Wykonałam to w następujący sposób: w ustawieniach wybrałam zakładkę "Password and authentication", włączyłam opcję „enable two-factor authentication” i wybrałam odpowiednią dla mnie opcję aplikacji uwierzytelniającej.
 
 
 ### Klonowanie repozytorium za pomocą HTTPS:
@@ -78,26 +75,26 @@ Sprawdziłam sposób polaczenia komenda
 
 -git remote -v
 
-![git remote https](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20clone%20https.png)
+![git remote https](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20remote%20https.png)
 
 Następnie wypróbowałam klonowanie repozytorium za pomocą SSH 
 
 -git clone
 
-![git clone](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20clone%20https.png)
+![git clone](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20clone%20git.png)
 
 Ponownie weryfikuję połączenie:
 
 -git remote -v
 
-![git remote git](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20clone%20git.png)
+![git remote git](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20remote%20git.png)
 
 
 
 ### Praca na gałęziach:
 
 
-Przełączyłam się na gałąź main a nastęnie gałąż swojej grupy:
+Przełączyłam się na gałąź main a nastęnie gałąź swojej grupy:
 
 -git checkout main
 
@@ -105,32 +102,31 @@ Przełączyłam się na gałąź main a nastęnie gałąż swojej grupy:
 
 ![wybranie gałęzi](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20checkout.png)
 
-Sprawdzam czy znajduję się na odpowiedniej gałęzi:
+Sprawdzam, czy znajduję się na odpowiedniej gałęzi:
 
 -git branch 
 
 ![git branch](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20branch.png)
 
-Utworzyłam własną gałąź nazywaną według wzoru „inicjały & nr indeksu”
+Utworzyłam własną gałąź, nazywaną według wzoru „inicjały & nr indeksu”
 
 - git checkout -b
 
 ![moja galaz](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/git%20checkout%20MK414948.png)
 
-Utworzyłam odpowiednie foldery do sprawozdań, zrzutów ekranu i plików oraz dodałam moją pracę i utworzyłam pull request do gałęzi GCL04.
-
+Utworzyłam również odpowiednie foldery do sprawozdań, zrzutów ekranu i plików oraz dodałam postępy swojej pracy tworząc pull request do gałęzi GCL04.
 
 
 ### Git Hooks
 
 
-Napisałam Git hooka korzystając z przykładowych githook’ów w folderze .git/hooks i w tym samym folderze zapisałam go jako commit-msg.
+Napisałam Git Hooka korzystając z przykładowych githook’ów w folderze .git/hooks i w tym samym folderze zapisałam go jako commit-msg.
 
-Mój githook weryfikuje czy każdy mój commit message rozpoczyna się od moich inicjałów i nr indeksu.
+Mój githook weryfikuje czy każdy mój commit message rozpoczyna się od kombinacji moich inicjałów i nr indeksu.
 
 Treść mojego git hooka:
 
-      #!/bin/bash
+    ```  #!/bin/bash
       COMMIT_MSG_FILE=$1
       COMMIT_MSG=$(cat $COMMIT_MSG_FILE)
       PREFIX="MK414948"
@@ -139,7 +135,8 @@ Treść mojego git hooka:
           echo "ERROR: Commit message must start with '$PREFIX'"
           echo "Przykład poprawnego commit message: '$PREFIX: Dodano nowy plik'"
           exit 1
-      fi
+      fi ```
+
 
 Przykłady poprawnego działania git hooka:
 
@@ -156,7 +153,7 @@ Niepoprawny message commit:
 ### Wysyłanie zmian na GitHuba
 
 
-Wszystkie potrzebne zmiany wprowadziłam na GitHub
+Wszystkie potrzebne zmiany wprowadziłam na repozytorium na GitHubie.
 
 Przykładowe dodawanie zmian:
 
@@ -170,8 +167,8 @@ Zainstalowałam Dockera, który przyda się nam do zarządzania kontenerami w ko
 
 -sudo dnf install docker 
 
-Sprawdzilam wersję, żeby upewnić się, że insatlacja udała się.
-Uruchamiłam go i sprawdziłam status;
+Sprawdzilam wersję, w celu upewnienia się, że insatalacja przebiegła prawidłowo.
+Uruchamiłam go i sprawdziłam status:
 
 -docker --version
 -sudo systemctl start docker
@@ -180,13 +177,14 @@ Uruchamiłam go i sprawdziłam status;
 ![instalacja dokcera](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/DockerWersja.png)
 
 Zarejestrowałam się w DockerHub, zapoznałam z sugerowanymi obrazami i zalogowałam:
+
 ![logowanie](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/DockerLogowanie.png)
 
-Pobralam obrazy: hello-world, busybox, ubuntu, fedora, mysql.
+Pobralam następujące obrazy: hello-world, busybox, ubuntu, fedora, mysql.
 
 ![pobieranie obrazów](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/PobiernaieObraz%C3%B3w.png)
 
-Upewniam się, że obrazy zosatly poprawnie pobrane:
+Upewniłam się, że obrazy zostały poprawnie pobrane:
 
 -sudo docker images
 
@@ -196,9 +194,9 @@ Uruchomiłam kontener busybox:
 
 -docker run busybox
 
-Kontener od razu się zamyka.
+Zauważyłam, że kontener od razu się zamyka.
 
-Podłączam się do niego interaktywnie i wywołuje numer jego wersji:
+Podłączyłam się do niego interaktywnie i wywołałam numer jego wersji:
 
 -docker run -it busybox
 
@@ -206,33 +204,33 @@ Podłączam się do niego interaktywnie i wywołuje numer jego wersji:
 
 ![wersja busyboxa](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/BusyBoxWersja.png)
 
-Wychodzę z kontenera poleceniem exit.
+Wyszłam z kontenera poleceniem exit.
 
-W taki sam sposob możemy przetestować inne kontenery.
+W taki sam sposob możemy też przetestować inne kontenery.
 
 Dla przykladu przetestowałam również hello-world.
 
 ![Hello from Docker](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/HelloFromDocker.png)
 
-Uruchomilam kontener w kontenerze- u nas z obrazu ubuntu i zaktualizowalam pakiety.
+Uruchomilam kontener w kontenerze- u nas z obrazu ubuntu i następnie zaktualizowałam pakiety.
 
 ![Aktualizajca pakietów w Ubuntu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/UbuntuAktualizacjaPakiet%C3%B3w.png)
 
-Sprawdzam dzialające procesy:
+Sprawdziłam dzialające procesy:
 
 -ps
 
 ![ProcesyUbuntu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/UbuntuPID.png)
 
-Wychodzę poelceniem exit
+Wyszłąm poelceniem exit.
 
 ### Własne obrazy 
 
-W kolejnym zadaniu celem będzie utworzenie własnego obrazu umożliwiającego właczenie kontenera. 
+W kolejnym zadaniu celem było utworzenie własnego obrazu umożliwiającego właczenie kontenera. 
 
-W celu utworzenia kontenera pobierającego nasze repo przedmiotowe utworzyłam następujący plik Dockerfile:
+W celu utworzenia kontenera pobierającego nasze repozytorium przedmiotowe utworzyłam następujący plik Dockerfile:
       
-      FROM fedora:41
+     ``` FROM fedora:41
       
       RUN dnf update -y && dnf install git -y
       
@@ -240,31 +238,32 @@ W celu utworzenia kontenera pobierającego nasze repo przedmiotowe utworzyłam n
       
       RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
       
-      CMD ["/bin/bash"]
+      CMD ["/bin/bash"]```
+      
 
-Kolejno budujemy obraz z naszego Dockerfile:
+Kolejno zbudowałam obraz z naszego Dockerfile:
 
 -sudo docker build -t fedora
 
-Po fladze -t podaliśmy nazwę naszego tworzonego obrazu.
+Po fladze -t podalam nazwę naszego tworzonego obrazu.
 
 ![DockerBuild Fedora](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Docker%20Build%20Fedora.png)
 
-I uruchamiamy zbudowany obrazw trybie interatywnym jak poprzedmio z busybox:
+I uruchamiłam zbudowany obraz w trybie interatywnym (podobnie jak poprzednio z busybox):
 
 -sudo docker run -it fedora:
 
 ![Docker run Fedora](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Docker%20Run%20Fedora.png)
 
-Po wykonaniu polecenia ls możemy zobaczyc katalog z naszym repozytorium przedmiotowym. 
+Po wykonaniu polecenia ls możemy zobaczyc katalog z naszym repozytorium przedmiotowym- wszystko przebiegło pomyślnie.
 
-Aby zobaczyc kontenery i obrazy możemy wykorzystać komendy:
+Aby zobaczyć kontenery i obrazy możemy wykorzystać komendy:
 
 -sudo docker ps -a 
 
 -sudo docker images
 
-Sprzątam:
+Posprzątałam:
 
 -sudo docker rm $(sudo docker ps -a -q)
 usuwanie kontenerów
@@ -274,12 +273,11 @@ usuwanie obrazów
 
 ![Sprzątanie](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Sprz%C4%85tanie.png)
 
-(Niestety nie mam zrzutu ekranu z analalogicznego czysczenia obrazów)
+(Niestety nie mam zrzutu ekranu z analalogicznego czyszczenia obrazów)
 
 ### LAB 3
 
-
-Wykorzystam programy: irsii z https://github.com/irssi/irssi oraz To Do Web App z https://github.com/devenes/node-js-dummy-test
+Wykorzystałam programy: irsii z https://github.com/irssi/irssi oraz To Do Web App z https://github.com/devenes/node-js-dummy-test
 
 Sklonowałam repozytorium, przeprowadziłam build i doinstalowałam wymagane zależności.
 
@@ -287,7 +285,7 @@ Sklonowałam repozytorium, przeprowadziłam build i doinstalowałam wymagane zal
 
 -git clone https://github.com/devenes/node-js-dummy-test.git 
 
-Przeprowadzamy buildy:
+Przeprowadziłam buildy:
 
 -sudo docker build -t irssibld -f Dockerfile.irssibld
 
@@ -295,6 +293,7 @@ Przeprowadzamy buildy:
 
 Plik Dockerfile.irssibld:
 
+   ```
       FROM fedora:42
       
       RUN dnf -y install git meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils*
@@ -305,8 +304,9 @@ Plik Dockerfile.irssibld:
       
       RUN meson Build
       RUN ninja -C Build
+```
 
-Przeprowadziłąm buildy i testy:
+Przeprowadziłam buildy i testy:
 
 -sudo docker build -t irssitest -f Dockerfile.irssitest 
 
@@ -314,11 +314,13 @@ Przeprowadziłąm buildy i testy:
 
 Plik Dockerfile.irssitest:
 
+      ```
       FROM irssibld
 
       RUN ninja -C Build test
 
       CMD ["/bin/bash"]
+      ```
 
 
 -sudo docker run -t irssitest
@@ -333,6 +335,7 @@ Oraz to samo dla drugiej aplikacji:
 
 Plik Dockerfile.nodebld:
       
+      ```
       FROM node:22.14.0
       
       RUN git clone https://github.com/devenes/node-js-dummy-test
@@ -340,6 +343,7 @@ Plik Dockerfile.nodebld:
       WORKDIR /node-js-dummy-test
 
       RUN npm install
+      ```
 
 -sudo docker build -t nodetest -f Dockerfile.nodetest
 
@@ -347,9 +351,11 @@ Plik Dockerfile.nodebld:
 
 Plik Dockerfile.nodetest:
 
+      ```
       FROM nodebld
       
       RUN npm test
+      ```
 
 -sudo docker run -it nodetest 
 
@@ -359,21 +365,22 @@ Wszystko działa poprawnie.
 
 ### Lab 4
 
-Zaczynam od stworzenia potrzebnych woluminów.
+Zaczełam od stworzenia potrzebnych woluminów.
 
 -sudo docker volume create Vin
 -sudo docker volume create Vout
 
 ![Create Vin, Vout](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Create%20Vin%20Vout.png)
 
-Budujemy obraz cloner:
+Zbudowałam obraz cloner:
 
 -sudo docker build -f Dockerfile.vol -t cloner
 
 ![Cloner build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Cloner%20buid.png)
 
 Plik Dockerfile.vol:
-
+      
+      ```
       FROM fedora:42
       
       RUN dnf update -y -y && dnf -y install git 
@@ -381,6 +388,7 @@ Plik Dockerfile.vol:
       WORKDIR /root/Volumes
             
       CMD git clone https://github.com/devenes/node-js-dummy-test /root/Volumes
+      ```
 
 Teraz uruchomiłam kontener z obrazu cloner i zamontowałam mój wcześniej stworzony wolumin.
 
@@ -396,6 +404,7 @@ Zbudowałam kolejny obraz o nazwie install:
 
 PLik Dockerfile.install:
 
+      ```
       FROM fedora:42
       
       VOLUME /root/TDWA
@@ -407,6 +416,7 @@ PLik Dockerfile.install:
       WORKDIR /root/TDWA/node-js-dummy-test
 
       CMD npm install && cp -r /root/TDWA /root/OUT
+      ```
 
 Na koniec uruchomiłam kontener install montując dwa woluminy:
 
@@ -419,21 +429,21 @@ Podsumowując stworzyliśmy dwa obrazy Docker i uruchomiliśmy kontenery z odpow
 
 ### Eksponowanie Portu
 
-W tej części ćwiczeń wykorzystamy narzędzie do testowania wydaności sieci iperf3.
+W tej części ćwiczeń wykorzystałam narzędzie do testowania wydaności sieci iperf3.
 
-Uruchamiam kontener z serwerem iperf3.
+Uruchamiłam kontener z serwerem iperf3.
 
 -sudo docker run -d --rm --name iperf-server networksattic/iperf3 -s
 
 ![run iperf3](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/run%20iperf3.png)
 
-Sprawdzam IP kontenera
+Sprawdziłam IP kontenera
 
 Uzyskałam adres: 172.17.0.2
 
 ![Adres kontenera Iperf3](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Adres%20Iperf3.png)
 
-Uruchamiam klienta iperf3:
+Uruchamiłam klienta iperf3:
 
 docker urn --rm networkstatic/iper3 -c 172.17.0.2
 
@@ -443,9 +453,9 @@ Uzyskane wyniki:
 
 ![Test z IP](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Test%20z%20IP.png)
 
-Aby uniknac odwoływnaia się po nazwach kontenerów musimy stworzyć swoją sieć mostkową.
+Aby uniknąć odwoływnaia się po IP kontenerów musimy stworzyć swoją sieć mostkową.
 
-Utworzłam sieć iperf-net-test, Uruchomiłam na nim server iperf--server-test i uruchomiłam klienta podając nazwę kontenera.
+Utworzłam sieć iperf-net-test, nastęnie uruchomiłam na nim server iperf--server-test i uruchomiłam klienta podając nazwę kontenera.
 
 ![Stworzenie sieci](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/iperf-network-test.png)
 
@@ -453,7 +463,7 @@ Utworzłam sieć iperf-net-test, Uruchomiłam na nim server iperf--server-test i
 
 ![Klient i wyniki](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Wyniki%20nazwa.png)
 
-Aby wyciagnac wyniki z testu polazenia do logow robie:
+Aby zapisać wyniki testu połączenia do logow zrobiłam:
 
 -sudo docker logs iperf-server-test > iperf3_logs.log
 
@@ -504,7 +514,7 @@ Accepted connection from 172.18.0.1, port 40064
 [  5]   0.00-10.00  sec  15.2 GBytes  13.1 Gbits/sec                  receiver
 ```
 
-Aby połączyc się do serwera iperf3 spoza hosta należy otworzyć port 
+Aby połączyć się do serwera iperf3 spoza hosta należało otworzyć port:
 
 ![Otwarcie portu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/otwarcie%20portu.png)
 
