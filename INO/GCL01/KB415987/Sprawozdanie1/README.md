@@ -292,7 +292,9 @@ Sprawdzenie na hoście czy w woluminie wyjściowym zapisało się repozytorium.
 Można te kroki zautomatyzować korzystająć z Docker BuildKit, tworzymy Dockerfile w którym sklonujemy dane repozytorium na wolumin wejściowy a następnie zbudujemy program i zapiszemy na woluminie wyjściowym. `RUN --mount` __tymczasowo__ zamontuje woluminy, dzięki czemu rozmiar obrazu się nie zwiększy.
 
 ### Iperf
+
 Stworzenie sieci:
+
 ![](resources/lab4/16.png)
 
 ```bash
