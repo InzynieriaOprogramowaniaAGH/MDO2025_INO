@@ -1,0 +1,2 @@
+FROM js_dummy
+RUN npm test
