@@ -1,0 +1,145 @@
+wpisałem po prostu skopiowane zadanie 3, oto odpowiedzi:
+1. Wybór repozytorium
+Repozytorium musi spełniać wymagania:
+✅ Otwartoźródłowe
+✅ Makefile lub inne narzędzie builda
+✅ Zdefiniowane testy
+
+Przykład:
+Projekt "CJSON" (https://github.com/DaveGamble/cJSON)
+
+Język: C
+
+System builda: CMake + Makefile
+
+Testy: CTest (integracja z Makefile
+2. Klonowanie i budowanie
+bash
+Copy
+Edit
+git clone https://github.com/DaveGamble/cJSON.git
+cd cJSON
+mkdir build && cd build
+cmake ..
+make
+3. Uruchomienie testów
+bash
+Copy
+Edit
+ctest --output-on-failure
+lub:
+
+bash
+Copy
+Edit
+make test
+4. Budowanie w kontenerze
+4.1. Uruchomienie kontenera
+bash
+Copy
+Edit
+docker run -it ubuntu bash
+4.2. Instalacja zależności i klonowanie repozytorium
+bash
+Copy
+Edit
+apt update && apt install -y git cmake make gcc
+git clone https://github.com/DaveGamble/cJSON.git
+cd cJSON
+mkdir build && cd build
+cmake ..
+make
+make test
+5. Automatyzacja w Dockerfile
+5.1. Dockerfile do budowania (Dockerfile.build)
+dockerfile
+Copy
+Edit
+FROM ubuntu:latest
+WORKDIR /app
+RUN apt update && apt install -y git cmake make gcc
+RUN git clone https://github.com/DaveGamble/cJSON.git .
+WORKDIR /app/build
+RUN cmake .. && make
+CMD ["bash"]
+Budowanie obrazu:
+
+bash
+Copy
+Edit
+docker build -t cjson-build -f Dockerfile.build .
+5.2. Dockerfile do testowania (Dockerfile.test)
+dockerfile
+Copy
+Edit
+FROM cjson-build
+WORKDIR /app/build
+CMD ["make", "test"]
+Budowanie obrazu testowego:
+
+bash
+Copy
+Edit
+docker build -t cjson-test -f Dockerfile.test .
+Uruchomienie testów:
+
+bash
+Copy
+Edit
+docker run --rm cjson-test
+6. Docker Compose
+Plik docker-compose.yml:
+
+yaml
+Copy
+Edit
+version: '3'
+services:
+  build:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+      - build
+Uruchomienie:
+
+bash
+Copy
+Edit
+docker-compose up --build
+7. Dyskusja na temat wdrażania
+Czy program nadaje się do konteneryzacji?
+Tak, do builda – można go budować w kontenerze.
+
+Nie, do wdrożenia – cJSON to biblioteka, a nie aplikacja serwerowa.
+
+Jak dystrybuować finalny artefakt?
+Biblioteka powinna być udostępniana jako pakiet:
+
+Debian/Ubuntu: dpkg-deb --build
+
+RedHat: rpmbuild -ba
+
+Statyczna/dynamiczna biblioteka: libcjson.a, libcjson.so
+
+Czy konieczne jest czyszczenie builda?
+Tak, jeśli tworzymy końcowy kontener.
+
+W przypadku pakietów .deb/.rpm, lepiej utworzyć trzeci kontener, np.:
+
+dockerfile
+Copy
+Edit
+FROM ubuntu:latest
+COPY --from=cjson-build /app/build/libcjson.so /usr/lib/
+8. Podsumowanie
+✅ Zbudowano i przetestowano program
+✅ Automatyzacja za pomocą Dockerfile
+✅ Docker Compose dla modularności
+✅ Dyskusja o wdrażaniu i dystrybucji
+
+Wniosek: Kontenery są świetne do budowania i testowania, ale dystrybucja wymaga osobnych pakietów .deb/.rpm! 🚀

@@ -1,0 +1,52 @@
+   48  git clone https://github.com/DaveGamble/cJSON.git
+   49  git
+   50  docker
+   51  sudo dnf install git
+   52  git clone https://github.com/DaveGamble/cJSON.git
+   53  cd cJSON
+   54  mkdir build && cd build
+   55  cmake ..
+   56  sudo dnf install cmake
+   57  cmake ..
+   58  sudo dnf install gcc
+   59  cmake ..
+   60  make
+   61  ctest --output-on-failure
+   62  docker run -it ubuntu bash
+   63  ls
+   64  cd cJSON_test
+   65  ls
+   66  nano Makefile
+   67  cd cJSON
+   68  cd ..
+   69  ls
+   70  docker run -it ubuntu bash
+   71  nano Makefile_build.mk
+   72  docker build -t cjson-build -f Dockerfile.build .
+   73* docker build -t cjson-build -f Dockerfile_bild.mk .
+   74  rm Makefile*
+   75  ls
+   76  nano Dockerfile.build
+   77  docker build -t cjson-build -f Dockerfile.build .
+   78  nano Dockerfile.test
+   79  docker build -t cjson-test -f Dockerfile.test .
+   80  docker run --rm cjson-test
+   81  docker build -t cjson-build -f Dockerfile.build .
+   82  docker run -it cjson-build
+   83  history
+   84  nano docker-compose.yml
+   85  docker-compose up
+   86  ls
+   87  docker-compose up
+   88  docker compose version
+   89  docker-compose --version
+   90  docker --version
+   91  docker compose version
+   92  sudo dnf install docker-compose-plugin
+   93  sudo dnf update
+   94  docker compose version
+   95  sudo dnf install docker-compose-plugin
+   96  sudo dnf install docker-compose
+   97  nano docker-compose.yml
+   98  docker-compose up
+   99  history
