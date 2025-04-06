@@ -126,7 +126,7 @@ Mój githook weryfikuje czy każdy mój commit message rozpoczyna się od kombin
 
 Treść mojego git hooka:
 
-    ```  #!/bin/bash
+     #!/bin/bash
       COMMIT_MSG_FILE=$1
       COMMIT_MSG=$(cat $COMMIT_MSG_FILE)
       PREFIX="MK414948"
@@ -135,7 +135,7 @@ Treść mojego git hooka:
           echo "ERROR: Commit message must start with '$PREFIX'"
           echo "Przykład poprawnego commit message: '$PREFIX: Dodano nowy plik'"
           exit 1
-      fi ```
+      fi 
 
 
 Przykłady poprawnego działania git hooka:
@@ -230,7 +230,7 @@ W kolejnym zadaniu celem było utworzenie własnego obrazu umożliwiającego wł
 
 W celu utworzenia kontenera pobierającego nasze repozytorium przedmiotowe utworzyłam następujący plik Dockerfile:
       
-     ``` FROM fedora:41
+      FROM fedora:41
       
       RUN dnf update -y && dnf install git -y
       
@@ -238,7 +238,7 @@ W celu utworzenia kontenera pobierającego nasze repozytorium przedmiotowe utwor
       
       RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
       
-      CMD ["/bin/bash"]```
+      CMD ["/bin/bash"]
       
 
 Kolejno zbudowałam obraz z naszego Dockerfile:
@@ -293,7 +293,7 @@ Przeprowadziłam buildy:
 
 Plik Dockerfile.irssibld:
 
-   ```
+   
       FROM fedora:42
       
       RUN dnf -y install git meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils*
@@ -304,7 +304,7 @@ Plik Dockerfile.irssibld:
       
       RUN meson Build
       RUN ninja -C Build
-```
+
 
 Przeprowadziłam buildy i testy:
 
@@ -314,13 +314,12 @@ Przeprowadziłam buildy i testy:
 
 Plik Dockerfile.irssitest:
 
-      ```
+      
       FROM irssibld
 
       RUN ninja -C Build test
 
       CMD ["/bin/bash"]
-      ```
 
 
 -sudo docker run -t irssitest
@@ -335,7 +334,6 @@ Oraz to samo dla drugiej aplikacji:
 
 Plik Dockerfile.nodebld:
       
-      ```
       FROM node:22.14.0
       
       RUN git clone https://github.com/devenes/node-js-dummy-test
@@ -343,7 +341,7 @@ Plik Dockerfile.nodebld:
       WORKDIR /node-js-dummy-test
 
       RUN npm install
-      ```
+    
 
 -sudo docker build -t nodetest -f Dockerfile.nodetest
 
@@ -351,11 +349,9 @@ Plik Dockerfile.nodebld:
 
 Plik Dockerfile.nodetest:
 
-      ```
       FROM nodebld
       
       RUN npm test
-      ```
 
 -sudo docker run -it nodetest 
 
@@ -380,7 +376,6 @@ Zbudowałam obraz cloner:
 
 Plik Dockerfile.vol:
       
-      ```
       FROM fedora:42
       
       RUN dnf update -y -y && dnf -y install git 
@@ -388,7 +383,7 @@ Plik Dockerfile.vol:
       WORKDIR /root/Volumes
             
       CMD git clone https://github.com/devenes/node-js-dummy-test /root/Volumes
-      ```
+    
 
 Teraz uruchomiłam kontener z obrazu cloner i zamontowałam mój wcześniej stworzony wolumin.
 
@@ -403,8 +398,7 @@ Zbudowałam kolejny obraz o nazwie install:
 ![Install build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MK414948/ITE/GCL04/MK414948/Sprawozdanie1/screenshoty/Install%20build.png)
 
 PLik Dockerfile.install:
-
-      ```
+      
       FROM fedora:42
       
       VOLUME /root/TDWA
@@ -416,7 +410,7 @@ PLik Dockerfile.install:
       WORKDIR /root/TDWA/node-js-dummy-test
 
       CMD npm install && cp -r /root/TDWA /root/OUT
-      ```
+      
 
 Na koniec uruchomiłam kontener install montując dwa woluminy:
 
