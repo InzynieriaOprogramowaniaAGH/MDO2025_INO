@@ -250,7 +250,7 @@ Pomocna komenda pozwalająca podłączyć się do działającego kontenera jeśl
 docker attach cont_lab4
 ```
 ![](resources/lab4/6.png)
-###
+
 
 Budowanie projektu w kontenerze:
 ![](resources/lab4/7.png)
@@ -317,6 +317,7 @@ iperf3 -c 192.168.1.105
 ```
 Można zobaczyć prędkość połączenia między moim laptopem z Windowsem, a serwerem w kontenerze na maszynie wirtualnej.
 ![](resources/lab4/28.png)
+
 Połączenie VM-ki z serwerem jest dużo szybsze niż mojego laptopa z tym serwerem.
 
 Sprawdzenie logów serwera:
@@ -325,11 +326,12 @@ Sprawdzenie logów serwera:
 
 
 
-
 ### Jenkins
 Instalację Jenkins przeprowadziłem wg instrukcji w dokumentacji: https://www.jenkins.io/doc/book/installing/docker/
 
+
 Utworzenie sieci:
+
 ![](resources/lab4/21.png)
 
 Utworzenie kontenera z obrazem docker:dind
@@ -357,16 +359,14 @@ RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
 Zbudowanie obrazu komendą:
 
 ```bash
-docker build -t myjenkins-blueocean:2.492.3-1 .
+docker build -t myjenkins-blueocean:2.492.3-1 -f Dockerfile.jenkins .
 ```
-
-
 ![](resources/lab4/24.png)
 
-Uruchomienie kontenera z tym obrazem
+Uruchomienie kontenera z tym obrazem:
+
 ![](resources/lab4/25.png)
 ![](resources/lab4/26.png)
  
-
 Jenkins działa i jest dostępny pod `localhost:8081`, (bo przekierowałem port):
 ![](resources/lab4/27.png)
