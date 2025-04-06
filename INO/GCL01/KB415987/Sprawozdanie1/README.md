@@ -299,22 +299,32 @@ Stworzenie sieci:
 docker network create --driver bridge siec_iperf
 ```
 
-Uruchomienie kontenera z serwerem
+Uruchomienie kontenera z serwerem:
+
 ![](resources/lab4/17.png)
 
 Utworzenie kontenera z klientem do testowania połączenia:
+
 ![](resources/lab4/18.png)
 
 Połączenie się z hosta:
+
 ![](resources/lab4/19.png)
+
 Aby przeprowadzić operację połączenia się z Windowsa do serwera musiałem najpierw doinstalować iperf3 na Windowsie
+
 ![](resources/lab4/20.png)
+
 Oraz przekierować port 5201
+
 ![](resources/lab4/29.png)
-Po wpisaniu komendy
+
+Po wpisaniu komendy:
+
 ```PS
 iperf3 -c 192.168.1.105
 ```
+
 Można zobaczyć prędkość połączenia między moim laptopem z Windowsem, a serwerem w kontenerze na maszynie wirtualnej.
 ![](resources/lab4/28.png)
 
