@@ -1,22 +1,4 @@
-# header 1
-## header 2
-### header 3
-`Jakas nazwa`
 
-```bash
-cd ..
-```
-
-```dockerfile
-FROM fedora:latest
-```
-
-### docker-compose
-```yml
-services: 
-
-
-```
 
 # Sprawozdanie 1
 ## Lab 1 - Wprowadzenie, Git, Gałęzie, SSH
@@ -111,7 +93,7 @@ Zaprezentowano działanie Githooka
 ![ss22](ss/Screenshot22.png)
 
 
-## 2. Docker
+## Lab 2 - Docker
 
 #### Zainstalowano docker
 ![ss23](ss/Screenshot23.png)
@@ -135,7 +117,8 @@ Zaprezentowano działanie Githooka
 #### Zaktualizowano pakiety
 ![ss29](ss/Screenshot29.png)
 
-#### 
+#### Skrypt 
+Dockerfile na podstawie obrazu Fedora. Instalowane tam są aktualizacje oraz git, a repozytorium jest klonowane.
 
 ```Dockerfile
 FROM fedora:latest
@@ -145,49 +128,129 @@ RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git .
 CMD ["/bin/bash"]
 ```
 
+
+#### Zbudowano obraz na podstawie dockerfile
+
 ![ss31](ss/Screenshot31.png)
+
+#### Stworzono i uruchomiono kontener
 ![ss32](ss/Screenshot32.png)
+
+#### Wyczyszczono kontenery
 ![ss33](ss/Screenshot33.png)
+
+#### Wyczyszczono obrazy
 ![ss34](ss/Screenshot34.png)
 
-# class003
+## Lab 3 - Dockerfiles, kontener jako definicja etapu
+Wykorzystano repo `doctest` `https://github.com/doctest/doctest`
 
+
+#### Sklonowano repozytorium, doinstalowano odpowiednie zależności oraz zbudowano projekt
 ![alt text](<ss/class003/Screenshot 2025-03-27 163416.png>)
-![alt text](<ss/class003/Screenshot 2025-03-27 163927.png>) 
+
+#### Uruchomiono testy znajdujące się w projekcie
+![alt text](<ss/class003/Screenshot 2025-03-27 163927.png>)
+
+#### Następnie zrobiono to samo, tylko w kontenerze
 ![alt text](<ss/class003/Screenshot 2025-03-27 164511.png>) 
-![alt text](<ss/class003/Screenshot 2025-03-27 164852.png>) 
+![alt text](<ss/class003/Screenshot 2025-03-27 164852.png>)   
 ![alt text](<ss/class003/Screenshot 2025-03-27 165446.png>) 
+
+#### Stworzono dwa dockerfile
+Pierwszy z nich wykonuje kroki do builda, a drugi wykonuje testy
+
+#### Następnie zbudowano i wdrożono kontenery
+
+
 ![alt text](<ss/class003/Screenshot 2025-03-30 220708.png>) 
 ![alt text](<ss/class003/Screenshot 2025-03-30 221045.png>) 
 ![alt text](<ss/class003/Screenshot 2025-03-30 221100.png>) 
+
+Można zauważyć poprawne działanie kontenerów
+
+#### Zbudowano kontenery używając `docker compose`
 ![alt text](<ss/class003/Screenshot 2025-03-30 222058.png>) 
 ![alt text](<ss/class003/Screenshot 2025-03-30 222114.png>) 
+
+
+
+#### Na koniec labów usunięto kontenery używając `docker compose down`
+
 ![alt text](<ss/class003/Screenshot 2025-03-30 222452.png>) 
 
 
-# class004
+### Czy program nadaje się do wdrażania i publikowania jako kontener, czy taki sposób interakcji nadaje się tylko do builda?
+
+Ten program nie nadaje się do wdrożenia jako kontener działający samodzielnie. W tym przypadku konteneryzacja znajduje zastosowanie głównie do budowania i testowania - doctest nie stanowi samodzielnej aplikacji serwerowej czy interfejsu użytkownika, ponieważ jest to framework testowy dla C++. 
+
+
+
+### Jeżeli program miałby być publikowany jako kontener - czy trzeba go oczyszczać z pozostałości po buildzie?
+
+Usunięcie niepotrzebnych plików byłoby dobrą praktyką
+
+
+### Jak przygotować finalny artefakt?
+
+- jako pakiet systemowy (np. .deb)
+
+- jako biblioteka nagłówkowa (np. doctest.h)
+
+- w formie archiwum (np. .zip)
+
+- można przygotować osobny kontener (np. doctest-package), którego jedynym celem będzie budowanie i pakowanie projektu do jednej z powyższych form
+
+
+## Lab 4 - Dodatkowa terminologia w konteneryzacji, instancja Jenkins
+
+#### Stworzono dwa woluminy - wyjściowy i wejściowy
 
 ![alt text](<ss/class004/Screenshot 2025-03-30 223958.png>) 
+
+
+
+#### Stworzono dockerfile, który wykorzystano do uruchomienia kontenera i przedstawiono wymagania wstępne
 ![alt text](<ss/class004/Screenshot 2025-03-30 225019.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-30 225335.png>) 
+
+#### Sklonowano repozytorium na wolumin zewnętrzny z pomocą kontenera `alpine/git`
 ![alt text](<ss/class004/Screenshot 2025-03-30 230427.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-30 230516.png>) 
+
+
+#### Uruchomiono builda w kontenerze, skopiowano repozytorium do kontenera oraz skopiowano build do woluminu wyjściowego
+
 ![alt text](<ss/class004/Screenshot 2025-03-30 231443.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-30 231554.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-30 231820.png>) 
+
+#### Następnie zrobiono to samo, ale z użyciem gita w kontenerze
 ![alt text](<ss/class004/Screenshot 2025-03-30 232018.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-30 232256.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-30 232507.png>) 
+
+#### Zainstalowano iperf3, uruchomiono kontenery, a następnie zbadano ruch
 ![alt text](<ss/class004/Screenshot 2025-03-30 232802.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-30 233234.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-30 233242.png>) 
+
+#### Stworzeno dedykowaną sieć mostkową oraz użyto rozwiązywania nazw (`localhost`)
 ![alt text](<ss/class004/Screenshot 2025-03-30 233551.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-30 235156.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-30 235205.png>) 
+
+#### Połączono się spoza kontenera (z hosta i spoza hosta)
 ![alt text](<ss/class004/Screenshot 2025-03-30 235552.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-31 000028.png>) 
+
+#### Wyświetlono logi z pliku `logs.txt`
 ![alt text](<ss/class004/Screenshot 2025-03-31 000106.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-31 000534.png>) 
+
+#### Zainstalowano Jenkinsa
+
+Następne operacje opierały się na instrukcji `https://www.jenkins.io/doc/book/installing/docker/`
 ![alt text](<ss/class004/Screenshot 2025-03-31 171532.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-31 171701.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-31 171850.png>) 
@@ -195,12 +258,30 @@ CMD ["/bin/bash"]
 ![alt text](<ss/class004/Screenshot 2025-03-31 172448.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-31 172814.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-31 172829.png>) 
-![alt text](<ss/class004/Screenshot 2025-03-31 172851.png>) 
+![alt text](<ss/class004/Screenshot 2025-03-31 172851.png>)
 ![alt text](<ss/class004/Screenshot 2025-03-31 172909.png>) 
+
+#### Usługa ssh w kontenerze, połączenie
 ![alt text](<ss/class004/Screenshot 2025-03-31 173158.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-31 173610.png>) 
 ![alt text](<ss/class004/Screenshot 2025-03-31 173734.png>) 
 
+
+
+### Co jest potrzebne by w naszym Jenkinsie uruchomić Dockerfile dla buildera?
+
+Dostęp do dockera (socket /var/run/docker.sock) i instalacja odpowiednich pluginów Jenkinsa
+
+### Co jest potrzebne w Jenkinsie by uruchomić Docker Compose?
+
+Trzeba w kontenerze zainstalować docker-compose i upewnić się czy ma dostęp do socketa dockera
+
+.
+.
+
+
+
+# HISTORIA POLECEŃ
 ```bash
     1  sudo dnf install openssh-server
     2  sudo systemctl enable --now sshd
