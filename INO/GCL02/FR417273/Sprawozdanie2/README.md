@@ -1,4 +1,4 @@
-# Sprawozdanie z laboratoriów: Pipeline, Jenkins, izolacja etapów
+![image](https://github.com/user-attachments/assets/ea183fde-00af-404e-9aeb-1ad1723ba736)# Sprawozdanie z laboratoriów: Pipeline, Jenkins, izolacja etapów
 - Przedmiot: DevOps
 - Kierunek: Inżynieria Obliczeniowa
 - Autor: Filip Rak
@@ -46,7 +46,7 @@
   - *Zrzut erkanu uruchomienia kontnera `jenkins-bluocean`*:
     
     ![Zrzut ekranu z tworzenia kontenerów 2](media/m2_ocean.png)
-  - Na hoście maszyny wirtualnej, prxzez przeglądarkę,  odwiedzono interfejs **Jenkinsa** pod adresem maszyny: `192.168.1.102:8080`
+- Na hoście maszyny wirtualnej, przez przeglądarkę,  odwiedzono interfejs **Jenkinsa** pod adresem maszyny: `192.168.1.102:8080`
   - *Zrzut ekranu strony logowania*:
  
     ![Zrzut ekranu strony logowania](media/m3_unlock.png)
@@ -59,4 +59,26 @@
   - *Zrzut erkanu z instalacji pluginów:*
 
     ![Zrzut ekranu konfiguracji](media/m5_getting_started.png)
-  - 
+- Wykonanno kilka projektów testowych:
+  - Utworzono projekt, który wyświetla `uname` w konsoli.
+    - *Zrzut ekranu konsoli projektu*:
+
+      ![Zrzut ekranu konsoli projektu](media/m6_uname.png)
+  - Utworzono projekt, który wypisuje w konsoli czy godzina jest parzysta czy nie.
+      ```
+      #!/bin/bash
+      HOUR=$(date +%H)
+      if [ $((10#$HOUR % 2)) -ne 0 ]; then
+      echo "Hour is odd: $HOUR"
+        exit 1
+      else
+        echo "Hour is even: $HOUR"
+      fi
+      ```
+    - *Zrzut ekranu z godziną*:
+
+      ![Zrzut ekranu z godziną](media/m7_hour.png)
+  - Utworzono projekt, który ściąga obraz ubuntu dockera, poleceniem `docker pull ubuntu`.
+    - *Zrzut ekranu projektu:*
+
+      ![Zrzut ekranu pull ubuntu](media/m8_pull.png)
