@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if ! grep -q "^MG414364" "$1"; then
+	echo "Bad commit!"
+	exit 1
+fi
+
+exit 0
