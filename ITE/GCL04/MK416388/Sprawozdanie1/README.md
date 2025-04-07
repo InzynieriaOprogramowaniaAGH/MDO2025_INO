@@ -1,13 +1,14 @@
-Tutaj jest mój plik commit message
-#!usr/bin/sh
+Sprawozdanie nr 1 z Przedmiotu DevOps
 
-EXPECTED_PREFIX="MK416388"
+Kierunek: Informatyka Techniczna
 
-COMMIT_MSG=$(cat "$1")
+Grupa 4
 
-if [[ "$COMMIT_MSG" != $EXPECTED_PREFIX* ]]; then
-    echo "Błąd: Commit message musi zaczynać się od "$EXPECTED_PREFIX"!"
-    exit 1
-fi
+Marcin Król
 
-exit 0
+
+## Zajecia 1
+
+1.
+
+![](Screeny/1.jpg)
