@@ -3,31 +3,31 @@
 ---
 1. Zainstalowano klienta Git i obsługę kluczy SSH.
 
-![Opis obrazka](ITE/GCL05/SO417771/Sprawozdanie1/lab1/lab1.2.png)
+![Opis obrazka](lab1/lab1.2.png)
 
-![Opis obrazka](ITE/GCL05/SO417771/Sprawozdanie1/lab1/lab1.1.png)
+![Opis obrazka](lab1/lab1.1.png)
 
 2. Sklonowano repozytorium za pomocą HTTPS i personal access token.
 
-![Opis obrazka](ITE/GCL05/SO417771/Sprawozdanie1/lab1/lab1.5.png)
+![Opis obrazka](lab1/lab1.5.png)
 
 3. Utworzono dwa klucze SSH, inne niż RSA, w tym co najmniej jeden zabezpieczony hasłem. Skonfigurowano klucz SSH jako metodę dostępu do GitHuba. Sklonowano repozytorium z wykorzystaniem protokołu SSH oraz skonfigurowano 2FA.
 
-## ECDSA
+- ***ECDSA***
 
-![Opis obrazka](ITE/GCL05/SO417771/Sprawozdanie1/lab1/lab1.4.png)
+![Opis obrazka](lab1/lab1.4.png)
 
 ECDSA to algorytm oparty na krzywych eliptycznych, który oferuje dobrą wydajność i bezpieczeństwo przy krótkich kluczach, ale jest mniej powszechny niż ED25519.
 
-## ED25519
+- ***ED25519***
 
-![Opis obrazka](ITE/GCL05/SO417771/Sprawozdanie1/lab1/lab1.3.png)
+![Opis obrazka](lab1/lab1.3.png)
 
 ED25519 to nowoczesny i bezpieczny algorytm, który zapewnia wyższą odporność na ataki i jest rekomendowany do używania w SSH ze względu na swoją szybkość i efektywność.
 
 4. Przełączono się na gałąź main, a następnie na grupową gałąź GCL05, gdzie utworzono gałąź o nazwie SO417771 
 
-![Opis obrazka](ITE/GCL05/SO417771/Sprawozdanie1/lab1/lab1.8.png)
+![Opis obrazka](lab1/lab1.8.png)
 
 5. Praca na nowej gałęzi
 
@@ -36,7 +36,7 @@ ED25519 to nowoczesny i bezpieczny algorytm, który zapewnia wyższą odpornoś�
 - Dodadano ten skrypt do stworzonego wcześniej katalogu.
 - Skopiowanao go we właściwe miejsce, tak by uruchamiał się za każdym razem przy commit'cie.
 
-## Treść Git hooka
+### Treść Git hooka
 
 ```sh
 
@@ -57,11 +57,11 @@ exit 0
 
 ```
 
-## Test napisanego Git hooka
+### Test napisanego Git hooka
 
  Test potwierdzaja poprawność napisanego Git hooka
 
-![Opis obrazka](ITE/GCL05/SO417771/Sprawozdanie1/lab1/lab1.7.png)
+![Opis obrazka](lab1/lab1.7.png)
 
 
 # Zajęcia 02
