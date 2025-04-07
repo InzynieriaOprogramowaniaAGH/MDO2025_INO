@@ -48,7 +48,9 @@ LAB 3
 ![image](https://github.com/user-attachments/assets/92769b80-6c5c-44b2-8105-7e2d44fbd989)
 
 *Dowód na poprawnie wykonane zadanie:
+
 ![image](https://github.com/user-attachments/assets/d45c5e87-8e7f-450b-913f-e3866f16d343)
+
 W kontenerach widzimy folder target, który świadczy o poprawnej kompilacji
 
 
