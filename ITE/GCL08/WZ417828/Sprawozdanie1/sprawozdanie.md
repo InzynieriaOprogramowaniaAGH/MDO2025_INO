@@ -1,6 +1,5 @@
 # Sprawozdanie 1
 #### Wojciech Zacharski ITE gr. 10
-
 <br>
 
 ## Laboratorium nr 1
@@ -36,6 +35,7 @@ Konfiguracja 2FA
 ![s8](../Sprawozdanie1/Sprawozdanie1_img/s1_8.png)
 
 Utworzenie katalogu
+<br>
 ![s9](../Sprawozdanie1/Sprawozdanie1_img/s1_9.png)
 
 
@@ -45,6 +45,7 @@ Utworzenie nowego git hooka
 ![s10](../Sprawozdanie1/Sprawozdanie1_img/s1_10.png)
 
 Treść git hooka
+<br>
 ```bash
 #!/bin/sh
 if ! grep -q "WZ417828" "$1"; then
@@ -53,7 +54,6 @@ if ! grep -q "WZ417828" "$1"; then
 fi
 ```
 Sprawdzenie poprawności działania
-
 ![s3](../Sprawozdanie1/Sprawozdanie1_img/s1_13.png)
 
 **6. Wypchnięcie gałęzi**
@@ -106,7 +106,7 @@ For more examples and ideas, visit:
 ```
 
 Zalogowanie się do dockera
-
+<br>
 ![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_3.png)
 
 **2. Pobieranie obrazów**
@@ -132,7 +132,7 @@ mysql
 
 ![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_10.png)
 
-wywołaenie rumeru wersji
+Wywołaenie rumeru wersji
 ![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_11.png)
 
 **4. Urochomienie obrazu systemu operacyjnego**
@@ -148,9 +148,9 @@ Aktualizacja pakietów w konenerze
 
 
 
-**5. Stworzenie dockerfile**
+**5. Stworzenie Dockerfile**
 
-Treść
+Treść Dockerfile
 ![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_15.png)
 
 
@@ -167,9 +167,9 @@ Urochomienie obrazu w konenerze i sprawdzenie, czy zostało pobrane repozytorium
 **6. Działające konenery**
 
 ![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_18.png)
-
-można również wykorzystać polecenie ```bash
-$ sudo docker ps -a```
+<br>
+Można również wykorzystać polecenie 
+```$ sudo docker ps -a```
 
 ## Laboratorium nr 3
 
@@ -218,6 +218,8 @@ Uruchomienie kontenera zawierającego testy
 
 ## Laboratorium nr 4
 
+### Zachowywanie stanu
+
 **1. Przygotowanie woluminu wejściowego i wyjściowego**
 
 ![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_1.png)
@@ -255,7 +257,71 @@ Instalacja gita
 <br>
 ![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_9.png)
 
-
+Zklonowanie repozytorium za pomocą HTTPS do woluminu
 ![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_10.png)
 
+### Eksponowanie portu
+
+**1. Uruchomienie serwera wewnątrz kontenera**
+
+Uruchomienie kontenera i pobranie potrzebnych narzędzi
 ![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_11.png)
+
+Efekt uruchomienia kontenera
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_12.png)
+
+**2. Połączenie z innego kontenera**
+
+Uruchomienie kontenera wraz z niezbędnymi zależnościami
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_13.png)
+
+Potwierdzenie połączenia 
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_14.png)
+
+**3. Połączenie za pomocą sieci ```network create```**
+
+Utworzenie sieci
+</br>
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_15.png)
+
+Uruchomienie kontenera serwerowego
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_17.png)
+
+Uruchomienie kontenera służącego do połączenia z serwerem
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_16.png)
+
+**4. Połączenie z hosta**
+
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_18.png)
+Wystąpił problem z widocznością portu. Rozwiązaniem było uruchomienie kontenera z widocznym portem
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_19.png)
+
+Wynik połączenia na hoście
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_20.png)
+
+Wynik połączenia w konenerze
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_21.png)
+
+**5. Instalacja Jenkinsa**
+
+Utworzenie sieci
+</br>
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_22.png)
+
+Uruchomienie kontener DIND (Docker in Docker):
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_27.png)
+
+Makefile z jenkinsem
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_28.png)
+
+Zbudowanie obrazu
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_29.png)
+
+Uruchomienie kontenera
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_30.png)
+
+Dodanie portu do NAT w VirtualBox
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_25.png)
+
+Strona logowania
+![s1](../Sprawozdanie1/Sprawozdanie4_img/s4_26.png)
