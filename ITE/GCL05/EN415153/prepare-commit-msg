@@ -1,0 +1,12 @@
+#!/bin/bash
+
+PREFIX="EN415153"
+COMMIT_MSG_FILE="$1"
+FIRST_LINE=$(head -n 1 "$COMMIT_MSG_FILE")
+
+if [[ ! "$FIRST_LINE" =~ ^"$PREFIX" ]]; then
+    echo "Commit musi zaczynac sie od: '$PREFIX'"
+    exit 1
+fi
+
+exit 0
