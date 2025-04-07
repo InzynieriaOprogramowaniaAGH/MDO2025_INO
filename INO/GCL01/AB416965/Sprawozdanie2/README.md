@@ -98,3 +98,48 @@ Podobnie jak w przypadku sprawdzenia systemu utworzyłem nowy projekt w Jenkinsi
 Ostatnim skryptem do utworzenia było pobranie obrazu ubuntu za pomocą `docker pull ubuntu`, które przebiegło poprawnie. To taki ostateczny test, że Jenkins ma połączenie z internetem.
 
 ![Pobranie ubuntu](zrzuty5/zrzut_ekranu10.png)
+
+### 3. Pipeline
+
+Pipeline to ciąg instrukcji autoatyzujący proces pobierania/instalacji oprogramowania.
+
+Utworzyłem obiekt typu pipeline i wpisałem poniższy ciąg komend. Ten pipline klonuje repozytorium przedmiotu `MDO2025_INO` i robi chceckout na mój branch `AB416965`. Następnie korzystając z `Dockerfile.build` stworzonego wcześniej dla repozytorium [cJSON](https://github.com/DaveGamble/cJSON) wykonuje build.
+
+Pipeline:
+
+```bash
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = 'cjson-builder-image'
+        BUILD_CONTEXT = 'INO/GCL01/AB416965/Sprawozdanie1/Dockerfiles/cjson'
+        DOCKERFILE_PATH = "${BUILD_CONTEXT}/Dockerfile.build"
+    }
+
+    stages {
+        stage('Klonowanie repo') { 
+            steps {
+                git branch: 'AB416965', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Budowanie obrazu buildera') {
+            steps {
+                sh '''
+                    docker build -t ${IMAGE_NAME} \
+                    -f ${DOCKERFILE_PATH} \
+                    ${BUILD_CONTEXT}
+                '''
+            }
+        }
+    }
+}
+```
+Pipeline przeszedł bez problemu, chwilę mu to zajęło z powodu pobrania wszystkich zależności umieszczonych w `Dockerfile.build`.
+
+![Build #1](zrzuty5/zrzut_ekranu12.png)
+
+Rebuild tego pipeline również odbył się bez problemu. Tym razem zajęło mu to znacznie mniej czasu. Wynika to z wykorzystania mechanizmu cache'owania warstw Dockera – kroki, które nie uległy zmianie (np. instalacja pakietów, klonowanie repozytorium) zostały pominięte dzięki buforowaniu.
+
+![Build #2](zrzuty5/zrzut_ekranu13.png)
