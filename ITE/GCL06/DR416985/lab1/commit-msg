@@ -1,0 +1,11 @@
+#!/bin/sh
+
+commit_msg=$(cat "1$")
+
+if [[ ! $COMMIT_MESSAGE =~ ^DR416985 ]]; then
+        echo "ERROR:  co ty robisz typie DR.."
+        exit 1 
+fi
+
+exit 0
+
