@@ -44,6 +44,7 @@ Utworzenie katalogu
 ![s9](../Sprawozdanie1/Sprawozdanie1_img/s1_9.png)
 
 
+
 **5. Praca na lokalnej gałęzi**
 
 Utworzenie nowego git hooka
