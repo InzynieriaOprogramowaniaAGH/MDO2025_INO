@@ -1,0 +1,125 @@
+Przygotowanie do wdrożenia (deploy): dyskusja
+1. Czy program nadaje się do wdrażania jako kontener?
+W przypadku jq - narzędzia wiersza poleceń do przetwarzania JSON - wdrożenie jako kontener ma zarówno zalety, jak i wady:
+
+Zalety:
+
+Możliwość zapewnienia spójnego środowiska wykonawczego na różnych systemach
+
+Łatwe zarządzanie wersjami (różne wersje jq jako różne obrazy)
+
+Możliwość użycia jako część większych potoków przetwarzania danych
+
+Wady:
+
+Narzędzie CLI jest zwykle używane interaktywnie, co może być mniej wygodne w kontenerze
+
+Overhead kontenera dla prostego narzędzia single-purpose
+
+Utrata niektórych funkcjonalności (np. integracji z powłoką)
+
+Wnioski: jq lepiej sprawdza się jako tradycyjny pakiet systemowy (DEB/RPM), ale wersja kontenerowa może być użyteczna w specyficznych scenariuszach, np. w potokach CI/CD.
+
+2. Przygotowanie finalnego artefaktu
+Dla jq można rozważyć kilka ścieżek:
+
+a) Kontener wykonawczy:
+
+Oparty na minimalnej bazie (Alpine)
+
+Zawierający tylko skompilowany binarny jq
+
+Możliwość użycia jako narzędzie w potokach:
+docker run jq -r '.field' input.json
+
+b) Pakiety systemowe:
+
+Generowanie pakietów DEB/RPM w kontenerze buildowym
+
+Publikacja do repozytoriów pakietów
+
+c) Binaria standalone:
+
+Statycznie linkowana wersja do dystrybucji
+
+3. Oczyszczanie po buildzie
+Jeśli zdecydujemy się na kontener wykonawczy:
+
+Należy usunąć narzędzia developerskie (kompilatory, biblioteki dev)
+
+Można użyć wieloetapowego builda:
+
+dockerfile
+Copy
+FROM ubuntu as builder
+# ... build steps ...
+
+FROM alpine:latest
+COPY --from=builder /usr/local/bin/jq /usr/bin/jq
+4. Oddzielne ścieżki dla builda i deploya
+Warto rozważyć oddzielne Dockerfile:
+
+Dockerfile.build - pełne środowisko buildowe
+
+Dockerfile.runtime - minimalny obraz wykonawczy
+
+5. Dystrybucja jako pakiety
+Dla jq najbardziej odpowiednie byłyby:
+
+Pakiety systemowe (DEB/RPM) - główna dystrybucja
+
+Binaria statyczne - dla użytkowników bez uprawnień admina
+
+Kontener - dla środowisk zarządzanych przez orchestrację
+
+6. Implementacja wieloetapowa
+Przykładowa struktura:
+
+Dockerfile.build:
+
+dockerfile
+Copy
+FROM ubuntu:latest as builder
+# ... instalacja zależności buildowych ...
+# ... kroki buildowe ...
+Dockerfile.package:
+
+dockerfile
+Copy
+FROM builder as packager
+# ... generowanie pakietów DEB/RPM ...
+Dockerfile.runtime:
+
+dockerfile
+Copy
+FROM alpine:latest
+COPY --from=builder /usr/local/bin/jq /usr/bin/jq
+ENTRYPOINT ["jq"]
+7. Zalecane podejście
+Dla jq rekomendowałbym:
+
+Główna dystrybucja przez pakiety systemowe
+
+Kontener jako opcja dodatkowa
+
+Proces:
+
+Build w dedykowanym kontenerze
+
+Generowanie pakietów w etapie pośrednim
+
+Tworzenie minimalnego obrazu wykonawczego
+
+Publikacja wszystkich artefaktów
+
+Przykład CI/CD:
+
+Kontener buildowy → artefakt: binaria
+
+Kontener pakujący → artefakt: .deb/.rpm
+
+Kontener wykonawczy → artefakt: obraz Docker
+
+Publikacja wszystkich do repozytoriów
+
+Taka strategia zapewnia maksymalną elastyczność dystrybucji przy zachowaniu zasad czystego separowania środowisk.

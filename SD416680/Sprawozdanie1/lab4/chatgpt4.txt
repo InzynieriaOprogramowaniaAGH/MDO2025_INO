@@ -1,0 +1,215 @@
+ Konteneryzacja: Terminologia, Jenkins i Eksperymenty z Dockerem
+Poniżej znajduje się szczegółowy przewodnik krok po kroku na temat woluminów, sieci, Jenkins, komunikacji oraz uruchamiania usług w kontenerach.
+
+1️⃣ Zachowywanie stanu (Woluminy)
+Dokumentacja:
+📌 Volumes
+📌 Bind mounts
+📌 RUN --mount
+
+📌 Tworzenie woluminów wejściowego i wyjściowego
+🔹 Wolumin wejściowy – do przechowywania kodu źródłowego
+🔹 Wolumin wyjściowy – do przechowywania wyników kompilacji
+
+bash
+Copy
+Edit
+docker volume create vol_input
+docker volume create vol_output
+📌 Sprawdzenie utworzonych woluminów
+
+bash
+Copy
+Edit
+docker volume ls
+📌 Uruchomienie kontenera i podłączenie woluminów
+bash
+Copy
+Edit
+docker run -it --rm \
+    -v vol_input:/app/src \
+    -v vol_output:/app/build \
+    ubuntu bash
+✅ Teraz możemy pracować wewnątrz kontenera!
+
+📌 Klonowanie repozytorium do woluminu wejściowego
+🔹 Możemy to zrobić spoza kontenera:
+
+bash
+Copy
+Edit
+git clone https://github.com/example/repo.git $(docker volume inspect vol_input --format '{{ .Mountpoint }}')
+🔹 Lub wewnątrz kontenera (wymaga git):
+
+bash
+Copy
+Edit
+apt update && apt install -y git
+cd /app/src
+git clone https://github.com/example/repo.git .
+✅ Kod źródłowy znajduje się teraz w woluminie wejściowym!
+
+📌 Uruchomienie buildu i zapis wyników na wolumin wyjściowy
+bash
+Copy
+Edit
+cd /app/src
+make build
+cp -r build /app/build
+📌 Teraz pliki wynikowe są w vol_output i dostępne poza kontenerem!
+
+2️⃣ Eksponowanie portu: iPerf
+📌 Dokumentacja iPerf
+
+📌 Uruchomienie serwera iperf3 w kontenerze
+bash
+Copy
+Edit
+docker run --rm -it --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+📌 Serwer działa i czeka na połączenia na porcie 5201!
+
+📌 Połączenie z serwerem z drugiego kontenera
+bash
+Copy
+Edit
+docker run --rm networkstatic/iperf3 -c 172.17.0.2
+📌 Zmierzyliśmy przepustowość sieci w kontenerach!
+
+3️⃣ Dedykowana sieć Docker (network create)
+📌 Docker Networks
+
+📌 Tworzymy własną sieć mostkową
+bash
+Copy
+Edit
+docker network create my_network
+📌 Uruchomienie serwera iperf3 w nowej sieci
+bash
+Copy
+Edit
+docker run --rm -it --network my_network --name iperf-server networkstatic/iperf3 -s
+📌 Połączenie klienta przez nazwę hosta (zamiast IP!)
+bash
+Copy
+Edit
+docker run --rm --network my_network networkstatic/iperf3 -c iperf-server
+✅ Dzięki temu kontenery komunikują się po nazwach zamiast adresów IP!
+
+4️⃣ Instalacja Jenkinsa (Dockerized Jenkins)
+📌 Instalacja Jenkinsa w Dockerze
+
+📌 Uruchomienie instancji Jenkinsa z DIND
+bash
+Copy
+Edit
+docker network create jenkins
+
+docker run --rm -d \
+    --name jenkins-dind \
+    --network jenkins \
+    --privileged \
+    -v jenkins_home:/var/jenkins_home \
+    docker:dind
+📌 Uruchomienie samego Jenkinsa
+bash
+Copy
+Edit
+docker run --rm -d \
+    --name jenkins \
+    --network jenkins \
+    -p 8080:8080 -p 50000:50000 \
+    -v jenkins_home:/var/jenkins_home \
+    jenkins/jenkins:lts
+✅ Jenkins działa! Można wejść na http://localhost:8080 i skonfigurować!
+
+5️⃣ SSHD w kontenerze Ubuntu/Fedora
+📌 W Ubuntu/Fedora można uruchomić usługę SSHD, ale...
+🔹 Nie jest to dobra praktyka w kontenerach (Docker sam zarządza dostępem)!
+
+📌 Uruchomienie kontenera Ubuntu z SSHD
+bash
+Copy
+Edit
+docker run --rm -d -p 2222:22 --name ssh-container rastasheep/ubuntu-sshd
+📌 Teraz można połączyć się przez SSH:
+
+bash
+Copy
+Edit
+ssh root@localhost -p 2222
+✅ Zalety: ✔ Można zalogować się do działającego kontenera
+✔ Możliwość tunelowania
+❌ Wady:
+❌ Niepotrzebne w większości scenariuszy Dockerowych
+❌ Tworzy dodatkowy punkt ataku
+
+6️⃣ Jenkins + Docker Compose
+📌 Co jest potrzebne, by uruchomić Dockera w Jenkinsie?
+
+1️⃣ Dodanie użytkownika Jenkinsa do grupy Docker
+
+bash
+Copy
+Edit
+usermod -aG docker jenkins
+2️⃣ Uruchomienie Jenkinsa w Docker Compose
+
+📌 docker-compose.yml dla Jenkinsa
+yaml
+Copy
+Edit
+version: '3.8'
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    privileged: true
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+volumes:
+  jenkins_home:
+📌 Uruchomienie
+
+bash
+Copy
+Edit
+docker-compose up -d
+✅ Teraz Jenkins ma dostęp do Dockera! 🎉
+
+📌 Co jest potrzebne, by uruchomić Docker Compose w Jenkinsie?
+1️⃣ Instalacja docker-compose w kontenerze Jenkinsa
+
+bash
+Copy
+Edit
+docker exec -it jenkins bash -c "apt update && apt install -y docker-compose"
+2️⃣ Dodanie skryptu do budowania w Jenkinsfile
+
+groovy
+Copy
+Edit
+pipeline {
+    agent {
+        docker { image 'docker:latest' }
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'docker-compose up --build'
+            }
+        }
+    }
+}
+✅ Teraz Jenkins może budować i uruchamiać Dockera! 🚀
+
+🔚 Podsumowanie
+✔ Zarządzanie stanem → Użycie woluminów wejściowych/wyjściowych
+✔ Eksponowanie portów → Uruchomienie iperf3
+✔ Sieć Docker → Dedykowana sieć mostkowa
+✔ Jenkins → Instalacja, konfiguracja, integracja z Docker
+✔ SSHD w kontenerze → Możliwe, ale niezalecane
+
+💡 Gotowe do wdrożenia? 🚀

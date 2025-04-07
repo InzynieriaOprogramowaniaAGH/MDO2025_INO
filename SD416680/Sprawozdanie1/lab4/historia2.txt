@@ -1,0 +1,22 @@
+  151  docker run -d --name iperf_server --network bridge networkstatic/iperf3 -s
+  152  docker inspect iperf_server | grep IPAddress
+  153  docker run -it --rm --network bridge networkstatic/iperf3 -c 172.17.0.2
+  154  sudo tcpdump -i docker0
+  155  docker network create --driver bridge my_custom_network
+  156  docker run -d --name iperf-server --network my_custom_network networkstatic/iperf3 -s
+  157  docker run -it --name iperf-client --network my_custom_network networkstatic/iperf3 -c iperf-server
+  158  docker rm iperf_client
+  159  docker stop iperf-client
+  160  docker rm iperf-client
+  161  docker run -it --name iperf-client --network my_custom_network networkstatic/iperf3 -c iperf-server
+  162  docker run -d --name iperf-server -p 5201:5201 --network my_custom_network networkstatic/iperf3 -s
+  163  iperf3 -c localhost -p 5201
+  164  docker stop iperf-server
+  165  docker rm iperf-server
+  166  docker run -d --name iperf-server -p 5201:5201 --network my_custom_network networkstatic/iperf3 -s
+  167  iperf3 -c localhost -p 5201
+  168  ip a
+  169  iperf3 -c 172.17.0.1 p 5201
+  170  docker logs iperf-server
+  171  docker logs iperf-client
+  172  history

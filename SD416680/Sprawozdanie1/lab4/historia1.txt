@@ -1,0 +1,90 @@
+git --version
+   68  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   69  ls -al ~/.ssh
+   70  ------. 1 user user  22 04-02 15:36 .
+   71  drwx------. 1 user user 176 04-02 15:36 ..
+   72  -rw-r--r--. 1 user user  92 04-02 15:36 known_hosts
+   73  ------. 1 user user  22 04-02 15:36 .
+   74  drwx------. 1 user user 176 04-02 15:36 ..
+   75  cat ~/.ssh/id_rsa.pub
+   76  ssh -T git@github.com
+   77  ssh-keygen -t ed25519 -C "s.a.dernoga@gmail.com"
+   78  ls -al ~/.ssh
+   79  cat ~/.ssh/id_ed25519.pub
+   80  ssh -T git@github.com
+   81  sudo git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git $(docker volume inspect vol_input --format '{{ .Mountpoint }}')
+   82  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   83  ls
+   84  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git $(docker volume inspect vol_input --format '{{ .Mountpoint }}')
+   85  docker volume ls
+   86  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git $(docker volume inspect vol_input --format '{{ .Mountpoint }}')docker volume inspect vol_input --format '{{ .Mountpoint }}'
+   87  docker volume inspect vol_input --format '{{ .Mountpoint }}'
+   88  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git /var/lib/docker/volumes/vol_input/_data
+   89  sudo chmod -R 777 /var/lib/docker/volumes/vol_input/_data
+   90  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git /var/lib/docker/volumes/vol_input/_data
+   91  sudo git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git /var/lib/docker/volumes/vol_input/_data
+   92  ssh -T git@github.com
+   93  docker ls
+   94  docker ps -a
+   95  docker run -it --name determined_jolio -v ~/.ssh:/root/.ssh ubuntu:latest /bin/bash
+   96  docker volume ls
+   97  docker run -it --name determined_jolio -v vol_input:/input -v vol_output:/output ubuntu:latest /bin/bash
+   98  docker rm vol_input vol_output
+   99  docker volume ls
+  100  docker volume rm vol_input vol_output
+  101  docker volume create vol_input
+  102  docker volume create vol_output
+  103  docker volume ls
+  104  docker run -it --name ubuntu_2 ubuntu:latest /bin/bash
+  105  docker run -it --name ubuntu_builder -v vol_input:/input -v vol_output:/output ubuntu:latest /bin/bash
+  106  docker volume inspect vol_input --format '{{ .Mountpoint }}'
+  107  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git /var/lib/docker/volumes/vol_input/_data
+  108  sudo git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git /var/lib/docker/volumes/vol_input/_data
+  109  ssh -T git@github.com
+  110  sudo git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git /var/lib/docker/volumes/vol_input/_data
+  111  sudo -E git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git /var/lib/docker/volumes/vol_input/_data
+  112  # Clone to a temporary directory (as your regular user)
+  113  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git ~/temp_repo
+  114  # Move the files to the Docker volume (requires sudo for the move)
+  115  sudo mv ~/temp_repo/* /var/lib/docker/volumes/vol_input/_data/
+  116  docker run -it --rm   -v ~/repo:/app   -v vol_output:/output   alpine sh -c "cd /app && build-command && cp -r /app/build /output"
+  117  docker volume rm vol_input vol_output
+  118  exit
+  119  docker volume create cjson-input
+  120  docker volume ls
+  121  docker volume create cjson-output
+  122  docker volume rm vol*
+  123  docker volume rm vol_input
+  124  docker ps -a --filter volume=vol_input
+  125  docker stop ubuntu_builder
+  126  docker volume rm vol_input
+  127  docker stop ubuntu_builder
+  128  docker volume rm vol_input
+  129  docker ps -a --filter volume=vol_input
+  130  docker stop ubuntu_builder
+  131  docker rm ubuntu_builder
+  132  docker volume rm vol_input
+  133  docker volume rm vol_output
+  134  docker volume rm *
+  135  docker volume ls
+  136  docker run -it --name cjson-builder -v cjson-input:/input -v cjson-output:/output ubuntu:latest /bin/bash
+  137  docker cp cJSON/. cjson-builder:/input
+  138  docker run -it --name cjson-builder -v cjson-input:/input -v cjson-output:/output ubuntu:latest /bin/bash
+  139  docker run -it --name cjson-builder
+  140  docker exec -it cjson-builder /bin/bash
+  141  docker start cjson-builder  # Uruchamia kontener
+  142  docker exec -it cjson-builder /bin/bash  # Wchodzi do niego
+  143  docker run -it --name cjson-builder-git -v cjson-input:/input -v cjson-output:/output ubuntu:latest /bin/bash
+  144  docker run -it --name cjson-builder-git
+  145  docker stop cjson-builder-git
+  146  docker run -it --name cjson-builder-git -v cjson-input:/input -v cjson-output:/output ubuntu:latest /bin/bash
+  147  docker rm cjson-builder-git
+  148  docker run -it --name cjson-builder-git -v cjson-input:/input -v cjson-output:/output ubuntu:latest /bin/bash
+  149  nano cjson-builder
+  150  docker build -t cjson-builder .
+  151  nano cjson-builder
+  152  docker build -t cjson-builder .
+  153  nano dockerfile-cjson-builder
+  154  docker build -t cjson-builder -f dockerfile-cjson-builder .
+  155  nano dockerfile-cjson-builder
+  156  docker build -t cjson-builder -f dockerfile-cjson-builder .

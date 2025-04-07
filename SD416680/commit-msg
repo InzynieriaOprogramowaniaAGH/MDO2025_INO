@@ -1,0 +1,8 @@
+#!/bin/bash
+PATTERN="SD416680"
+COMMIT_MSG=$(cat "$1")
+
+if [[ ! $COMMIT_MSG =~ $PATTERN ]]; then
+    echo "BŁĄD: Commit message musi zaczynać się od 'INICJAŁY_NR_INDEKSU'"
+    exit 1
+fi
