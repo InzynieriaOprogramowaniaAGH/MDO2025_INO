@@ -1,0 +1,29 @@
+{
+    "name": "tea-concat"
+  , "version": "0.1.0"
+  , "description": "A must faster concat for Arrays"
+  , "author": "Jake Luer <jake@qualiancy.com> (http://qualiancy.com)"
+  , "license": "MIT"
+  , "keywords": [
+    ]
+  , "repository": {
+        "type": "git"
+      , "url": "git@github.com:qualiancy/tea-concat.git"
+    }
+  , "engines": {
+      "node": "*"
+    }
+  , "main": "./index"
+  , "scripts": {
+      "test": "make test"
+    }
+  , "dependencies": {
+    }
+  , "devDependencies": {
+        "chai": "*"
+      , "component": "*"
+      , "matcha": "*"
+      , "mocha": "*"
+      , "mocha-phantomjs": "*"
+    }
+}
