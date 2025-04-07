@@ -1,0 +1,8 @@
+FROM ubuntu:22.04
+WORKDIR /app
+RUN apt update
+RUN apt-get -y install git make gcc
+RUN git clone https://github.com/DaveGamble/cJSON.git
+WORKDIR /app/cJSON
+RUN make 
+CMD ["/bin/bash"]

@@ -1,0 +1,4 @@
+FROM cj-build
+WORKDIR /app/cJSON
+RUN mkdir logs && make test > logs/test_results.log
+CMD ["/bin/bash"]
