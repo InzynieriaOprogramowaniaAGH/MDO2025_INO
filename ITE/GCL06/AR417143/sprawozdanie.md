@@ -189,4 +189,13 @@
 ### Instancja Jenkins
 * Zapoznaj się z dokumentacją  https://www.jenkins.io/doc/book/installing/docker/
 * Przeprowadź instalację skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND
+
+    ![jenkins-dind](004-Class/jenkins-dind.png)
+
+    ![jenkinsRun](004-Class/jenkinsRun.png)
+
 * Zainicjalizuj instację, wykaż działające kontenery, pokaż ekran logowania
+
+    ![dockerPS](004-Class/dockerPS.png)
+
+    ![jenkins](004-Class/jenkins.png)
