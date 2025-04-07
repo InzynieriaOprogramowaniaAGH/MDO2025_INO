@@ -1,0 +1,2 @@
+FROM coscos
+RUN npm test
