@@ -1,15 +1,9 @@
 FROM node:16
 
-RUN apt-get update && apt-get install -y git
-
 RUN --mount=type=volume,source=input_volume,target=/app/input \
-    --mount=type=volume,source=output_volume,target=/app/output \
+    git clone https://github.com/devenes/node-js-dummy-test.git /app/input/repo
 
-    git clone https://github.com/devenes/node-js-dummy-test.git /app/input/repo && \
+WORKDIR /app/input/repo
+RUN npm install
 
-    cd /app/input/repo && \
-    npm install && \
-    npm run build && \
-
-    cp -r ./build/* /app/output/ && \
-    cp -r ./node_modules /app/output/
+COPY . /app/output
