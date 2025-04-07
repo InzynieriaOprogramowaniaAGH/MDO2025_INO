@@ -21,12 +21,16 @@ Sprawdziłem, czy instalacja przebiegła pomyślnie. Komenda git --version potwi
 #
 ![1 4](https://github.com/user-attachments/assets/b0fc08a0-22fd-42e9-9a20-9e49730e5d02)
 Zrzut ekranu 1.4
-Wygenerowałem parę kluczy SSH za pomocą komendy ssh-keygen -t ed25519 -C "wmatys.contact@gmail.com". Klucze zostały zapisane w niestandardowej lokalizacji /home/Wojtek/.ssh/id_devops. Wprowadziłem również hasło zabezpieczające klucz prywatny.
+Wygenerowałem parę kluczy SSH za pomocą komendy ssh-keygen -t ed25519 -C "wmatys.contact@gmail.com". Klucze zostały zapisane w niestandardowej lokalizacji /home/Wojtek/.ssh/id_devops. Nie wprowadziłem  hasła zabezpieczającego klucz prywatny.
 #
 #
 ![1 5](https://github.com/user-attachments/assets/f90fc898-0a57-4b40-9519-ba3e0066fd92)
 Zrzut ekranu 1.5
 Uruchomiłem agenta SSH poleceniem eval "$(ssh-agent -s)", a następnie dodałem nowo utworzony klucz do agenta za pomocą ssh-add ~/.ssh/id_devops. Sprawdziłem zawartość klucza publicznego komendą cat ~/.ssh/id_devops.pub. Na końcu przetestowałem połączenie z GitHubem za pomocą ssh -T git@github.com – autoryzacja zakończyła się pomyślnie.
+#
+#
+![1X](https://github.com/user-attachments/assets/911b9630-2c3f-43bf-be92-eb5ba71af665)
+Utworzyłem, również drugi klucz już zabezpieczony hasłem
 #
 #
 ![1 6](https://github.com/user-attachments/assets/559c80ce-9878-47a7-99da-939564d024e3)
