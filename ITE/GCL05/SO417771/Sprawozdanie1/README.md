@@ -63,10 +63,9 @@ exit 0
 
 ### Test napisanego Git hooka
 
- Test potwierdza poprawność napisanego Git hooka
-
 ![Opis obrazka](lab1/lab1.7.png)
 
+- Test potwierdza poprawność napisanego Git hooka
 
 # Zajęcia 02
 
@@ -145,7 +144,7 @@ CMD ["/bin/bash"]
 
 ### Tworzenie dwóch plików Dockerfile automatyzujących kroki powyżej
 
-4. - Kontener pierwszy ma przeprowadzać wszystkie kroki aż do builda. Zbudowano go za pomocą komendy `docker build -t nodebld -f ./Dockerfile.nodebld .`. Kontener został nazwany nodebld i zawierał wszystkie wymagane zależności oraz kroki do zbudowania aplikacji.
+4. Kontener pierwszy ma przeprowadzać wszystkie kroki aż do builda. Zbudowano go za pomocą komendy `docker build -t nodebld -f ./Dockerfile.nodebld .`. Kontener został nazwany nodebld i zawierał wszystkie wymagane zależności oraz kroki do zbudowania aplikacji.
 
 ![Opis obrazka](lab3/lab3_node/lab3.4.png)
 
@@ -168,7 +167,7 @@ RUN npm i
 
 ![Opis obrazka](lab3/lab3_node/lab3.6.png)
 
-5. - Zbudowano drugi kontener Docker za pomocą komendy `docker build -t nodetest -f ./Dockerfile.nodetest .`. Ten kontener jest przeznaczony do uruchamiania testów, nie przeprowadzając procesu builda, który był wykonany wcześniej w pierwszym kontenerze.
+5. Zbudowano drugi kontener Docker za pomocą komendy `docker build -t nodetest -f ./Dockerfile.nodetest .`. Ten kontener jest przeznaczony do uruchamiania testów, nie przeprowadzając procesu builda, który był wykonany wcześniej w pierwszym kontenerze.
 
 ![Opis obrazka](lab3/lab3_node/lab3.7.png)
 
@@ -211,7 +210,7 @@ Po zainstalowaniu tych zależności, komenda `meson Build` została ponownie uru
 
 ### Tworzenie dwóch plików Dockerfile automatyzujących kroki powyżej
 
-5. - W tym kroku zbudowano kontener Docker dla aplikacji irssi za pomocą komendy `docker build -t irssibld -f ./Dockerfile.irssibld .`. Proces budowy kontenera obejmował pobranie obrazu bazowego fedora, zainstalowanie wymaganych zależności (takich jak git, gcc, glib2-devel, ncurses-devel, perl-Ext* i utf8proc), oraz sklonowanie repozytorium irssi. Na końcu kontener został zapisany z nazwą irssibld i jest gotowy do uruchomienia.
+5. W tym kroku zbudowano kontener Docker dla aplikacji irssi za pomocą komendy `docker build -t irssibld -f ./Dockerfile.irssibld .`. Proces budowy kontenera obejmował pobranie obrazu bazowego fedora, zainstalowanie wymaganych zależności (takich jak git, gcc, glib2-devel, ncurses-devel, perl-Ext* i utf8proc), oraz sklonowanie repozytorium irssi. Na końcu kontener został zapisany z nazwą irssibld i jest gotowy do uruchomienia.
 
 ![Opis obrazka](lab3/lab3_irssi/lab3.6i.png)
 
@@ -229,7 +228,7 @@ RUN meson Build
 
 ![Opis obrazka](lab3/lab3_irssi/lab3.7i.png)
 
-6. - W tym kroku zbudowano drugi kontener Docker o nazwie irssitest, korzystając z pliku Dockerfile.irssitest za pomocą komendy `docker build -t irssitest -f ./Dockerfile.irssitest .`. Kontener ten bazuje na wcześniej zbudowanym obrazie irssibld i przeprowadza testy aplikacji.
+6. W tym kroku zbudowano drugi kontener Docker o nazwie irssitest, korzystając z pliku Dockerfile.irssitest za pomocą komendy `docker build -t irssitest -f ./Dockerfile.irssitest .`. Kontener ten bazuje na wcześniej zbudowanym obrazie irssibld i przeprowadza testy aplikacji.
 
 ![Opis obrazka](lab3/lab3_irssi/lab3.8i.png)
 
@@ -266,7 +265,7 @@ RUN ninja test
 
 - Klonowanie repozytorium: Repozytorium zostało sklonowane z adresu https://github.com/devenes/node-js-dummy-test.git za pomocą komendy git clone.
 - Przeniesienie repozytorium do kontenera: Po sklonowaniu repozytorium do lokalnego katalogu, pliki zostały przeniesione do kontenera za pomocą polecenia: `docker cp node-js-dummy-test/ node_container:/app/input`
--Dzięki temu zawartość repozytorium trafiła do katalogu /app/input w kontenerze, który jest zamontowany na woluminie input_volume.
+- Dzięki temu zawartość repozytorium trafiła do katalogu /app/input w kontenerze, który jest zamontowany na woluminie input_volume.
 
 4. Po sklonowaniu repozytorium i skopiowaniu go do kontenera, zawartość katalogu /app/input w kontenerze została zweryfikowana. W katalogu tym znajdują się pliki i foldery, takie jak Dockerfile, LICENSE, README.md, package.json, package-lock.json, a także foldery public, src, views i readme. Wszystkie te pliki pochodzą z repozytorium, które zostało sklonowane na wolumin wejściowy.
 
