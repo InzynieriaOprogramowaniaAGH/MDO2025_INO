@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'DS417321', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+            }
+        }
+        
+        stage('Build Builder Image') {
+            steps {
+                script {
+                    def imageName = "builder"
+                    def dockerfileDir = "MDO2025_INO/ITE/GCL07/DS417321/Sprawozdanie1/3/Dockerfile.build"
+
+                    sh "docker build -t ${imageName} ${dockerfileDir}"
+                }
+            }
+        }
+        
+        stage('Build Tester Image') {
+            steps {
+                script {
+                    def imageName = "tester"
+                    def dockerfileDir = "MDO2025_INO/ITE/GCL07/DS417321/Sprawozdanie1/3/Dockerfile.test"
+
+                    sh "docker build -t ${imageName} ${dockerfileDir}"
+                }
+            }
+        }
+    }
+}
+
