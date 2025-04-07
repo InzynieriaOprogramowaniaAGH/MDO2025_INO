@@ -51,3 +51,50 @@ Zbudowanie `Dockerfile` komendą z instrukcji: `docker build -t myjenkins-blueoc
 Uruchomienie obrazu `myjenkins-blueocean:2.492.2-1` w kontenerze.
 
 ![Uruchoemienie obrazu myjenkins-blueocean](zrzuty5/zrzut_ekranu4.png)
+
+Aby sprawdzić czy Jenkins został skonfigurowany poprawnie wpisałem w przeglądarce adres `192.168.56.101:8080`. Poniższy widok oznacza że Jenkins ma dostęp do internetu.
+
+![Uruchoemienie Jenkina w przegladarce](zrzuty5/zrzut_ekranu5.png)
+
+Wybrałem opcje `Zainstaluj sugerowane wtyczki` instalator przeprowadził mnie przez pobieranie podstawowych wtyczek oraz przez tworzenia konta.
+
+![Po instalacji](zrzuty5/zrzut_ekranu6.png)
+
+Zanim przeszedłem do pracy z Jenkinsem to przeniosłęm `Dockerfile` do wcześniej przygotowanego katalogu
+
+![Dockerfile Jenkins](zrzuty5/zrzut_ekranu11.png)
+
+### 2. Zadania wstępne
+
+Na tak przygotowanym Jenkinsie byłem gotowy do wykonywania projektów.
+
+![Jenkins gotowy](zrzuty5/zrzut_ekranu7.png)
+
+Do utworzenia projektów skorzystałem z przycisku `Nowy projekt` po prawej stronie, tam wprowadziłem nazwę i jego typ czyli wykonanie polecenia w konsoli.\
+Pierwszym zadaniem było wyświetlenie informacji o systemie za pomocą komendy `uname -a`
+
+![Uname -a](zrzuty5/zrzut_ekranu8.png)
+
+Następnie napisałem prosty skrypt który sprawdza czy godzina jest parzysta i jeśli nie jest to zwraca błąd.
+
+Skrypt:
+
+```bash
+HOUR=$(date +%H)
+echo "Aktualna godzina: $HOUR"
+
+if [ $((10#$HOUR % 2)) -ne 0 ]; then
+  echo "Godzina jest nieparzysta — przerywam."
+  exit 1
+else
+  echo "Godzina jest parzysta — kontynuuję."
+fi
+```
+
+Podobnie jak w przypadku sprawdzenia systemu utworzyłem nowy projekt w Jenkinsie tym razem wykorzystując powyższy skrypt
+
+![Sprawdzenie godziny](zrzuty5/zrzut_ekranu9.png)
+
+Ostatnim skryptem do utworzenia było pobranie obrazu ubuntu za pomocą `docker pull ubuntu`, które przebiegło poprawnie. To taki ostateczny test, że Jenkins ma połączenie z internetem.
+
+![Pobranie ubuntu](zrzuty5/zrzut_ekranu10.png)
