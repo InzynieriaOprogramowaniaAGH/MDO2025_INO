@@ -180,3 +180,60 @@ Analogicznie dla pozostałych repozytoriów.
 10. Testy po automatyzacji:
 
 ![alt text](screens/screens3/14.png)
+
+## Laboratorium 4
+
+1. Stworzenie woluminów:
+
+* 'docker volume create irssi_input'
+* 'docker volume create irssi_output'
+
+2. Uruchomienie kontenera za pomocą polecenia oraz zbudowanie projektu za pomocą meson 'builddir' oraz 'ninja'
+'docker run -it --rm \
+  -v irssi_input:/input \
+  -v irssi_output:/output \
+  irssi-build bash'
+
+![alt text](screens/screens4/2.png)
+
+![alt text](screens/screens4/3.png)
+
+3. Skopiowanie plików za pomocą 'cp -r builddir/* /output/' oraz sprawdzenie, czy pliki trafiły do woluminu wyjściowego za pomocą 'docker run --rm -it -v irssi_output:/output alpine ls /output'
+
+![alt text](screens/screens4/4.png)
+
+4. Instalacja gita w kontenerze
+
+![alt text](screens/screens4/5.png)
+
+5. Sklonowanie repozytorium i sprawdzenie, czy pliki trafiły do woluminu wejściowego
+
+![alt text](screens/screens4/6.png)
+
+6. Eksponowanie portu:
+
+* instalacja iperf3
+
+![alt text](screens/screens4/7.png)
+
+* uruchomienie serweru w kontenerze oraz iperf3 w drugim kontenerze, który się połączy z serwerem. Sprawdzenie połączenia
+
+![alt text](screens/screens4/8.png)
+
+* utworzenie sieci mostkowej za pomocą 'docker network create'. Testy przepustowości z kontenera do kontenera
+
+![alt text](screens/screens4/9.png)
+
+* test z hosta do serwera w kontenerze
+
+![alt text](screens/screens4/10.png)
+
+7. Pobranie Jenkinsa za pomocą komend:
+
+* 'docker pull 'jenkins/jenkins:lts'
+
+* 'docker run -d -p 8080:8080 -p 50000:50000 --name jenkins_home jenkins/jenkins:lts'
+
+* 'docker exec -it jenkins_home cat /var/jenkins_home/secrets/initialAdminPassword' - ustawienie hasła
+
+![alt text](screens/screens4/11.png)
