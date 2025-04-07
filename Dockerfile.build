@@ -1,0 +1,15 @@
+FROM node:14
+
+WORKDIR /app
+
+# Instalacja git
+RUN apt-get update && apt-get install -y git
+
+# Klonowanie repozytorium
+RUN git clone https://github.com/devenes/node-js-dummy-test.git .
+
+# Instalacja zależności (build)
+RUN npm install
+
+# Domyślne polecenie
+CMD ["echo", "Build completed successfully!"]
