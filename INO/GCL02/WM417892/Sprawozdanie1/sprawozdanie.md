@@ -1,4 +1,4 @@
-# Sprawozdanie 1
+# Sprawozdanie z zajęć 01
 
 ## Wprowadzenie
 
@@ -247,6 +247,249 @@ Na tym zrzucie ekranu zbudowałem dwa obrazy Dockera:
 #
 ![3 10](https://github.com/user-attachments/assets/0c530a64-2794-4267-b3c3-01dc05aa07c5)
 Na tym zrzucie ekranu uruchomiłem kontener zbudowany na podstawie obrazu `programtest`. W wyniku wykonania polecenia `make test`, zostały uruchomione testy jednostkowe dla biblioteki cJSON. Testy zakończyły się sukcesem, a dane wyjściowe zostały poprawnie wyświetlone w formacie JSON, potwierdzając poprawne działanie aplikacji.
+#
+#
+#
+#
+# Sprawozdanie z zajęć 04 – Konteneryzacja i instancja Jenkins
 
-  
+## Wstęp
+
+Celem ćwiczeń było zapoznanie się z zaawansowaną terminologią dotyczącą konteneryzacji z wykorzystaniem Dockera. Szczególną uwagę poświęcono trwałości danych przy użyciu wolumenów, komunikacji między kontenerami oraz wdrożeniu kontenerowej instancji narzędzia Jenkins w środowisku Docker-in-Docker (DIND).
+#
+#
+![4 1](https://github.com/user-attachments/assets/aecb8fb2-7a69-42fa-8f1b-1572cbb8d4ae)
+**Zrzut ekranu 4.1 – Tworzenie i montowanie wolumenu wejściowego**
+
+Na zrzucie widać utworzenie wolumenu o nazwie `wolumen-wejsciowy` oraz uruchomienie kontenera `ubuntu` z zamontowanym wolumenem do ścieżki `/app`. Następnie w kontenerze wykonano aktualizację pakietów i instalację narzędzi `git` oraz `build-essential`.
+#
+#
+![4 2](https://github.com/user-attachments/assets/380989a0-3c70-48dd-9e29-d0c3fb7fae9c)
+**Zrzut ekranu 4.2 – Klonowanie repozytorium do wolumenu**
+
+Po wejściu do katalogu `/app` (zamontowanego wolumenu), sklonowano repozytorium `cJSON` z GitHub. Operacja zakończyła się powodzeniem, a dane zostały zapisane w wolumenie, co umożliwia ich wykorzystanie poza kontenerem. Następnie zakończono działanie kontenera komendą `exit`.
+#
+#
+![4 3](https://github.com/user-attachments/assets/22096fcf-4815-482d-bf0e-57b0832f3678)
+Zrzut ekranu 4.3 – Powrót do kontenera i przygotowanie środowiska w katalogu projektu
+Po wcześniejszym zapisaniu plików cJSON w wolumenie, ponownie uruchomiłem kontener z tym samym wolumenem zamontowanym w katalogu /app. Następnie przeszedłem do katalogu /app/cJSON, czyli miejsca, gdzie został wcześniej sklonowany projekt. W kolejnym kroku zaktualizowałem pakiety i zainstalowałem środowisko kompilacji (build-essential), przygotowując kontener do uruchomienia testów.
+#
+#
+![4 4](https://github.com/user-attachments/assets/20bfe36b-4bf4-4fd3-93ac-d8986a5f0464)
+Zrzut ekranu 4.4 – Uruchomienie testów biblioteki cJSON
+Po przygotowaniu środowiska i przejściu do katalogu z projektem wykonałem polecenie make test, które skompilowało oraz uruchomiło testy projektu cJSON. Testy zakończyły się powodzeniem, wypisując poprawnie sparsowane dane JSON, takie jak informacje o obrazie, lokalizacjach geograficznych i innych strukturach danych. To potwierdziło, że biblioteka działa prawidłowo w kontenerze.
+#
+#
+![4 5](https://github.com/user-attachments/assets/9c12affb-001b-4e48-b03f-119c3c2ec6d8)
+![4 6](https://github.com/user-attachments/assets/b89842b9-eda9-4b59-9290-92267c0b047e)
+Zrzut ekranu 4.6 – Zawartość pliku Dockerfile.volume
+Zdefiniowałem Dockerfile oparty na obrazie ubuntu:latest. Ustawiłem katalog roboczy, zainstalowałem wymagane pakiety, wskazałem folder cJSON i ustawiłem domyślną komendę make test jako polecenie do wykonania przy uruchomieniu kontenera.
+#
+#
+![4 7](https://github.com/user-attachments/assets/35ba1b33-30ee-4056-916c-0841fa74eced)
+Zrzut ekranu 4.7 – Budowanie obrazu Dockera
+Na tym etapie uruchomiłem polecenie docker build, aby zbudować obraz o nazwie wolumen-test na podstawie pliku Dockerfile.volume. Proces zakończył się powodzeniem, a obraz został zapisany lokalnie z unikalnym identyfikatorem SHA. Budowanie obrazu przebiegło sprawnie – większość kroków była cache'owana, dzięki czemu proces był szybki.
+#
+#
+![4 8](https://github.com/user-attachments/assets/c7f6d658-4cec-4462-8aba-9a4f75ccdad1)
+Zrzut ekranu 4.8:
+W tym kroku uruchomiłem kontener na podstawie wcześniej zbudowanego obrazu `wolumen-test`, wykorzystując bind mount:
+
+```bash
+--mount type=bind,source="$(pwd)/cJSON",target=/app/cJSON
+```
+
+Podmontowałem lokalny katalog `cJSON` do ścieżki `/app/cJSON` wewnątrz kontenera. Po uruchomieniu kontenera automatycznie wykonało się domyślne polecenie `make test`, które przetwarza dane w formacie JSON. Efektem działania programu był wydruk struktury JSON, widoczny na ekranie terminala.
+#
+#
+![4 9](https://github.com/user-attachments/assets/df974074-03f4-4a36-a887-0d2f120c2756)
+**Zrzut ekranu 4.9:**  
+Na tym etapie utworzyłem własną sieć Docker o nazwie `iperf-net` za pomocą polecenia:
+
+```bash
+docker network create iperf-net
+```
+
+Następnie pobrałem obraz `networkstatic/iperf3`, który służy do testowania przepustowości sieciowej między kontenerami:
+
+```bash
+docker pull networkstatic/iperf3
+```
+
+Obraz został poprawnie pobrany z Docker Hub. Będzie on wykorzystany do dalszych testów sieciowych z użyciem narzędzia `iperf3`, zarówno w trybie klienta, jak i serwera, w ramach wcześniej utworzonej sieci.
+
+#
+#
+![4 10](https://github.com/user-attachments/assets/b43596ca-2f03-49d4-abec-587a19bd6ec7)
+**Zrzut ekranu 4.10:**  
+Na tym etapie uruchomiłem dwa kontenery `iperf3` w tej samej, wcześniej utworzonej sieci `iperf-net`. Jeden z nich działał jako serwer:
+
+```bash
+docker run --rm -d --network iperf-net --name iperf-server networkstatic/iperf3 -s
+```
+
+A drugi jako klient, który łączy się z serwerem po jego nazwie (`iperf-server`) i przeprowadza test przepustowości:
+
+```bash
+docker run --rm --network iperf-net networkstatic/iperf3 -c iperf-server
+```
+
+Połączenie zostało zestawione poprawnie, a wynik testu pokazuje bardzo dobrą przepustowość sieci między kontenerami – średnio około 4.05 Gbit/s. Test został przeprowadzony w obrębie prywatnej sieci Dockera i potwierdził, że kontenery mogą się ze sobą komunikować z dużą wydajnością przy użyciu nazw hostów.
+
+#
+#
+![4 11](https://github.com/user-attachments/assets/f5d76c49-6ba5-4ef9-a9d0-28f0cd0df18a)
+**Zrzut ekranu 4.11:**  
+Tym razem utworzyłem własną sieć o nazwie `mojabrigada` z użyciem sterownika `bridge`:
+
+```bash
+docker network create --driver bridge mojabrigada
+```
+
+Następnie uruchomiłem dwa kontenery `iperf3` w tej sieci — pierwszy jako serwer:
+
+```bash
+docker run --rm --network mojabrigada --name serwer-testowy networkstatic/iperf3 -s
+```
+
+A drugi jako klient:
+
+```bash
+docker run --rm --network mojabrigada networkstatic/iperf3 -c serwer-testowy
+```
+
+Połączenie pomiędzy kontenerami zostało nawiązane, a test przepustowości wykazał średni transfer na poziomie **4.49 Gbit/s**. Dzięki wykorzystaniu nazw kontenerów jako hostów mogłem łatwo sprawdzić komunikację w obrębie jednej, dedykowanej sieci typu `bridge`.
+#
+#
+![4 12](https://github.com/user-attachments/assets/fd111a50-69f7-4f27-a688-a198a07697a5)
+**Zrzut ekranu 4.12:**  
+W tym kroku najpierw usunąłem wcześniej uruchomiony kontener `iperf-server` poleceniem:
+
+```bash
+docker rm -f iperf-server
+```
+
+Następnie ponownie uruchomiłem kontener `iperf-server`, tym razem mapując port 5201 kontenera na port 5201 hosta, dzięki czemu mogę testować połączenia spoza kontenera:
+
+```bash
+docker run -d --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+```
+
+Polecenie `docker ps` pokazuje, że kontener działa i ma prawidłowo przekierowany port 5201.
+
+Na końcu próbowałem uruchomić `iperf3` bezpośrednio z poziomu hosta jako klient (`iperf3 -c localhost`), jednak pojawił się komunikat o braku tej komendy. Oznacza to, że `iperf3` nie jest zainstalowany na systemie hosta. Wskazówka mówi, że można go zainstalować za pomocą:
+
+```bash
+sudo apt install iperf3
+```
+
+Ten etap był próbą sprawdzenia działania serwera `iperf3` z zewnątrz (spoza kontenera), ale wymaga doinstalowania narzędzia na hoście.
+#
+#
+![4 13](https://github.com/user-attachments/assets/9fcbcd01-03df-41b1-8770-9dc206b60b57)
+**Zrzut ekranu 4.13:**  
+Po wcześniejszej instalacji narzędzia `iperf3` na hoście, uruchomiłem test jako klient, łącząc się do działającego kontenera `iperf-server` przez `localhost`:
+
+```bash
+iperf3 -c localhost
+```
+
+Połączenie zostało nawiązane z portem 5201, który był wystawiony przez kontener. Test wykazał średnią przepustowość na poziomie **4.42 Gbit/s**, co potwierdza poprawne działanie połączenia między hostem a kontenerem. Widać też 58 retransmisji, co może być wynikiem lokalnych obciążeń, ale ogólnie transfer jest bardzo dobry i stabilny.
+
+Dzięki temu potwierdziłem, że kontener `iperf-server` jest dostępny z poziomu hosta, jeśli porty są prawidłowo zmapowane.
+#
+#
+![4 14](https://github.com/user-attachments/assets/3e957c5f-2243-4b01-bcc9-6fedd8d77559)
+**Zrzut ekranu 4.14:**  
+Tutaj wyświetliłem logi kontenera `iperf-server` za pomocą polecenia:
+
+```bash
+docker logs iperf-server
+```
+
+W logach widać, że serwer `iperf3` odebrał połączenie od klienta z hosta `172.17.0.1`. Połączenie zostało nawiązane na porcie 5201, a transfer danych przebiegał przez 10 sekund. Wyniki testu pokazują, że transfer utrzymywał się na poziomie około **4.40 Gbit/s**.
+
+Dzięki temu mogłem potwierdzić, że serwer iperf działał poprawnie, nasłuchiwał na odpowiednim porcie i odbierał dane od klienta – logi zawierają szczegóły dotyczące każdego interwału transmisji.
+#
+#
+![4 15](https://github.com/user-attachments/assets/c4a9c7cb-3068-4ea0-bab4-51ffedf6b314)
+**Zrzut ekranu 4.15:**  
+Na tym screenie sprawdziłem logi kontenera `serwer-testowy` za pomocą polecenia:
+
+```bash
+docker logs serwer-testowy
+```
+
+Logi pokazują, że serwer `iperf3` działający w kontenerze przyjął połączenie od klienta z IP `172.19.0.2`, który łączył się na porcie 5201. Transfer danych trwał 10 sekund, a średnia przepustowość wyniosła **4.48 Gbit/s**.
+
+Wyniki wskazują, że komunikacja w ramach własnej sieci mostkowanej (`mojabrigada`) działa poprawnie i umożliwia bardzo wydajne przesyłanie danych między kontenerami. Serwer poprawnie przyjął i zarejestrował cały przebieg sesji testowej.
+#
+#
+![4 16](https://github.com/user-attachments/assets/b9b1c049-def1-4238-a9c7-98bafc6b95f2)
+**Zrzut ekranu 4.16:**  
+Tutaj utworzyłem dedykowaną sieć o nazwie `jenkins-net`, która będzie służyć do komunikacji między kontenerami w środowisku Jenkins:
+
+```bash
+docker network create jenkins-net
+```
+
+Następnie uruchomiłem kontener `docker:dind` (Docker-in-Docker), który umożliwia wykonywanie poleceń Dockera wewnątrz kontenera – co jest niezbędne w przypadku używania Jenkinsa do budowania obrazów Dockera:
+
+```bash
+docker run --rm --privileged --network jenkins-net --name dind -d docker:dind
+```
+
+System nie znalazł lokalnie obrazu `docker:dind`, więc rozpoczął jego pobieranie z rejestru. Na ekranie widać kolejne warstwy obrazu, które zostały pobrane i zakończone komunikatem o sukcesie. Teraz kontener `dind` jest gotowy do dalszego użycia przez Jenkinsa.
+#
+#
+![4 17](https://github.com/user-attachments/assets/fe44129f-a6b5-4754-99e0-0970bff39e97)
+
+**Zrzut ekranu 4.17:**  
+Na tym etapie uruchomiłem kontener z instancją Jenkinsa, przypisując go do sieci `jenkins-net`, a także wystawiając odpowiednie porty (8080 dla interfejsu webowego i 50000 dla agentów Jenkins):
+
+```bash
+docker run --rm --network jenkins-net -p 8080:8080 -p 50000:50000 \
+-v jenkins_home:/var/jenkins_home \
+--name jenkins \
+-d jenkins/jenkins:lts
+```
+
+Ponieważ obraz `jenkins/jenkins:lts` nie był wcześniej pobrany lokalnie, system automatycznie rozpoczął jego pobieranie z rejestru Docker Hub. Na ekranie widać listę warstw obrazu, które zostały pomyślnie pobrane i złożone.
+
+W ten sposób przygotowałem i uruchomiłem podstawową instancję Jenkinsa w kontenerze, gotową do dalszej konfiguracji poprzez przeglądarkę.
+#
+#
+![4 18](https://github.com/user-attachments/assets/cc37afab-54a0-4fc9-bd1c-84a6c1d21588)
+**Zrzut ekranu 4.18:**  
+Na tym screenie uruchomiłem kontener z Jenkinsem w trybie odseparowanym (`-d`), przypisując go do wcześniej utworzonej sieci `jenkins-net`, a także mapując porty:
+
+```bash
+docker run -d --network jenkins-net -p 8080:8080 -p 50000:50000 \
+-v jenkins_home:/var/jenkins_home \
+--name jenkins \
+jenkins/jenkins:lts
+```
+
+Użycie woluminu `jenkins_home` pozwala zachować dane konfiguracyjne Jenkinsa nawet po zatrzymaniu kontenera. Na końcu terminala widać hash ID nowo uruchomionego kontenera, co potwierdza, że Jenkins został poprawnie uruchomiony i działa w tle. Teraz mogłem przejść do przeglądarki i otworzyć panel webowy Jenkinsa pod adresem `localhost:8080`.
+#
+#![4 19](https://github.com/user-attachments/assets/e583d85e-64e8-475c-a139-c7a6e0b6fb92)
+
+  **Zrzut ekranu 4.19:**  
+Na tym etapie sprawdziłem, czy kontener Jenkins działa poprawnie, używając komendy:
+
+```bash
+docker ps
+```
+
+Na liście widać uruchomiony kontener `jenkins`, bazujący na obrazie `jenkins/jenkins:lts`. Porty 8080 i 50000 zostały prawidłowo zmapowane na hosta, co umożliwia dostęp do interfejsu webowego oraz komunikację z agentami Jenkins.
+
+Następnie, aby uzyskać hasło potrzebne do pierwszego logowania się do panelu administracyjnego, użyłem polecenia:
+
+```bash
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+```
+
+Z terminala odczytałem wartość hasła (`d02d54453ce042a78c9d4b2f524a330a`), którą mogłem wkleić na stronie startowej Jenkinsa (`localhost:8080`) w celu zakończenia procesu inicjalizacji.
+![4 20](https://github.com/user-attachments/assets/1cec5aa0-46cd-42bb-a80e-f73c1c857f12)
+
 
