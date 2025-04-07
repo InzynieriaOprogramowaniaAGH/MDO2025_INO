@@ -1,0 +1,4 @@
+FROM fedora
+RUN dnf -y install gcc make
+WORKDIR /toasty
+CMD [ "make" ]
