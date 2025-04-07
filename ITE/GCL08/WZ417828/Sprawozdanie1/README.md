@@ -53,7 +53,6 @@ Utworzenie nowego git hooka
 
 Treść git hooka
 <br>
-<br>
 ```bash
 #!/bin/sh
 if ! grep -q "WZ417828" "$1"; then
@@ -62,6 +61,7 @@ if ! grep -q "WZ417828" "$1"; then
 fi
 ```
 Sprawdzenie poprawności działania
+<br>
 ![s3](../Sprawozdanie1/Sprawozdanie1_img/s1_13.png)
 
 **6. Wypchnięcie gałęzi**
@@ -186,9 +186,6 @@ Urochomienie obrazu w konenerze i sprawdzenie, czy zostało pobrane repozytorium
 **6. Działające konenery**
 
 ![s1](../Sprawozdanie1/Sprawozdanie2_img/s2_18.png)
-<br>
-Można również wykorzystać polecenie 
-```$ sudo docker ps -a```
 <br>
 Można również wykorzystać polecenie 
 ```$ sudo docker ps -a```
