@@ -317,11 +317,11 @@ Nie wystąpiły żadne problemy z połączeniem, jak pokazują logi. Transfer da
 
 ### Sieć o nazwie jenkins została utworzona przed rozpoczęciem procesu instalacji.
 
-![Ss 98](sources/screen4/5-0.png)
+![Ss 68](sources/screen4/5-0.png)
 
 ### Kolejnym krokiem było utworzenie kontenera na podstawie obrazu `docker:dind`, wykorzystując do tego poniższe polecenie.
 
-![Ss 99](sources/screen4/5-1.png)
+![Ss 69](sources/screen4/5-1.png)
 
 ### W dalszej kolejności przygotowano plik Dockerfile, który generuje spersonalizowany obraz oparty na oficjalnym obrazie Jenkinsa. Jego zawartość została zaczerpnięta z dokumentacji Jenkinsa.
 
@@ -343,16 +343,16 @@ RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
 
 ### W dalszej części procesu przystąpiono do budowy obrazu komendą `docker build -t myjenkins-blueocean:2.492.3-1 .`
 
-![Ss 100](sources/screen4/5-2.png)
+![Ss 70](sources/screen4/5-2.png)
 
 ### Na bazie przygotowanego obrazu uruchomiono kontener za pomocą poniższego polecenia.
 
-![Ss 101](sources/screen4/5-3.png)
+![Ss 71](sources/screen4/5-3.png)
 
 ### Po stronie hosta, na zakończenie możliwe było przejście do ekranu logowania dostępnego pod adresem localhost:8081, z wykorzystaniem portu 8081. Zostało skonfigurowane przekierowanie portów z lokalnego komputera na maszynę wirtualną.
 
-![Ss 102](sources/screen4/5-4.png)
+![Ss 72](sources/screen4/5-4.png)
 
 ### Pierwsze logowanie zostało zrobione ale nie zarejestrowane dlatego jestem już na ekranie logowania
-![Ss 103](sources/screen4/5-5.png)
+![Ss 73](sources/screen4/5-5.png)
 
