@@ -1,0 +1,6 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS builder
+
+RUN --mount=type=bind,source=/mnt/data/source,target=/src \
+    --mount=type=bind,source=/mnt/data/output,target=/out \
+    git clone https://github.com/JakubLatawiec/weatherapp-backend.git /src && \
+    dotnet build /src/WeatherForecast.Api/WeatherForecast.Api.csproj -c Release -o /out
