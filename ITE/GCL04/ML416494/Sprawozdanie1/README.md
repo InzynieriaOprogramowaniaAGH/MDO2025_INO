@@ -8,6 +8,7 @@ sudo dnf install git
 2. Sklonuj repozytorium przedmiotowe za pomocą HTTPS
 ```bash
 git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+```
 3. Upewnij się w kwestii dostępu do repozytorium jako uczestnik i sklonuj je za pomocą utworzonego klucza SSH
 ```bash
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
@@ -51,11 +52,16 @@ sudo docker pull ubuntu
 sudo docker pull mysql
 ```
 3. Uruchom interaktywnie kontener z obrazu `busybox`
+   
 ![image](docker_interactive.PNG)
-4. Uruchom "system w kontenerze" (czyli kontener z obrazu `fedora` lub `ubuntu`)
+
+5. Uruchom "system w kontenerze" (czyli kontener z obrazu `fedora` lub `ubuntu`)
+   
 ![image](ubuntu_pid.PNG)
+
 ![image](ubuntu_update.PNG)
-5. Stwórz własnoręcznie, zbuduj i uruchom prosty plik `Dockerfile` bazujący na wybranym systemie i sklonuj nasze repo.
+
+7. Stwórz własnoręcznie, zbuduj i uruchom prosty plik `Dockerfile` bazujący na wybranym systemie i sklonuj nasze repo.
 ```Dockerfile
 FROM alpine:lastest@sha256:a8560b36e8b8210634f77d9f7f9efd7ffa463e380b75e2e74aff4511df3ef88c
 RUN apk add --no-cache git
@@ -63,8 +69,10 @@ RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 CMD ["git", "--help", "-a"]
 ```
 6. Pokaż uruchomione ( != "działające" ) kontenery, wyczyść je.
+   
 ![image](docker_images.PNG)
-7. Wyczyść obrazy
+
+8. Wyczyść obrazy
 ```bash
 sudo docker image prune -a
 ```
@@ -87,6 +95,7 @@ FROM sds_build
 CMD ["./sds-test"]
 ```
 3. Wykaż, że kontener wdraża się i pracuje poprawnie. Pamiętaj o różnicy między obrazem a kontenerem. Co pracuje w takim kontenerze?
+   
 ![image](sds_test.PNG)
 
 ## Zajęcia 04
@@ -96,8 +105,11 @@ CMD ["./sds-test"]
 - Uruchom kontener, zainstaluj/upewnij się że istnieją niezbędne wymagania wstępne (jeżeli istnieją), ale *bez gita*
 
 Zrobiłem to używajać konetera z ubuntu + git + podłączeniem woluminu w celu zaciągniecia repozytorium, a następnie podłączyłem ten wolumin do kontenera bez gita w celu zbudowania oprogramowania.
+
 ![image](vol_ls.PNG)
+
 Już zbudowałem wcześniej
+
 ![image](no_git.PNG)
 
 2 Eksponowanie portu
