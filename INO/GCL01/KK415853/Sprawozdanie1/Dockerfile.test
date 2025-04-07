@@ -1,0 +1,3 @@
+FROM mvn-build
+WORKDIR /app/simple-java-maven-app
+CMD ["mvn", "test"]

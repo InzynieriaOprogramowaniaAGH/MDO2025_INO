@@ -1,0 +1,16 @@
+services:
+  build:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+    image: mvn-build
+    container_name: build-container
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    image: mvn-test
+    container_name: test-container
+    depends_on:
+      - build
