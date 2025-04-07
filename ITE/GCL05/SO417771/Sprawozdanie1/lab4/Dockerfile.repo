@@ -1,0 +1,9 @@
+FROM node:16
+
+RUN --mount=type=volume,source=input_volume,target=/app/input \
+    git clone https://github.com/devenes/node-js-dummy-test.git /app/input/repo
+
+WORKDIR /app/input/repo
+RUN npm install
+
+COPY . /app/output
