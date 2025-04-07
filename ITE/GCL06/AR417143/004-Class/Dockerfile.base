@@ -1,0 +1,6 @@
+FROM fedora:42
+
+RUN dnf -y update && \
+    dnf -y install meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel \
+    perl-ExtUtils-MakeMaker perl-ExtUtils-Embed && \
+    dnf clean all && rm -rf /var/cache/dnf
