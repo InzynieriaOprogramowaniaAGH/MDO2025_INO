@@ -196,6 +196,57 @@ git push origin GCL02
 Dodatkowo sprawdziłem, czy repozytorium jest poprawnie powiązane ze zdalnym adresem przy pomocy `git remote -v`, co potwierdza połączenie z GitHubem przez SSH.
 
 Na koniec użyłem `git log --oneline`, aby upewnić się, że wszystkie commity znajdują się na gałęzi `WM417892`. Najnowszy commit (`273fb8ca`) zatytułowany *"Dodano sprawozdanie i pliki Dockera"* został poprawnie zapisany jako aktualna głowa (`HEAD`) tej gałęzi. Wszystko wygląda na uporządkowane i gotowe do oceny.
+#
+#
+#
+#
+# Sprawozdanie – Zajęcia 03
 
+## Wstęp
 
+Celem ćwiczenia było zapoznanie się z ideą konteneryzacji oprogramowania przy użyciu narzędzia Docker. W ramach zajęć należało znaleźć repozytorium spełniające określone wymagania (m.in. dostępność plików `Makefile`, możliwość uruchomienia testów oraz otwarta licencja), a następnie przeprowadzić proces buildowania i testowania aplikacji wewnątrz kontenera. 
+
+Dodatkowo zrealizowano etap automatyzacji poprzez utworzenie dwóch plików `Dockerfile` – jeden odpowiedzialny za budowanie projektu (`Dockerfile.build`), drugi za jego testowanie (`Dockerfile.test`).
+#
+#
+![3 1](https://github.com/user-attachments/assets/27c90429-edbe-467c-b4ee-dda89da0a439)
+Na powyższym zrzucie ekranu widać, że sklonowałem repozytorium `cJSON` z GitHuba do lokalnego katalogu roboczego. Użyłem polecenia `git clone`, aby pobrać wszystkie pliki źródłowe potrzebne do dalszej pracy z projektem. Repozytorium zostało pomyślnie sklonowane, o czym świadczy komunikat o zakończeniu pobierania wszystkich obiektów.
+#
+#
+![3 2](https://github.com/user-attachments/assets/6a725a79-7b19-46d7-9cd2-2ddd723faafc)
+Na tym etapie zrealizowałem proces budowania programu przy pomocy polecenia `make`. Kompilator `gcc` skompilował pliki źródłowe, a następnie utworzył pliki wykonywalne oraz biblioteki współdzielone. Wszystkie kroki zostały wykonane poprawnie, co potwierdzają wyświetlone komunikaty bez błędów.
+#
+#
+![3 3](https://github.com/user-attachments/assets/c4f82e6d-279c-4de7-9815-db2bd90ee9ce)
+Na zrzucie ekranu widoczny jest wynik działania testów po wykonaniu polecenia `make test`. Uruchomiłem testowy program `./cJSON_test`, który poprawnie zinterpretował i wyświetlił dane w formacie JSON. Oznacza to, że wszystkie testy przebiegły pomyślnie i biblioteka cJSON została zbudowana oraz przetestowana bez błędów.
+#
+#
+![3 4](https://github.com/user-attachments/assets/ba7df10d-866c-43d8-aa89-1ebdb6b02545)
+Na powyższym zrzucie ekranu uruchomiłem kontener Dockerowy z obrazem Ubuntu, a następnie wykonałem aktualizację pakietów oraz zainstalowałem niezbędne narzędzia (`git`, `build-essential`). Był to pierwszy krok do zbudowania środowiska do testowania projektu wewnątrz kontenera.
+#
+#
+![3 5x](https://github.com/user-attachments/assets/a7266156-82dc-4502-be9e-a36971648d8f)
+Na powyższym zrzucie ekranu, po wejściu do kontenera, sklonowałem repozytorium `cJSON`, a następnie przeprowadziłem proces kompilacji przy pomocy polecenia `make`. Kompilacja przebiegła pomyślnie, po czym uruchomiłem testy jednostkowe (`make test`), które zakończyły się poprawnym wynikiem, co świadczy o prawidłowym działaniu aplikacji.
+#
+#
+![3 7](https://github.com/user-attachments/assets/25403dd2-db02-49b8-a8bf-7c38951b0228)
+Na powyższym zrzucie przedstawiono zawartość pliku `Dockerfile.build`, który przygotowuje środowisko do zbudowania aplikacji. W pliku tym określiłem jako bazowy obraz `ubuntu:latest`, ustawiłem katalog roboczy, zainstalowałem wymagane narzędzia (`build-essential`, `git`) oraz sklonowałem repozytorium `cJSON`, przechodząc do jego katalogu i uruchamiając komendę `make`.
+#
+#
+![3 8](https://github.com/user-attachments/assets/69cf73cd-cda5-481b-9bf4-2380b33f25e7)
+Na tym zrzucie ekranu pokazany jest plik `Dockerfile.test`, który odpowiada za uruchomienie testów. Bazuje on na wcześniej zbudowanym obrazie o nazwie `program`, ustawia katalog roboczy na `/app/cJSON`, a następnie za pomocą polecenia `CMD ["make", "test"]` uruchamia testy projektu cJSON.
+#
+#
+![3 9](https://github.com/user-attachments/assets/a02a137c-1a9d-41d2-81bf-fc5f77a0a8f6)
+Na tym zrzucie ekranu zbudowałem dwa obrazy Dockera:
+
+- Pierwszy obraz `program` został utworzony przy użyciu pliku `Dockerfile.build`. W jego trakcie pobrano potrzebne pakiety i repozytorium cJSON, a następnie przeprowadzono kompilację.
+
+- Drugi obraz `programtest` został zbudowany na podstawie obrazu `program` przy użyciu pliku `Dockerfile.test`. Służy on do uruchamiania testów jednostkowych cJSON. Oba procesy zakończyły się pomyślnie.
+#
+#
+![3 10](https://github.com/user-attachments/assets/0c530a64-2794-4267-b3c3-01dc05aa07c5)
+Na tym zrzucie ekranu uruchomiłem kontener zbudowany na podstawie obrazu `programtest`. W wyniku wykonania polecenia `make test`, zostały uruchomione testy jednostkowe dla biblioteki cJSON. Testy zakończyły się sukcesem, a dane wyjściowe zostały poprawnie wyświetlone w formacie JSON, potwierdzając poprawne działanie aplikacji.
+
+  
 
