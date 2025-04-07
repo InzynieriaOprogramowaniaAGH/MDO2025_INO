@@ -1,0 +1,14 @@
+FROM node:20
+
+RUN apt-get update
+
+WORKDIR /app
+
+RUN git clone https://github.com/devenes/node-js-dummy-test.git 
+
+VOLUME /vol_1
+VOLUME /vol_2
+
+CMD ["sh", "-c", "\
+    cp -r /app/. /vol_1/ && \
+    /bin/bash"]
