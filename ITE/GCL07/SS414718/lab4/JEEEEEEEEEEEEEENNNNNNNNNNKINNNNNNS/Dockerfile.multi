@@ -1,0 +1,15 @@
+# Stage 1: Build
+FROM node:18-alpine AS builder
+RUN apk update && apk add --no-cache git make
+WORKDIR /app
+RUN git clone https://github.com/devenes/node-js-dummy-test.git .
+RUN npm install
+# Nie ma RUN npm run build, bo nie ma takiego skryptu
+
+# Stage 2: Final minimal
+FROM node:18-alpine
+WORKDIR /app
+# Kopiujemy cały katalog src (lub inny odpowiedni, np. całość, jeśli nie potrzebujemy narzędzi do builda)
+COPY --from=builder /app /app
+# Ustawiamy domyślną komendę - uruchamiamy aplikację, korzystając z pliku startowego znajdującego się w src
+CMD ["node", "src/index.js"]
