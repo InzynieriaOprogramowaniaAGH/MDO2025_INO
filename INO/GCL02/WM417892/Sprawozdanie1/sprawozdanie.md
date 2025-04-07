@@ -94,10 +94,108 @@ Dzięki temu mogłem bezpiecznie dodać zewnętrzne repozytorium Dockera do syst
 #
 #
 ![2 4](https://github.com/user-attachments/assets/c6475bb9-f240-4d5c-b1af-a6babcf03b1b)
+Na zrzucie ekranu 2.4 dodałem repozytorium Dockera do systemowego pliku źródeł APT oraz zaktualizowałem listę pakietów.  
 
+Użyłem polecenia:
 
+```bash
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+Następnie wykonałem:
+
+```bash
+sudo apt update
+```
+
+Dzięki temu system wie teraz, skąd pobierać pakiety Dockera z zaufanego źródła.
 
 #
 #
 ![2 5](https://github.com/user-attachments/assets/7d8736ea-767e-4e06-817c-6044a9924cb9)
+Na zrzucie ekranu 2.5 zainstalowałem Dockera oraz dodatkowe komponenty za pomocą komendy:
+
+```bash
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+Ta komenda instaluje silnik Dockera, jego CLI, oraz wtyczki wspierające tworzenie i zarządzanie kontenerami. Instalacja przebiegła pomyślnie, co umożliwia mi dalszą pracę z kontenerami.
+#
+#
+![2 6](https://github.com/user-attachments/assets/5d8e3f22-e5ab-40d7-9c93-2168cfac29f5)
+Na zrzucie ekranu 2.6 sprawdziłem poprawność instalacji Dockera, wpisując komendę:
+
+```bash
+sudo docker --version
+```
+
+W odpowiedzi otrzymałem informację, że zainstalowana wersja to `Docker version 28.0.4`, co potwierdza, że instalacja przebiegła pomyślnie i Docker jest gotowy do użycia.
+#
+#
+![2 7](https://github.com/user-attachments/assets/320317c7-ee3c-4f8f-9337-195992e23f59)
+Na zrzucie ekranu 2.7 uruchomiłem usługę Dockera oraz sprawdziłem jej status. Komenda:
+
+```bash
+sudo systemctl start docker
+```
+
+uruchomiła usługę, a następnie:
+
+```bash
+sudo systemctl status docker
+```
+
+pokazała, że Docker działa prawidłowo (status: `active (running)`). Logi potwierdzają, że demony Dockera zostały uruchomione i kontenery mogą być obsługiwane przez system.
+#
+#
+![2 8](https://github.com/user-attachments/assets/2f21779e-c764-4468-b3fe-3300b65d0be0)
+Na zrzucie ekranu 2.8 wykonałem polecenia `docker pull`, aby pobrać wymagane obrazy kontenerów: `hello-world`, `busybox`, `ubuntu`, `fedora` oraz `mysql`. Każdy z nich został pomyślnie pobrany z rejestru Docker Hub, co potwierdzają komunikaty `Pull complete` i `Downloaded newer image`. Obrazy te będą wykorzystywane w kolejnych etapach konfiguracji środowiska i pracy z kontenerami.
+#
+#
+![2 9](https://github.com/user-attachments/assets/44c4431c-bc84-4eef-893b-e8ab9c2be589)
+Na zrzucie ekranu 2.9 uruchomiłem kontener z obrazu `busybox`, wydając polecenie `sudo docker run -it busybox`. Wewnątrz kontenera sprawdziłem jego działanie za pomocą prostego polecenia `echo "Działa!"`, które zwróciło oczekiwany komunikat. Następnie opuściłem kontener (`exit`) i wyświetliłem listę wszystkich kontenerów (`docker ps -a`), co potwierdziło, że kontener `busybox` został poprawnie uruchomiony i zakończony.
+#
+#
+![2 10](https://github.com/user-attachments/assets/cd61d47a-c1d0-47ca-9047-ddc2b732dc51)
+Na zrzucie ekranu 2.10 uruchomiłem kontener na bazie obrazu `ubuntu` z użyciem polecenia `sudo docker run -it ubuntu`. Po zalogowaniu się do kontenera, sprawdziłem działające procesy poleceniem `ps`, a następnie zaktualizowałem listę pakietów systemowych komendą `apt update`. Proces zakończył się sukcesem, informując, że 20 pakietów może zostać zaktualizowanych. Po zakończeniu działań opuściłem kontener komendą `exit`.
+#
+#
+![2 11](https://github.com/user-attachments/assets/13571f54-0aca-4cab-9ca9-640f37ced125)
+Na zrzucie ekranu 2.11 stworzyłem nowy katalog `moj-obraz`, w którym utworzyłem plik `Dockerfile`. Następnie zbudowałem własny obraz Dockera o nazwie `moj-pierwszy-obraz` poleceniem `sudo docker build -t moj-pierwszy-obraz .`. Proces budowania rozpoczął się poprawnie i wykorzystuje jako bazę oficjalny obraz `ubuntu:latest`.
+#
+#
+![2 12](https://github.com/user-attachments/assets/7b3621dc-6b74-4802-91c0-fee9aa7242f7)
+Na zrzucie ekranu 2.12 znajduje się zawartość mojego pliku `Dockerfile`, który wykorzystałem do zbudowania własnego obrazu. Obraz bazuje na oficjalnym `ubuntu:latest`. W kroku `RUN` zaktualizowałem listę pakietów i zainstalowałem `curl`. Ostatecznie, instrukcja `CMD` ustawia domyślną komendę, która po uruchomieniu kontenera wyświetla komunikat: „Działa z mojego obrazu!”.
+#
+#
+![2 13](https://github.com/user-attachments/assets/30b30c2d-b104-48a2-b49a-7dde0f0d4b4a)
+Na zrzucie ekranu 2.13 widoczny jest rezultat uruchomienia mojego własnego obrazu Dockera o nazwie `moj-pierwszy-obraz`. Po poprawnym zbudowaniu obrazu, uruchomiłem go poleceniem `sudo docker run moj-pierwszy-obraz`. Kontener uruchomił się i wyświetlił wiadomość „Działa z mojego obrazu!”, co potwierdza, że wszystko działa zgodnie z założeniami zapisanymi w pliku `Dockerfile`.
+#
+#
+![2 14](https://github.com/user-attachments/assets/f4ade3d7-042c-4938-b4e8-8764d8f3f0a8)
+Na zrzucie ekranu 2.14 widać potwierdzenie uruchomienia kontenera na podstawie mojego obrazu `moj-pierwszy-obraz`. Polecenie `docker ps -a` pokazuje listę wszystkich kontenerów, w tym ten najnowszy z komendą `"echo 'Działa z moje…"`, co odpowiada treści z mojego pliku `Dockerfile`. Kontener zakończył działanie poprawnie (status `Exited (0)`), co oznacza, że polecenie wewnątrz obrazu zostało wykonane bez błędów.
+#
+#
+![2 15](https://github.com/user-attachments/assets/fe70529e-3171-404a-abb2-0278a8b6dd32)
+Na zrzucie ekranu 2.15 widać, że wykonałem czyszczenie środowiska Dockera za pomocą dwóch poleceń:
+
+1. `docker container prune` – usunąłem wszystkie zatrzymane kontenery, co pozwala zwolnić miejsce i uporządkować środowisko. Polecenie potwierdziłem, wpisując `y`, po czym zostały wypisane ID usuniętych kontenerów oraz informacja o odzyskanym miejscu (62.38MB).
+
+2. `docker image prune -a` – usunąłem wszystkie obrazy, które nie były już używane przez aktywne kontenery. Dzięki temu jeszcze bardziej oczyściłem system z niepotrzebnych danych.
+
+To był końcowy krok przygotowujący środowisko do dalszej pracy – czyste, uporządkowane i bez zbędnych plików.
+#
+#
+![2 16](https://github.com/user-attachments/assets/b9fdaec0-2146-47ac-a1c6-1ccf7505ac34)
+Na zrzucie ekranu 2.16 widać, że zakończyłem pracę nad sprawozdaniem i wypchnąłem zmiany do zdalnego repozytorium GitHub na gałęzi `GCL02` przy pomocy polecenia:
+
+```
+git push origin GCL02
+```
+
+Dodatkowo sprawdziłem, czy repozytorium jest poprawnie powiązane ze zdalnym adresem przy pomocy `git remote -v`, co potwierdza połączenie z GitHubem przez SSH.
+
+Na koniec użyłem `git log --oneline`, aby upewnić się, że wszystkie commity znajdują się na gałęzi `WM417892`. Najnowszy commit (`273fb8ca`) zatytułowany *"Dodano sprawozdanie i pliki Dockera"* został poprawnie zapisany jako aktualna głowa (`HEAD`) tej gałęzi. Wszystko wygląda na uporządkowane i gotowe do oceny.
+
+
 
