@@ -36,3 +36,11 @@ Następnie należało dodać git hook'a, który sprawdza, czu każdy commit zacz
 
 ![alt text](image-3.png)
 
+Konieczne było również nadanie mu uprawnień do wykonania.
+
+Pozostało tylko sprawdzenie poprawności hooka.
+
+![alt text](image-6.png)
+
+
+
