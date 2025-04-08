@@ -30,9 +30,16 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/69d55fc3f388456a
 Lab 2
 Git, Docker
 1. Zestawienie środowiska
-System operacyjny: Linux (np. Ubuntu 22.04)
+System operacyjny: Linux (Fedora)
 Instalacja Dockera została wykonana z repozytorium dystrybucji (APT), bez użycia Snap.
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/f069544e0b1ee19eef1c76e68588cfef9a0742f2/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(110).png
 2. Rejestracja w Docker Hub i pobieranie obrazów
 Utworzyłem konto na hub.docker.com i zapoznałem się z dostępnymi, oficjalnymi obrazami. Następnie pobrałem obrazy: hello world busybox ubuntu fedora mysql
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/f069544e0b1ee19eef1c76e68588cfef9a0742f2/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(111).png
+3. Uruchomienie kontenera z obrazu busybox
+Za pomocą polecenia docker run busybox echo "Hello from Busybox!" uruchomiono jednorazowy kontener na podstawie obrazu busybox. Kontener poprawnie wykonał polecenie i zwrócił komunikat tekstowy, co potwierdziło jego działanie.
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/2b7b9443660d27e651d1e4aeb261949236cf6a71/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(113).png
+4. Podłączenie do kontenera interaktywnie 
+Uruchomiłem kontener w trybie interaktywnym z dostępem do terminala (sh) używając polecenia docker run -it busybox sh.
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/2b7b9443660d27e651d1e4aeb261949236cf6a71/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(123).png
+
