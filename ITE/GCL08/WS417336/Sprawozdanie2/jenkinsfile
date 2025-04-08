@@ -26,5 +26,14 @@ pipeline {
                 }
             }
         }
+        
+        stage('Run app') {
+            steps {
+                dir('ITE/GCL08/WS417336/Sprawozdanie2') {
+                    sh 'docker network create ci'
+                    sh 'docker run --rm -d --network ci --name app -p 3000:3000 express-app'
+                }
+            }
+        }
     }
 }
