@@ -26,4 +26,6 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/1d67a17d42376e0a
 Po wykonaniu wszystkich zmian, zostały one dodane, zatwierdzone i wypchnięte do zdalnego repozytorium.
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/1d67a17d42376e0a71f375d8b5656705aa5e4cf4/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(103).png
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/69d55fc3f388456a3d76c6075815eda794f868ec/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(101).png
+
 Lab 2
+Git, Docker
