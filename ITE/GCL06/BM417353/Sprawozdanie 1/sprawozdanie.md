@@ -1,4 +1,4 @@
-Lab 1
+Lab 1 Git wprowadzenie
 1. Instalacja Git i obsługa kluczy SSH
 Na początku zainstalowano klienta Git oraz sprawdzono obecność obsługi SSH. Umożliwia to klonowanie repozytoriów i uwierzytelnianie się za pomocą kluczy kryptograficznych.
 
