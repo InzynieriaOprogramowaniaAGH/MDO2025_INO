@@ -44,5 +44,7 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/2b7b9443660d27e6
 Uruchomiłem kontener w trybie interaktywnym z dostępem do terminala (sh) używając polecenia docker run -it busybox sh.
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/2b7b9443660d27e651d1e4aeb261949236cf6a71/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(123).png
 6. System w kontenerze (Fedora/Ubuntu)
-Uruchomiłem kontener z obrazem systemu ubuntu w trybie interaktywnym, co pozwoliło mi na pełny dostęp do powłoki systemowej. Wewnątrz kontenera sprawdziłem PID procesu 1 (ps -p 1 -o comm=), a na hoście przeanalizowałem aktywność demona Dockera (ps aux | grep dockerd), aby zobaczyć powiązania kontenera z hostem.
+Uruchomiłem kontener z obrazem systemu ubuntu w trybie interaktywnym, co pozwoliło mi na pełny dostęp do powłoki systemowej. Wewnątrz kontenera sprawdziłem PID procesu 1, a na hoście przeanalizowałem aktywność demona Dockera (ps aux | grep dockerd), aby zobaczyć powiązania kontenera z hostem.
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/aadb66116d16e16747cf2577a9269d77be71cb66/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(116).png
+
 
