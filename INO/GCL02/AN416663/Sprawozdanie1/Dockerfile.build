@@ -1,0 +1,23 @@
+# Użycie obrazu Python jako bazowego
+FROM python:3.10
+
+# Instalacja wymaganych pakietów systemowych
+RUN apt-get update && apt-get install -y python3-venv
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
+
+# Kopiowanie plików projektu
+COPY . .
+
+# Tworzenie wirtualnego środowiska (bez aktywacji)
+RUN python3 -m venv venv
+
+# Instalacja pip i zależności
+RUN venv/bin/pip install --upgrade pip && venv/bin/pip install .
+
+# Budowanie aplikacji (jeśli wymagane)
+RUN make build || true  # Jeśli `make build` nie istnieje, kontener nie kończy działania
+
+# Ustawienie domyślnej ścieżki do Pythona
+ENV PATH="/app/venv/bin:$PATH"

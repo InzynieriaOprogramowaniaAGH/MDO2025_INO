@@ -1,0 +1,17 @@
+# Bazowanie na kontenerze builda
+FROM build-image as build
+
+# Tworzenie nowego kontenera testowego na bazie builda
+FROM python:3.10
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
+
+# Kopiowanie aplikacji i środowiska z kontenera builda
+COPY --from=build /app /app
+
+# Ustawienie domyślnej ścieżki do Pythona
+ENV PATH="/app/venv/bin:$PATH"
+
+# Uruchomienie testów
+CMD ["pytest", "tests"]
