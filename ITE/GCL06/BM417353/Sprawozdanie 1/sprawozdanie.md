@@ -55,7 +55,8 @@ Utworzyłem plik Dockerfile, który bazuje na obrazie fedora:latest i zawiera in
 Obraz zbudowałem przy użyciu polecenia docker build -t my-fedora-git ., a następnie uruchomiłem kontener interaktywnie, sprawdzając zawartość katalogu /app, aby upewnić się, że repozytorium zostało poprawnie sklonowane.
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6709bf8306ce078314b77ba273168b08cd103bd0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(118).png
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6709bf8306ce078314b77ba273168b08cd103bd0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(120).png
-9. Zarządzanie kontenerami i obrazami
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/b84cc41d4f8df4562f23fca6888add95467d725f/ITE/GCL06/BM417353/Sprawozdanie%201/Dockerfile
+10. Zarządzanie kontenerami i obrazami
 Za pomocą docker ps -a sprawdziłem wszystkie utworzone kontenery, zarówno aktywne, jak i zakończone. Następnie wykonałem komendy docker container prune -f, aby wyczyścić środowisko z niepotrzebnych kontenerów i obrazów.
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6709bf8306ce078314b77ba273168b08cd103bd0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(122).png
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6709bf8306ce078314b77ba273168b08cd103bd0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(124).png
