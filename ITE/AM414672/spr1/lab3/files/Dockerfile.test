@@ -1,0 +1,8 @@
+
+FROM sds-dockor
+
+
+WORKDIR /app
+
+
+CMD ["./sds-test"]
