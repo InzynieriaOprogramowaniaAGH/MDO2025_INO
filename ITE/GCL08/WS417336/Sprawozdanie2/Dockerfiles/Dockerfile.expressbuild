@@ -1,7 +1,12 @@
-FROM node
+FROM node AS express-build
 
 RUN git clone https://github.com/expressjs/express
 
-WORKDIR /express
+RUN npm install -g express-generator@4
+
+RUN express /tmp/foo
+
+WORKDIR /tmp/foo
+RUN npm install
 
 RUN npm install
