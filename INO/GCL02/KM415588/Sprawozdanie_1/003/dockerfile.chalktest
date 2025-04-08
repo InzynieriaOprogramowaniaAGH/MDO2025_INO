@@ -1,0 +1,4 @@
+FROM chalk-build
+WORKDIR /chalk-pipe
+RUN npm test > test_output.log || true
+CMD ["cat", "test_output.log"]

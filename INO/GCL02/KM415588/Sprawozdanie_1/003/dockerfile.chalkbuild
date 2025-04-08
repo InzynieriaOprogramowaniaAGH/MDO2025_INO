@@ -1,0 +1,7 @@
+FROM node
+
+RUN git clone https://github.com/LitoMore/chalk-pipe
+WORKDIR /chalk-pipe
+
+RUN npm install
+RUN npm run build
