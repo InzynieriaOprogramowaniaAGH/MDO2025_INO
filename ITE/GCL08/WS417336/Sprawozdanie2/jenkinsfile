@@ -13,7 +13,7 @@ pipeline {
                     sh 'docker rmi -f express-build'
                     sh 'docker rmi -f express-app'
                     sh 'docker builder prune --force --all'
-                    sh 'docker network rm ci'
+                    sh 'docker network inspect ci >/dev/null 2>&1 && docker network rm ci || true'
                 }
             }
         }
@@ -38,8 +38,8 @@ pipeline {
             steps {
                 dir('ITE/GCL08/WS417336/Sprawozdanie2') {
                     sh 'docker network create ci'
-                    sh 'docker run --rm -d --network ci --name app -p 3000 express-app'
-                    sh 'curl app:3000'
+                    sh 'docker run --rm -d --network ci --name app -p 3000:3000 express-app'
+                    sh 'docker run --rm --network ci fedora curl -s app:3000'
                 }
             }
         }
