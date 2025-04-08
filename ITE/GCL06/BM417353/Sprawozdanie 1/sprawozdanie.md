@@ -13,18 +13,20 @@ Po poprawnym dodaniu klucza SSH, sklonowano repozytorium ponownie, tym razem za 
 
 5. Konfiguracja 2FA 
 Na koncie GitHub została skonfigurowana opcja 2FA (Two-Factor Authentication) przy użyciu aplikacji autoryzującej, Google Authenticator.
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/1d67a17d42376e0a71f375d8b5656705aa5e4cf4/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(159).png
 
-6. Przełączanie gałęzi
+7. Przełączanie gałęzi
 W repozytorium przełączono się najpierw na główną gałąź main, a następnie na gałąź odpowiadającą grupie.
 
-7. Utworzenie nowej gałęzi „inicjały & nr indeksu”
+8. Utworzenie nowej gałęzi „inicjały & nr indeksu”
 Zgodnie z poleceniem, utworzono nową gałąź, odgałęziając się od gałęzi grupowej.
 
-8. Utworzenie katalogu o tej samej nazwie co gałąź
+9. Utworzenie katalogu o tej samej nazwie co gałąź
 W katalogu grupowym utworzono nowy folder odpowiadający nazwie gałęzi.
-
-9. Napisanie i dodanie Git hooka
-Stworzono prosty hook commit-msg, który sprawdza, czy komunikat commita zaczyna się od odpowiednich inicjałów i numeru indeksu.
-
-10. Wysłanie zmian do zdalnego repozytorium
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/1d67a17d42376e0a71f375d8b5656705aa5e4cf4/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(104).png
+10. Napisanie i dodanie Git hooka
+Stworzono prosty hook commit-msg, który sprawdza, czy komunikat commita zaczyna się od odpowiednich inicjałów i numeru indeksu. Niestety nie hook nie zadziałał poprawnie przesyłam wersje hooka jaką zamierzałem wykorzystać.
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/1d67a17d42376e0a71f375d8b5656705aa5e4cf4/ITE/GCL06/BM417353/Sprawozdanie%201/githook
+11. Wysłanie zmian do zdalnego repozytorium
 Po wykonaniu wszystkich zmian, zostały one dodane, zatwierdzone i wypchnięte do zdalnego repozytorium.
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/1d67a17d42376e0a71f375d8b5656705aa5e4cf4/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(103).png
