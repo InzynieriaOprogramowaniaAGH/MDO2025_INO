@@ -101,13 +101,35 @@ Już zbudowałem wcześniej
 ![image](no_git.PNG)
 
 2 Eksponowanie portu
-TODO
+```bash
+sudo docker network create --driver bridge mynet
+```
 
+```bash
+docker run --rm -d --name iperf3-server --network mynet networkstatic/iperf3 -s
+```
+
+```bash
+docker run --rm --name iperf3-client --network mynet networkstatic/iperf3 -c iperf3-server
+```
+
+![image](iperf_container.PNG)
+
+```bash
+sudo docker logs iperf3-server
+```
+
+![image](iperf_logi.PNG)
 
 3 Przeprowadź instalację skonteneryzowanej instancji Jenkinsa
 ```bash
 sudo docker network create jenkins-net
-sudo docker run --name jenkins-docker   --rm --detach   --privileged   --network jenkins-net   --network-alias docker   --env DOCKER_TLS_CERTDIR=""   -p 2376:2376   docker:dind
-sudo docker run --name jenkins   --rm --detach   --network jenkins-net   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_TLS_VERIFY=0   -p 8080:8080 -p 50000:50000   -v jenkins-data:/var/jenkins_home   jenkins/jenkins:lts-jdk11
+sudo docker run --name jenkins-docker --rm --detach \
+  --privileged --network jenkins --network-alias docker \
+  --env DOCKER_TLS_CERTDIR=/certs \
+  --volume jenkins-docker-certs:/certs/client \
+  --volume jenkins-data:/var/jenkins_home \
+  --publish 2376:2376 \
+  docker:dind --storage-driver overlay2
 ```
-TODO
+![image](jenkins.PNG)
