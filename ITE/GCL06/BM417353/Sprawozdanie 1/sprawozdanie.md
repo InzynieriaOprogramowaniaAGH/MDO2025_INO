@@ -29,3 +29,10 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/69d55fc3f388456a
 
 Lab 2
 Git, Docker
+1. Zestawienie środowiska
+System operacyjny: Linux (np. Ubuntu 22.04)
+Instalacja Dockera została wykonana z repozytorium dystrybucji (APT), bez użycia Snap.
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/f069544e0b1ee19eef1c76e68588cfef9a0742f2/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(110).png
+2. Rejestracja w Docker Hub i pobieranie obrazów
+Utworzyłem konto na hub.docker.com i zapoznałem się z dostępnymi, oficjalnymi obrazami. Następnie pobrałem obrazy: hello world busybox ubuntu fedora mysql
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/f069544e0b1ee19eef1c76e68588cfef9a0742f2/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(111).png
