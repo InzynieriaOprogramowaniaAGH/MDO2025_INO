@@ -60,3 +60,12 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/b84cc41d4f8df456
 Za pomocą docker ps -a sprawdziłem wszystkie utworzone kontenery, zarówno aktywne, jak i zakończone. Następnie wykonałem komendy docker container prune -f, aby wyczyścić środowisko z niepotrzebnych kontenerów i obrazów.
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6709bf8306ce078314b77ba273168b08cd103bd0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(122).png
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6709bf8306ce078314b77ba273168b08cd103bd0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(124).png
+
+Lab 3
+
+1. Wybór oprogramowania – irssi
+Na potrzeby laboratorium wybrałem aplikację irssi – przedstawioną na zajęciach. Projekt dostępny jest publicznie na GitHubie. Repozytorium zawiera wymagane pliki Makefile.am, configure.ac oraz zestaw testów jednostkowych.
+
+2. Build i test lokalnie (poza kontenerem)
+Sklonowałem repozytorium:
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/38f67548a0d7679234a8721ea9db64610f779d2d/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(172).png
