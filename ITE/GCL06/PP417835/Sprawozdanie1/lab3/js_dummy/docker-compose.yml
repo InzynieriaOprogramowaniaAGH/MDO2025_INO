@@ -1,0 +1,16 @@
+services:
+  node-js-dummy-test_compose:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: node-js-dummy-test_compose
+    container_name: node-js-dummy-test_compose_run
+
+  node-js-dummy-test_compose_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+    - node-js-dummy-test_compose
+    image: node-js-dummy-test_compose_test
+    container_name: node-js-dummy-test_compose_test_run

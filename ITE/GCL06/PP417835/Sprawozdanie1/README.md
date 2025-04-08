@@ -207,6 +207,56 @@ RUN npm test
 
 ![](./lab3/screen15.jpg)
 
+## 7. Instalacja docker compose
+
+![](./lab3/screen16%20compose.jpg)
+
+## 8. Automatyzacja budowania i uruchamiania kontenerów ```irssi``` za pomocą docker compose
+
+```
+services:
+  irssi_compose:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: irssi_compose
+    container_name: irssi_compose_run
+
+  irssi_compose_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+    - irssi_compose
+    image: irssi_compose_test
+    container_name: irssi_compose_test_run
+```
+
+![](./lab3/screen17%20compose.jpg)
+
+## 8. Automatyzacja budowania i uruchamiania kontenerów ```node-js-dummy-test``` za pomocą docker compose
+
+```
+services:
+  node-js-dummy-test_compose:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: node-js-dummy-test_compose
+    container_name: node-js-dummy-test_compose_run
+
+  node-js-dummy-test_compose_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+    - node-js-dummy-test_compose
+    image: node-js-dummy-test_compose_test
+    container_name: node-js-dummy-test_compose_test_run
+```
+
+![](./lab3/screen18%20compose.jpg)
+
 # Zajęcia 4
 
 # a) Zachowanie stanu 

@@ -1,0 +1,16 @@
+services:
+  irssi_compose:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: irssi_compose
+    container_name: irssi_compose_run
+
+  irssi_compose_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    depends_on:
+    - irssi_compose
+    image: irssi_compose_test
+    container_name: irssi_compose_test_run
