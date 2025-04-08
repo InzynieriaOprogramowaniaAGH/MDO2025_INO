@@ -36,10 +36,13 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/f069544e0b1ee19e
 2. Rejestracja w Docker Hub i pobieranie obrazów
 Utworzyłem konto na hub.docker.com i zapoznałem się z dostępnymi, oficjalnymi obrazami. Następnie pobrałem obrazy: hello world busybox ubuntu fedora mysql
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/f069544e0b1ee19eef1c76e68588cfef9a0742f2/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(111).png
-3. Uruchomienie kontenera z obrazu busybox
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/094b7978cf929a24c4efa8aff332e70788e9821f/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(115).png
+4. Uruchomienie kontenera z obrazu busybox
 Za pomocą polecenia docker run busybox echo "Hello from Busybox!" uruchomiono jednorazowy kontener na podstawie obrazu busybox. Kontener poprawnie wykonał polecenie i zwrócił komunikat tekstowy, co potwierdziło jego działanie.
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/2b7b9443660d27e651d1e4aeb261949236cf6a71/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(113).png
-4. Podłączenie do kontenera interaktywnie 
+5. Podłączenie do kontenera interaktywnie 
 Uruchomiłem kontener w trybie interaktywnym z dostępem do terminala (sh) używając polecenia docker run -it busybox sh.
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/2b7b9443660d27e651d1e4aeb261949236cf6a71/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(123).png
+6. System w kontenerze (Fedora/Ubuntu)
+Uruchomiłem kontener z obrazem systemu ubuntu w trybie interaktywnym, co pozwoliło mi na pełny dostęp do powłoki systemowej. Wewnątrz kontenera sprawdziłem PID procesu 1 (ps -p 1 -o comm=), a na hoście przeanalizowałem aktywność demona Dockera (ps aux | grep dockerd), aby zobaczyć powiązania kontenera z hostem.
 
