@@ -9,10 +9,10 @@ pipeline {
         
         stage('Build Dockerfile') {
             steps {
-                dir('ITE/GCL08/WS417336/Sprawozdanie1') {
-                    sh 'docker rmi -f irssi-build'
+                dir('ITE/GCL08/WS417336/Sprawozdanie2') {
+                    sh 'docker rmi -f express-build'
                     sh 'docker builder prune --force --all'
-                    sh 'docker build -t irssi-build -f Dockerfile.irssibuild .'
+                    sh 'docker build -f Dockerfile.expressbuild -t express-build .'
                 }
             }
         }
