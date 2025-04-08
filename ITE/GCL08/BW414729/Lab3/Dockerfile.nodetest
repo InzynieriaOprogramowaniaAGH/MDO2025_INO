@@ -1,0 +1,3 @@
+FROM nodebld
+WORKDIR /node-js-dummy-test
+CMD ["npm", "test"]

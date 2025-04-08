@@ -1,6 +1,5 @@
 FROM irssi-build
 
-WORKDIR /irssi
+WORKDIR /irssi/Build
 
-# Uruchomienie testów za pomocą ninja
-CMD ["ninja", "-C", "Build", "test"]
+CMD ["meson", "test", "--print-errorlogs"]

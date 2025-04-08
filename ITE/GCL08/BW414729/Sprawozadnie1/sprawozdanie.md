@@ -1,5 +1,7 @@
 # Sprawozdanie 1 - BW414729
-## 1. Instalacja Git, SSH i przygotowanie do pracy
+
+## Labolatoria 1 Wprowadzenie, Git, Gałęzie, SSH
+### 1. Instalacja Git, SSH i przygotowanie do pracy
 - Zainstalowałem Git
 ![Test Git](../Lab1/Git.png)
 
@@ -32,8 +34,8 @@ chmod +x .git/hooks/commit-msg
 ![TESTHOOKA](../Lab1/testhooka.png)
 
 ##############################################################
-
-## 2. Git, Docker
+## Labolatoria 2 Git, Docker
+### 2. Zestawienie środowiska
 - zainstalowałem Dockera na serwerze Fedora, oraz pobrałem wymagane obrazy.
    - instalacja dockera 
 ![INSTALACJA1](../Lab2/instalacja_docekr1.png)
@@ -86,3 +88,38 @@ Nie wyswietla repozytoriów bo wszystkie są aktualne
 - Uruchomione kontenery przed wyczyszczeniem i po wyczyszczeniu
 ![CZYSZCZENIE_KONTEEROW](../Lab2/uruchomione_dockery_2.png)
 
+## Labolatoria 3 Dockerfiles, kontener jako definicja etapu
+- na potrzebu tego labolatorium skorzystałem z irssi i nide-js-dummy-test dostępnch po poniższymi linkami:
+  - https://github.com/irssi/irssi
+  - https://github.com/devenes/node-js-dummy-test
+- Poprałem powyższe repozytoria i następnie wykonałem kroki podane w instrukcji, poniżej szczegółowy ich opis dla poszczególnych repozytoriów:
+
+### IRSSI
+Program został poprawnie zbudowany przy użyciu systemu budowania Meson i narzędzia ninja. Zostało to wykoanne za pomocą poleceń podanych przez autora:
+
+```bash
+git clone https://github.com/irssi/irssi
+cd irssi
+dnf install -y git meson ninja-build gcc gcc-c++ glib2-devel openssl-devel ncurses-devel libtool perl && dnf 
+meson Build
+ninja -C Build && sudo ninja -C Build install
+```
+Pobrane za pomocą dnf repozytoria są niezbędne do prawidłowego działania Irssi.
+Dowód pobrania odpowieniego repozytorium:
+![KLONOWANIE IRSSI](../Lab3/screeny/lab3_1.png)
+Następnie uruchomiłem Irssi by potwirdzić prawidłowe działanie:
+![URUCHOMIENIE IRSSI](../Lab3/screeny/lab3_2.png)
+Po czy jeszcze uruchomiłem dla niego testy za pomocą ```ninja test```:
+![TEST IRSSI](../Lab3/screeny/lab3_3.png)
+Jak widać na screenie wszystkie zostały zaliczone.
+
+Następnoie napisałe
+
+### NODE-JS-DUMMY-TEST
+
+
+## Labolatoria 4
+
+### Zachowywanie stanu
+### Eksponowanie portu
+### Instancja Jenkins
