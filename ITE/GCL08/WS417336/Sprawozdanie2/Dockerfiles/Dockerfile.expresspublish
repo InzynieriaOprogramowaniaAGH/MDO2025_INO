@@ -2,7 +2,6 @@ FROM node:18-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y curl
 COPY --from=express-build /express /app
 
 CMD ["npm", "start"]
