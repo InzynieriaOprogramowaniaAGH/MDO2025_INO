@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone&Checkout') {
+            steps {
+                sh "rm -fr MDO2025_INO"
+                sh "git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git"
+                dir("MDO2025_INO") { sh "git checkout TM415261" }
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "docker build -t redis-builder -f MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie2/Lab5/project/Dockerfile.build ."
+            }
+        }
+        stage('Test') {
+            steps {
+                sh "docker build -t redis-test -f MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie2/Lab5/project/Dockerfile.test ."
+            }
+        }
+        stage('RunningTests') {
+            steps {
+                sh "docker run redis-test"
+            }
+        }
+    }
+}
