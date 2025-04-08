@@ -46,5 +46,16 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/2b7b9443660d27e6
 6. System w kontenerze (Fedora/Ubuntu)
 Uruchomiłem kontener z obrazem systemu ubuntu w trybie interaktywnym, co pozwoliło mi na pełny dostęp do powłoki systemowej. Wewnątrz kontenera sprawdziłem PID procesu 1, a na hoście przeanalizowałem aktywność demona Dockera (ps aux | grep dockerd), aby zobaczyć powiązania kontenera z hostem.
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/aadb66116d16e16747cf2577a9269d77be71cb66/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(116).png
-
-
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6709bf8306ce078314b77ba273168b08cd103bd0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(117).png
+7. Aktualizacja pakietów w kontenerze
+W kontenerze uruchomionym z systemem Ubuntu wykonałem polecenie upgrade -y, aby zaktualizować wszystkie dostępne pakiety systemowe. Po zakończeniu procesu aktualizacji, zakończyłem pracę w kontenerze komendą exit.
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6709bf8306ce078314b77ba273168b08cd103bd0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(116).png
+8. Stworzenie własnego obrazu z Dockerfile
+Utworzyłem plik Dockerfile, który bazuje na obrazie fedora:latest i zawiera instrukcje instalacji Gita za pomocą menedżera pakietów dnf, a także klonowania zdalnego repozytorium z GitHuba do katalogu roboczego /app. Dzięki użyciu dnf clean all, obraz jest lżejszy i zgodny z dobrymi praktykami.
+Obraz zbudowałem przy użyciu polecenia docker build -t my-fedora-git ., a następnie uruchomiłem kontener interaktywnie, sprawdzając zawartość katalogu /app, aby upewnić się, że repozytorium zostało poprawnie sklonowane.
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6709bf8306ce078314b77ba273168b08cd103bd0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(118).png
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6709bf8306ce078314b77ba273168b08cd103bd0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(120).png
+9. Zarządzanie kontenerami i obrazami
+Za pomocą docker ps -a sprawdziłem wszystkie utworzone kontenery, zarówno aktywne, jak i zakończone. Następnie wykonałem komendy docker container prune -f, aby wyczyścić środowisko z niepotrzebnych kontenerów i obrazów.
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6709bf8306ce078314b77ba273168b08cd103bd0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(122).png
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6709bf8306ce078314b77ba273168b08cd103bd0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(124).png
