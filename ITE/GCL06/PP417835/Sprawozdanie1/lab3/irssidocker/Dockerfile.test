@@ -1,0 +1,3 @@
+FROM irssi_kont
+
+RUN ninja -C Build test

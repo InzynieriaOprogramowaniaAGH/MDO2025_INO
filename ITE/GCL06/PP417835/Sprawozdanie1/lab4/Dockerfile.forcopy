@@ -1,0 +1,6 @@
+FROM fedora:42
+
+RUN dnf -y update&& \ 
+    dnf -y install git 
+
+WORKDIR /repo
