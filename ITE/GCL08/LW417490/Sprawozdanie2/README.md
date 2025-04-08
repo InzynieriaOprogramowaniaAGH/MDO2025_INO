@@ -99,3 +99,9 @@ pipeline {
 
 Na zrzucie widać, że mimo kliku nie udanych prób końcowo wsyzstko zadziałało prawidłowo.
 ![alt text](<Lab5/Zrzut ekranu 2025-04-01 200042.png>)
+
+
+
+## Lab 6 - 
+
+### Cel:
