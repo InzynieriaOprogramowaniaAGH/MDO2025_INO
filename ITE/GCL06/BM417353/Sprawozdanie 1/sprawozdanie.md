@@ -166,6 +166,7 @@ Po przekopiowaniu projektu przeszedłem do katalogu /dane_wej/irssi w kontenerze
 Na koniec, w osobnym terminalu na hoście, sprawdziłem zawartość woluminu wyjściowego, uruchamiając tymczasowy kontener alpine i wypisując pliki przy pomocy ls -la /sprawdz/build, upewniając się, że build został wykonany poprawnie i pliki są dostępne po zamknięciu kontenera.
 
 2. Ponowienie z klonowaniem w kontenerze (z git):
+
 Uruchomienie nowego kontenera z git:
 
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/af7f53cc69fee54520d9b6256563dd0414b9f4cc/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(3).png
@@ -173,3 +174,7 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/af7f53cc69fee545
 Wewnątrz kontenera:
 
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/42cc7bec6ae24586ee4e3a72a2775440659d973f/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu(4).png
+3. Stworzenie dedykowanej sieci mostkowej
+Tworzymy sieć o nazwie siec_testowa:
+
+
