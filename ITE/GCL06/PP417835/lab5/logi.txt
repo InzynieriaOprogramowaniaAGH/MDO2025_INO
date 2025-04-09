@@ -1,0 +1,271 @@
+#11
+
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/pipeline1
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Clone)
+[Pipeline] sh
++ rm -rf MDO2025_INO
+[Pipeline] sh
++ git clone -b PP417835 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+Cloning into 'MDO2025_INO'...
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t irssi_kont -f MDO2025_INO/ITE/GCL06/PP417835/Sprawozdanie1/lab3/irssidocker/Dockerfile .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 379B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/fedora:42
+#2 DONE 1.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.1s
+
+#4 [1/8] FROM docker.io/library/fedora:42@sha256:8c56879c165267e10c987ce5d3803d316d9ab21b28a2816f66130d402d35ca81
+#4 DONE 0.0s
+
+#5 [3/8] RUN dnf -y install git
+#5 CACHED
+
+#6 [5/8] WORKDIR /irssi
+#6 CACHED
+
+#7 [7/8] RUN meson setup Build
+#7 CACHED
+
+#8 [2/8] RUN dnf -y update && 	 dnf -y install meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils*
+#8 CACHED
+
+#9 [4/8] RUN git clone https://github.com/irssi/irssi
+#9 CACHED
+
+#10 [6/8] RUN mkdir Build
+#10 CACHED
+
+#11 [8/8] RUN ninja -C Build
+#11 CACHED
+
+#12 exporting to image
+#12 exporting layers done
+#12 writing image sha256:b9f96deceb83cf4e7b45fc4f1883405bb6fa4ca67b6b31a18749ca9ee9cfe7d9 done
+#12 naming to docker.io/library/irssi_kont done
+#12 DONE 0.0s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t irssi_test -f MDO2025_INO/ITE/GCL06/PP417835/Sprawozdanie1/lab3/irssidocker/Dockerfile.test .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.test
+#1 transferring dockerfile: 143B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/irssi_kont:latest
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/2] FROM docker.io/library/irssi_kont:latest
+#4 DONE 0.3s
+
+#5 [2/2] RUN ninja -C Build test
+#5 0.242 ninja: Entering directory `Build'
+#5 0.528 [1/2] Generating irssi-version.h with a custom command (wrapped by meson to capture output)
+#5 0.533 [1/2] Running all tests
+#5 1.009 1/5 test-formats test              OK              0.01s   1 subtests passed
+#5 1.022 2/5 test-irc test                  OK              0.01s   22 subtests passed
+#5 1.036 3/5 test-channel-events test       OK              0.01s   3 subtests passed
+#5 1.051 4/5 test-796 test                  OK              0.01s   1 subtests passed
+#5 1.059 5/5 test-paste-join-multiline test OK              0.01s   3 subtests passed
+#5 1.066 
+#5 1.066 Ok:                 5   
+#5 1.066 Expected Fail:      0   
+#5 1.066 Fail:               0   
+#5 1.066 Unexpected Pass:    0   
+#5 1.066 Skipped:            0   
+#5 1.066 Timeout:            0   
+#5 1.066 
+#5 1.066 Full log written to /irssi/Build/meson-logs/testlog.txt
+#5 DONE 1.4s
+
+#6 exporting to image
+#6 exporting layers 0.1s done
+#6 writing image sha256:f43ff73b368704b1412bc67b489ce6e6215cb473acb6604d2e6ae906054f7f43 done
+#6 naming to docker.io/library/irssi_test done
+#6 DONE 0.1s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Images)
+[Pipeline] sh
++ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED              SIZE
+irssi_test   latest    f43ff73b3687   2 seconds ago        820MB
+irssi        latest    b9f96deceb83   About a minute ago   820MB
+irssi_kont   latest    b9f96deceb83   About a minute ago   820MB
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+
+#12
+
+
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/pipeline1
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Clone)
+[Pipeline] sh
++ rm -rf MDO2025_INO
+[Pipeline] sh
++ git clone -b PP417835 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+Cloning into 'MDO2025_INO'...
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t irssi_kont -f MDO2025_INO/ITE/GCL06/PP417835/Sprawozdanie1/lab3/irssidocker/Dockerfile .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 379B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/fedora:42
+#2 DONE 0.5s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/8] FROM docker.io/library/fedora:42@sha256:8c56879c165267e10c987ce5d3803d316d9ab21b28a2816f66130d402d35ca81
+#4 DONE 0.0s
+
+#5 [3/8] RUN dnf -y install git
+#5 CACHED
+
+#6 [2/8] RUN dnf -y update && 	 dnf -y install meson gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils*
+#6 CACHED
+
+#7 [6/8] RUN mkdir Build
+#7 CACHED
+
+#8 [7/8] RUN meson setup Build
+#8 CACHED
+
+#9 [5/8] WORKDIR /irssi
+#9 CACHED
+
+#10 [4/8] RUN git clone https://github.com/irssi/irssi
+#10 CACHED
+
+#11 [8/8] RUN ninja -C Build
+#11 CACHED
+
+#12 exporting to image
+#12 exporting layers done
+#12 writing image sha256:b9f96deceb83cf4e7b45fc4f1883405bb6fa4ca67b6b31a18749ca9ee9cfe7d9 done
+#12 naming to docker.io/library/irssi_kont done
+#12 DONE 0.0s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t irssi_test -f MDO2025_INO/ITE/GCL06/PP417835/Sprawozdanie1/lab3/irssidocker/Dockerfile.test .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.test
+#1 transferring dockerfile: 143B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/irssi_kont:latest
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/2] FROM docker.io/library/irssi_kont:latest
+#4 DONE 0.0s
+
+#5 [2/2] RUN ninja -C Build test
+#5 CACHED
+
+#6 exporting to image
+#6 exporting layers done
+#6 writing image sha256:f43ff73b368704b1412bc67b489ce6e6215cb473acb6604d2e6ae906054f7f43 done
+#6 naming to docker.io/library/irssi_test done
+#6 DONE 0.0s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Images)
+[Pipeline] sh
++ docker images
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+irssi_test   latest    f43ff73b3687   38 seconds ago   820MB
+irssi        latest    b9f96deceb83   2 minutes ago    820MB
+irssi_kont   latest    b9f96deceb83   2 minutes ago    820MB
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
