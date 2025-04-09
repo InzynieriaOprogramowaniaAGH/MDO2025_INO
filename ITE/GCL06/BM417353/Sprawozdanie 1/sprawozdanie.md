@@ -138,5 +138,14 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/50ab6b15e635e5bd
 
 Uruchomienie kontenera bazowego bez git (Użyłem obrazu fedora, który ma już narzędzia do budowania).
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/0841b6bd2f39492f4ab0a236e062c3751b864983/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(136).png
+
 W kontenerze: Instalacja zależności:
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/0841b6bd2f39492f4ab0a236e062c3751b864983/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(136).png
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/8f0cc70a7b879a85ae4440bd21dc0ed33476dbcd/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(137).png
+
+Klonowanie repozytorium na wolumin wejściowy (z poziomu hosta):
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/d98b097d55dd3314f33a415b66197fcf270d6419/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(141).png
+Kompilacja i zapis wyników na woluminie wyjściowym: We wnętrzu kontenera:
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/ddfed437f6bdaf6a2b2670d80f5ebcd148696c11/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(143).png
