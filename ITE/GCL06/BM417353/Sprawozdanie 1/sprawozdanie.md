@@ -35,6 +35,7 @@ Instalacja Dockera została wykonana z repozytorium dystrybucji (APT), bez użyc
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/f069544e0b1ee19eef1c76e68588cfef9a0742f2/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(110).png
 2. Rejestracja w Docker Hub i pobieranie obrazów
 Utworzyłem konto na hub.docker.com i zapoznałem się z dostępnymi, oficjalnymi obrazami. Następnie pobrałem obrazy: hello world busybox ubuntu fedora mysql
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/dc5b6e3530f0904cb2fd60d653acf6fdeadf753f/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(133).png
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/f069544e0b1ee19eef1c76e68588cfef9a0742f2/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(111).png
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/094b7978cf929a24c4efa8aff332e70788e9821f/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(115).png
 4. Uruchomienie kontenera z obrazu busybox
@@ -92,3 +93,35 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/1c1c23e8acaca919
 
 Przeprowadziłem testy wewątrz kontenera:
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/1c1c23e8acaca91978532cb084c2bf3c62d36e93/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(167).png
+
+4. Dockerfile 1 – Budowanie aplikacji
+Ten plik Dockerfile tworzy obraz bazujący na Ubuntu, w którym instalowane są wszystkie niezbędne zależności potrzebne do zbudowania aplikacji irssi. Zawiera też instrukcje sklonowania repozytorium, przygotowania środowiska (autogen, configure) oraz kompilacji kodu za pomocą make. Pojawiły się problemy ostatnim krokiem dockerfile, ale zostały rozwiązane przez dodanie perla do dockerfile.
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/bcfbb9b4504d3fc85b31427b7c9cb50f363ca8ae/ITE/GCL06/BM417353/Sprawozdanie%201/Dockerfile.build
+
+Wykonałem build za pomocą dockerfile:
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/bcfbb9b4504d3fc85b31427b7c9cb50f363ca8ae/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(127).png
+
+5. Dockerfile 2 – Uruchamianie testów na bazie pierwszego obrazu
+Drugi Dockerfile oparty jest na obrazie wygenerowanym z pierwszego pliku i nie wykonuje już kompilacji, lecz jedynie uruchamia testy jednostkowe. Dzięki temu proces testowania jest szybszy i bardziej modularny, a także oddzielony logicznie od etapu budowania.
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/bcfbb9b4504d3fc85b31427b7c9cb50f363ca8ae/ITE/GCL06/BM417353/Sprawozdanie%201/Dockerfile.test
+
+Przeprowadziłem testy przy użyciu dockerfile.test:
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/bcfbb9b4504d3fc85b31427b7c9cb50f363ca8ae/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(128).png
+
+6. Budowanie obrazów
+Obrazy tworzy się za pomocą polecenia docker build, w którym określa się nazwę oraz plik Dockerfile, z którego ma zostać zbudowany obraz. Proces budowania automatycznie pobiera zależności, wykonuje komendy z Dockerfile i tworzy gotowe środowisko pracy.
+Budowanie obrazu buildującego:
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/51056805b7e996ccd3614f2facf38994af18a2f9/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(175).png
+
+Budowanie obrazu testującego:
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/51056805b7e996ccd3614f2facf38994af18a2f9/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(176).png
+
+Uruchomienie kontenera testowego:
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/51056805b7e996ccd3614f2facf38994af18a2f9/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(177).png
+
