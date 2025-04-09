@@ -67,6 +67,7 @@ Lab 3
 Na potrzeby laboratorium wybrałem aplikację irssi – przedstawioną na zajęciach. Projekt dostępny jest publicznie na GitHubie. Repozytorium zawiera wymagane pliki Makefile.am, configure.ac oraz zestaw testów jednostkowych.
 
 2. Build i test lokalnie (poza kontenerem)
+
 Sklonowałem repozytorium:
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/38f67548a0d7679234a8721ea9db64610f779d2d/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(172).png
 
