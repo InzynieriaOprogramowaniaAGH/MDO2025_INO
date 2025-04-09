@@ -131,7 +131,12 @@ Obraz w Dockerze to niezmienny szablon zawierający wszystkie potrzebne elementy
 
 Lab 4 Dodatkowa terminologia w konteneryzacji, instancja Jenkins
 
-Zachowywanie stanu – woluminy wejściowy i wyjściowy
+1. Zachowywanie stanu – woluminy wejściowy i wyjściowy
+2. Klonowanie repozytrium bez git
 Tworzenie woluminów zdrzut z stworzonymi woluminami za pomocą poleceń docker volume create volumin_wej, docker volume create volumin_wyj:
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/50ab6b15e635e5bd92dd896f9a411fd9ac698379/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(135).png
 
+Uruchomienie kontenera bazowego bez git (Użyłem obrazu fedora, który ma już narzędzia do budowania).
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/0841b6bd2f39492f4ab0a236e062c3751b864983/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(136).png
+W kontenerze: Instalacja zależności:
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/0841b6bd2f39492f4ab0a236e062c3751b864983/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(136).png
