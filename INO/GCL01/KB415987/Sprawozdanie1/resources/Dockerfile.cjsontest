@@ -1,0 +1,4 @@
+FROM cjsonbld
+
+WORKDIR /app/cJSON/build
+CMD ["make", "test"]

@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  build:
+    image: cjsonbld
+    build:
+      context: .
+      dockerfile: Dockerfile.cjsonbld
+
+  test:
+    image: cjsontest
+    build:
+      context: .
+      dockerfile: Dockerfile.cjsontest
+    depends_on:
+      - build
