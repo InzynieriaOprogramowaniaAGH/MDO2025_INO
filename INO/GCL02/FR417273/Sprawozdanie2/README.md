@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/ea183fde-00af-404e-9aeb-1ad1723ba736)# Sprawozdanie z laboratoriów: Pipeline, Jenkins, izolacja etapów
+# Sprawozdanie z laboratoriów: Pipeline, Jenkins, izolacja etapów
 - Przedmiot: DevOps
 - Kierunek: Inżynieria Obliczeniowa
 - Autor: Filip Rak
