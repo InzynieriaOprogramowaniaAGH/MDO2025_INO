@@ -132,20 +132,44 @@ Obraz w Dockerze to niezmienny szablon zawierający wszystkie potrzebne elementy
 Lab 4 Dodatkowa terminologia w konteneryzacji, instancja Jenkins
 
 1. Zachowywanie stanu – woluminy wejściowy i wyjściowy
-2. Klonowanie repozytrium bez git
+Klonowanie repozytrium bez git
 Tworzenie woluminów zdrzut z stworzonymi woluminami za pomocą poleceń docker volume create volumin_wej, docker volume create volumin_wyj:
-https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/50ab6b15e635e5bd92dd896f9a411fd9ac698379/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(135).png
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/0900bb534c152f43c961b03d9a1cd605c59ccfa5/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(140).png
 
 Uruchomienie kontenera bazowego bez git (Użyłem obrazu fedora, który ma już narzędzia do budowania).
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/0841b6bd2f39492f4ab0a236e062c3751b864983/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(136).png
 
 W kontenerze: Instalacja zależności:
-https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/0841b6bd2f39492f4ab0a236e062c3751b864983/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(136).png
-https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/8f0cc70a7b879a85ae4440bd21dc0ed33476dbcd/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(137).png
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/0900bb534c152f43c961b03d9a1cd605c59ccfa5/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(143).png
 
 Klonowanie repozytorium na wolumin wejściowy (z poziomu hosta):
 
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/d98b097d55dd3314f33a415b66197fcf270d6419/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(141).png
+
 Kompilacja i zapis wyników na woluminie wyjściowym: We wnętrzu kontenera:
 
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/ddfed437f6bdaf6a2b2670d80f5ebcd148696c11/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(143).png
+Weryfikcja:
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/42cc7bec6ae24586ee4e3a72a2775440659d973f/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(142).png
+
+Opis jak wykonałem kolowanie bez użycia git: 
+Wykonałem zadanie polegające na klonowaniu repozytorium bez użycia Gita, wykorzystując woluminy Dockera jako sposób na przekazanie danych do kontenera. Na początku utworzyłem dwa woluminy przy pomocy poleceń docker volume create wolumin_wej oraz docker volume create wolumin_wyj, które odpowiednio odpowiadały za dane wejściowe i wyjściowe. Następnie uruchomiłem kontener o nazwie zadanie4, bazujący na obrazie fedora:latest, z zamontowanymi wcześniej utworzonymi woluminami. Kontener uruchomiłem z dostępem do terminala (TTY), aby pracować w nim interaktywnie.
+
+Po wejściu do kontenera wykonałem aktualizację repozytoriów i zainstalowałem potrzebne narzędzia buildowe, takie jak make, gcc, meson oraz ninja-build, jednak  bez gita. Upewniłem się, że git nie jest dostępny, wpisując which git, co zwróciło komunikat informujący o jego braku.
+
+Repozytorium projektu przeniosłem do kontenera bezpośrednio z hosta, korzystając z polecenia docker cp, wskazując lokalizację projektu na moim systemie oraz docelowy katalog /dane_wej/irssi wewnątrz kontenera. W ten sposób „sklonowałem” repozytorium bez korzystania z git.
+
+Po przekopiowaniu projektu przeszedłem do katalogu /dane_wej/irssi w kontenerze, uruchomiłem konfigurację przy pomocy meson setup build, a następnie wykonałem kompilację komendą ninja -C build. Wytworzone pliki binarne oraz cały katalog build skopiowałem do katalogu /dane_wyj, czyli na wolumin wyjściowy, który służył do trwałego przechowywania wyników, na zrzucie jest to udokomentowane w fomie histori poleceń dokera.
+
+Na koniec, w osobnym terminalu na hoście, sprawdziłem zawartość woluminu wyjściowego, uruchamiając tymczasowy kontener alpine i wypisując pliki przy pomocy ls -la /sprawdz/build, upewniając się, że build został wykonany poprawnie i pliki są dostępne po zamknięciu kontenera.
+
+2. Ponowienie z klonowaniem w kontenerze (z git):
+Uruchomienie nowego kontenera z git:
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/af7f53cc69fee54520d9b6256563dd0414b9f4cc/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(3).png
+
+Wewnątrz kontenera:
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/42cc7bec6ae24586ee4e3a72a2775440659d973f/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu(4).png
