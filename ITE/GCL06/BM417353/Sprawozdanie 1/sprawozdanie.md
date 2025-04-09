@@ -131,5 +131,7 @@ Obraz w Dockerze to niezmienny szablon zawierający wszystkie potrzebne elementy
 
 Lab 4 Dodatkowa terminologia w konteneryzacji, instancja Jenkins
 
-
+Zachowywanie stanu – woluminy wejściowy i wyjściowy
+Tworzenie woluminów zdrzut z stworzonymi woluminami za pomocą poleceń docker volume create volumin_wej, docker volume create volumin_wyj:
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/50ab6b15e635e5bd92dd896f9a411fd9ac698379/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(135).png
 
