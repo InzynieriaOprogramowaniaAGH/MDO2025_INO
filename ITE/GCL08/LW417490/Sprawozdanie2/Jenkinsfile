@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'LW417490', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Cleaning') {
+            steps {
+                dir('ITE/GCL08/LW417490/Sprawozdanie2') {
+                    sh 'docker rmi -f express-build || true'
+                    sh 'docker rmi -f express-app || true'
+                    sh 'docker builder prune --force --all || true'
+                    sh 'docker network rm ci || true'
+                }
+            }
+        }
+
+        stage('Build Dockerfile (Builder)') {
+            steps {
+                dir('ITE/GCL08/LW417490/Sprawozdanie2') {
+                    sh 'docker build -f Dockerfile.expbuild -t express-build .'
+                }
+            }
+        }
+
+        stage('Build Dockerfile (App)') {
+            steps {
+                dir('ITE/GCL08/LW417490/Sprawozdanie2') {
+                    sh 'docker build -f Dockerfile.exppub -t express-app .'
+                }
+            }
+        }
+
+        stage('Run app') {
+            steps {
+                dir('ITE/GCL08/LW417490/Sprawozdanie2') {
+                    sh 'docker network create ci || true'
+                    sh 'docker run --rm -d --network ci --name app -p 3000:3000 express-app'
+                    sh 'sleep 2'
+                    sh 'curl http://localhost:3000 || echo "Aplikacja nie odpowiedziała"'
+                }
+            }
+        }
+    }
+}

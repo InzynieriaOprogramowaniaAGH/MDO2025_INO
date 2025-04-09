@@ -1,0 +1,8 @@
+# Bazujemy na wcześniej zbudowanym obrazie
+FROM irssi-build
+
+# Ustawienie katalogu roboczego
+WORKDIR /app/irssi
+
+# Uruchomienie testów jednostkowych
+CMD ["meson", "test", "-C", "build"]
