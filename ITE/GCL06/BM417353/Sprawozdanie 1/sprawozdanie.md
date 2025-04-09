@@ -69,3 +69,8 @@ Na potrzeby laboratorium wybrałem aplikację irssi – przedstawioną na zajęc
 2. Build i test lokalnie (poza kontenerem)
 Sklonowałem repozytorium:
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/38f67548a0d7679234a8721ea9db64610f779d2d/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(172).png
+Zainstalowałem wymagane pakiety:
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/a2816b2e7af7e59ed983f71c35b85713c02376d0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(171).png
+Następnie wykonałem proces konfiguracji, builda i testów:
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/a2816b2e7af7e59ed983f71c35b85713c02376d0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(173).png
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/a2816b2e7af7e59ed983f71c35b85713c02376d0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(174).png
