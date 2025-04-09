@@ -1,0 +1,15 @@
+FROM fedora 
+
+RUN dnf -y install \
+    git \
+    meson \
+    ninja \
+    gcc \
+    glib2-devel \
+    utf8proc-devel \
+    ncurses-devel \
+    perl-ExtUtil*
+
+WORKDIR /app
+
+CMD ["/bin/bash"]
