@@ -77,3 +77,17 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/a2816b2e7af7e59e
 Następnie wykonałem proces konfiguracji, builda i testów:
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/a2816b2e7af7e59ed983f71c35b85713c02376d0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(173).png
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/a2816b2e7af7e59ed983f71c35b85713c02376d0/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(174).png
+
+3. Praca w kontenerze – build i test interaktywnie
+
+Uruchomiłem kontener bazowy z obrazem ubuntu oraz podłączyłem się w trybie interaktywnym użyłem polecenia "docker run -it --name irssi-build ubuntu:latest /bin/bash":
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/1c1c23e8acaca91978532cb084c2bf3c62d36e93/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(161).png
+
+W kontenerze zainstalowałem potrzebne pakiety:
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/1c1c23e8acaca91978532cb084c2bf3c62d36e93/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(162).png
+
+Sklonowałem repozytorium i zrobiłem builda:
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/1c1c23e8acaca91978532cb084c2bf3c62d36e93/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(166).png
+Przeprowadziłem testy wewątrz kontenera:
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/1c1c23e8acaca91978532cb084c2bf3c62d36e93/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(167).png
