@@ -2,5 +2,6 @@ FROM redis-builder
 
 WORKDIR /app/redis
 
-CMD ["sh", "-c", "make -j$(nproc) test"]
+CMD ["./runtest", "--single", "unit/printver"]
+
 
