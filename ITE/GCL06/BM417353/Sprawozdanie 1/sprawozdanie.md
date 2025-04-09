@@ -125,3 +125,7 @@ Uruchomienie kontenera testowego:
 
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/51056805b7e996ccd3614f2facf38994af18a2f9/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(177).png
 
+Lab 4 Dodatkowa terminologia w konteneryzacji, instancja Jenkins
+
+
+
