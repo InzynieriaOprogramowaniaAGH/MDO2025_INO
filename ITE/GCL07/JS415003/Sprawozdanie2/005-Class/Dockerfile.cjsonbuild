@@ -1,0 +1,17 @@
+FROM fedora:42
+
+RUN dnf update -y && \
+    dnf install -y \
+    git \
+    gcc \
+    make \
+    cmake \
+    && dnf clean all
+
+WORKDIR /cjson-build
+
+RUN git clone https://github.com/DaveGamble/cJSON.git .
+
+RUN mkdir build && cd build && \
+    cmake -DENABLE_CJSON_TEST=On .. && \
+    make -j$(nproc)
