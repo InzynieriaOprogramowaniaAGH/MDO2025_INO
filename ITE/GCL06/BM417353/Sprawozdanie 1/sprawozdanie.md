@@ -124,6 +124,7 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/51056805b7e996cc
 Uruchomienie kontenera testowego:
 
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/51056805b7e996ccd3614f2facf38994af18a2f9/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(177).png
+
 Różnica między konteneram a obrazem:
 
 Obraz w Dockerze to niezmienny szablon zawierający wszystkie potrzebne elementy do uruchomienia aplikacji – system operacyjny, zależności, kod źródłowy i instrukcje uruchomienia. Kontener natomiast to działający, uruchomiony z obrazu proces, który posiada własną przestrzeń nazw, system plików i środowisko wykonawcze, ale współdzieli jądro z systemem hosta. To właśnie kontener „pracuje” – wykonuje polecenia zdefiniowane w obrazie, np. kompiluje kod, uruchamia testy czy działa jako serwer. Obraz jest tylko instrukcją, a kontener to jego realizacja w działającym środowisku. W tym przypadku kontener uruchamia procesy takie jak make build lub make test, rzeczywiście wykonując kompilację i testy aplikacji irssi wewnątrz odizolowanego środowiska.
