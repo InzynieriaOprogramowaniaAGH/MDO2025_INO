@@ -174,7 +174,9 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/af7f53cc69fee545
 Wewnątrz kontenera:
 
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/42cc7bec6ae24586ee4e3a72a2775440659d973f/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu(4).png
+
 3. Stworzenie dedykowanej sieci mostkowej
 Tworzymy sieć o nazwie siec_testowa:
 
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/321149722bd72e6b908c415dd10aa3dd4bd99145/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(180).png
 
