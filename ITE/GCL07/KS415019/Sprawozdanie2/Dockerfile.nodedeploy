@@ -1,0 +1,2 @@
+FROM kontener_build
+CMD ["npm", "start"]
