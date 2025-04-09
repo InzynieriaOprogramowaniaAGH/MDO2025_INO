@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ARGS=$1
+
+COMMIT_MSG=`head -n1 $ARGS`
+PATTERN="^KH 415979"
+if ! [[ "$COMMIT_MSG" =~ $PATTERN ]]; then
+	echo "Bad commit msg"
+	exit 1
+fi
+exit 0
