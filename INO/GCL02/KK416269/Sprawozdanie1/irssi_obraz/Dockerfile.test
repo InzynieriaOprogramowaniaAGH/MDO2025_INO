@@ -1,0 +1,5 @@
+FROM irssi_build_container
+
+WORKDIR /irssi/Build
+
+RUN ninja test
