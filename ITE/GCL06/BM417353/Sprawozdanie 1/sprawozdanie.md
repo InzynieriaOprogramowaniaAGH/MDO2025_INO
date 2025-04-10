@@ -205,6 +205,7 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/905074d509e011c0
 8. Stworzenie woluminów do trwałego przechowywania danych:
 
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/905074d509e011c0984c04c4cf9689542cc30bcd/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(186).png
+
 9. Uruchomienie kontenera pomocniczego (Docker-in-Docker)
 
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/905074d509e011c0984c04c4cf9689542cc30bcd/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(186).png\
