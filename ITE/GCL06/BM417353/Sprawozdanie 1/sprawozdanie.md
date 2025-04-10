@@ -189,9 +189,44 @@ https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/810035edaed7193c
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/810035edaed7193c8877ae2b65c77c8c553c411a/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(181).png
 
 6. Połączenie z hosta (spoza kontenera)
+
 Najpierw uruchomienie iperf_server, ale z eksponowanym portem:
+
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/810035edaed7193c8877ae2b65c77c8c553c411a/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(184).png
 
 Teraz połączenie z hosta:
+
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/810035edaed7193c8877ae2b65c77c8c553c411a/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(183).png
+
+7.Instancja Jenkins stworzenie sieci jenkins
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/905074d509e011c0984c04c4cf9689542cc30bcd/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(186).png
+
+8. Stworzenie woluminów do trwałego przechowywania danych:
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/905074d509e011c0984c04c4cf9689542cc30bcd/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(186).png
+9. Uruchomienie kontenera pomocniczego (Docker-in-Docker)
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/905074d509e011c0984c04c4cf9689542cc30bcd/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(186).png\
+
+10. Uworzenie własnego pliku dockerfile jenkins:
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/905074d509e011c0984c04c4cf9689542cc30bcd/ITE/GCL06/BM417353/Sprawozdanie%201/Zajecia04/Dockerfile.jenkins
+
+11. Zbudowanie obrazu:
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/905074d509e011c0984c04c4cf9689542cc30bcd/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(186).png
+
+12. Uruchomienie jenkins (pojawiłły się problemy z zajętym już portem 8080, ale udało mi się go zwolnić):
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/879ceff187530f3168f8355a3094aa11bcfaf17e/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(5).png
+
+13. Sprawdźenie logów:
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/879ceff187530f3168f8355a3094aa11bcfaf17e/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(6).png
+
+14: Zalogowanie w jenkins: 
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/879ceff187530f3168f8355a3094aa11bcfaf17e/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(156).png
+
 
