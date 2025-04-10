@@ -180,3 +180,18 @@ Tworzymy sieć o nazwie siec_testowa:
 
 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/321149722bd72e6b908c415dd10aa3dd4bd99145/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(180).png
 
+4. Uruchomienie kontenera z serwerem iperf3
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/810035edaed7193c8877ae2b65c77c8c553c411a/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(182).png
+
+5. Uruchomienie klienta iperf3 w drugim kontenerze
+
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/810035edaed7193c8877ae2b65c77c8c553c411a/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(181).png
+
+6. Połączenie z hosta (spoza kontenera)
+Najpierw uruchomienie iperf_server, ale z eksponowanym portem:
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/810035edaed7193c8877ae2b65c77c8c553c411a/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(184).png
+
+Teraz połączenie z hosta:
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/810035edaed7193c8877ae2b65c77c8c553c411a/ITE/GCL06/BM417353/Sprawozdanie%201/Zrzuty%20ekranu/Zrzut%20ekranu%20(183).png
+
