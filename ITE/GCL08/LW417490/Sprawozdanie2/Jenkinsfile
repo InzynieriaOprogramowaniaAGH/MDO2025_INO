@@ -10,15 +10,15 @@ pipeline {
         stage('Cleaning') {
             steps {
                 dir('ITE/GCL08/LW417490/Sprawozdanie2') {
-                    sh 'docker rmi -f express-build || true'
-                    sh 'docker rmi -f express-app || true'
-                    sh 'docker builder prune --force --all || true'
-                    sh 'docker network rm ci || true'
+                    sh 'docker rmi -f express-build'
+                    sh 'docker rmi -f express-app'
+                    sh 'docker builder prune --force --all'
+                    sh 'docker network inspect ci >/dev/null 2>&1 && docker network rm ci || true'
                 }
             }
         }
 
-        stage('Build Dockerfile (Builder)') {
+        stage('Build Dockerfile') {
             steps {
                 dir('ITE/GCL08/LW417490/Sprawozdanie2') {
                     sh 'docker build -f Dockerfile.expbuild -t express-build .'
@@ -26,7 +26,7 @@ pipeline {
             }
         }
 
-        stage('Build Dockerfile (App)') {
+        stage('Publish Dockerfile') {
             steps {
                 dir('ITE/GCL08/LW417490/Sprawozdanie2') {
                     sh 'docker build -f Dockerfile.exppub -t express-app .'
@@ -37,10 +37,9 @@ pipeline {
         stage('Run app') {
             steps {
                 dir('ITE/GCL08/LW417490/Sprawozdanie2') {
-                    sh 'docker network create ci || true'
+                    sh 'docker network create ci'
                     sh 'docker run --rm -d --network ci --name app -p 3000:3000 express-app'
-                    sh 'sleep 2'
-                    sh 'curl http://localhost:3000 || echo "Aplikacja nie odpowiedziała"'
+                    sh 'docker run --rm --network ci fedora curl -s app:3000'
                 }
             }
         }
