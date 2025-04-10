@@ -7,35 +7,56 @@ pipeline {
         DOCKERFILE_PATH = 'ITE/GCL06/JR414539/Sprawozdanie1/Dockerfile.build'
         DOCKER_CONTEXT = 'ITE/GCL06/JR414539/Sprawozdanie1'
         DOCKER_IMAGE = 'wget-jenkins-build'
+        DEPLOY_IMAGE = 'wget-deploy-test'
     }
 
     stages {
-        stage('Klonowanie repozytorium') {
+        stage('📥 Klonowanie repozytorium') {
             steps {
                 git branch: "${BRANCH}", url: "${GIT_REPO}"
             }
         }
 
-        stage('Sprawdzenie Dockerfile') {
+        stage('📄 Sprawdzenie Dockerfile') {
             steps {
                 sh "ls -la ${DOCKER_CONTEXT}"
                 sh "cat ${DOCKERFILE_PATH}"
             }
         }
 
-        stage('Budowanie obrazu Dockera') {
+        stage('🐳 Budowanie obrazu Dockera') {
             steps {
                 sh "docker build -t ${DOCKER_IMAGE} -f ${DOCKERFILE_PATH} ${DOCKER_CONTEXT}"
             }
         }
+
+        stage('🚀 Deploy & Test wget') {
+            steps {
+                echo 'Buduję deploy-image do testu wget'
+                sh "docker build -t ${DEPLOY_IMAGE} -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile_deploy ITE/GCL06/JR414539/Sprawozdanie2"
+                echo 'Odpalam kontener i testuję wget'
+                sh "docker run --rm ${DEPLOY_IMAGE}"
+            }
+        }
+        
+        stage('📦 Build wget .deb package') {
+           steps {
+                echo 'Buduję paczkę wget.deb'
+                sh 'docker create --name wget-builder ${DOCKER_IMAGE}'
+                sh 'docker cp wget-builder:/opt/wget/wget_1.0-1_amd64.deb wget.deb'
+                sh 'docker rm wget-builder'
+                archiveArtifacts artifacts: 'wget.deb', fingerprint: true
+            }
+        }
+
     }
 
     post {
         success {
-            echo 'Pipeline zakończony sukcesem.'
+            echo '✅ Pipeline zakończony sukcesem.'
         }
         failure {
-            echo 'Pipeline zakończył się błędem.'
+            echo '❌ Pipeline zakończył się błędem.'
         }
     }
 }
