@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+    environment {
+        REPO_URL = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+        BRANCH = 'SP414848'
+        IMAGE_NAME_BUILD = 'sqlite-build'
+        IMAGE_NAME_TEST = 'sqlite-test'
+    }
+    stages {
+        stage('Clean Up Existing Docker Image') {
+            steps {
+                script {
+                    sh "docker rmi -f ${IMAGE_NAME_BUILD}"
+                    sh "docker rmi -f ${IMAGE_NAME_TEST}"
+                }
+            }
+        }
+        stage('Clone Repository') {
+            steps {
+                script {
+                    sh 'rm -rf MDO2025_INO'
+                    sh "git clone ${REPO_URL}"
+                }
+            }
+        }
+        stage('Checkout Personal Branch') {
+            steps {
+                dir('MDO2025_INO') {
+                    script {
+                        sh "git checkout ${BRANCH}"
+                    }
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                dir('MDO2025_INO/ITE/GCL06/SP414848') {
+                    script {
+                        sh "docker build --no-cache -t ${IMAGE_NAME_BUILD} -f Dockerfile.build ."
+                        sh "docker build --no-cache -t ${IMAGE_NAME_TEST} -f Dockerfile.test ."
+                    }
+                }
+            }
+        }
+    }
+}

@@ -7,4 +7,4 @@ USER testuser
 
 WORKDIR /sqlite
 
-CMD ["make", "test"]
+RUN make test
