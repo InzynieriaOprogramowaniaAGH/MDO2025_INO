@@ -1,0 +1,3 @@
+FROM nodebld
+
+CMD ["npm", "start"]
