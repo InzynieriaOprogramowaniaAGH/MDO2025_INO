@@ -1,6 +1,4 @@
-FROM ubuntu:latest
-
-RUN apt update && apt install -y git gcc make
+FROM gcc:latest
 
 RUN git clone https://github.com/badzianga/toasty.git
 

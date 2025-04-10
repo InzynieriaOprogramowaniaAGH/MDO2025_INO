@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean') {
+            steps {
+                sh 'rm -fr MDO2025_INO'
+                sh 'docker system prune -f'
+            }
+        }
+        stage('Clone') {
+            steps {
+                sh 'git clone -b TO417248 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                sh 'pwd'
+                sh 'find . -name "Dockerfile"'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'docker build -t toasty -f ./MDO2025_INO/ITE/GCL06/TO417248/Sprawozdanie1/003-Class/Dockerfile .'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'docker build -t toasty-test -f ./MDO2025_INO/ITE/GCL06/TO417248/Sprawozdanie1/003-Class/Dockerfile.test .'
+            }
+        }
+    }
+}
