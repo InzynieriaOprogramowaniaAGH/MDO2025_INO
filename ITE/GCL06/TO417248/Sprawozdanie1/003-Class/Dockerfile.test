@@ -1,4 +1,3 @@
 FROM toasty
 
-RUN make test
-
+CMD [ "make", "test" ]
