@@ -16,7 +16,8 @@ RUN apt update && apt install -y \
     git \
     wget \
     autoconf-archive \
-    ca-certificates
+    ca-certificates \
+    checkinstall
 
 WORKDIR /opt
 
@@ -24,6 +25,15 @@ RUN git clone https://github.com/mirror/wget.git
 
 WORKDIR /opt/wget
 
-RUN ./bootstrap && ./configure && make
+RUN ./bootstrap && ./configure && make && \
+    checkinstall --install=no \
+                 --pkgname=wget \
+                 --pkgversion=1.0 \
+                 --pkgarch=amd64 \
+                 --pkgrelease=1 \
+                 --maintainer="JR414539@student.agh.edu.pl" \
+                 --fstrans=no \
+                 --pakdir=/opt/wget \
+                 -y
 
 CMD ["/bin/bash"]
