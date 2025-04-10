@@ -1,0 +1,7 @@
+FROM redis-build AS build
+
+FROM alpine:latest
+
+COPY --from=build /redis/src/redis-cli /
+
+CMD ["/redis-cli"]

@@ -26,5 +26,32 @@ pipeline {
                 
             }
         }
+
+        stage('Test') {
+            steps {
+                dir('ITE/GCL05/KL417218/Sprawozdanie1') {
+                    sh 'docker build -f Dockerfile.redistest -t redis-test .'    
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+               dir('ITE/GCL05/KL417218/Sprawozdanie2') {
+                    sh 'docker build -f Dockerfile.redisdeploy -t redis-deploy .'
+                    sh 'docker build -f Dockerfile.redisclient -t redis-client .'
+                    sh 'docker network create redis-network'
+                    sh 'docker run -d --name redis-server --network redis-network redis-deploy'
+                    sh 'docker run -d --name redis-client --network redis-network redis-client redis-cli -h redis-server' 
+                    sh 'docker exec redis-client ping'
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+              echo 'Publish will be here!'
+            }
+        }
     }
 }
