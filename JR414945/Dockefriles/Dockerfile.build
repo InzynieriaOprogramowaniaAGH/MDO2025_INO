@@ -1,0 +1,5 @@
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y git maven
+
+RUN git clone https://github.com/jitpack/maven-simple.git && cd maven-simple && mvn compile
