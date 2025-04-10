@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean') {
+            steps {
+                echo 'Cleaning...'
+                sh 'rm -fr MDO2025_INO'
+                sh 'docker images --format "{{.Repository}}:{{.Tag}}" | grep -v "^gcc" | awk "{print $1}" | xargs -r docker rmi -f'
+            }
+        }
+        stage('Clone') {
+            steps {
+                echo 'Cloning...'
+                sh 'git clone -b TO417248 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                sh 'docker build -t toasty -f ./MDO2025_INO/ITE/GCL06/TO417248/Sprawozdanie1/003-Class/Dockerfile .'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+                sh 'docker build -t toasty-test -f ./MDO2025_INO/ITE/GCL06/TO417248/Sprawozdanie1/003-Class/Dockerfile.test .'
+                sh 'docker run --rm -t toasty-test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+            }
+        }
+        stage('Publish') {
+            steps {
+                echo 'Publishing...'
+            }
+        }
+    }
+}
