@@ -1,10 +1,2 @@
-# Dockerfile.nodetest
-FROM node:18
-
-WORKDIR /testapp
-
-RUN git clone https://github.com/devenes/node-js-dummy-test.git .
-
-RUN npm ci
-
+FROM node_builder
 RUN npm test
