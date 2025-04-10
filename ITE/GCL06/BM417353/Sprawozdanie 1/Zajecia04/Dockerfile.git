@@ -1,0 +1,11 @@
+# Dockerfile.git
+FROM fedora:latest
+
+RUN dnf install -y git meson ninja-build && dnf clean all
+
+RUN --mount=type=volume,source=wolumin_wej,target=/dane_wej \
+    git clone https://github.com/irssi/irssi.git /dane_wej/irssi_git && \
+    cd /dane_wej/irssi_git && \
+    meson setup build && \
+    ninja -C build
+

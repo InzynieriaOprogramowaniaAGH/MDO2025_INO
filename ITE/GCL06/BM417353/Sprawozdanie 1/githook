@@ -1,0 +1,8 @@
+#!/bin/bash
+message=$(cat "$1")
+pattern="^BM417353"
+
+if [[ ! "$message" =~ $pattern ]]; then
+  echo "Commit message musi zaczynać się od 'BM417353'"
+  exit 1
+fi
