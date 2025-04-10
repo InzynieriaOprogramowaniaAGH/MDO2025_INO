@@ -1,0 +1,5 @@
+FROM build_image
+
+WORKDIR /app
+
+CMD ninja -C builddir test
