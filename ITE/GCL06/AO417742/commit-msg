@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Pobranie pierwszej linii commit message
+commit_msg=$(cat "$1")
+
+# Sprawdzanie, czy commit message zaczyna się od "AO417742"
+if [[ ! $commit_msg =~ ^AO417742 ]]; then
+    echo " BŁĄD:  commit message musi zaczynać się od 'AO417742'"
+    exit 1
+fi
+
+echo "Commit message poprawny!"
+exit 0
