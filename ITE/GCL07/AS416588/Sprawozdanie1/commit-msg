@@ -1,0 +1,8 @@
+#!/bin/bash
+
+INDEKS="AS416588"
+
+test "$(head -n1 "$1" | grep -E "^$INDEKS")" || {
+  echo "Error: Commit message must start with '$INDEKS'"
+  exit 1
+}
