@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  build:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+      network: host
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+      network: host
