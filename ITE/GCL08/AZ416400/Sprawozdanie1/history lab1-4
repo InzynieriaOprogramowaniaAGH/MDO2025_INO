@@ -1,0 +1,349 @@
+ 1  ls
+    2  cd ..
+    3  ls
+    4  ip a
+    5  ls
+    6  cd azakrecka/
+    7  ls
+    8  mkdir DevOps
+    9  ls
+   10  cd DevOps/
+   11  ls
+   12  cd DevOps/
+   13  cd ..
+   14  ls
+   15  sudo dnf install git -y
+   16  git --version
+   17  witch git
+   18  whitch git
+   19  witch git
+   20  which git
+   21  git --version
+   22  which git
+   23  dnf provides /usr/bin/git
+   24  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2024_INO.git
+   25  ls
+   26  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   27  ssh-keygen -t ed25519 -C
+   28  ssh-keygen -t ed25519 
+   29  /.ssh
+   30  mkdir -p ~/.ssh
+   31  ssh-keygen -t ed25519 
+   32  ssh-keygen -t ecdsa 
+   33  eval "$(ssh-agent -s)"
+   34  ssh-add ~/.ssh/id_ed25519
+   35  git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   36  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   37  ssh -T git@github.com
+   38  git branches
+   39  git branch
+   40  cd MDO2025_INO/
+   41  git branch
+   42  git branch -r
+   43  git checkout origin/GCL08
+   44  git checkout -b AZ416400
+   45  git branch 
+   46  git branch -d AZ416400
+   47  git checkout -b main
+   48  git checkout main
+   49  git branch -d AZ416400
+   50  git branch -D AZ416400
+   51  git branch -a
+   52  git checkout remotes/origin/GCL08
+   53  git pull
+   54  git checkout -b AZ416400
+   55  git branch
+   56  ls
+   57  cd .git
+   58  ls
+   59  cd hooks
+   60  ls
+   61  pre-merge-commit.sample 
+   62  cut pre-merge-commit.sample 
+   63  cat pre-merge-commit.sample 
+   64  chmod +x commit-msg
+   65  cd ../..
+   66  ls
+   67  cd ITE/
+   68  ls
+   69  cd GCL08/
+   70  ls
+   71  cd ../..
+   72  ls
+   73  git status
+   74  git commit -m "test"
+   75  cat ~/.bash_history
+   76  history
+   77  git status
+   78  git add ITE/GCL08/AZ416400/
+   79  git commit -m "test"
+   80  git commit -m "AZ416400 hook"
+   81  exit
+   82  l
+   83  ls
+   84  cd MDO2025_INO/
+   85  ls
+   86  cd ITE/
+   87  git statuss
+   88  git status
+   89  git add ./GCL08/AZ416400/Sprawozdanie1/img/
+   90  git status
+   91  git add GCL08/AZ416400/Sprawozdanie1/README.md 
+   92  git status
+   93  git commit -m "AZ416400 punkty 1:5"
+   94  ls
+   95  cd MDO2025_INO/
+   96  ls
+   97  cd ITE/
+   98  ls
+   99  cd ..
+  100  git commit -m "test"
+  101  git status 
+  102  git add ITE/GCL08/AZ416400/Sprawozdanie1/README.md 
+  103  git commit -m "test"
+  104  git commit -m "AZ416400 test"
+  105  exit
+  106  l
+  107  ls
+  108  cd MDO2025_INO/
+  109  cd ITE/
+  110  cd ..
+  111  docker --verion
+  112  sudo dnf install -y moby-engine
+  113  docker --verion
+  114  docker --version
+  115  docker run hello-world
+  116  docker images
+  117  sudo systemctl start docker
+  118  sudo systemctl enable docker
+  119  docker images
+  120  sudo usermod -aG docker $USER
+  121  newgrp docker
+  122  docker images
+  123  docker pull hello-world
+  124  docker pull busybox
+  125  docker pull ubuntu
+  126  docker pull fedora
+  127  docker pull mysql
+  128  docker pull hello-world
+  129  docker images
+  130  sudo systemctl status docker
+  131  docker run hello-world
+  132  docker run busybox
+  133  sudo docker container list
+  134  docker container list
+  135  sudo docker container list -all
+  136  lss
+  137  ls
+  138  cd MDO2025_INO/ITE/
+  139  l
+  140  docker images
+  141  docker containers
+  142  docker container
+  143  docker container lit
+  144  docker container list
+  145  docker container list -a
+  146  docker container ls
+  147  docker run -it busybox  
+  148  docker ps
+  149  ps aux | grep docker
+  150  ps aux 
+  151  ps aux | grep docker
+  152  cd MDO2025_INO/ITE/GCL08/AZ416400/Sprawozdanie1/
+  153  l
+  154  ls
+  155  docker images
+  156  docker run -it my-fedora-image
+  157  ls
+  158  docker p
+  159  docker ps
+  160  docker ls
+  161  docker container ls
+  162  pwd
+  163  docker container ls
+  164  docker container ls -a
+  165  docker ps -q
+  166  container start bda11c8be149
+  167  docker container start bda11c8be149
+  168  docker 
+  169  container start -it  bda11c8be149 
+  170  container start -it bda11c8be149 
+  171  docker container start -it bda11c8be149
+  172  docker container start --help
+  173  docker exec it bda11c8be149 sh
+  174  docker exec -it bda11c8be149 sh
+  175  docker rm $(docker ps -aq -f status=exited)
+  176  docker ps
+  177  docker stop bda11c8be149
+  178  docker ps
+  179  docker ps -a
+  180  docker rm $(docker ps -aq -f status=exited)
+  181  docker ps -a
+  182  docker run -it fedora
+  183  docker ps
+  184  docker ps -a
+  185  docker rm $(docker ps -aq -f status=exited)
+  186  docker run -it fedora
+  187  l
+  188  ls
+  189  cd MDO2025_INO/ITE/GCL08/AZ416400/Sprawozdanie1/
+  190  ls
+  191  l
+  192  ls
+  193  docker run -it my-fedora-image
+  194  docker build -t my-fedora-image .
+  195  ls
+  196  docker ps
+  197  ps
+  198  docker ps
+  199  docker run -it fedora
+  200  docker run -it busybox
+  201  docker ps
+  202  docker ps -a
+  203  docker rm 48b7f361b8dc
+  204  docker rm 7ed359e1dce0c
+  205  docker rm 7ed359e1dce0
+  206  docker ps -a
+  207  docker rm -f $(docker ps -aq)
+  208  docker ps -a
+  209  git status
+  210  cd MDO2025_INO/
+  211  git status
+  212  git push
+  213  git push --set-upstream origin AZ416400
+  214  history
+  215  git branch -a
+  216  git checkout   remotes/origin/GCL08
+  217  git status 
+  218  git add .
+  219  git status 
+  220  git commit -m "Lab2"
+  221  git commit -m "AZ416400 Lab2"
+  222  git checkout   remotes/origin/GCL08
+  223  git merge AZ416400
+  224  git push
+  225  git push origin HEAD:GCL08
+  226  git branch
+  227  git checkout AZ416400 
+  228  git status 
+  229  git add .
+  230  git commit -m "AZ416400 Lab1 report fin"
+  231  git push 
+  232  ls
+  233  cd MDO2025_INO/ITE/GCL08/AZ416400/
+  234  ls
+  235  cd ../../..
+  236  cd ..
+  237  ls
+  238  git clone https://github.com/devenes/node-js-dummy-test.git
+  239  ls
+  240  cd irssi
+  241  git clone https://github.com/irssi/irssi
+  242  cd irssi/
+  243  meson Build
+  244  meson --version
+  245  sudo dnf install meson
+  246  meson Build
+  247  sudo dnf groupinstall "Development Tools"
+  248  sudo dnf5 install "Development Tools"
+  249  sudo dnf5 install gcc gcc-c++ make
+  250  meson Build
+  251  sudo dnf5 install glib2-devel pkgconf-pkg-config
+  252  meson Build
+  253  sudo dnf5 install ncurses-devel
+  254  meson Build
+  255  sudo dnf5 install perl-ExtUtils-Embed
+  256  meson Build
+  257  ninja -C Build
+  258  history
+  259  ninja -C Build /test
+  260  ninja -C Build test
+  261  docker run -it fedora bash
+  262  docker ps -a
+  263  docker exec -it 5683de25359b /bin/sh
+  264  docker exec -it 5683de25359b /bin/bash
+  265  docker start 5683de25359b 
+  266  docker exec -it 5683de25359b /bin/sh
+  267  docker exec -it 5683de25359b /bin/bash
+  268  cd MDO2025_INO/ITE/GCL08/AZ416400/Sprawozdanie1/
+  269  ls
+  270  docker build t irssibld -f ./Dockerfile.irssibld .
+  271  docker build -t irssibld -f ./Dockerfile.irssibld .
+  272  docker exec -it 5683de25359b /bin/bash
+  273  git status 
+  274  git add .
+  275  git commi -m "AZ416400 D.irssibld"
+  276  git commit -m "AZ416400 D.irssibld"
+  277  git push
+  278  ls
+  279  cd MDO2025_INO/ITE/GCL08/AZ416400/Sprawozdanie1/
+  280  git status
+  281  git add .
+  282  git status
+  283  git commit -m "AZ416400 Lab2 img"
+  284  git status
+  285  git add .
+  286  git status
+  287  git commit -m "AZ416400 Lab2 img"
+  288  git push
+  289  l
+  290  ls
+  291  history
+  292  docker build -t irssibldv2 -f ./Dockerfile.irssibldv2 .     .
+  293  docker build -t irssibldv2 -f ./Dockerfile.irssibldv2 .   
+  294  docker run -it irssibldv2 bash
+  295  hitory
+  296  history
+  297  git statu 
+  298  git status
+  299  git add .
+  300  git commit -m "AZ416400 lab3 img"
+  301  git push
+  302  docker run --rm -v output_volume:/mnt/output fedora ls /mnt/output
+  303  ls
+  304  docker run -it --name repo_cloning -v input_volume:/mnt/input fedora /bin/bash
+  305  ls
+  306  docker volume create input_volume
+  307  docker volume create output_volume
+  308  cd MDO2025_INO/ITE/GCL08/AZ416400/Sprawozdanie1
+  309  ls
+  310  cd Dockerfiles/
+  311  docker build -f Dockerfile.bld -t build_container .
+  312  docker build -f Dockerfile.bld -t build_img .
+  313  docker run -it --name build-container -v input_volume:/mnt/input -v output_volume:/mnt/output build_img /bin/bash
+  314  docker ps
+  315  docker exec 6501695724d3 bash
+  316  docker it exec 6501695724d3 bash
+  317  docker -it exec 6501695724d3 bash
+  318  docker -it exec 6501695724d3 /bin/bash
+  319  docker exec -it 6501695724d3 /bin/bash
+  320  docker ps
+  321  docker exec -it d25724958ff5 /bin/bash
+  322  clear
+  323  docker run -it --name f1 fedora bash
+  324  docker run -it --name f2 fedora bash
+  325  docip a
+  326  ip
+  327  ip -a
+  328  ifconfig
+  329  ip a
+  330  docker inspect -f '{{ .NetworkSettings.IPAddress }}' f1
+  331  docker inspect -f '{{ .NetworkSettings.IPAddress }}' f2
+  332  docker network create my_network
+  333  docker run --rm --tty -i -- network=my_network --name f1 fedora bash
+  334  claer
+  335  claen
+  336  clear
+  337  docker run --rm --tty -i --network=my_network --name f1 fedora bash
+  338  docker run --rm --tty -i --network=my_network --name f2 fedora bash
+  339  docker run --privileged --name jenkins-dind \ 
+  340  -d -p 8080:8080 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock jenkins/jenkins:lts
+  341  docker run --privileged --name jenkins-dind -d -p 8080:8080 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock jenkins/jenkins:lts
+  342  docker exec -it --user root jenkins-dind docker ps
+  343  docker exec -it --user root jenkins-dind bash
+  344  apt-get update
+  345  apt-get install -y docker.io
+  346  docker ps
+  347  docker exec -it --user root jenkins-dind bash
+  348  docker exec jenkins-dind cat /var/jenkins_home/secrets/initialAdminPassword
+  349  history
