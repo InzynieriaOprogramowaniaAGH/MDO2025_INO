@@ -1,0 +1,8 @@
+#!/bin/sh
+ FILE=$1
+ MSG=$(cat "$FILE")
+ 
+ if [[ ! $MSG =~ ^BP417137 ]]; then
+     echo "ERROR: Invalid commit message. It has to begin with 'BP417137'."
+     exit 1
+ fi
