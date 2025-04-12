@@ -1,0 +1,14 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+WORKDIR /src
+
+# Klonowanie repozytorium
+RUN git clone https://github.com/JakubLatawiec/weatherapp-backend.git
+
+WORKDIR /src/weatherapp-backend
+
+# Przywrócenie zależności
+RUN dotnet restore WeatherForecast.Api/WeatherForecast.Api.csproj
+
+# Budowanie
+RUN dotnet build WeatherForecast.Api/WeatherForecast.Api.csproj -c Release -o /app/build
