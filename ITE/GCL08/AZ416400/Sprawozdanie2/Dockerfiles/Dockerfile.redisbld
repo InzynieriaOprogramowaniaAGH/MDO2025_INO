@@ -1,0 +1,17 @@
+FROM fedora
+
+RUN dnf -y install \
+    git \
+    which\
+    python3 \
+    make \
+    gcc \
+    g++ \
+    jemalloc-devel 
+
+RUN git clone https://github.com/redis/redis.git
+
+WORKDIR /redis
+
+RUN make
+

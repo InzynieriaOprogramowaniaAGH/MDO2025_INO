@@ -1,0 +1,10 @@
+FROM redisbld
+
+RUN dnf -y install \
+    make \
+    ps \
+    tcl
+
+WORKDIR /redis
+
+RUN make test
