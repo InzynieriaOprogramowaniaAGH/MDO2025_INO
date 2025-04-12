@@ -1,4 +1,5 @@
-FROM redisbld
+ARG IMAGE_TAG
+FROM redisbld:${IMAGE_TAG}
 
 RUN dnf -y install \
     make \
