@@ -1,0 +1,15 @@
+FROM python:3.9-slim
+
+RUN apt-get update && apt-get install -y \
+    git \
+    make \
+    pip \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+RUN git clone https://github.com/copperhead143/python_app_devops.git .
+
+RUN pip install pytest
+
+CMD ["make", "test"]
