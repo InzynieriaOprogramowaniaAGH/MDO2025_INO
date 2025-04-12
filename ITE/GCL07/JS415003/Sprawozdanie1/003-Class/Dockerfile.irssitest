@@ -1,0 +1,2 @@
+FROM bld001
+CMD ["ninja", "-C", "Build", "test"]
