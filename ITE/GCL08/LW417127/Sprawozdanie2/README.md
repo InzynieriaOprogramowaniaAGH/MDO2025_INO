@@ -129,3 +129,21 @@ Zestawienie czasów trwania procesów buildowania dla obu uruchomień pipeline'u
 ![](../screens/class5/15.jpg)
 
 ![](../screens/class5/16.jpg)
+
+# Sprawozdanie z Publikacji pakietu npm z express.js
+
+![](../screens/class6/1.jpg)
+![](../screens/class6/2.jpg)
+![](../screens/class6/3.jpg)
+![](../screens/class6/4.jpg)
+![](../screens/class6/5.jpg)
+![](../screens/class6/6.jpg)
+![](../screens/class6/7.jpg)
+![](../screens/class6/8.jpg)
+![](../screens/class6/9.jpg)
+![](../screens/class6/10.jpg)
+![](../screens/class6/11.jpg)
+![](../screens/class6/12.jpg)
+![](../screens/class6/13.jpg)
+![](../screens/class6/14.jpg)
+![](../screens/class6/15.jpg)
