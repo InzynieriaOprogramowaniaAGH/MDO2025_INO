@@ -167,14 +167,6 @@
               }
           }
   
-  
-          stage('Print info') {
-              steps {
-                  echo 'Pipeline ran successfully. Docker image was built.'
-              }
-          }
-      }
-      
           post {
           always {
               archiveArtifacts artifacts: 'INO/GCL02/FR417273/Sprawozdanie1/coursework/lab3/logs/test_results.log', allowEmptyArchive: true
