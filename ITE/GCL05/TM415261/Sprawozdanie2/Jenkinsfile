@@ -32,8 +32,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh """
-                    if [ \$(docker ps -a -q -f name=redis-postdeploy-test) ]; then
-                        docker rm -f redis-postdeploy-test
+                    if [ \$(docker ps -a -q -f name=redis-deploy-test) ]; then
+                        docker rm -f redis-deploy-test
                     fi
                 """
                 sh """ 
@@ -41,13 +41,13 @@ pipeline {
                 """
                 echo "Testing deploy..."
                 sh """
-                    docker run -d --name redis-postdeploy-test -p 6379:6379 ${IMAGE_NAME}:${IMAGE_TAG}
+                    docker run -d --name redis-deploy-test -p 6379:6379 ${IMAGE_NAME}:${IMAGE_TAG}
                     sleep 5
-                    docker exec redis-postdeploy-test redis-cli PING | grep PONG
-                    docker exec redis-postdeploy-test redis-cli SET test_key "MyKey" | grep OK
-                    docker exec redis-postdeploy-test redis-cli GET test_key | grep MyKey
-                    docker stop redis-postdeploy-test
-                    docker rm redis-postdeploy-test
+                    docker exec redis-deploy-test redis-cli PING | grep PONG
+                    docker exec redis-deploy-test redis-cli SET test_key "MyKey" | grep OK
+                    docker exec redis-deploy-test redis-cli GET test_key | grep MyKey
+                    docker stop redis-deploy-test
+                    docker rm redis-deploy-test
                 """
             }
         }
