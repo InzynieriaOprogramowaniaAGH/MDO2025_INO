@@ -137,6 +137,9 @@ Pipeline przeszedł bez problemu, chwilę mu to zajęło z powodu pobrania wszys
 
 ![Build #1](zrzuty5/zrzut_ekranu12.png)
 
+> [Pełne logi z konsoli](test_logs.txt)
+
 Rebuild tego pipeline również odbył się bez problemu. Tym razem zajęło mu to znacznie mniej czasu. Wynika to z wykorzystania mechanizmu cache'owania warstw Dockera – kroki, które nie uległy zmianie (np. instalacja pakietów, klonowanie repozytorium) zostały pominięte dzięki buforowaniu.
 
 ![Build #2](zrzuty5/zrzut_ekranu13.png)
+
