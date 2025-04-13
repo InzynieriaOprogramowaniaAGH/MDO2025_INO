@@ -1,4 +1,4 @@
-FROM wget-build
+FROM wget-jenkins-build
 
 WORKDIR /opt/wget
 
