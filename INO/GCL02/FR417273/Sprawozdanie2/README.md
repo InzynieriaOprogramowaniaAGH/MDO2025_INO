@@ -5,7 +5,7 @@
 - Data: 06/04/2025
 
 ## Przebieg Ćwiczeń
-### Jenkins
+### Przygotowanie
 - Utworzono instancje jenkinsa zgodnie z [instrukcją instalacyjną](https://www.jenkins.io/doc/book/installing/docker/).
   - Utworzono nową sieć dockera **Jenkins**: `docker network create jenkins`.
   - Utworzono kontener *docker-in-docker (dind)*, który pozwala na wywołanie poleeceń Dockera wewnątrz Jenkinsa: `docker run --name jenkins-docker --rm --detach \
@@ -59,6 +59,7 @@
     - *Zrzut erkanu z instalacji pluginów:*
 
       ![Zrzut ekranu konfiguracji](media/m5_getting_started.png)
+### Zadanie wstępne: uruchomienie
 - Wykonanno kilka projektów testowych:
   - Utworzono projekt, który wyświetla `uname` w konsoli.
     - *Zrzut ekranu konsoli projektu*:
@@ -82,7 +83,7 @@
     - *Zrzut ekranu konsoli projektu:*
 
       ![Zrzut ekranu pull ubuntu](media/m8_pull.png)
-
+### Zadanie wstępne: obiekt typu pipeline
   - Utworzono **pileline**, którego zadaniem jest pobranie repozytorium przedmiotu `MD02025_INO` i budowa obrazu dockera, zawartego w dockerfile na własnej gałęzi: `FR417273`.
     ```
       pipeline {
@@ -120,6 +121,6 @@
       ![Zrzut ekranu](media/m9_pipe.png)
     - [Pełna treść wydruku z konsoli](coursework/MD02025_INO_console.txt)
     - Pipeline z powodzeniem udało się uruchomić ponownie
-
+### Pipeline korzystający z kontenerów celem realizacji kroków build -> test
 
  
