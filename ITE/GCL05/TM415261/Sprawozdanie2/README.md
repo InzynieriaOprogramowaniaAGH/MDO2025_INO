@@ -7,7 +7,7 @@
 
 ### Tworzenie instancji `Jenkins`
 
-Na początku należało przygotować środowisko do pracy - `Jenkins`'a. W tym celu skorzystałem z instrukcji zamieszczonej przez prowadzącego. Poniżej znajdują się kroki wymagane do uruchomienia `Jenkins`'a jako kontener Dockera. 
+Na początku należało przygotować środowisko do pracy - `Jenkins`'a. W tym celu skorzystałem z instrukcji na stronie `Jenkins`'a (https://www.jenkins.io/doc/book/installing/docker/). Poniżej znajdują się kroki wymagane do uruchomienia `Jenkins`'a jako kontener Dockera. 
 
 1. Utworzenie sieci mostkowej:
 ![ss](./screenshots/ss1.png)
@@ -52,7 +52,7 @@ Po zainstalowaniu wtyczek należy utworzyć konto i na tym kończy się wstępna
 
 ### Projekt testowy
 
-Poniżej znajduje się testowy projekt w `Jenkins`ie. Aby utworzyć nowy projekt należy na stronie głównej przejść do **Nowy projekt** i wybrać typ projektu - w tym przypadku będzie to **Ogólny projekt**.
+Poniżej znajduje się testowy projekt w `Jenkins`'ie. Aby utworzyć nowy projekt należy na stronie głównej przejść do **Nowy projekt** i wybrać typ projektu - w tym przypadku będzie to **Ogólny projekt**.
 
 Założenia projektu:
 * Wyświetlanie `uname`
