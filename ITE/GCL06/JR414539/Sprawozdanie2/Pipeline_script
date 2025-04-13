@@ -8,6 +8,7 @@ pipeline {
         DOCKER_CONTEXT = 'ITE/GCL06/JR414539/Sprawozdanie1'
         DOCKER_IMAGE = 'wget-jenkins-build'
         DEPLOY_IMAGE = 'wget-deploy-test'
+        TEST_IMAGE = 'wget-tester'
     }
 
     stages {
@@ -46,6 +47,15 @@ pipeline {
                 sh 'docker cp wget-builder:/opt/wget/wget_1.0-1_amd64.deb wget.deb'
                 sh 'docker rm wget-builder'
                 archiveArtifacts artifacts: 'wget.deb', fingerprint: true
+            }
+        }
+        
+        stage('🔍 Test wget (Tester)') {
+           steps {
+                echo 'Buduję obraz tester-a'
+                sh "docker build -t ${TEST_IMAGE} -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile.test ITE/GCL06/JR414539/Sprawozdanie2"
+                echo 'Odpalam testy wget'
+                sh "docker run --rm ${TEST_IMAGE}"
             }
         }
 
