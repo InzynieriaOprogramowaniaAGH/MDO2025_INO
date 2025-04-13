@@ -1,0 +1,184 @@
+Started by user Kacper Mazur
+Running as SYSTEM
+Building in workspace /var/jenkins_home/workspace/repo_przedm_clone
+The recommended git tool is: NONE
+using credential b9b1cefe-d396-44da-9e70-76a5f4a5bb81
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/repo_przedm_clone/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+using GIT_ASKPASS to set credentials 
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/KM415588^{commit} # timeout=10
+Checking out Revision 4fa6159d12c1c26eb7677396bbdb0540a8c6f7f6 (refs/remotes/origin/KM415588)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 4fa6159d12c1c26eb7677396bbdb0540a8c6f7f6 # timeout=10
+Commit message: "KM415588: jenkins setup"
+ > git rev-list --no-walk 4fa6159d12c1c26eb7677396bbdb0540a8c6f7f6 # timeout=10
+[repo_przedm_clone] $ /bin/sh -xe /tmp/jenkins259393544093587197.sh
++ cd INO/GCL02/KM415588/Sprawozdanie_1/003
++ docker build -f dockerfile.chalkbuild -t chalkbuild-image .
+#1 [internal] load build definition from dockerfile.chalkbuild
+#1 sha256:940dd52c0cc9425890f80a36888ba0db15618b0b6a459337dde1cf54fe45dbfc
+#1 transferring dockerfile: 232B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/node:latest
+#2 sha256:4ee467a97d34407a8575d51a76bd1143551ab4621bbaac83e709893d2f56069a
+#2 DONE 2.3s
+
+#3 [internal] load .dockerignore
+#3 sha256:7145ef99039d8b1bc7763d8579869c387575f512239bcc6ae6f2029216c85a1e
+#3 transferring context: 2B done
+#3 DONE 0.1s
+
+#8 [1/5] FROM docker.io/library/node:latest@sha256:c5bfe90b30e795ec57bcc0040065ca6f284af84a1dafd22a207bd6b48c39ce01
+#8 sha256:6227daa949d8f017bf0be0b9763bfffca6a2031a91fbe5b6c9e4dc904c6cdc43
+#8 resolve docker.io/library/node:latest@sha256:c5bfe90b30e795ec57bcc0040065ca6f284af84a1dafd22a207bd6b48c39ce01 0.0s done
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 0B / 64.40MB 0.1s
+#8 sha256:c5bfe90b30e795ec57bcc0040065ca6f284af84a1dafd22a207bd6b48c39ce01 6.41kB / 6.41kB done
+#8 sha256:a3c564aba94388718f175cdebbe90a4027feeb666cfc82033e5b96bbb03b7815 6.39kB / 6.39kB done
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 0B / 48.49MB 0.1s
+#8 sha256:07d1b5af933d2dfc3d0dd509d6e20534825e4a537f7b006a6cb5b8e5a1f20905 0B / 24.01MB 0.1s
+#8 sha256:881a03f83c33cb9d5993ac2770041340683a6295e8a45e2fadb38b06e67da5d4 2.49kB / 2.49kB done
+#8 sha256:07d1b5af933d2dfc3d0dd509d6e20534825e4a537f7b006a6cb5b8e5a1f20905 2.10MB / 24.01MB 0.6s
+#8 sha256:07d1b5af933d2dfc3d0dd509d6e20534825e4a537f7b006a6cb5b8e5a1f20905 5.24MB / 24.01MB 0.8s
+#8 sha256:07d1b5af933d2dfc3d0dd509d6e20534825e4a537f7b006a6cb5b8e5a1f20905 9.44MB / 24.01MB 0.9s
+#8 sha256:07d1b5af933d2dfc3d0dd509d6e20534825e4a537f7b006a6cb5b8e5a1f20905 13.63MB / 24.01MB 1.1s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 5.24MB / 48.49MB 1.5s
+#8 sha256:07d1b5af933d2dfc3d0dd509d6e20534825e4a537f7b006a6cb5b8e5a1f20905 17.83MB / 24.01MB 1.5s
+#8 sha256:07d1b5af933d2dfc3d0dd509d6e20534825e4a537f7b006a6cb5b8e5a1f20905 19.92MB / 24.01MB 1.7s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 10.49MB / 48.49MB 1.9s
+#8 sha256:07d1b5af933d2dfc3d0dd509d6e20534825e4a537f7b006a6cb5b8e5a1f20905 24.01MB / 24.01MB 1.9s done
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 0B / 211.33MB 1.9s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 13.63MB / 48.49MB 2.2s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 17.83MB / 48.49MB 2.5s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 20.97MB / 48.49MB 2.9s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 11.53MB / 211.33MB 2.9s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 24.12MB / 48.49MB 3.2s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 28.31MB / 48.49MB 3.4s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 30.92MB / 48.49MB 3.6s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 24.12MB / 211.33MB 3.6s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 33.55MB / 48.49MB 3.8s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 36.70MB / 48.49MB 4.0s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 35.65MB / 211.33MB 4.3s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 41.94MB / 48.49MB 4.6s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 45.09MB / 48.49MB 4.9s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 47.19MB / 211.33MB 5.1s
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 2.10MB / 64.40MB 5.2s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 48.49MB / 48.49MB 5.2s
+#8 sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 48.49MB / 48.49MB 5.2s done
+#8 sha256:7069a6cd51132d2aabbafeb5cb8a9a5b6673c67e0f7225ea78670af143112c83 0B / 3.33kB 5.3s
+#8 extracting sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 0.1s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 59.77MB / 211.33MB 5.5s
+#8 sha256:7069a6cd51132d2aabbafeb5cb8a9a5b6673c67e0f7225ea78670af143112c83 3.33kB / 3.33kB 5.5s done
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 0B / 57.51MB 5.6s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 72.35MB / 211.33MB 6.0s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 5.24MB / 57.51MB 6.2s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 87.03MB / 211.33MB 6.6s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 9.44MB / 57.51MB 6.6s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 14.68MB / 57.51MB 6.8s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 98.57MB / 211.33MB 6.9s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 17.83MB / 57.51MB 6.9s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 23.07MB / 57.51MB 7.1s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 112.20MB / 211.33MB 7.2s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 26.21MB / 57.51MB 7.2s
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 6.29MB / 64.40MB 7.3s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 29.36MB / 57.51MB 7.3s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 34.60MB / 57.51MB 7.5s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 125.83MB / 211.33MB 7.6s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 41.94MB / 57.51MB 7.8s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 45.09MB / 57.51MB 7.9s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 140.51MB / 211.33MB 8.1s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 50.33MB / 57.51MB 8.1s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 53.48MB / 57.51MB 8.2s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 152.04MB / 211.33MB 8.5s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 57.51MB / 57.51MB 8.5s
+#8 sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 57.51MB / 57.51MB 8.5s done
+#8 sha256:84d83b2ec25af7bf1f8970fea33da750d7fa4161ab00e362d8dc0cc862b7ff8e 0B / 1.25MB 8.6s
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 10.49MB / 64.40MB 8.7s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 167.77MB / 211.33MB 8.9s
+#8 sha256:84d83b2ec25af7bf1f8970fea33da750d7fa4161ab00e362d8dc0cc862b7ff8e 1.25MB / 1.25MB 8.9s done
+#8 sha256:90d6f0b6e96e815b727957a4b480eb287eed97859804b8199d25cc3d9d261343 0B / 447B 9.0s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 182.45MB / 211.33MB 9.2s
+#8 sha256:90d6f0b6e96e815b727957a4b480eb287eed97859804b8199d25cc3d9d261343 447B / 447B 9.2s done
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 198.18MB / 211.33MB 9.5s
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 14.68MB / 64.40MB 9.9s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 211.33MB / 211.33MB 9.9s
+#8 sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 211.33MB / 211.33MB 10.0s done
+#8 extracting sha256:23b7d26ef1d294256da0d70ce374277b9aab5ca683015073316005cb63d33849 4.6s done
+#8 extracting sha256:07d1b5af933d2dfc3d0dd509d6e20534825e4a537f7b006a6cb5b8e5a1f20905
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 18.87MB / 64.40MB 10.4s
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 23.07MB / 64.40MB 10.9s
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 27.26MB / 64.40MB 11.3s
+#8 extracting sha256:07d1b5af933d2dfc3d0dd509d6e20534825e4a537f7b006a6cb5b8e5a1f20905 1.1s done
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 31.46MB / 64.40MB 11.6s
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 36.70MB / 64.40MB 11.9s
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 40.89MB / 64.40MB 12.1s
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 46.14MB / 64.40MB 12.4s
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 53.48MB / 64.40MB 12.7s
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 61.87MB / 64.40MB 13.0s
+#8 sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 64.40MB / 64.40MB 13.1s done
+#8 extracting sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7
+#8 extracting sha256:1eb98adba0eb44a2e4facf9ca3626a4a66feedd0dd56d159cca90a35205744e7 5.0s done
+#8 extracting sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621
+#8 extracting sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 5.2s
+#8 extracting sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 10.3s
+#8 extracting sha256:b617a119f8a27982374d94ec6eb3738ae3d38d6fc2c34c865813926cf596a621 12.1s done
+#8 extracting sha256:7069a6cd51132d2aabbafeb5cb8a9a5b6673c67e0f7225ea78670af143112c83 done
+#8 extracting sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d
+#8 extracting sha256:6acb77dc5e5211f86ab4727188ee0efe810bbd0d76f8a121aa01630d1b2ce48d 4.7s done
+#8 extracting sha256:84d83b2ec25af7bf1f8970fea33da750d7fa4161ab00e362d8dc0cc862b7ff8e
+#8 extracting sha256:84d83b2ec25af7bf1f8970fea33da750d7fa4161ab00e362d8dc0cc862b7ff8e 0.1s done
+#8 extracting sha256:90d6f0b6e96e815b727957a4b480eb287eed97859804b8199d25cc3d9d261343 done
+#8 DONE 36.2s
+
+#7 [2/5] RUN git clone https://github.com/LitoMore/chalk-pipe
+#7 sha256:685982db09b75dc371e0bd6ce8dc4f3a934ced723656262384d6523b8b910e0c
+#7 0.479 Cloning into 'chalk-pipe'...
+#7 DONE 3.9s
+
+#6 [3/5] WORKDIR /chalk-pipe
+#6 sha256:ade51eb7990fd81dcd98cc98f3a34ab46cd2b44c6fac506aa5284564809de0c9
+#6 DONE 0.1s
+
+#5 [4/5] RUN npm install
+#5 sha256:f814ff04a7560f4a3d99ff925b7599da01452a74fd37d77c75d884ab2c05a398
+#5 26.83 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+#5 26.90 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+#5 27.86 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+#5 27.94 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+#5 28.31 npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+#5 31.24 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+#5 32.37 
+#5 32.37 added 671 packages, and audited 672 packages in 32s
+#5 32.37 
+#5 32.37 259 packages are looking for funding
+#5 32.37   run `npm fund` for details
+#5 32.38 
+#5 32.38 found 0 vulnerabilities
+#5 32.38 npm notice
+#5 32.38 npm notice New major version of npm available! 10.9.2 -> 11.3.0
+#5 32.38 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.3.0
+#5 32.38 npm notice To update run: npm install -g npm@11.3.0
+#5 32.38 npm notice
+#5 DONE 32.9s
+
+#4 [5/5] RUN npm run build
+#4 sha256:4a177f43ee91b8c26d2017674845353bd06ca7f4f71b4ed6b3db200526e13ae3
+#4 0.420 
+#4 0.420 > chalk-pipe@6.2.0 build
+#4 0.420 > del-cli distribution && tsc
+#4 0.420 
+#4 DONE 2.3s
+
+#9 exporting to image
+#9 sha256:d47015891b21667c26cd2e8593f528b6f9a7e7cc53bc0d83efa4995574946550
+#9 exporting layers
+#9 exporting layers 5.8s done
+#9 writing image sha256:14fa586bb2f3cda0aa2200f8158a1e8dab12b8a0587414f4c22d4c7fc36f3ddf done
+#9 naming to docker.io/library/chalkbuild-image:latest done
+#9 DONE 5.8s
+Finished: SUCCESS
