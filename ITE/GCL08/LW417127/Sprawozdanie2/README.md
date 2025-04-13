@@ -132,18 +132,175 @@ Zestawienie czasów trwania procesów buildowania dla obu uruchomień pipeline'u
 
 # Sprawozdanie z Publikacji pakietu npm z express.js
 
+Plik Dockerfile przygotowany do buildu aplikacji express
+
+```
+  FROM node:16 AS express-build
+
+  RUN npm install -g express-generator@4
+
+  RUN express /tmp/foo
+
+  WORKDIR /tmp/foo
+
+  RUN npm install
+```
+
 ![](../screens/class6/1.jpg)
+
+Plik Dockerfile przygotowany do deploymentu aplikacji express
+
+```
+  FROM node:18-slim
+
+  COPY --from=express-build /tmp/foo /app
+
+  WORKDIR /app
+
+  CMD ["npm", "start"]
+```
+
 ![](../screens/class6/2.jpg)
+
+Utworzenie sieci dla CI
+
 ![](../screens/class6/3.jpg)
+
+Uruchomienie kontenera deploymentowego w celu weryfikacji działania aplikacji
+
 ![](../screens/class6/4.jpg)
+
+Potwierdzenia prawidłowego działania aplikacji poprzez ```curl```
+
 ![](../screens/class6/5.jpg)
+
+Wygenerowanie tokenu autoryzacyjnego dla NPM
+
 ![](../screens/class6/6.jpg)
+
+Dodanie tokenu do plików projektu
+
 ![](../screens/class6/7.jpg)
+
+Próba publikacji lokalnie z dopiskiem ```--dry-run``` aby jeszcze nie publikować pakietu
+
 ![](../screens/class6/8.jpg)
+
+Dodanie tokenu NPM do uprawnień jenkinsa
+
 ![](../screens/class6/9.jpg)
+
+Przeprowadzenie próby całego procesu poprzez pipeline
+
+```
+pipeline {
+    agent any
+
+    environment {
+        APP_DIR = 'ITE/GCL08/LW417127/Sprawozdanie2'
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'LW417127_S2', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Cleaning') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker rmi -f express-build || true'
+                    sh 'docker rmi -f express-app || true'
+                    sh 'docker builder prune --force --all || true'
+                    sh 'docker network inspect ci >/dev/null 2>&1 && docker network rm ci || true'
+                    sh 'docker ps -q --filter "name=app" | grep -q . && docker rm -f app || true'
+                }
+            }
+        }
+
+        stage('Build Express App') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfiles/Dockerfile.express-build -t express-build .'
+                    sh 'docker run --rm express-build npm --version'
+
+                }
+            }
+        }
+
+        stage('Build Deploy Container') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfiles/Dockerfile.express-deploy -t express-app .'
+                }
+            }
+        }
+
+        stage('Run and Test App') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh '''
+                        docker network create ci || true
+                        docker run -d --rm --network ci --name app -p 3000:3000 express-app
+                        sleep 5
+                        docker run --rm --network ci curlimages/curl curl -s --fail app:3000
+                    '''
+                }
+            }
+        }
+
+        stage('Publish to NPM') {
+            steps {
+                withCredentials([string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
+                    dir("${APP_DIR}") {
+                        sh '''
+                            docker create --name temp_publish express-build
+                            docker cp temp_publish:/tmp/foo ./foo
+                            docker rm temp_publish
+                            
+                            docker run --rm -v "$PWD/foo":/app -w /app express-build \
+                                sh -c 'npm pkg set name="devops_lukasz_wrobel" && \
+                                npm pkg delete private && \
+                                cat package.json'
+                            
+                            docker run --rm -v "$PWD/foo":/app -w /app express-build npm pack
+        
+                            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./foo/.npmrc
+        
+                            docker run --rm -v "$PWD/foo":/app -w /app express-build npm publish --access public
+                            
+                            rm ./foo/.npmrc
+                        '''
+                        
+                        archiveArtifacts artifacts: 'foo/*.tgz', fingerprint: true
+                    }
+                }
+            }
+        }
+    }
+}
+
+```
+
 ![](../screens/class6/10.jpg)
+
+Dodanie zapisu artefaktu dla możliwości jego pobrania z poziomu UI jenkinsa
+
 ![](../screens/class6/11.jpg)
+
+Gotowy do pobrania artefakt pochodzący z procesu próbnej publikacji (--dry-run)
+
 ![](../screens/class6/12.jpg)
+
+Przeprowadzenie procesu publikacji z publicznym dostępem do paczki npm
+
 ![](../screens/class6/13.jpg)
+
+Widok paczki npm na https://registry.npmjs.org/devops_lukasz_wrobel
+
 ![](../screens/class6/14.jpg)
+
+Artefakt do pobrania pochodzący z publicznej wersji publikacji pakietu
+
 ![](../screens/class6/15.jpg)
