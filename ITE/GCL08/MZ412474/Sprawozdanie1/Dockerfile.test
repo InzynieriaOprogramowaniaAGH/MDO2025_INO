@@ -1,0 +1,4 @@
+FROM irssi-build
+
+WORKDIR /app
+CMD meson test -C build --verbose
