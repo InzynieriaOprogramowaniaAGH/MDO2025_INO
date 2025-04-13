@@ -82,3 +82,44 @@
     - *Zrzut ekranu konsoli projektu:*
 
       ![Zrzut ekranu pull ubuntu](media/m8_pull.png)
+
+  - Utworzono **pileline**, którego zadaniem jest pobranie repozytorium przedmiotu `MD02025_INO` i budowa obrazu dockera, zawartego w dockerfile na własnej gałęzi: `FR417273`.
+    ```
+      pipeline {
+        agent any
+    
+        stages {
+            stage('Clone repo') {
+                steps {
+                    git branch: 'FR417273', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                }
+            }
+    
+            stage('Build Docker image') {
+                steps {
+                    dir ("INO/GCL02/FR417273/Sprawozdanie1/coursework/lab3")
+                    {
+                        script {
+                            sh 'ls -la'
+                            docker.build('build', '-f Dockerfile.build .')
+                        }   
+                    }
+                }
+            }
+    
+            stage('Print info') {
+                steps {
+                    echo 'Pipeline ran successfully. Docker image was built.'
+                }
+            }
+        }
+    }
+    ```
+    - *Zrzut ekranu potwierdzający powodzenie*:
+
+      ![Zrzut ekranu](media/m9_pipe.png)
+    - [Pełna treść wydruku z konsoli](coursework/MD02025_INO_console.txt)
+    - Pipeline z powodzeniem udało się uruchomić ponownie
+
+
+ 
