@@ -1,6 +1,11 @@
 pipeline {
     agent any
-
+    
+    environment {
+        IMAGE_NAME = "tomaszek03/redis-app"
+        IMAGE_TAG = 'v1.0.0'
+    }
+    
     stages {
         stage('Clone&Checkout') {
             steps {
@@ -22,6 +27,33 @@ pipeline {
         stage('RunningTests') {
             steps {
                 sh "docker run --rm redis-test"
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh """
+                    if [ \$(docker ps -a -q -f name=redis-postdeploy-test) ]; then
+                        docker rm -f redis-postdeploy-test
+                    fi
+                """
+                sh """ 
+                    docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie2/Dockerfile.deploy .
+                """
+                echo "Testing deploy..."
+                sh """
+                    docker run -d --name redis-postdeploy-test -p 6379:6379 ${IMAGE_NAME}:${IMAGE_TAG}
+                    sleep 5
+                    docker exec redis-postdeploy-test redis-cli PING | grep PONG
+                    docker exec redis-postdeploy-test redis-cli SET test_key "MyKey" | grep OK
+                    docker exec redis-postdeploy-test redis-cli GET test_key | grep MyKey
+                    docker stop redis-postdeploy-test
+                    docker rm redis-postdeploy-test
+                """
+            }
+        }
+        stage('Publish') {
+            steps {
+                echo "Here will be a Publish stage"
             }
         }
     }
