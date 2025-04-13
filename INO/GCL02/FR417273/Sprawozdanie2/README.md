@@ -33,9 +33,9 @@
     RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
     ```
     Obraz utworzono poleceniem: `docker build -t myjenkins-blueocean:2.492.3-1 .`
-  - *Zrzut erkanu z tworzenia kontenera `dind` i obrazu `myjenkins-blueocean:2.492.3-1`*:
+    - *Zrzut erkanu z tworzenia kontenera `dind` i obrazu `myjenkins-blueocean:2.492.3-1`*:
     
-    ![Zrzut ekranu z tworzenia kontenerów 1](media/m1_setup.png)
+      ![Zrzut ekranu z tworzenia kontenerów 1](media/m1_setup.png)
   - Uruchomiono kontener **jenkins-bluocean** poleceniem: `docker run --name jenkins-blueocean --restart=on-failure --detach \
     --network jenkins --env DOCKER_HOST=tcp://docker:2376 \
     --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 \
@@ -43,22 +43,22 @@
     --volume jenkins-data:/var/jenkins_home \
     --volume jenkins-docker-certs:/certs/client:ro \
     myjenkins-blueocean:2.492.3-1` podłączając go do sieci i odpowiednich woluminów.
-  - *Zrzut erkanu uruchomienia kontnera `jenkins-bluocean`*:
+    - *Zrzut erkanu uruchomienia kontnera `jenkins-bluocean`*:
     
-    ![Zrzut ekranu z tworzenia kontenerów 2](media/m2_ocean.png)
+      ![Zrzut ekranu z tworzenia kontenerów 2](media/m2_ocean.png)
 - Na hoście maszyny wirtualnej, przez przeglądarkę,  odwiedzono interfejs **Jenkinsa** pod adresem maszyny: `192.168.1.102:8080`
-  - *Zrzut ekranu strony logowania*:
+    - *Zrzut ekranu strony logowania*:
  
-    ![Zrzut ekranu strony logowania](media/m3_unlock.png)
+      ![Zrzut ekranu strony logowania](media/m3_unlock.png)
   - Hasło uzyskano z logów dockera poleceniem `docker logs jenkins-blueocean`
-  - *Zrzut ekranu uzyskanego hasła jednorazowego*:
+    - *Zrzut ekranu uzyskanego hasła jednorazowego*:
  
-    ![Zrzut ekranu hasła](media/m4_pass.png)
+      ![Zrzut ekranu hasła](media/m4_pass.png)
 
   - Utworzono konto w interfejsie **Jenkinsa** i wybrano rekomendowaną paczkę pluginów.
-  - *Zrzut erkanu z instalacji pluginów:*
+    - *Zrzut erkanu z instalacji pluginów:*
 
-    ![Zrzut ekranu konfiguracji](media/m5_getting_started.png)
+      ![Zrzut ekranu konfiguracji](media/m5_getting_started.png)
 - Wykonanno kilka projektów testowych:
   - Utworzono projekt, który wyświetla `uname` w konsoli.
     - *Zrzut ekranu konsoli projektu*:
