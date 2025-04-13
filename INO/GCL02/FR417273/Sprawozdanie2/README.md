@@ -122,5 +122,82 @@
     - [Pełna treść wydruku z konsoli](coursework/MD02025_INO_console.txt)
     - Pipeline z powodzeniem udało się uruchomić ponownie
 ### Pipeline korzystający z kontenerów celem realizacji kroków build -> test
+- Zmodyfikowano wcześniej utworzony **Pipeline**, tak aby budował rownież kontener testowy. Kontener testowy zostaje uruchomiony a logi będące wynikami jego działania zostają zapisane w postaci artefaktu.
+  ```
+  pipeline {
+      agent any
+  
+      stages {
+          stage('Clone repo') {
+              steps {
+                  git branch: 'FR417273', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+              }
+          }
+  
+          stage('Build') {
+              steps {
+                  dir ("INO/GCL02/FR417273/Sprawozdanie1/coursework/lab3")
+                  {
+                      script {
+                          docker.build('cj-build', '-f Dockerfile.build .')
+                      }   
+                  }
+              }
+          }
+          
+          stage('Test') {
+              steps {
+                  dir("INO/GCL02/FR417273/Sprawozdanie1/coursework/lab3") {
+                      script {
+                          def testImage = docker.build('cj-test', '-f Dockerfile.test .')
+          
+                          // Run temporary container
+                          def containerId = sh(script: "docker create cj-test", returnStdout: true).trim()
+                          
+                          // Ensure logs dir exists
+                          sh "mkdir -p logs"
+          
+                          // Copy logs from container to workspace
+                          sh "docker cp ${containerId}:/app/cJSON/logs/test_results.log logs/test_results.log"
+          
+                          // Clean
+                          sh "docker rm ${containerId}"
+                      }
+                  }
+              }
+          }
+  
+  
+          stage('Print info') {
+              steps {
+                  echo 'Pipeline ran successfully. Docker image was built.'
+              }
+          }
+      }
+      
+          post {
+          always {
+              archiveArtifacts artifacts: 'INO/GCL02/FR417273/Sprawozdanie1/coursework/lab3/logs/test_results.log', allowEmptyArchive: true
+          }
+      }
+  }
+  ```
+  - *Zrzut ekranu potwierdzający utworzenie artefaktu*:
 
- 
+    ![Zrzut ekranu potwierdzający utworzenie artefaktu](media/m10_art.png)
+ - Porównanie podejść DIND - Kontener CI:
+    - **Podejście 1: DIND (Docker-in-Docker)**:
+      - Jenkins korzysta z osobnego kontenera *docker:dind*, który działa jako demon Dockera.
+      - Pipeline może wykonywać `docker build`, `docker run`, `docker cp`, `docker push`, itd.
+      - Umożliwia dynamiczne budowanie i uruchamianie obrazów w czasie działania pipeline’a.
+      - Jest bardziej elastyczne, ale wymaga dodatkowej konfiguracji.
+    - **Podejście 2: Kontener CI**:
+      - Każdy etap pipeline’a działa w osobnym, gotowym kontenerze z wybranym obrazem.
+      - Jenkins nie ma dostępu do docker build ani do Dockera jako takiego.
+      - Prostsze w konfiguracji, ale ograniczone — nie da się dynamicznie budować nowych obrazów.
+      - W projekcie zastosowano podejście DIND, ponieważ:
+
+  - W projekcie zastosowano podejście DIND, ponieważ:
+    - Obrazy są budowane dynamicznie z `Dockerfile.build` i `Dockerfile.test`
+    - Pipeline kopiuje logi testów z wnętrza kontenera (`docker cp`)
+    - Wymagane są możliwości Dockera, których `agent { docker }` nie zapewnia.
