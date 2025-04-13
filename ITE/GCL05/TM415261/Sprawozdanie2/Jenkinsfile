@@ -21,7 +21,7 @@ pipeline {
         }
         stage('RunningTests') {
             steps {
-                sh "docker run redis-test"
+                sh "docker run --rm redis-test"
             }
         }
     }

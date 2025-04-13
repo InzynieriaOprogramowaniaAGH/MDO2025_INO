@@ -1,0 +1,12 @@
+FROM redis-builder AS builder
+FROM alpine:3.21
+
+RUN apk add --no-cache libstdc++ jemalloc
+
+COPY --from=builder /app/redis/src/redis-server /usr/local/bin/
+COPY --from=builder /app/redis/src/redis-cli /usr/local/bin/
+
+EXPOSE 6379
+
+ENTRYPOINT ["redis-server"]
+CMD ["--protected-mode", "no"]
