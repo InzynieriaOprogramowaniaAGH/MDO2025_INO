@@ -556,5 +556,76 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
       <img src="screens3/22.jpg" alt="irssi build">
     </div>
 
+
+
+
 ***
 ## Laboratorium 4
+
+**1.  Zachowywanie stanu**
+
+- Aby utworzyć woluminy wyjściowy i wejściowy należy użyć polecenia:
+  - `docker volume create redis_input`
+  - `docker volume create redis_output`
+
+  <div align="center">
+    <img src="screens4/1.jpg" alt="creating volumes">
+  </div>
+
+- Aby podłączyć woluminy wejściowy i wyjściowy do kontenera bazowego należy użyć polecenia:
+  - `docker run -it --rm --name redisBuildContainer -v redis_input:/mnt/input -v redis_output:/mnt/redis_output redis_build`
+  - Następnie można sprawdzić, czy woluminy zostały poprawnie podłączone za pomocą polecenia `ls` w folderze `mnt`. Jeśli zostały poprawnie podłączone, powinny wyświetlić się foldery `input` oraz `output`.
+
+  <div align="center">
+    <img src="screens4/2.jpg" alt="connecting volumes">
+  </div>
+
+- Aby upewnić się, czy istnieją niezbędne wymagania wstępne w kontenerze do uruchomienia buildu, należy sprawdzić, czy zainstalowane są narzędzia, z których korzysta program w trakcie buildu (w tym wypadku make i gcc) 
+
+  <div align="center">
+    <img src="screens4/3.jpg" alt="creating volumes">
+  </div>
+
+- Aby skopiować repozytorium na wolumin wejściowy wykorzystałem bind mount z lokalnym katalogiem
+
+  <div align="center">
+    <img src="screens4/4.jpg" alt="creating volumes">
+  </div>
+
+  - Sklonowane repozytorium znajduje się w folderze `mnt/input`
+
+  <div align="center">
+    <img src="screens4/5.jpg" alt="creating volumes">
+  </div>
+
+- Uruchomienie buildu w kontenerze:
+  
+  <div align="center">
+    <img src="screens4/6.jpg" alt="creating volumes">
+  </div>
+    
+  <div align="center">
+    <img src="screens4/7.jpg" alt="creating volumes">
+  </div>
+
+- Zapisanie powstałych wyników na woluminie wyjściowym
+
+  <div align="center">
+    <img src="screens4/8.jpg" alt="creating volumes">
+  </div>
+
+  <div align="center">
+    <img src="screens4/9.jpg" alt="creating volumes">
+  </div>
+
+- Klonowanie repozytorium wewnątrz woluminu wejściowego oraz uruchomienie buildu
+
+  <div align="center">
+    <img src="screens4/10.jpg" alt="creating volumes">
+  </div>
+
+  - Zapisanie powstałych wyników na woluminie wyjściowym
+
+  <div align="center">
+    <img src="screens4/11.jpg" alt="creating volumes">
+  </div>
