@@ -1,0 +1,653 @@
+Started by user Adam Borek
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/pipeline-test-fedora
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Klonowanie repo)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/pipeline-test-fedora/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/AB416965^{commit} # timeout=10
+Checking out Revision c7fd35e35d53afc498888c0f4688718433ad62bf (refs/remotes/origin/AB416965)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f c7fd35e35d53afc498888c0f4688718433ad62bf # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D AB416965 # timeout=10
+ > git checkout -b AB416965 c7fd35e35d53afc498888c0f4688718433ad62bf # timeout=10
+Commit message: "AB416965: Create dockerfiles/cjson/Dockerfile.build"
+ > git rev-list --no-walk c7fd35e35d53afc498888c0f4688718433ad62bf # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Budowanie obrazu buildera)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/pipeline-test-fedora/INO/GCL01/AB416965/Sprawozdanie2/dockerfiles/cjson
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t cjson-builder-image -f Dockerfile.build .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.build
+#1 transferring dockerfile:
+#1 transferring dockerfile: 301B 0.0s done
+#1 DONE 0.2s
+
+#2 [internal] load metadata for docker.io/library/fedora:41
+#2 DONE 2.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context:
+#3 transferring context: 2B done
+#3 DONE 0.2s
+
+#4 [1/5] FROM docker.io/library/fedora:41@sha256:f84a7b765ce09163d11de44452a4b56c1b2f5571b6f640b3b973c6afc4e63212
+#4 resolve docker.io/library/fedora:41@sha256:f84a7b765ce09163d11de44452a4b56c1b2f5571b6f640b3b973c6afc4e63212 0.1s done
+#4 DONE 0.1s
+
+#4 [1/5] FROM docker.io/library/fedora:41@sha256:f84a7b765ce09163d11de44452a4b56c1b2f5571b6f640b3b973c6afc4e63212
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 0B / 58.94MB 0.1s
+#4 sha256:f84a7b765ce09163d11de44452a4b56c1b2f5571b6f640b3b973c6afc4e63212 4.66kB / 4.66kB done
+#4 sha256:ed23ab3a8b70551e12f75bda81ec6052ce9882b15435bf2e2c31865b08a201db 1.03kB / 1.03kB done
+#4 sha256:9645f4e2280d9175edc72cd6195576bf9fa396cbde7d1c120756768a5e7399e0 1.00kB / 1.00kB done
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 4.19MB / 58.94MB 0.7s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 9.44MB / 58.94MB 1.1s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 13.63MB / 58.94MB 1.5s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 16.78MB / 58.94MB 1.9s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 19.92MB / 58.94MB 2.3s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 23.07MB / 58.94MB 2.6s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 26.21MB / 58.94MB 3.0s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 29.36MB / 58.94MB 3.3s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 32.51MB / 58.94MB 3.8s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 35.65MB / 58.94MB 4.2s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 38.80MB / 58.94MB 4.6s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 41.94MB / 58.94MB 5.1s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 45.09MB / 58.94MB 5.6s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 49.28MB / 58.94MB 6.3s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 52.43MB / 58.94MB 6.9s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 55.57MB / 58.94MB 7.5s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 58.94MB / 58.94MB 8.1s
+#4 sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 58.94MB / 58.94MB 8.2s done
+#4 extracting sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372
+#4 extracting sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 5.1s
+#4 extracting sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 10.3s
+#4 extracting sha256:510231d94cd9e5ba0690689032bd475ec84d246429c88de4915016c7233ca372 15.8s done
+#4 DONE 25.2s
+
+#5 [2/5] RUN dnf update -y && dnf install -y git cmake gcc gcc-c++ make
+#5 0.824 Updating and loading repositories:
+#5 2.273  Fedora 41 openh264 (From Cisco) - x86_ 100% |   4.3 KiB/s |   6.0 KiB |  00m01s
+#5 10.02  Fedora 41 - x86_64                     100% |   4.6 MiB/s |  35.7 MiB |  00m08s
+#5 12.81  Fedora 41 - x86_64 - Updates           100% |   4.7 MiB/s |  12.1 MiB |  00m03s
+#5 18.62 Repositories loaded.
+#5 22.10 Package                   Arch   Version           Repository                            Size
+#5 22.10 Upgrading:
+#5 22.10  dnf5                     x86_64 5.2.12.0-2.fc41   updates                            2.2 MiB
+#5 22.10    replacing dnf5         x86_64 5.2.12.0-1.fc41   468e23d13dae4189804dd2e6f84e5b07   2.2 MiB
+#5 22.10  dnf5-plugins             x86_64 5.2.12.0-2.fc41   updates                            1.2 MiB
+#5 22.10    replacing dnf5-plugins x86_64 5.2.12.0-1.fc41   468e23d13dae4189804dd2e6f84e5b07   1.2 MiB
+#5 22.10  libdnf5                  x86_64 5.2.12.0-2.fc41   updates                            3.6 MiB
+#5 22.10    replacing libdnf5      x86_64 5.2.12.0-1.fc41   468e23d13dae4189804dd2e6f84e5b07   3.6 MiB
+#5 22.10  libdnf5-cli              x86_64 5.2.12.0-2.fc41   updates                          883.4 KiB
+#5 22.10    replacing libdnf5-cli  x86_64 5.2.12.0-1.fc41   468e23d13dae4189804dd2e6f84e5b07 883.4 KiB
+#5 22.10  libsolv                  x86_64 0.7.32-4.fc41     updates                          982.7 KiB
+#5 22.10    replacing libsolv      x86_64 0.7.31-1.fc41     468e23d13dae4189804dd2e6f84e5b07 944.3 KiB
+#5 22.10  libxcrypt                x86_64 4.4.38-7.fc41     updates                          288.5 KiB
+#5 22.10    replacing libxcrypt    x86_64 4.4.38-6.fc41     468e23d13dae4189804dd2e6f84e5b07 288.5 KiB
+#5 22.10  openldap                 x86_64 2.6.9-1.fc41      updates                          645.3 KiB
+#5 22.10    replacing openldap     x86_64 2.6.8-7.fc41      468e23d13dae4189804dd2e6f84e5b07 631.4 KiB
+#5 22.10  tzdata                   noarch 2025b-1.fc41      updates                            1.6 MiB
+#5 22.10    replacing tzdata       noarch 2025a-1.fc41      468e23d13dae4189804dd2e6f84e5b07   1.6 MiB
+#5 22.10  vim-data                 noarch 2:9.1.1275-1.fc41 updates                           10.3 KiB
+#5 22.10    replacing vim-data     noarch 2:9.1.1227-1.fc41 468e23d13dae4189804dd2e6f84e5b07  10.3 KiB
+#5 22.10  vim-minimal              x86_64 2:9.1.1275-1.fc41 updates                            1.7 MiB
+#5 22.10    replacing vim-minimal  x86_64 2:9.1.1227-1.fc41 468e23d13dae4189804dd2e6f84e5b07   1.7 MiB
+#5 22.10 
+#5 22.10 Transaction Summary:
+#5 22.10  Upgrading:         10 packages
+#5 22.10  Replacing:         10 packages
+#5 22.10 
+#5 22.11 Total size of inbound packages is 5 MiB. Need to download 5 MiB.
+#5 22.11 After this operation, 64 KiB extra will be used (install 13 MiB, remove 13 MiB).
+#5 23.02 [ 1/10] dnf5-0:5.2.12.0-2.fc41.x86_64   100% |   2.4 MiB/s | 829.6 KiB |  00m00s
+#5 23.02 [ 2/10] libdnf5-cli-0:5.2.12.0-2.fc41.x 100% |   1.0 MiB/s | 353.5 KiB |  00m00s
+#5 23.17 [ 3/10] dnf5-plugins-0:5.2.12.0-2.fc41. 100% |   2.8 MiB/s | 454.5 KiB |  00m00s
+#5 23.20 [ 4/10] libdnf5-0:5.2.12.0-2.fc41.x86_6 100% |   2.3 MiB/s |   1.2 MiB |  00m01s
+#5 23.21 [ 5/10] libsolv-0:0.7.32-4.fc41.x86_64  100% |   2.4 MiB/s | 444.0 KiB |  00m00s
+#5 23.22 [ 6/10] libxcrypt-0:4.4.38-7.fc41.x86_6 100% |   2.7 MiB/s | 127.5 KiB |  00m00s
+#5 23.25 [ 7/10] vim-data-2:9.1.1275-1.fc41.noar 100% | 679.7 KiB/s |  18.4 KiB |  00m00s
+#5 23.27 [ 8/10] openldap-0:2.6.9-1.fc41.x86_64  100% |   3.4 MiB/s | 255.9 KiB |  00m00s
+#5 23.45 [ 9/10] tzdata-0:2025b-1.fc41.noarch    100% |   2.9 MiB/s | 713.9 KiB |  00m00s
+#5 23.47 [10/10] vim-minimal-2:9.1.1275-1.fc41.x 100% |   3.8 MiB/s | 830.6 KiB |  00m00s
+#5 23.47 --------------------------------------------------------------------------------
+#5 23.47 [10/10] Total                           100% |   3.8 MiB/s |   5.1 MiB |  00m01s
+#5 23.47 Running transaction
+#5 23.85 [ 1/22] Verify package files            100% | 147.0   B/s |  10.0   B |  00m00s
+#5 23.96 [ 2/22] Prepare transaction             100% | 139.0   B/s |  20.0   B |  00m00s
+#5 24.04 [ 3/22] Upgrading vim-data-2:9.1.1275-1 100% | 206.5 KiB/s |  11.4 KiB |  00m00s
+#5 24.07 [ 4/22] Upgrading libsolv-0:0.7.32-4.fc 100% |  18.1 MiB/s | 984.5 KiB |  00m00s
+#5 24.27 [ 5/22] Upgrading libdnf5-0:5.2.12.0-2. 100% |  17.9 MiB/s |   3.6 MiB |  00m00s
+#5 24.37 [ 6/22] Upgrading libdnf5-cli-0:5.2.12. 100% |  28.9 MiB/s | 887.3 KiB |  00m00s
+#5 24.46 [ 7/22] Upgrading dnf5-0:5.2.12.0-2.fc4 100% |  20.0 MiB/s |   2.3 MiB |  00m00s
+#5 24.50 [ 8/22] Upgrading dnf5-plugins-0:5.2.12 100% |  13.9 MiB/s |   1.2 MiB |  00m00s
+#5 24.61 [ 9/22] Upgrading vim-minimal-2:9.1.127 100% |  24.1 MiB/s |   1.7 MiB |  00m00s
+#5 25.71 [10/22] Upgrading tzdata-0:2025b-1.fc41 100% |   1.7 MiB/s |   1.9 MiB |  00m01s
+#5 25.73 [11/22] Upgrading openldap-0:2.6.9-1.fc 100% |  16.3 MiB/s | 649.1 KiB |  00m00s
+#5 25.75 [12/22] Upgrading libxcrypt-0:4.4.38-7. 100% |  14.2 MiB/s | 291.2 KiB |  00m00s
+#5 26.00 [13/22] Removing dnf5-plugins-0:5.2.12. 100% | 476.0   B/s | 123.0   B |  00m00s
+#5 26.06 [14/22] Removing tzdata-0:2025a-1.fc41. 100% |  62.9 KiB/s |   1.8 KiB |  00m00s
+#5 26.13 [15/22] Removing dnf5-0:5.2.12.0-1.fc41 100% |   1.4 KiB/s | 145.0   B |  00m00s
+#5 26.15 [16/22] Removing libdnf5-cli-0:5.2.12.0 100% |   1.5 KiB/s |  24.0   B |  00m00s
+#5 26.16 [17/22] Removing libdnf5-0:5.2.12.0-1.f 100% |   3.0 KiB/s |  49.0   B |  00m00s
+#5 26.17 [18/22] Removing vim-minimal-2:9.1.1227 100% |   1.3 KiB/s |  16.0   B |  00m00s
+#5 26.19 [19/22] Removing vim-data-2:9.1.1227-1. 100% |   1.1 KiB/s |   7.0   B |  00m00s
+#5 26.20 [20/22] Removing libsolv-0:0.7.31-1.fc4 100% | 785.0   B/s |  11.0   B |  00m00s
+#5 26.22 [21/22] Removing openldap-0:2.6.8-7.fc4 100% |   1.4 KiB/s |  26.0   B |  00m00s
+#5 26.51 [22/22] Removing libxcrypt-0:4.4.38-6.f 100% |  60.0   B/s |  18.0   B |  00m00s
+#5 26.51 Complete!
+#5 26.58 Updating and loading repositories:
+#5 27.56 Repositories loaded.
+#5 27.79 Package                     Arch   Version                 Repository      Size
+#5 27.79 Installing:
+#5 27.79  cmake                      x86_64 3.30.8-1.fc41           updates     32.7 MiB
+#5 27.79  gcc                        x86_64 14.2.1-7.fc41           updates    103.4 MiB
+#5 27.79  gcc-c++                    x86_64 14.2.1-7.fc41           updates     37.7 MiB
+#5 27.79  git                        x86_64 2.49.0-1.fc41           updates     85.3 KiB
+#5 27.79  make                       x86_64 1:4.4.1-8.fc41          fedora       1.8 MiB
+#5 27.79 Installing dependencies:
+#5 27.79  binutils                   x86_64 2.43.1-5.fc41           updates     27.4 MiB
+#5 27.79  cmake-data                 noarch 3.30.8-1.fc41           updates      8.2 MiB
+#5 27.79  cmake-filesystem           x86_64 3.30.8-1.fc41           updates      0.0   B
+#5 27.79  cpp                        x86_64 14.2.1-7.fc41           updates     34.5 MiB
+#5 27.79  elfutils-debuginfod-client x86_64 0.192-9.fc41            updates     84.2 KiB
+#5 27.79  emacs-filesystem           noarch 1:30.0-3.fc41           fedora       0.0   B
+#5 27.79  expat                      x86_64 2.7.1-1.fc41            updates    298.3 KiB
+#5 27.79  git-core                   x86_64 2.49.0-1.fc41           updates     22.8 MiB
+#5 27.79  git-core-doc               noarch 2.49.0-1.fc41           updates     17.6 MiB
+#5 27.79  glibc-devel                x86_64 2.40-23.fc41            updates      2.3 MiB
+#5 27.79  groff-base                 x86_64 1.23.0-7.fc41           fedora       3.8 MiB
+#5 27.79  jansson                    x86_64 2.13.1-10.fc41          fedora      88.3 KiB
+#5 27.79  jsoncpp                    x86_64 1.9.5-8.fc41            fedora     253.4 KiB
+#5 27.79  kernel-headers             x86_64 6.13.3-200.fc41         updates      6.5 MiB
+#5 27.79  less                       x86_64 668-1.fc41              updates    406.3 KiB
+#5 27.79  libcbor                    x86_64 0.11.0-2.fc41           fedora      73.9 KiB
+#5 27.79  libedit                    x86_64 3.1-54.20250104cvs.fc41 updates    239.3 KiB
+#5 27.79  libfdisk                   x86_64 2.40.4-1.fc41           updates    356.4 KiB
+#5 27.79  libfido2                   x86_64 1.15.0-2.fc41           fedora     238.2 KiB
+#5 27.79  libmpc                     x86_64 1.3.1-6.fc41            fedora     164.7 KiB
+#5 27.79  libpkgconf                 x86_64 2.3.0-1.fc41            fedora      78.2 KiB
+#5 27.79  libstdc++-devel            x86_64 14.2.1-7.fc41           updates     15.4 MiB
+#5 27.79  libutempter                x86_64 1.2.1-15.fc41           fedora      57.7 KiB
+#5 27.79  libuv                      x86_64 1:1.50.0-1.fc41         updates    568.4 KiB
+#5 27.79  libxcrypt-devel            x86_64 4.4.38-7.fc41           updates     30.8 KiB
+#5 27.79  ncurses                    x86_64 6.5-2.20240629.fc41     fedora     627.3 KiB
+#5 27.79  openssh                    x86_64 9.9p1-3.fc41            updates      1.4 MiB
+#5 27.79  openssh-clients            x86_64 9.9p1-3.fc41            updates      2.7 MiB
+#5 27.79  perl-AutoLoader            noarch 5.74-514.fc41           updates     20.5 KiB
+#5 27.79  perl-B                     x86_64 1.89-514.fc41           updates    498.0 KiB
+#5 27.79  perl-Carp                  noarch 1.54-511.fc41           fedora      46.6 KiB
+#5 27.79  perl-Class-Struct          noarch 0.68-514.fc41           updates     25.4 KiB
+#5 27.79  perl-Data-Dumper           x86_64 2.189-512.fc41          fedora     111.7 KiB
+#5 27.79  perl-Digest                noarch 1.20-511.fc41           fedora      35.3 KiB
+#5 27.79  perl-Digest-MD5            x86_64 2.59-5.fc41             fedora      59.8 KiB
+#5 27.79  perl-DynaLoader            x86_64 1.56-514.fc41           updates     32.1 KiB
+#5 27.79  perl-Encode                x86_64 4:3.21-511.fc41         fedora       4.7 MiB
+#5 27.79  perl-Errno                 x86_64 1.38-514.fc41           updates      8.3 KiB
+#5 27.79  perl-Error                 noarch 1:0.17029-16.fc41       fedora      77.3 KiB
+#5 27.79  perl-Exporter              noarch 5.78-511.fc41           fedora      54.3 KiB
+#5 27.79  perl-Fcntl                 x86_64 1.18-514.fc41           updates     49.0 KiB
+#5 27.79  perl-File-Basename         noarch 2.86-514.fc41           updates     14.0 KiB
+#5 27.79  perl-File-Find             noarch 1.44-514.fc41           updates     41.9 KiB
+#5 27.79  perl-File-Path             noarch 2.18-511.fc41           fedora      63.5 KiB
+#5 27.79  perl-File-Temp             noarch 1:0.231.100-511.fc41    fedora     162.3 KiB
+#5 27.79  perl-File-stat             noarch 1.14-514.fc41           updates     12.5 KiB
+#5 27.79  perl-FileHandle            noarch 2.05-514.fc41           updates      9.3 KiB
+#5 27.79  perl-Getopt-Long           noarch 1:2.58-2.fc41           fedora     144.5 KiB
+#5 27.79  perl-Getopt-Std            noarch 1.14-514.fc41           updates     11.2 KiB
+#5 27.79  perl-Git                   noarch 2.49.0-1.fc41           updates     64.0 KiB
+#5 27.79  perl-HTTP-Tiny             noarch 0.090-1.fc41            updates    154.4 KiB
+#5 27.79  perl-IO                    x86_64 1.55-514.fc41           updates    151.1 KiB
+#5 27.79  perl-IO-Socket-IP          noarch 0.43-1.fc41             updates    100.3 KiB
+#5 27.79  perl-IO-Socket-SSL         noarch 2.089-1.fc41            fedora     703.3 KiB
+#5 27.79  perl-IPC-Open3             noarch 1.22-514.fc41           updates     22.5 KiB
+#5 27.79  perl-MIME-Base32           noarch 1.303-21.fc41           fedora      30.7 KiB
+#5 27.79  perl-MIME-Base64           x86_64 3.16-511.fc41           fedora      46.1 KiB
+#5 27.79  perl-Net-SSLeay            x86_64 1.94-7.fc41             fedora       1.3 MiB
+#5 27.79  perl-POSIX                 x86_64 2.20-514.fc41           updates    235.1 KiB
+#5 27.79  perl-PathTools             x86_64 3.91-512.fc41           updates    184.1 KiB
+#5 27.79  perl-Pod-Escapes           noarch 1:1.07-511.fc41         fedora      24.9 KiB
+#5 27.79  perl-Pod-Perldoc           noarch 3.28.01-512.fc41        fedora     163.7 KiB
+#5 27.79  perl-Pod-Simple            noarch 1:3.45-511.fc41         fedora     560.9 KiB
+#5 27.79  perl-Pod-Usage             noarch 4:2.03-511.fc41         fedora      84.8 KiB
+#5 27.79  perl-Scalar-List-Utils     x86_64 5:1.68-1.fc41           updates    148.9 KiB
+#5 27.79  perl-SelectSaver           noarch 1.02-514.fc41           updates      2.2 KiB
+#5 27.79  perl-Socket                x86_64 4:2.038-511.fc41        fedora     124.0 KiB
+#5 27.79  perl-Storable              x86_64 1:3.32-511.fc41         fedora     232.4 KiB
+#5 27.79  perl-Symbol                noarch 1.09-514.fc41           updates      6.8 KiB
+#5 27.79  perl-Term-ANSIColor        noarch 5.01-512.fc41           fedora      97.5 KiB
+#5 27.79  perl-Term-Cap              noarch 1.18-511.fc41           fedora      29.3 KiB
+#5 27.79  perl-TermReadKey           x86_64 2.38-23.fc41            fedora      64.1 KiB
+#5 27.79  perl-Text-ParseWords       noarch 3.31-511.fc41           fedora      13.6 KiB
+#5 27.79  perl-Text-Tabs+Wrap        noarch 2024.001-511.fc41       fedora      22.6 KiB
+#5 27.79  perl-Time-Local            noarch 2:1.350-511.fc41        fedora      69.0 KiB
+#5 27.79  perl-URI                   noarch 5.30-1.fc41             fedora     256.9 KiB
+#5 27.79  perl-base                  noarch 2.27-514.fc41           updates     12.5 KiB
+#5 27.79  perl-constant              noarch 1.33-512.fc41           fedora      26.2 KiB
+#5 27.79  perl-if                    noarch 0.61.000-514.fc41       updates      5.8 KiB
+#5 27.79  perl-interpreter           x86_64 4:5.40.1-514.fc41       updates    122.3 KiB
+#5 27.79  perl-lib                   x86_64 0.65-514.fc41           updates      8.5 KiB
+#5 27.79  perl-libnet                noarch 3.15-512.fc41           fedora     289.4 KiB
+#5 27.79  perl-libs                  x86_64 4:5.40.1-514.fc41       updates      9.8 MiB
+#5 27.79  perl-locale                noarch 1.12-514.fc41           updates      6.5 KiB
+#5 27.79  perl-mro                   x86_64 1.29-514.fc41           updates     45.6 KiB
+#5 27.79  perl-overload              noarch 1.37-514.fc41           updates     71.5 KiB
+#5 27.79  perl-overloading           noarch 0.02-514.fc41           updates      4.8 KiB
+#5 27.79  perl-parent                noarch 1:0.242-1.fc41          fedora      10.0 KiB
+#5 27.79  perl-podlators             noarch 1:6.0.2-2.fc41          fedora     317.5 KiB
+#5 27.79  perl-vars                  noarch 1.05-514.fc41           updates      3.9 KiB
+#5 27.79  pkgconf                    x86_64 2.3.0-1.fc41            fedora      88.6 KiB
+#5 27.79  pkgconf-m4                 noarch 2.3.0-1.fc41            fedora      14.4 KiB
+#5 27.79  pkgconf-pkg-config         x86_64 2.3.0-1.fc41            fedora     989.0   B
+#5 27.79  rhash                      x86_64 1.4.4-2.fc41            fedora     349.9 KiB
+#5 27.79  util-linux                 x86_64 2.40.4-1.fc41           updates      3.6 MiB
+#5 27.79  vim-filesystem             noarch 2:9.1.1275-1.fc41       updates     40.0Total size of inbound packages is 106 MiB. Need to download 106 MiB.
+#5 27.79 After this operation, 347 MiB extra will be used (install 347 MiB, remove 0 B).
+#5 27.79    B
+#5 27.79 Installing weak dependencies:
+#5 27.79  perl-NDBM_File             x86_64 1.17-514.fc41           updates     32.5 KiB
+#5 27.79 
+#5 27.79 Transaction Summary:
+#5 27.79  Installing:       102 packages
+#5 27.79 
+#5 29.30 [  1/102] git-0:2.49.0-1.fc41.x86_64    100% | 315.2 KiB/s |  51.1 KiB |  00m00s
+#5 29.63 [  2/102] make-1:4.4.1-8.fc41.x86_64    100% |   1.2 MiB/s | 586.1 KiB |  00m00s
+#5 29.69 [  3/102] perl-Git-0:2.49.0-1.fc41.noar 100% | 712.8 KiB/s |  37.8 KiB |  00m00s
+#5 29.77 [  4/102] perl-Getopt-Long-1:2.58-2.fc4 100% | 779.1 KiB/s |  63.9 KiB |  00m00s
+#5 29.83 [  5/102] perl-TermReadKey-0:2.38-23.fc 100% | 592.5 KiB/s |  35.6 KiB |  00m00s
+#5 29.96 [  6/102] perl-Error-1:0.17029-16.fc41. 100% | 330.1 KiB/s |  40.6 KiB |  00m00s
+#5 30.04 [  7/102] perl-Exporter-0:5.78-511.fc41 100% | 359.5 KiB/s |  30.9 KiB |  00m00s
+#5 30.15 [  8/102] perl-constant-0:1.33-512.fc41 100% | 215.2 KiB/s |  23.0 KiB |  00m00s
+#5 31.04 [  9/102] git-core-0:2.49.0-1.fc41.x86_ 100% |   2.6 MiB/s |   4.9 MiB |  00m02s
+#5 31.06 [ 10/102] perl-Pod-Usage-4:2.03-511.fc4 100% |  44.5 KiB/s |  40.0 KiB |  00m01s
+#5 31.09 [ 11/102] perl-Text-ParseWords-0:3.31-5 100% | 338.3 KiB/s |  16.6 KiB |  00m00s
+#5 31.13 [ 12/102] perl-Carp-0:1.54-511.fc41.noa 100% | 431.2 KiB/s |  28.9 KiB |  00m00s
+#5 31.21 [ 13/102] perl-Pod-Perldoc-0:3.28.01-51 100% | 742.3 KiB/s |  86.1 KiB |  00m00s
+#5 31.29 [ 14/102] perl-podlators-1:6.0.2-2.fc41 100% | 810.4 KiB/s | 128.9 KiB |  00m00s
+#5 31.35 [ 15/102] perl-File-Temp-1:0.231.100-51 100% | 985.3 KiB/s |  59.1 KiB |  00m00s
+#5 31.48 [ 16/102] perl-Pod-Simple-1:3.45-511.fc 100% |   1.7 MiB/s | 219.0 KiB |  00m00s
+#5 31.53 [ 17/102] perl-parent-1:0.242-1.fc41.no 100% | 375.0 KiB/s |  15.0 KiB |  00m00s
+#5 31.56 [ 18/102] git-core-doc-0:2.49.0-1.fc41. 100% |   1.3 MiB/s |   3.0 MiB |  00m02s
+#5 31.57 [ 19/102] perl-Term-ANSIColor-0:5.01-51 100% |   1.1 MiB/s |  47.7 KiB |  00m00s
+#5 31.58 [ 20/102] groff-base-0:1.23.0-7.fc41.x8 100% |   3.0 MiB/s |   1.1 MiB |  00m00s
+#5 31.59 [ 21/102] perl-Term-Cap-0:1.18-511.fc41 100% | 882.8 KiB/s |  22.1 KiB |  00m00s
+#5 31.61 [ 22/102] perl-Text-Tabs+Wrap-0:2024.00 100% |   1.1 MiB/s |  21.9 KiB |  00m00s
+#5 31.62 [ 23/102] perl-File-Path-0:2.18-511.fc4 100% | 750.2 KiB/s |  35.3 KiB |  00m00s
+#5 31.63 [ 24/102] perl-Pod-Escapes-1:1.07-511.f 100% | 412.8 KiB/s |  19.8 KiB |  00m00s
+#5 31.71 [ 25/102] ncurses-0:6.5-2.20240629.fc41 100% |   4.3 MiB/s | 423.8 KiB |  00m00s
+#5 31.75 [ 26/102] cmake-filesystem-0:3.30.8-1.f 100% | 400.3 KiB/s |  16.8 KiB |  00m00s
+#5 31.81 [ 27/102] jsoncpp-0:1.9.5-8.fc41.x86_64 100% |   1.8 MiB/s |  99.3 KiB |  00m00s
+#5 31.92 [ 28/102] rhash-0:1.4.4-2.fc41.x86_64   100% |   1.8 MiB/s | 196.0 KiB |  00m00s
+#5 31.97 [ 29/102] emacs-filesystem-1:30.0-3.fc4 100% | 162.3 KiB/s |   7.1 KiB |  00m00s
+#5 32.50 [ 30/102] cmake-data-0:3.30.8-1.fc41.no 100% |   2.7 MiB/s |   2.3 MiB |  00m01s
+#5 33.91 [ 31/102] cmake-0:3.30.8-1.fc41.x86_64  100% |   4.8 MiB/s |  10.9 MiB |  00m02s
+#5 33.94 [ 32/102] libmpc-0:1.3.1-6.fc41.x86_64  100% |   2.0 MiB/s |  71.1 KiB |  00m00s
+#5 36.12 [ 33/102] cpp-0:14.2.1-7.fc41.x86_64    100% |   3.2 MiB/s |  11.5 MiB |  00m04s
+#5 36.16 [ 34/102] perl-File-Basename-0:2.86-514 100% | 378.2 KiB/s |  17.0 KiB |  00m00s
+#5 36.24 [ 35/102] perl-POSIX-0:2.20-514.fc41.x8 100% |   1.4 MiB/s |  97.0 KiB |  00m00s
+#5 36.32 [ 36/102] perl-PathTools-0:3.91-512.fc4 100% | 981.2 KiB/s |  87.3 KiB |  00m00s
+#5 36.38 [ 37/102] perl-interpreter-4:5.40.1-514 100% |   1.4 MiB/s |  72.2 KiB |  00m00s
+#5 37.06 [ 38/102] gcc-c++-0:14.2.1-7.fc41.x86_6 100% |   4.4 MiB/s |  13.7 MiB |  00m03s
+#5 37.10 [ 39/102] perl-libs-4:5.40.1-514.fc41.x 100% |   3.2 MiB/s |   2.3 MiB |  00m01s
+#5 37.12 [ 40/102] perl-Errno-0:1.38-514.fc41.x8 100% | 284.7 KiB/s |  14.8 KiB |  00m00s
+#5 37.16 [ 41/102] perl-MIME-Base64-0:3.16-511.f 100% | 637.1 KiB/s |  29.9 KiB |  00m00s
+#5 37.24 [ 42/102] perl-Storable-1:3.32-511.fc41 100% |   1.3 MiB/s |  98.4 KiB |  00m00s
+#5 37.28 [ 43/102] perl-DynaLoader-0:1.56-514.fc 100% | 740.3 KiB/s |  25.9 KiB |  00m00s
+#5 37.31 [ 44/102] perl-vars-0:1.05-514.fc41.noa 100% | 389.6 KiB/s |  12.9 KiB |  00m00s
+#5 37.34 [ 45/102] perl-Fcntl-0:1.18-514.fc41.x8 100% |   1.1 MiB/s |  29.7 KiB |  00m00s
+#5 37.41 [ 46/102] perl-IO-0:1.55-514.fc41.x86_6 100% |   1.3 MiB/s |  81.7 KiB |  00m00s
+#5 37.42 [ 47/102] perl-Encode-4:3.21-511.fc41.x 100% |   3.4 MiB/s |   1.1 MiB |  00m00s
+#5 37.47 [ 48/102] perl-Symbol-0:1.09-514.fc41.n 100% | 319.7 KiB/s |  14.1 KiB |  00m00s
+#5 37.47 [ 49/102] perl-Socket-4:2.038-511.fc41. 100% | 783.2 KiB/s |  54.8 KiB |  00m00s
+#5 37.49 [ 50/102] perl-if-0:0.61.000-514.fc41.n 100% | 577.5 KiB/s |  13.9 KiB |  00m00s
+#5 37.51 [ 51/102] perl-overload-0:1.37-514.fc41 100% |   1.2 MiB/s |  45.4 KiB |  00m00s
+#5 37.54 [ 52/102] perl-HTTP-Tiny-0:0.090-1.fc41 100% |   1.4 MiB/s |  56.5 KiB |  00m00s
+#5 37.62 [ 53/102] perl-IO-Socket-SSL-0:2.089-1. 100% |   2.1 MiB/s | 231.2 KiB |  00m00s
+#5 37.67 [ 54/102] perl-Time-Local-2:1.350-511.f 100% | 750.6 KiB/s |  34.5 KiB |  00m00s
+#5 37.68 [ 55/102] perl-Net-SSLeay-0:1.94-7.fc41 100% |   2.5 MiB/s | 375.7 KiB |  00m00s
+#5 37.73 [ 56/102] perl-Data-Dumper-0:2.189-512. 100% |   1.4 MiB/s |  56.3 KiB |  00m00s
+#5 37.75 [ 57/102] perl-URI-0:5.30-1.fc41.noarch 100% |   1.8 MiB/s | 140.8 KiB |  00m00s
+#5 37.78 [ 58/102] perl-MIME-Base32-0:1.303-21.f 100% | 379.1 KiB/s |  20.5 KiB |  00m00s
+#5 37.83 [ 59/102] perl-Digest-MD5-0:2.59-5.fc41 100% | 734.9 KiB/s |  36.0 KiB |  00m00s
+#5 37.96 [ 60/102] perl-Digest-0:1.20-511.fc41.n 100% | 216.5 KiB/s |  24.9 KiB |  00m00s
+#5 37.99 [ 61/102] perl-IPC-Open3-0:1.22-514.fc4 100% | 657.6 KiB/s |  21.7 KiB |  00m00s
+#5 38.03 [ 62/102] perl-AutoLoader-0:5.74-514.fc 100% | 602.8 KiB/s |  21.1 KiB |  00m00s
+#5 38.12 [ 63/102] perl-IO-Socket-IP-0:0.43-1.fc 100% | 474.5 KiB/s |  42.2 KiB |  00m00s
+#5 38.16 [ 64/102] perl-base-0:2.27-514.fc41.noa 100% | 434.2 KiB/s |  16.1 KiB |  00m00s
+#5 38.24 [ 65/102] perl-libnet-0:3.15-512.fc41.n 100% | 263.8 KiB/s | 128.5 KiB |  00m00s
+#5 38.25 [ 66/102] perl-Scalar-List-Utils-5:1.68 100% | 797.7 KiB/s |  74.2 KiB |  00m00s
+#5 38.30 [ 67/102] perl-Getopt-Std-0:1.14-514.fc 100% | 277.7 KiB/s |  15.5 KiB |  00m00s
+#5 38.33 [ 68/102] perl-mro-0:1.29-514.fc41.x86_ 100% | 990.2 KiB/s |  29.7 KiB |  00m00s
+#5 38.47 [ 69/102] perl-B-0:1.89-514.fc41.x86_64 100% | 819.2 KiB/s | 176.1 KiB |  00m00s
+#5 38.48 [ 70/102] perl-overloading-0:0.02-514.f 100% |  86.9 KiB/s |  12.8 KiB |  00m00s
+#5 38.51 [ 71/102] perl-locale-0:1.12-514.fc41.n 100% | 337.0 KiB/s |  13.5 KiB |  00m00s
+#5 38.55 [ 72/102] perl-File-stat-0:1.14-514.fc4 100% | 248.7 KiB/s |  16.9 KiB |  00m00s
+#5 38.57 [ 73/102] perl-SelectSaver-0:1.02-514.f 100% | 227.2 KiB/s |  11.6 KiB |  00m00s
+#5 38.66 [ 74/102] perl-Class-Struct-0:0.68-514. 100% | 195.7 KiB/s |  21.9 KiB |  00m00s
+#5 38.71 [ 75/102] expat-0:2.7.1-1.fc41.x86_64   100% | 822.5 KiB/s | 116.0 KiB |  00m00s
+#5 39.27 [ 76/102] less-0:668-1.fc41.x86_64      100% | 314.6 KiB/s | 189.4 KiB |  00m01s
+#5 40.59 [ 77/102] openssh-clients-0:9.9p1-3.fc4 100% | 405.8 KiB/s | 760.0 KiB |  00m02s
+#5 41.13 [ 78/102] openssh-0:9.9p1-3.fc41.x86_64 100% | 189.9 KiB/s | 353.2 KiB |  00m02s
+#5 41.29 [ 79/102] libcbor-0:0.11.0-2.fc41.x86_6 100% | 208.4 KiB/s |  33.1 KiB |  00m00s
+#5 41.30 [ 80/102] libfido2-0:1.15.0-2.fc41.x86_ 100% | 138.0 KiB/s |  98.1 KiB |  00m01s
+#5 41.38 [ 81/102] perl-lib-0:0.65-514.fc41.x86_ 100% | 194.9 KiB/s |  14.8 KiB |  00m00s
+#5 41.39 [ 82/102] perl-File-Find-0:1.44-514.fc4 100% | 268.4 KiB/s |  25.2 KiB |  00m00s
+#5 43.46 [ 83/102] libstdc++-devel-0:14.2.1-7.fc 100% |   1.3 MiB/s |   2.8 MiB |  00m02s
+#5 43.54 [ 84/102] jansson-0:2.13.1-10.fc41.x86_ 100% | 634.7 KiB/s |  44.4 KiB |  00m00s
+#5 43.91 [ 85/102] glibc-devel-0:2.40-23.fc41.x8 100% |   1.6 MiB/s | 613.8 KiB |  00m00s
+#5 43.96 [ 86/102] vim-filesystem-2:9.1.1275-1.f 100% | 375.7 KiB/s |  16.2 KiB |  00m00s
+#5 44.11 [ 87/102] libuv-1:1.50.0-1.fc41.x86_64  100% |   1.7 MiB/s | 264.3 KiB |  00m00s
+#5 44.16 [ 88/102] elfutils-debuginfod-client-0: 100% | 889.5 KiB/s |  46.3 KiB |  00m00s
+#5 44.20 [ 89/102] perl-FileHandle-0:2.05-514.fc 100% | 479.9 KiB/s |  15.4 KiB |  00m00s
+#5 44.28 [ 90/102] libedit-0:3.1-54.20250104cvs. 100% |   1.2 MiB/s | 100.7 KiB |  00m00s
+#5 44.73 [ 91/102] util-linux-0:2.40.4-1.fc41.x8 100% |   2.4 MiB/s |   1.1 MiB |  00m00s
+#5 44.78 [ 92/102] libutempter-0:1.2.1-15.fc41.x 100% | 532.3 KiB/s |  26.6 KiB |  00m00s
+#5 44.99 [ 93/102] binutils-0:2.43.1-5.fc41.x86_ 100% |   1.7 MiB/s |   6.3 MiB |  00m04s
+#5 45.05 [ 94/102] libxcrypt-devel-0:4.4.38-7.fc 100% | 544.0 KiB/s |  29.4 KiB |  00m00s
+#5 45.15 [ 95/102] libfdisk-0:2.40.4-1.fc41.x86_ 100% |   1.5 MiB/s | 152.5 KiB |  00m00s
+#5 45.22 [ 96/102] pkgconf-pkg-config-0:2.3.0-1. 100% | 156.4 KiB/s |  10.0 KiB |  00m00s
+#5 45.26 [ 97/102] kernel-headers-0:6.13.3-200.f 100% |   3.4 MiB/s |   1.6 MiB |  00m00s
+#5 45.27 [ 98/102] pkgconf-0:2.3.0-1.fc41.x86_64 100% | 886.4 KiB/s |  45.2 KiB |  00m00s
+#5 45.29 [ 99/102] pkgconf-m4-0:2.3.0-1.fc41.noa 100% | 550.8 KiB/s |  14.3 KiB |  00m00s
+#5 45.32 [100/102] libpkgconf-0:2.3.0-1.fc41.x86 100% | 785.4 KiB/s |  38.5 KiB |  00m00s
+#5 45.33 [101/102] perl-NDBM_File-0:1.17-514.fc4 100% | 613.3 KiB/s |  22.7 KiB |  00m00s
+#5 47.50 [102/102] gcc-0:14.2.1-7.fc41.x86_64    100% |   2.3 MiB/s |  36.1 MiB |  00m16s
+#5 47.50 --------------------------------------------------------------------------------
+#5 47.50 [102/102] Total                         100% |   5.4 MiB/s | 106.2 MiB |  00m20s
+#5 47.51 Running transaction
+#5 50.95 [  1/104] Verify package files          100% | 107.0   B/s | 102.0   B |  00m01s
+#5 51.06 [  2/104] Prepare transaction           100% | 990.0   B/s | 102.0   B |  00m00s
+#5 51.11 [  3/104] Installing libmpc-0:1.3.1-6.f 100% |   3.4 MiB/s | 166.2 KiB |  00m00s
+#5 51.14 [  4/104] Installing expat-0:2.7.1-1.fc 100% |   9.8 MiB/s | 300.4 KiB |  00m00s
+#5 51.18 [  5/104] Installing cmake-filesystem-0 100% | 270.4 KiB/s |   7.3 KiB |  00m00s
+#5 51.28 [  6/104] Installing make-1:4.4.1-8.fc4 100% |  31.0 MiB/s |   1.8 MiB |  00m00s
+#5 51.78 [  7/104] Installing cpp-0:14.2.1-7.fc4 100% |  66.7 MiB/s |  34.6 MiB |  00m01s
+#5 51.79 [  8/104] Installing libpkgconf-0:2.3.0 100% |   1.3 MiB/s |  79.3 KiB |  00m00s
+#5 51.84 [  9/104] Installing pkgconf-0:2.3.0-1. 100% |   2.2 MiB/s |  91.1 KiB |  00m00s
+#5 51.86 [ 10/104] Installing pkgconf-m4-0:2.3.0 100% | 705.0 KiB/s |  14.8 KiB |  00m00s
+#5 51.87 [ 11/104] Installing pkgconf-pkg-config 100% | 161.2 KiB/s |   1.8 KiB |  00m00s
+#5 51.89 [ 12/104] Installing libfdisk-0:2.40.4- 100% |  20.5 MiB/s | 357.4 KiB |  00m00s
+#5 52.28 [ 13/104] Installing kernel-headers-0:6 100% |  16.8 MiB/s |   6.6 MiB |  00m00s
+#5 52.30 [ 14/104] Installing libxcrypt-devel-0: 100% |   1.8 MiB/s |  33.1 KiB |  00m00s
+#5 52.62 [ 15/104] Installing glibc-devel-0:2.40 100% |   7.3 MiB/s |   2.3 MiB |  00m00s
+#5 52.72 [ 16/104] Installing libutempter-0:1.2. 100% |   1.8 MiB/s |  59.7 KiB |  00m00s
+#5 53.03 [ 17/104] Installing util-linux-0:2.40. 100% |   9.9 MiB/s |   3.7 MiB |  00m00s
+#5 53.10 [ 18/104] Installing openssh-0:9.9p1-3. 100% |  29.4 MiB/s |   1.4 MiB |  00m00s
+#5 53.14 [ 19/104] Installing libedit-0:3.1-54.2 100% |   4.9 MiB/s | 241.0 KiB |  00m00s
+#5 53.19 [ 20/104] Installing elfutils-debuginfo 100% |   1.7 MiB/s |  86.5 KiB |  00m00s
+#5 53.22 [ 21/104] Installing libuv-1:1.50.0-1.f 100% |  15.9 MiB/s | 571.2 KiB |  00m00s
+#5 53.23 [ 22/104] Installing vim-filesystem-2:9 100% | 277.6 KiB/s |   4.7 KiB |  00m00s
+#5 53.25 [ 23/104] Installing jansson-0:2.13.1-1 100% |   4.9 MiB/s |  89.7 KiB |  00m00s
+#5 53.69 [ 24/104] Installing binutils-0:2.43.1- 100% |  61.7 MiB/s |  27.4 MiB |  00m00s
+#5 55.12 [ 25/104] Installing gcc-0:14.2.1-7.fc4 100% |  72.3 MiB/s | 103.4 MiB |  00m01s
+#5 55.55 [ 26/104] Installing libstdc++-devel-0: 100% |  36.3 MiB/s |  15.6 MiB |  00m00s
+#5 55.57 [ 27/104] Installing libcbor-0:0.11.0-2 100% |   6.7 MiB/s |  75.3 KiB |  00m00s
+#5 55.66 [ 28/104] Installing libfido2-0:1.15.0- 100% |   8.7 MiB/s | 239.7 KiB |  00m00s
+#5 55.73 [ 29/104] Installing openssh-clients-0: 100% |  22.7 MiB/s |   2.7 MiB |  00m00s
+#5 55.76 [ 30/104] Installing less-0:668-1.fc41. 100% |  10.5 MiB/s | 409.6 KiB |  00m00s
+#5 55.97 [ 31/104] Installing git-core-0:2.49.0- 100% | 102.3 MiB/s |  22.8 MiB |  00m00s
+#5 56.02 [ 32/104] Installing git-core-doc-0:2.4 100% | 395.1 MiB/s |  17.8 MiB |  00m00s
+#5 56.06 [ 33/104] Installing emacs-filesystem-1 100% |  37.9 KiB/s | 544.0   B |  00m00s
+#5 56.09 [ 34/104] Installing rhash-0:1.4.4-2.fc 100% |   6.3 MiB/s | 355.1 KiB |  00m00s
+#5 56.19 [ 35/104] Installing jsoncpp-0:1.9.5-8. 100% |   5.7 MiB/s | 254.9 KiB |  00m00s
+#5 57.41 [ 36/104] Installing cmake-data-0:3.30. 100% |   7.0 MiB/s |   8.8 MiB |  00m01s
+#5 57.93 [ 37/104] Installing cmake-0:3.30.8-1.f 100% |  60.7 MiB/s |  32.7 MiB |  00m01s
+#5 58.04 [ 38/104] Installing ncurses-0:6.5-2.20 100% |   5.7 MiB/s | 633.9 KiB |  00m00s
+#5 58.50 [ 39/104] Installing groff-base-0:1.23. 100% |   8.4 MiB/s |   3.9 MiB |  00m00s
+#5 58.53 [ 40/104] Installing perl-Digest-0:1.20 100% |   1.8 MiB/s |  37.1 KiB |  00m00s
+#5 58.56 [ 41/104] Installing perl-Digest-MD5-0: 100% |   3.5 MiB/s |  61.7 KiB |  00m00s
+#5 58.57 [ 42/104] Installing perl-B-0:1.89-514. 100% |  15.3 MiB/s | 501.4 KiB |  00m00s
+#5 58.59 [ 43/104] Installing perl-FileHandle-0: 100% | 887.1 KiB/s |   9.8 KiB |  00m00s
+#5 58.60 [ 44/104] Installing perl-MIME-Base32-0 100% |   2.6 MiB/s |  32.2 KiB |  00m00s
+#5 58.62 [ 45/104] Installing perl-Data-Dumper-0 100% |   5.8 MiB/s | 113.6 KiB |  00m00s
+#5 58.63 [ 46/104] Installing perl-libnet-0:3.15 100% |  16.9 MiB/s | 294.7 KiB |  00m00s
+#5 58.64 [ 47/104] Installing perl-AutoLoader-0: 100% |   2.9 MiB/s |  20.9 KiB |  00m00s
+#5 58.66 [ 48/104] Installing perl-IO-Socket-IP- 100% |   9.1 MiB/s | 102.2 KiB |  00m00s
+#5 58.68 [ 49/104] Installing perl-URI-0:5.30-1. 100% |   9.7 MiB/s | 269.5 KiB |  00m00s
+#5 58.69 [ 50/104] Installing perl-Text-Tabs+Wra 100% |   2.9 MiB/s |  23.9 KiB |  00m00s
+#5 58.70 [ 51/104] Installing perl-Pod-Escapes-1 100% |   3.2 MiB/s |  25.9 KiB |  00m00s
+#5 58.71 [ 52/104] Installing perl-if-0:0.61.000 100% | 563.9 KiB/s |   6.2 KiB |  00m00s
+#5 58.73 [ 53/104] Installing perl-Time-Local-2: 100% |   4.1 MiB/s |  70.6 KiB |  00m00s
+#5 58.79 [ 54/104] Installing perl-Net-SSLeay-0: 100% |  21.6 MiB/s |   1.4 MiB |  00m00s
+#5 58.80 [ 55/104] Installing perl-File-Path-0:2 100% |   4.8 MiB/s |  64.5 KiB |  00m00s
+#5 58.82 [ 56/104] Installing perl-locale-0:1.12 100% | 766.9 KiB/s |   6.9 KiB |  00m00s
+#5 58.83 [ 57/104] Installing perl-IO-Socket-SSL 100% |  38.4 MiB/s | 707.4 KiB |  00m00s
+#5 58.84 [ 58/104] Installing perl-Term-ANSIColo 100% |   9.7 MiB/s |  99.2 KiB |  00m00s
+#5 58.86 [ 59/104] Installing perl-Term-Cap-0:1. 100% |   2.7 MiB/s |  30.6 KiB |  00m00s
+#5 58.88 [ 60/104] Installing perl-Pod-Simple-1: 100% |  24.2 MiB/s | 570.5 KiB |  00m00s
+#5 58.89 [ 61/104] Installing perl-POSIX-0:2.20- 100% |  19.2 MiB/s | 236.4 KiB |  00m00s
+#5 58.90 [ 62/104] Installing perl-File-Temp-1:0 100% |  16.0 MiB/s | 164.1 KiB |  00m00s
+#5 58.92 [ 63/104] Installing perl-IPC-Open3-0:1 100% |   1.2 MiB/s |  23.3 KiB |  00m00s
+#5 58.93 [ 64/104] Installing perl-Class-Struct- 100% |   1.9 MiB/s |  25.9 KiB |  00m00s
+#5 58.96 [ 65/104] Installing perl-HTTP-Tiny-0:0 100% |   9.5 MiB/s | 156.4 KiB |  00m00s
+#5 58.98 [ 66/104] Installing perl-Socket-4:2.03 100% |   3.4 MiB/s | 126.1 KiB |  00m00s
+#5 58.99 [ 67/104] Installing perl-Symbol-0:1.09 100% | 902.3 KiB/s |   7.2 KiB |  00m00s
+#5 59.01 [ 68/104] Installing perl-SelectSaver-0 100% | 214.8 KiB/s |   2.6 KiB |  00m00s
+#5 59.03 [ 69/104] Installing perl-File-stat-0:1 100% | 767.7 KiB/s |  13.1 KiB |  00m00s
+#5 59.06 [ 70/104] Installing perl-podlators-1:6 100% |   9.2 MiB/s | 321.4 KiB |  00m00s
+#5 59.07 [ 71/104] Installing perl-Pod-Perldoc-0 100% |   9.7 MiB/s | 169.3 KiB |  00m00s
+#5 59.09 [ 72/104] Installing perl-Text-ParseWor 100% |   1.2 MiB/s |  14.6 KiB |  00m00s
+#5 59.10 [ 73/104] Installing perl-Fcntl-0:1.18- 100% |   4.9 MiB/s |  50.1 KiB |  00m00s
+#5 59.11 [ 74/104] Installing perl-base-0:2.27-5 100% |   1.3 MiB/s |  12.9 KiB |  00m00s
+#5 59.12 [ 75/104] Installing perl-mro-0:1.29-51 100% |   5.1 MiB/s |  46.6 KiB |  00m00s
+#5 59.13 [ 76/104] Installing perl-overloading-0 100% | 692.4 KiB/s |   5.5 KiB |  00m00s
+#5 59.15 [ 77/104] Installing perl-IO-0:1.55-514 100% |   8.0 MiB/s | 155.3 KiB |  00m00s
+#5 59.16 [ 78/104] Installing perl-Pod-Usage-4:2 100% |   9.4 MiB/s |  86.3 KiB |  00m00s
+#5 59.16 [ 79/104] Installing perl-constant-0:1. 100% |   3.3 MiB/s |  27.4 KiB |  00m00s
+#5 59.17 [ 80/104] Installing perl-parent-1:0.24 100% |   1.5 MiB/s |  10.7 KiB |  00m00s
+#5 59.18 [ 81/104] Installing perl-File-Basename 100% |   1.8 MiB/s |  14.6 KiB |  00m00s
+#5 59.19 [ 82/104] Installing perl-Errno-0:1.38- 100% |   1.2 MiB/s |   8.7 KiB |  00m00s
+#5 59.20 [ 83/104] Installing perl-MIME-Base64-0 100% |   4.3 MiB/s |  48.4 KiB |  00m00s
+#5 59.23 [ 84/104] Installing perl-vars-0:1.05-5 100% | 304.7 KiB/s |   4.3 KiB |  00m00s
+#5 59.24 [ 85/104] Installing perl-Scalar-List-U 100% |   5.0 MiB/s | 152.6 KiB |  00m00s
+#5 59.25 [ 86/104] Installing perl-Getopt-Std-0: 100% |   1.1 MiB/s |  11.7 KiB |  00m00s
+#5 59.27 [ 87/104] Installing perl-overload-0:1. 100% |   7.8 MiB/s |  71.9 KiB |  00m00s
+#5 59.28 [ 88/104] Installing perl-Storable-1:3. 100% |  13.4 MiB/s | 234.0 KiB |  00m00s
+#5 59.29 [ 89/104] Installing perl-Getopt-Long-1 100% |  13.1 MiB/s | 147.2 KiB |  00m00s
+#5 59.31 [ 90/104] Installing perl-Exporter-0:5. 100% |   3.9 MiB/s |  55.6 KiB |  00m00s
+#5 59.32 [ 91/104] Installing perl-Carp-0:1.54-5 100% |   4.2 MiB/s |  47.7 KiB |  00m00s
+#5 59.33 [ 92/104] Installing perl-DynaLoader-0: 100% |   3.2 MiB/s |  32.5 KiB |  00m00s
+#5 59.37 [ 93/104] Installing perl-PathTools-0:3 100% |  10.8 MiB/s | 188.6 KiB |  00m00s
+#5 59.47 [ 94/104] Installing perl-Encode-4:3.21 100% |  44.1 MiB/s |   4.7 MiB |  00m00s
+#5 59.86 [ 95/104] Installing perl-libs-4:5.40.1 100% |  25.1 MiB/s |   9.9 MiB |  00m00s
+#5 59.87 [ 96/104] Installing perl-interpreter-4 100% |   7.1 MiB/s | 124.0 KiB |  00m00s
+#5 59.88 [ 97/104] Installing perl-TermReadKey-0 100% |   4.3 MiB/s |  66.3 KiB |  00m00s
+#5 59.89 [ 98/104] Installing perl-Error-1:0.170 100% |   6.6 MiB/s |  80.5 KiB |  00m00s
+#5 59.91 [ 99/104] Installing perl-File-Find-0:1 100% |   3.8 MiB/s |  42.5 KiB |  00m00s
+#5 59.92 [100/104] Installing perl-lib-0:0.65-51 100% | 809.3 KiB/s |   8.9 KiB |  00m00s
+#5 59.93 [101/104] Installing perl-Git-0:2.49.0- 100% |   5.8 MiB/s |  65.0 KiB |  00m00s
+#5 59.94 [102/104] Installing git-0:2.49.0-1.fc4 100% |   6.6 MiB/s |  87.5 KiB |  00m00s
+#5 59.99 [103/104] Installing perl-NDBM_File-0:1 100% |   3.3 MiB/s |  33.7 KiB |  00m00s
+#5 61.14 [104/104] Installing gcc-c++-0:14.2.1-7 100% |  31.8 MiB/s |  37.7 MiB |  00m01s
+#5 61.14 Complete!
+#5 DONE 61.4s
+
+#6 [3/5] WORKDIR /app
+#6 DONE 0.3s
+
+#7 [4/5] RUN git clone https://github.com/DaveGamble/cJSON.git .
+#7 0.658 Cloning into '.'...
+#7 DONE 4.8s
+
+#8 [5/5] RUN mkdir build && cd build && cmake .. && make
+#8 0.610 CMake Deprecation Warning at CMakeLists.txt:2 (cmake_minimum_required):
+#8 0.610   Compatibility with CMake < 3.5 will be removed from a future version of
+#8 0.610   CMake.
+#8 0.610 
+#8 0.610   Update the VERSION argument <min> value or use a ...<max> suffix to tell
+#8 0.610   CMake that the project does not need compatibility with older versions.
+#8 0.610 
+#8 0.610 
+#8 0.734 -- The C compiler identification is GNU 14.2.1
+#8 0.767 -- Detecting C compiler ABI info
+#8 1.012 -- Detecting C compiler ABI info - done
+#8 1.041 -- Check for working C compiler: /usr/bin/cc - skipped
+#8 1.042 -- Detecting C compile features
+#8 1.044 -- Detecting C compile features - done
+#8 1.059 -- Performing Test FLAG_SUPPORTED_stdc89
+#8 1.258 -- Performing Test FLAG_SUPPORTED_stdc89 - Success
+#8 1.259 -- Performing Test FLAG_SUPPORTED_pedantic
+#8 1.493 -- Performing Test FLAG_SUPPORTED_pedantic - Success
+#8 1.501 -- Performing Test FLAG_SUPPORTED_Wall
+#8 1.698 -- Performing Test FLAG_SUPPORTED_Wall - Success
+#8 1.698 -- Performing Test FLAG_SUPPORTED_Wextra
+#8 1.878 -- Performing Test FLAG_SUPPORTED_Wextra - Success
+#8 1.880 -- Performing Test FLAG_SUPPORTED_Werror
+#8 2.055 -- Performing Test FLAG_SUPPORTED_Werror - Success
+#8 2.059 -- Performing Test FLAG_SUPPORTED_Wstrictprototypes
+#8 2.295 -- Performing Test FLAG_SUPPORTED_Wstrictprototypes - Success
+#8 2.304 -- Performing Test FLAG_SUPPORTED_Wwritestrings
+#8 2.548 -- Performing Test FLAG_SUPPORTED_Wwritestrings - Success
+#8 2.552 -- Performing Test FLAG_SUPPORTED_Wshadow
+#8 2.782 -- Performing Test FLAG_SUPPORTED_Wshadow - Success
+#8 2.786 -- Performing Test FLAG_SUPPORTED_Winitself
+#8 3.003 -- Performing Test FLAG_SUPPORTED_Winitself - Success
+#8 3.008 -- Performing Test FLAG_SUPPORTED_Wcastalign
+#8 3.189 -- Performing Test FLAG_SUPPORTED_Wcastalign - Success
+#8 3.192 -- Performing Test FLAG_SUPPORTED_Wformat2
+#8 3.360 -- Performing Test FLAG_SUPPORTED_Wformat2 - Success
+#8 3.363 -- Performing Test FLAG_SUPPORTED_Wmissingprototypes
+#8 3.584 -- Performing Test FLAG_SUPPORTED_Wmissingprototypes - Success
+#8 3.589 -- Performing Test FLAG_SUPPORTED_Wstrictoverflow2
+#8 3.791 -- Performing Test FLAG_SUPPORTED_Wstrictoverflow2 - Success
+#8 3.792 -- Performing Test FLAG_SUPPORTED_Wcastqual
+#8 3.925 -- Performing Test FLAG_SUPPORTED_Wcastqual - Success
+#8 3.926 -- Performing Test FLAG_SUPPORTED_Wundef
+#8 4.139 -- Performing Test FLAG_SUPPORTED_Wundef - Success
+#8 4.142 -- Performing Test FLAG_SUPPORTED_Wswitchdefault
+#8 4.332 -- Performing Test FLAG_SUPPORTED_Wswitchdefault - Success
+#8 4.341 -- Performing Test FLAG_SUPPORTED_Wconversion
+#8 4.587 -- Performing Test FLAG_SUPPORTED_Wconversion - Success
+#8 4.589 -- Performing Test FLAG_SUPPORTED_Wccompat
+#8 4.815 -- Performing Test FLAG_SUPPORTED_Wccompat - Success
+#8 4.823 -- Performing Test FLAG_SUPPORTED_fstackprotectorstrong
+#8 4.979 -- Performing Test FLAG_SUPPORTED_fstackprotectorstrong - Success
+#8 4.983 -- Performing Test FLAG_SUPPORTED_Wcomma
+#8 5.075 -- Performing Test FLAG_SUPPORTED_Wcomma - Failed
+#8 5.081 -- Performing Test FLAG_SUPPORTED_Wdoublepromotion
+#8 5.294 -- Performing Test FLAG_SUPPORTED_Wdoublepromotion - Success
+#8 5.300 -- Performing Test FLAG_SUPPORTED_Wparentheses
+#8 5.546 -- Performing Test FLAG_SUPPORTED_Wparentheses - Success
+#8 5.552 -- Performing Test FLAG_SUPPORTED_Wformatoverflow
+#8 5.711 -- Performing Test FLAG_SUPPORTED_Wformatoverflow - Success
+#8 5.714 -- Performing Test FLAG_SUPPORTED_Wunusedmacros
+#8 5.852 -- Performing Test FLAG_SUPPORTED_Wunusedmacros - Success
+#8 5.854 -- Performing Test FLAG_SUPPORTED_Wmissingvariabledeclarations
+#8 6.017 -- Performing Test FLAG_SUPPORTED_Wmissingvariabledeclarations - Success
+#8 6.021 -- Performing Test FLAG_SUPPORTED_Wusedbutmarkedunused
+#8 6.166 -- Performing Test FLAG_SUPPORTED_Wusedbutmarkedunused - Failed
+#8 6.174 -- Performing Test FLAG_SUPPORTED_Wswitchenum
+#8 6.426 -- Performing Test FLAG_SUPPORTED_Wswitchenum - Success
+#8 6.432 -- Performing Test FLAG_SUPPORTED_fvisibilityhidden
+#8 6.719 -- Performing Test FLAG_SUPPORTED_fvisibilityhidden - Success
+#8 6.726 -- Configuring done (6.1s)
+#8 6.760 -- Generating done (0.0s)
+#8 6.762 -- Build files have been written to: /app/build
+#8 6.868 [  2%] Building C object CMakeFiles/cjson.dir/cJSON.c.o
+#8 7.111 [  4%] Linking C shared library libcjson.so
+#8 7.244 [  4%] Built target cjson
+#8 7.334 [  6%] Building C object CMakeFiles/cJSON_test.dir/test.c.o
+#8 7.408 [  8%] Linking C executable cJSON_test
+#8 7.516 [  8%] Built target cJSON_test
+#8 7.552 [ 11%] Building C object tests/CMakeFiles/unity.dir/unity/src/unity.c.o
+#8 7.767 [ 13%] Linking C static library libunity.a
+#8 7.899 [ 13%] Built target unity
+#8 7.947 [ 15%] Building C object tests/CMakeFiles/parse_examples.dir/parse_examples.c.o
+#8 8.249 [ 17%] Linking C executable parse_examples
+#8 8.316 [ 17%] Built target parse_examples
+#8 8.385 [ 20%] Building C object tests/CMakeFiles/parse_number.dir/parse_number.c.o
+#8 8.729 [ 22%] Linking C executable parse_number
+#8 8.807 [ 22%] Built target parse_number
+#8 8.865 [ 24%] Building C object tests/CMakeFiles/parse_hex4.dir/parse_hex4.c.o
+#8 9.154 [ 26%] Linking C executable parse_hex4
+#8 9.298 [ 26%] Built target parse_hex4
+#8 9.355 [ 28%] Building C object tests/CMakeFiles/parse_string.dir/parse_string.c.o
+#8 9.654 [ 31%] Linking C executable parse_string
+#8 9.737 [ 31%] Built target parse_string
+#8 9.788 [ 33%] Building C object tests/CMakeFiles/parse_array.dir/parse_array.c.o
+#8 10.02 [ 35%] Linking C executable parse_array
+#8 10.12 [ 35%] Built target parse_array
+#8 10.19 [ 37%] Building C object tests/CMakeFiles/parse_object.dir/parse_object.c.o
+#8 10.53 [ 40%] Linking C executable parse_object
+#8 10.60 [ 40%] Built target parse_object
+#8 10.66 [ 42%] Building C object tests/CMakeFiles/parse_value.dir/parse_value.c.o
+#8 10.96 [ 44%] Linking C executable parse_value
+#8 11.05 [ 44%] Built target parse_value
+#8 11.13 [ 46%] Building C object tests/CMakeFiles/print_string.dir/print_string.c.o
+#8 11.32 [ 48%] Linking C executable print_string
+#8 11.41 [ 48%] Built target print_string
+#8 11.46 [ 51%] Building C object tests/CMakeFiles/print_number.dir/print_number.c.o
+#8 11.68 [ 53%] Linking C executable print_number
+#8 11.77 [ 53%] Built target print_number
+#8 11.83 [ 55%] Building C object tests/CMakeFiles/print_array.dir/print_array.c.o
+#8 12.00 [ 57%] Linking C executable print_array
+#8 12.08 [ 57%] Built target print_array
+#8 12.16 [ 60%] Building C object tests/CMakeFiles/print_object.dir/print_object.c.o
+#8 12.33 [ 62%] Linking C executable print_object
+#8 12.44 [ 62%] Built target print_object
+#8 12.50 [ 64%] Building C object tests/CMakeFiles/print_value.dir/print_value.c.o
+#8 12.74 [ 66%] Linking C executable print_value
+#8 12.82 [ 66%] Built target print_value
+#8 12.88 [ 68%] Building C object tests/CMakeFiles/misc_tests.dir/misc_tests.c.o
+#8 13.15 [ 71%] Linking C executable misc_tests
+#8 13.24 [ 71%] Built target misc_tests
+#8 13.27 [ 73%] Building C object tests/CMakeFiles/parse_with_opts.dir/parse_with_opts.c.o
+#8 13.61 [ 75%] Linking C executable parse_with_opts
+#8 13.71 [ 75%] Built target parse_with_opts
+#8 13.78 [ 77%] Building C object tests/CMakeFiles/compare_tests.dir/compare_tests.c.o
+#8 14.02 [ 80%] Linking C executable compare_tests
+#8 14.11 [ 80%] Built target compare_tests
+#8 14.14 [ 82%] Building C object tests/CMakeFiles/cjson_add.dir/cjson_add.c.o
+#8 14.39 [ 84%] Linking C executable cjson_add
+#8 14.53 [ 84%] Built target cjson_add
+#8 14.59 [ 86%] Building C object tests/CMakeFiles/readme_examples.dir/readme_examples.c.o
+#8 14.82 [ 88%] Linking C executable readme_examples
+#8 14.88 [ 88%] Built target readme_examples
+#8 14.93 [ 91%] Building C object tests/CMakeFiles/minify_tests.dir/minify_tests.c.o
+#8 15.16 [ 93%] Linking C executable minify_tests
+#8 15.24 [ 93%] Built target minify_tests
+#8 15.30 [ 95%] Building C object fuzzing/CMakeFiles/fuzz_main.dir/fuzz_main.c.o
+#8 15.35 [ 97%] Building C object fuzzing/CMakeFiles/fuzz_main.dir/cjson_read_fuzzer.c.o
+#8 15.41 [100%] Linking C executable fuzz_main
+#8 15.54 [100%] Built target fuzz_main
+#8 DONE 15.8s
+
+#9 exporting to image
+#9 exporting layers
+#9 exporting layers 5.2s done
+#9 writing image sha256:eae21e2063c964bbea435064802d5043f5e66e8ec1287c5ec9b5514f0e461dec done
+#9 naming to docker.io/library/cjson-builder-image 0.0s done
+#9 DONE 5.3s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
