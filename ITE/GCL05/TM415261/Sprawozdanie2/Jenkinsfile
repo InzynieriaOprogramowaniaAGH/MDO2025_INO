@@ -11,12 +11,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh "docker build -t redis-builder -f MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie2/Lab5/project/Dockerfile.build ."
+                sh "docker build -t redis-builder -f MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie2/project/Dockerfile.build ."
             }
         }
         stage('Test') {
             steps {
-                sh "docker build -t redis-test -f MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie2/Lab5/project/Dockerfile.test ."
+                sh "docker build -t redis-test -f MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie2/project/Dockerfile.test ."
             }
         }
         stage('RunningTests') {
