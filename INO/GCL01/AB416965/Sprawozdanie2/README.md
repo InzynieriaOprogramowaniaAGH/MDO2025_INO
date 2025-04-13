@@ -99,23 +99,19 @@ Ostatnim skryptem do utworzenia było pobranie obrazu ubuntu za pomocą `docker 
 
 ![Pobranie ubuntu](zrzuty5/zrzut_ekranu10.png)
 
-### 3. Pipeline
+### 3. Obiekt typu pipeline
 
 Pipeline to ciąg instrukcji autoatyzujący proces pobierania/instalacji oprogramowania.
 
 Utworzyłem obiekt typu pipeline i wpisałem poniższy ciąg komend. Ten pipline klonuje repozytorium przedmiotu `MDO2025_INO` i robi chceckout na mój branch `AB416965`. Następnie korzystając z `Dockerfile.build` stworzonego wcześniej dla repozytorium [cJSON](https://github.com/DaveGamble/cJSON) wykonuje build.
+
+> `Dockerfile.build` został skopiowany z katalogu `Sprawozdanie1` i zmodyfikowany aby działał na kontenerze bazującym na `Fedorze 41`
 
 Pipeline:
 
 ```bash
 pipeline {
     agent any
-
-    environment {
-        IMAGE_NAME = 'cjson-builder-image'
-        BUILD_CONTEXT = 'INO/GCL01/AB416965/Sprawozdanie1/Dockerfiles/cjson'
-        DOCKERFILE_PATH = "${BUILD_CONTEXT}/Dockerfile.build"
-    }
 
     stages {
         stage('Klonowanie repo') { 
@@ -126,11 +122,12 @@ pipeline {
 
         stage('Budowanie obrazu buildera') {
             steps {
-                sh '''
-                    docker build -t ${IMAGE_NAME} \
-                    -f ${DOCKERFILE_PATH} \
-                    ${BUILD_CONTEXT}
-                '''
+                dir ("INO/GCL01/AB416965/Sprawozdanie2/dockerfiles/cjson")
+                {
+                    script {
+                        docker.build('cjson-builder-image', '-f Dockerfile.build .')
+                    }
+                }
             }
         }
     }
