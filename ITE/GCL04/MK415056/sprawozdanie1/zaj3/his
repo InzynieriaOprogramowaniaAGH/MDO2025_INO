@@ -1,0 +1,564 @@
+    1  echo a
+    2  sudo jum git
+    3  sudo dnf install git
+    4  git
+    5  git config --global user.name "Marek"
+    6  git config --global user.email "marekkubicki@student.agh.edu.pl"
+    7  ssh-keygen -t ed25519 -C "marekkubicki@student.agh.edu.pl"
+    8  eval "$(ssh-agent -s)"
+    9  ls
+   10  ssh-add key
+   11  cat key.pub
+   12  ssh-keygen -t ecdsa-sk -C "marekkubicki@student.agh.edu.pl"
+   13  ssh-keygen -t ed25519 -C "marekkubicki@student.agh.edu.pl"
+   14  ls
+   15  cd ..
+   16  ls
+   17  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   18  ls
+   19  cd git
+   20  ls
+   21  cd MDO2025_INO/
+   22  ls
+   23  hit branch
+   24  git branch
+   25  git branch -a
+   26  git checkout -b GCL04 origin/GCL04
+   27  git checkout -b MK415056
+   28  ls
+   29  cd ITE/
+   30  mkdir MK415056
+   31  ls
+   32  cd MK415056/
+   33  ls
+   34  touch commit-msg
+   35  nano comit-msg
+   36  ls
+   37  cd ../..
+   38  ls
+   39  cd ..
+   40  ls
+   41  cd MDO2025_INO/
+   42  l
+   43  ls
+   44  cd ITE/
+   45  ls
+   46  cd GCL04/
+   47  l
+   48  ls
+   49  cd ..
+   50  ls
+   51  cd MK415056/
+   52  ls
+   53  nano commit-msg 
+   54  cd ../..
+   55  ls
+   56  ls -a
+   57  cd .git
+   58  ls
+   59  cd hooks
+   60  cp ../ITE/MK415056/commit-msg hooks/
+   61  cp ../ITE/ITE/MK415056/commit-msg hooks/
+   62  cp ../ITE/MK415056/commit-msg hooks/
+   63  ls ../ITE/MK415056/commit-msg hooks/
+   64  ls ../ITE/MK415056/commit-msg 
+   65  ls ../ITE/MK415056
+   66  cp ../../ITE/MK415056/commit-msg hooks/
+   67  cd ../..
+   68  l
+   69  ls
+   70  cd ITE/
+   71  ls
+   72  cd MK415056/
+   73  ls
+   74  cp commit-msg ../../.git/hooks/
+   75  ls
+   76  cd ..
+   77  cd .git
+   78  cd hooks/
+   79  ls
+   80  cd ..
+   81  cd..
+   82  cd ..
+   83  l
+   84  ls
+   85  cd ..
+   86  l
+   87  git add .
+   88  ls
+   89  cd MDO2025_INO/
+   90  git add .
+   91  git commit -m "test"
+   92  cd .git/hooks
+   93  chmod +x commit-msg
+   94  cd ../..
+   95  git push
+   96  git push --set-upstream origin MK415056
+   97  git help
+   98  git commit --amend -m "MK415056 zaj1"
+   99  ls
+  100  cd ..
+  101  l
+  102  ls
+  103  cat key
+  104  cat key.pub
+  105  cd MDO2025_INO/
+  106  git push --set-upstream origin MK415056
+  107  cd ..
+  108  ls
+  109  cd ..
+  110  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  111  ls
+  112  cd MDO2025_INO/
+  113  ls
+  114  git branch
+  115  git branch -a
+  116  cd ..
+  117  ls
+  118  cd git
+  119  ls
+  120  rm MDO2025_INO/
+  121  rm dir MDO2025_INO/
+  122  rmdir MDO2025_INO/
+  123  rm -r MDO2025_INO/
+  124  ls
+  125  cd MDO2025_INO/
+  126  ls
+  127  cd ..
+  128  rm MDO2025_INO/
+  129  rmdir MDO2025_INO/
+  130  ls
+  131  cd MDO2025_INO/
+  132  ls -a
+  133  cd ..
+  134  git help
+  135  git rm MDO2025_INO/
+  136  ls
+  137  cd ..
+  138  ls
+  139  mkdir git_mk
+  140  ls
+  141  cp MDO2025_INO/ git_mk/
+  142  cp -r MDO2025_INO/ git_mk/
+  143  ls
+  144  cd git_mk/
+  145  ls
+  146  cd MDO2025_INO/
+  147  ls
+  148  cd ..
+  149  ls
+  150  rm -r MDO2025_INO/
+  151  ls
+  152  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  153  ls
+  154  ls -a
+  155  cd ..
+  156  ls
+  157  rm -r git
+  158  ls
+  159  rm -r git_mk/
+  160  ls
+  161  rm -r MDO2025_INO/
+  162  ls
+  163  mkdir git
+  164  cd git
+  165  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  166  ls
+  167  rm -r MDO2025_INO/
+  168  exit
+  169  ls
+  170  cd git
+  171  ls
+  172  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  173  git config --global user.name "MarekKubi"
+  174  git config --global user.email "marekkubicki@student.agh.edu.pl"
+  175  ssh-keygen -t ed25519 -C "marekkubicki@student.agh.edu.pl"
+  176  eval "$(ssh-agent -s)"
+  177  ssh-add key.c
+  178  ls
+  179  cat key.c.pub 
+  180  ssh-keygen -t ecdsa-sk -C "marekkubicki@student.agh.edu.pl"
+  181  ssh-keygen -t ed25519 -C "marekkubicki@student.agh.edu.pl"
+  182  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  183  ls
+  184  cd ..
+  185  mkdir git2
+  186  ls
+  187  cd git2
+  188  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  189  ls
+  190  cd MDO2025_INO/
+  191  cd ..
+  192   cd..
+  193   cd ..
+  194  ls
+  195  cd home/
+  196  ls
+  197  ls -a
+  198  cd markubi/
+  199  ls
+  200  ls -a
+  201  cd .ssh/
+  202  ls
+  203  cat id_ed25519.pub 
+  204  cd ../ ..
+  205  cd ..
+  206  ls
+  207  cd markubi/
+  208  ls
+  209  cd git2
+  210  cd MDO2025_INO/
+  211  git branch 
+  212  git branch -a
+  213  git checkout -b GCL04 origin/GCL04
+  214  git checkout -b MK415056
+  215  ls
+  216  cd ITE/
+  217  mkdir MK415056
+  218  cd MK415056/
+  219  ls -a
+  220  toutch commit_hook
+  221  touch commit_hook
+  222  nano commit_hook 
+  223  cat commit_hook 
+  224  cd ../..
+  225  ls-a
+  226  ls -a
+  227  cd .git
+  228  ls
+  229  cd hooks
+  230  ls
+  231  cd ..
+  232  ls
+  233  cd ITE/MK415056/
+  234  ls
+  235  cp commit_hook ../../.git/hooks
+  236  cd ../../.git/hooks
+  237  ls
+  238  cd ../..
+  239  git add .
+  240  git commit -m "t"
+  241  cd .git/hooks
+  242  chmod +x commit-msg
+  243  ls
+  244  chmod +x commit-hook
+  245  chmod +x commit_hook
+  246  cd ../..
+  247  git push
+  248  git push --set-upstream origin MK415056
+  249  exit
+  250  -v docker command
+  251  -v docker
+  252  command -v docker
+  253  if command -v docker &> /dev/null; then     echo "Docker installation found"; else     echo "Docker installation not found. Please install docker.";     exit 1; fi
+  254  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  255  ls
+  256  mkdir git
+  257  cd git
+  258  ls
+  259  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  260  script git_setup
+  261  l
+  262  ls
+  263  cd ..
+  264  ls
+  265  cd ..
+  266  ls
+  267  cd ..
+  268  ls
+  269  cd home/
+  270  cd markubi/
+  271  script zaj1
+  272  ls
+  273  rm zaj1 
+  274  script zaj1
+  275  ls
+  276  nano zaj1
+  277  script zaj2
+  278  sudo dnf config-manager --add-repo=https://download.docker.com/linux/fedora/docker-ce.repo
+  279  sudo dnf install dnf-plugins-core
+  280  marekkubicki -r
+  281  -r
+  282  uname -r
+  283  sudo dnf config-manager addrepo --from-repofile="https://download.docker.com/linux/fedora/docker-ce.repo"
+  284  sudo dnf install docker-ce docker-ce-cli containerd.io
+  285  df
+  286  history
+  287  nano zaj2
+  288  sudo dnf install docker
+  289  docker help
+  290  docker login
+  291  docker login -u marekkubi
+  292  sudo docker pull hello-world
+  293  sudo docker pull busybox
+  294  systemctl start docker
+  295  sudo docker pull hello-world
+  296  sudo docker pull busybox
+  297  sudo docker pull ubuntu
+  298  sudo docker pull mysql
+  299  sudo docker run -it busybox 
+  300  sudo docker run -it ubuntu
+  301  ls
+  302  cd git2
+  303  ls
+  304  cd MDO2025_INO/
+  305  ls
+  306  cd ITE/
+  307  ls
+  308  cd MK415056/
+  309  ls
+  310  mkdir sprawozdanie1
+  311  ls
+  312  cd sprawozdanie1/
+  313  touch Dockerfile
+  314  nano Dockerfile 
+  315  sudo docker build -t MK_repository
+  316  sudo docker build -t MK-repository
+  317  sudo docker build -t my-hit-repo
+  318  sudo docker build -t my-git-repo
+  319  docker build help
+  320  docker buildx build help
+  321  docker build --help
+  322  sudo docker build -t Dockerfile
+  323  ls
+  324  nano Dockerfile 
+  325  sudo docker build -t Dockerfile
+  326  sudo docker build -t MK-repository
+  327  docker buildx build --help
+  328  nano Dockerfile 
+  329  sudo docker build -t MK-repository
+  330  sudo docker build -t MK-repository .
+  331  sudo docker build -t mk-repository .
+  332  nanao Dockerfile 
+  333  nano Dockerfile 
+  334  sudo docker build -t mk-repository .
+  335  sudo docker run -it mk-repository sh
+  336  sudo docker -ps
+  337  sudo docker -a
+  338  sudo docker ps -a
+  339  sudo docker container prune
+  340  sudo docker rmi -f $(sudo docker images -aq)
+  341  ls
+  342  nano Dockerfile 
+  343  history
+  344  ls
+  345  touch lab2
+  346  ls
+  347  nano lab2
+  348  history > lab2
+  349  ls
+  350  nano lab2
+  351  nano Dockerfile 
+  352  ls
+  353  mkdir zaj3
+  354  ls
+  355  cd zaj3/
+  356  touch Dockerfile1
+  357  nano Dockerfile1 
+  358  sudo docker build -t lab3
+  359  sudo docker build -t lab3 .
+  360  ls
+  361  docker build help
+  362  docker build --help
+  363  sudo docker build -f Dockerfile1 -t lab3 .
+  364  nano Dockerfile1 
+  365  sudo docker build -f Dockerfile1 -t lab3 .
+  366  nano Dockerfile1 
+  367  sudo docker build -f Dockerfile1 -t lab3 .
+  368  nano Dockerfile1 
+  369  sudo docker build -f Dockerfile1 -t lab3 .
+  370  nano Dockerfile1 
+  371  sudo docker build -f Dockerfile1 -t lab3 .
+  372  ls
+  373  cd git2
+  374  ls
+  375  cd MDO2025_INO/
+  376  ls
+  377  cd ITE/
+  378  ls
+  379  cd MK415056/
+  380  ls
+  381  cd ..
+  382  history 
+  383  ls
+  384  cd G
+  385  cd GCL04/
+  386  ls
+  387  cd ..
+  388  ls
+  389  cd ITE/
+  390  ls
+  391  cd MK415056/
+  392  ls
+  393  cd sprawozdanie1/
+  394  ls
+  395  cd zaj3/
+  396  ls
+  397  nano Dockerfile1 
+  398  sudo docker -t lab3
+  399  sudo docker build -t lab3
+  400  sudo docker build -t lab3.
+  401  sudo docker build -t lab3 .
+  402  sudo docker build -t lab3 -f Dockerfile1 .
+  403  sudo docker run -it lab3 sh
+  404  ls
+  405  cd git2
+  406  ls
+  407  cd MDO2025_INO/
+  408  ls
+  409  cd ITE/
+  410  ls
+  411  cd GCL04/
+  412  ls
+  413  cd ..
+  414  ls
+  415  cd MK415056/
+  416  ls
+  417  cd sprawozdanie1/
+  418  ls
+  419  cd zaj3/
+  420  l
+  421  ls
+  422  nano Dockerfile1 
+  423  rm Dockerfile1 
+  424  touch Dockerfile
+  425  rm Dockerfile 
+  426  mkdir 1
+  427  cd 1
+  428  touch Dockerfile
+  429  nano Dockerfile 
+  430  sudo docker run -it lab3_1 sh
+  431  sudo docker run sh .
+  432  sudo docker build lab3_1 .
+  433  sudo docker build -t lab3_1 .
+  434  nano Dockerfile 
+  435  sudo docker build -t lab3_1 .
+  436  nano Dockerfile 
+  437  sudo docker build -t lab3_1 .
+  438  sudo docker run -it lab3_1 sh
+  439  ls
+  440  history 
+  441  ls
+  442  cd git2
+  443  ls
+  444  cd MDO2025_INO/
+  445  ls
+  446  cd ITE/
+  447  ls
+  448  cd MK415056/
+  449  ls
+  450  cd sprawozdanie1/
+  451  ls
+  452  cd zaj3/
+  453  ls
+  454  cd git2/MDO2025_INO/ITE/MK415056/sprawozdanie1/zaj3/
+  455  ls
+  456  nano 1
+  457  cd 1
+  458  ls
+  459  nano Dockerfile 
+  460  sudo docker build -t lab3_1 .
+  461  sudo docker run -it lab3_1 bash
+  462  ls
+  463  cd git2/MDO2025_INO/ITE/MK415056/
+  464  ls
+  465  cd sprawozdanie1/
+  466  cd lab3
+  467  ls
+  468  cd zaj3/
+  469  ls
+  470  cd 1
+  471  cd git2/MDO2025_INO/ITE/MK415056/
+  472  sudo docker run -it lab3_1 bash
+  473  cd git2/MDO2025_INO//ITE/MK415056/sprawozdanie1/zaj3/test/sds/
+  474  make
+  475  ./sds-test 
+  476  ls
+  477  cd ..
+  478  ls
+  479  cd ..
+  480  mkdir d-b
+  481  ls
+  482  cd d-b/
+  483  touch Dockerfile
+  484  nano
+  485  nano Dockerfile 
+  486* na
+  487  sudo docker build -t d-b .
+  488  touch Dockerfile
+  489  nano Dockerfile 
+  490  ls
+  491  nano Dockerfile 
+  492  sudo docker build -t d-b .
+  493  nano Dockerfile 
+  494  sudo docker build -t d-b .
+  495  nano Dockerfile 
+  496  sudo docker build -t d-b .
+  497  nano Dockerfile 
+  498  sudo docker build -t d-b .
+  499  nano Dockerfile 
+  500  sudo docker build -t d-b .
+  501  nano Dockerfile 
+  502  sudo docker build -t d-b .
+  503  nano Dockerfile 
+  504  sudo docker build -t d-b .
+  505  nano Dockerfile 
+  506  sudo docker build -t d-b .
+  507  nano Dockerfile 
+  508  sudo docker build -t d-b .
+  509  ls
+  510  cd ..
+  511  ls
+  512  mkdir d-t
+  513  cd d-t/
+  514  touch Dockerfile
+  515  ls
+  516   nano Dockerfile 
+  517  sudo docker build -t d-t .
+  518  sudo docker run d-t 
+  519  sudo docker run d-t bash
+  520  sudo docker run d-t sh
+  521  touch d-c.yml
+  522  nano d-c.yml 
+  523  ls
+  524  rm d-c.yml 
+  525  ls
+  526  touch d-c.yml
+  527  nano d-c.yml 
+  528  ls
+  529  rm d-c.yml 
+  530  ls
+  531  cd .
+  532  cd ..
+  533  ls
+  534  cd d-b
+  535  ls
+  536  touch d-c.yml
+  537  ls
+  538  nano d-c.yml 
+  539  rm d-c.yml 
+  540  cd ..
+  541  cd d-t
+  542  touch d-c.yml
+  543  nano d-c.yml 
+  544  sudo docker run -it d-t bash
+  545  nano d-c.yml 
+  546  sudo d-c up d-t
+  547  nano d-c.yml 
+  548  sudo d-c.yml up d-t
+  549  ls
+  550  sudo docker-compose up d-t
+  551  ls
+  552  mv d-c.yml docker-compose.yml
+  553  sudo docker-compose up d-t
+  554  ls
+  555  cd ..
+  556  mkdir zaj4
+  557  ls
+  558  cd zaj4
+  559  ls
+  560  cd ..
+  561  cd zaj3
+  562  ls
+  563  touch his
+  564  history >> his

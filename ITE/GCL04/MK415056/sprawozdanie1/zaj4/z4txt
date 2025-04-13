@@ -1,0 +1,772 @@
+    1  echo a
+    2  sudo jum git
+    3  sudo dnf install git
+    4  git
+    5  git config --global user.name "Marek"
+    6  git config --global user.email "marekkubicki@student.agh.edu.pl"
+    7  ssh-keygen -t ed25519 -C "marekkubicki@student.agh.edu.pl"
+    8  eval "$(ssh-agent -s)"
+    9  ls
+   10  ssh-add key
+   11  cat key.pub
+   12  ssh-keygen -t ecdsa-sk -C "marekkubicki@student.agh.edu.pl"
+   13  ssh-keygen -t ed25519 -C "marekkubicki@student.agh.edu.pl"
+   14  ls
+   15  cd ..
+   16  ls
+   17  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   18  ls
+   19  cd git
+   20  ls
+   21  cd MDO2025_INO/
+   22  ls
+   23  hit branch
+   24  git branch
+   25  git branch -a
+   26  git checkout -b GCL04 origin/GCL04
+   27  git checkout -b MK415056
+   28  ls
+   29  cd ITE/
+   30  mkdir MK415056
+   31  ls
+   32  cd MK415056/
+   33  ls
+   34  touch commit-msg
+   35  nano comit-msg
+   36  ls
+   37  cd ../..
+   38  ls
+   39  cd ..
+   40  ls
+   41  cd MDO2025_INO/
+   42  l
+   43  ls
+   44  cd ITE/
+   45  ls
+   46  cd GCL04/
+   47  l
+   48  ls
+   49  cd ..
+   50  ls
+   51  cd MK415056/
+   52  ls
+   53  nano commit-msg 
+   54  cd ../..
+   55  ls
+   56  ls -a
+   57  cd .git
+   58  ls
+   59  cd hooks
+   60  cp ../ITE/MK415056/commit-msg hooks/
+   61  cp ../ITE/ITE/MK415056/commit-msg hooks/
+   62  cp ../ITE/MK415056/commit-msg hooks/
+   63  ls ../ITE/MK415056/commit-msg hooks/
+   64  ls ../ITE/MK415056/commit-msg 
+   65  ls ../ITE/MK415056
+   66  cp ../../ITE/MK415056/commit-msg hooks/
+   67  cd ../..
+   68  l
+   69  ls
+   70  cd ITE/
+   71  ls
+   72  cd MK415056/
+   73  ls
+   74  cp commit-msg ../../.git/hooks/
+   75  ls
+   76  cd ..
+   77  cd .git
+   78  cd hooks/
+   79  ls
+   80  cd ..
+   81  cd..
+   82  cd ..
+   83  l
+   84  ls
+   85  cd ..
+   86  l
+   87  git add .
+   88  ls
+   89  cd MDO2025_INO/
+   90  git add .
+   91  git commit -m "test"
+   92  cd .git/hooks
+   93  chmod +x commit-msg
+   94  cd ../..
+   95  git push
+   96  git push --set-upstream origin MK415056
+   97  git help
+   98  git commit --amend -m "MK415056 zaj1"
+   99  ls
+  100  cd ..
+  101  l
+  102  ls
+  103  cat key
+  104  cat key.pub
+  105  cd MDO2025_INO/
+  106  git push --set-upstream origin MK415056
+  107  cd ..
+  108  ls
+  109  cd ..
+  110  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  111  ls
+  112  cd MDO2025_INO/
+  113  ls
+  114  git branch
+  115  git branch -a
+  116  cd ..
+  117  ls
+  118  cd git
+  119  ls
+  120  rm MDO2025_INO/
+  121  rm dir MDO2025_INO/
+  122  rmdir MDO2025_INO/
+  123  rm -r MDO2025_INO/
+  124  ls
+  125  cd MDO2025_INO/
+  126  ls
+  127  cd ..
+  128  rm MDO2025_INO/
+  129  rmdir MDO2025_INO/
+  130  ls
+  131  cd MDO2025_INO/
+  132  ls -a
+  133  cd ..
+  134  git help
+  135  git rm MDO2025_INO/
+  136  ls
+  137  cd ..
+  138  ls
+  139  mkdir git_mk
+  140  ls
+  141  cp MDO2025_INO/ git_mk/
+  142  cp -r MDO2025_INO/ git_mk/
+  143  ls
+  144  cd git_mk/
+  145  ls
+  146  cd MDO2025_INO/
+  147  ls
+  148  cd ..
+  149  ls
+  150  rm -r MDO2025_INO/
+  151  ls
+  152  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  153  ls
+  154  ls -a
+  155  cd ..
+  156  ls
+  157  rm -r git
+  158  ls
+  159  rm -r git_mk/
+  160  ls
+  161  rm -r MDO2025_INO/
+  162  ls
+  163  mkdir git
+  164  cd git
+  165  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  166  ls
+  167  rm -r MDO2025_INO/
+  168  exit
+  169  ls
+  170  cd git
+  171  ls
+  172  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  173  git config --global user.name "MarekKubi"
+  174  git config --global user.email "marekkubicki@student.agh.edu.pl"
+  175  ssh-keygen -t ed25519 -C "marekkubicki@student.agh.edu.pl"
+  176  eval "$(ssh-agent -s)"
+  177  ssh-add key.c
+  178  ls
+  179  cat key.c.pub 
+  180  ssh-keygen -t ecdsa-sk -C "marekkubicki@student.agh.edu.pl"
+  181  ssh-keygen -t ed25519 -C "marekkubicki@student.agh.edu.pl"
+  182  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  183  ls
+  184  cd ..
+  185  mkdir git2
+  186  ls
+  187  cd git2
+  188  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  189  ls
+  190  cd MDO2025_INO/
+  191  cd ..
+  192   cd..
+  193   cd ..
+  194  ls
+  195  cd home/
+  196  ls
+  197  ls -a
+  198  cd markubi/
+  199  ls
+  200  ls -a
+  201  cd .ssh/
+  202  ls
+  203  cat id_ed25519.pub 
+  204  cd ../ ..
+  205  cd ..
+  206  ls
+  207  cd markubi/
+  208  ls
+  209  cd git2
+  210  cd MDO2025_INO/
+  211  git branch 
+  212  git branch -a
+  213  git checkout -b GCL04 origin/GCL04
+  214  git checkout -b MK415056
+  215  ls
+  216  cd ITE/
+  217  mkdir MK415056
+  218  cd MK415056/
+  219  ls -a
+  220  toutch commit_hook
+  221  touch commit_hook
+  222  nano commit_hook 
+  223  cat commit_hook 
+  224  cd ../..
+  225  ls-a
+  226  ls -a
+  227  cd .git
+  228  ls
+  229  cd hooks
+  230  ls
+  231  cd ..
+  232  ls
+  233  cd ITE/MK415056/
+  234  ls
+  235  cp commit_hook ../../.git/hooks
+  236  cd ../../.git/hooks
+  237  ls
+  238  cd ../..
+  239  git add .
+  240  git commit -m "t"
+  241  cd .git/hooks
+  242  chmod +x commit-msg
+  243  ls
+  244  chmod +x commit-hook
+  245  chmod +x commit_hook
+  246  cd ../..
+  247  git push
+  248  git push --set-upstream origin MK415056
+  249  exit
+  250  -v docker command
+  251  -v docker
+  252  command -v docker
+  253  if command -v docker &> /dev/null; then     echo "Docker installation found"; else     echo "Docker installation not found. Please install docker.";     exit 1; fi
+  254  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  255  ls
+  256  mkdir git
+  257  cd git
+  258  ls
+  259  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  260  script git_setup
+  261  l
+  262  ls
+  263  cd ..
+  264  ls
+  265  cd ..
+  266  ls
+  267  cd ..
+  268  ls
+  269  cd home/
+  270  cd markubi/
+  271  script zaj1
+  272  ls
+  273  rm zaj1 
+  274  script zaj1
+  275  ls
+  276  nano zaj1
+  277  script zaj2
+  278  sudo dnf config-manager --add-repo=https://download.docker.com/linux/fedora/docker-ce.repo
+  279  sudo dnf install dnf-plugins-core
+  280  marekkubicki -r
+  281  -r
+  282  uname -r
+  283  sudo dnf config-manager addrepo --from-repofile="https://download.docker.com/linux/fedora/docker-ce.repo"
+  284  sudo dnf install docker-ce docker-ce-cli containerd.io
+  285  df
+  286  history
+  287  nano zaj2
+  288  sudo dnf install docker
+  289  docker help
+  290  docker login
+  291  docker login -u marekkubi
+  292  sudo docker pull hello-world
+  293  sudo docker pull busybox
+  294  systemctl start docker
+  295  sudo docker pull hello-world
+  296  sudo docker pull busybox
+  297  sudo docker pull ubuntu
+  298  sudo docker pull mysql
+  299  sudo docker run -it busybox 
+  300  sudo docker run -it ubuntu
+  301  ls
+  302  cd git2
+  303  ls
+  304  cd MDO2025_INO/
+  305  ls
+  306  cd ITE/
+  307  ls
+  308  cd MK415056/
+  309  ls
+  310  mkdir sprawozdanie1
+  311  ls
+  312  cd sprawozdanie1/
+  313  touch Dockerfile
+  314  nano Dockerfile 
+  315  sudo docker build -t MK_repository
+  316  sudo docker build -t MK-repository
+  317  sudo docker build -t my-hit-repo
+  318  sudo docker build -t my-git-repo
+  319  docker build help
+  320  docker buildx build help
+  321  docker build --help
+  322  sudo docker build -t Dockerfile
+  323  ls
+  324  nano Dockerfile 
+  325  sudo docker build -t Dockerfile
+  326  sudo docker build -t MK-repository
+  327  docker buildx build --help
+  328  nano Dockerfile 
+  329  sudo docker build -t MK-repository
+  330  sudo docker build -t MK-repository .
+  331  sudo docker build -t mk-repository .
+  332  nanao Dockerfile 
+  333  nano Dockerfile 
+  334  sudo docker build -t mk-repository .
+  335  sudo docker run -it mk-repository sh
+  336  sudo docker -ps
+  337  sudo docker -a
+  338  sudo docker ps -a
+  339  sudo docker container prune
+  340  sudo docker rmi -f $(sudo docker images -aq)
+  341  ls
+  342  nano Dockerfile 
+  343  history
+  344  ls
+  345  touch lab2
+  346  ls
+  347  nano lab2
+  348  history > lab2
+  349  ls
+  350  nano lab2
+  351  nano Dockerfile 
+  352  ls
+  353  mkdir zaj3
+  354  ls
+  355  cd zaj3/
+  356  touch Dockerfile1
+  357  nano Dockerfile1 
+  358  sudo docker build -t lab3
+  359  sudo docker build -t lab3 .
+  360  ls
+  361  docker build help
+  362  docker build --help
+  363  sudo docker build -f Dockerfile1 -t lab3 .
+  364  nano Dockerfile1 
+  365  sudo docker build -f Dockerfile1 -t lab3 .
+  366  nano Dockerfile1 
+  367  sudo docker build -f Dockerfile1 -t lab3 .
+  368  nano Dockerfile1 
+  369  sudo docker build -f Dockerfile1 -t lab3 .
+  370  nano Dockerfile1 
+  371  sudo docker build -f Dockerfile1 -t lab3 .
+  372  ls
+  373  cd git2
+  374  ls
+  375  cd MDO2025_INO/
+  376  ls
+  377  cd ITE/
+  378  ls
+  379  cd MK415056/
+  380  ls
+  381  cd ..
+  382  history 
+  383  ls
+  384  cd G
+  385  cd GCL04/
+  386  ls
+  387  cd ..
+  388  ls
+  389  cd ITE/
+  390  ls
+  391  cd MK415056/
+  392  ls
+  393  cd sprawozdanie1/
+  394  ls
+  395  cd zaj3/
+  396  ls
+  397  nano Dockerfile1 
+  398  sudo docker -t lab3
+  399  sudo docker build -t lab3
+  400  sudo docker build -t lab3.
+  401  sudo docker build -t lab3 .
+  402  sudo docker build -t lab3 -f Dockerfile1 .
+  403  sudo docker run -it lab3 sh
+  404  ls
+  405  cd git2
+  406  ls
+  407  cd MDO2025_INO/
+  408  ls
+  409  cd ITE/
+  410  ls
+  411  cd GCL04/
+  412  ls
+  413  cd ..
+  414  ls
+  415  cd MK415056/
+  416  ls
+  417  cd sprawozdanie1/
+  418  ls
+  419  cd zaj3/
+  420  l
+  421  ls
+  422  nano Dockerfile1 
+  423  rm Dockerfile1 
+  424  touch Dockerfile
+  425  rm Dockerfile 
+  426  mkdir 1
+  427  cd 1
+  428  touch Dockerfile
+  429  nano Dockerfile 
+  430  sudo docker run -it lab3_1 sh
+  431  sudo docker run sh .
+  432  sudo docker build lab3_1 .
+  433  sudo docker build -t lab3_1 .
+  434  nano Dockerfile 
+  435  sudo docker build -t lab3_1 .
+  436  nano Dockerfile 
+  437  sudo docker build -t lab3_1 .
+  438  sudo docker run -it lab3_1 sh
+  439  ls
+  440  history 
+  441  ls
+  442  cd git2
+  443  ls
+  444  cd MDO2025_INO/
+  445  ls
+  446  cd ITE/
+  447  ls
+  448  cd MK415056/
+  449  ls
+  450  cd sprawozdanie1/
+  451  ls
+  452  cd zaj3/
+  453  ls
+  454  cd git2/MDO2025_INO/ITE/MK415056/sprawozdanie1/zaj3/
+  455  ls
+  456  nano 1
+  457  cd 1
+  458  ls
+  459  nano Dockerfile 
+  460  sudo docker build -t lab3_1 .
+  461  sudo docker run -it lab3_1 bash
+  462  ls
+  463  cd git2/MDO2025_INO/ITE/MK415056/
+  464  ls
+  465  cd sprawozdanie1/
+  466  cd lab3
+  467  ls
+  468  cd zaj3/
+  469  ls
+  470  cd 1
+  471  cd git2/MDO2025_INO/ITE/MK415056/
+  472  sudo docker run -it lab3_1 bash
+  473  ls
+  474  cd git2/
+  475  ls
+  476  cd MDO2025_INO/ITE/MK415056/
+  477  ls
+  478  cd s
+  479  cd sprawozdanie1/1
+  480  cd sprawozdanie1
+  481  ls
+  482  cd zaj3/
+  483  ls
+  484  cd 1
+  485  l
+  486  ls
+  487  sudo docker run -it lab3_1 bash
+  488  ls
+  489  cd ..
+  490  ls 
+  491  mkdir test
+  492  cd test
+  493  git clone https://github.com/antirez/sds.git
+  494  ls
+  495  cd sds
+  496  make
+  497  ls
+  498  opt install make
+  499  apt install make
+  500  sudo apt-get install make
+  501  sudo install make
+  502  sudo dnf install make gcc gcc-c++
+  503  ls
+  504  make
+  505  sudo dnf install make gcc gcc-c++
+  506  cd git2/MDO2025_INO//ITE/MK415056/sprawozdanie1/zaj3/test/sds/
+  507  make
+  508  ./sds-test 
+  509  ls
+  510  cd ..
+  511  ls
+  512  cd ..
+  513  mkdir d-b
+  514  ls
+  515  cd d-b/
+  516  touch Dockerfile
+  517  nano
+  518  nano Dockerfile 
+  519  na
+  520  sudo docker build -t d-b .
+  521  touch Dockerfile
+  522  nano Dockerfile 
+  523  ls
+  524  nano Dockerfile 
+  525  sudo docker build -t d-b .
+  526  nano Dockerfile 
+  527  sudo docker build -t d-b .
+  528  nano Dockerfile 
+  529  sudo docker build -t d-b .
+  530  nano Dockerfile 
+  531  sudo docker build -t d-b .
+  532  nano Dockerfile 
+  533  sudo docker build -t d-b .
+  534  nano Dockerfile 
+  535  sudo docker build -t d-b .
+  536  nano Dockerfile 
+  537  sudo docker build -t d-b .
+  538  nano Dockerfile 
+  539  sudo docker build -t d-b .
+  540  nano Dockerfile 
+  541  sudo docker build -t d-b .
+  542  ls
+  543  cd ..
+  544  ls
+  545  mkdir d-t
+  546  cd d-t/
+  547  touch Dockerfile
+  548  ls
+  549   nano Dockerfile 
+  550  sudo docker build -t d-t .
+  551  sudo docker run d-t 
+  552  sudo docker run d-t bash
+  553  sudo docker run d-t sh
+  554  touch d-c.yml
+  555  nano d-c.yml 
+  556  ls
+  557  rm d-c.yml 
+  558  ls
+  559  touch d-c.yml
+  560  nano d-c.yml 
+  561  ls
+  562  rm d-c.yml 
+  563  ls
+  564  cd .
+  565  cd ..
+  566  ls
+  567  cd d-b
+  568  ls
+  569  touch d-c.yml
+  570  ls
+  571  nano d-c.yml 
+  572  rm d-c.yml 
+  573  cd ..
+  574  cd d-t
+  575  touch d-c.yml
+  576  nano d-c.yml 
+  577  sudo docker run -it d-t bash
+  578  nano d-c.yml 
+  579  sudo d-c up d-t
+  580  nano d-c.yml 
+  581  sudo d-c.yml up d-t
+  582  ls
+  583  sudo docker-compose up d-t
+  584  ls
+  585  mv d-c.yml docker-compose.yml
+  586  sudo docker-compose up d-t
+  587  ls
+  588  cd ..
+  589  mkdir zaj4
+  590  ls
+  591  cd zaj4
+  592  ls
+  593  cd ..
+  594  cd zaj3
+  595  ls
+  596  touch his
+  597  history >> his
+  598  ls
+  599  nano his 
+  600  cd ..
+  601  cd zaj4
+  602  ls
+  603  touch Dockerfile
+  604  nano Dockerfile 
+  605  docker ps
+  606  sudo docker ps
+  607  ls
+  608  cd git2
+  609  ls
+  610  cd MDO2025_INO/
+  611  ls
+  612  cd ITE/
+  613  ls
+  614  cd MK415056/
+  615  ls
+  616  cd sprawozdanie1/
+  617  ls
+  618  cd zaj4
+  619  ls
+  620  nano Dockerfile 
+  621  sudo docker build -t build .
+  622  sudo docker volume create entry
+  623  sudo docker volume create exit
+  624  ENTRY_PATH=$(sudo docker volume inspect entry --format '{{.Mountpoint}}')
+  625  ENTRY=$(sudo docker volume inspect entry --format '{{.Mountpoint}}')
+  626  sudo git clone https://github.com/antirez/sds.git $ENTRY/sds
+  627  docer run help
+  628  docer run help
+  629  man docer run 
+  630  help docer run 
+  631  docer run 
+  632  help docker run 
+  633  man docker run 
+  634  sudo docker run -it --rm -v entry:/entry -v exit:/exit --name build build
+  635  sudo docker pull networkstatic/iperf3
+  636  man docker run 
+  637  l
+  638  sudo docker run -d --name iperf3-rever -p 1234:1234 networkstatic/iperf3 -s
+  639  SIP=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf3-s)
+  640  man docker inspect
+  641  SIP=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf3)
+  642  ps
+  643  docker ps
+  644  sudo docker ps
+  645  sudo docker run -d --name iperf3-s -p 1234:1234 networkstatic/iperf3 -s
+  646  sudo docker ps
+  647  docker stop iperf3-rever
+  648  sudo docker stop iperf3-rever
+  649  sudo docker run -d --name iperf3-s -p 1234:1234 networkstatic/iperf3 -s
+  650  sudo docker ps
+  651  sudo docker ps -a
+  652  sudo docker rm iperf3-s
+  653  sudo docker rm iperf3-rever
+  654  sudo docker run -d --name iperf3-s -p 1234:1234 networkstatic/iperf3 -s
+  655  SIP=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf3-s)
+  656  exho "Server IP: $SERVER_IP"
+  657  echo "Server IP: $SERVER_IP"
+  658  echo "Server IP: $SIP"
+  659  sudo docker run -it --rm networkstatic/iperf3 -c $SERVER_IP
+  660  sudo docker run -it --rm networkstatic/iperf3 -c $SIP
+  661  sudo docker stop iperf3-s
+  662  sudo docker run -it --rm -v entry:/entry -v exit:/exit --name build build
+  663  mkdir bridge
+  664  touch Dockerfile
+  665  ls
+  666  nano Dockerfile 
+  667  cd bridge/
+  668  ls
+  669  touch Dockerfile
+  670  nano Dockerfile 
+  671  sudo docker build -t iperf-b
+  672  sudo docker build -t iperf-b .
+  673  nano Dockerfile 
+  674  sudo docker build -t iperf-b .
+  675  sudo docker network create --driver bridge iperf-n
+  676  sudo docker build -t iperf3-i
+  677  sudo docker build -t iperf3-i .
+  678  sudoe docker rm iperf3-i
+  679  sudo docker rm iperf3-i
+  680  sudo docker ps -a
+  681  sudo docker run -d --name iperf-s --network iperf-n iperf3-i iperf3 -s
+  682  sudo docker run -it --name iperf-c --network iperf-n iperf3-i iperf3 -c iperf -s
+  683  sudo docker run -it --name iperf-c --network iperf-n iperf3-i iperf3 -c iperf-s
+  684  sudo docker rm iperf-c
+  685  sudo docker run -it --name iperf-c --network iperf-n iperf3-i iperf3 -c iperf-s
+  686  sudo docker volume create iperf-s-l
+  687  sudo docker volume create iperf-c-l
+  688  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/var/log iperf3-i
+  689  sudo docker rename iperf-s iperf-s-old
+  690  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/var/log iperf3-i
+  691  sudo docker run -it --name iperf-c --network iperf-n -v iperf-c-l:/var/log iperf3-i bash -c "iperf3 -c iperf-s -t 30 -i 5 -b 0 &> /var/log/iperf-client.log"
+  692  sudo docker rename iperf-c iperf-c-old
+  693  sudo docker run -it --name iperf-c --network iperf-n -v iperf-c-l:/var/log iperf3-i bash -c "iperf3 -c iperf-s -t 30 -i 5 -b 0 &> /var/log/iperf-client.log"
+  694  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/logs iperf-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+  695  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+  696  docker ps
+  697  sudo docker ps
+  698  sudo docker renam iperf-s iperf-s-o2
+  699  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+  700  sudo docker rename iperf-s iperf-s-o2
+  701  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+  702  sudo docker run -d --name iperf-c --network iperf-n -v iperf-s-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+  703  sudo docker rename iperf-c iperf-c-o1
+  704  sudo docker run -d --name iperf-c --network iperf-n -v iperf-s-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+  705  sudo docker run --rm -v iperf-s-l:/logs alpine cat /logs/iperf-server.log
+  706  sudo docker run --rm -v iperf-s-l:/logs alpine cat /logs/iperf-s.log
+  707  sudo docker run --rm -v iperf-s-l:/logs alpine cat /logs/iperf-c.log
+  708  sudo docker run --rm -v iperf-s-l:/logs alpine cat /logs/iperf3-c.log
+  709  ls
+  710  sudo docker run iper
+  711  sudo docker run --rm -v iperf-c-l:/logs alpine cat /logs/iperf3-c.log
+  712  sudo docker run --rm -v iperf-c-l:/logs alpine cat /logs/iperf-c.log
+  713  sudo docker run -d --name iperf-c --network iperf-n -v iperf-c-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+  714  sudo docker rename iperf-c iperf-c-o2
+  715  sudo docker run -d --name iperf-c --network iperf-n -v iperf-c-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+  716  sudo docker run --rm -v iperf-c-l:/logs alpine cat /logs/iperf-c.log
+  717  sudo docker rename iperf-c iperf-c-o3
+  718  sudo docker run -d --name iperf-c --network iperf-n -v iperf-c-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-c.log 2>&1"
+  719  sudo docker run --rm -v iperf-c-l:/logs alpine cat /logs/iperf-c.log
+  720  sudo docker run --rm -v iperf-c-l:/logs cat /logs/iperf-c.log
+  721  sudo docker rename iperf-s iperf-s-o3
+  722  sudo docker run -d --name iperf3-s -p 5201:5201 networstatistic/iperf3 -s
+  723  sudo docker run -d --name iperf3-s -p 5201:5201 networstatic/iperf3 -s
+  724  sudo docker run -d --name iperf3-s -p 5201:5201 networkstatic/iperf3 -s
+  725  sudo docker rename iperf-s iperf-s-o4
+  726  sudo docker rename iperf3-s iperf3-s-o4
+  727  sudo docker run -d --name iperf3-s -p 5201:5201 networkstatic/iperf3 -s
+  728  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+  729  sudo docker run --rm -v iperf-s-l:/logs alpine cat /logs/iperf-s.log
+  730  SIP=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf3-s)
+  731  echo "Server IP: $SIP"
+  732  sudo docker run -it --rm networkstatic/iperf3 -c $SIP
+  733  sudo docker run -d --name iperf-s --network iperf-n iperf3-i iperf3 -s
+  734  sudoe docker rename iperf-s iperfs-s-o5
+  735  sudo docker rename iperf-s iperfs-s-o5
+  736  sudo docker run -d --name iperf-s --network iperf-n iperf3-i iperf3 -s
+  737  sudo hostname -l | awk '{print $1}'
+  738  sudo hostname -I | awk '{print $1}'
+  739  sudo yum install iperf3
+  740  iperf3 -c 127.0.0.1
+  741  sudo docker network create jenkins-net
+  742  sudo docker run --name jenkins-d
+  743  sudo docker run --name jenkins-d -rm --detach --privileged --network jenkins-net --network-alias docker --env DOCKER_TLS_CERTDIR="" -p 2374:2375 docker:dind
+  744  sudo docker run --name jenkins-d --rm --detach --privileged --network jenkins-net --network-alias docker --env DOCKER_TLS_CERTDIR="" -p 2374:2375 docker:dind
+  745  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-idk11
+  746  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-idk17
+  747  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:idk11
+  748  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-jdk11
+  749  a4
+  750  sudo docker run --name jenkins-d --rm --detach --privileged --network jenkins-net --network-alias docker --env DOCKER_TLS_CERTDIR="" -p 2376:2376 docker:dind
+  751  docker rename jenkins-d jenkins-d-01
+  752  sudo docker rename jenkins-d jenkins-d-01
+  753  sudo docker run --name jenkins-d --rm --detach --privileged --network jenkins-net --network-alias docker --env DOCKER_TLS_CERTDIR="" -p 2376:2376 docker:dind
+  754  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-jdk11
+  755  sudo docker rename jenkins   jenkins-o1
+  756  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-jdk11
+  757  sudo docker rm jenkins-o1
+  758  sudo docker stop jenkins-o1
+  759  sudo docker rm jenkins-o1
+  760  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-jdk11
+  761  sudo docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+  762  sudo docker ps
+  763  sudo docker stop jenkins-d-01
+  764  sudo docker ps
+  765  ls
+  766  cd git2/MDO2025_INO/ITE/MK415056/
+  767  ls
+  768  cd sprawozdanie1/
+  769  ls
+  770  cd zaj4
+  771  ls
+  772  history > z4txt
