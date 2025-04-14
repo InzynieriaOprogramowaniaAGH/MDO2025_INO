@@ -3,6 +3,7 @@ Sprawozdanie 1
 Laboratorium1
 Po zainstalowaniu koniecznego oprogramowania czyli w moim przypadku Ubuntu Server na VirtualBox przystąpiłem do wykonywania zadania.
 Skopiowałem repozytorium za pomocą HTTPS, przełączyłem się na gałąź main, następnie na GCL02, czyli na brancha mojej grupy: 
+
 <img width="452" alt="image" src="https://github.com/user-attachments/assets/e166bbd6-e8d8-459c-a0ac-1f8cd27a860e" />
 
 Następnie utworzyłem brancha z moimi inicjałami czyli MM414332:
