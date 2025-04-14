@@ -1,0 +1,8 @@
+#!/bin/bash
+COMMIT_MSG_FILE=$1
+PREFIX="TK414543"
+
+if ! grep -q "^$PREFIX" "$COMMIT_MSG_FILE"; then
+  echo "Commit message must start from $PREFIX"
+  exit 1
+fi
