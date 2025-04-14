@@ -10,7 +10,7 @@ pipeline {
 
         stage('Clear Docker cache') {
             steps {
-                sh 'docker builder prune -f'
+                sh 'docker builder prune -af'
             }
         }
 
