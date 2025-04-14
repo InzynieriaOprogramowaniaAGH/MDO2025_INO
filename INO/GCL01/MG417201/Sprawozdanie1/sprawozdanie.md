@@ -653,10 +653,55 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
 
 ### **Eksponowanie portu**
 
-- Aby uruchomić serwer iperf3 na kontenerze Docker można uruchomić go w obrazie `networkstatic/iperf3`
+- Aby uruchomić serwer **_iperf3_** na kontenerze Docker można uruchomić go w obrazie `networkstatic/iperf3`
 
   <div align="center">
     <img src="screens4/12.jpg" alt="creating volumes">
   </div>
 
-- 
+- Połączenie się z serwerem **_iperf3_** z drugiego kontenera i zbadanie ruchu
+
+  <div align="center">
+    <img src="screens4/13.jpg" alt="creating volumes">
+  </div>
+
+- Wykorzystanie własnej sieci do powyższych kroków:
+
+  - Stworzenie własnej sieci
+
+    <div align="center">
+      <img src="screens4/14.jpg" alt="creating volumes">
+    </div>
+
+  - Uruchomienie serwera
+
+    <div align="center">
+      <img src="screens4/15.jpg" alt="creating volumes">
+    </div>
+
+  - Połączenie się z serwerem z drugiego kontenera
+
+    <div align="center">
+      <img src="screens4/16.jpg" alt="creating volumes">
+    </div>
+
+- Połącznie się z serwerem z hosta
+
+  <div align="center">
+    <img src="screens4/17.jpg" alt="creating volumes">
+  </div>
+
+- Połączenie się z serwerem spoza hosta
+
+  <div align="center">
+    <img src="screens4/18.jpg" alt="creating volumes">
+  </div>
+  
+- Przedstawienie przepustowości komunikacji
+
+  <div align="center">
+    <img src="screens4/18.jpg" alt="creating volumes">
+  </div>
+
+  
+### **Instancja Jenkins**
