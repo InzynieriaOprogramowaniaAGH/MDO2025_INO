@@ -33,6 +33,7 @@ Kilka dodatkowych uwag:
 ## Pull Request
 - PR musi spełniać kryteria wstępne:
   - Wystawiony do odpowiedniej gałęzi ćwiczeniowej
+  - Wystawiony do odpowiedniej **gałęzi ćwiczeniowej**
   - Nazwany inicjałami i numerem indeksu, z dopiskiem S2
   - **Nie wywołuje konfliktów podczas próby merge'u!!**
 
