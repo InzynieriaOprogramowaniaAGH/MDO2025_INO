@@ -5,6 +5,7 @@ pipeline {
         WORKDIR = "INO/GCL02/FR417273/Sprawozdanie2/coursework/pipeline"
     }
 
+    stages {
         stage('Build') {
             steps {
                 dir("${WORKDIR}") {
