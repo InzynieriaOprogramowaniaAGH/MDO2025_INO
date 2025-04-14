@@ -705,3 +705,34 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
 
 
 ### **Instancja Jenkins**
+
+- Utworzenie nowej sieci na potrzeby dalszych działań
+
+  <div align="center">
+    <img src="screens4/20.jpg" alt="creating volumes">
+  </div>
+
+- Uruchomienie kontenera z DIND
+
+  <div align="center">
+    <img src="screens4/21.jpg" alt="creating volumes">
+  </div>
+
+
+- Uruchomienie kontenera z Jenkins
+
+  <div align="center">
+    <img src="screens4/22.jpg" alt="creating volumes">
+  </div>
+
+- Uruchomienie Jenkins w przeglądarce
+
+  <div align="center">
+    <img src="screens4/23.jpg" alt="creating volumes">
+  </div>
+
+  - Zalogowanie się do Jenkins
+
+    <div align="center">
+    <img src="screens4/24.jpg" alt="creating volumes">
+  </div>
