@@ -280,10 +280,9 @@ Budowanie wewnatrz kontenera:
 ![zdj24](screenshots/24.png)
 
 Na wolumin wyjściowy przesłałam utworzony plik cJSON_test poleceniem `cp cJSON_test /mnt/v_out`
-
+![zdj26](screenshots/26.png)
 Następnie zrobiłam klonowanie w kontenerze i od razu skopiowałam folder pobranego repozytorium na wolumin wyjściowy:
 ![zdj25](screenshots/25.png)
-![zdj26](screenshots/26.png)
 
 Sprawdzenie poprawności przeniesienia folderów:
 ![zdj27](screenshots/27.png)
