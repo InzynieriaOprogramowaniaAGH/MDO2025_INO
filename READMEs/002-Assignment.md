@@ -32,12 +32,12 @@ Kilka dodatkowych uwag:
 
 ## Pull Request
 - PR musi spełniać kryteria wstępne:
-  - Wystawiony do odpowiedniej gałęzi ćwiczeniowej
+  - Wystawiony do odpowiedniej **gałęzi ćwiczeniowej**
   - Nazwany inicjałami i numerem indeksu, z dopiskiem S2
   - **Nie wywołuje konfliktów podczas próby merge'u!!**
 
 ## Oceny
 - Oceny będą obecne w systemie USOS, pojawiając się przez okno czasowe oddawania sprawozdań
-  - Terminy: do 27 kwienia: max 5.0
+  - Terminy: do 27 kwietnia: max 5.0
   - Tydzień później: max 4.0
   - Kolejny tydzień później: max 3.0
