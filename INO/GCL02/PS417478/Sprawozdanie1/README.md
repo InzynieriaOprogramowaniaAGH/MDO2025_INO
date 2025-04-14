@@ -260,3 +260,61 @@ Można użyć osobnego kontenera do pakowania artefaktów. Fpm może pomóc w au
 --- 
 ## Lab 4 - Dodatkowa terminologia w konteneryzacji, instancja Jenkins
 
+### 1. Zachowywanie stanu
+Tworzenie woluminów:
+```bash
+docker volume create v_in
+docker volume create v_out
+```
+![zdj17](screenshots/17.png)
+
+Uruchomienie kontenera (opcja `-v` umożliwia ustawić gdzie dane woluminu będą się znajdować):
+![zdj18](screenshots/18.png)
+
+Klonowanie repozytorium na wolumin z hosta:
+![zdj21](screenshots/21.png)
+![zdj22](screenshots/22.png)
+
+Budowanie wewnatrz kontenera:
+![zdj23](screenshots/23.png)
+![zdj24](screenshots/24.png)
+
+Na wolumin wyjściowy przesłałam utworzony plik cJSON_test poleceniem `cp cJSON_test /mnt/v_out`
+
+Następnie zrobiłam klonowanie w kontenerze i od razu skopiowałam folder pobranego repozytorium na wolumin wyjściowy:
+![zdj25](screenshots/25.png)
+![zdj26](screenshots/26.png)
+
+Sprawdzenie poprawności przeniesienia folderów:
+![zdj27](screenshots/27.png)
+
+### 2. Eksponowanie portu
+Utworzyłam i Uruchomiłam kontener z serwerem iperf3-server. 
+![zdj29](screenshots/29.png)
+Sprawdziłam adres IP kontenera i uruchomiłam kolejny raz - podając ten adres.
+![zdj30](screenshots/30.png)
+
+Utworzyłam sieć mostkowaną (brak konieczności korzystania z adresów IP) poleceniem:
+```bash
+sudo docker network create iperf-net-test
+```
+![zdj31](screenshots/31.png)
+
+Połączenie do serwera spoza hosta:
+![zdj32](screenshots/32.png)
+
+### 3. Instancja Jenkins
+Poleceniem tworze siec i kontener jenkins:
+```bash
+sudo docker network create jenkins
+```
+![zdj34](screenshots/34.png)
+![zdj35](screenshots/35.png)
+![zdj36](screenshots/36.png)
+![zdj37](screenshots/37.png)
+
+Po wpisaniu adresu hosta w przeglądarkę trafiam na stronę:
+![zdj38](screenshots/38.png)
+
+Po wprowadzeniu wymaganego hasła z plików przeszłam instalację i tworzenie konta Jenkins instalując odpowiednie wtyczki:
+![zdj39](screenshots/39.png)
