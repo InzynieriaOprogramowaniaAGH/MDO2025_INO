@@ -40,7 +40,7 @@ Zmieniono połączenie z repozytorium na SSH:
 ![4 1](https://github.com/user-attachments/assets/f9619c28-f188-4d66-86e0-fff7b3ee38c2)
 ![4 2](https://github.com/user-attachments/assets/2686ca3a-171f-4db6-be8d-b18f3bace47d)
 
-### 5) Stworzenie nowej gałęzi Utworzono nową gałąź o nazwie KP415903, odgałęziając ją od gałęzi grupowej.
+### 5) Stworzenie nowej gałęzi Utworzono nową gałąź o nazwie KL414598, odgałęziając ją od gałęzi grupowej.
 
         git checkout -b KL414598
 ![4 3](https://github.com/user-attachments/assets/6d213f69-3617-445c-8e30-a83fc474f3e1)
