@@ -731,8 +731,8 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
     <img src="screens4/23.jpg" alt="creating volumes">
   </div>
 
-  - Zalogowanie się do Jenkins
+- Zalogowanie się do Jenkins
 
-    <div align="center">
+  <div align="center">
     <img src="screens4/24.jpg" alt="creating volumes">
   </div>
