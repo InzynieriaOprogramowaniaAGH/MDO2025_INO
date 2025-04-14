@@ -83,7 +83,7 @@
 
 ## Lab 2
 
-    1. **Instalacja Dockera**
+1. **Instalacja Dockera**
     ```bash
     sudo dnf install -y dnf-plugins-core
     sudo dnf install -y docker
@@ -94,7 +94,7 @@
     Sprawdzenie wersji Dockera
     ![Docker version](Lab2/docker_version.png)
 
-    2. **Rejestracja w DockerHub**
+2. **Rejestracja w DockerHub**
 
     Zarejestrowano się w DockerHub
 
@@ -104,7 +104,7 @@
 
     ![Logowanie do Dockera](Lab2/docker_lohin.png)
 
-    3. **Pobieranie obrazów Dockera**
+3. **Pobieranie obrazów Dockera**
 
     Pobrano wybrane obrazy przy pomocy komend:
 
@@ -120,7 +120,7 @@
 
     ![Pobrane obrazy](Lab2/doker_images.png)
 
-    4. **Uruchomienie kontenera BusyBox**
+4. **Uruchomienie kontenera BusyBox**
 
     Uruchomienie proste:
     ![BusyBox](Lab2/bb_działa.png)
@@ -129,7 +129,7 @@
     ![BusyBox inter](Lab2/bb_inter.png)
 
 
-    5. **Uruchomienie Ubuntu w kontenerze**
+5. **Uruchomienie Ubuntu w kontenerze**
 
     Sprawdzenie procesu PID 1 w kontenerze:  
 
@@ -144,7 +144,7 @@
     ```bash 
     exit
     ```
-    6. **Tworzenie Dockerfile**
+6. **Tworzenie Dockerfile**
 
     Utworzono plik Dockerfile  
 
@@ -165,7 +165,7 @@
     Uruchomiono kontener i sprawdzono repozytorium
     ![Ubuntu z repo](Lab2/repo.png)
 
-    7. **Usuwanie kontenerów i obrazów**
+7. **Usuwanie kontenerów i obrazów**
 
     Sprawdzono listy wszystkich kontenerów, a następnie zatrzymano i usunięto:
 
