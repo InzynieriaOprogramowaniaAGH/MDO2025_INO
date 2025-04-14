@@ -11,7 +11,7 @@ RUN git clone https://github.com/DaveGamble/cJSON.git && \
     tar czvf cjson.tar.gz cJSON && \
     mv cjson.tar.gz /root/rpmbuild/SOURCES/
 
-COPY ../../../rpm/cjson.spec /root/rpmbuild/SPECS/
+COPY ../../../pipeline/cjson.spec /root/rpmbuild/SPECS/
 
 WORKDIR /root/rpmbuild/SPECS
 
