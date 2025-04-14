@@ -137,9 +137,108 @@ Pipeline przeszedł bez problemu, chwilę mu to zajęło z powodu pobrania wszys
 
 ![Build #1](zrzuty5/zrzut_ekranu12.png)
 
-> [Pełne logi z konsoli](test_logs.txt)
+> [Pełne logi z konsoli](jenkinslogs/console_results.log)
 
 Rebuild tego pipeline również odbył się bez problemu. Tym razem zajęło mu to znacznie mniej czasu. Wynika to z wykorzystania mechanizmu cache'owania warstw Dockera – kroki, które nie uległy zmianie (np. instalacja pakietów, klonowanie repozytorium) zostały pominięte dzięki buforowaniu.
 
 ![Build #2](zrzuty5/zrzut_ekranu13.png)
+
+### 4. Pipeline korzystający z kontenerów `build -> test`
+
+Kolejnym krokiem było dołączenie testów do pipelina.
+
+Skopiowałem `Dockerfile.test` z `Sprawozdanie1`, który to tworzył kontener na bazie obrazu `cjson-builder-image` i uruchamiał w nim testy. 
+
+Zmodyfikowałem również sam pipeline o budowanie kontenera testowego oraz uruchomienie testów i zapisanie ich wyników do pliku `test.log`, który jest zwracany jako artefakt.
+
+```bash
+pipeline {
+    agent any
+
+    stages {
+        stage('Klonowanie repo') { 
+            steps {
+                git branch: 'AB416965', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Budowanie obrazu buildera') {
+            steps {
+                dir ("INO/GCL01/AB416965/Sprawozdanie2/dockerfiles/cjson")
+                {
+                    script {
+                        docker.build('cjson-builder-image', '-f Dockerfile.build .')
+                    }
+                }
+            }
+        }
+
+        stage('Budowanie obrazu testowego') {
+            steps {
+                dir ("INO/GCL01/AB416965/Sprawozdanie2/dockerfiles/cjson")
+                {
+                    script {
+                        docker.build('cjson-test-image', '-f Dockerfile.test .')
+                    }
+                }
+            }
+        }
+
+        stage('Testy') {
+            steps {
+                dir ("INO/GCL01/AB416965/Sprawozdanie2")
+                {
+                    sh "mkdir -p artifacts"
+
+                    sh """
+                        docker run --rm cjson-test-image | tee artifacts/test.log
+                    """
+                }    
+            }
+        }
+
+        stage('Publikacja logów z testów') {
+            steps {
+                archiveArtifacts artifacts: 'INO/GCL01/AB416965/Sprawozdanie2/artifacts/test.log', fingerprint: true
+            }
+        }
+    }
+}
+```
+W pipeline zastosowano `fingerprint: true` w kroku publikacji artefaktu testowego. Pozwala to Jenkinsowi śledzić przepływ danego pliku pomiędzy etapami pipeline’u lub nawet pomiędzy różnymi jobami. Dzięki temu można łatwo zidentyfikować, w którym buildzie dany plik powstał, a także zapewnić spójność artefaktów w większych procesach CI/CD.
+
+![Build i test](zrzuty5/zrzut_ekranu14.png)
+
+> [Wyniki testów](jenkinslogs/test.log)
+
+#### Docker-in-Docker (DIND)
+
+W podejściu opartym o Docker-in-Docker (DIND) pipeline CI/CD korzysta z osobnego kontenera z demonem Dockera (`dockerd`), który działa wewnątrz kontenerowej infrastruktury Jenkinsa.
+
+Jenkins działa jako kontener (np. `jenkins-blueocean`), natomiast dockerd działa w osobnym kontenerze (np. `docker:dind`). Te dwa kontenery komunikują się ze sobą poprzez sieć Docker.
+
+Aby taka komunikacja była możliwa:
+- docker:dind musi zostać uruchomiony z flagą --privileged, ponieważ uruchamia w sobie pełnoprawnego Dockera
+- Musi być skonfigurowane TLS (certyfikaty), aby połączenie było bezpieczne
+- enkins musi mieć pluginy pozwalające na komunikację z zewnętrznym demonem Dockera
+
+Dzięki temu pipeline może uruchamiać polecenia `docker build`, `docker run`, `docker push` wewnątrz środowiska kontenerowego całkowicie niezależnie od hosta.
+
+#### Kontener CI bez DIND
+
+Drugim podejściem do uruchamiania pipeline'u CI/CD w Jenkinsie jest tzw. Docker Outside of Docker (DOoD), czyli konfiguracja, w której Jenkins nie uruchamia własnego demona Dockera, tylko korzysta z tego, który działa na maszynie hosta.
+
+To rozwiązanie jest prostsze i szybsze w konfiguracji:
+- Nie trzeba konfigurować TLS
+- Nie potrzebujemy osobnego kontenera z dockerd
+- Nie trzeba uruchamiać kontenerów z --privileged
+
+Jednak ma to swoje wady:
+- Jenkins zyskuje bezpośredni dostęp do dockera hosta — a tym samym do całego środowiska hosta
+- Potencjalna pomyłka w pipeline może skutkować np. usunięciem obrazów/kontenerów z systemu głównego
+- Mniejsza izolacja i przenośność — środowisko pipeline'u zależy bezpośrednio od konfiguracji maszyny hosta
+
+####  Dlaczego wybrano DIND w tym projekcie
+
+W tym konkretnym projekcie zdecydowano się na konfigurację opartą o Docker-in-Docker (DIND), dzięki temu cały proces CI/CD (build, test, deploy, publish) odbywa się w całości wewnątrz środowiska kontenerowego, bez konieczności ingerowania w system hosta. To podejście zwiększa przenośność pipeline'u, pozwala łatwo odtworzyć środowisko na innych maszynach i zapewnia większe bezpieczeństwo.
 
