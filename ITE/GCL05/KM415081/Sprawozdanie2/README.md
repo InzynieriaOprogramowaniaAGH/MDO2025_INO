@@ -131,5 +131,5 @@ Console output
 
 ### Drugie uruchomienie
 
-![Opis obrazka](lab5_screenshots/13.png)
+![Opis obrazka](lab5_screenshots/20.png)
 
