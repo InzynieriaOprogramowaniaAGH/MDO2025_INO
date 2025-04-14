@@ -59,6 +59,15 @@ pipeline {
             }
         }
 
+        stage('🚀 Publish Runtime Image') {
+           steps {
+                echo 'Buduję runtime image z wget'
+                sh "docker build -t wget-runtime -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile.runtime ITE/GCL06/JR414539/Sprawozdanie2"
+                echo 'Odpalam kontener runtime z wget'
+                sh "docker run --rm wget-runtime"
+            }
+        }
+
     }
 
     post {
