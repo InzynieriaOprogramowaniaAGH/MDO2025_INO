@@ -4,4 +4,4 @@ COPY cjson.rpm /tmp/cjson.rpm
 
 RUN dnf install -y /tmp/cjson.rpm
 
-CMD ["ldd", "/usr/lib/libcjson.so"]
+CMD ["ldd", "/usr/local/lib64/libcjson.so"]
