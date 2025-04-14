@@ -4,7 +4,7 @@
 
 ![Opis obrazka](lab5_screenshots/1.png)
 
-![Opis obrazka](lab5_screenshots/1.png)
+![Opis obrazka](lab5_screenshots/2.png)
 
 ### Utworzenie i konfiguracja Jenkins
 Uruchomiono kontener DIND, zbudowano obraz jenkinsa przy użyciu Dockerfila podanego w dokumentacji, stworzono kontener
