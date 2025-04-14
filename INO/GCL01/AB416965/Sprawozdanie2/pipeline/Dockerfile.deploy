@@ -1,6 +1,6 @@
 FROM fedora:41
 
-COPY ../../../artifacts/cjson.rpm /tmp/cjson.rpm
+COPY cjson.rpm /tmp/cjson.rpm
 
 RUN dnf install -y /tmp/cjson.rpm
 
