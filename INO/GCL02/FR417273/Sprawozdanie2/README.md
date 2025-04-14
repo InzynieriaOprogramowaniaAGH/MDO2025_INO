@@ -198,7 +198,7 @@
 - Utworzono kompletny pipeline realizujący cykl **CI/CD** dla bibliotecji `cJSON`.
 - Pipeline dzieli się na pięć etapów:
   - **Clone**:
-    - Klonowanie repoizytorium przedmiotowego, w tym pliki: `Dockerfile.build`, `Dockerfile.test`, `Dockerfile.deploy` i `deploy.c`.
+    - Klonowanie repozytorium przedmiotowego, w tym pliki: `Dockerfile.build`, `Dockerfile.test`, `Dockerfile.deploy` i `deploy.c`.
   - **Build**:
     - Budowa obrazu `Dockerfile.build`, zajmującego się klonowaniem repozytorium `cJSON`, kompilacją i utworzeniem pakietu instalacyjnego `.rpm`.
     - Utworzenie katalogu do przechowywania artefaktów.
@@ -323,7 +323,7 @@
 
   ![Zrzut ekranu powodzenia](media/m11_succ.png)
 - Udało się wejść do kontenera `jenkins-blueocen` poleceniem: `docker exec -it jenkins-blueocean bash`.
-- W kontenerze odnaleziono utworzony artefakt oraz odkryto jego płeną ścieżke poleceniem: `readlink -f cjson.rpm`.
+- W kontenerze odnaleziono utworzony artefakt oraz odkryto jego pelną ścieżke poleceniem: `readlink -f cjson.rpm`.
   - *Zrzut erkanu ze ścieżką*:
  
     ![Zrzut ekranu ze ścieżką](media/m12_path.png)
