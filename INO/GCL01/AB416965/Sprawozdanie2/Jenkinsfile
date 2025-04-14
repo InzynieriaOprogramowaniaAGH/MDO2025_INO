@@ -8,6 +8,12 @@ pipeline {
             }
         }
 
+        stage('Clear Docker cache') {
+            steps {
+                sh 'docker builder prune -f'
+            }
+        }
+
         stage('Build') {
             steps {
                 dir ("INO/GCL01/AB416965/Sprawozdanie2/pipeline")
