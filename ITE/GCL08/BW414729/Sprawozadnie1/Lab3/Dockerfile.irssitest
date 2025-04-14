@@ -1,0 +1,5 @@
+FROM irssi-build
+
+WORKDIR /irssi/Build
+
+CMD ["ninja", "test"]
