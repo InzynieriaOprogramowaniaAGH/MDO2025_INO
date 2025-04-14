@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_BUILDKIT = 1
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'MN417158',
+                    url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie1/files/Dockerfilechalk.build'
+
+                    def image = docker.build("chalk-image", "-f ${dockerfilePath} .")
+                }
+            }
+        }
+        stage('Deploy'){
+            
+        }
+    }
+}
