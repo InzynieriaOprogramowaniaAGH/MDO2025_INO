@@ -31,8 +31,9 @@
 2. **Konfiguracja gałęzi w Git**
 
     Przełączono się na gałąź main, a potem na gałąź grupy 7
+
     Utworzono gałąź o nazwie 'TS416767':
     ```bash
     git checkout -b TS416767
     ```
-    [Git branch](Lab1/git_branch.png)
+    ![Git branch](Lab1/git_branch.png)
