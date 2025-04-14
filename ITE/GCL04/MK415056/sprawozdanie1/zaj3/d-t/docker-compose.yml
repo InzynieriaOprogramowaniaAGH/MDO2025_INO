@@ -1,0 +1,12 @@
+services:
+  d-b:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: d-b
+
+  sds-test:
+    image: d-t
+    depends_on:
+      - d-b
+    command: ./sds-test
