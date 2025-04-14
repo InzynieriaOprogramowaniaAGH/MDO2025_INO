@@ -183,3 +183,81 @@
 10. Wyczyszczono obrazy:
 
       ![Alt text](screenshots/LAB2/16_docker_image_prune.png)
+
+# LAB 3
+
+* Znaleziono repozytorium zdatne do użycia w tym laboratorium, jest to mój własny projekt z pierwszego roku, OceanBattle, które:
+	* dysponuje otwartą licencją
+	* jest umieszczone wraz ze swoimi narzędziami tak, że możliwe jest uruchomienie w repozytorium ```dotnet build``` oraz ```dotnet test```.
+	* Zawiera zdefiniowane i obecne w repozytorium testy. Testy muszą jednoznacznie formułują swój raport końcowy.
+* Sklonowano niniejsze repozytorium, i przeprowadzono build programu po uwczesnym doinstalowaniu wymaganych zależności
+
+   ![Alt text](screenshots/LAB3/1_git_clone.png)
+   ![Alt text](screenshots/LAB3/2_cd_oceanbattle.png)
+   ![Alt text](screenshots/LAB3/3_install_dotnet.png)
+
+* Uruchomiono testy jednostkowe dołączone do repozytorium
+
+   ![Alt text](screenshots/LAB3/4_restore_build_test.png)
+
+### Przeprowadzenie buildu w kontenerze
+Ponowiono wyżej wymieniony  proces w kontenerze, interaktywnie.
+
+1. Wykonano kroki `build` i `test` wewnątrz wybranego kontenera bazowego. Wybrano "wystarczający" kontener, dostępny obraz dotnet dla Dockera, mcr.microsoft.com/dotnet/sdk:7.0
+	* uruchomiono kontener i rozpoczęto interaktywną pracę
+
+   ![Alt text](screenshots/LAB3/5_create_container.png)
+
+	* zaopatrzono kontener w wymagania wstępne (zainstalowano git)
+
+   ![Alt text](screenshots/LAB3/6_git_install.png)
+
+	* sklonowano repozytorium
+
+   ![Alt text](screenshots/LAB3/7_git_clone.png)
+   ![Alt text](screenshots/LAB3/8_cd_oceanbattle.png)
+
+	* Skonfigurowano środowisko i uruchomiono *build*
+
+   ![Alt text](screenshots/LAB3/9_dotnet_restore.png)
+   ![Alt text](screenshots/LAB3/10_dotnet_build.png)
+
+	* uruchomiono testy
+
+   ![Alt text](screenshots/LAB3/11_dotnet_test.png)
+
+2. Stworzono dwa pliki `Dockerfile` automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:
+
+	* Kontener pierwszy przeprowadza wszystkie kroki aż do *builda*
+
+      ```dockerfile
+      FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+
+      WORKDIR /app
+      RUN apt update && apt install -y git
+
+      RUN git clone --recurse-submodules -j8 https://github.com/OceanBattle/OceanBattle.WebAPI.git .
+      RUN dotnet restore
+      RUN dotnet build
+      ```
+
+	* Kontener drugi bazuje na pierwszym i wykonuje testy, nie robiąc *builda*
+
+      ```dockerfile
+      FROM oceanbattle-build AS test
+
+      WORKDIR /app
+
+      CMD ["dotnet", "test"]
+      ```
+
+3. Kontener wdraża się i pracuje poprawnie. 
+
+   ![Alt text](screenshots/LAB3/12_dockerfile_build.png)
+   ![Alt text](screenshots/LAB3/13_dockerfile_test.png)
+   ![Alt text](screenshots/LAB3/14_run_container.png)
+
+
+   * Co pracuje w takim kontenerze?
+
+   Kontener pracuje tymczasowo, uruchamiając proces `dotnet test`, który wykonuje testy jednostkowe aplikacji z repozytorium OceanBattle.WebAPI. Po zakończeniu działania testów, kontener się zamyka. Nie działa w tle jako serwer, tylko jako **jednorazowe środowisko testowe**. W tym scenariuszu kontener jest użyty jako etap CI/CD, a nie jako produkt końcowy.
