@@ -1,0 +1,443 @@
+    1  ls
+    2  ip a
+    3  shutdonw now
+    4  shutdown now
+    5  ip a
+    6  ping 1.1.1.1
+    7  ip a
+    8  ping 1.1.1.1
+    9  shutdown now
+   10  ls
+   11  ping 1.1.1.1
+   12  ip a
+   13  ifconfig
+   14  traceroute 1.1.1.1
+   15  ping 192.168.71.67
+   16  ip a
+   17  systemctl status sshd
+   18  ping 127.0.0.1
+   19  ssh 127.0.0.1
+   20  ssh 192.168.71.67
+   21  shutdonw now
+   22  shutdown now
+   23  ip a
+   24  ping 192.168.71.67
+   25  traceroute 1.1.1.1
+   26  ip a
+   27  ping 1.1.1.1
+   28  shutdown now
+   29  ls
+   30  systemctl status sftp
+   31  scp
+   32  ls
+   33  cat lorems.txt 
+   34  scp git@github.com:szymusu/devops.git
+   35  ssh git@github.com:szymusu/devops.git
+   36  git clone git@github.com:szymusu/devops.git
+   37  sudo dnf install git
+   38  git clone git@github.com:szymusu/devops.git
+   39  ls
+   40  ls -a
+   41  cd .ssh
+   42  ls
+   43  ssh-keygen -o
+   44  ls
+   45  cat github.pub 
+   46  cd ..
+   47  git clone git@github.com:szymusu/devops.git -i .ssh/github
+   48  git clone git@github.com:szymusu/devops.git
+   49  cd .ssh
+   50  ls
+   51  rm github
+   52  rm github.pub 
+   53  ssh-keygen
+   54  cat github.pub 
+   55  ls
+   56  vim config
+   57  vi config
+   58  cd ..
+   59  git clone git@github.com:szymusu/devops.git
+   60  ls
+   61  cd devops/
+   62  ls
+   63  git pull
+   64  ip a
+   65  ping 1.1.1.1
+   66  ping 192.168.71.67
+   67  ls
+   68  shutdown now
+   69  ip a
+   70  ls
+   71  history
+   72  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   73  ls
+   74  cd MDO2025_INO/
+   75  ls
+   76  cd MDO2025_INO/
+   77  git status
+   78  cd MDO2025_INO/
+   79  ls
+   80  git status
+   81  git branch GCL05
+   82  git status
+   83  git checkout GCL05
+   84  git status
+   85  ls
+   86  git pull
+   87  ls
+   88  ls -a
+   89  ls
+   90  git status
+   91  git checkout origin/GCL05
+   92  ls
+   93  git checkout GCL05
+   94  ls
+   95  git checkout origin/GCL05
+   96  git switch -c SM418114
+   97  git branch
+   98  ls
+   99  cd ITE
+  100  ls
+  101  cd GCL05/
+  102  ls
+  103  mkdir SM418114
+  104  cd SM418114/
+  105  ls
+  106  ls ../../../.git/hooks/
+  107  vim ../../../.git/hooks/commit-msg.sample 
+  108  vi 
+  109  vi ../../../.git/hooks/prepare-commit-msg.sample 
+  110  cp ../../../.git/hooks/prepare-commit-msg.sample ./
+  111  ls
+  112  rm prepare-commit-msg.sample 
+  113  cp ../../../.git/hooks/commit-msg.sample ./
+  114  mv commit-msg.sample commit-msg
+  115  ls
+  116  vi commit-msg 
+  117  cp commit-msg ../../../.git/hooks/commit-msg
+  118  ls ../../../.git/hooks/
+  119  ls
+  120  git status
+  121  git add .
+  122  git status
+  123  git add ~/MDO2025_INO/
+  124  git status
+  125  git add ~/MDO2025_INO/.git/
+  126  git status
+  127  vi commit-msg 
+  128  mv commit-msg prepare-commit-msg
+  129  cp prepare-commit-msg ../../../.git/hooks/
+  130  rm ../../../.git/hooks/commit-msg
+  131  git add ~/MDO2025_INO/
+  132  git status
+  133  git commit -m "add message checking hook"
+  134  git commit -m "SM418114 add message checking hook"
+  135  git config --global --edit
+  136  git push
+  137  git push --set-upstream origin SM418114
+  138  ls
+  139  cd MDO2025_INO/
+  140  ls
+  141  ls
+  142  cd MDO2025_INO/
+  143  ls
+  144  cd ITE
+  145  git branch
+  146  ls
+  147  cd GCL05/
+  148  ls
+  149  cd SM418114/
+  150  ls
+  151  git status
+  152  vim
+  153  vi sprawozdanie1.md
+  154  git status
+  155  rm sprawozdanie1.md 
+  156  mkdir Sprawozdanie1
+  157  cd Sprawozdanie1/
+  158  vi README.md
+  159  git status
+  160  git add .
+  161  git status
+  162  sudo dnf install docker
+  163  docker pull fedora
+  164  docker
+  165  docker pull fedora
+  166  sudo systemctl status docker
+  167  sudo systemctl start docker
+  168  docker pull fedora
+  169  docker
+  170  sudo docker pull fedora
+  171  sudo docker pull mysql
+  172  sudo docker pull busybox hello-world
+  173  sudo docker pull 
+  174  sudo docker pull hello-world
+  175  docker
+  176  sudo groupadd docker
+  177  sudo usermod -aG docker $USER
+  178  reboot
+  179  docker run hello-world
+  180  docker run -it fedora bash
+  181  docker
+  182  docker list
+  183  docker containers
+  184  docker containe
+  185  docker container
+  186  docker run -it busybox
+  187  docker run -it fedora bash
+  188  dnf -y
+  189  ps
+  190  ps aux
+  191  ps aux | grep docker
+  192  pgrep
+  193  pgrep docker
+  194  ls
+  195  cd MDO2025_INO/
+  196  ls
+  197  cd ITE/GCL05/SM418114/
+  198  lsw
+  199  ls
+  200  docker build -t laby-repo .
+  201  docker
+  202  docker run -it laby-repo
+  203  docker run -it laby-repo sh
+  204  docker run -it laby-repo bash
+  205  ls
+  206  ls -a
+  207  la
+  208  docker ps
+  209  docker ps -a
+  210  docker rm focused_joliot eager_jones infallible_murdock vigilant_clarke heuristic_knuth quirky_goldstine recursing_gauss
+  211  docker ps -a
+  212  make
+  213  man dnf
+  214  dnf search make
+  215  ls
+  216  cd toasty/
+  217  man docker 
+  218  man run build
+  219  man docker run
+  220  docker build -t toasty .
+  221  dokcer run -it toasty
+  222  docker run -it toasty
+  223  docker build -t toasty .
+  224  docker run -it toasty
+  225  man docker build
+  226  ls
+  227  mv Dockerfile Dockerfile.build
+  228  vim
+  229  cp Dockerfile.build Dockerfile.test
+  230  vi Dockerfile.build 
+  231  vi Dockerfile.test 
+  232  docker build -t toasty .
+  233  docker build -t toasty -f Dockerfile.build .
+  234  docker build -t toasty-test -f Dockerfile.test .
+  235  docker run -it toasty-test
+  236  ls
+  237  cd MDO2025_INO/
+  238  ls
+  239  cd ITE/
+  240  ls
+  241  cd GCL05/
+  242  ls
+  243  cd SM418114/
+  244  ls
+  245  cd toasty/
+  246  ls
+  247  docker run -it toasty
+  248  docker run -it toasty-test
+  249  ls
+  250  docker volume create vol1
+  251  docker volume create vol2
+  252  docker volume
+  253  docker volume inspect
+  254  docker volume ls
+  255  docker volume inspect vol1
+  256  ls /var/lib/docker/volumes/vol1/_data
+  257  docker volume inspect vol1
+  258  docker volume inspect vol2
+  259  docker volume inspect vol2 | grep Mountpoint
+  260  docker volume inspect vol2 | grep Mountpoint | columns -s"
+  261  cd MDO2025_INO/ITE/GCL05/SM418114/toasty/
+  262  docker volume inspect vol2 | grep Mountpoint | columns -s\"
+  263  docker volume inspect vol2 | grep Mountpoint | column -s\"
+  264  docker volume inspect vol2 | grep Mountpoint | column
+  265  docker volume inspect vol2 | grep Mountpoint | column -t
+  266  docker volume inspect vol2 | grep Mountpoint | column -s\" -t
+  267  docker volume inspect vol2 | grep Mountpoint | column -s\" -t -f2
+  268  docker volume inspect vol2 | grep Mountpoint | column -s\" -t -c2
+  269  docker volume inspect vol2 | grep Mountpoint | column -s\" -t -c3
+  270  docker volume inspect vol2 | grep Mountpoint | column -s\" -t -c
+  271  docker volume inspect vol2 | grep Mountpoint | column -s\" -t -c1
+  272  docker volume inspect vol2 | grep Mountpoint | column -s\" -t 
+  273  docker volume inspect vol2 | grep Mountpoint | awk -F \" '{print $2}'
+  274  docker volume inspect vol2 | grep Mountpoint | awk -F \" '{print $4}'
+  275  $(docker volume inspect vol2 | grep Mountpoint | awk -F \" '{print $4}')
+  276  echo $(docker volume inspect vol2 | grep Mountpoint | awk -F \" '{print $4}')
+  277  ls $(docker volume inspect vol2 | grep Mountpoint | awk -F \" '{print $4}')
+  278  sudo ls $(docker volume inspect vol2 | grep Mountpoint | awk -F \" '{print $4}')
+  279  sudo file $(docker volume inspect vol2 | grep Mountpoint | awk -F \" '{print $4}')
+  280  docker volume inspect vol2 | grep Mountpoint | awk -F \" '{print $4}'
+  281  docker volume inspect vol1 | grep Mountpoint | awk -F \" '{print $4}'
+  282  docker volume inspect vol2 | grep Mountpoint | awk -F \" '{print $4}'
+  283  history -grep "-t"
+  284  history | grep "-t"
+  285  history | grep build
+  286  docker build -t toasty-volumes -f Dockerfile.volumes .
+  287  man mkdir
+  288  docker build -t toasty-volumes -f Dockerfile.volumes .
+  289  sudo git clone https://github.com/badzianga/toasty $(docker volume inspect vol1 | grep Mountpoint | awk -F \" '{print $4}')
+  290  docker run -it --rm -v vol1:/toasty -v vol2:/toasty/build --name toasty-volumes toasty-volumes
+  291  sudo ls $(docker volume inspect vol2 | grep Mountpoint | awk -F \" '{print $4}')
+  292  docker pull networkstatic/iperf3
+  293  man docker run
+  294  docker run -d --name iperf -p 2115:2115 networkstatic/iperf3 -s
+  295  man docker run
+  296  man docker run -s
+  297  man docker run
+  298  docker inspect
+  299  docker inspect iperf
+  300  docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ipserwer
+  301  docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf
+  302  ip a
+  303  man docker run
+  304  docker run -it --rm networkstatic/iperf3 -c 172.17.0.2
+  305  ping 172.17.0.2
+  306  docker network create --driver bridge siec-brydz
+  307  docker run -d --name ipserwer --network siec-brydz networkstatic/iperf3 iperf3 -s
+  308  docker run -it --name ipklient --network siec-brydz networkstatic/iperf3 iperf3 -c ipserwer
+  309  docker volume create vol-serwer
+  310  docker volume create vol-klient
+  311  docker volume ls
+  312  man sh
+  313  docker build -t ipserwer -f Dockerfile.serwer .
+  314  cat Dockerfile.serwer 
+  315  docker build -t ipklient -f Dockerfile.klient .
+  316  cat Dockerfile.klient 
+  317  docker run -d --name ipserwer --network siec-brydz -v vol-serwer:/log ipserwer
+  318  docker run -d --name ipklient --network siec-brydz -v vol-klient:/log ipklient
+  319  sudo ls $(docker volume inspect vol-serwer | grep Mountpoint | awk -F \" '{print $4}')
+  320  sudo ls $(docker volume inspect vol-klient | grep Mountpoint | awk -F \" '{print $4}')
+  321  echo $(docker volume inspect vol-klient | grep Mountpoint | awk -F \" '{print $4}')
+  322  echo $(docker volume inspect vol-serwer | grep Mountpoint | awk -F \" '{print $4}')
+  323  sudo ls $(docker volume inspect vol-serwer | grep Mountpoint | awk -F \" '{print $4}')
+  324  sudo ls $(docker volume inspect vol1 | grep Mountpoint | awk -F \" '{print $4}')
+  325  docker build -t ipklient -f Dockerfile.klient .
+  326  docker build -t ipserwer -f Dockerfile.serwer .
+  327  docker run -d --name ipserwer --network siec-brydz -v vol-serwer:/log ipserwer
+  328  sh -c 'echo chuj'
+  329  ls
+  330  echo dhuj >> chuj.log
+  331  ls
+  332  cat chuj.log 
+  333  rm chuj.log 
+  334  docker run -d --name ipserwer --network siec-brydz -v vol-serwer:/log networkstatic/iperf3 sh -c 'iperf3 -s >> /log/serwer.log 2>&1'
+  335  docker run -d --name ipklient --network siec-brydz -v vol-klient:/log networkstatic/iperf3 sh -c 'iperf3 -c ipserwer >> /log/klient.log 2>&1'
+  336  sudo ls $(docker volume inspect vol-serwer | grep Mountpoint | awk -F \" '{print $4}')
+  337  docker run -d --name ipklient --network siec-brydz -v vol-klient:/log networkstatic/iperf3 sh -c 'echo chuj > /log/chuj'
+  338  sudo ls $(docker volume inspect vol-klient | grep Mountpoint | awk -F \" '{print $4}')
+  339  docker run -d --name ipklient --network siec-brydz -v vol-klient:/log networkstatic/iperf3 sh -c 'echo c'
+  340  docker run -it --name ipklient --network siec-brydz -v vol-klient:/log networkstatic/iperf3 sh -c 'echo c'
+  341  docker build -t ipserwer -f Dockerfile.serwer .
+  342  docker build -t ipklient -f Dockerfile.klient .
+  343  docker run -it --name ipklient --network siec-brydz -v vol-klient:/log ipklient
+  344  sudo ls $(docker volume inspect vol-klient | grep Mountpoint | awk -F \" '{print $4}')
+  345  docker run --rm --name ipklient --network siec-brydz -v vol-klient:/log networkstatic/iperf3 sh -c 'echo c > /log/output.txt'
+  346  sudo ls $(docker volume inspect vol-klient | grep Mountpoint | awk -F \" '{print $4}')
+  347  docker run --rm -v vol-klient:/data alpine cat /data/output.txt
+  348  docker run --rm --name ipklient -v vol-klient:/log networkstatic/iperf3 sh -c 'echo c > /log/output.txt'
+  349  docker run --rm --name ipklient -v vol-klient:/log networkstatic/iperf3 sh -c 'iperf3 -s && echo c > /log/output.txt'
+  350  docker run --rm -it -v vol-klient:/data alpine sh
+  351  docker run --rm -v vol-klient:/log networkstatic/iperf3 sh -c "echo 'c' > /log/output.txt"
+  352  docker run --rm -it -v vol-klient:/data alpine sh
+  353  docker run --rm -v vol-klient:/log alpine sh -c "echo 'c' > /log/output.txt"
+  354  docker run --rm -it -v vol-klient:/data alpine sh
+  355  docker run --rm --name ipserwer -v vol-serwer:/log networkstatic/iperf3 sh -c "iperf3 -s > /log/serwer.log"
+  356  docker run -d --rm --name ipserwer --network siec-brydz -v vol-serwer:/log networkstatic/iperf3 sh -c "iperf3 -s > /log/serwer.log"
+  357  docker run --rm -it -v vol-serwer:/data alpine sh
+  358  docker run -d --rm --name ipserwer --network siec-brydz -v vol-serwer:/log networkstatic/iperf3 sh -c "iperf3 -s > /log/serwer.log"
+  359  docker run -it --rm --name ipserwer --network siec-brydz -v vol-serwer:/log networkstatic/iperf3 sh -c "iperf3 -s > /log/serwer.log"
+  360  docker run -d --name ipserwer --network siec-brydz -v vol-serwer:/log networkstatic/iperf3 sh -c "iperf3 -s > /log/serwer.log"
+  361  docker run --rm --network siec-brydz networkstatic/iperf3 iperf3 -c ipserwer
+  362  docker run --rm -it -v vol-serwer:/data alpine sh
+  363  docker run -d --name ipserwer --network siec-brydz -v vol-serwer:/log networkstatic/iperf3 iperf3 -s
+  364  docker run --rm --network siec-brydz networkstatic/iperf3 iperf3 -c ipserwer
+  365  docker network ls
+  366  docker network create leeroy
+  367  docker run --name jenkins-docker --rm -d --privileged --network leroy --network-alias docker --env DOCKER_TLS_CERTDIR="" -p 2376:2376 docker:dind
+  368  docker run --name jenkins-docker --rm -d --privileged --network leeroy --network-alias docker --env DOCKER_TLS_CERTDIR="" -p 2376:2376 docker:dind
+  369  docker run --name jenkins --rm -d --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-jdk11
+  370  docker run --name jenkins --rm -d --network leeroy --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-jdk11
+  371  docker ps
+  372  ip a
+  373  docker network ls
+  374  docker run   --name jenkins-docker   --rm   --detach   --privileged   --network leeroy   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+  375  docker run --name jenkins-docker --rm --detach   --privileged --network leeroy --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind --storage-driver overlay2
+  376  docker run --name jenkins --rm --detach   --privileged --network leeroy --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind --storage-driver overlay2
+  377  docker run --name jenkins   --rm --detach   --network leeroy   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_TLS_VERIFY=0   -p 8080:8080 -p 50000:50000   -v jenkins-data:/var/jenkins_home   jenkins/jenkins:lts-jdk11
+  378  curl localhost:8080
+  379  docker run --name jenkins-docker --rm -d --privileged --network leeroy --network-alias docker --env DOCKER_TLS_CERTDIR="" -p 2376:2376 docker:dind
+  380  docker run --name jenkins   --rm --detach   --network leeroy   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_TLS_VERIFY=0   -p 8080:8080 -p 50000:50000   -v jenkins-data:/var/jenkins_home   jenkins/jenkins:lts-jdk11
+  381  curl localhost:8080
+  382  curl localhost:8080/login
+  383  ls
+  384  git status
+  385  git add ../..
+  386  git status
+  387  git commit -m "smol changes"
+  388  git commit -m "SM418114 smol changes"
+  389  git push
+  390  git push --set-upstream origin SM418114
+  391  cd MDO2025_INO/
+  392  ls
+  393  cd ITE/
+  394  ls
+  395  cd GCL05/SM418114/
+  396  ls
+  397  docker run --name jenkins-docker --rm -d --privileged --network leeroy --network-alias docker --env DOCKER_TLS_CERTDIR="" -p 2376:2376 docker:dind
+  398  docker run --name jenkins   --rm --detach   --network leeroy   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_TLS_VERIFY=0   -p 8080:8080 -p 50000:50000   -v jenkins-data:/var/jenkins_home   jenkins/jenkins:lts-jdk11
+  399  docker build -t myjenkins-blueocean:2.492.3-1 -f toasty/Dockerfile.blueocean 
+  400  docker build -t -f toasty/Dockerfile.blueocean myjenkins-blueocean:2.492.3-1
+  401  docker build -t -f toasty/Dockerfile.blueocean myjenkins-blueocean:2.492.3-1 .
+  402  history | grep build
+  403  docker build -f toasty/Dockerfile.blueocean -t myjenkins-blueocean .
+  404  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network leeroy   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean
+  405  time
+  406  date
+  407  man date
+  408  date hh
+  409  man date
+  410  date -I hh
+  411  date 'hh'
+  412  man date
+  413  date +"%H" 
+  414  sudo usermod -aG docker jenkins
+  415  docker
+  416  cd MDO2025_INO/ITE/GCL05/SM418114/
+  417  ls
+  418  git status
+  419  ls Sprawozdanie
+  420  ls Sprawozdanie2
+  421  git log
+  422  vim
+  423  vi Sprawozdanie1/README.md 
+  424  echo "# 1" > Sprawozdanie1/README.md 
+  425  vi Sprawozdanie1/README.md 
+  426  git status
+  427  vi Sprawozdanie2/README.md 
+  428  git add .
+  429  git status
+  430  git commit -m "SM418114 bluocean"
+  431  git push
+  432  git push --set-upstream origin SM418114
+  433  git status
+  434  git add .
+  435  git status
+  436  git commit -m "SM418114 screeny"
+  437  git push 
+  438  history
+  439  history -a
+  440  history 
+  441  ls
+  442  cd Sprawozdanie1
+  443  history > history.txt
