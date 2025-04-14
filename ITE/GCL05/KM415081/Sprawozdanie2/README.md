@@ -38,6 +38,12 @@ Uruchomiono jenkins w przeglądarce na porcie 8080 dzięki odpowiedniej konfigur
 ## Utworzenie i uruchomienie projektów
 ### Projekt 1 - wyświetlenie uname
 ```sh
+uname -a
+```
+![Opis obrazka](lab5_screenshots/3.png)
+
+### Projekt 2 - błąd jeśli godzina jest nieparzysta
+```sh
 #!/bin/bash
 
 HOUR=$(date +%H)
@@ -50,12 +56,6 @@ else
     echo "OK: Godzina ($HOUR) jest parzysta."
     exit 0
 fi
-```
-![Opis obrazka](lab5_screenshots/3.png)
-
-### Projekt 2 - błąd jeśli godzina jest nieparzysta
-```sh
-uname -a
 ```
 ![Opis obrazka](lab5_screenshots/4.png)
 
