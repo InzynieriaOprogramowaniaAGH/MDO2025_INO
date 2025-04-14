@@ -1,3 +1,5 @@
+cleanWs()
+
 pipeline {
     agent {
         docker {
