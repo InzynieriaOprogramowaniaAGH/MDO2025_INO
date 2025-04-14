@@ -9,9 +9,9 @@
 ### Utworzenie i konfiguracja Jenkins
 Uruchomiono kontener DIND, zbudowano obraz jenkinsa przy użyciu Dockerfila podanego w dokumentacji, stworzono kontener
 
-![Opis obrazka](KM415081/Sprawozadnie1/lab4_screenshots/10.png)
+![Opis obrazka](Sprawozadnie1/lab4_screenshots/10.png)
 
-![Opis obrazka](KM415081/Sprawozadnie1/lab4_screenshots/11.png)
+![Opis obrazka](Sprawozadnie1/lab4_screenshots/11.png)
 
 Dockerfile.jenkins
 ```sh
@@ -31,9 +31,9 @@ RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
 ```
 Uruchomiono jenkins w przeglądarce na porcie 8080 dzięki odpowiedniej konfiguracji kontenerów, odblokowano kodem z konsoli, utworzono konta admina i zainstalowano rekomendowane pluginy.
 
-![Opis obrazka](KM415081/Sprawozadnie1/lab4_screenshots/j1.png)
+![Opis obrazka](Sprawozadnie1/lab4_screenshots/j1.png)
 
-![Opis obrazka](KM415081/Sprawozadnie1/lab4_screenshots/j2.png)
+![Opis obrazka](Sprawozadnie1/lab4_screenshots/j2.png)
 
 ## Utworzenie i uruchomienie projektów
 ### Projekt 1 - wyświetlenie uname
