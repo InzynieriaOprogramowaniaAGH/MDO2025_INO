@@ -1,0 +1,5 @@
+FROM cjson-builder-image
+
+WORKDIR /root/rpmbuild/BUILD/cJSON/build
+
+CMD ["ctest", "--output-on-failure"]

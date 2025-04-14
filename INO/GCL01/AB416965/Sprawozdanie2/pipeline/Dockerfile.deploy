@@ -1,0 +1,7 @@
+FROM fedora:41
+
+COPY ../../../artifacts/cjson-1.7.15-1.x86_64.rpm /tmp/
+
+RUN dnf install -y /tmp/cjson-1.7.15-1.x86_64.rpm
+
+CMD ["ldd", "/usr/lib/libcjson.so"]

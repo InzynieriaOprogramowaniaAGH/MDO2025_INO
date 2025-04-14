@@ -1,0 +1,18 @@
+FROM fedora:41
+
+RUN dnf update -y && \
+    dnf install -y git cmake gcc gcc-c++ make rpm-build rpmdevtools
+
+RUN rpmdev-setuptree
+
+WORKDIR /root/rpmbuild/SOURCES
+
+RUN git clone https://github.com/DaveGamble/cJSON.git && \
+    tar czvf cjson.tar.gz cJSON && \
+    mv cjson.tar.gz /root/rpmbuild/SOURCES/
+
+COPY ../../../rpm/cjson.spec /root/rpmbuild/SPECS/
+
+WORKDIR /root/rpmbuild/SPECS
+
+RUN rpmbuild -ba cjson.spec
