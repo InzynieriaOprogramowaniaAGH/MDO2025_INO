@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+
+    environment {
+        BUILD_IMAGE = 'chalk-build'
+        TEST_IMAGE = 'chalk-test'
+        RUNTIME_IMAGE = 'chalk-runer'
+        WORK_DIR = 'MDO2025_INO/INO/GCL02/KM415588/Sprawozdanie_2'   // folder w repo przedmiotowym z plikami
+    }
+
+    stages {
+        stage('Clone repo przedmiotowe') {
+            steps {
+                dir('repo-przedmiotowe') {
+                    git url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git', branch: 'KM415588'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+
+            }
+        }
+
+        stage('Test') {
+            steps {
+
+            }
+        }
+
+        stage('Deploy / Smoke test') {
+            steps {
+
+            }
+        }
+
+        stage('Create ZIP archive') {
+            steps {
+
+            }
+        }
+
+        stage('Archive ZIP') {
+            steps {
+                archiveArtifacts artifacts: 
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Wszystko gotowe – ZIP dostępny w artefaktach.'
+        }
+        failure {
+            echo '❌ Coś poszło nie tak – sprawdź logi.'
+        }
+    }
+}
