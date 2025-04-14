@@ -92,6 +92,7 @@
     ```
 
     Sprawdzenie wersji Dockera
+
     ![Docker version](Lab2/docker_version.png)
 
 2. **Rejestracja w DockerHub**
@@ -102,7 +103,7 @@
 
     Zalogowano się na utworzone konto w Fedorze
 
-    ![Logowanie do Dockera](Lab2/docker_lohin.png)
+    ![Logowanie do Dockera](Lab2/docker_login.png)
 
 3. **Pobieranie obrazów Dockera**
 
@@ -118,14 +119,16 @@
 
     Pobrane obrazy
 
-    ![Pobrane obrazy](Lab2/doker_images.png)
+    ![Pobrane obrazy](Lab2/docker_images.png)
 
 4. **Uruchomienie kontenera BusyBox**
 
     Uruchomienie proste:
+
     ![BusyBox](Lab2/bb_działa.png)
 
     Uruchomienie w trybie interaktywnym:
+
     ![BusyBox inter](Lab2/bb_inter.png)
 
 
@@ -160,9 +163,11 @@
     ```
 
     Zbudowano obraz
+
     ![Ubuntu z Dockerfile](Lab2/repo_ubuntu.png)
 
     Uruchomiono kontener i sprawdzono repozytorium
+
     ![Ubuntu z repo](Lab2/repo.png)
 
 7. **Usuwanie kontenerów i obrazów**
