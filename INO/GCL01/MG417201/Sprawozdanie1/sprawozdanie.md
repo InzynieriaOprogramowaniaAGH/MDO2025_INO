@@ -700,8 +700,8 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
 - Przedstawienie przepustowości komunikacji
 
   <div align="center">
-    <img src="screens4/18.jpg" alt="creating volumes">
+    <img src="screens4/19.jpg" alt="creating volumes">
   </div>
 
-  
+
 ### **Instancja Jenkins**
