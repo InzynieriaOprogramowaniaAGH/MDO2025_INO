@@ -273,7 +273,7 @@ Uruchomienie kontenera (opcja `-v` umożliwia ustawić gdzie dane woluminu będ�
 
 Klonowanie repozytorium na wolumin z hosta:
 ![zdj21](screenshots/21.png)
-![zdj20](screenshots/22.png)
+![zdj20](screenshots/20.png)
 
 Budowanie wewnatrz kontenera:
 ![zdj23](screenshots/23.png)
