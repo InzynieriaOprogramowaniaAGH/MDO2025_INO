@@ -193,3 +193,143 @@
     - Obrazy są budowane dynamicznie z `Dockerfile.build` i `Dockerfile.test`
     - Pipeline kopiuje logi testów z wnętrza kontenera (`docker cp`)
     - Wymagane są możliwości Dockera, których `agent { docker }` nie zapewnia.
+   
+### Kompletny Pipeline CI/CD
+- Utworzono kompletny pipeline realizujący cykl **CI/CD** dla bibliotecji `cJSON`.
+- Pipeline dzieli się na pięć etapów:
+  - **Clone**:
+    - Klonowanie repozytorium przedmiotowego, w tym pliki: `Dockerfile.build`, `Dockerfile.test`, `Dockerfile.deploy` i `deploy.c`.
+  - **Build**:
+    - Budowa obrazu `Dockerfile.build`, zajmującego się klonowaniem repozytorium `cJSON`, kompilacją i utworzeniem pakietu instalacyjnego `.rpm`.
+    - Utworzenie katalogu do przechowywania artefaktów.
+    - Uruchomienie zbudowanego kontenera.
+    - Skopiowanie utworzonego pakietu instalacyjnego `.rpm` i usunięcie instancji kontenera.
+  - **Test**:
+    - Budowa obrazu `Dockerfile.test`, zajmującego się uruchomieniem testów.
+    - Utworzenie katalogu wynikowego dla logów.
+    - Uruchomiienie instancji kontenera.
+    - Kopia logów, usunięcie instancji kontenera.
+  - **Deploy**:
+    - Budowa obrazu `Dockerfile.deploy`, który instaluje `gcc` do weryfikacji działania pakietu instalacyjnego `.rpm`.
+    - Uruchomienie instancji kontenera.
+    - Skopiowanie pakietu instalacyjnego `.rpm` oraz źródłowego pliku testowego `deploy.c` do kontenera i instalacja pakietu.
+    - Kompilacja kodu testowego i usunięcie kontenera.
+  - **Print**
+    - Wydrukwowanie komunikatu potwierdzającego powodzenie pipeline'u.
+
+  - Pełna treść skryptu:
+    ```
+    pipeline {
+        agent any
+    
+        environment {
+            WORKDIR = "INO/GCL02/FR417273/Sprawozdanie2/coursework/pipeline"
+        }
+    
+        stages {
+            stage('Clone') {
+                steps {
+                    git branch: 'FR417273', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                }
+            }
+    
+            stage('Build') {
+                steps {
+                    dir("${WORKDIR}") {
+                        script {
+                            // Build building image
+                            def buildImage = docker.build('cj-build', '-f Dockerfile.build .')
+                            
+                            // Create dir for artifacts
+                            sh 'mkdir -p artifacts'
+                            
+                            // Run build container
+                            def buildContainer = sh(script: "docker create cj-build", returnStdout: true).trim()
+                            
+                            // Copy artifacts & remove container
+                            sh "docker cp ${buildContainer}:/app/cJSON/build/output/cjson.rpm artifacts/cjson.rpm"
+                            sh "docker rm ${buildContainer}"
+                        }
+                    }
+                }
+            }
+    
+            stage('Test') {
+                steps {
+                    dir("${WORKDIR}") {
+                        script {
+                            // Build test container
+                            def testImage = docker.build('cj-test', '-f Dockerfile.test .')
+                            
+                            // Create logs dir
+                            sh 'mkdir -p logs'
+                            
+                            // Run test container
+                            def testContainer = sh(script: "docker create cj-test", returnStdout: true).trim()
+                            
+                            // Copy test results & remove the container
+                            sh "docker cp ${testContainer}:/app/cJSON/logs/test_results.log logs/test_results.log"
+                            sh "docker rm ${testContainer}"
+                        }
+                    }
+                }
+            }
+    
+            stage('Deploy') {
+                steps {
+                    dir("${WORKDIR}") {
+                        script {
+                            // Build deploy container
+                            def deployImage = docker.build('cj-deploy', '-f Dockerfile.deploy .')
+    
+                            // Run container
+                            def deployContainer = sh(script: "docker create cj-deploy", returnStdout: true).trim()
+    
+                            // Copy .rpm and deploy.c into the container and install
+                            sh "docker cp artifacts/cjson.rpm ${deployContainer}:/tmp/cjson.rpm"
+                            sh "docker cp deploy.c ${deployContainer}:/app/deploy.c"
+                            sh "docker start ${deployContainer}"
+                            sh "docker exec ${deployContainer} dnf install -y /tmp/cjson.rpm"
+    
+                            // Compile deploy.c and verify lib's compilation
+                            sh "docker exec ${deployContainer} gcc /app/deploy.c -lcjson -o /tmp/deploy_test"
+                            sh "docker exec ${deployContainer} /tmp/deploy_test"
+    
+                            // Remove the container
+                            sh "docker rm -f ${deployContainer}"
+                        }
+                    }
+                }
+            }
+    
+            stage('Print') {
+                steps {
+                    echo 'Pipeline finished succesfully.'
+                }
+            }
+        }
+    
+        post {
+            always {
+                archiveArtifacts artifacts: "${WORKDIR}/artifacts/cjson.rpm", allowEmptyArchive: true
+                archiveArtifacts artifacts: "${WORKDIR}/logs/test_results.log", allowEmptyArchive: true
+            }
+        }
+    }
+
+    ```
+- Z powodzeniem udało się wykonać cały pipeline. [Wydruk z konsoli](coursework/cJSON_console.txt).
+- *Zrzut ekranu powodzenia z uzyskanymi artefaktami*:
+
+  ![Zrzut ekranu powodzenia](media/m11_succ.png)
+- Udało się wejść do kontenera `jenkins-blueocen` poleceniem: `docker exec -it jenkins-blueocean bash`.
+- W kontenerze odnaleziono utworzony artefakt oraz odkryto jego pelną ścieżke poleceniem: `readlink -f cjson.rpm`.
+  - *Zrzut erkanu ze ścieżką*:
+ 
+    ![Zrzut ekranu ze ścieżką](media/m12_path.png)
+- Artefakt skopiowano na hosta poleceniem: `docker cp jenkins-blueocean:/var/jenkins_home/workspace/cJSON/INO/GCL02/FR417273/Sprawozdanie2/coursework/pipeline/artifacts/cjson.rpm .`.
+- Zweryfikowano, że pakiet instalacyjny nie jest pusty.
+  - *Zrzut ekranu zawartości pakietu*:
+
+    ![Zrzut ekranu zawartości pakietu](media/m13_contents.png)
+- Uzyskany artefkat `cjson.rpm` został znastępnie zapisany w repozytorium przedmiotowym: [cjson.rpm](coursework/cjson.rpm).
