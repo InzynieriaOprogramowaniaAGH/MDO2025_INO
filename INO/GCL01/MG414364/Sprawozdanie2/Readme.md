@@ -3,7 +3,7 @@
 Uruchomiłem docker `dind` z instrukcji [Jenskins](https://www.jenkins.io/doc/book/installing/docker/):
 ![alt text](<Screenshot from 2025-03-31 17-30-50.png>)
 ```shell
-docker run   --name jenkins-docker   --rm   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+docker run   --name jenkins-docker  --detach --rm   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
 ```
 
 ```shell
@@ -57,5 +57,3 @@ Uruchomienie dockera z Jenkina\
 
 Pliki pobrane przez Jenkinsa:\
 ![alt text](image-3.png)
-
-[star umlhttps://staruml.io/](https://staruml.io/)
