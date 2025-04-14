@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    ports:
+      - "8080:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_HOST=tcp://dind:2375
+      - DOCKER_TLS_CERTDIR=
+    depends_on:
+      - dind
+
+  dind:
+    image: docker:dind
+    privileged: true
+    environment:
+      - DOCKER_TLS_CERTDIR=
+    volumes:
+      - dind-storage:/var/lib/docker
+
+volumes:
+  jenkins_home:
+  dind-storage:
