@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Klonowanie repo') { 
+            steps {
+                git branch: 'AB416965', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Budowanie obrazu buildera') {
+            steps {
+                dir ("INO/GCL01/AB416965/Sprawozdanie2/dockerfiles/cjson")
+                {
+                    script {
+                        docker.build('cjson-builder-image', '-f Dockerfile.build .')
+                    }
+                }
+            }
+        }
+
+        stage('Budowanie obrazu testowego') {
+            steps {
+                dir ("INO/GCL01/AB416965/Sprawozdanie2/dockerfiles/cjson")
+                {
+                    script {
+                        docker.build('cjson-test-image', '-f Dockerfile.test .')
+                    }
+                }
+            }
+        }
+
+        stage('Testy') {
+            steps {
+                dir ("INO/GCL01/AB416965/Sprawozdanie2")
+                {
+                    sh "mkdir -p artifacts"
+
+                    sh """
+                        docker run --rm cjson-test-image | tee artifacts/test.log
+                    """
+                }    
+            }
+        }
+
+        stage('Publikacja logów z testów') {
+            steps {
+                archiveArtifacts artifacts: 'INO/GCL01/AB416965/Sprawozdanie2/artifacts/test.log', fingerprint: true
+            }
+        }
+    }
+}
