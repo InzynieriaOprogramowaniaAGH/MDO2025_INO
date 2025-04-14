@@ -27,3 +27,12 @@
     git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
     ```
     ![Pobieranie SSH](Lab1/git_clone_ssh.png)
+
+2. **Konfiguracja gałęzi w Git**
+
+    Przełączono się na gałąź main, a potem na gałąź grupy 7
+    Utworzono gałąź o nazwie 'TS416767':
+    ```bash
+    git checkout -b TS416767
+    ```
+    [Git branch](Lab1/git_branch.png)
