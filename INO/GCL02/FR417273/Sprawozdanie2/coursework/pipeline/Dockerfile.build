@@ -20,7 +20,7 @@ RUN make
 RUN mkdir -p /tmp/cjson-install/usr/include \
              /tmp/cjson-install/usr/lib && \
     cp cJSON.h cJSON_Utils.h /tmp/cjson-install/usr/include/ && \
-    cp libcjson* libcjson*.a.so /tmp/cjson-install/usr/lib/
+    cp libcjson*.so libcjson*.a /tmp/cjson-install/usr/lib/
 
 # Create a directory for final .rpm package
 RUN mkdir -p /app/cJSON/build/output
