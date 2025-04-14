@@ -333,3 +333,9 @@
 
     ![Zrzut ekranu zawartości pakietu](media/m13_contents.png)
 - Uzyskany artefkat `cjson.rpm` został znastępnie zapisany w repozytorium przedmiotowym: [cjson.rpm](coursework/cjson.rpm).
+- Utworzono plik `Jenkinsfile`, który został wrzucony do repozytorium przedmiotowego. Jego zawartość została zmodyfikowana o usunięcie kroku **Clone**: [Jenkinsfile](coursework/pipeline/Jenkinsfile).
+- Utworzono nowy **Pipeline**: *Pipeline from SCM*, który automatycznie klonuje repozytorium, odczytuje plik `Jenkinsfile` i wykonuje pozostałe kroki CI/CD.
+- Z powodzeniem udało się przejść przez cały Pipeline. [Wydruk konsoli](coursework/cjson_scm_console.txt)
+  - *Zrzut ekranu potwierdzający powodzenie pipeline'u*:
+ 
+    ![Zrzut ekranu potwierdzający powodzenie pipeline'u](media/m14_scm.png)
