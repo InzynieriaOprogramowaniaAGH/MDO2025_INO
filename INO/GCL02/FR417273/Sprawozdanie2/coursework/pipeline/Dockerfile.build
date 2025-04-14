@@ -17,7 +17,7 @@ WORKDIR /app/cJSON
 RUN make
 
 # Prepare file structure for rpm
-RUN mkdir -p /tmp/cjson-install/usr/include \
+RUN mkdir -p /tmp/cjson-install/usr/include/cjson \
              /tmp/cjson-install/usr/lib && \
     cp cJSON.h cJSON_Utils.h /tmp/cjson-install/usr/include/cjson && \
     cp libcjson*.so libcjson*.a /tmp/cjson-install/usr/lib
