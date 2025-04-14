@@ -74,10 +74,11 @@
     ![Hook test](Lab1/hook_test.png)
 
 4. **Dodanie zrzutów ekranu i utworzenie sprawozdania**
+
     Dodano zrzuty ekranu do katalogu 'Lab1'
-    
+
     Stworzono sprawozdanie i przesłano je do repozytorium zdalnego
 
     ![Sprawozdanie](Lab1/sprawozdanie.png)
 
-##Lab 2
+## Lab 2
