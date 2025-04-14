@@ -1,0 +1,14 @@
+pipeline {
+    agent {
+        docker {
+            image 'debian:bullseye'
+        }
+    }
+    stages {
+        stage('Test Docker') {
+            steps {
+                sh 'echo "Docker działa!"'
+            }
+        }
+    }
+}
