@@ -562,7 +562,7 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
 ***
 ## Laboratorium 4
 
-**1.  Zachowywanie stanu**
+### **Zachowywanie stanu**
 
 - Aby utworzyć woluminy wyjściowy i wejściowy należy użyć polecenia:
   - `docker volume create redis_input`
@@ -629,3 +629,34 @@ Powyższy zrzut ekranu przedstawia polecenia użyte w celu dodania pliku _**Dock
   <div align="center">
     <img src="screens4/11.jpg" alt="creating volumes">
   </div>
+
+- Istnieje możliwość wykonania wszystkich powyższych kroków w pliku **_Dockerfile_** z użyciem `RUN --mount`, aby to zrobić należy:
+
+  - Utworzyć woluminy wejściowy i wyjściowy
+  - Sklonować redis na wolumin wejściowy
+  - A następnie uruchomić build poniższego pliku Dockerfile:
+
+  ```Dockerfile
+  FROM ubuntu:latest AS redis_build
+
+  RUN apt update && apt install -y \
+      build-essential tcl
+
+  WORKDIR /build
+
+  RUN --mount=type=volume,source=redis_input,target=/mnt/input \
+      --mount=type=volume,source=redis_output,target=/mnt/output \
+      cd /mnt/input/redis && \
+      make && \
+      cp src/redis-server src/redis-cli /mnt/output/
+  ```
+
+### **Eksponowanie portu**
+
+- Aby uruchomić serwer iperf3 na kontenerze Docker można uruchomić go w obrazie `networkstatic/iperf3`
+
+  <div align="center">
+    <img src="screens4/12.jpg" alt="creating volumes">
+  </div>
+
+- 
