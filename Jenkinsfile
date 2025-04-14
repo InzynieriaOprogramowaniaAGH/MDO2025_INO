@@ -2,6 +2,7 @@ pipeline {
     agent {
         docker {
             image 'debian:bullseye'
+            args '-u root --privileged'
         }
     }
 
