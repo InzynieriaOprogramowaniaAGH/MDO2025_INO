@@ -126,3 +126,26 @@ sudo docker rmi $(sudo docker images -q)
 ```
 
 ![wyczyszczone obrazy](S2_pngs/rmi.JPG)
+
+# Sprawozdanie 3
+
+Pobrano repo `tldr`. Projekt ma na celu zapewnienie prostszego i przystępniejszego manuala niż linuksowy. Jest na licencji MIT oraz zawiera testy jednostkowe (npm).
+
+![tldr]()
+
+Pobrano wymagane zależności:
+
+```bash
+npm ci
+```
+
+![dependencies]()
+
+Uruchomiono testy jednostkowe:
+
+```bash
+npm test
+```
+
+![tests]()
+
