@@ -317,3 +317,6 @@ Po wpisaniu adresu hosta w przeglądarkę trafiam na stronę:
 
 Po wprowadzeniu wymaganego hasła z plików przeszłam instalację i tworzenie konta Jenkins instalując odpowiednie wtyczki:
 ![zdj39](screenshots/39.png)
+
+--- 
+Do pomocy korzystałam ze sztucznej inteligencji takej jak `Chat GPT`, `DeepSeak`, oraz `Perplexity.ai`, każdorazowo weryfikując informacje w róznych źródłach.
