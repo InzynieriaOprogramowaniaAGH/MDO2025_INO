@@ -18,4 +18,3 @@ if ! grep -qE "$pattern" "$commit_msg_file"; then
   echo "Commit message musi zaczynać się od 'MM414332'"
   exit 1
 fi
-<img width="459" alt="image" src="https://github.com/user-attachments/assets/1cbd9532-79ca-4e29-bdb0-f9514ebc8677" />
