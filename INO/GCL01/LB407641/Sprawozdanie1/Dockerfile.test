@@ -1,0 +1,6 @@
+FROM node:18
+
+WORKDIR /app
+COPY --from=build /app /app
+
+RUN make test

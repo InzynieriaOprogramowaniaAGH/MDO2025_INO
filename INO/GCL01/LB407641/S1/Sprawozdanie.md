@@ -1,8 +1,8 @@
-Sprawozdanie nr 1
+# Sprawozdanie nr 1
 
 Na zainstalowanej maszynie wirtualnej Fedora zainstalowano klienta Git i obsługę kluczy SSH
 
-![Fedora w Virtual Box](L1.JPG)
+![Fedora w Virtual Box](S1_pngs/L1.JPG)
 
 ```bash
 sudo dnf install git
@@ -19,17 +19,17 @@ Utworzono dwa klucze SSH przy pomocy komendy i skonfigurowano je jako metodę do
 ssh-keygen -t ed25519 -C "2013burl01@gmail.com"
 ```
 
-![Klucze SSH](SSHs.JPG)
+![Klucze SSH](S1_pngs/SSHs.JPG)
 
 Rozpoczęto pracę na gałęzi main/GCL01/LB407641:
 
-![inicjały + indeks branch](branch.JPG)
+![inicjały + indeks branch](S1_pngs/branch.JPG)
 
 Utworzono katalog w grupie GCL01:
 ```bash
 mkdir LB407641
 ```
-![katalog LB407641](katalog.JPG)
+![katalog LB407641](S1_pngs/katalog.JPG)
 
 Stworzono Git hooka, który weryfikuje commit message (commit ma rozpoczynać się od inicjałów oraz numeru indeksu):
 
@@ -46,3 +46,9 @@ case "$commit_message" in
 esac
 ```
 
+# Zajęcia 2
+Zainstalowano Docker na Fedorze
+
+```bash
+sudo dnf -y install dnf-plugins-core
+```

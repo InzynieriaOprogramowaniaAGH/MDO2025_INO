@@ -131,7 +131,9 @@ sudo docker rmi $(sudo docker images -q)
 
 Pobrano repo `tldr`. Projekt ma na celu zapewnienie prostszego i przystępniejszego manuala niż linuksowy. Jest na licencji MIT oraz zawiera testy jednostkowe (npm).
 
-![tldr]()
+![clone](S3_pngs/git_clone.JPG)
+
+![tldr](S3_pngs/catalogs.JPG)
 
 Pobrano wymagane zależności:
 
@@ -139,7 +141,7 @@ Pobrano wymagane zależności:
 npm ci
 ```
 
-![dependencies]()
+![dependencies](S3_pngs/dependencies.JPG)
 
 Uruchomiono testy jednostkowe:
 
@@ -147,5 +149,104 @@ Uruchomiono testy jednostkowe:
 npm test
 ```
 
-![tests]()
+![tests](S3_pngs/tests.JPG)
 
+Docker build:
+
+![docker->build](S3_pngs/docker_build.JPG)
+
+Uruchomienie dockera:
+
+![docker](S3_pngs/docker.JPG)
+
+Te same czynności w dockerze:
+
+![docker clone](S3_pngs/docker_clone.JPG)
+
+Instalowanie zależności
+
+![docker install](S3_pngs/docker_install.JPG)
+
+Plik Dockerfile (wszystkie kroki do builda):
+
+```bash
+FROM node:18
+
+WORKDIR /app
+RUN apt update && apt install -y make git
+
+RUN git clone https://github.com/tldr-pages/tldr.git .
+RUN npm install
+RUN npm markdown
+```
+
+Plik Dockerfile.test:
+
+```bash
+FROM node:18
+
+WORKDIR /app
+COPY --from=build /app /app
+
+RUN npm test
+```
+
+# Sprawozdanie 4
+
+Stworzono woluminy - wejściowy/wyjściowy:
+
+```bash
+docker volume create input_volume
+docker volume create output_volume
+```
+
+![volumes](S4_pngs/in_out.JPG)
+
+oraz kontener bazowy:
+
+```bash
+docker run -it --name base_container -v input_volume:\input -v output_volume:\output ubuntu:22.04
+```
+
+![volumes](S4_pngs/base_container.JPG)
+
+instalacja wymaganych zależności:
+
+```bash
+apt update && apt install -y build-essential
+```
+
+![dependencies](S4_pngs/docker_dependencies.JPG)
+
+klonowanie repo spoza kontrolera na wolumin wejściowy:
+
+![clone](S4_pngs/volume_clone.JPG)
+
+
+# .....
+
+# Eksponowanie portu (iperf3)
+
+```bash
+sudo docker run -it --rm --name iperf-server-2 -p 5201:5201 networkstatic/iperf3 -s
+```
+
+![create](S4_pngs/iperf3_ip.JPG)
+
+![listening](S4_pngs/server.JPG)
+
+Połączono się spoza kontenera:
+
+![connection](S4_pngs/connection.JPG)
+
+Stworzono sieć:
+
+```bash
+docker network create --driver bridge custom_net
+```
+
+![bridge](S4_pngs/bridge.JPG)
+
+Uruchomiono serwer i klient w tej samej sieci:
+
+![C-S](S4_pngs/server_client.JPG)
