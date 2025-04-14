@@ -4,3 +4,5 @@ RUN dnf install -y gcc && dnf clean all
 
 WORKDIR /app
 
+CMD ["tail", "-f", "/dev/null"]
+
