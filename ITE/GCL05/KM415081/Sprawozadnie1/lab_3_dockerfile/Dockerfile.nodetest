@@ -1,3 +1,2 @@
-FROM dummy-test
-
+FROM my_node_build
 CMD ["npm", "run", "test"]
