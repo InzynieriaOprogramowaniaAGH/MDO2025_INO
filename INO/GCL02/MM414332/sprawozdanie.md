@@ -1,6 +1,6 @@
-Sprawozdanie 1
+### Sprawozdanie 1
 
-Laboratorium1
+### Laboratorium 1
 Po zainstalowaniu koniecznego oprogramowania czyli w moim przypadku Ubuntu Server na VirtualBox przystąpiłem do wykonywania zadania.
 Skopiowałem repozytorium za pomocą HTTPS, przełączyłem się na gałąź main, następnie na GCL02, czyli na brancha mojej grupy: 
 
@@ -15,7 +15,6 @@ Następnym krokiem, który wykonałem było utworzenie katalogu z moimi inicjał
 
 <img width="385" alt="image" src="https://github.com/user-attachments/assets/818528dd-3a71-4b84-b241-4e9f6ded2001" />
 
- 
 Jego treść:
 
 <img width="398" alt="image" src="https://github.com/user-attachments/assets/ff2f8d1a-bd48-4ec0-b094-2012af960a99" />
@@ -30,9 +29,7 @@ Po wykonaniu poleceń utworzyłem plik sprawozdanie.md, gdzie streściłem wykon
 <img width="473" alt="image" src="https://github.com/user-attachments/assets/9a052802-3846-4b50-825a-3adcbd8a2e52" />
 
  
-
-
-Laboratorium 2
+### Laboratorium 2
 W pierwszym kroku drugiej instrukcji pobrałem repozytorium z oficjalnej dokumantecji Dockera:
 
 <img width="459" alt="image" src="https://github.com/user-attachments/assets/80f35690-4870-46b4-915a-69d52a26e84d" />
@@ -94,7 +91,7 @@ Oraz obrazy:
 <img width="452" alt="image" src="https://github.com/user-attachments/assets/ef34fad6-73ea-43f0-9ce3-42d070ff0fb5" />
 
 
-Laboratorium 3
+### Laboratorium 3
 Pracę rozpocząłem od sklonowania wybranego repozytorium, zainstalowałem npm:
  
 <img width="452" alt="image" src="https://github.com/user-attachments/assets/ea66dd27-2ccb-4e03-88e2-aae11450e7b2" />
@@ -141,7 +138,7 @@ Gdyby projekt miał być publikowany jako kontener, trzeba by go najpierw oczyś
 Lepszym rozwiązaniem byłoby wypuszczenie gotowej paczki, np. jako biblioteka na npm. Można to zrobić w dodatkowym kroku, np. w osobnym kontenerze.
 
 
-Laboratorium 4.
+### Laboratorium 4.
 Pierwszym krokiem, który wykonałem jest utworzenie dwóch woluminów:
  
 <img width="452" alt="image" src="https://github.com/user-attachments/assets/e06a629b-cb81-471f-935b-2133e5927ecf" />
@@ -218,6 +215,7 @@ W ostatnim kroku połączyłem się z Jenkinsem:
 Zalogowałem się:
  
  <img width="423" alt="image" src="https://github.com/user-attachments/assets/58f4c940-3d5d-4328-a34b-24469a9331b4" />
+ 
 
 <img width="452" alt="image" src="https://github.com/user-attachments/assets/0130f743-5cf5-4666-acc6-7d0123796e4d" />
 
