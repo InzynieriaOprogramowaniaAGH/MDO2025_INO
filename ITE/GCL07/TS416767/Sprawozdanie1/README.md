@@ -37,3 +37,32 @@
     git checkout -b TS416767
     ```
     ![Git branch](Lab1/git_branch.png)
+
+3. **Tworzenie katalogu i githooka**
+
+    Utworzono katalog w /ITE/GCL07
+    ```bash
+    mkdir TS416767
+    ```
+
+    ![Katalog roboczy](Lab1/katalog.png)
+
+    Napisano hooka commit-msg do walidacji prefiksu w commitach
+    ```bash
+    #!/bin/bash
+    COMMIT_MSG_FILE=$1
+    COMMIT_MSG=$(head -n 1 "$COMMIT_MSG_FILE")
+
+    if [[ ! "$COMMIT_MSG" =~ ^TS416767 ]]; then
+        echo "ERROR: Każdy commit MUSI zaczynać się od 'TS416767'!!!"
+        exit 1
+    fi
+    exit 0		
+    ```
+
+    Umieszczono go w odpowiednim katalogu
+    ![Hook w folderze](!Lab1/hook.png)
+
+    Przetestowano czy hook działa
+    ![Hook test](!Lab1/hook_test.png)
+
