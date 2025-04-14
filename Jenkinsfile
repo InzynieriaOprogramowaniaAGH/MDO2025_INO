@@ -1,5 +1,3 @@
-cleanWs()
-
 pipeline {
     agent {
         docker {
@@ -11,6 +9,7 @@ pipeline {
     stages {
         stage('Install dependencies') {
             steps {
+                cleanWs()
                 sh '''
                     apt update
                     apt install -y build-essential autotools-dev automake libtool git
