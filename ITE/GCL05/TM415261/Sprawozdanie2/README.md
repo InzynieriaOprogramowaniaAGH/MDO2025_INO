@@ -298,7 +298,7 @@ Dostępne są wszystkie opublikowane wersje obrazu:
 
 #### Ponowne uruchomienie `pipeline`'u
 
-Ponowne uruchomienie `pipeline`'u ponownie zakończyło się sukcesem. Dowodem na to, że pracował na najnowszym (a nie *cacheowanym*) kodzie jest bardzo zbliżony czas wykonania obydwu `pipeline`'ów:
+Ponowne uruchomienie `pipeline`'u ponownie zakończyło się sukcesem. Dowodem na to, że pracował na najnowszym (a nie *cache'owanym*) kodzie jest bardzo zbliżony czas wykonania obydwu `pipeline`'ów:
 
 ![ss](./screenshots/ss21.png)
 
