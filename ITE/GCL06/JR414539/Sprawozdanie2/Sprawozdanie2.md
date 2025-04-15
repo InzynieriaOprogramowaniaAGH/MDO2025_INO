@@ -205,6 +205,36 @@ pipeline {
 
 ---
 
+# **Opis celu (diagramy UML - aktywności oraz wdrożeniowy)**
+
+Na końcu sprawozdania porównam czy zrobione przeze diagramy na początku dobrze przedstawiły całokształt projektu.
+
+- Wymagania wstępne środowiska:
+
+  - Ubuntu Server 22.04 z Dockerem
+
+  - Jenkins uruchomiony w kontenerze Docker (jenkins/jenkins)
+
+  - Kontener `docker:dind` (Docker-in-Docker) jako backend
+
+  - Skonfigurowana sieć Docker (bridge) o nazwie `jenkins`
+
+  - Jenkins pipeline z dostępem do repozytorium GitHub (gałąź JR414539)
+
+  - Plik Dockerfile.build w katalogu: ITE/GCL06/JR414539/Sprawozdanie1 lub ITE/GCL06/JR414539/Sprawozdanie2
+
+  - Możliwość zbudowania obrazu `wget-jenkins-build` w Jenkinsie
+
+- Diagram aktywności:
+
+![Zrzut ekranu – 12](zrzuty_ekranu_sprawozdanie_2/21.png)
+
+- Diagram wdrożeniowy:
+
+![Zrzut ekranu – 12](zrzuty_ekranu_sprawozdanie_2/22.png)
+
+---
+
 # **Kompletny Pipeline CI/CD - projekt wget**
 
 - Uznałem, że lepiej będzie opisać już cały Pipeline. W szczególności, że udało mi się zrobić już kroki deploy oraz publish. 
@@ -853,6 +883,9 @@ pipeline {
 - ✔ Zdecydowano, czy jest potrzebny fork repozytorium
   - → Nie wykonano forka – repozytorium przedmiotowe MDO2025_INO posiada uprawnienia do pushowania gałęzi osobistych.
 
+- ✔ Stworzono diagram UML zawierający planowany proces CI/CD
+  - → Stworzono diagram aktywności oraz diagram wdrożeniowy w Visual Paradigm Community Edition.
+
 - ✔ Wybrano kontener bazowy lub stworzono odpowiedni kontener wstępny
   - → Jako bazę użyto ubuntu:22.04, uzupełniono o narzędzia do budowy (autotools, checkinstall, itp.).
 
@@ -931,6 +964,73 @@ pipeline {
 
 - ✔ Ponowne uruchomienie pipeline’u pracuje na świeżym kodzie
   - → Każde uruchomienie zaczyna od git checkout branch JR414539, a Dockerfile.build klonuje źródła wget z GitHub. Nie korzystamy z cache, dzięki czemu budujemy zawsze aktualny stan.
+
+- ✔ Zweryfikowano zgodność UML z pipeline
+  - → Diagramy, które zrobiłem na początku niestety nie oddały dobrze całokształtu mojego projektu, szczególnie diagram aktywności (nie wiedziałem wtedy za bardzo jak publish zorbić itd). Opiszę tutaj co bym zmienił teraz w tych diagramach:
+
+  - Diagram aktywności:
+
+    - Przede wszystkim brakuje dokładniejszego rozbicia:
+
+      - Po Build docker image powinno być np. jeszcze:
+
+        - docker create
+
+        - docker cp wget.deb
+
+        - docker rm
+
+        - docker build deploy
+
+        - docker run deploy
+
+        - docker build test
+
+        - docker run test
+
+    - Dodałbym jeszcze oczywiście Publish:
+
+      - Kopiowanie .deb
+
+      - Budowa runtime image
+
+      - Odpalenie runtime i sprawdzenie wget
+
+  - Diagram wdrożeniowy:
+
+    - Na pewno brakuje reszty obrazów: 
+
+      - wget-jenkins-build
+
+      - wget-deploy-test
+
+      - wget-tester
+
+      - wget-runtime
+
+    - Można by było jeszcze pokazać:
+
+      - Jenkins korzysta z Dockerfile.build, ale potem:
+
+        - Tworzy plik wget.deb
+
+        - Buduje deploy-image
+
+        - Buduje test-image
+
+        - Buduje runtime-image
+
+  - Na koniec, przy GitHubie dobrze by było napisać, że Jenkins klonuje cały projekt (nie tylko Dockerfile.build).
+
+  Udało mi się tak poprawić te diagramy:
+
+  - Diagram aktywności:
+
+  ![Zrzut ekranu – 21](zrzuty_ekranu_sprawozdanie_2/24.png)
+
+  - Diagram wdrożeniowy:
+
+  ![Zrzut ekranu – 22](zrzuty_ekranu_sprawozdanie_2/23.png)
 
 ---
 
