@@ -1,0 +1,4 @@
+FROM rust:1.75-slim
+
+COPY --from=bat_builder /usr/src/bat/target/release/bat /usr/local/bin/bat
+CMD ["sh", "-c", "bat /vol/bat_in/in.txt /vol/bat_in/in2.txt > /vol/bat_out/out.txt"]
