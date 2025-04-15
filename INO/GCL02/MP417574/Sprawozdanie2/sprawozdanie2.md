@@ -333,6 +333,13 @@ Po utworzenie nowego pipeline o nazwie 'cJSON_MP417574' wybrałam opcję 'Pipeli
 oraz uruchomiam pipeline.
 Wyniki:
 
+![projekt_cJSON_wynik](IMG5/cJSON_wynik.png)
+
+![projekt_cJSON_wynik](IMG5/cJSON_wynik2.png)
+
+[Zobacz logi - test ](JenkinsLogs/cjson_test.log)
+
+[Zobacz logi - deploy](JenkinsLogs/cjson_deploy.log)
 
 ####Podsumowanie
 
