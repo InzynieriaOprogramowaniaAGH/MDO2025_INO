@@ -1,0 +1,2 @@
+FROM node_build_v1
+RUN npm test

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+COMMIT_MESSAGE=$(cat "$1")
+
+if [[  ! $COMMIT_MESSAGE =~ ^KP414342 ]]; then
+    echo "ERROR: Commit message does not start with KP414342"
+    exit 1
+fi
+
+exit 0
