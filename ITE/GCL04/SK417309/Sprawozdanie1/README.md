@@ -86,7 +86,7 @@ Następnie sprawdziłem wszystkie uruchomione obrazy Dockera i wszystkie wyczyś
 
 ## Lab 3
 ### Wybór oprogramowania
-Do pracy na zajęciach wybrałem własne repozytorium z aplikacją napisaną w języku Java (wersja 17+) wraz z jej środowiskiem Makefile, którym w tym przypadku jest Maven. Sklonowałem to repozytorium, a następnie przeprowadziłem build oraz test programu za pomocą komend  
+Do pracy na zajęciach wybrałem własne repozytorium z aplikacją napisaną w języku Java (wersja 17+). Do budowania projektu użyłem Mavena jako systemu zarządzania zależnościami i automatyzacji kompilacji. Sklonowałem to repozytorium, a następnie przeprowadziłem build oraz test programu za pomocą komend  
 `mvn clean package`  
 `mvn test`.
 
@@ -154,7 +154,7 @@ Najpierw stworzyłem dwa puste woluminy na dane wejściowe i wyjściowe:
 Następnie wykorzystałem tymczasowy kontener pomocniczy, na którym jest zainstalowany git.
 ![temp-container](git-alpine.png)
 
-Następnie przygotowałem Dockerfile do budowy kontenera na podstawie lekkiej wersji eclipse-temurin-alpine, która nie ma zainstalowanego gita. Aby móc na nim pracować, pobrałem na niego środowisko Makefile maven. Uruchomiłem kontener w trybie interaktywnym, sprawdziłem zawartość oraz czy maven się poprawnie zainstalował:
+Następnie przygotowałem Dockerfile do budowy kontenera na podstawie lekkiej wersji eclipse-temurin-alpine, która nie ma zainstalowanego gita. Aby móc na nim pracować, pobrałem na niego środowisko Makefile maven. Uruchomiłem kontener w trybie interaktywnym, sprawdziłem zawartość oraz poprawność instalacji Mavena:
 ![nogitconatiner](no-git-kontener.png)
 Na kontener skopiowałem repozytorium z woluminu wejściowego, a paczkę JAR skopiowałem na wolumin wyjściowy.
 ![build-start](build-poczatek.png)

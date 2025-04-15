@@ -1,6 +1,6 @@
 ARG BUILDER_VERSION
 
-FROM tm-build:${BUILDER_VERSION} AS test
+FROM tm-build AS test
 
 WORKDIR /app
 
