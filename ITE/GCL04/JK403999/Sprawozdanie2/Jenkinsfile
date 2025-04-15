@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                sh "rm -rf MDO2025_INO"
+                sh "git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git"
+                dir("MDO2025_INO/ITE/GCL04/JK403999/Sprawozdanie1") { sh "git checkout JK403999" }
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Build'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Test'
+            }
+        }
+    }
+}
