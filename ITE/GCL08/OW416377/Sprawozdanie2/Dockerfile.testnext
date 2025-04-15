@@ -1,0 +1,2 @@
+FROM next-build AS next-test
+RUN npm run jest:test
