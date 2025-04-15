@@ -6,6 +6,11 @@ COPY --from=next-build /Next.js-Boilerplate/.next .next
 COPY --from=next-build /Next.js-Boilerplate/public public
 COPY --from=next-build /Next.js-Boilerplate/package.json .
 COPY --from=next-build /Next.js-Boilerplate/node_modules node_modules
+COPY --from=next-build /Next.js-Boilerplate/next.config.ts .
+COPY --from=next-build /Next.js-Boilerplate/tsconfig.json .
+COPY --from=next-build /Next.js-Boilerplate/tailwind.config.ts .
+
+
 
 ENV PORT=3000
 
