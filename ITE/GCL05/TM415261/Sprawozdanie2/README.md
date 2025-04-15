@@ -299,5 +299,7 @@ Dostępne są wszystkie opublikowane wersje:
 #### Próba pobrania i uruchomienia obrazu:
 
 Spróbowałem pobrać obraz i uruchomić na jego podstawie kontener. Całość zakończyła się sukcesem.
+
 ![ss](./screenshots/ss19.png)
+
 ![ss](./screenshots/ss20.png)
