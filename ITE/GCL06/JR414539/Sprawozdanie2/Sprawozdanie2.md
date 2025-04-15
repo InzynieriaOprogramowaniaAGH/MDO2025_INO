@@ -195,13 +195,13 @@ pipeline {
 
 ![Zrzut ekranu – 11](zrzuty_ekranu_sprawozdanie_2/14.png)
 
-- [Pełny log z konsoli pierwszego builda](zrzuty_ekranu_sprawozdanie_2/#1.txt)
+- [Pełny log z konsoli pierwszego builda - plik #1.txt](zrzuty_ekranu_sprawozdanie_2/#1.txt)
 
 - Pipeline z udało się uruchomić drugi raz, potwierdzenie na poniższym zrzucie ekranu: 
 
 ![Zrzut ekranu – 12](zrzuty_ekranu_sprawozdanie_2/13.png)
 
-- [Pełny log z konsoli drugiego builda](zrzuty_ekranu_sprawozdanie_2/#2.txt)
+- [Pełny log z konsoli drugiego builda - plik #2.txt](zrzuty_ekranu_sprawozdanie_2/#2.txt)
 
 ---
 
@@ -387,13 +387,13 @@ Pierwsze uruchomienie ostatecznej wersji pipeline'a:
 
 ![Zrzut ekranu – 14](zrzuty_ekranu_sprawozdanie_2/15.png)
 
-[Pełny log z konsoli pierwszego, pełnego builda z wszystkimi etapami](zrzuty_ekranu_sprawozdanie_2/#12.txt)
+[Pełny log z konsoli pierwszego, pełnego builda z wszystkimi etapami - plik #12.txt](zrzuty_ekranu_sprawozdanie_2/#12.txt)
 
 Drugie uruchomienie ostatecznej wersji pipeline'a: 
 
 ![Zrzut ekranu – 15](zrzuty_ekranu_sprawozdanie_2/16.png)
 
-[Pełny log z konsoli drugiego, pełnego builda z wszystkimi etapami](zrzuty_ekranu_sprawozdanie_2/#13.txt)
+[Pełny log z konsoli drugiego, pełnego builda z wszystkimi etapami - plik #13.txt](zrzuty_ekranu_sprawozdanie_2/#13.txt)
 
 - **Zrzut ekranu potwierdzający pomyślną archiwizację pliku .deb w Jenkinsie:**
 
