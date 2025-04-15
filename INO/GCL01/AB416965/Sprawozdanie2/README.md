@@ -1,14 +1,10 @@
-# Sprawozdanie 2 z przedmiotu DevOps
+# Sprawozdanie 2  - Pipeline, Jenkins, izolacja etapów
 
 ### **Kierunek: Inżynieria Obliczeniowa**
-
 ### **Autor: Adam Borek**
-
 ### **Grupa 1**
 
 ---
-
-## **Zajęcia 05 - Pipeline, Jenkins, izolacja etapów**
 
 ### 1. Przygotowanie środowiska
 
@@ -242,3 +238,38 @@ Jednak ma to swoje wady:
 
 W tym konkretnym projekcie zdecydowano się na konfigurację opartą o Docker-in-Docker (DIND), dzięki temu cały proces CI/CD (build, test, deploy, publish) odbywa się w całości wewnątrz środowiska kontenerowego, bez konieczności ingerowania w system hosta. To podejście zwiększa przenośność pipeline'u, pozwala łatwo odtworzyć środowisko na innych maszynach i zapewnia większe bezpieczeństwo.
 
+### 5. Kompletny Pipeline CI/CD
+
+Kolejnym etapem było utworzenie pełnego pipelina z etapami `deploy` oraz `publish`. Podczas tego etapu utworzyłem `Jenkinsfile`, który był wykorzystywany podczas `SCM`. `Jenkinsfile` został umieszczoony w repozytorium rzedmiotowym na mojej gałęzi `AB416965` czyli Jenkins klonuje nasze repozytorium dwa razy.
+
+> [Jenkinsfile](Jenkinsfile)
+
+#### Sam `Jenkinsfile` jest podzielony na 6 etapów:
+- clone
+    - klonowanie repozytorium przedmiotowego na gałęzi `AB416965`.
+- clear cache
+    - proste polecenie `docker builder prune -af`, które czyści cache zbudowanych kontenerów.
+- build
+
+    - [Dockerfile.build](pipeline/Dockerfile.build) został zmodyfikowany, aby po zbudowaniu bilioteki była ona pakowana do `.rpm` przy pomocy FPM (Effing Package Management) — narzędzia upraszczającego tworzenie paczek instalacyjnych dla różnych systemów.
+
+- test
+    - [Dockerfile.test](pipeline/Dockerfile.test) nie został zbytnio zmieniony, ponownie wykonuje `ctest`, wynik jest zapisywany w logach.
+
+    - > [Wydruk zwracany przez `test`](jenkinslogs/cjson_test.log)
+- deploy
+
+    - [Dockerfile.deploy](pipeline/Dockerfile.deploy) został przygotowany w taki sposób aby wykorzystując zbudowaną i zapakowaną w `.rpm` bibliotekę instalował poleceniem `sudo dnf install ./cjson.rpm` a następnie korzystając z wcześniej przygotowanego kodu [main.c](pipeline/main.c) dokonywał kompilacji i uruchomienia programu.
+
+    - > [Wydruk zwracany przez `deploy`](jenkinslogs/cjson_deploy.log)
+
+- publish
+    - zwraca jako artefakt wszystkie pliki `.log` i archiwum `cjson.rpm`.
+
+![Kompletny pipeline](zrzuty5/zrzut_ekranu15.png)
+
+> [Logi z konsoli](jenkinslogs/console_1.log)
+
+W celu upewnienia się, że nic nie jest pozostawiane w pamięci cache, uruchomiłem `pipeline` kilkukrotnie.
+
+> [Logi z konsoli po ponownym uruchomieniu](jenkinslogs/console_2.log)
