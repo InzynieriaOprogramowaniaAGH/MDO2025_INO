@@ -1,0 +1,12 @@
+FROM node:18-slim AS deploy
+
+WORKDIR /app
+
+COPY --from=next-build /Next.js-Boilerplate/.next .next
+COPY --from=next-build /Next.js-Boilerplate/public public
+COPY --from=next-build /Next.js-Boilerplate/package.json .
+COPY --from=next-build /Next.js-Boilerplate/node_modules node_modules
+
+ENV PORT=3000
+
+ENTRYPOINT ["npm", "start"]
