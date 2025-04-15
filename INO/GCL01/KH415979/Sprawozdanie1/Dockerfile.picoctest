@@ -1,0 +1,3 @@
+FROM picoc-b
+
+RUN make test
