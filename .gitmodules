@@ -1,0 +1,3 @@
+[submodule "ITE/GCL04/TK414543/ITE/GCL04/TK414543/Sprawozdanie1/LAB3/OceanBattle.WebAPI"]
+	path = ITE/GCL04/TK414543/ITE/GCL04/TK414543/Sprawozdanie1/LAB3/OceanBattle.WebAPI
+	url = https://github.com/OceanBattle/OceanBattle.WebAPI.git
