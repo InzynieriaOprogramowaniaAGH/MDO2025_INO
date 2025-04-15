@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+    DOCKER_IMAGE = 'zbogenza/express-app:latest'
+    }   
     stages {
         stage('Clone Repository') {
             steps {
@@ -40,6 +43,18 @@ pipeline {
                     sh 'docker network create ci'
                     sh 'docker run --rm -d --network ci --name app -p 3000:3000 express-app'
                     sh 'docker run --rm --network ci fedora curl -s app:3000'
+                }
+            }
+        }
+
+        stage('Docker Login and Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker tag express-app $DOCKER_IMAGE
+                        docker push $DOCKER_IMAGE
+                    '''
                 }
             }
         }
