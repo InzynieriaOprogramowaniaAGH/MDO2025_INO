@@ -324,7 +324,7 @@ pipeline {
 }
 ```
 
-Po utworzenie nowego pipeline o nazwie 'cJSON_MP417574' wybrałam opcję 'Pipeline script from SCM` -> SCM: Git i uzupeniłam potrzebne informację.
+Po utworzenie nowego pipeline o nazwie `cJSON_MP417574` wybrałam opcję 'Pipeline script from SCM` -> SCM: Git i uzupeniłam potrzebne informację.
 
 
 ![projekt_cJSON](IMG5/cJSON.png)
@@ -341,7 +341,7 @@ Wyniki:
 
 [Zobacz logi - deploy](JenkinsLogs/cjson_deploy.log)
 
-####Podsumowanie
+#### Podsumowanie
 
 Wartianty implementacji:
 1. Bezpośrednio na kontenerze CI (DOoD – Docker Outside of Docker).
@@ -367,7 +367,8 @@ To podejście polega na uruchamianiu kontenera z demonem Dockera (docker:dind), 
 - Dodatkowo zużycie zasobów systemowych może być wyższe niż w przypadku DOoD.
 
 
-Dlaczego wybrałam w projekcie podejście `DIND`?
+#### Dlaczego wybrałam w projekcie podejście `DIND`?
+
 W projekcie zdecydowałam się na pto odejście, ponieważ zapewnia ono lepszą przenośność środowiska CI/CD, umożliwia jego łatwe odtworzenie na innych systemach oraz zwiększa bezpieczeństwo dzięki pełnej izolacji procesu od systemu hosta.
 
 
