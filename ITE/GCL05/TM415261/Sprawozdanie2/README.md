@@ -247,7 +247,7 @@ Ze względu na długotrwały proces testowania aplikacji oraz niedeterministyczn
 
 #### Etap `RunningTests`
 
-Etap ten odpowiada za uruchomienie testów dołączonych do aplikacji (w moim przypadku w testów w zredukowanej wersji).
+Etap ten odpowiada za uruchomienie testów dołączonych do aplikacji (w moim przypadku testów w zredukowanej wersji).
 
 #### Etap `Deploy`
 W tym etapie przygotowywana jest wersja obrazu gotowa do dystrybucji. Obraz jest budowany za pomocą [`Dockerfile.deploy`](./Dockerfile.deploy):
