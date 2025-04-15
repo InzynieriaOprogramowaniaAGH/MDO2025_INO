@@ -7,7 +7,7 @@ Oceń postęp prac na pipelinem - proces ujęty w sposób deklaratywny. Przejdź
 Zweryfikuj, czy definicja pipeline'u obecna w repozytorium pokrywa ścieżkę krytyczną:
 
 - [ ] Przepis dostarczany z SCM, a nie wklejony w Jenkinsa lub sprawozdanie (co załatwia nam `clone` )
-- [ ] Posprzątaliśmy i wiemy, że odbyło się to skutecznie
+- [ ] Posprzątaliśmy i wiemy, że odbyło się to skutecznie - mamy pewność, że pracujemy na najnowszym (a nie *cache'owanym* kodzie)
 - [ ] Etap `Build` dysponuje repozytorium i plikami `Dockerfile`
 - [ ] Etap `Build` tworzy obraz buildowy, np. `BLDR`
 - [ ] Etap `Build` (krok w tym etapie) lub oddzielny etap (o innej nazwie), przygotowuje artefakt - **jeżeli docelowy kontener ma być odmienny**, tj. nie wywodzimy `Deploy` z obrazu `BLDR`
