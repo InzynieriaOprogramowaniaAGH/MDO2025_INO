@@ -142,12 +142,35 @@ Wynik uruchomienia:
 
 ![projekt_p3_wynik](IMG5/p3_wynik.png)
 
-Utworzyłam `p4`, który:
+Utworzyłam `p4` obiekt typu pipeline, który:
 - klonuje nasze repozytorium `https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO`
 - przechodzi na osobistą gałąź `MP417574`
-- buduje obrazy z dockerfiles i/lub komponuje via docker-compose.
+- buduje obrazy z dockerfiles zdefiniowanych na poprzednich zajęciach.
 
-![projekt_p4](IMG5/p4.png)
+```pipeline
+pipeline {
+    agent any
+
+    stages {
+        stage('Klonowanie repo') { 
+            steps {
+                git branch: 'MP417574', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Budowanie obrazu buildera') {
+            steps {
+                dir ("INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles")
+                {
+                    script {
+                        docker.build('cjson-builder-image', '-f Dockerfiles/Dockerfile.build1 .')
+                    }
+                }
+            }
+        }
+    }
+}
+```
 
 Wynik uruchomienia:
 

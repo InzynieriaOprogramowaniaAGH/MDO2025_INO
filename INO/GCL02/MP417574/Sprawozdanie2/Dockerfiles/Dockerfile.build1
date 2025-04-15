@@ -1,0 +1,7 @@
+FROM ubuntu:latest
+
+RUN apt update && apt install -y git cmake gcc g++ make
+
+WORKDIR /app
+RUN git clone https://github.com/DaveGamble/cJSON.git .
+RUN mkdir build && cd build && cmake .. && make
