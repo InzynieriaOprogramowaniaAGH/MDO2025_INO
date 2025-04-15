@@ -41,6 +41,7 @@ pipeline {
             steps {
                 dir('ITE/GCL08/WS417336/Sprawozdanie2') {
                     sh 'docker build -f Dockerfiles/Dockerfile.expresstest -t express-test .'
+                    sh 'docker run --rm express-test'
                 }
             }
         }
