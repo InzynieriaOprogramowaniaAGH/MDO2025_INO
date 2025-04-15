@@ -29,7 +29,6 @@ pipeline {
                 dir("${APP_DIR}") {
                     sh 'docker build -f Dockerfiles/Dockerfile.express-build -t express-build .'
                     sh 'docker run --rm express-build npm --version'
-
                 }
             }
         }
@@ -66,6 +65,7 @@ pipeline {
                             
                             docker run --rm -v "$PWD/foo":/app -w /app express-build \
                                 sh -c 'npm pkg set name="devops_lukasz_wrobel" && \
+                                npm pkg set version="0.0.2" && \
                                 npm pkg delete private && \
                                 cat package.json'
                             

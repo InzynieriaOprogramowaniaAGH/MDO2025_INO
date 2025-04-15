@@ -19,7 +19,7 @@ Uruchomienie docker:dind w kontenerze
 ```
 docker run \
   --name jenkins-docker \
-  --rm \
+  --restart=always \
   --detach \
   --privileged \
   --network jenkins \
