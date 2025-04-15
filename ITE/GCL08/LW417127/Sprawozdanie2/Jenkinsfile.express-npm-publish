@@ -63,11 +63,19 @@ pipeline {
                             docker cp temp_publish:/tmp/foo ./foo
                             docker rm temp_publish
                             
+                            VERSION=$(docker run --rm -v "$PWD/foo":/app -w /app express-build \
+                                node -p "require('./package.json').version")
+
+                            NEW_VERSION=$(echo $VERSION | awk -F. '{ $3 = $3 + 1; print $1 "." $2 "." $3 }')
+
+                            echo "Current version: $VERSION"
+                            echo "New version: $NEW_VERSION"
+
                             docker run --rm -v "$PWD/foo":/app -w /app express-build \
-                                sh -c 'npm pkg set name="devops_lukasz_wrobel" && \
-                                npm pkg set version="0.0.2" && \
+                                sh -c "npm pkg set name='devops_lukasz_wrobel' && \
+                                npm pkg set version='$NEW_VERSION' && \
                                 npm pkg delete private && \
-                                cat package.json'
+                                cat package.json"
                             
                             docker run --rm -v "$PWD/foo":/app -w /app express-build npm pack
         
