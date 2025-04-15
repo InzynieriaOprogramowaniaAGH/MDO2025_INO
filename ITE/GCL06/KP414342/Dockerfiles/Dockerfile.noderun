@@ -1,2 +1,0 @@
-FROM bld002
-RUN npm test

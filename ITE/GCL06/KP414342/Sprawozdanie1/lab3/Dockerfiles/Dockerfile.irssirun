@@ -1,0 +1,5 @@
+FROM fedora_build_v1
+
+WORKDIR /irssi
+
+RUN ninja -C Build test
