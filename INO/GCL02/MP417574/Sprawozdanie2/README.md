@@ -1,7 +1,7 @@
 # Sprawozdanie 2
-## Zajecia 5 (31.03.2025r.)
-### Pipeline, Jenkins, izolacja etapów
-Celem pracy było przygotowanie spersonalizowanego obrazu Dockera dla Jenkinsa z dodatkowymi narzędziami i wtyczkami niezbędnymi do tworzenia potoków CI/CD.
+## Meg Paskowski
+## Grupa: 2
+## Zajecia 5-7
 
 Instalacja Jenkinsa.
 Wybrane wtyczki dla Jenkinsa:
@@ -144,6 +144,10 @@ Wynik uruchomienia:
 
 ![projekt_p3_wynik](IMG5/p3_wynik.png)
 
+Diagram aktywności procesu CI (Continuous Integration) - dla wybranego projektu:
+
+![diagram_prac](IMG5/diagram.png)
+
 Utworzyłam `p4` obiekt typu pipeline, który:
 - klonuje nasze repozytorium `https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO`
 - przechodzi na osobistą gałąź `MP417574`
@@ -177,7 +181,7 @@ Wynik uruchomienia:
 
 ![projekt_p4_wynik](IMG5/p4_wynik.png)
 
-[Zobacz log z budowania](JenkinsLogs/console_results_build.log)
+[Zobacz logi z budowania](JenkinsLogs/console_results_build.log)
 
 
 Następnie dołączyłam do pipelina `p4`testy z pliku `Dockerfile.test` z poprzednich zajęć (tworzenie kontenera na bazie obrazu `cjson-builder-image` i uruchamienie testów).
@@ -244,7 +248,7 @@ Wszystkie testy zakończyły się sukcesem – "19/19 zaliczonych".
 
 ![projekt_p4_wynik3](IMG5/p4_wynik3.png)
 
-[Zobacz log z testów](JenkinsLogs/test_result.log)
+[Zobacz logi z testów](JenkinsLogs/test_result.log)
 
 #### Implementacja Pipeline'u z wykorzystaniem kontenerów
 Celem punktu zadania było stworzenie potoku Jenkinsa (`Pipeline`), który będzie wykorzystywał kontenery do izolacji poszczególnych etapów budowania i testowania. 
@@ -324,7 +328,30 @@ pipeline {
 }
 ```
 
-Po utworzenie nowego pipeline o nazwie `cJSON_MP417574` wybrałam opcję 'Pipeline script from SCM` -> SCM: Git i uzupeniłam potrzebne informację.
+Wyjaśnienie pliku `Jenkinsfile`:
+
+Składa się z kilku etapów, które kolejno wykonują operacje na bazie biblioteki `cJSON`, prowadząc do utworzenia i przetestowania pakietu `.rpm`.
+
+1. **`Clone`**  
+   Pobranie repozytorium z branch'a `MP417574` w GitHubie, zawierającego wszystkie pliki potrzebne do budowy pipeline’u.
+
+2. **`Clear Docker cache`**  
+   Usunięcie pamięci podręcznej buildera Dockera (`docker builder prune -af`), aby każdy build wykonywany był w świeżym środowisku.
+
+3. **`Build`**  
+   Budowa obrazu Dockera (`cjson-build`) przy użyciu `Dockerfile.build1`. Wewnątrz obrazu budowany jest pakiet `.rpm`, który następnie zostaje skopiowany do katalogu `artifacts`.
+
+4. **`Test`**  
+   Utworzenie obrazu `cjson-test` z `Dockerfile.test`, uruchomienie testu działania biblioteki `cJSON` (np. poprzez program w C) i zapis wyniku do pliku `cjson_test.log`.
+
+5. **`Deploy`**  
+   Obraz `cjson-deploy` z `Dockerfile.deploy` instaluje wygenerowany pakiet `.rpm` i uruchamia program testujący bibliotekę (`main.c`). Wynik działania zapisuje się w `cjson_deploy.log`.
+
+6. **`Publish`**  
+   Archiwizacja utworzonych artefaktów (`*.log`, `*.rpm`) za pomocą `archiveArtifacts`. Dzięki temu są one dostępne do pobrania z interfejsu Jenkinsa.
+
+
+Po utworzenie nowego pipeline o nazwie `cJSON_MP417574` wybrałam opcję `Pipeline script from SCM` -> `SCM: Git` i uzupeniłam potrzebne informację.
 
 
 ![projekt_cJSON](IMG5/cJSON.png)
@@ -337,9 +364,39 @@ Wyniki:
 
 ![projekt_cJSON_wynik](IMG5/cJSON_wynik2.png)
 
-[Zobacz logi - test ](JenkinsLogs/cjson_test.log)
+[Logi - test ](JenkinsLogs/cjson_test.log.txt)
 
-[Zobacz logi - deploy](JenkinsLogs/cjson_deploy.log)
+[Logi - deploy](JenkinsLogs/cjson_deploy.log.txt)
+
+[Logi](JenkinsLogs/console_logs.txt)
+
+Wyniki po ponownym urochomieniu:
+
+[Logi - test2](JenkinsLogs/Ponowne_uruchomienie_cJSON/cjson_test.log.txt)
+
+[Logi - deploy2](JenkinsLogs/Ponowne_uruchomienie_cJSON/cjson_deploy.log.txt)
+
+[Logi](JenkinsLogs/Ponowne_uruchomienie_cJSON/console_logs_2.txt)
+
+Ponowne uruchomienie pozwala na upewnienie się, czy w pamięci cache nic nie zostało.
+Uzyskany artefakt `cjson.rpm` został zapisany w repozytorium przedmiotowym.
+Wykonałam to nastepującymi poleceniami:
+
+```bash
+#Wejście do kontenera
+docker exec -it jenkins bash
+
+#Zlokalizowanie artefaktu
+find /var/jenkins_home -name '*.rpm'
+
+#Skopiowanie artefaktu na hosta po wyjsciu z kontenera
+docker cp jenkins:/var/jenkins_home/jobs/cJSON_MP417574/builds/2/archive/INO/GCL02/MP417574/Sprawozdanie2/artifacts/cjson.rpm .
+
+#Sprawdzenie zawartości pliku
+
+```
+![projekt_cJSON_wynik_fedora](IMG5/kopiowanie_i_spr.png)
+
 
 #### Podsumowanie
 
@@ -367,7 +424,7 @@ To podejście polega na uruchamianiu kontenera z demonem Dockera (docker:dind), 
 - Dodatkowo zużycie zasobów systemowych może być wyższe niż w przypadku DOoD.
 
 
-#### Dlaczego wybrałam w projekcie podejście `DIND`?
+#### Dlaczego w projekcie zostało wybrane podejście `DIND`?
 
 W projekcie zdecydowałam się na pto odejście, ponieważ zapewnia ono lepszą przenośność środowiska CI/CD, umożliwia jego łatwe odtworzenie na innych systemach oraz zwiększa bezpieczeństwo dzięki pełnej izolacji procesu od systemu hosta.
 
