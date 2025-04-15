@@ -26,7 +26,7 @@ pipeline {
         stage('Build Dockerfile') {
             steps {
                 dir('ITE/GCL08/WS417336/Sprawozdanie2') {
-                    sh 'docker build -f Dockerfiles/Dockerfile.expressbuild -t express-build .'
+                    sh 'docker build --no-cache -f Dockerfiles/Dockerfile.expressbuild -t express-build .'
                 }
             }
         }
@@ -34,7 +34,7 @@ pipeline {
         stage('Publish Dockerfile') {
             steps {
                 dir('ITE/GCL08/WS417336/Sprawozdanie2') {
-                    sh 'docker build -f Dockerfiles/Dockerfile.expresspublish -t express-app .'
+                    sh 'docker build --no-cache -f Dockerfiles/Dockerfile.expresspublish -t express-app .'
                 }
             }
         }
@@ -42,7 +42,7 @@ pipeline {
         stage('Test Dockerfile') {
             steps {
                 dir('ITE/GCL08/WS417336/Sprawozdanie2') {
-                    sh 'docker build -f Dockerfiles/Dockerfile.expresstest -t express-test .'
+                    sh 'docker build --no-cache -f Dockerfiles/Dockerfile.expresstest -t express-test .'
                     sh 'docker run --rm express-test'
                 }
             }
