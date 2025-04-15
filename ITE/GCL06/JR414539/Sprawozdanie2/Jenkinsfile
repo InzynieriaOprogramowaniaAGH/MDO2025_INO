@@ -27,14 +27,14 @@ pipeline {
 
         stage('🐳 Budowanie obrazu Dockera') {
             steps {
-                sh "docker build -t ${DOCKER_IMAGE} -f ${DOCKERFILE_PATH} ${DOCKER_CONTEXT}"
+                sh "docker build --no-cache -t ${DOCKER_IMAGE} -f ${DOCKERFILE_PATH} ${DOCKER_CONTEXT}"
             }
         }
 
         stage('🚀 Deploy & Test wget') {
             steps {
                 echo 'Buduję deploy-image do testu wget'
-                sh "docker build -t ${DEPLOY_IMAGE} -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile_deploy ITE/GCL06/JR414539/Sprawozdanie2"
+                sh "docker build --no-cache -t ${DEPLOY_IMAGE} -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile_deploy ITE/GCL06/JR414539/Sprawozdanie2"
                 echo 'Odpalam kontener i testuję wget'
                 sh "docker run --rm ${DEPLOY_IMAGE}"
             }
@@ -53,7 +53,7 @@ pipeline {
         stage('🔍 Test wget (Tester)') {
            steps {
                 echo 'Buduję obraz tester-a'
-                sh "docker build -t ${TEST_IMAGE} -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile.test ITE/GCL06/JR414539/Sprawozdanie2"
+                sh "docker build --no-cache -t ${TEST_IMAGE} -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile.test ITE/GCL06/JR414539/Sprawozdanie2"
                 echo 'Odpalam testy wget'
                 sh "docker run --rm ${TEST_IMAGE}"
             }
@@ -64,7 +64,7 @@ pipeline {
                 echo 'Kopiuję wget.deb do katalogu Sprawozdanie2'
                 sh 'cp wget.deb ITE/GCL06/JR414539/Sprawozdanie2/'
                 echo 'Buduję runtime image z wget'
-                sh 'docker build -t wget-runtime -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile.runtime ITE/GCL06/JR414539/Sprawozdanie2'
+                sh 'docker build --no-cache -t wget-runtime -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile.runtime ITE/GCL06/JR414539/Sprawozdanie2'
                 echo 'Odpalam kontener runtime z wget'
                 sh 'docker run --rm wget-runtime'
             }
