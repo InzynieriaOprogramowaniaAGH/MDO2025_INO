@@ -4,23 +4,52 @@
 
 1. Zainstalowano klienta Git i obsługę kluczy SSH
 
+```
+sudo dnf install git openssh
+```
+
    ![Alt text](screenshots/LAB1/1_git.png)
+
+```
+git --version
+```
+
    ![Alt text](screenshots/LAB1/2_git_ssh_check.png)
 
 2. Sklonowano [repozytorium przedmiotowe](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO) za pomocą HTTPS i [*personal access token*](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
 
    ![Alt text](screenshots/LAB1/3_github_key.png)
+
+```
+git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+```
+
    ![Alt text](screenshots/LAB1/4_clone.png)
 
 3. Sklonowano repozytorium za pomocą utworzonego klucza SSH.
    - Utworzono dwa klucze SSH, inne niż RSA, oba zabezpieczone hasłem
-   
+
+      ```      
+      ssh-keygen -t ed25519 -C "tomekkurowski2003@gmail.com" -f ~/.ssh/id_ed25519
+      ssh-keygen -t ecdsa -b 521 -C "tomekkurowski2003@gmail.com" -f ~/.ssh/id_ecdsa
+      ```
+
       ![Alt text](screenshots/LAB1/5_ssh_keys.png)
+
+      ```
+      eval "$(ssh-agent -s)"
+      ```
+
       ![Alt text](screenshots/LAB1/6_ssh_agent.png)
    
    - Skonfigurowano klucz SSH jako metodę dostępu do GitHuba
    
       ![Alt text](screenshots/LAB1/7_add_ssh_key.png)
+
+      ```
+      ssh -T git@github.com
+      ```
+
       ![Alt text](screenshots/LAB1/8_test.png)
    
    - Sklonowano repozytorium z wykorzystaniem protokołu SSH
@@ -33,17 +62,36 @@
 
 4. Przełączono się na gałąź ```main```, a potem na gałąź swojej grupy (GCL04)
 
+   ```
+   git checkout main
+   ```
+   ```
+   git pull
+   ```
    ![Alt text](screenshots/LAB1/11_przelacz_main.png)
+   ```
+   git checkout GCL04
+   ```
+   ```
+   git pull
+   ```
    ![Alt text](screenshots/LAB1/12_przelacz_grupa.png)
 
 5. Utwórzono gałąź o nazwie "TK414543".
 
+   ```
+   git checkout -b TK414543   
+   ```
    ![Alt text](screenshots/LAB1/13_checkout_TK414543.png)
+   ```
+   git switch TK414543
+   ```
    ![Alt text](screenshots/LAB1/14_switchTK414543.png)
 
 6. Rozpoczęto pracę na nowej gałęzi
    - W katalogu GCL04 utwórzono nowy katalog TK414543
-   
+
+      Przejście do katalogu:
       ![Alt text](screenshots/LAB1/15_cdTK414543.png)
    
    - Napisano [Git hooka](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) - weryfikującego, że każdy "commit message" zaczyna się od "TK414543".
@@ -145,18 +193,18 @@
 
    - Zawartość Dockerfile:
 
-   ```dockerfile
+      ```dockerfile
 
-   FROM fedora:latest
+      FROM fedora:latest
 
-   RUN dnf update -y && \
+      RUN dnf update -y && \
       dnf install -y git
 
-   RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git /repo
+      RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git /repo
    
-   CMD ["/bin/bash"]
+      CMD ["/bin/bash"]
 
-   ```
+      ```
 
    - Uruchomienie
 
@@ -164,9 +212,9 @@
 
    - Obraz będzie miał `git`-a:
 
-   ```dockerfile
-   dnf install -y git
-   ```
+      ```dockerfile
+      dnf install -y git
+      ```
 
    - Uruchomiono w trybie interaktywnym oraz zweryfikowano pobranie repozytorium przedmiotowego:
 
@@ -206,25 +254,25 @@ Ponowiono wyżej wymieniony  proces w kontenerze, interaktywnie.
 1. Wykonano kroki `build` i `test` wewnątrz wybranego kontenera bazowego. Wybrano "wystarczający" kontener, dostępny obraz dotnet dla Dockera, mcr.microsoft.com/dotnet/sdk:7.0
 	* uruchomiono kontener i rozpoczęto interaktywną pracę
 
-   ![Alt text](screenshots/LAB3/5_create_container.png)
+      ![Alt text](screenshots/LAB3/5_create_container.png)
 
 	* zaopatrzono kontener w wymagania wstępne (zainstalowano git)
 
-   ![Alt text](screenshots/LAB3/6_git_install.png)
+      ![Alt text](screenshots/LAB3/6_git_install.png)
 
 	* sklonowano repozytorium
 
-   ![Alt text](screenshots/LAB3/7_git_clone.png)
-   ![Alt text](screenshots/LAB3/8_cd_oceanbattle.png)
+      ![Alt text](screenshots/LAB3/7_git_clone.png)
+      ![Alt text](screenshots/LAB3/8_cd_oceanbattle.png)
 
 	* Skonfigurowano środowisko i uruchomiono *build*
 
-   ![Alt text](screenshots/LAB3/9_dotnet_restore.png)
-   ![Alt text](screenshots/LAB3/10_dotnet_build.png)
+      ![Alt text](screenshots/LAB3/9_dotnet_restore.png)
+      ![Alt text](screenshots/LAB3/10_dotnet_build.png)
 
 	* uruchomiono testy
 
-   ![Alt text](screenshots/LAB3/11_dotnet_test.png)
+      ![Alt text](screenshots/LAB3/11_dotnet_test.png)
 
 2. Stworzono dwa pliki `Dockerfile` automatyzujące kroki powyżej, z uwzględnieniem następujących kwestii:
 
@@ -264,36 +312,168 @@ Ponowiono wyżej wymieniony  proces w kontenerze, interaktywnie.
 
 
 ### Zachowywanie stanu
-* Zapoznaj się z dokumentacją:
-  * https://docs.docker.com/storage/volumes/
-  * https://docs.docker.com/engine/storage/bind-mounts/
-  * https://docs.docker.com/engine/storage/volumes/
-  * https://docs.docker.com/reference/dockerfile/#volume
-  * https://docs.docker.com/reference/dockerfile/#run---mount
-* Przygotuj woluminy wejściowy i wyjściowy, o dowolnych nazwach, i podłącz je do kontenera bazowego (np. tego, z którego rozpoczynano poprzednio pracę). Kontener bazowy to ten, który umie budować nasz projekt (ma zainstalowane wszystkie dependencje, `git` nią nie jest)
-* Uruchom kontener, zainstaluj/upewnij się że istnieją niezbędne wymagania wstępne (jeżeli istnieją), ale *bez gita*
-* Sklonuj repozytorium na wolumin wejściowy
-  * Opisz dokładnie, jak zostało to zrobione
-    * Wolumin/kontener pomocniczy?
-    * *Bind mount* z lokalnym katalogiem?
-    * Kopiowanie do katalogu z woluminem na hoście (`/var/lib/docker`)?
-* Uruchom build w kontenerze - rozważ skopiowanie repozytorium do wewnątrz kontenera
-* Zapisz powstałe/zbudowane pliki na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera.
-* Pamiętaj udokumentować wyniki.
-* Ponów operację, ale klonowanie na wolumin wejściowy przeprowadź wewnątrz kontenera (użyj gita w kontenerze)
-* Przedyskutuj możliwość wykonania ww. kroków za pomocą `docker build` i pliku `Dockerfile`. (podpowiedź: `RUN --mount`)
+
+* Przygotowano woluminy wejściowy (input) i wyjściowy (output) i podłączono je do kontenera bazowego, nie zawierającego gita.
+
+   ```
+   docker volume create ocean-input
+   docker volume create ocean-output
+   ```
+   ![Alt text](screenshots/LAB4/1_volumes.png)
+
+* Uruchomiono kontener, zawierający dotnet SDK
+
+   ```
+   docker run -it --rm mcr.microsoft.com/dotnet/sdk:7.0 bash
+   ```
+   ![Alt text](screenshots/LAB4/2_connect_container.png)
+
+* Sklonowano repozytorium na wolumin wejściowy, wykorzystano Docker copy (docker cp), kopiując istniejące repozytorium z hosta do wejścia kontenera.
+
+   ![Alt text](screenshots/LAB4/3_docker_copy.png)
+
+* Uruchomiono build w kontenerze.
+
+   ```
+   dotnet restore
+   ```
+   ![Alt text](screenshots/LAB4/4_dotnet_restore.png)
+   ```
+   dotnet build -o /data/output/build
+   ```
+   ![Alt text](screenshots/LAB4/5_build.png)
+
+* Zapisano powstałe/zbudowane pliki na woluminie wyjściowym, tak by były dostępne po wyłączniu kontenera.
+
+   ![Alt text](screenshots/LAB4/6a_check_output.png)
+   ![Alt text](screenshots/LAB4/6_output_zawartosc.png)
+
+* Ponowiono operację, ale klonowanie na wolumin wejściowy przeprowadzono wewnątrz kontenera, używając gita w kontenerze
+
+   ```
+   docker run -it --rm mcr.microsoft.com/dotnet/sdk:7.0 bash
+   ```
+   ![Alt text](screenshots/LAB4/7_git_container.png)
+   ```
+   apt update && apt install -y git
+   ```
+   ![Alt text](screenshots/LAB4/8_install_git.png)
+   ```
+   git clone --recurse-submodules -j8 https://github.com/OceanBattle/OceanBattle.WebAPI.git
+   ```
+   ![Alt text](screenshots/LAB4/9_git_clone.png)
+   ```
+   dotnet restore
+   dotnet build -o /data/output/build
+   ```
+   ![Alt text](screenshots/LAB4/10_build.png)
+
+   ![Alt text](screenshots/LAB4/11_check_output2.png)
+
+* Przedyskutuj możliwość wykonania ww. kroków za pomocą `docker build` i pliku `Dockerfile`.
+
+Tak, istnieje taka możliwość, ponieważ – od Dockera 20.10+ można użyć polecenia:
+```dockerfile
+RUN --mount=type=bind,target=/src git clone ...
+```
+Ale: *RUN --mount* działa tylko w docker build z opcją *--mount*, więc trzeba uruchomiony BuildKit *(DOCKER_BUILDKIT=1)*.
 
 ### Eksponowanie portu
-* Zapoznaj się z dokumentacją https://iperf.fr/
-* Uruchom wewnątrz kontenera serwer iperf (iperf3)
-* Połącz się z nim z drugiego kontenera, zbadaj ruch
-* Zapoznaj się z dokumentacją `network create` : https://docs.docker.com/engine/reference/commandline/network_create/
-* Ponów ten krok, ale wykorzystaj własną dedykowaną sieć mostkową (zamiast domyślnej). Spróbuj użyć rozwiązywania nazw
-* Połącz się spoza kontenera (z hosta i spoza hosta)
-* Przedstaw przepustowość komunikacji lub problem z jej zmierzeniem (wyciągnij log z kontenera, woluminy mogą pomóc)
-* Opcjonalnie: odwołuj się do kontenera serwerowego za pomocą nazw, a nie adresów IP
+* Uruchomiono wewnątrz kontenera serwer iperf (iperf3)
+
+```
+docker run -it --rm --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+```
+![Alt text](screenshots/LAB4/12_iperf.png)
+
+* Połączono się z nim z drugiego kontenera i zbadano ruch
+
+   Sprawdzenie adresu ip:
+   ![Alt text](screenshots/LAB4/13_get_ip.png)
+
+   ```
+   docker run --rm networkstatic/iperf3 -c 172.17.0.3
+   ```
+   ![Alt text](screenshots/LAB4/14_iperf_client.png)
+
+* Ponowiono ten krok, wykorzystując własną dedykowaną sieć mostkową (zamiast domyślnej).
+
+   ![Alt text](screenshots/LAB4/15_docker_network.png)
+   ![Alt text](screenshots/LAB4/16_iperf_server_network.png)
+   ![Alt text](screenshots/LAB4/17_iperf_client_network.png)
+
+* Połączono się spoza kontenera
+   - Z hosta
+   ![Alt text](screenshots/LAB4/18_connect_from_host_iperf.png)
+
+   - Z poza hosta
+   ![Alt text](screenshots/LAB4/19_connect_external_iperf.png)
+
+* Wyciągnięto log z kontenera
+   ```
+   docker logs iperf-server2 > iperf_log.txt
+   ```
+
+   ```
+   -----------------------------------------------------------
+   Server listening on 5201 (test #1)
+   -----------------------------------------------------------
+   Accepted connection from 172.18.0.3, port 48186
+   [  5] local 172.18.0.2 port 5201 connected to 172.18.0.3 port 48198
+   [ ID] Interval           Transfer     Bitrate
+   [  5]   0.00-1.00   sec  3.83 GBytes  32.9 Gbits/sec                  
+   [  5]   1.00-2.00   sec  3.95 GBytes  33.9 Gbits/sec                  
+   [  5]   2.00-3.00   sec  3.67 GBytes  31.5 Gbits/sec                  
+   [  5]   3.00-4.00   sec  3.98 GBytes  34.2 Gbits/sec                  
+   [  5]   4.00-5.00   sec  3.65 GBytes  31.3 Gbits/sec                  
+   [  5]   5.00-6.00   sec  3.76 GBytes  32.3 Gbits/sec                  
+   [  5]   6.00-7.00   sec  3.53 GBytes  30.3 Gbits/sec                  
+   [  5]   7.00-8.00   sec  3.21 GBytes  27.5 Gbits/sec                  
+   [  5]   8.00-9.00   sec  2.95 GBytes  25.4 Gbits/sec                  
+   [  5]   9.00-10.00  sec  2.82 GBytes  24.2 Gbits/sec                  
+   - - - - - - - - - - - - - - - - - - - - - - - - -
+   [ ID] Interval           Transfer     Bitrate
+   [  5]   0.00-10.00  sec  35.3 GBytes  30.4 Gbits/sec                  receiver
+   -----------------------------------------------------------
+   Server listening on 5201 (test #2)
+   -----------------------------------------------------------
+   ```
 
 ### Instancja Jenkins
-* Zapoznaj się z dokumentacją  https://www.jenkins.io/doc/book/installing/docker/
-* Przeprowadź instalację skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND
-* Zainicjalizuj instację, wykaż działające kontenery, pokaż ekran logowania
+* Przeprowadzono instalację skonteneryzowanej instancji Jenkinsa z pomocnikiem DIND
+
+   ```
+   docker network create jenkins-net
+   ```
+   ![Alt text](screenshots/LAB4/20_create_jenkins.png)
+   ```
+   docker run -d --rm --name jenkins-docker \
+  --network jenkins-net --privileged \
+  -v jenkins-docker-certs:/certs/client \
+  -v jenkins-docker-data:/var/lib/docker \
+  -e DOCKER_TLS_CERTDIR=/certs \
+  docker:dind
+   ```
+   ![Alt text](screenshots/LAB4/21_run_dindpng.png)
+
+* Zainicjalizowano instację, i zalogowano z hasłem admina
+
+   ```
+   docker run -d --rm --name jenkins \
+  --network jenkins-net \
+  -p 8080:8080 -p 50000:50000 \
+  -v jenkins-data:/var/jenkins_home \
+  -v jenkins-docker-certs:/certs/client:ro \
+  -e DOCKER_HOST=tcp://jenkins-docker:2376 \
+  -e DOCKER_CERT_PATH=/certs/client \
+  -e DOCKER_TLS_VERIFY=1 \
+  jenkins/jenkins:lts
+   ```
+   ![Alt text](screenshots/LAB4/22_docker_run_jenkins.png)
+   ```
+   docker exec jenkins cat /var/jenkins/secrets/initialAdminPassword
+   ```
+   ![Alt text](screenshots/LAB4/23_jenkins_initial_admin_pass.png)
+
+   Otwarto w przeglądarcę stronę logowania Jenkins'a i zalogowano się z użyciem hasła:
+   ![Alt text](screenshots/LAB4/24_jenkins_page.png)
