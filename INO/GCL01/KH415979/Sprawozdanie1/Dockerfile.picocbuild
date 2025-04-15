@@ -1,0 +1,12 @@
+FROM fedora:latest
+
+RUN dnf install --assumeyes make
+RUN dnf install --assumeyes gcc
+RUN dnf install --assumeyes readline-devel
+RUN dnf install --assumeyes git
+
+RUN git clone https://github.com/larryhe/tiny-c-interpreter.git
+
+WORKDIR /tiny-c-interpreter/
+RUN make
+CMD ["bash"]
