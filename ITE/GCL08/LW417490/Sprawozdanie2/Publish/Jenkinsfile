@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'LW417490', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Cleaning') {
+            steps {
+                dir('ITE/GCL08/LW417490/Sprawozdanie2') {
+                    sh 'docker rmi -f express-build'
+                    sh 'docker rmi -f express-app'
+                    sh 'docker builder prune --force --all'
+                    sh 'docker network inspect ci >/dev/null 2>&1 && docker network rm ci || true'
+                }
+            }
+        }
+
+        stage('Build Dockerfile') {
+            steps {
+                dir('ITE/GCL08/LW417490/Sprawozdanie2') {
+                    sh 'docker build -f Dockerfile.expbuild -t express-build .'
+                }
+            }
+        }
+
+        stage('Publish Dockerfile') {
+            steps {
+                dir('ITE/GCL08/LW417490/Sprawozdanie2') {
+                    sh 'docker build -f Dockerfile.exppub -t express-app .'
+                }
+            }
+        }
+
+        stage('Run app') {
+            steps {
+                dir('ITE/GCL08/LW417490/Sprawozdanie2') {
+                    sh 'docker network create ci'
+                    sh 'docker run --rm -d --network ci --name app -p 3000:3000 express-app'
+                    sh 'docker run --rm --network ci fedora curl -s app:3000'
+                }
+            }
+        }
+        
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker_hub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                    sh 'docker tag express-app lucyferryt/express-app:latest'
+                    sh 'docker push lucyferryt/express-app:latest'
+                }
+            }
+        }
+    }
+}
