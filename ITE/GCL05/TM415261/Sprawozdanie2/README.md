@@ -283,7 +283,7 @@ Obraz do publikacji nosi nazwę `tomaszek03/redis-app` i jest wersjonowany za po
 #### Etap `Publish`
 Etap ten odpowiada za opublikowanie obrazu na DockerHub. Na początku dodałem do Jenkinsa tzw. "credentials" umożliwiające zalogowanie się do DockerHub'a (login i hasło). Następnie w etapie `Publish` w `pipeline`, za ich pomocą loguję się do DockerHub'a i publikuję aktualną wersję obrazu. Dodatkowo publikuję też wersję `latest` w celu szybkiego dostępu do najnowszej wersji obrazu.
 
-### Weryfikacja działania `pipeline`
+### Weryfikacja działania `pipeline`'u
 
 Po uruchomieniu `pipeline` zakończył się sukcesem
 ![ss](./screenshots/ss16.png)
@@ -293,8 +293,19 @@ Pełny log dostępny jest w repozytorium: [`pipeline_log.txt`](./pipeline_log.tx
 Repozytorium pojawiło się na moim profilu DockerHub:
 ![ss](./screenshots/ss17.png)
 
-Dostępne są wszystkie opublikowane wersje:
+Dostępne są wszystkie opublikowane wersje obrazu:
 ![ss](./screenshots/ss18.png)
+
+#### Ponowne uruchomienie `pipeline`'u
+
+Ponowne uruchomienie `pipeline`'u ponownie zakończyło się sukcesem. Dowodem na to, że pracował na najnowszym (a nie *cacheowanym*) kodzie jest bardzo zbliżony czas wykonania obydwu `pipeline`'ów:
+
+![ss](./screenshots/ss21.png)
+
+![ss](./screenshots/ss22.png)
+
+Na DockerHub'ie pojawiła się nowa wersja obrazu:
+![ss](./screenshots/ss23.png)
 
 #### Próba pobrania i uruchomienia obrazu:
 
