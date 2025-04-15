@@ -1,0 +1,30 @@
+# Używamy Ubuntu jako bazowego obrazu
+FROM ubuntu:latest
+
+# Aktualizacja repozytoriów i instalacja wymaganych pakietów
+RUN apt update && apt install -y \
+    build-essential \
+    git \
+    meson \
+    ninja-build \
+    pkg-config \
+    libssl-dev \
+    libglib2.0-dev \
+    libutf8proc-dev \
+    libncurses-dev \
+    libtinfo-dev \
+    libperl-dev \
+    perl cpanminus && \
+    cpanm ExtUtils::Embed
+
+# Skopiowanie całego kodu źródłowego do kontenera
+COPY . /app
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
+
+# Konfiguracja Meson
+RUN meson setup builddir
+
+# Budowanie aplikacji
+RUN ninja -C builddir

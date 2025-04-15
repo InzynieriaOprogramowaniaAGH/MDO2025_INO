@@ -1,0 +1,95 @@
+pipeline {
+    agent any
+
+    environment {
+        APP_DIR = 'ITE/GCL08/LW417127/Sprawozdanie2'
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'LW417127_S2', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Cleaning') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker rmi -f express-build || true'
+                    sh 'docker rmi -f express-app || true'
+                    sh 'docker builder prune --force --all || true'
+                    sh 'docker network inspect ci >/dev/null 2>&1 && docker network rm ci || true'
+                    sh 'docker ps -q --filter "name=app" | grep -q . && docker rm -f app || true'
+                }
+            }
+        }
+
+        stage('Build Express App') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfiles/Dockerfile.express-build -t express-build .'
+                    sh 'docker run --rm express-build npm --version'
+                }
+            }
+        }
+
+        stage('Build Deploy Container') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfiles/Dockerfile.express-deploy -t express-app .'
+                }
+            }
+        }
+
+        stage('Run and Test App') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh '''
+                        docker network create ci || true
+                        docker run -d --rm --network ci --name app -p 3000:3000 express-app
+                        sleep 5
+                        docker run --rm --network ci curlimages/curl curl -s --fail app:3000
+                    '''
+                }
+            }
+        }
+
+        stage('Publish to NPM') {
+            steps {
+                withCredentials([string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
+                    dir("${APP_DIR}") {
+                        sh '''
+                            docker create --name temp_publish express-build
+                            docker cp temp_publish:/tmp/foo ./foo
+                            docker rm temp_publish
+                            
+                            VERSION=$(docker run --rm -v "$PWD/foo":/app -w /app express-build \
+                                node -p "require('./package.json').version")
+
+                            NEW_VERSION=$(echo $VERSION | awk -F. '{ $3 = $3 + 1; print $1 "." $2 "." $3 }')
+
+                            echo "Current version: $VERSION"
+                            echo "New version: $NEW_VERSION"
+
+                            docker run --rm -v "$PWD/foo":/app -w /app express-build \
+                                sh -c "npm pkg set name='devops_lukasz_wrobel' && \
+                                npm pkg set version='$NEW_VERSION' && \
+                                npm pkg delete private && \
+                                cat package.json"
+                            
+                            docker run --rm -v "$PWD/foo":/app -w /app express-build npm pack
+        
+                            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./foo/.npmrc
+        
+                            docker run --rm -v "$PWD/foo":/app -w /app express-build npm publish --access public
+                            
+                            rm ./foo/.npmrc
+                        '''
+                        
+                        archiveArtifacts artifacts: 'foo/*.tgz', fingerprint: true
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,9 @@
+FROM node:16 AS express-build
+
+RUN npm install -g express-generator@4
+
+RUN express /tmp/foo
+
+WORKDIR /tmp/foo
+
+RUN npm install
