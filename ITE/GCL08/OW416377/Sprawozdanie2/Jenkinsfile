@@ -1,0 +1,83 @@
+pipeline {
+    agent any
+    
+    environment {
+        NEXTAUTH_URL = 'http://localhost:3000'
+        NEXTAUTH_SECRET = credentials('NEXTAUTH_SECRET')
+        NEXT_PUBLIC_BASE_API_URL = 'http://localhost:3000/app'
+        NEXT_PUBLIC_EXAMPLE_URL = 'https://just-example-url'
+    }
+    
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'OW416377_S2', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+        
+        stage('Clean'){
+            steps {
+                dir('ITE/GCL08/OW416377/Sprawozdanie2') {
+                    sh '''
+                        docker rm -f app || true
+                        docker ps -a -q --filter "network=ci" | xargs -r docker rm -f || true
+                        docker network rm ci || true
+                        docker rmi -f next-build || true
+                        docker rmi -f next-test || true
+                        docker rmi -f next-deploy || true
+                        docker builder prune --force --all || true
+                    '''
+                }
+            }
+            
+        }
+        
+        stage('Build App (next-build)') {
+            steps {
+                dir('ITE/GCL08/OW416377/Sprawozdanie2') {
+                    sh '''
+                        docker build \
+                            --build-arg NEXTAUTH_URL=$NEXTAUTH_URL \
+                            --build-arg NEXTAUTH_SECRET=$NEXTAUTH_SECRET \
+                            --build-arg NEXT_PUBLIC_BASE_API_URL=$NEXT_PUBLIC_BASE_API_URL \
+                            --build-arg NEXT_PUBLIC_EXAMPLE_URL=$NEXT_PUBLIC_EXAMPLE_URL \
+                            -f Dockerfile.bldnext -t next-build .
+                    '''
+                }
+            }
+        }
+        
+        stage('Run Tests (next-test)') {
+            steps {
+                dir('ITE/GCL08/OW416377/Sprawozdanie2') {
+                    sh 'docker build -f Dockerfile.testnext -t next-test .'
+                }
+            }
+        }
+        
+        stage('Deploy App') {
+            steps {
+                dir('ITE/GCL08/OW416377/Sprawozdanie2') {
+                    sh '''
+                        docker build \
+                            --build-arg NEXTAUTH_URL=$NEXTAUTH_URL \
+                            --build-arg NEXTAUTH_SECRET=$NEXTAUTH_SECRET \
+                            --build-arg NEXT_PUBLIC_BASE_API_URL=$NEXT_PUBLIC_BASE_API_URL \
+                            --build-arg NEXT_PUBLIC_EXAMPLE_URL=$NEXT_PUBLIC_EXAMPLE_URL \
+                            -f Dockerfile.deploynext -t next-deploy .
+
+                        docker network create ci
+
+                        docker rm -f app >/dev/null 2>&1 || true
+
+                        docker run -d --name app --network ci -p 3000:3000 next-deploy
+
+                        sleep 5
+                    
+                        docker run --rm --network ci curlimages/curl curl -v app:3000 || (echo "App did not respond properly. Failing..."; exit 1)
+                    '''
+                }
+            }
+        }
+    }
+}
