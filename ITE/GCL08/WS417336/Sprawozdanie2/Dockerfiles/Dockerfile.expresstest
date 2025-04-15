@@ -1,3 +1,5 @@
 FROM express-build
 
+WORKDIR /tmp/foo
+
 CMD ["npm", "test"]
