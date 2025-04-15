@@ -1,0 +1,85 @@
+Started by user Meg Paskowski
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/p4
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Klonowanie repozytorium)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/p4/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/MP417574^{commit} # timeout=10
+Checking out Revision 39eaa3cf999ed234986df7c7b87ac81f0d0c3b97 (refs/remotes/origin/MP417574)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 39eaa3cf999ed234986df7c7b87ac81f0d0c3b97 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D MP417574 # timeout=10
+ > git checkout -b MP417574 39eaa3cf999ed234986df7c7b87ac81f0d0c3b97 # timeout=10
+Commit message: "MP417574: Przeniesienie plików"
+First time build. Skipping changelog.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Budowanie obrazu)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/p4/INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t cjson-build -f Dockerfile.build1 .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.build1
+#1 transferring dockerfile: 302B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:latest
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/5] FROM docker.io/library/ubuntu:latest
+#4 DONE 0.0s
+
+#5 [3/5] WORKDIR /app
+#5 CACHED
+
+#6 [4/5] RUN git clone https://github.com/DaveGamble/cJSON.git .
+#6 CACHED
+
+#7 [2/5] RUN apt update && apt install -y git cmake gcc g++ make
+#7 CACHED
+
+#8 [5/5] RUN mkdir build && cd build && cmake .. && make
+#8 CACHED
+
+#9 exporting to image
+#9 exporting layers done
+#9 writing image sha256:ac05b4678f8419d5d5d2eb7b075914a110a3056de80e837bfa0798e9f13145b6 done
+#9 naming to docker.io/library/cjson-build done
+#9 DONE 0.0s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

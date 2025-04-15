@@ -136,6 +136,8 @@ Po odpaleniu projektu:
 
 Kolejnym utworzonym pojektem 'p3' będzie `Pipeline`, który pobiera obraz kontenera ubuntu (stosując docker pull).
 
+`Pipeline` to zautomatyzowany proces w Jenkinsie, który definiuje kolejne etapy (np. klonowanie repozytorium, budowanie, testowanie) potrzebne do dostarczenia i przetestowania aplikacji.
+
 ![projekt_p3](IMG5/p3.png)
 
 Wynik uruchomienia:
@@ -152,18 +154,17 @@ pipeline {
     agent any
 
     stages {
-        stage('Klonowanie repo') { 
+        stage('Klonowanie repozytorium') { 
             steps {
                 git branch: 'MP417574', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
             }
         }
 
-        stage('Budowanie obrazu buildera') {
+        stage('Budowanie obrazu') {
             steps {
-                dir ("INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles")
-                {
+                dir("INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles") {
                     script {
-                        docker.build('cjson-builder-image', '-f Dockerfiles/Dockerfile.build1 .')
+                        docker.build('cjson-build', '-f Dockerfile.build1 .')
                     }
                 }
             }
@@ -176,29 +177,190 @@ Wynik uruchomienia:
 
 ![projekt_p4_wynik](IMG5/p4_wynik.png)
 
-#### Implementacja Pipeline'u z wykorzystaniem kontenerów
-Celem punktu zadania było stworzenie potoku Jenkinsa (`Pipeline`), który będzie wykorzystywał kontenery do izolacji poszczególnych etapów budowania i testowania. `Pipeline` powinien być zdefiniowany w pliku Jenkinsfile umieszczonym w repozytorium projektu.
+[Zobacz log z budowania](JenkinsLogs/console_results_build.log)
 
-Utworzyłam plik `Jenkinsfile`definiujący pipeline w głównym katalogu repozytorium.
-```groovy
+
+Następnie dołączyłam do pipelina `p4`testy z pliku `Dockerfile.test` z poprzednich zajęć (tworzenie kontenera na bazie obrazu `cjson-builder-image` i uruchamienie testów).
+Wyniki przeprowadzonych testów zostanął zapisane w pliku "test_result.log".
+
+```pipeline
+pipeline {
+    agent any
+
+    stages {
+        stage('Klonowanie repozytorium') { 
+            steps {
+                git branch: 'MP417574', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Budowanie obrazu') {
+            steps {
+                dir ("INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles") {
+                    script {
+                        docker.build('cjson-build', '-f Dockerfile.build1 .')
+                    }
+                }
+            }
+        }
+
+        stage('Budowanie obrazu testowego') {
+            steps {
+                dir ("INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles") {
+                    script {
+                        docker.build('cjson-test', '-f Dockerfile.test .')
+                    }
+                }
+            }
+        }
+
+        stage('Testy') {
+            steps {
+                dir ("INO/GCL02/MP417574/Sprawozdanie2/JenkinsLogs") {
+                    sh """
+                        docker run --rm cjson-test | tee test_result.log
+                    """
+                }    
+            }
+        }
+
+        stage('Wyniki logów z testów') {
+            steps {
+                archiveArtifacts artifacts: 'INO/GCL02/MP417574/Sprawozdanie2/JenkinsLogs/artifacts/test_result.log', fingerprint: true
+            }
+        }
+    }
+}
 
 ```
+Parametr `fingerprint: true` w poleceniu `archiveArtifacts` powoduje utworzenie unikalnego odcisku palca (`hasha`) dla archiwizowanego pliku. Dzięki temu Jenkins może śledzić pochodzenie danego pliku i powiązać go z konkretnym buildem lub innymi projektami.
+
+Wynik uruchomienia po dokonanych zmianach:
+
+![projekt_p4_wynik2](IMG5/p4_wynik2.png)
+
+Wynik działania testów jednostkowych uruchomionych w kontenerze Jenkins, zapisany do pliku test_result.log podczas wykonywania etapu Testy w pipeline. 
+Wszystkie testy zakończyły się sukcesem – "19/19 zaliczonych".
+
+![projekt_p4_wynik3](IMG5/p4_wynik3.png)
+
+[Zobacz log z testów](JenkinsLogs/test_result.log)
+
+#### Implementacja Pipeline'u z wykorzystaniem kontenerów
+Celem punktu zadania było stworzenie potoku Jenkinsa (`Pipeline`), który będzie wykorzystywał kontenery do izolacji poszczególnych etapów budowania i testowania. 
+
+Utworzyłam plik `Jenkinsfile`definiujący pipeline w głównym katalogu repozytorium.
+
+```groovy
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') { 
+            steps {
+                git branch: 'MP417574', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Clear Docker cache') {
+            steps {
+                sh 'docker builder prune -af'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir("INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles_p") {
+                    script {
+                        docker.build('cjson-build', '-f Dockerfile.build1 .')
+
+                        sh '''
+                            mkdir -p ../artifacts
+                            CID=$(docker create cjson-build)
+                            docker cp $CID:/app/cjson.rpm ../artifacts/
+                            docker rm $CID
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir("INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles_p") {
+                    script {
+                        docker.build('cjson-test', '-f Dockerfile.test .')
+
+                        sh """
+                            docker run --rm cjson-test | tee ../artifacts/cjson_test.log
+                        """
+                    }
+                }    
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir("INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles_p") {
+                    script {
+                        sh 'cp ../artifacts/cjson.rpm .'
+                        docker.build("cjson-deploy", "-f Dockerfile.deploy .")
+
+                        sh """
+                            docker run --rm cjson-deploy | tee ../artifacts/cjson_deploy.log
+                        """
+                    }      
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                archiveArtifacts artifacts: 'INO/GCL02/MP417574/Sprawozdanie2/artifacts/*.log', fingerprint: true
+                archiveArtifacts artifacts: 'INO/GCL02/MP417574/Sprawozdanie2/artifacts/*.rpm', fingerprint: true
+            }
+        }
+    }
+}
+```
+
+Po utworzenie nowego pipeline o nazwie 'cJSON_MP417574' wybrałam opcję 'Pipeline script from SCM` -> SCM: Git i uzupeniłam potrzebne informację.
+
+
+![projekt_cJSON](IMG5/cJSON.png)
+
+
+oraz uruchomiam pipeline.
+Wyniki:
+
+
+####Podsumowanie
 
 Wartianty implementacji:
-1. Bezpośrednio na kontenerze CI:
-- Prostsza konfiguracja
-- Mniejsze zużycie zasobów
-- Szybsze uruchomienie
-- Mniejsza izolacja
-- Potencjalne konflikty wersji narzędzi
+1. Bezpośrednio na kontenerze CI (DOoD – Docker Outside of Docker).
+W tym podejściu Jenkins nie uruchamia własnego demona Dockera, lecz korzysta z Dockera działającego bezpośrednio na hoście systemowym. Dzięki temu:
+- Konfiguracja jest prostsza i szybsza w uruchomieniu.
+- Nie wymaga tworzenia osobnych kontenerów z `dockerd`
+- Nie ma potrzeby konfigurowania TLS ani nadawania specjalnych uprawnień.
+- Zużycie zasobów jest niższe, co może być istotne na słabszych maszynach.
+- Jednak Jenkins zyskuje pełen dostęp do Dockera hosta, co zmniejsza izolację i niesie ze sobą ryzyko przypadkowego usunięcia obrazów lub kontenerów systemu głównego.
+- Pipeline staje się też mniej przenośny, ponieważ zależy bezpośrednio od środowiska hosta (wersje narzędzi, konfiguracja Dockera itp.).
 
-
-2. Z wykorzystaniem DinD
-- Pełna izolacja środowisk
+2. Z wykorzystaniem Docker-in-Docker (DIND).
+To podejście polega na uruchamianiu kontenera z demonem Dockera (docker:dind), z którym łączy się Jenkins działający również jako kontener. Dzięki temu cały proces CI/CD odbywa się w pełni kontenerowo i z zachowaniem wysokiej izolacji.
+- Buildy, testy i inne działania pipeline’u są odizolowane od hosta.
 - Możliwość równoległego uruchamiania wielu buildów
-- Spójność z lokalnym środowiskiem developerskim
-- Większa złożoność
-- Wymaga kontenera `privileged`
-- Większe zużycie zasobów
+- Możliwe jest równoległe uruchamianie wielu środowisk testowych niezależnie od siebie.
+- Środowisko pipeline’u można łatwo przenosić i odtwarzać na innych maszynach (np. w zespołach developerskich).
+- Zwiększa to bezpieczeństwo — pipeline nie wpływa na system hosta.
+- Jednak DIND wymaga większej złożoności konfiguracji:
+     - Kontener docker:dind musi być uruchomiony z flagą `--privileged`, aby umożliwić pełne działanie demona Dockera.
+     - Niezbędne może być skonfigurowanie TLS (certyfikatów) do bezpiecznej komunikacji między kontenerami.
+     - Jenkins musi mieć odpowiednie pluginy umożliwiające komunikację z zewnętrznym `dockerd`.
+- Dodatkowo zużycie zasobów systemowych może być wyższe niż w przypadku DOoD.
+
+
+Dlaczego wybrałam w projekcie podejście `DIND`?
+W projekcie zdecydowałam się na pto odejście, ponieważ zapewnia ono lepszą przenośność środowiska CI/CD, umożliwia jego łatwe odtworzenie na innych systemach oraz zwiększa bezpieczeństwo dzięki pełnej izolacji procesu od systemu hosta.
 
 

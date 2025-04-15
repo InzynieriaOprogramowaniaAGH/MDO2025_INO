@@ -1,0 +1,12 @@
+FROM fedora:41
+
+COPY cjson.rpm /tmp/cjson.rpm
+RUN dnf install -y /tmp/cjson.rpm gcc
+
+COPY main.c /app/main.c
+WORKDIR /app
+
+RUN gcc main.c -o example -lcjson -I/usr/local/include/cjson -L/usr/local/lib64
+ENV LD_LIBRARY_PATH=/usr/local/lib64
+
+CMD ["./example"]
