@@ -16,6 +16,8 @@ pipeline {
                     sh 'docker rmi -f express-build'
                     sh 'docker rmi -f express-app'
                     sh 'docker builder prune --force --all'
+                    sh 'docker stop app || true'
+                    sh 'docker rm app || true'
                     sh 'docker network inspect ci >/dev/null 2>&1 && docker network rm ci || true'
                 }
             }
