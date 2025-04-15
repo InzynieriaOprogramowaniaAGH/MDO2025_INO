@@ -12,7 +12,7 @@ Utworzenie sieci jenkins
 docker network create jenkins
 ```
 
-![](../screens/class5/1.jpg)
+![](class5/1.jpg)
 
 Uruchomienie docker:dind w kontenerze
 
@@ -32,7 +32,7 @@ docker run \
   --storage-driver overlay2
 ```
 
-![](../screens/class5/2.jpg)
+![](class5/2.jpg)
 
 Utworzenie pliku Dockerfile do zbudowania kontenera blueocean
 
@@ -52,7 +52,7 @@ USER jenkins
 RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
 ```
 
-![](../screens/class5/3.jpg)
+![](class5/3.jpg)
 
 Zbudowanie obrazu z powyższego Dockerfile
 
@@ -60,7 +60,7 @@ Zbudowanie obrazu z powyższego Dockerfile
 docker build -t myjenkins-blueocean -f Dockerfile.blueocean .
 ```
 
-![](../screens/class5/4.jpg)
+![](class5/4.jpg)
 
 Uruchomienie jenkins:blueocean w kontenerze
 
@@ -80,7 +80,7 @@ docker run \
   myjenkins-blueocean
 ```
 
-![](../screens/class5/5.jpg)
+![](class5/5.jpg)
 
 Po uruchomieniu blueocean i dind przechodzimy na stronę konfiguracyjną jenkins na porcie 8080: http://localhost:8080/
 
@@ -90,23 +90,23 @@ Po uruchomieniu blueocean i dind przechodzimy na stronę konfiguracyjną jenkins
 
 Po podaniu hasła zapisanego w kontenerze z jenkinsem przenosimy się do panelu konfiguracyjnego jenkins, skąd możemy tworzyć projekty i *pipeline'y*
 
-![](../screens/class5/7.jpg)
+![](class5/7.jpg)
 
 W zakładce *Nowy projekt* tworzymy nowy projekt i w jego konfiguracji w krokach budowania możemy umieścić treść polecenia, które ma się wykonać po uruchomieniu projektu
 
-![](../screens/class5/8.jpg)
+![](class5/8.jpg)
 
 Wynik projektu wyświetlającego ```uname -a```
 
-![](../screens/class5/9.jpg)
+![](class5/9.jpg)
 
 Wynik projektu wyświetlającego błąd jeśli godzina jest nieparzysta
 
-![](../screens/class5/10.jpg)
+![](class5/10.jpg)
 
 Wynik projektu wykonującego polecenie ```docker pull ubuntu``` wewnątrz DinD
 
-![](../screens/class5/11.jpg)
+![](class5/11.jpg)
 
 ### Zadanie wstępne: obiekt typu pipeline
 
@@ -116,19 +116,19 @@ Wewnątrz projektu pipeline'u tworzymy skrypt w składni pipeline, który klonuj
 
 #### Treść skryptu:
 
-![](../screens/class5/12.jpg)
+![](class5/12.jpg)
 
 Wyniki dwukrotnego uruchomienia pipeline'u
 
-![](../screens/class5/13.jpg)
+![](class5/13.jpg)
 
-![](../screens/class5/14.jpg)
+![](class5/14.jpg)
 
 Zestawienie czasów trwania procesów buildowania dla obu uruchomień pipeline'u. Obserwujemy podobne wynki czasowe, co sugeruje, że oba pipeline'y wykonały tę samą pracę i żadne czynności nie zostały pominięte chociażby poprzez cache'owanie
 
-![](../screens/class5/15.jpg)
+![](class5/15.jpg)
 
-![](../screens/class5/16.jpg)
+![](class5/16.jpg)
 
 # Sprawozdanie z Publikacji pakietu npm z express.js
 
@@ -146,7 +146,7 @@ Plik Dockerfile przygotowany do buildu aplikacji express
   RUN npm install
 ```
 
-![](../screens/class6/1.jpg)
+![](class6/1.jpg)
 
 Plik Dockerfile przygotowany do deploymentu aplikacji express
 
@@ -160,35 +160,35 @@ Plik Dockerfile przygotowany do deploymentu aplikacji express
   CMD ["npm", "start"]
 ```
 
-![](../screens/class6/2.jpg)
+![](class6/2.jpg)
 
 Utworzenie sieci dla CI
 
-![](../screens/class6/3.jpg)
+![](class6/3.jpg)
 
 Uruchomienie kontenera deploymentowego w celu weryfikacji działania aplikacji
 
-![](../screens/class6/4.jpg)
+![](class6/4.jpg)
 
 Potwierdzenia prawidłowego działania aplikacji poprzez ```curl```
 
-![](../screens/class6/5.jpg)
+![](class6/5.jpg)
 
 Wygenerowanie tokenu autoryzacyjnego dla NPM
 
-![](../screens/class6/6.jpg)
+![](class6/6.jpg)
 
 Dodanie tokenu do plików projektu
 
-![](../screens/class6/7.jpg)
+![](class6/7.jpg)
 
 Próba publikacji lokalnie z dopiskiem ```--dry-run``` aby jeszcze nie publikować pakietu
 
-![](../screens/class6/8.jpg)
+![](class6/8.jpg)
 
 Dodanie tokenu NPM do uprawnień jenkinsa
 
-![](../screens/class6/9.jpg)
+![](class6/9.jpg)
 
 Przeprowadzenie próby całego procesu poprzez pipeline
 
@@ -283,27 +283,27 @@ pipeline {
 
 ```
 
-![](../screens/class6/10.jpg)
+![](class6/10.jpg)
 
 Dodanie zapisu artefaktu dla możliwości jego pobrania z poziomu UI jenkinsa
 
-![](../screens/class6/11.jpg)
+![](class6/11.jpg)
 
 Gotowy do pobrania artefakt pochodzący z procesu próbnej publikacji (--dry-run)
 
-![](../screens/class6/12.jpg)
+![](class6/12.jpg)
 
 Przeprowadzenie procesu publikacji z publicznym dostępem do paczki npm
 
-![](../screens/class6/13.jpg)
+![](class6/13.jpg)
 
 Widok paczki npm na https://registry.npmjs.org/devops_lukasz_wrobel
 
-![](../screens/class6/14.jpg)
+![](class6/14.jpg)
 
 Artefakt do pobrania pochodzący z publicznej wersji publikacji pakietu
 
-![](../screens/class6/15.jpg)
+![](class6/15.jpg)
 
 # Sprawozdanie z publikacji pakietu npm korzystając z Jenkinsfile odczytywanego w pipelinie oraz modyfikacje skryptu pipelienu
 
@@ -409,13 +409,13 @@ pipeline {
 
 Konfiguracja źródła skryptu pipeline'u na skrypt z SCM
 
-![](../screens/class7/1.jpg)
-![](../screens/class7/2.jpg)
+![](class7/1.jpg)
+![](class7/2.jpg)
 
 Uruchomienie pipeline'u - jak widać pipeline na początku klonuje repozytorium w poszukiwaniu Jenkinsfile, następnie wykonuje skrypt w nim zawarty
 
-![](../screens/class7/3.jpg)
+![](class7/3.jpg)
 
 Wynik działania pipeline'u pozostaje taki sam, wprowadzona została modyfikacja automatycznego zwiększania wersji paczki w celu zabezpieczenia pipeline'u przed błędami wynikającymi z ponownej publikacji istniejącej paczki
 
-![](../screens/class7/4.jpg)
+![](class7/4.jpg)

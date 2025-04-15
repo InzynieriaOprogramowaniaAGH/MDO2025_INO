@@ -7,7 +7,7 @@ Na serwerze Fedora instalujemy Git oraz narzędzia do zarządzania kluczami SSH:
 sudo dnf install git openssh -y
 ```
 
-**Zrzut ekranu:** ![Instalacja Git](../screens/class1/instalacja_git.jpg)
+**Zrzut ekranu:** ![Instalacja Git](class1/instalacja_git.jpg)
 
 ## 2. Klonowanie repozytorium przez HTTPS i Personal Access Token (PAT)
 
@@ -19,7 +19,7 @@ git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
 ```
 Po podaniu loginu, zamiast hasła wklejamy wygenerowany PAT.
 
-**Zrzut ekranu:** ![Klonowanie https](../screens/class1/sklonowanie_repo_https.jpg)
+**Zrzut ekranu:** ![Klonowanie https](class1/sklonowanie_repo_https.jpg)
 
 ## 3. Klonowanie repozytorium za pomocą klucza SSH
 
@@ -32,7 +32,7 @@ ssh-keygen -t ecdsa -b 521 -C "wrobel.lukasz02@gmail.com"
 
 Dla jednego z kluczy ustawiamy hasło.
 
-**Zrzut ekranu:** ![Generowanie kluczy SSH](../screens/class1/generowanie_klucza_ssh.jpg)
+**Zrzut ekranu:** ![Generowanie kluczy SSH](class1/generowanie_klucza_ssh.jpg)
 
 ### 3.2. Konfiguracja klucza SSH na GitHubie
 Dodajemy zawartość klucza publicznego (~/.ssh/id_ed25519.pub) do GitHuba (Settings -> SSH and GPG Keys).
@@ -42,7 +42,7 @@ Testujemy połączenie:
 ssh -T git@github.com
 ```
 
-**Zrzut ekranu:** ![Github SSH key](../screens/class1/ssh_github.jpg)
+**Zrzut ekranu:** ![Github SSH key](class1/ssh_github.jpg)
 
 ### 3.3. Klonowanie repozytorium przez SSH
 
@@ -50,13 +50,13 @@ ssh -T git@github.com
 git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO
 ```
 
-**Zrzut ekranu:** ![Klonowanie SSH](../screens/class1/sklonowanie_repo_ssh.jpg)
+**Zrzut ekranu:** ![Klonowanie SSH](class1/sklonowanie_repo_ssh.jpg)
 
 ## 4. Konfiguracja 2FA
 
 Włączamy 2FA w ustawieniach GitHub -> Security.
 
-**Zrzut ekranu:** ![Github 2FA](../screens/class1/2FA.jpg)
+**Zrzut ekranu:** ![Github 2FA](class1/2FA.jpg)
 
 ## 5. Praca z gałęziami w repozytorium
 
@@ -71,14 +71,14 @@ git checkout GCL08
 git checkout -b LW417127
 ```
 
-**Zrzut ekranu:** ![Branch](../screens/class1/branch.jpg)
+**Zrzut ekranu:** ![Branch](class1/branch.jpg)
 
 ### 5.3. Tworzenie katalogu
 ```bash
 mkdir LW417127
 ```
 
-**Zrzut ekranu:** ![Branch](../screens/class1/branch.jpg)
+**Zrzut ekranu:** ![Branch](class1/branch.jpg)
 
 ## 6. Tworzenie Git hooka
 
@@ -107,7 +107,7 @@ Kopiujemy do katalogu hooks:
 cp GCL08/LW417127/commit-msg .git/hooks/
 ```
 
-**Zrzut ekranu:** ![git hook test](../screens/class1/test_git_hooka.jpg)
+**Zrzut ekranu:** ![git hook test](class1/test_git_hooka.jpg)
 
 ## 7. Próba merge z branchem grupowym
 
@@ -125,8 +125,8 @@ git commit -m "LW417127 Polaczenie galezi LD417127 z GCL08"
 git push origin GCL08
 ```
 
-**Zrzut ekranu:** ![git hook test](../screens/class1/git_merge.jpg)
-**Zrzut ekranu:** ![git hook test](../screens/class1/git_merge_blad.jpg)
+**Zrzut ekranu:** ![git hook test](class1/git_merge.jpg)
+**Zrzut ekranu:** ![git hook test](class1/git_merge_blad.jpg)
 
 # Sprawozdanie z instalacji i konfiguracji Dockera
 
@@ -139,27 +139,27 @@ Zaczynamy od instalacji Dockera na systemie Fedora.
    ```bash
    sudo dnf update -y
    ```
-   ![Zrzut ekranu: Aktualizacja systemu](../screens/class2/update_systemu.jpg)
+   ![Zrzut ekranu: Aktualizacja systemu](class2/update_systemu.jpg)
 
 2. **Instalujemy Docker:**
    Aby zainstalować Dockera, używamy repozytoriów systemowych:
    ```bash
    sudo dnf install docker -y
    ```
-   ![Zrzut ekranu: Instalacja Dockera](../screens/class2/instalacja_docker.jpg)
+   ![Zrzut ekranu: Instalacja Dockera](class2/instalacja_docker.jpg)
 
 3. **Uruchamiamy i włączamy usługę Docker:**
    ```bash
    sudo systemctl start docker
    sudo systemctl enable docker
    ```
-   ![Zrzut ekranu: Uruchomienie Dockera](../screens/class2/uruchomienie_uslugi_docker.jpg)
+   ![Zrzut ekranu: Uruchomienie Dockera](class2/uruchomienie_uslugi_docker.jpg)
 
 4. **Sprawdzamy status Dockera:**
    ```bash
    sudo systemctl status docker
    ```
-   ![Zrzut ekranu: Status Dockera](../screens/class2/status_dockera.jpg)
+   ![Zrzut ekranu: Status Dockera](class2/status_dockera.jpg)
 
 ## 2. Rejestracja w Docker Hub
 1. Przechodzimy na stronę [Docker Hub](https://hub.docker.com/) i rejestrujemy się (jeśli jeszcze tego nie zrobiliśmy).
@@ -167,8 +167,8 @@ Zaczynamy od instalacji Dockera na systemie Fedora.
    ```bash
    docker login
    ```
-   ![Zrzut ekranu: Rejestracja do Docker Hub](../screens/class2/rejestracja_docker.jpg)
-   ![Zrzut ekranu: Logowanie do Docker Hub](../screens/class2/docker_logowanie.jpg)
+   ![Zrzut ekranu: Rejestracja do Docker Hub](class2/rejestracja_docker.jpg)
+   ![Zrzut ekranu: Logowanie do Docker Hub](class2/docker_logowanie.jpg)
 
 ## 3. Pobieranie obrazów Docker
 Pobieramy obrazy: `hello-world`, `busybox`, `ubuntu`, `fedora`, `mysql`.
@@ -180,7 +180,7 @@ docker pull ubuntu
 docker pull fedora
 docker pull mysql
 ```
-![Zrzut ekranu: Pobieranie obrazów Docker](../screens/class2/pobranie_obrazow.jpg)
+![Zrzut ekranu: Pobieranie obrazów Docker](class2/pobranie_obrazow.jpg)
 
 ## 4. Uruchamianie kontenera z obrazu `busybox`
 
@@ -188,13 +188,13 @@ docker pull mysql
    ```bash
    docker run -d --name my_busybox busybox
    ```
-   ![Zrzut ekranu: Uruchamianie kontenera busybox](../screens/class2/busybox.jpg)
+   ![Zrzut ekranu: Uruchamianie kontenera busybox](class2/busybox.jpg)
 
 2. **Sprawdzamy uruchomione kontenery:**
    ```bash
    docker ps
    ```
-   ![Zrzut ekranu: Uruchomione kontenery](../screens/class2/sprawdzenie_dzialania_busybox.jpg)
+   ![Zrzut ekranu: Uruchomione kontenery](class2/sprawdzenie_dzialania_busybox.jpg)
 
 ## 5. Podłączanie się do kontenera interaktywnie i sprawdzanie wersji
 
@@ -202,14 +202,14 @@ docker pull mysql
    ```bash
    docker exec -it my_busybox sh
    ```
-   ![Zrzut ekranu: Połączenie z kontenerem](../screens/class2/busybox_interaktywnie.jpg)
+   ![Zrzut ekranu: Połączenie z kontenerem](class2/busybox_interaktywnie.jpg)
 
 2. **Sprawdzamy wersję:**
    Wewnątrz kontenera uruchamiamy:
    ```bash
    busybox | head n-1
    ```
-   ![Zrzut ekranu: Sprawdzanie wersji busybox w kontenerze](../screens/class2/busybox_wersja.jpg)
+   ![Zrzut ekranu: Sprawdzanie wersji busybox w kontenerze](class2/busybox_wersja.jpg)
 
 3. **Wychodzimy z kontenera:**
    Aby opuścić kontener, używamy komendy:
@@ -234,20 +234,20 @@ docker pull mysql
      ```bash
      ps -ef | grep docker
      ```
-	![Zrzut ekranu: Uruchamianie kontenera z Fedora](../screens/class2/fedora_i_PID1.jpg)
+	![Zrzut ekranu: Uruchamianie kontenera z Fedora](class2/fedora_i_PID1.jpg)
 
 3. **Aktualizujemy pakiety w kontenerze (Fedora lub Ubuntu):**
    Wykonujemy to polecenie wewnątrz kontenera:
    ```bash
    dnf update -y
    ```
-   ![Zrzut ekranu: Aktualizacja pakietów w kontenerze](../screens/class2/aktualizacja_pakietow.jpg)
+   ![Zrzut ekranu: Aktualizacja pakietów w kontenerze](class2/aktualizacja_pakietow.jpg)
 
 4. **Wychodzimy z kontenera:**
    ```bash
    exit
    ```
-   ![Zrzut ekranu: Wyjście z kontenera Fedora](../screens/class2/wyjscie_z_kontenera.jpg)
+   ![Zrzut ekranu: Wyjście z kontenera Fedora](class2/wyjscie_z_kontenera.jpg)
 
 ## 7. Tworzenie własnego Dockerfile
 
@@ -265,14 +265,14 @@ docker pull mysql
 
    CMD ["bash"]
    ```
-   ![Zrzut ekranu: Tworzenie pliku Dockerfile](../screens/class2/utworzenie_dockerfile.jpg)
+   ![Zrzut ekranu: Tworzenie pliku Dockerfile](class2/utworzenie_dockerfile.jpg)
 
 2. **Budujemy obraz na podstawie Dockerfile:**
    W katalogu, gdzie znajduje się nasz `Dockerfile`, uruchamiamy:
    ```bash
    docker build -t my_custom_image .
    ```
-   ![Zrzut ekranu: Budowanie obrazu z Dockerfile](../screens/class2/build_obrazu.jpg)
+   ![Zrzut ekranu: Budowanie obrazu z Dockerfile](class2/build_obrazu.jpg)
 
 3. **Uruchamiamy kontener z tego obrazu interaktywnie:**
    ```bash
@@ -284,7 +284,7 @@ docker pull mysql
    ```bash
    ls
    ```
-   ![Zrzut ekranu: Uruchamianie kontenera z własnym obrazem](../screens/class2/uruchomienie_obrazu_i_sklonowane_repo.jpg)
+   ![Zrzut ekranu: Uruchamianie kontenera z własnym obrazem](class2/uruchomienie_obrazu_i_sklonowane_repo.jpg)
 
 ## 8. Wyświetlanie uruchomionych kontenerów i czyszczenie
 
@@ -292,7 +292,7 @@ docker pull mysql
    ```bash
    docker ps
    ```
-   ![Zrzut ekranu: Pokaż uruchomione kontenery](../screens/class2/uruchomione_kontenery.jpg)
+   ![Zrzut ekranu: Pokaż uruchomione kontenery](class2/uruchomione_kontenery.jpg)
 
 2. **Zatrzymujemy kontenery, które nie są już potrzebne:**
    ```bash
@@ -308,7 +308,7 @@ docker pull mysql
    ```bash
    docker rmi busybox fedora ubuntu mysql
    ```
-   ![Zrzut ekranu: Zatrzymywanie kontenerów](../screens/class2/zatrzymanie_i_usuniecie_kontenerow_i_obrazow.jpg)
+   ![Zrzut ekranu: Zatrzymywanie kontenerów](class2/zatrzymanie_i_usuniecie_kontenerow_i_obrazow.jpg)
 
 # Sprawozdanie z Dockerfiles, kontener jako definicja etapu
 
@@ -325,7 +325,7 @@ Aby rozpocząć pracę, sklonowano repozytorium projektu irssi z GitHub:
 ```
 git clone https://github.com/irssi/irssi
 ```
-![](../screens/class3/clone_irssi.jpg)
+![](class3/clone_irssi.jpg)
 
 ### 2. Instalacja zależności
 
@@ -335,9 +335,9 @@ Następnie, zainstalowane zostały wymagane zależności, aby umożliwić kompil
 sudo dnf -y install gcc glib2-devel openssl-devel perl-devel ncurses-devel meson ninja
 ```
 
-![](../screens/class3/meson_install.jpg)
-![](../screens/class3/instalacja_gcc.jpg)
-![](../screens/class3/instalacja_zaleznosci.jpg)
+![](class3/meson_install.jpg)
+![](class3/instalacja_gcc.jpg)
+![](class3/instalacja_zaleznosci.jpg)
 
 Po zainstalowaniu zależności, zbudowano projekt przy użyciu Meson:
 
@@ -346,8 +346,8 @@ meson Build
 ninja -C Build
 ```
 
-![](../screens/class3/meson_build.jpg)
-![](../screens/class3/ninja_build.jpg)
+![](class3/meson_build.jpg)
+![](class3/ninja_build.jpg)
 
 Oraz uruchomiono testy:
 
@@ -355,7 +355,7 @@ Oraz uruchomiono testy:
 ninja -C Build test
 ```
 
-![](../screens/class3/ninja_test.jpg)
+![](class3/ninja_test.jpg)
 
 ### 3. Przeprowadzenie buildu w kontenerze
 
@@ -366,7 +366,7 @@ docker pull ubuntu:latest
 docker run -it --name my_build_env ubuntu:latest /bin/bash
 ```
 
-![](../screens/class3/kontener_uruchomienie.jpg)
+![](class3/kontener_uruchomienie.jpg)
 
 Ponowna instalacja zależności programu wewnątrz kontenera
 
@@ -374,7 +374,7 @@ Ponowna instalacja zależności programu wewnątrz kontenera
 apt update && apt install -y build-essential git meson ninja-build perl-ExtUtils-Embed glib2-devel openssl-devel ncurses-devel
 ```
 
-![](../screens/class3/instalacja_zaleznosci_w_kontenerze.jpg)
+![](class3/instalacja_zaleznosci_w_kontenerze.jpg)
 
 Klonowanie repozytorium wewnątrz kontenera:
 
@@ -382,7 +382,7 @@ Klonowanie repozytorium wewnątrz kontenera:
 git clone https://github.com/irssi/irssi
 ```
 
-![](../screens/class3/klonowanie_repo_docker.jpg)
+![](class3/klonowanie_repo_docker.jpg)
 
 Konfiguracja i build aplikacji
 
@@ -391,8 +391,8 @@ meson setup builddir
 ninja -C builddir
 ```
 
-![](../screens/class3/meson_builddir.jpg)
-![](../screens/class3/ninja_build_docker.jpg)
+![](class3/meson_builddir.jpg)
+![](class3/ninja_build_docker.jpg)
 
 Uruchomienie testów
 
@@ -400,11 +400,11 @@ Uruchomienie testów
 ninja -C builddir test
 ```
 
-![](../screens/class3/ninja_test_docker.jpg)
+![](class3/ninja_test_docker.jpg)
 
 ### 4. Tworzenie Dockerfile
 
-![](../screens/class3/dockerfiles.jpg)
+![](class3/dockerfiles.jpg)
 
 #### Dockerfile dla pierwszego kontenera (build)
 
@@ -448,7 +448,7 @@ Zbudowanie obrazu kontenera (build)
 docker build -t build_image -f Dockerfile.build .
 ```
 
-![](../screens/class3/build_z_dockerfile.jpg)
+![](class3/build_z_dockerfile.jpg)
 
 #### Dockerfile dla drugiego kontenera (test)
 
@@ -469,7 +469,7 @@ Budowanie drugiego obrazu (test)
 docker build -t test_image -f Dockerfile.test .
 ```
 
-![](../screens/class3/test_z_dockerfile.jpg)
+![](class3/test_z_dockerfile.jpg)
 
 Uruchomienie kontenera z testami
 
@@ -477,7 +477,7 @@ Uruchomienie kontenera z testami
 docker run --rm --name test_container test_image
 ```
 
-![](../screens/class3/uruchomienie_testu_z_dockerfile.jpg)
+![](class3/uruchomienie_testu_z_dockerfile.jpg)
 
 # Sprawozdanie z Dodatkowa terminologia w konteneryzacji, instancja Jenkins
 
@@ -488,7 +488,7 @@ docker run --rm --name test_container test_image
 docker volume create input_volume
 docker volume create output_volume
 ```
-![](../screens/class4/1.jpg)
+![](class4/1.jpg)
 
 ### Utworzenie kontenera bazowego z zainstalowanymi zależnościami ale bez gita za pomocą Dockerfile
 
@@ -521,7 +521,7 @@ CMD ["/bin/bash"]
 docker build -t build_image_no_git -f Dockerfile.build_no_git .
 ```
 
-![](../screens/class4/2.jpg)
+![](class4/2.jpg)
 
 ### Uruchomienie kontenera bazowego z podpięciem utworzonych woluminów
 
@@ -532,7 +532,7 @@ docker run -it --name build-container \
 build_image_no_git /bin/bash
 ```
 
-![](../screens/class4/3.jpg)
+![](class4/3.jpg)
 
 ### Sklonowanie repozytorium spoza kontenera na wolumin wejściowy
 
@@ -542,7 +542,7 @@ build_image_no_git /bin/bash
 sudo git clone https://github.com/irssi/irssi $(docker volume inspect --format '{{ .Mountpoint }}' input_volume)
 ```
 
-![](../screens/class4/4.jpg)
+![](class4/4.jpg)
 
 ### Uruchomienie buildu repozytorium wewnątrz kontenera korzystając z woluminu wejściowego
 
@@ -552,8 +552,8 @@ meson setup builddir
 ninja -C builddir
 ```
 
-![](../screens/class4/5.jpg)
-![](../screens/class4/6.jpg)
+![](class4/5.jpg)
+![](class4/6.jpg)
 
 ### Zapisanie folderu builda na woluminie wyjściowym
 
@@ -561,7 +561,7 @@ ninja -C builddir
 cp -r /mnt/input/builddir /mnt/output
 ```
 
-![](../screens/class4/7.jpg)
+![](class4/7.jpg)
 
 ### Weryfikacja zapisanego builda na woluminie przy pomocy innego kontenera z zamontowanym woluminem wyjściowym
 
@@ -569,7 +569,7 @@ cp -r /mnt/input/builddir /mnt/output
 docker run --rm -v output_volume:/mnt/output alpine ls /mnt/output
 ```
 
-![](../screens/class4/9.jpg)
+![](class4/9.jpg)
 
 Powyższe czynnosci można również wykonać za pomocą ```docker build``` i ```Dockerfile``` bez konieczności uruchamiania kontenerów ręcznie.
 
@@ -583,7 +583,7 @@ Powyższe czynnosci można również wykonać za pomocą ```docker build``` i ``
 sudo dnf install -y iperf3
 ```
 
-![](../screens/class4/10.jpg)
+![](class4/10.jpg)
 
 ### Uruchomienie kontenerów i instalacja iperf3 wewnątrz przygotowanych kontenerów z fedorą
 
@@ -596,7 +596,7 @@ docker run --rm --tty -i --name f2 fedora bash
 sudo dnf install -y iperf3
 ```
 
-![](../screens/class4/11.jpg)
+![](class4/11.jpg)
 
 ### Komunikacja pomiędzy kontenerami
 
@@ -613,7 +613,7 @@ iperf3 -c 172.17.0.2
 
 pierwsze polecenie na kliencie jeszcze nie zadziała, ponieważ nie ma utworzonej customowej sieci, która umożliwi korzystanie z DNS
 
-![](../screens/class4/12.jpg)
+![](class4/12.jpg)
 
 ### Utworzenie własnej dedykowane sieci mostkowej
 
@@ -621,7 +621,7 @@ pierwsze polecenie na kliencie jeszcze nie zadziała, ponieważ nie ma utworzone
 docker network create my_network
 ```
 
-![](../screens/class4/13.jpg)
+![](class4/13.jpg)
 
 ### Uruchomienie kontenerów w utworzonej sieci mostkowanej
 
@@ -634,7 +634,7 @@ Teraz ip kontenerów to
  * f1 -> 172.18.0.2
  * f2 -> 172.18.0.3
 
-![](../screens/class4/14.jpg)
+![](class4/14.jpg)
 
 #### Teraz możemy już komunikować się wewnątrz tej samej sieci za pomocą nazw, dzięki DNS
 
@@ -648,7 +648,7 @@ na kliencie
 iperf3 -c f1
 ```
 
-![](../screens/class4/15.jpg)
+![](class4/15.jpg)
 
 ### Połączenie z serwerem iperf3 w kontenerze z hosta
 
@@ -658,7 +658,7 @@ iperf3 -c f1
 iperf3 -c 172.18.0.2
 ```
 
-![](../screens/class4/16.jpg)
+![](class4/16.jpg)
 
 ### Połączenie z serwerem spoza hosta
 
@@ -674,7 +674,7 @@ iperf3 -c 192.168.0.37
 
 Spoza hosta podajemy ip hosta i port, po czym następuje przekierowanie przez port z hosta na VM do kontenera z serwerem słuchającym na danym porcie
 
-![](../screens/class4/17.jpg)
+![](class4/17.jpg)
 
 Przepustowości połączenia widać w terminalach serwera i komunikującego się klienta
 
@@ -691,7 +691,7 @@ docker run --privileged --name jenkins-dind \
 jenkins/jenkins:lts
 ```
 
-![](../screens/class4/22.jpg)
+![](class4/22.jpg)
 
 ### Uruchomione kontenery wewnątrz jenkinsa i na hoscie
 
@@ -702,7 +702,7 @@ docker ps
 
 Uruchomione kontenery widok z jenkinsa i hosta
 
-![](../screens/class4/26.jpg)
+![](class4/26.jpg)
 
 ### Logowanie
 
@@ -712,7 +712,7 @@ Uruchomione kontenery widok z jenkinsa i hosta
 docker exec jenkins-dind cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 
-![](../screens/class4/23.jpg)
-![](../screens/class4/24.jpg)
+![](class4/23.jpg)
+![](class4/24.jpg)
 
 Strona oferuje konfiguracje właściwości i pluginów jenkinsa, które można doinstalować wedle woli z poziomu strony na lokalhoscie
