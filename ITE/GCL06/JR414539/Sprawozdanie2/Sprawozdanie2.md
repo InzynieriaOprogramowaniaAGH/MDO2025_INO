@@ -1032,6 +1032,8 @@ pipeline {
 
   ![Zrzut ekranu – 22](zrzuty_ekranu_sprawozdanie_2/23.png)
 
+Dodałem plik z diagramami .vpp napisany w visual paradigm community edition na repozytorium (gałąź JR414539).
+
 ---
 
 # **Definition of Done – ocena końcowego efektu** 
