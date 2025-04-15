@@ -207,7 +207,7 @@ pipeline {
 
 # **Opis celu (diagramy UML - aktywności oraz wdrożeniowy)**
 
-Na końcu sprawozdania porównam czy zrobione przeze diagramy na początku dobrze przedstawiły całokształt projektu.
+Na końcu sprawozdania porównam czy zrobione przeze mnie diagramy na początku dobrze przedstawiły całokształt projektu.
 
 - Wymagania wstępne środowiska:
 
