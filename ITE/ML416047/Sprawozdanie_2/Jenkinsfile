@@ -37,9 +37,9 @@ pipeline {
                     docker run --rm --network network-testing redis redis-cli -h redis-testing-deploy PING | grep PONG
                     docker run --rm --network network-testing redis redis-cli -h redis-testing-deploy SET test_key "MyKey" | grep OK
                     docker run --rm --network network-testing redis redis-cli -h redis-testing-deploy GET test_key | grep MyKey
-                    docker network rm network-testing
                     docker stop redis-testing-deploy
                     docker rm redis-testing-deploy
+                    docker network rm network-testing
                 """
             }
         }
