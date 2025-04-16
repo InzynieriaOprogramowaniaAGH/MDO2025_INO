@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Cleaning') {
+            steps {
+                sh "rm -fr MDO2025_INO"
+                sh "git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git"
+                dir("MDO2025_INO") {
+                    sh "git checkout ML416047"
+                }
+            }
+        }
+        
+        stage('Builder') {
+            steps {
+                sh "docker build -t redis-builder -f MDO2025_INO/ITE/ML416047/Sprawozdanie_2/roboczy/Dockerfile ."
+            }
+        }
+        
+        stage('Tester') {
+            steps {
+                sh "docker build -t redis-test -f MDO2025_INO/ITE/ML416047/Sprawozdanie_2/roboczy/Dockerfile.test ."
+                sh "docker run redis-test"
+            }
+        }
+	stage('Deploy') {
+            steps {
+		sh """ 
+                    docker build --no-cache -t mlorenc4/pipeline-redis:v1.0.${BUILD_NUMBER} -f MDO2025_INO/ITE/ML416047/Sprawozdanie_2/Dockerfile.deploy . 
+                    docker network inspect network-testing >/dev/null 2>&1 || docker network create network-testing
+		            if [ \$(docker ps -a -q -f name=redis-testing-deploy) ]; then
+                        docker rm -f redis-testing-deploy
+                    fi
+                    docker run -d --name redis-testing-deploy --network network-testing mlorenc4/pipeline-redis:v1.0.${BUILD_NUMBER}
+                    sleep 10
+                    docker run --rm --network network-testing redis redis-cli -h redis-testing-deploy PING | grep PONG
+                    docker run --rm --network network-testing redis redis-cli -h redis-testing-deploy SET test_key "MyKey" | grep OK
+                    docker run --rm --network network-testing redis redis-cli -h redis-testing-deploy GET test_key | grep MyKey
+                    docker network rm network-testing
+                    docker stop redis-testing-deploy
+                    docker rm redis-testing-deploy
+                """
+            }
+        }
+        stage('Publish') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'pass-dockhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                        docker push mlorenc4/pipeline-redis:v1.0.${BUILD_NUMBER}
+                        docker tag mlorenc4/pipeline-redis:v1.0.${BUILD_NUMBER} mlorenc4/pipeline-redis:latest
+                        docker push mlorenc4/pipeline-redis:latest
+                    '''
+                }
+            }
+        }
+    }
+}
