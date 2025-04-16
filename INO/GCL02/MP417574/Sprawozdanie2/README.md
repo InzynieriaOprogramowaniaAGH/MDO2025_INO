@@ -99,7 +99,7 @@ Następnie pobrałam hasło admina potrzebne do zalogowania się póżniej do Je
 
 ![haslo_jenkins](IMG5/haslo.png)
 
-Uzyskałam hasło: 77bf97f2b9b4455d97efd5b34b176c45
+Uzyskałam hasło: `77bf97f2b9b4455d97efd5b34b176c45`
 Otworzyłam Jenkinsa w przeglądarce za pomocą IP `http://192.168.0.7:8080/`. Po wprowadzeniu hasła możliwa była dalsza konfiguracja (instalacja sugerowanych wtyczek, tworzenie konta administratora).
 
 ![jenkins_konto](IMG5/tworzenieAdministratora.png)
@@ -134,7 +134,7 @@ Po odpaleniu projektu:
 
 ![projekt_p2_wynik](IMG5/p2_wynik.png)
 
-Kolejnym utworzonym pojektem 'p3' będzie `Pipeline`, który pobiera obraz kontenera ubuntu (stosując docker pull).
+Kolejnym utworzonym pojektem `p3` będzie `Pipeline`, który pobiera obraz kontenera ubuntu (stosując docker pull).
 
 `Pipeline` to zautomatyzowany proces w Jenkinsie, który definiuje kolejne etapy (np. klonowanie repozytorium, budowanie, testowanie) potrzebne do dostarczenia i przetestowania aplikacji.
 
@@ -185,7 +185,7 @@ Wynik uruchomienia:
 
 
 Następnie dołączyłam do pipelina `p4`testy z pliku `Dockerfile.test` z poprzednich zajęć (tworzenie kontenera na bazie obrazu `cjson-builder-image` i uruchamienie testów).
-Wyniki przeprowadzonych testów zostanął zapisane w pliku "test_result.log".
+Wyniki przeprowadzonych testów zostanął zapisane w pliku `test_result.log`.
 
 ```pipeline
 pipeline {
@@ -253,7 +253,7 @@ Wszystkie testy zakończyły się sukcesem – "19/19 zaliczonych".
 #### Implementacja Pipeline'u z wykorzystaniem kontenerów
 Celem punktu zadania było stworzenie potoku Jenkinsa (`Pipeline`), który będzie wykorzystywał kontenery do izolacji poszczególnych etapów budowania i testowania. 
 
-Utworzyłam plik `Jenkinsfile`definiujący pipeline w głównym katalogu repozytorium.
+Utworzyłam plik `Jenkinsfile`definiujący pipeline w katalogu repozytorium.
 
 ```groovy
 pipeline {
@@ -400,7 +400,7 @@ docker cp jenkins:/var/jenkins_home/jobs/cJSON_MP417574/builds/2/archive/INO/GCL
 
 #### Podsumowanie
 
-Wartianty implementacji:
+Warianty implementacji:
 1. Bezpośrednio na kontenerze CI (DOoD – Docker Outside of Docker).
 W tym podejściu Jenkins nie uruchamia własnego demona Dockera, lecz korzysta z Dockera działającego bezpośrednio na hoście systemowym. Dzięki temu:
 - Konfiguracja jest prostsza i szybsza w uruchomieniu.
@@ -421,11 +421,9 @@ To podejście polega na uruchamianiu kontenera z demonem Dockera (docker:dind), 
      - Kontener docker:dind musi być uruchomiony z flagą `--privileged`, aby umożliwić pełne działanie demona Dockera.
      - Niezbędne może być skonfigurowanie TLS (certyfikatów) do bezpiecznej komunikacji między kontenerami.
      - Jenkins musi mieć odpowiednie pluginy umożliwiające komunikację z zewnętrznym `dockerd`.
-- Dodatkowo zużycie zasobów systemowych może być wyższe niż w przypadku DOoD.
+- Dodatkowo zużycie zasobów systemowych może być wyższe niż w przypadku `DOoD`.
 
 
 #### Dlaczego w projekcie zostało wybrane podejście `DIND`?
 
-W projekcie zdecydowałam się na pto odejście, ponieważ zapewnia ono lepszą przenośność środowiska CI/CD, umożliwia jego łatwe odtworzenie na innych systemach oraz zwiększa bezpieczeństwo dzięki pełnej izolacji procesu od systemu hosta.
-
-
+W projekcie zdecydowałam się na to podejście, ponieważ zapewnia ono lepszą przenośność środowiska CI/CD, umożliwia jego łatwe odtworzenie na innych systemach oraz zwiększa bezpieczeństwo dzięki pełnej izolacji procesu od systemu hosta.
