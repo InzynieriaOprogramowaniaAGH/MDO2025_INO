@@ -1,0 +1,2 @@
+FROM networkstatic/iperf3
+CMD "iperf3 -s >> /log/serwer.log 2>&1"

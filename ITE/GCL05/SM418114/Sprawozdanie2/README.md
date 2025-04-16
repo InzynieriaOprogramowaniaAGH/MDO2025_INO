@@ -1,0 +1,2 @@
+zbudować .a
+digital signature

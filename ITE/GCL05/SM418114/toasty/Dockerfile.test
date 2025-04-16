@@ -1,0 +1,3 @@
+FROM toasty
+WORKDIR /toasty
+CMD [ "make", "test" ]
