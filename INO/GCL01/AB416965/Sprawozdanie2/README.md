@@ -273,3 +273,13 @@ Kolejnym etapem było utworzenie pełnego pipelina z etapami `deploy` oraz `publ
 W celu upewnienia się, że nic nie jest pozostawiane w pamięci cache, uruchomiłem `pipeline` kilkukrotnie.
 
 > [Logi z konsoli po ponownym uruchomieniu](jenkinslogs/console_2.log)
+
+Tak jak pliki z logami, pobrałem archiwum `cjson.rpm` i umieściłem na hośćie. Przeprowadziłem jeszcze jeden test. Spróbowałem lokalnie zajnstalować bibliotekeę.
+
+![Instalacja biblioteki](zrzuty5/zrzut_ekranu16.png)
+
+Instalacja przebiegła bez problemu, dlatego uruchomiłem program.
+
+![Uruchomienie programu](zrzuty5/zrzut_ekranu17.png)
+
+> [Archiwum `.rpm` na hoście](cjson.rpm)
