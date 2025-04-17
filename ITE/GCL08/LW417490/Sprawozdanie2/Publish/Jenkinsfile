@@ -52,7 +52,7 @@ pipeline {
                 dir('ITE/GCL08/LW417490/Sprawozdanie2') {
                     sh 'docker network create ci'
                     sh 'docker run --rm -d --network ci --name app -p 3000:3000 express-app'
-                    sh 'docker run --rm --network ci fedora curl -s app:3000'
+                    sh 'docker run --rm --network ci curlimages/curl -s app:3000'
                 }
             }
         }
