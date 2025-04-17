@@ -12,6 +12,7 @@ pipeline {
                 dir('ITE/GCL08/LW417490/Sprawozdanie2') {
                     sh 'docker rmi -f express-build'
                     sh 'docker rmi -f express-app'
+                    sh 'docker rmi -f express-test'
                     sh 'docker builder prune --force --all'
                     sh 'docker network inspect ci >/dev/null 2>&1 && docker network rm ci || true'
                 }
@@ -25,6 +26,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Test Dockerfile') {
+            steps {
+                dir('ITE/GCL08/LW417490/Sprawozdanie2') {
+                    sh 'docker build --no-cache -f Dockerfiles/Dockerfile.expresstest -t express-test .'
+                    sh 'docker run --rm express-test'
+                }
+            }
+        }
+        
 
         stage('Publish Dockerfile') {
             steps {
