@@ -30,7 +30,7 @@ pipeline {
         stage('Test Dockerfile') {
             steps {
                 dir('ITE/GCL08/LW417490/Sprawozdanie2') {
-                    sh 'docker build --no-cache -f Dockerfiles/Dockerfile.expresstest -t express-test .'
+                    sh 'docker build --no-cache -f Dockerfile.exptest -t express-test .'
                     sh 'docker run --rm express-test'
                 }
             }
