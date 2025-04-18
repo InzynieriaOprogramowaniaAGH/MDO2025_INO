@@ -2,6 +2,14 @@
 
 ---
 
+# **Cel** 
+
+---
+
+**Celem ćwiczeń było nauczenie się jak skonfigurować i obsługiwać Jenkinsa w środowisku Docker, skupiając się na tworzeniu pipeline’ów oraz automatyzacji budowania i testowania aplikacji.**
+
+---
+
 # **Przygotowanie** 
 
 ---
