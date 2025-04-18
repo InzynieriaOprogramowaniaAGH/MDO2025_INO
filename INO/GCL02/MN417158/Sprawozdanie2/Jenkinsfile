@@ -16,14 +16,44 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie1/files/Dockerfilechalk.build'
+                    def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/Dockerfilechalk.build'
 
-                    def image = docker.build("chalk-image", "-f ${dockerfilePath} .")
+                    def image = docker.build("bldr", "-f ${dockerfilePath} .")
                 }
             }
         }
-        stage('Deploy'){
-            
+        stage('Deploy') {
+             steps {
+                script {
+                    def buildContext = 'INO/GCL02/MN417158/Sprawozdanie2'
+
+                    sh """
+                        docker run --rm -v \$PWD/${buildContext}:/output bldr \
+                        cp -r /chalk/node_modules /output/
+                    """
+
+
+                    writeFile file: "${buildContext}/demo.js", text: '''
+                        import chalk from 'chalk';
+                        const name = 'Sindre';
+                        console.log(chalk.green('Hello %s'), name);
+                    '''.stripIndent()
+
+                    def deployImage = docker.build("deploy", "-f ${buildContext}/Dockerfilechalk.deploy ${buildContext}")
+
+                }
+            }
         }
+        stage('Publish') {
+            steps {
+                script {
+                    def output = sh(script: "docker run --rm deploy", returnStdout: true).trim()
+                    echo "Wynik działania demo.js:\n${output}"
+                }
+            }       
+        }
+
+
     }
 }
+
