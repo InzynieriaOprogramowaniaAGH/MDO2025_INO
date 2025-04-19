@@ -1,0 +1,144 @@
+pipeline {
+    agent any
+
+    environment {
+        //Repository
+        REPO_URL = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+        BRANCH = 'JL416317'
+        
+        //Dockerfiles
+        DOCKERFILES_PATH = 'MDO2025_INO/ITE/GCL04/JL416317/Sprawozdanie2/dockerfiles'
+        DOCKERFILE_BUILD = 'Dockerfile.build'
+        DOCKERFILE_TEST = 'Dockerfile.test'
+        DOCKERFILE_DEPLOY = 'Dockerfile.deploy'
+        
+        //Images
+        IMAGE_BUILD = 'weatherapp-build'
+        IMAGE_TEST = 'weatherapp-test'
+        IMAGE_DEPLOY = 'weatherapp-deploy'
+        
+        //Containers
+        CONTAINER_DEPLOY = 'weatherapp'
+        
+        //Health check
+        API_HEALTHCHECK_URL = 'http://localhost:8080/api/apihealth'
+        
+        //Publish
+        ARTIFACTS_PATH = 'artifacts'
+    }
+
+    stages {
+        stage('Workspace cleanup') {
+            steps {
+                echo 'Cleaning containers...'
+                sh """
+                    docker container prune -f
+                    docker rm -f ${CONTAINER_DEPLOY} || true
+                """
+                echo 'Cleaning images...'
+                sh """
+                    docker image prune -f
+                    docker rmi -f ${IMAGE_BUILD} ${IMAGE_TEST} ${IMAGE_DEPLOY} || true
+                """
+                echo 'Cleaning workspace...'
+                cleanWs()
+            }
+        }
+
+        stage('Workspace setup') {
+            steps {
+                sh "git clone --depth 1 --branch ${BRANCH} --single-branch ${REPO_URL}"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir("${DOCKERFILES_PATH}") {
+                    sh "docker build --no-cache -t ${IMAGE_BUILD} -f ${DOCKERFILE_BUILD} ."
+                }
+            }
+        }
+        
+        stage('Build debug') {
+            steps {
+                sh 'docker images'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                 dir("${DOCKERFILES_PATH}") {
+                    sh "docker build --no-cache -t ${IMAGE_TEST} -f ${DOCKERFILE_TEST} ."
+                }
+            }
+        }
+        
+        stage('Test debug') {
+            steps {
+                sh 'docker images'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                dir("${DOCKERFILES_PATH}") {
+                    sh """
+                        docker build --no-cache -t ${IMAGE_DEPLOY} -f ${DOCKERFILE_DEPLOY} .
+                        docker run -d --name ${CONTAINER_DEPLOY} ${IMAGE_DEPLOY}
+                    """
+                    sleep 20
+                }
+            }
+        }
+        
+        stage('Deploy debug') {
+            steps {
+                sh """
+                    docker images
+                    docker ps
+                    docker logs ${CONTAINER_DEPLOY}
+                """
+            }
+        }
+        
+        stage('Health check') {
+            steps {
+                sh '''
+                    set -e
+                    STATUS=$(docker exec ${CONTAINER_DEPLOY} curl -s -o /tmp/response.txt -w "%{http_code}" ${API_HEALTHCHECK_URL})
+                    docker exec ${CONTAINER_DEPLOY} cat /tmp/response.txt
+                    [ "$STATUS" -eq 200 ]
+                '''
+            }
+        }
+        
+        stage('Publish') {
+            steps {
+                sh """
+                    mkdir -p ${ARTIFACTS_PATH}
+                    docker cp ${CONTAINER_DEPLOY}:/app ${ARTIFACTS_PATH}
+                    rm -f ${ARTIFACTS_PATH}/*.pdb
+                    rm -f ${ARTIFACTS_PATH}/appsettings.Development.json
+                """
+                archiveArtifacts artifacts: "${ARTIFACTS_PATH}/**", fingerprint: true
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning containers...'
+            sh """
+                docker container prune -f
+                docker rm -f ${CONTAINER_DEPLOY} || true
+            """
+            echo 'Cleaning images...'
+            sh """
+                docker image prune -f
+                docker rmi -f ${IMAGE_BUILD} ${IMAGE_TEST} ${IMAGE_DEPLOY} || true
+            """
+            echo 'Cleaning workspace...'
+            cleanWs()
+        }
+    }
+}
