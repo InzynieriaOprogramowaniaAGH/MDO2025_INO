@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     stages {
         stage('Cleaning') {
             steps {
@@ -11,22 +10,20 @@ pipeline {
                 }
             }
         }
-        
         stage('Builder') {
             steps {
                 sh "docker build -t redis-builder -f MDO2025_INO/ITE/ML416047/Sprawozdanie_2/roboczy/Dockerfile ."
             }
         }
-        
         stage('Tester') {
             steps {
                 sh "docker build -t redis-test -f MDO2025_INO/ITE/ML416047/Sprawozdanie_2/roboczy/Dockerfile.test ."
                 sh "docker run redis-test"
             }
         }
-	stage('Deploy') {
+	    stage('Deploy') {
             steps {
-		sh """ 
+		        sh """ 
                     docker build --no-cache -t mlorenc4/pipeline-redis:v1.0.${BUILD_NUMBER} -f MDO2025_INO/ITE/ML416047/Sprawozdanie_2/Dockerfile.deploy . 
                     docker network inspect network-testing >/dev/null 2>&1 || docker network create network-testing
 		            if [ \$(docker ps -a -q -f name=redis-testing-deploy) ]; then
