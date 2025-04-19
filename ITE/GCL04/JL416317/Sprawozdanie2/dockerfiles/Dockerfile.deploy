@@ -1,19 +1,26 @@
-FROM weatherapp-build AS build
+FROM weatherapp-build AS publish
 
 WORKDIR /src/weatherapp-backend
 
-RUN dotnet publish WeatherForecast.Api/WeatherForecast.Api.csproj -c Release -o /app/publish
+RUN dotnet publish WeatherForecast.Api/WeatherForecast.Api.csproj \
+    -c Release \
+    -r linux-x64 \
+    --self-contained true \
+    -p:PublishSingleFile=true \
+    -p:IncludeNativeLibrariesForSelfExtract=true \
+    -p:PublishTrimmed=false \
+    -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
-
-WORKDIR /app
+FROM debian:bullseye-slim AS runtime
 
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
-ENV ASPNETCORE_URLS=http://+:8080
+WORKDIR /app
 
-COPY --from=build /app/publish .
+COPY --from=publish /app/publish .
+
+ENV ASPNETCORE_URLS=http://+:8080
 
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "WeatherForecast.Api.dll"]
+ENTRYPOINT ["./WeatherForecast.Api"]
