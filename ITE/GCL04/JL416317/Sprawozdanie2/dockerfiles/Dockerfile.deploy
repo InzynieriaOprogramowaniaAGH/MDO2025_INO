@@ -9,6 +9,7 @@ RUN dotnet publish WeatherForecast.Api/WeatherForecast.Api.csproj \
     -p:PublishSingleFile=true \
     -p:IncludeNativeLibrariesForSelfExtract=true \
     -p:PublishTrimmed=false \
+    -p:DebugType=none \
     -o /app/publish
 
 FROM bitnami/minideb:bullseye AS runtime
