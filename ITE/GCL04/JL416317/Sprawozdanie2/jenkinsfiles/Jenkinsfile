@@ -88,18 +88,21 @@ pipeline {
         }
 
         stage('App startup') {
-            sh '''
-                for i in {1..30}; do
-                    STATUS=$(docker exec ${CONTAINER_DEPLOY} curl -s -o /dev/null -w "%{http_code}" ${API_HEALTHCHECK_URL})
-                    if [ "$STATUS" -eq 200 ]; then
-                        docker logs ${CONTAINER_DEPLOY}
-                        exit 0
-                    fi
-                    sleep 5
-                done
-                echo "Application is not running!"
-                exit 1
-            '''
+            steps {
+                sh '''
+                    for i in {1..30}; do
+                        STATUS=$(docker exec ${CONTAINER_DEPLOY} curl -s -o /dev/null -w "%{http_code}" ${API_HEALTHCHECK_URL})
+                        if [ "$STATUS" -eq 200 ]; then
+                            docker logs ${CONTAINER_DEPLOY}
+                            exit 0
+                        fi
+                        sleep 5
+                    done
+                    echo "Application is not running!"
+                    exit 1
+                '''
+            }
+            
         }
         
         stage('Health check') {
