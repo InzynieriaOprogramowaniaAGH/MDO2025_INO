@@ -1,0 +1,237 @@
+    1  git
+    2  sudo yum git
+    3  sudo dnf install git
+    4  git
+    5  git branch -a
+    6  git push --set-upstream origin ML416047
+    7  sudo dnf install docker
+    8  docker
+    9  docker pull hello-world
+   10  sudo docker pull hello-world
+   11  sudo systemctl enable docker
+   12  sudo docker pull hello-world
+   13  sudo systemctl status docker
+   14  sudo systemctl start docker
+   15  sudo systemctl status docker
+   16  sudo docker pull hello-world
+   17  sudo docker pull busybox
+   18  sudo docker pull ubuntu
+   19  sudo docker pull mysql
+   20  sudo docker run -it busybox
+   21  sudo docker run -it ubuntu
+   22  mkdir Sprawozdanie
+   23  cd Sprawozdanie/
+   24  touch Dockerfile
+   25  nano Dockerfile 
+   26  cat Dockerfile 
+   27  nano Dockerfile 
+   28  cat Dockerfile 
+   29  sudo docker build -t myDocker
+   30  sudo docker build -t myDocker .
+   31  sudo docker build -t mydocker .
+   32  nano Dockerfile 
+   33  cat Dockerfile 
+   34  sudo docker build -t mydocker .
+   35  nano Dockerfile 
+   36  cat Dockerfile 
+   37  sudo docker build -t mydocker .
+   38  sudo docker run -it mydocker
+   39  sudo docker run -it mydocker sh
+   40  sudo docker ps -a
+   41  sudo docker containter prune
+   42  sudo docker container prune
+   43  sudo docker ps -a
+   44  sudo docker rmi -f $(sudo docker images -aq)
+   45  ls
+   46  exit
+   47  git clone https://github.com/antirez/sds.git
+   48  ls
+   49  cd sds
+   50  make
+   51  sudo yum install make gcc
+   52  make
+   53  ./sds-test
+   54  cd ..
+   55  sudo docker pull ubuntu
+   56  sudo docker run -it ubuntu
+   57  cd GitHub/MDO2025_INO/ITE/ML416047/
+   58  ls
+   59  cd Sprawozdanie/
+   60  ls
+   61  mkdir lab_3_files
+   62  cd lab_3_files/
+   63  touch Dockerfile
+   64  nano Dockerfile 
+   65  touch Dockerfile.test
+   66  nano Dockerfile.test 
+   67  sudo docker build -t makapaka-sds .
+   68  cat Dockerfile
+   69  cat Dockerfile.test 
+   70  sudo docker build -t makapaka-sds -f Dockerfile.test .
+   71  sudo docker run -it makapaka-sds
+   72  touch docker-compose.yml
+   73  nano docker-compose.yml 
+   74  cat docker-compose.yml 
+   75  sudo yum install dokcer-compose
+   76  sudo yum install docker-compose
+   77  sudo docker-compose up makapaka-test
+   78  git add .
+   79  git commit -m "ML416047 lab3"
+   80  git push
+   81  exit
+   82  ls
+   83  cd GitHub/
+   84  ls
+   85  cd MDO2025_INO/
+   86  ls
+   87  cd ../..
+   88  script GitHub/MDO2025_INO/ITE/ML416047/lab_3.txt
+   89  ls
+   90  cd GitHub/MDO2025_INO/ITE/ML416047/Sprawozdanie/
+   91  ls
+   92  cd lab_3_files/
+   93  ls
+   94  cd sds/
+   95  ls
+   96  cd ..
+   97  cd GitHub/MDO2025_INO/ITE/ML416047/Sprawozdanie/lab_3_files/
+   98  ls
+   99  nano Dockerfile
+  100  nano Dockerfile.test 
+  101  cat Dockerfile
+  102  cat Dockerfile.test 
+  103  cat docker-compose.yml 
+  104  ls
+  105  cd ..
+  106  ls
+  107  cat Dockerfile 
+  108  cd
+  109  ls
+  110  cd sds
+  111  ls
+  112  cd 
+  113  echo tutek
+  114  history
+  115  git add .
+  116  cd GitHub/MDO2025_INO/ITE/ML416047/Sprawozdanie/lab_3_files/
+  117  git add .
+  118  git commit -m "ML416047 lab3.1"
+  119  git push
+  120  ls
+  121  docker volume create wolumin_wejściowy
+  122  sudo docker volume create wolumin_wejściowy
+  123  sudo docker volume create Wejsciowy
+  124  sudo docker volume create Wyjsciowy
+  125  docker volume ls
+  126  sudo docker volume ls
+  127  docker images
+  128  sudo docker images
+  129  docker containers
+  130  docker ps
+  131  sudo docker ps
+  132  docker run -d   --name kontenerBezGita   -v Wejsciowy:/app/input   -v Wyjsciowy:/app/output   makapaka-sds
+  133  sudo docker run -d   --name kontenerBezGita   -v Wejsciowy:/app/input   -v Wyjsciowy:/app/output   makapaka-sds
+  134  docker volume ls
+  135  sudo docker volume ls
+  136  sudo docker inspect Wejsciowy
+  137  sudo docker ps
+  138  sudo docker ps -a
+  139  echo ls
+  140  sudo docker run -d   --name kontenerBezGita   -v Wejsciowy:/app/input   -v Wyjsciowy:/app/output   makapaka-sds
+  141  sudo docker stop kontenerBezGita
+  142  sudo docker run -d   --name kontenerBezGita   -v Wejsciowy:/app/input   -v Wyjsciowy:/app/output   makapaka-sds
+  143  sudo docker stop kontenerBezGita
+  144  sudo docker remove kontenerBezGita
+  145  sudo docker ps -a
+  146  sudo docker run -d   --name kontenerBezGita   -v Wejsciowy:/app/input   -v Wyjsciowy:/app/output   makapaka-sds
+  147  sudo docker ps -a
+  148  ls
+  149  cat docker-compose.yml 
+  150  sudo docker stop kontenerBezGita
+  151  sudo docker remove kontenerBezGita
+  152  ls
+  153  cd ..
+  154  ls
+  155  cd ..
+  156  ls
+  157  cd ..
+  158  ls
+  159  cd ..
+  160  cd ITE/ML416047/Sprawozdanie/lab_3_files/
+  161  ls
+  162  nano Dockerfile.lab4
+  163  sudo docker build -t wolumin -f Dockerfile.lab4 
+  164  sudo docker build -t wolumin -f Dockerfile.lab4 .
+  165  sudo docker run -it --rm -v Wejsciowy:/entry --name wolumin wolumin
+  166  sudo docker build -t nogitches -f Dockerfile.lab4 .
+  167  sudo docker remove nogitches
+  168  docker images
+  169  sudo docker images
+  170  sudo docker delete nogitches
+  171  sudo docker remove-image nogitches
+  172  docker --help
+  173  sudo docker rmi nogitches
+  174  nano Dockerfile.lab4 
+  175  cat Dockerfile.lab4 
+  176  sudo docker build -t nogitches -f Dockerfile.lab4 .
+  177  sudo docker run -it --rm -v Wejsciowy:/entry -v Wyjsciowy:/output --name nogitussy nogitches
+  178  wpisz=$(sudo docker volume inspect Wejsciowy --format '{{.Mountpoint}}')
+  179  sudo git clone https://github.com/antirez/sds.git $wpisz/entrypoint
+  180  sudo docker pull networkstatic/iperf3
+  181  sudo docker run -d --name serwer -p 2137:2137 networkstatic/iperf3 -s
+  182  adresip=$(sudo docker inspect -f '{{range.NetworkSetting.Networks}}{{.IPAddress}}{{end}}' serwer)
+  183  adresip=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' serwer)
+  184  echo adresip
+  185  echo $adresip
+  186  sudo docker run -it --rm networkstatic/iperf3 -c $adresip
+  187  sudo docker stop serwer
+  188  nano Dockerfile.iperf
+  189  cat Dockerfile.iperf 
+  190  sudo docker build -t nobritches -f Dockerfile.iperf .
+  191  sudo docker network create --driver bridge iperf-net
+  192  sudo docker run -d --name nobritches --network iperf-net iperf3-image iperf3 -s
+  193  sudo yum install iperf3
+  194  sudo docker run -d --name nobritches --network iperf-net iperf3-image iperf3 -s
+  195  sudo docker exec -it serwer bash -c "apt update && apt install -y tcpdump && tcpdump -i eth0 -w /tmp/iperf3.pcap"
+  196  sudo docker exec -it nobritches bash -c "apt update && apt install -y tcpdump && tcpdump -i eth0 -w /tmp/iperf3.pcap"
+  197  sudo build -t klient -f Dockerfile.iperf .
+  198  sudo docker build -t klient -f Dockerfile.iperf .
+  199  sudo docker run -d --name nobritches --network iperf-net klient iperf3 -s
+  200  sudo docker run -it --name iperf-client --network iperf-net klient iperf3 -c nobritches
+  201  sudo docker volume create serwer-vol
+  202  sudo docker volume create klient-vol
+  203  sudo docker volume ls
+  204  sudo docker stop nobritches
+  205  sudo docker rm nobritches
+  206  sudo docker run -it --rm --name serwer --network iperf-net klient iperf3 -s &
+  207  sudo docker ps -a
+  208  sudo docker rm serwer
+  209  sudo docker run -it --rm --name serwer --network iperf-net klient iperf3 -s &
+  210  sudo docker run -it --rm --name trueklient --network iperf-net klient iperf3 -c serwer
+  211  sudo docker stop trueklient
+  212  sudo docker rm trueklient
+  213  sudo docker ps
+  214  sudo docker stop serwer
+  215  sudo docker rm serwer
+  216  sudo docker run -d   --name serwer   --network iperf-net   -v serwer-vol:/logs   klient   sh -c "iperf3 -s > /logs/serwer.log 2>&1"
+  217  sudo docker run -it   --name trueklient   --network iperf-net   -v klient-vol:/logs   klient   sh -c "iperf3 -c serwer > /logs/trueklient.log 2>&1"
+  218  sudo docker run --rm -v serwer-vol:/logs alpine cat /logs/serwer.log
+  219  sudo docker run --rm -v klient-vol:/logs alpine cat /logs/trueklient.log
+  220  sudo docker stop serwer
+  221  sudo docker rm serwer
+  222  sudo docker run -d   --name serwer   --network iperf-net   klient   iperf3 -s
+  223  sudo docker stop serwer
+  224  sudo docker rm serwer
+  225  sudo docker run -d   --name serwer   -p 5201:5201   klient   iperf3 -s
+  226  iperf3 -c localhost
+  227  sudo docker network create jenkins-net
+  228  sudo docker run --name jenkins-docker   --rm --detach   --privileged   --network jenkins-net   --network-alias docker   --env DOCKER_TLS_CERTDIR=""   -p 2376:2376   docker:dind
+  229  sudo docker run --name jenkins   --rm --detach   --network jenkins-net   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_TLS_VERIFY=0   -p 8080:8080 -p 50000:50000   -v jenkins-data:/var/jenkins_home   jenkins/jenkins:lts-jdk11
+  230  sudo docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+  231  ls /var
+  232  ls /var/jenkins_home/
+  233  ls /var/jenkins_home
+  234  ls /var/jenkins
+  235  sudo docker ps
+  236  history
+  237  history > historiaKomend
