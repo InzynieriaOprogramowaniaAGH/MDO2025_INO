@@ -1,0 +1,29 @@
+Script started on 2025-04-16 17:55:54+02:00 [TERM="xterm-256color" TTY="/dev/pts/4" COLUMNS="303" LINES="67"]
+]0;mlorenc@Malachiasz:~/GitHub/MDO2025_INO/ITE/ML416047/Sprawozdanie_2[?2004h[32mmlorenc@Malachiasz[0m:[32m~/GitHub/MDO2025_INO/ITE/ML416047/Sprawozdanie_2[0m$[0m cd roboczy/
+[?2004l]0;mlorenc@Malachiasz:~/GitHub/MDO2025_INO/ITE/ML416047/Sprawozdanie_2/roboczy[?2004h[32mmlorenc@Malachiasz[0m:[32m~/GitHub/MDO2025_INO/ITE/ML416047/Sprawozdanie_2/roboczy[0m$[0m ls[K[Kcat Dockerfile
+[?2004lFROM ubuntu:latest
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && \
+    apt-get install -y \
+    git \
+    make \
+    gcc \
+    tcl \
+    build-essential \
+    libc6-dev \
+    libjemalloc-dev \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+RUN git clone https://github.com/redis/redis.git redis
+WORKDIR /app/redis
+RUN make -j$(nproc)
+ENV PATH="/app/redis/src:${PATH}"
+]0;mlorenc@Malachiasz:~/GitHub/MDO2025_INO/ITE/ML416047/Sprawozdanie_2/roboczy[?2004h[32mmlorenc@Malachiasz[0m:[32m~/GitHub/MDO2025_INO/ITE/ML416047/Sprawozdanie_2/roboczy[0m$[0m dind[K[K[K[Kdo[K[Ksuco doc[K[K[K[K[K[Kdo docker ps
+[?2004l[sudo] hasło użytkownika mlorenc: 
+CONTAINER ID   IMAGE                           COMMAND                  CREATED             STATUS             PORTS                                                                                      NAMES
+01139cd613ee   docker:dind                     "dockerd-entrypoint.…"   About an hour ago   Up About an hour   2375/tcp, 0.0.0.0:2376->2376/tcp, :::2376->2376/tcp                                        jenkins-docker
+883b1ef5cc1c   myjenkins-blueocean:2.492.3-1   "/usr/bin/tini -- /u…"   8 days ago          Up About an hour   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp, 0.0.0.0:50000->50000/tcp, :::50000->50000/tcp   jenkins-blueocean
+]0;mlorenc@Malachiasz:~/GitHub/MDO2025_INO/ITE/ML416047/Sprawozdanie_2/roboczy[?2004h[32mmlorenc@Malachiasz[0m:[32m~/GitHub/MDO2025_INO/ITE/ML416047/Sprawozdanie_2/roboczy[0m$[0m exit
+[?2004lexit
+
+Script done on 2025-04-16 19:03:25+02:00 [COMMAND_EXIT_CODE="0"]
