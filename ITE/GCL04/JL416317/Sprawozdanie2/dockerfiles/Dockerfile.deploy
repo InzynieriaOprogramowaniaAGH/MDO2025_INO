@@ -18,7 +18,8 @@ RUN install_packages curl libicu67
 
 WORKDIR /app
 
-COPY --from=publish /app/publish .
+COPY --from=publish /app/publish ./
+RUN rm -f appsettings.Development.json
 
 ENV ASPNETCORE_URLS=http://+:8080
 

@@ -2,12 +2,8 @@ pipeline {
     agent any
 
     environment {
-        //Repository
-        REPO_URL = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
-        BRANCH = 'JL416317'
-        
         //Dockerfiles
-        DOCKERFILES_PATH = 'MDO2025_INO/ITE/GCL04/JL416317/Sprawozdanie2/dockerfiles'
+        DOCKERFILES_PATH = 'ITE/GCL04/JL416317/Sprawozdanie2/dockerfiles'
         DOCKERFILE_BUILD = 'Dockerfile.build'
         DOCKERFILE_TEST = 'Dockerfile.test'
         DOCKERFILE_DEPLOY = 'Dockerfile.deploy'
@@ -40,14 +36,6 @@ pipeline {
                     docker image prune -f
                     docker rmi -f ${IMAGE_BUILD} ${IMAGE_TEST} ${IMAGE_DEPLOY} || true
                 """
-                echo 'Cleaning workspace...'
-                cleanWs()
-            }
-        }
-
-        stage('Workspace setup') {
-            steps {
-                sh "git clone --depth 1 --branch ${BRANCH} --single-branch ${REPO_URL}"
             }
         }
 
@@ -86,7 +74,6 @@ pipeline {
                         docker build --no-cache -t ${IMAGE_DEPLOY} -f ${DOCKERFILE_DEPLOY} .
                         docker run -d --name ${CONTAINER_DEPLOY} ${IMAGE_DEPLOY}
                     """
-                    sleep 20
                 }
             }
         }
@@ -96,9 +83,23 @@ pipeline {
                 sh """
                     docker images
                     docker ps
-                    docker logs ${CONTAINER_DEPLOY}
                 """
             }
+        }
+
+        stage('App startup') {
+            sh '''
+                for i in {1..30}; do
+                    STATUS=$(docker exec ${CONTAINER_DEPLOY} curl -s -o /dev/null -w "%{http_code}" ${API_HEALTHCHECK_URL})
+                    if [ "$STATUS" -eq 200 ]; then
+                        docker logs ${CONTAINER_DEPLOY}
+                        exit 0
+                    fi
+                    sleep 5
+                done
+                echo "Application is not running!"
+                exit 1
+            '''
         }
         
         stage('Health check') {
