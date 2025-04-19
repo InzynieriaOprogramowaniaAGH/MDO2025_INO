@@ -52,7 +52,7 @@ pipeline {
         
         stage('[Debug]: Build') {
             when {
-                expression { env.DEBUG_INFO == 'true' }
+                expression { env.DEBUG_FLAG == 'true' }
             }
             steps {
                 sh 'docker images'
@@ -69,7 +69,7 @@ pipeline {
 
         stage('[Debug]: Test') {
             when {
-                expression { env.DEBUG_INFO == 'true' }
+                expression { env.DEBUG_FLAG == 'true' }
             }
             steps {
                 sh 'docker images'
@@ -89,7 +89,7 @@ pipeline {
 
         stage('[Debug]: Deploy') {
             when {
-                expression { env.DEBUG_INFO == 'true' }
+                expression { env.DEBUG_FLAG == 'true' }
             }
             steps {
                 sh '''
@@ -119,7 +119,7 @@ pipeline {
 
         stage('[Debug]: App startup') {
             when {
-                expression { env.DEBUG_INFO == 'true' }
+                expression { env.DEBUG_FLAG == 'true' }
             }
             steps {
                 sh "docker logs ${APP_CONTAINER}"
