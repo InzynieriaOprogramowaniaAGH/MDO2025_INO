@@ -22,6 +22,15 @@ pipeline {
                 }
             }
         }
+	stage('Test') {
+            steps {
+                script {
+                    def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/Dockerfilechalk.test'
+
+                    def image = docker.build("test", "-f ${dockerfilePath} .")
+                }
+            }
+        }
         stage('Deploy') {
              steps {
                 script {
@@ -46,13 +55,12 @@ pipeline {
         }
         stage('Publish') {
             steps {
-                script {
-                    def output = sh(script: "docker run --rm deploy", returnStdout: true).trim()
-                    echo "Wynik działania demo.js:\n${output}"
+                ansiColor('xterm') {
+                sh "docker run --rm deploy > log.txt"
                 }
-            }       
+		archiveArtifacts artifacts: 'log.txt', fingerprint: true
+            }
         }
-
 
     }
 }
