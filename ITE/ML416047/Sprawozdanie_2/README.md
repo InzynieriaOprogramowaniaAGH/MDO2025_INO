@@ -34,6 +34,8 @@ docker logs jenkins-blueocean
 ```
 
 ![Error 8080](./screenshots/error-port8080.png)
+
+
 Istotnym jest również przekierowanie portu `8080` w Visual Studio Code, jest to konieczne inaczej nie będziemy nawet mogli dostać się do Jenkinsa. 
 Pierwszym problemem przy uruchomieniu Jenkinsa był właśnie brak przekierowania portu, wyświetlał się wtedy błąd o odrzucenia połączenia przez localhosta.
   
@@ -189,8 +191,14 @@ Plik `Dockerfile.test` pozwala utworzyć obraz `redis-test`, który później je
     *  Proszę opisać szczegółowo proces który zostanie opisany jako `Deploy`, ze względu na mnogość podejść
 
 ![Dockerfile.deploy](./screenshots/dockdep.png)
-Plik `Dockerfile.deploy` zawiera informacje potrzebne do stworzenia obrarzu przeznaczonego do dystrybucji. 
+Plik `Dockerfile.deploy` zawiera informacje potrzebne do stworzenia obrarzu przeznaczonego później do publikacji. 
 
+Powstały później obraz zawiera tylko najpotrzebniejsze elementy z buildera (serwer i klient aplikacji Redis). Efektywnie kontener, który będzie zbudowany na tym obrazie będzie miał od razu uruchamiany serwer (`ENTRYPOINT ["redis-server"]`), będzie nasłuchiwać na porcie 6379 (`EXPOSE 6379`) oraz będzie miał wyłączone ograniczenie dostępu (`--protected-mode no`) dzięki czemu kontener nie będzie się blokować podczas nieudanych interakcji z nim (np testowanie działania programu). 
+Dodatkowo z racji argumentu `--no-cache` wykorzystywanego przy budowaniu samego obrazu w Jenkinsie, unikamy problemu gdzie kolejne wersje obrazu budują się ze starych plików przechowywanych w pamięci podręcznej (cache). W ten sposób mamy gwarancję, że budując nowy obraz, będzie on zawsze oparty na wprowadzonych zmianach:
+```
+docker build --no-cache -t mlorenc4/pipeline-redis:v1.0.${BUILD_NUMBER} -f MDO2025_INO/ITE/ML416047/Sprawozdanie_2/Dockerfile.deploy . 
+```
+Kiedy powstanie już obraz gotowy do dalszej publikacji, jest on jeszcze testowany poprzez wysłanie komend testowych (`PING` i oczekuje `PONG`, `SET test_key "MyKey"` i oczekuje `OK`, `GET test_key` i oczekuje `MyKey`) do stworzonego tymczasowego kontenera `redis-testing-deploy` w tymczasowej sieci `network-testing`.
 
   * `Publish`
     * Przygotowanie wersjonowanego artefaktu, na przykład:
