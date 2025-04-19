@@ -21,6 +21,9 @@ pipeline {
         
         //Publish
         ARTIFACTS_PATH = 'artifacts'
+
+        //Flags
+        DEBUG_FLAG = 'true'
     }
 
     stages {
@@ -47,7 +50,10 @@ pipeline {
             }
         }
         
-        stage('Build debug') {
+        stage('[Debug]: Build') {
+            when {
+                expression { env.DEBUG_INFO == 'true' }
+            }
             steps {
                 sh 'docker images'
             }
@@ -60,8 +66,11 @@ pipeline {
                 }
             }
         }
-        
-        stage('Test debug') {
+
+        stage('[Debug]: Test') {
+            when {
+                expression { env.DEBUG_INFO == 'true' }
+            }
             steps {
                 sh 'docker images'
             }
@@ -77,15 +86,19 @@ pipeline {
                 }
             }
         }
-        
-        stage('Deploy debug') {
+
+        stage('[Debug]: Deploy') {
+            when {
+                expression { env.DEBUG_INFO == 'true' }
+            }
             steps {
-                sh """
+                sh '''
                     docker images
-                    docker ps
-                """
+                    docker ps -a
+                '''
             }
         }
+        
 
         stage('App startup') {
             steps {
@@ -93,7 +106,6 @@ pipeline {
                     for i in {1..30}; do
                         STATUS=$(docker exec ${CONTAINER_DEPLOY} curl -s -o /dev/null -w "%{http_code}" ${API_HEALTHCHECK_URL})
                         if [ "$STATUS" -eq 200 ]; then
-                            docker logs ${CONTAINER_DEPLOY}
                             exit 0
                         fi
                         sleep 5
@@ -103,6 +115,15 @@ pipeline {
                 '''
             }
             
+        }
+
+        stage('[Debug]: App startup') {
+            when {
+                expression { env.DEBUG_INFO == 'true' }
+            }
+            steps {
+                sh "docker logs ${CONTAINER_DEPLOY}"
+            }
         }
         
         stage('Health check') {
@@ -121,8 +142,6 @@ pipeline {
                 sh """
                     mkdir -p ${ARTIFACTS_PATH}
                     docker cp ${CONTAINER_DEPLOY}:/app ${ARTIFACTS_PATH}
-                    rm -f ${ARTIFACTS_PATH}/*.pdb
-                    rm -f ${ARTIFACTS_PATH}/appsettings.Development.json
                 """
                 archiveArtifacts artifacts: "${ARTIFACTS_PATH}/**", fingerprint: true
             }
