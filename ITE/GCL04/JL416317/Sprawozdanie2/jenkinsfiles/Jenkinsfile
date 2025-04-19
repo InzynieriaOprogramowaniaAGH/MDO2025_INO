@@ -14,7 +14,7 @@ pipeline {
         IMAGE_DEPLOY = 'weatherapp-deploy'
         
         //Containers
-        CONTAINER_DEPLOY = 'weatherapp'
+        APP_CONTAINER = 'weatherapp'
         
         //Health check
         API_HEALTHCHECK_URL = 'http://localhost:8080/api/apihealth'
@@ -32,7 +32,7 @@ pipeline {
                 echo 'Cleaning containers...'
                 sh """
                     docker container prune -f
-                    docker rm -f ${CONTAINER_DEPLOY} || true
+                    docker rm -f ${APP_CONTAINER} || true
                 """
                 echo 'Cleaning images...'
                 sh """
@@ -81,7 +81,7 @@ pipeline {
                 dir("${DOCKERFILES_PATH}") {
                     sh """
                         docker build --no-cache -t ${IMAGE_DEPLOY} -f ${DOCKERFILE_DEPLOY} .
-                        docker run -d --name ${CONTAINER_DEPLOY} ${IMAGE_DEPLOY}
+                        docker run -d --name ${APP_CONTAINER} ${IMAGE_DEPLOY}
                     """
                 }
             }
@@ -104,7 +104,7 @@ pipeline {
             steps {
                 sh '''
                     for i in {1..30}; do
-                        STATUS=$(docker exec ${CONTAINER_DEPLOY} curl -s -o /dev/null -w "%{http_code}" ${API_HEALTHCHECK_URL})
+                        STATUS=$(docker exec ${APP_CONTAINER} curl -s -o /dev/null -w "%{http_code}" ${API_HEALTHCHECK_URL})
                         if [ "$STATUS" -eq 200 ]; then
                             exit 0
                         fi
@@ -122,7 +122,7 @@ pipeline {
                 expression { env.DEBUG_INFO == 'true' }
             }
             steps {
-                sh "docker logs ${CONTAINER_DEPLOY}"
+                sh "docker logs ${APP_CONTAINER}"
             }
         }
         
@@ -130,8 +130,8 @@ pipeline {
             steps {
                 sh '''
                     set -e
-                    STATUS=$(docker exec ${CONTAINER_DEPLOY} curl -s -o /tmp/response.txt -w "%{http_code}" ${API_HEALTHCHECK_URL})
-                    docker exec ${CONTAINER_DEPLOY} cat /tmp/response.txt
+                    STATUS=$(docker exec ${APP_CONTAINER} curl -s -o /tmp/response.txt -w "%{http_code}" ${API_HEALTHCHECK_URL})
+                    docker exec ${APP_CONTAINER} cat /tmp/response.txt
                     [ "$STATUS" -eq 200 ]
                 '''
             }
@@ -141,7 +141,7 @@ pipeline {
             steps {
                 sh """
                     mkdir -p ${ARTIFACTS_PATH}
-                    docker cp ${CONTAINER_DEPLOY}:/app ${ARTIFACTS_PATH}
+                    docker cp ${APP_CONTAINER}:/app ${ARTIFACTS_PATH}
                 """
                 archiveArtifacts artifacts: "${ARTIFACTS_PATH}/**", fingerprint: true
             }
@@ -153,7 +153,7 @@ pipeline {
             echo 'Cleaning containers...'
             sh """
                 docker container prune -f
-                docker rm -f ${CONTAINER_DEPLOY} || true
+                docker rm -f ${APP_CONTAINER} || true
             """
             echo 'Cleaning images...'
             sh """
