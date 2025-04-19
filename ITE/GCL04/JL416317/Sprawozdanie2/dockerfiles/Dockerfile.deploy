@@ -11,9 +11,9 @@ RUN dotnet publish WeatherForecast.Api/WeatherForecast.Api.csproj \
     -p:PublishTrimmed=false \
     -o /app/publish
 
-FROM debian:bullseye-slim AS runtime
+FROM bitnami/minideb:bullseye AS runtime
 
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN install_packages curl libicu67
 
 WORKDIR /app
 
