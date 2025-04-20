@@ -1,0 +1,48 @@
+#!/bin/sh
+
+MRUBY_PACKAGE_DIR=$(dirname "$(dirname "$(readlink -f "$0")")")
+
+print_help()
+{
+  echo "Usage: mruby-config [switches]"
+  echo "  switches:"
+  echo "  --cc                        print C compiler name"
+  echo "  --cflags                    print flags passed to C compiler"
+  echo "  --cxx                       print C++ compiler name"
+  echo "  --cxxflags                  print flags passed to C++ compiler"
+  echo "  --as                        print assembler name"
+  echo "  --asflags                   print flags passed to assembler"
+  echo "  --objc                      print Objective C compiler name"
+  echo "  --objcflags                 print flags passed to Objective C compiler"
+  echo "  --ld                        print linker name"
+  echo "  --ldflags                   print flags passed to linker"
+  echo "  --ldflags-before-libs       print flags passed to linker before linked libraries"
+  echo "  --libs                      print linked libraries"
+  echo "  --libmruby-path             print libmruby path"
+  echo "  --help                      print this help"
+  exit 0
+}
+
+if [ $# -eq 0 ]; then
+   print_help
+fi
+
+while [ $# -gt 0 ]; do
+  case $1 in
+    --cc) echo gcc;;
+    --cflags) echo -std=gnu99 -g -O3 -Wall -Wundef -Werror-implicit-function-declaration -Wwrite-strings -DHAVE_MRUBY_IO_GEM -DMRB_USE_RATIONAL -DMRB_USE_COMPLEX -DMRB_USE_BIGINT -DMRB_USE_DEBUG_HOOK -I"${MRUBY_PACKAGE_DIR}/include" -I"${MRUBY_PACKAGE_DIR}/include/mruby/gems/mruby-time/include" -I"${MRUBY_PACKAGE_DIR}/include/mruby/gems/mruby-io/include";;
+    --cxx) echo g++;;
+    --cxxflags) echo -g -O3 -Wall -Wundef -DHAVE_MRUBY_IO_GEM -DMRB_USE_RATIONAL -DMRB_USE_COMPLEX -DMRB_USE_BIGINT -DMRB_USE_DEBUG_HOOK -I"${MRUBY_PACKAGE_DIR}/include" -I"${MRUBY_PACKAGE_DIR}/include/mruby/gems/mruby-time/include" -I"${MRUBY_PACKAGE_DIR}/include/mruby/gems/mruby-io/include";;
+    --as) echo gcc;;
+    --asflags) echo -std=gnu99 -g -O3 -Wall -Wundef -Werror-implicit-function-declaration -Wwrite-strings -DHAVE_MRUBY_IO_GEM -DMRB_USE_RATIONAL -DMRB_USE_COMPLEX -DMRB_USE_BIGINT -DMRB_USE_DEBUG_HOOK -I"${MRUBY_PACKAGE_DIR}/include" -I"${MRUBY_PACKAGE_DIR}/include/mruby/gems/mruby-time/include" -I"${MRUBY_PACKAGE_DIR}/include/mruby/gems/mruby-io/include";;
+    --objc) echo gcc;;
+    --objcflags) echo -std=gnu99 -g -O3 -Wall -Wundef -Werror-implicit-function-declaration -Wwrite-strings -DHAVE_MRUBY_IO_GEM -DMRB_USE_RATIONAL -DMRB_USE_COMPLEX -DMRB_USE_BIGINT -DMRB_USE_DEBUG_HOOK -I"${MRUBY_PACKAGE_DIR}/include" -I"${MRUBY_PACKAGE_DIR}/include/mruby/gems/mruby-time/include" -I"${MRUBY_PACKAGE_DIR}/include/mruby/gems/mruby-io/include";;
+    --ld) echo gcc;;
+    --ldflags) echo  -L${MRUBY_PACKAGE_DIR}/lib;;
+    --ldflags-before-libs) ;;
+    --libs) echo -lmruby -lm;;
+    --libmruby-path) echo ${MRUBY_PACKAGE_DIR}/lib/libmruby.a;;
+    *) print_help;;
+  esac
+  shift
+done
