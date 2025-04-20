@@ -1,4 +1,5 @@
 # Pipeline, Jenkins, izolacja etapów
+Repozytorium wykorzystane do zadań: https://github.com/mruby/mruby.git
 ## Przygotowanie
 Zgodnie z instrukcją instalacji Jenkinsa: https://www.jenkins.io/doc/book/installing/docker/
 
@@ -67,20 +68,80 @@ docker run \
 sudo docker exec ${CONTAINER_ID or CONTAINER_NAME} cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 
-### Różnica: Jenkins vs BlueOcean
-
-| Cecha                  | Jenkins (bazowy)                                      | BlueOcean (rozszerzenie Jenkinsa)                          |
-|------------------------|-------------------------------------------------------|-------------------------------------------------------------|
-| *Interfejs użytkownika (UI)* | Klasyczny, techniczny i mniej intuicyjny                | Nowoczesny, graficzny i bardziej przyjazny dla użytkownika |
-| *Obsługa pipeline'ów*       | Wymaga ręcznej konfiguracji i pluginów                 | Wbudowana obsługa pipeline as code z graficznym edytorem    |
-| *Tworzenie projektów*      | Ręczne dodawanie i konfiguracja                         | Kreatory projektów z integracją Git, GitHub, Bitbucket      |
-| *Zarządzanie buildami*     | Widok listy, mniej przejrzysty                          | Wizualizacja przepływu pracy (pipeline visualization)       |
-| *Grupa docelowa*           | Zaawansowani użytkownicy i administratorzy              | Zespoły DevOps, programiści, użytkownicy nietechniczni      |
-| *Instalacja*               | Podstawowa instalacja Jenkins                           | Wymaga dodania pluginu blueocean                          |
-
 **Podsumowanie:**  
 BlueOcean to nowoczesne rozszerzenie Jenkinsa, które upraszcza zarządzanie pipeline’ami i oferuje przyjazny interfejs graficzny, ale nadal bazuje na podstawowej instalacji Jenkins.
 
 
 ### Zadanie wstępne: uruchomienie
+```Nowy projekt``` > ```Ogólny projekt``` > ```Kroki budowania``` > ```Dodaj krok budowania``` > ```Uruchom powłokę```
+1. Uname - wyświetla nazwę systemu operacyjnego
+```
+uname -a
+```
 
+2. Hour - zwraca błąd, gdy... godzina jest nieparzysta
+```
+#!/bin/bash
+
+GODZINA=$(date +%H)
+echo "Aktualna godzina: $GODZINA"
+
+if [ $((GODZINA % 2)) -ne 0 ]; then
+  echo "Błąd: godzina $GODZINA jest nieparzysta."
+  exit 1
+else
+  echo "OK: godzina $GODZINA jest parzysta."
+fi
+```
+
+3. Obraz - pobiera obraz kontenera ```ubuntu```
+```
+docker pull ubuntu
+```
+
+### Zadanie wstępne: obiekt typu pipeline
+- Sklonowano repozytorium przedmiotowe (MDO2025_INO)
+- Zrobiono checkout do pliku Dockerfile (na osobistej gałęzi) właściwego dla buildera wybranego programu - mruby.
+- Zbudowano Dockerfile do budowania i testowania
+```
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean') {
+            steps {
+                echo 'Cleaning ...'
+                sh 'rm -rf MDO2025_INO'
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                echo 'Checkout ...'
+                sh 'git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+                dir('MDO2025_INO') {
+                    sh 'git checkout KM417392'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building ...'
+                dir('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/lab3-wazne-pliki') {
+                    sh 'docker build -f Dockerfile.build -t r-build .'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Testing ...'
+                dir('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/lab3-wazne-pliki') {
+                    sh 'docker build -f Dockerfile.test -t r-test .'
+                }
+            }
+        }
+    }
+}
+```
