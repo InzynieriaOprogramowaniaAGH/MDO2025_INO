@@ -16,9 +16,14 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/Dockerfilechalk.build'
+                    	def shortCommit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+                    	def date = sh(script: "date +%Y%m%d%H%M%S", returnStdout: true).trim()
+                    	env.IMAGE_VERSION = "${date}-${shortCommit}"
+                    	echo "Wersja obrazu: ${env.IMAGE_VERSION}"
 
-                    def image = docker.build("bldr", "-f ${dockerfilePath} .")
+			def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/Dockerfilechalk.build'
+
+                    	def image = docker.build("bldr", "-f ${dockerfilePath} .")
                 }
             }
         }
@@ -27,7 +32,7 @@ pipeline {
                 script {
                     def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/Dockerfilechalk.test'
 
-                    def image = docker.build("test", "-f ${dockerfilePath} .")
+                    def image = docker.build("test:${env.IMAGE_VERSION}", "-f ${dockerfilePath} .")
                 }
             }
         }
@@ -37,7 +42,7 @@ pipeline {
                     def buildContext = 'INO/GCL02/MN417158/Sprawozdanie2'
 
                     sh """
-                        docker run --rm -v \$PWD/${buildContext}:/output bldr \
+                        docker run --rm -v \$PWD/${buildContext}:/output bldr:${env.IMAGE_VERSION} \
                         cp -r /chalk/node_modules /output/
                     """
 
@@ -48,7 +53,7 @@ pipeline {
                         console.log(chalk.green('Hello %s'), name);
                     '''.stripIndent()
 
-                    def deployImage = docker.build("deploy", "-f ${buildContext}/Dockerfilechalk.deploy ${buildContext}")
+                    def deployImage = docker.build("deploy:${env.IMAGE_VERSION}", "-f ${buildContext}/Dockerfilechalk.deploy ${buildContext}")
 
                 }
             }
@@ -59,6 +64,8 @@ pipeline {
                 sh "docker run --rm deploy > log.txt"
                 }
 		archiveArtifacts artifacts: 'log.txt', fingerprint: true
+		writeFile file: 'version.txt', text: "IMAGE_VERSION=${env.IMAGE_VERSION}\n"
+		archiveArtifacts artifacts: 'version.txt', fingerprint: true
             }
         }
 

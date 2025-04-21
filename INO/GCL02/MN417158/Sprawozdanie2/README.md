@@ -61,7 +61,7 @@ Tworzony jest inny obraz Dockera "test" na podstawie obrazu "bldr", pliku [Docke
 
 Etap Deploy:
 W kontenerze bldr kopiowany jest katalog node_modules powstały po zbudowaniu aplikacji do katalogu projektu (/output).
-Tworzony jest plik [demo.s](files/demo.js), który wykorzystuje bibliotekę chalk do kolorowego wypisania tekstu w terminalu.
+Tworzony jest plik [demo.js](files/demo.js), który wykorzystuje bibliotekę chalk do kolorowego wypisania tekstu w terminalu.
 Budowany jest obraz deploy z pliku [Dockerfilechalk.deploy](files/Dockerfilechalk.deploy) znajdującego się w katalogu projektu. Obraz zawiera aplikację gotową do uruchomienia.
 
 Etap Publish:
@@ -69,7 +69,53 @@ Uruchamiany jest kontener na podstawie obrazu deploy, a jego wynik wypisywany w 
 
 ## Zajęcia 06
 
+1. Po przygotowaniu planu działania przeszedłem do jego realizaji. W tym celu utworzyłem nowy projekt typu pipeline w Jenkinsie.
+
+2. Utworzyłem skrypt w konfiguracji pipeline'u realizującego etapy "Clone", "Build", "Deploy" oraz "Publish".
+
+**Przygotowany skrypt realizujący zadanie: **
+
+![Zrzut8](screenshots/Zrzut8.png)
+
+3. Uruchomiłem działanie projektu.
+
+**Efekt wyświetlony w konsoli po uruchomieniu skryptu: **
+
+![Zrzut9](screenshots/Zrzut9.png)
+
+4. Aby sprawdzić czy aplikacja na pewno działa poprawnie pobrałem w Jenkinsie wtyczkę AnsiColor, a w skrypcie w etapie publish dodałem ```ansiColor('xterm') {```
+
+**Dzięki tym zmianom wydruk w konsoli Jenkinsa jest zielony, zgodnie z treścią pliku demo.js, pipeline zadziałał więc poprawnie: **
+
+![Zrzut10](screenshots/Zrzut10.png)
+
 ## Zajęcia 07
+
+1. Do mojego Jenkinsfile'a dodałem wersjonowanie utworzonych kontenerów, aby ułatwić śledzenie powstałych artefaktów i unikanie nadpisywanie. Umożliwia to sprawdzenie pochodzenia artefaktu i jego unikalność przy kolejnym uruchomieniu pipeline'a. W tym celu na etapie Build dodałem
+```
+ 			def shortCommit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+                        def date = sh(script: "date +%Y%m%d%H%M%S", returnStdout: true).trim()
+                        env.IMAGE_VERSION = "${date}-${shortCommit}"
+                        echo "Wersja obrazu: ${env.IMAGE_VERSION}"
+```
+Wersja jest tworzona poprzez pobranie daty uruchomienia skryptu i danych commita na którym został on uruchomiony.
+
+2. Dodałem również do etapu Publish zapisywanie artefaktów. Jeden jest wydrukiem konsoli ukazującym działanie aplikacji, drugi posiada zapisaną wersję:
+```
+ansiColor('xterm') {
+                sh "docker run --rm deploy > log.txt"
+                }
+                archiveArtifacts artifacts: 'log.txt', fingerprint: true
+                writeFile file: 'version.txt', text: "IMAGE_VERSION=${env.IMAGE_VERSION}\n"
+                archiveArtifacts artifacts: 'version.txt', fingerprint: true
+```
+3. Ostatnim krokiem była zmiana ustawień projektu aby przepis pipeline'u był dostarczany z SCM, a nie wklejony w skrypt projektu Jenkinsa.
+
+**Zmiana definicji na "Pipeline script from SCM", dodanie adresu repozytorium, odpowiedniej gałęzi i ścieżki do Jenkinsfile**
+![Zrzut11](screenshots/Zrzut11.png)
+![Zrzut12](screenshots/Zrzut12.png) 
+
+
 ## Korzystanie z narzędzi AI podczas wykonywania zadań
 
 Gemini 2.0 w celu znalezienia odpowiedniego repozytorium z otwartą licencją i posiadającego testy.
