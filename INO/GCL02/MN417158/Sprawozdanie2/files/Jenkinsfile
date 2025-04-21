@@ -58,7 +58,7 @@ pipeline {
         stage('Publish') {
             steps {
                 ansiColor('xterm') {
-                sh "docker run --rm deploy > log.txt"
+                sh "docker run --rm deploy:${env.IMAGE_VERSION} > log.txt"
                 }
 		archiveArtifacts artifacts: 'log.txt', fingerprint: true
 		writeFile file: 'version.txt', text: "IMAGE_VERSION=${env.IMAGE_VERSION}\n"
