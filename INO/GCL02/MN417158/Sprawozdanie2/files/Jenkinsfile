@@ -19,7 +19,7 @@ pipeline {
                 script {
 
 			def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/files/Dockerfilechalk.build'
-                    	def image = docker.build("bldr:${env.IMAGE_VERSION}", "-f ${dockerfilePath} .")
+                    	def image = docker.build("bldr:${env.IMAGE_VERSION}", "--no-cache -f ${dockerfilePath} .")
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
                 script {
                     def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/files/Dockerfilechalk.test'
 
-                    def testImage = docker.build("test:${env.IMAGE_VERSION}", "-f ${dockerfilePath} --build-arg IMAGE_VERSION=${env.IMAGE_VERSION} .")
+                    def testImage = docker.build("test:${env.IMAGE_VERSION}", "--no-cache -f ${dockerfilePath} --build-arg IMAGE_VERSION=${env.IMAGE_VERSION} .")
 
                 }
             }
@@ -50,7 +50,7 @@ pipeline {
                         console.log(chalk.green('Hello %s'), name);
                     '''.stripIndent()
 
-                    def deployImage = docker.build("deploy:${env.IMAGE_VERSION}", "-f ${buildContext}/Dockerfilechalk.deploy ${buildContext}")
+                    def deployImage = docker.build("deploy:${env.IMAGE_VERSION}", "--no-cache -f ${buildContext}/Dockerfilechalk.deploy ${buildContext}")
 
                 }
             }

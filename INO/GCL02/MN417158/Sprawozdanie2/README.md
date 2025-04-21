@@ -117,6 +117,8 @@ ansiColor('xterm') {
 ![Zrzut11](screenshots/Zrzut11.png)
 ![Zrzut12](screenshots/Zrzut12.png) 
 
+4. W etapach "Build" "Test" oraz "Deploy" w odpowiednich miejscach docker.build dodałem ```--no-cache```
+Dzięki temu w skuteczny i bezpieczny sposób mam pewność że pipeline przy każdym uruchomieniu działa na nowym kodzie i środowisku.
 
 ## Korzystanie z narzędzi AI podczas wykonywania zadań
 
