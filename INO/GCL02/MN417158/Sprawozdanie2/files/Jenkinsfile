@@ -21,7 +21,7 @@ pipeline {
                     	env.IMAGE_VERSION = "${date}-${shortCommit}"
                     	echo "Wersja obrazu: ${env.IMAGE_VERSION}"
 
-			def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/Dockerfilechalk.build'
+			def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/files/Dockerfilechalk.build'
 
                     	def image = docker.build("bldr", "-f ${dockerfilePath} .")
                 }
@@ -30,7 +30,7 @@ pipeline {
 	stage('Test') {
             steps {
                 script {
-                    def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/Dockerfilechalk.test'
+                    def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/files/Dockerfilechalk.test'
 
                     def image = docker.build("test:${env.IMAGE_VERSION}", "-f ${dockerfilePath} .")
                 }
@@ -39,7 +39,7 @@ pipeline {
         stage('Deploy') {
              steps {
                 script {
-                    def buildContext = 'INO/GCL02/MN417158/Sprawozdanie2'
+                    def buildContext = 'INO/GCL02/MN417158/Sprawozdanie2/files'
 
                     sh """
                         docker run --rm -v \$PWD/${buildContext}:/output bldr:${env.IMAGE_VERSION} \

@@ -36,7 +36,8 @@ W celu sprawdzenia czy wszystko działa poprawnie
 
 ![Zrzut6](screenshots/Zrzut6.png)
 
-**Wydruk ukazujący że projekt wykonał się poprawnie: **
+
+**Wydruk ukazujący że projekt wykonał się poprawnie:**
 
 ![Zrzut7](screenshots/Zrzut7.png)
 
@@ -47,7 +48,8 @@ Zadanie wykonuję na bibliotece graficznej [Chalk](https://github.com/chalk/chal
 
 7. Zadanie planowałem wykonywać według następującego schematu:
 
-**Schemat UML: **
+
+**Schemat UML:**
 
 ![UML](screenshots/UML.png)
 
@@ -73,19 +75,19 @@ Uruchamiany jest kontener na podstawie obrazu deploy, a jego wynik wypisywany w 
 
 2. Utworzyłem skrypt w konfiguracji pipeline'u realizującego etapy "Clone", "Build", "Deploy" oraz "Publish".
 
-**Przygotowany skrypt realizujący zadanie: **
+**Przygotowany skrypt realizujący zadanie:**
 
 ![Zrzut8](screenshots/Zrzut8.png)
 
 3. Uruchomiłem działanie projektu.
 
-**Efekt wyświetlony w konsoli po uruchomieniu skryptu: **
+**Efekt wyświetlony w konsoli po uruchomieniu skryptu:**
 
 ![Zrzut9](screenshots/Zrzut9.png)
 
 4. Aby sprawdzić czy aplikacja na pewno działa poprawnie pobrałem w Jenkinsie wtyczkę AnsiColor, a w skrypcie w etapie publish dodałem ```ansiColor('xterm') {```
 
-**Dzięki tym zmianom wydruk w konsoli Jenkinsa jest zielony, zgodnie z treścią pliku demo.js, pipeline zadziałał więc poprawnie: **
+**Dzięki tym zmianom wydruk w konsoli Jenkinsa jest zielony, zgodnie z treścią pliku demo.js, pipeline zadziałał więc poprawnie:**
 
 ![Zrzut10](screenshots/Zrzut10.png)
 
