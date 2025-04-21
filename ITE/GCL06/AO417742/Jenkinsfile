@@ -1,0 +1,58 @@
+pipeline {
+    agent {
+        docker {
+            image 'docker:24.0.7-dind' // wersja DIND
+            args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+
+    environment {
+        IMAGE_NAME = "node-js-dummy"
+        TAG = "latest"
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo ' Budowanie aplikacji...'
+                sh 'docker build -f Dockerfile.build.node -t ${IMAGE_NAME}:build .'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo ' Uruchamianie testów...'
+                sh 'docker build -f Dockerfile.test.node -t ${IMAGE_NAME}:test .'
+                sh 'docker run --rm ${IMAGE_NAME}:test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploy aplikacji...'
+                sh 'docker build -f Dockerfile.deploy.node -t ${IMAGE_NAME}:${TAG} .'
+                sh 'docker run -d -p 3000:3000 --name ${IMAGE_NAME}_container ${IMAGE_NAME}:${TAG}'
+                sh 'sleep 5'
+                sh 'curl http://localhost:3000 || echo " Aplikacja nie odpowiada"'
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                echo 'Archiwizacja artefaktu...'
+                sh 'mkdir -p artifacts'
+                sh 'docker cp ${IMAGE_NAME}_container:/app ./artifacts/app || echo "Brak danych do kopiowania"'
+                archiveArtifacts artifacts: 'artifacts/**', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Sprzątanie...'
+            sh 'docker stop ${IMAGE_NAME}_container || true'
+            sh 'docker rm ${IMAGE_NAME}_container || true'
+            sh 'docker image prune -f || true'
+        }
+    }
+}
