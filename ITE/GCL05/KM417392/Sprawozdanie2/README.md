@@ -299,7 +299,7 @@ stage('Push image to Docker Hub') {
     }
 }
 ```
-- [Dockerfile](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/KM/Jenkinsfile)
+- [Jenkinsfile](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/KM/Jenkinsfile)
 
 
 ![obraz](KM/wersje.png)
