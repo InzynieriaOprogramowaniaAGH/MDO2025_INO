@@ -178,6 +178,10 @@ Do ćwiczeń wykorzystano repozytorium mruby - lekką implementacje języka ruby
 - [Dockerfile.deploy](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline/Dockerfile.deploy)
 - [script.rb](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline/script.rb)
 
+
+![obraz](KM/scm.png)
+
+
 ```
 pipeline {
     agent any
@@ -287,6 +291,8 @@ stage('Push image to Docker Hub') {
 ![obraz](KM/wersje.png)
 ![obraz](KM/moj_obraz.png)
 
+
+![obraz](KM/it.png)
 
 
 
