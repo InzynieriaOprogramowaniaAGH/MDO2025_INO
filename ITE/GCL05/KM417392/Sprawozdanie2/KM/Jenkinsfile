@@ -1,5 +1,3 @@
-
-Wysłano
 pipeline {
     agent any
 
