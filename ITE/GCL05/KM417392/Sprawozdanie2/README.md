@@ -45,7 +45,8 @@ USER jenkins
 RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
 ```
 ![obraz](KM/lab5/Dockerfile.png)
-- [Dcokerfile](http://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/KM/lab5/wazne_pliki/Dockerfile)
+- [Dockerfile](http://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/KM/lab5/wazne_pliki/Dockerfile)
+
 b) budowanie obrazu:
 ```
 docker build -t myjenkins-blueocean:2.492.3-1 .
@@ -159,3 +160,117 @@ pipeline {
 
 ![obraz](KM/lab5/pipeline-success.png)
 ![obraz](KM/lab5/pipeline-success2.png)
+
+## mruby - Jenkinsfile 
+Do ćwiczeń wykorzystano repozytorium mruby - lekką implementacje języka ruby. 
+
+
+
+
+
+
+```
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = 'kasiam23/mruby:latest' 
+    }
+
+    stages {
+        stage('Clean') {
+            steps {
+                echo ' Czyszczenie środowiska roboczego...'
+                sh 'rm -rf MDO2025_INO'
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                echo ' Klonowanie repozytorium...'
+                sh 'git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+                dir('MDO2025_INO') {
+                    sh 'git checkout KM417392'
+                }
+            }
+        }
+
+        stage('Build mruby') {
+            steps {
+                echo ' Budowanie obrazu mruby-build i kompilacja...'
+                dir('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline') {
+                    sh '''
+                        docker build -f Dockerfile.build -t mruby-build .
+
+                        echo "Tworzenie tymczasowego kontenera i kopiowanie binarki..."
+                        docker create --name temp mruby-build
+                        mkdir -p mruby.deploy
+                        docker cp temp:/mruby/build/host/bin/mruby mruby.deploy/
+                        docker rm temp
+
+                        echo "Nadawanie uprawnień do uruchomienia binarki..."
+                        chmod +x mruby.deploy/mruby
+                    '''
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                echo 'Testing ...'
+                dir('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/lab3-wazne-pliki') {
+                    sh 'docker build -f Dockerfile.test -t r-test .'
+                }
+            }
+        }    
+        
+        stage('Build deploy image') {
+            steps {
+                echo ' Budowanie czystego obrazu deploy...'
+                dir('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline') {
+                    sh 'docker build -f Dockerfile.deploy -t mruby-deploy .'
+                }
+            }
+        }
+
+        stage('Test deploy image') {
+            steps {
+                echo ' Testowanie obrazu deploy z podmontowanym script.rb...'
+                dir('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline') {
+                    sh '''
+                        docker run --rm \
+                          -v $(pwd)/script.rb:/app/script.rb \
+                          mruby-deploy > result.txt
+
+                        echo " Wynik testu:"
+                        cat result.txt
+
+                        echo "Sprawdzanie, czy output zawiera 'Hello world'..."
+                        grep -q "Hello world" result.txt
+                    '''
+                }
+            }
+        }
+
+stage('Push image to Docker Hub') {
+    when {
+        expression {
+            return fileExists('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline/result.txt') &&
+                   readFile('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline/result.txt').contains('Hello world')
+        }
+    }
+    steps {
+        echo ' Wypychanie obrazu deploy na Docker Hub...'
+        dir('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline') {
+            sh '''
+                docker tag mruby-deploy kasiam23/mruby:latest
+                docker push kasiam23/mruby:latest
+            '''
+             }
+          }
+        }
+    }
+}
+```
+
+
