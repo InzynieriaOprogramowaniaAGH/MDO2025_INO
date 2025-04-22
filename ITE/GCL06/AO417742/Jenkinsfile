@@ -4,20 +4,21 @@ pipeline {
     environment {
         IMAGE_NAME = "node-js-dummy"
         TAG = "latest"
+        PATH_PREFIX = "ITE/GCL06/AO417742"
     }
 
     stages {
         stage('Build') {
             steps {
-                echo ' Budowanie aplikacji...'
-                sh 'docker build -f Dockerfile.build.node -t ${IMAGE_NAME}:build .'
+                echo 'Budowanie aplikacji...'
+                sh 'docker build -f ${PATH_PREFIX}/Dockerfile.build.node -t ${IMAGE_NAME}:build ${PATH_PREFIX}'
             }
         }
 
         stage('Test') {
             steps {
-                echo ' Uruchamianie testów...'
-                sh 'docker build -f Dockerfile.test.node -t ${IMAGE_NAME}:test .'
+                echo 'Uruchamianie testów...'
+                sh 'docker build -f ${PATH_PREFIX}/Dockerfile.test.node -t ${IMAGE_NAME}:test ${PATH_PREFIX}'
                 sh 'docker run --rm ${IMAGE_NAME}:test'
             }
         }
@@ -25,10 +26,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploy aplikacji...'
-                sh 'docker build -f Dockerfile.deploy.node -t ${IMAGE_NAME}:${TAG} .'
+                sh 'docker build -f ${PATH_PREFIX}/Dockerfile.deploy.node -t ${IMAGE_NAME}:${TAG} ${PATH_PREFIX}'
                 sh 'docker run -d -p 3000:3000 --name ${IMAGE_NAME}_container ${IMAGE_NAME}:${TAG}'
                 sh 'sleep 5'
-                sh 'curl http://localhost:3000 || echo " Aplikacja nie odpowiada"'
+                sh 'curl http://localhost:3000 || echo "Aplikacja nie odpowiada"'
             }
         }
 
