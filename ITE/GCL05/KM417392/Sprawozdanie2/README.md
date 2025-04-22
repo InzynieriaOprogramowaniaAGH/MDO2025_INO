@@ -111,7 +111,7 @@ docker pull ubuntu
 ```
 ![obraz](KM/lab5/Obraz.png)
 
-### Zadanie wstępne: obiekt typu pipeline
+### Zadanie wstępne: obiekt typu pipeline (bez SCM)
 - Sklonowano repozytorium przedmiotowe (MDO2025_INO)
 - Zrobiono checkout do pliku Dockerfile (na osobistej gałęzi) właściwego dla buildera wybranego programu - mruby.
 - Zbudowano Dockerfile do budowania i testowania
@@ -161,7 +161,7 @@ pipeline {
 ![obraz](KM/lab5/pipeline-success.png)
 ![obraz](KM/lab5/pipeline-success2.png)
 
-## mruby - Jenkinsfile 
+## mruby - Jenkinsfile (z SCM)
 Do ćwiczeń wykorzystano repozytorium mruby - lekką implementacje języka ruby. 
 
 
