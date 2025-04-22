@@ -24,6 +24,8 @@ docker run \
   docker:dind \
   --storage-driver overlay2
 ```
+![obraz](KM/lab5/siec-jenkins.png)
+
 *Kontener działa jako "Docker daemon" dla Jenkinsa. Jest niezbędny, by Jenkins mógł wykonywać polecenia **docker** 
 3. Stworzono własny obraz z Jenkins +  BlueOcean
 a) plik Dockerfile:
@@ -42,10 +44,14 @@ RUN apt-get update && apt-get install -y lsb-release ca-certificates curl && \
 USER jenkins
 RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
 ```
+![obraz](KM/lab5/Dockerfile.png)
+- [Dcokerfile](http://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/KM/lab5/wazne_pliki/Dockerfile)
 b) budowanie obrazu:
 ```
 docker build -t myjenkins-blueocean:2.492.3-1 .
 ```
+![obraz](KM/lab5/budowanie-ocean.png)
+
 4. Uruchomiono kontener z własnym obrazem Jenkins + BlueOcean
 ```
 docker run \
@@ -62,6 +68,8 @@ docker run \
   --volume jenkins-docker-certs:/certs/client:ro \
   myjenkins-blueocean:2.492.3-1
 ```
+![obraz](KM/lab5/run-ocean.png)
+
 5. Jenkins jest dostępny pod adresem: http://localhost:8080
 6. Po wejściu na podany adres, będzie wymagane hasło, które można uzyskać poniższą komendą:
 ```
@@ -78,6 +86,7 @@ BlueOcean to nowoczesne rozszerzenie Jenkinsa, które upraszcza zarządzanie pip
 ```
 uname -a
 ```
+![obraz](KM/lab5/Uname.png)
 
 2. Hour - zwraca błąd, gdy... godzina jest nieparzysta
 ```
@@ -93,11 +102,13 @@ else
   echo "OK: godzina $GODZINA jest parzysta."
 fi
 ```
+![obraz](KM/lab5/Hour.png)
 
 3. Obraz - pobiera obraz kontenera ```ubuntu```
 ```
 docker pull ubuntu
 ```
+![obraz](KM/lab5/Obraz.png)
 
 ### Zadanie wstępne: obiekt typu pipeline
 - Sklonowano repozytorium przedmiotowe (MDO2025_INO)
@@ -145,3 +156,6 @@ pipeline {
     }
 }
 ```
+
+![obraz](KM/lab5/pipeline-success.png)
+![obraz](KM/lab5/pipeline-success2.png)
