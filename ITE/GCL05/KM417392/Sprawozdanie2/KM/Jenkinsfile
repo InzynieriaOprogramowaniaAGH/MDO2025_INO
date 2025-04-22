@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'kasiam23/mruby'
-        IMAGE_VERSION = "${env.BUILD_NUMBER}" // unikalna wersja na podstawie numeru buildu
+        IMAGE_VERSION = "${env.BUILD_NUMBER}" 
     }
 
     stages {
