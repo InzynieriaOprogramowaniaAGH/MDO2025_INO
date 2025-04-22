@@ -164,6 +164,20 @@ pipeline {
 ## mruby - Jenkinsfile (z SCM)
 Do ćwiczeń wykorzystano repozytorium mruby - lekką implementacje języka ruby. 
 
+mruby to interaktywny shell, a jak wiadomo gdy uruchomiony zostanie wirtualny shell w pipeline, to on zawiśnie na zawsze. Dlatego zrobiono run z innym entrypointem (CMD) - mruby uruchamia skrypt - **script.rb** podany z woluminu. 
+
+### Wymagania wstępne środowiska CI
+Aby system CI działał poprawnie, środowisko powinno zawierać:
+
+- Docker (z CLI dostępne dla Jenkinsa)
+
+- Jenkins (z pluginami: Docker Pipeline, Git)
+
+- Dostęp do repozytorium kodu (np. GitHub)
+
+- Pliki projektowe: Jenkinsfile, Dockerfile.build, Dockerfile.deploy, script.rb
+
+- Jenkins skonfigurowany do uruchamiania jobów z rep
 
 
 ### Diagram aktywności
