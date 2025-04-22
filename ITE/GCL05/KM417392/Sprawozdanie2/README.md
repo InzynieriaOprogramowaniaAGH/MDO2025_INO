@@ -279,7 +279,7 @@ stage('Push image to Docker Hub') {
 - [Dockerfile](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/KM/Jenkinsfile)
 
 
-![obraz](KM/lab5/wersje.png)
+![obraz](KM/wersje.png)
 ![obraz](KM/moj_obraz.png)
 
 
