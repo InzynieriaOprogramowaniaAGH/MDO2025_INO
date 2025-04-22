@@ -195,6 +195,8 @@ Aby system CI działał poprawnie, środowisko powinno zawierać:
 
 ![obraz](KM/scm.png)
 
+Prace rozpoczynam od wyczyszczenia, checkout, i clone. Następnie buduje obraz Dockerfile.build, który klonuje repozytorium projektu mruby oraz potrzebne dependencje, gdzie powstaje cały zestaw plików. Potrzebne pliki kopiuje do mruby.deploy (czysty kontener - bez git,gcc etc.). Sprawdzam czy działa i robie CMD. Run z innym enetrypointem, z innym CMD - mruby uruchamia skrypt Hello world podany z woluminu - script.rb. Jeżeli output jest OK to docker push  
+
 
 ```
 pipeline {
