@@ -173,6 +173,11 @@ Do ćwiczeń wykorzystano repozytorium mruby - lekką implementacje języka ruby
 ### Diagram wdrożeniowy
 ![obraz](KM/diagram-wdrozeniowy.png)
 
+
+- [Dockerfile.build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline/Dockerfile.build)
+- [Dockerfile.deploy](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline/Dockerfile.deploy)
+- [script.rb](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline/script.rb)
+
 ```
 pipeline {
     agent any
