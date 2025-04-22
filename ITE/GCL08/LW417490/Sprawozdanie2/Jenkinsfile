@@ -44,4 +44,4 @@ pipeline {
             }
         }
     }
-}
+docker build -f Dockerfile.expbuild -t myapp-build .
