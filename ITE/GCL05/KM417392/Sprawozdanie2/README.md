@@ -162,9 +162,20 @@ pipeline {
 ![obraz](KM/lab5/pipeline-success2.png)
 
 ## mruby - Jenkinsfile (z SCM)
-Do ćwiczeń wykorzystano repozytorium mruby - lekką implementacje języka ruby. 
+W ramach ćwiczeń wykorzystano repozytorium zawierające mruby – lekką implementację języka Ruby, przeznaczoną głównie do zastosowań wbudowanych i środowisk ograniczonych zasobowo. Projekt ten udostępnia minimalistyczne środowisko uruchomieniowe Ruby, umożliwiające wykonywanie skryptów bez potrzeby korzystania z pełnego interpretera Ruby.
 
-mruby to interaktywny shell, a jak wiadomo gdy uruchomiony zostanie wirtualny shell w pipeline, to on zawiśnie na zawsze. Dlatego zrobiono run z innym entrypointem (CMD) - mruby uruchamia skrypt - **script.rb** podany z woluminu. 
+Pipeline zdefiniowany w pliku Jenkinsfile został w całości dostarczony z SCM (Source Code Management) – kod repozytorium jest pobierany bezpośrednio przez etap Checkout, co spełnia dobre praktyki DevOps i zapewnia spójność wersji w procesie CI/CD.
+
+### Problem interaktywnego shell'a
+Domyślnym trybem działania mruby jest interaktywny shell, który po uruchomieniu oczekuje na wejście użytkownika. W kontekście automatyzacji w Jenkinsie, uruchomienie kontenera w trybie interaktywnym skutkuje zawieszeniem się pipeline'u — ponieważ proces czeka na dane wejściowe, których nigdy nie otrzyma.
+
+### Rozwiązanie: uruchamianie z niestandardowym entrypointem
+Aby obejść ten problem, zastosowano zmodyfikowany entrypoint (CMD) w obrazie Docker. Zamiast uruchamiać mruby w trybie interaktywnym, obraz został skonfigurowany tak, aby automatycznie wykonywał wskazany skrypt – script.rb. Skrypt ten jest montowany jako wolumin do katalogu /app, a następnie interpretowany przez mruby.
+
+Dzięki temu pipeline może automatycznie uruchomić testowy skrypt w bezpieczny i przewidywalny sposób, a wynik jego działania można przechwycić do pliku (result.txt) i dalej wykorzystać w logice pipeline'u (np. do warunkowego wypychania obrazu do rejestru Docker Hub).
+
+
+
 
 ### Wymagania wstępne środowiska CI
 Aby system CI działał poprawnie, środowisko powinno zawierać:
@@ -195,7 +206,27 @@ Aby system CI działał poprawnie, środowisko powinno zawierać:
 
 ![obraz](KM/scm.png)
 
-Prace rozpoczynam od wyczyszczenia, checkout, i clone. Następnie buduje obraz Dockerfile.build, który klonuje repozytorium projektu mruby oraz potrzebne dependencje, gdzie powstaje cały zestaw plików. Potrzebne pliki kopiuje do mruby.deploy (czysty kontener - bez git,gcc etc.). Sprawdzam czy działa i robie CMD. Run z innym enetrypointem, z innym CMD - mruby uruchamia skrypt Hello world podany z woluminu - script.rb. Jeżeli output jest OK to docker push  
+Proces automatyzacji budowania i wdrażania aplikacji mruby został zrealizowany przy użyciu narzędzia Jenkins w oparciu o wieloetapowy pipeline.
+
+1. **Czyszczenie środowiska i pobranie kodu źródłowego**
+
+Pipeline rozpoczyna się od etapu Clean, w którym usuwany jest lokalny katalog roboczy (rm -rf MDO2025_INO). Działanie to zapewnia, że pipeline pracuje zawsze na czystym i świeżym kodzie, bez wpływu ewentualnych pozostałości z poprzednich uruchomień. W kolejnym etapie Checkout następuje pobranie aktualnej wersji repozytorium z GitHuba wraz z przełączeniem na wybraną gałąź (KM417392). Gwarantuje to pełną kontrolę nad wersją źródła.
+
+2. **Budowa obrazu buildowego**
+
+W etapie Build mruby wykorzystywany jest plik Dockerfile.build, na bazie którego budowany jest tymczasowy obraz mruby-build. Obraz ten zawiera wszystkie niezbędne narzędzia (m.in. kompilator gcc, system rake, bibliotekę mruby) i pozwala na zbudowanie artefaktu w postaci binarki mruby. Następnie tworzony jest tymczasowy kontener, z którego kopiowana jest gotowa binarka do folderu mruby.deploy. Dalsze kroki nie wymagają już obecności narzędzi kompilacyjnych, co pozwala na stworzenie lekkiego, "czystego" kontenera produkcyjnego.
+
+3. **Przygotowanie obrazu produkcyjnego z własnym CMD**
+
+W etapie Build deploy image powstaje finalny obraz mruby-deploy, który zawiera jedynie pliki niezbędne do uruchomienia aplikacji — bez narzędzi deweloperskich czy systemów budowania(bez git, gcc etc). Najważniejszym aspektem jest tutaj modyfikacja domyślnego sposobu uruchamiania kontenera. Zamiast uruchamiania mruby w trybie interaktywnym (który zawieszałby pipeline), obraz zawiera własny CMD, który pozwala wykonać podany skrypt script.rb — montowany do kontenera jako wolumin.
+
+Dzięki temu rozwiązaniu mruby działa w trybie batchowym i automatycznie wykonuje treść skryptu, co pozwala na sprawne testowanie i wdrażanie logiki.
+
+4. **Test działania i warunkowe wypchnięcie do rejestru**
+
+W etapie Test deploy image uruchamiany jest kontener na podstawie obrazu mruby-deploy, a wynik działania skryptu script.rb zapisywany jest do pliku result.txt. Pipeline następnie sprawdza, czy output zawiera oczekiwaną wartość (Hello world). Jeśli tak — uruchamiany jest etap Push image to Docker Hub, który wypycha obraz do zewnętrznego rejestru jako kasiam23/mruby:latest.
+
+Taka konstrukcja zapewnia, że do rejestru trafią wyłącznie poprawnie zbudowane i przetestowane wersje aplikacji.
 
 
 ```
@@ -310,8 +341,39 @@ pipeline {
 ![obraz](KM/wersje.png)
 ![obraz](KM/moj_obraz.png)
 
+### Przykład uruchomienia:
+```
+docker run --rm -v $(pwd)/script.rb:/app/script.rb kasiam23/mruby:latest
+```
 
-![obraz](KM/it.png)
+![obraz](KM/wolum.png)
 
 
+### Krok Deploy - wyjaśnienie 
+Etap Deploy w pipeline został zaprojektowany z myślą o specyfice aplikacji mruby, która nie działa jak klasyczna aplikacja serwerowa, lecz jako interpreter języka skryptowego. W związku z tym, deploy nie polega na długotrwałym uruchomieniu serwisu w tle, lecz na jednorazowym wykonaniu skryptu użytkownika.
 
+W celu realizacji tej funkcji przygotowano osobny obraz mruby-deploy, zbudowany z wykorzystaniem pliku Dockerfile.deploy(czysty kontener, nie posiadający git, gcc etc). Obraz zawiera artefakt mruby skopiowany wcześniej z obrazu buildowego oraz skonfigurowany entrypoint, który umożliwia uruchomienie podanego skryptu script.rb. Skrypt ten montowany jest do kontenera jako wolumin, co umożliwia dynamiczne testowanie i wdrażanie różnych wersji bez konieczności przebudowy obrazu.
+
+
+### Krok Publish - wyjaśnienie 
+Pipeline zawiera zaimplementowany krok Publish w etapie Push image to Docker Hub. Obraz mruby-deploy zostaje oznaczony odpowiednim tagiem (kasiam23/mruby:latest) i wypychany do rejestru zewnętrznego Docker Hub.
+Publikacja obrazu jest warunkowa, co zwiększa niezawodność całego procesu — obraz zostaje opublikowany tylko wtedy, gdy wynik działania skryptu script.rb zawiera oczekiwaną frazę Hello world.
+
+### Maintainability
+Pipeline został zaprojektowany w sposób umożliwiający łatwe utrzymanie i ponowne wykorzystanie:
+
+- Każdy etap jest modularny i niezależny – od czyszczenia, przez build i testy, aż po deploy i publish.
+
+- Etapy build i deploy są rozdzielone, co umożliwia wymianę jednego bez wpływu na drugi.
+
+- Build zawsze rozpoczyna się od git clone, co zapewnia pracę na aktualnym kodzie.
+
+- Testy muszą przejść, by możliwe było wypchnięcie obrazu.
+
+- Zawieszenie kontenera mruby jest niemożliwe dzięki zastosowaniu niestandardowego CMD.
+
+
+### Podsumowanie
+Proces CI/CD został zaprojektowany tak, aby kończył się powstaniem w pełni wdrażalnego artefaktu — w tym przypadku obrazu Docker mruby-deploy, zawierającego gotową do uruchomienia binarkę mruby oraz odpowiednio skonfigurowany CMD, który umożliwia wykonanie skryptów dostarczanych jako wolumin.
+
+Obraz jest publikowany do zewnętrznego rejestru Docker Hub i może być uruchomiony na dowolnej maszynie z zainstalowanym Dockerem, bez potrzeby instalacji dodatkowych narzędzi (takich jak git, gcc, make czy środowisko CI). Nie opiera się na DIND ani konfiguracjach specyficznych dla Jenkinsa, co czyni go w pełni przenośnym i niezależnym środowiskiem wykonawczym.
