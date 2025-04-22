@@ -1,8 +1,11 @@
+
+Wysłano
 pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'kasiam23/mruby:latest' 
+        IMAGE_NAME = 'kasiam23/mruby'
+        IMAGE_VERSION = "${env.BUILD_NUMBER}" // unikalna wersja na podstawie numeru buildu
     }
 
     stages {
@@ -42,7 +45,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Test') {
             steps {
                 echo 'Testing ...'
@@ -50,8 +53,8 @@ pipeline {
                     sh 'docker build -f Dockerfile.test -t r-test .'
                 }
             }
-        }    
-        
+        }
+
         stage('Build deploy image') {
             steps {
                 echo ' Budowanie czystego obrazu deploy...'
@@ -80,22 +83,24 @@ pipeline {
             }
         }
 
-stage('Push image to Docker Hub') {
-    when {
-        expression {
-            return fileExists('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline/result.txt') &&
-                   readFile('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline/result.txt').contains('Hello world')
-        }
-    }
-    steps {
-        echo ' Wypychanie obrazu deploy na Docker Hub...'
-        dir('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline') {
-            sh '''
-                docker tag mruby-deploy kasiam23/mruby:latest
-                docker push kasiam23/mruby:latest
-            '''
-             }
-          }
+        stage('Push image to Docker Hub') {
+            when {
+                expression {
+                    return fileExists('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline/result.txt') &&
+                           readFile('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline/result.txt').contains('Hello world')
+                }
+            }
+            steps {
+                echo ' Wypychanie obrazu deploy na Docker Hub...'
+                dir('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2/mruby-pipeline') {
+                    sh """
+                        docker tag mruby-deploy ${IMAGE_NAME}:${IMAGE_VERSION}
+                        docker tag mruby-deploy ${IMAGE_NAME}:latest
+                        docker push ${IMAGE_NAME}:${IMAGE_VERSION}
+                        docker push ${IMAGE_NAME}:latest
+                    """
+                }
+            }
         }
     }
 }
