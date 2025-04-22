@@ -1,3 +1,3 @@
-FROM node-builder:23-alpine
+FROM node-build:23-alpine
 
 CMD ["npm","start"]
