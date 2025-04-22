@@ -48,7 +48,7 @@ pipeline {
             steps {
                 echo 'Testing ...'
                 dir('MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie1/KM/lab3/lab3-wazne-pliki') {
-                    sh 'docker build -f Dockerfile.test -t r-test .'
+                    sh 'docker build --no-cache -f Dockerfile.test -t r-test .'
                 }
             }
         }
