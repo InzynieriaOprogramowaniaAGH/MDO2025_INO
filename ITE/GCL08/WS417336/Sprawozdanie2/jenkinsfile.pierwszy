@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'WS417336', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+        
+        stage('Build Dockerfile') {
+            steps {
+                dir('ITE/GCL08/WS417336/Sprawozdanie2') {
+                    sh 'docker rmi -f express-build'
+                    sh 'docker builder prune --force --all'
+                    sh 'docker build -f Dockerfiles/Dockerfile.expressbuild -t express-build .'
+                }
+            }
+        }
+    }
+}
