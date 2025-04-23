@@ -87,5 +87,7 @@ Kolejny projekt wykonuje skrypt Bash, który sprawdza, czy aktualna godzina (w f
 
 ![image](https://github.com/user-attachments/assets/5a6adea7-1d2c-422b-be43-7ca3530528a5)
 
+Koniec loga potwierdzający działanie pipeline'u:
+
 ![image](https://github.com/user-attachments/assets/06eb1d6c-6df5-4f4e-8885-54624dbf1927)
 
