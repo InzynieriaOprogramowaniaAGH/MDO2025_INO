@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/2c1fe48a-c3c9-4038-a8bd-7896b7366b32)# Sprawozdanie z laboratoriów: Pipeline, Jenkins
+# Sprawozdanie z laboratoriów: Pipeline, Jenkins
 ### Instancja Jenkinsa została utworzona zgodnie z oficjalną instrukcją instalacyjną.
 
 ### Utworzono dedykowaną sieć Docker o nazwie jenkins:
@@ -91,3 +91,4 @@ Koniec loga potwierdzający działanie pipeline'u:
 
 ![image](https://github.com/user-attachments/assets/06eb1d6c-6df5-4f4e-8885-54624dbf1927)
 
+(INO/GCL02/KL414598/Sprawozdanie2/log.txt)
