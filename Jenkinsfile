@@ -1,53 +1,4 @@
 pipeline {
-<<<<<<< HEAD
-    agent {
-        docker {
-            image 'debian:bullseye'
-            args '-u root --privileged'
-        }
-    }
-
-    stages {
-        stage('Install dependencies') {
-            steps {
-                cleanWs()
-                sh '''
-                    apt update
-                    apt install -y build-essential autotools-dev automake libtool git
-                '''
-            }
-        }
-        stage('Clone xz') {
-            steps {
-                sh 'git clone https://github.com/tukaani-project/xz.git'
-            }
-        }
-        stage('Build') {
-            steps {
-                dir('xz') {
-                    sh '''
-                        ./autogen.sh || true
-                        ./configure
-                        make
-                    '''
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                dir('xz') {
-                    sh 'make check || true'
-                }
-            }
-        }
-        stage('Package') {
-            steps {
-                dir('xz') {
-                    sh 'make dist'
-                }
-            }
-        }
-=======
     agent any
 
     environment {
@@ -126,6 +77,5 @@ pipeline {
             archiveArtifacts artifacts: "${WORKDIR}/artifacts/xz.tar.gz", allowEmptyArchive: true
             archiveArtifacts artifacts: "${WORKDIR}/logs/test_results.log", allowEmptyArchive: true
         }
->>>>>>> 1fd95c2 (JK414562 Poprawiony Jenkinsfile bez agent docker)
     }
 }
