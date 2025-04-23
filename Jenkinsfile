@@ -2,26 +2,25 @@ pipeline {
     agent any
 
     environment {
-        BASE = "${env.WORKSPACE}/xz"
-        PIPELINE = "${env.WORKSPACE}/pipeline"
+        WORKDIR = "JK414562/pipeline"
     }
 
     stages {
         stage('Clone') {
             steps {
-                sh 'git clone https://github.com/tukaani-project/xz.git'
+                git branch: 'JK414562', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
             }
         }
 
         stage('Build') {
             steps {
-                dir("${env.WORKSPACE}") {
+                dir("${WORKDIR}") {
                     script {
-                        def image = docker.build('xz-build', '-f pipeline/Dockerfile.build .')
-                        def container = sh(script: 'docker create xz-build', returnStdout: true).trim()
+                        def buildImage = docker.build('xz-build', '-f Dockerfile.build .')
                         sh 'mkdir -p artifacts'
-                        sh "docker cp ${container}:/app/xz-*.tar.gz artifacts/"
-                        sh "docker rm ${container}"
+                        def buildContainer = sh(script: "docker create xz-build", returnStdout: true).trim()
+                        sh "docker cp ${buildContainer}:/app/xz-*.tar.gz artifacts/xz.tar.gz"
+                        sh "docker rm ${buildContainer}"
                     }
                 }
             }
@@ -29,13 +28,13 @@ pipeline {
 
         stage('Test') {
             steps {
-                dir("${env.WORKSPACE}") {
+                dir("${WORKDIR}") {
                     script {
-                        def image = docker.build('xz-test', '-f pipeline/Dockerfile.test .')
-                        def container = sh(script: 'docker create xz-test', returnStdout: true).trim()
+                        def testImage = docker.build('xz-test', '-f Dockerfile.test .')
                         sh 'mkdir -p logs'
-                        sh "docker cp ${container}:/app/logs/test_results.log logs/test_results.log || true"
-                        sh "docker rm ${container}"
+                        def testContainer = sh(script: "docker create xz-test", returnStdout: true).trim()
+                        sh "docker cp ${testContainer}:/app/logs/test_results.log logs/test_results.log"
+                        sh "docker rm ${testContainer}"
                     }
                 }
             }
@@ -43,35 +42,31 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                script {
-                    writeFile file: 'pipeline/deploy.c', text: '''
-                        #include <stdio.h>
-                        #include <lzma.h>
-                        int main() {
-                            printf("XZ lib version: %s\\n", lzma_version_string());
-                            return 0;
-                        }
-                    '''
-                    def image = docker.build('xz-deploy', '-f pipeline/Dockerfile.deploy .')
-                    def container = sh(script: 'docker create xz-deploy', returnStdout: true).trim()
-                    sh "docker start ${container}"
-                    sh "docker logs ${container}"
-                    sh "docker rm ${container}"
+                dir("${WORKDIR}") {
+                    script {
+                        def deployImage = docker.build('xz-deploy', '-f Dockerfile.deploy .')
+                        def deployContainer = sh(script: "docker create xz-deploy", returnStdout: true).trim()
+                        sh "docker cp deploy.c ${deployContainer}:/app/deploy.c"
+                        sh "docker start ${deployContainer}"
+                        sh "docker exec ${deployContainer} gcc /app/deploy.c -lxz -o /tmp/deploy_test"
+                        sh "docker exec ${deployContainer} /tmp/deploy_test"
+                        sh "docker rm -f ${deployContainer}"
+                    }
                 }
             }
         }
 
-        stage('Done') {
+        stage('Print') {
             steps {
-                echo 'Pipeline finished successfully ✅'
+                echo 'Pipeline finished successfully.'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'artifacts/*.tar.gz', allowEmptyArchive: true
-            archiveArtifacts artifacts: 'logs/test_results.log', allowEmptyArchive: true
+            archiveArtifacts artifacts: "${WORKDIR}/artifacts/xz.tar.gz", allowEmptyArchive: true
+            archiveArtifacts artifacts: "${WORKDIR}/logs/test_results.log", allowEmptyArchive: true
         }
     }
 }
