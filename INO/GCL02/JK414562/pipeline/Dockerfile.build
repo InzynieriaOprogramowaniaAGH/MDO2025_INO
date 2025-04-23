@@ -10,4 +10,6 @@ COPY xz/ /app/
 
 RUN ./autogen.sh && ./configure && make && make dist
 
+RUN mv /app/xz-*.tar.gz /app/xz.tar.gz
+
 CMD ["bash"]
