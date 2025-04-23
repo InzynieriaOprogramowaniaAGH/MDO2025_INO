@@ -2,7 +2,11 @@ pipeline {
     agent any
 
     environment {
-        WORKDIR = "pipeline"
+        // bazowy katalog Twojego zadania w repo
+        BASEDIR    = "INO/GCL02/JK414562"
+        WORKDIR    = "${BASEDIR}/pipeline"
+        ARTIFACTS  = "${WORKDIR}/artifacts"
+        LOGS       = "${WORKDIR}/logs"
     }
 
     parameters {
@@ -14,7 +18,6 @@ pipeline {
         stage('Clone xz') {
             when { expression { !params.SKIP_CLONE } }
             steps {
-                // klonujemy tylko katalog xz
                 sh "rm -rf ${WORKDIR}/xz"
                 sh "git clone https://github.com/tukaani-project/xz.git ${WORKDIR}/xz"
             }
@@ -25,11 +28,13 @@ pipeline {
             steps {
                 dir("${WORKDIR}") {
                     script {
-                        // budujemy obraz, w Dockerfile.build pętla zmienia nazwę paczki na xz.tar.gz
-                        docker.build('xz-build', '-f Dockerfile.build .')
+                        // Dockerfile.build jest w INO/GCL02/JK414562/pipeline/Dockerfile.build
+                        def img = docker.build('xz-build', '-f Dockerfile.build .')
                         def cid = sh(script: "docker create xz-build", returnStdout: true).trim()
-                        sh 'mkdir -p artifacts'
-                        sh "docker cp ${cid}:/app/xz.tar.gz artifacts/xz.tar.gz"
+                        sh "mkdir -p ${ARTIFACTS}"
+                        // w Dockerfile.build masz na końcu:
+                        //   RUN make dist && for f in xz-*.tar.gz; do mv \"$f\" xz.tar.gz; done
+                        sh "docker cp ${cid}:/app/xz.tar.gz ${ARTIFACTS}/xz.tar.gz"
                         sh "docker rm ${cid}"
                     }
                 }
@@ -40,10 +45,10 @@ pipeline {
             steps {
                 dir("${WORKDIR}") {
                     script {
-                        docker.build('xz-test', '-f Dockerfile.test .')
+                        def img = docker.build('xz-test', '-f Dockerfile.test .')
                         def cid = sh(script: "docker create xz-test", returnStdout: true).trim()
-                        sh 'mkdir -p logs'
-                        sh "docker cp ${cid}:/app/logs/test_results.log logs/test_results.log"
+                        sh "mkdir -p ${LOGS}"
+                        sh "docker cp ${cid}:/app/logs/test_results.log ${LOGS}/test_results.log"
                         sh "docker rm ${cid}"
                     }
                 }
@@ -54,8 +59,9 @@ pipeline {
             steps {
                 dir("${WORKDIR}") {
                     script {
-                        docker.build('xz-deploy', '-f Dockerfile.deploy .')
+                        def img = docker.build('xz-deploy', '-f Dockerfile.deploy .')
                         def cid = sh(script: "docker create xz-deploy", returnStdout: true).trim()
+                        // kopiujesz swój deploy.c
                         sh "docker cp deploy.c ${cid}:/app/deploy.c"
                         sh "docker start ${cid}"
                         sh "docker exec ${cid} gcc /app/deploy.c -lxz -o /tmp/deploy_test"
@@ -68,15 +74,15 @@ pipeline {
 
         stage('Done') {
             steps {
-                echo '✅ Cały pipeline zakończony.'
+                echo '✅ Pipeline zakończony pomyślnie.'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: "${WORKDIR}/artifacts/xz.tar.gz", allowEmptyArchive: true
-            archiveArtifacts artifacts: "${WORKDIR}/logs/test_results.log", allowEmptyArchive: true
+            archiveArtifacts artifacts: "${ARTIFACTS}/xz.tar.gz", allowEmptyArchive: true
+            archiveArtifacts artifacts: "${LOGS}/test_results.log", allowEmptyArchive: true
         }
     }
 }
