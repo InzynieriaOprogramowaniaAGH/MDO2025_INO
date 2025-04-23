@@ -92,3 +92,4 @@ Koniec loga potwierdzający działanie pipeline'u:
 ![image](https://github.com/user-attachments/assets/06eb1d6c-6df5-4f4e-8885-54624dbf1927)
 
 - [Pełna treść wydruku z konsoli](log.txt)
+- [Pełna treść wydruku z konsoli po powtórnym uruchomieniu](log.txt)
