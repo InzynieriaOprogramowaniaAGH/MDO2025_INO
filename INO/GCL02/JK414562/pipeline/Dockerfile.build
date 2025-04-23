@@ -5,10 +5,11 @@ WORKDIR /app
 # kopiujemy katalog xz/ z kontekstu
 COPY xz/ ./
 
-# instalujemy tylko niezbędne pakiety, w tym autopoint i certyfikaty SSL
+# instalujemy wszystkie niezbędne narzędzia, w tym autopoint i po4a
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
       autopoint \
+      po4a \
       build-essential \
       autotools-dev \
       autoconf \
