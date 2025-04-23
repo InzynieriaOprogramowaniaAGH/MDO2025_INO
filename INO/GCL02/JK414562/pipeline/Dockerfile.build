@@ -1,18 +1,20 @@
 FROM debian:bullseye
-
 WORKDIR /app
 
-# skopiuj całe źródła xz do /app
+# 1) ZAINSTALUJEMY gettext (autopoint), autotools itd.
+RUN apt-get update && apt-get install -y \
+      build-essential autotools-dev autoconf automake libtool \
+      gettext pkg-config ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2) SKOPIUJ kod
 COPY xz/ ./
 
-# zainstaluj, zbuduj i zrób tarball
-RUN apt-get update && apt-get install -y \
-      build-essential autotools-dev autoconf automake libtool gettext pkg-config \
-    && ./autogen.sh \
+# 3) ZRÓB bootstrap, kompilację i paczkę
+RUN ./autogen.sh \
     && ./configure \
     && make -j"$(nproc)" \
     && make dist \
     && for f in xz-*.tar.gz; do mv "$f" xz.tar.gz; done
 
-# nic nie uruchamiamy na start
 CMD ["bash"]
