@@ -1,60 +1,70 @@
 pipeline {
-  agent any
+    agent any
 
-  stages {
-    stage('Clone xz') {
-      steps {
-        // Wyczyść workspace i sklonuj repo
-        deleteDir()
-        git url: 'https://github.com/tukaani-project/xz.git', branch: 'master'
-      }
+    environment {
+        // ścieżka do katalogu z Dockerfile.build, Dockerfile.test itd.
+        WORKDIR = "INO/GCL02/JK414562/pipeline"
     }
 
-    stage('Build Image') {
-      steps {
-        script {
-          // budujemy obraz z Dockerfile.build
-          docker.build('xz-build', '-f pipeline/Dockerfile.build .')
+    stages {
+
+        stage('Clone') {
+            steps {
+                // klonujemy Twoją gałąź
+                git branch: 'JK414562', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
         }
-      }
-    }
 
-    stage('Test Image') {
-      steps {
-        script {
-          // budujemy obraz testowy
-          docker.build('xz-test', '-f pipeline/Dockerfile.test .')
-          // uruchamiamy go jednorazowo, aby wyciągnąć logi
-          sh '''
-            docker create --name xz-test-container xz-test
-            mkdir -p logs
-            docker cp xz-test-container:/app/logs/test_results.log logs/test_results.log
-            docker rm xz-test-container
-          '''
+        stage('Build') {
+            steps {
+                dir("${WORKDIR}") {
+                    script {
+                        // budujemy obraz buildowy
+                        def buildImage = docker.build('xz-build', '-f Dockerfile.build .')
+
+                        // przygotowujemy katalog na artefakty
+                        sh 'mkdir -p artifacts'
+
+                        // tworzymy kontener, kopiujemy gotowy tarball i usuwamy kontener
+                        def buildContainer = sh(script: "docker create xz-build", returnStdout: true).trim()
+                        sh "docker cp ${buildContainer}:/app/xz.tar.gz artifacts/xz.tar.gz"
+                        sh "docker rm ${buildContainer}"
+                    }
+                }
+            }
         }
-      }
-    }
 
-    stage('Package Image') {
-      steps {
-        script {
-          // wyciągamy gotowy tarball z obrazu buildowego
-          sh '''
-            docker create --name xz-build-container xz-build
-            mkdir -p artifacts
-            docker cp xz-build-container:/app/xz.tar.gz artifacts/xz.tar.gz
-            docker rm xz-build-container
-          '''
+        stage('Test') {
+            steps {
+                dir("${WORKDIR}") {
+                    script {
+                        // budujemy obraz testowy
+                        def testImage = docker.build('xz-test', '-f Dockerfile.test .')
+
+                        // katalog na logi
+                        sh 'mkdir -p logs'
+
+                        // uruchamiamy kontener, kopiujemy logi i usuwamy kontener
+                        def testContainer = sh(script: "docker create xz-test", returnStdout: true).trim()
+                        sh "docker cp ${testContainer}:/app/logs/test_results.log logs/xz_test.log"
+                        sh "docker rm ${testContainer}"
+                    }
+                }
+            }
         }
-      }
-    }
-  }
 
-  post {
-    always {
-      // archiwizujemy jako artefakty
-      archiveArtifacts artifacts: 'artifacts/xz.tar.gz',   allowEmptyArchive: false
-      archiveArtifacts artifacts: 'logs/test_results.log', allowEmptyArchive: false
+        stage('Print') {
+            steps {
+                echo '✅ Pipeline dla xz zakończony pomyślnie.'
+            }
+        }
     }
-  }
+
+    post {
+        always {
+            // archiwizujemy tarball i logi
+            archiveArtifacts artifacts: "${WORKDIR}/artifacts/xz.tar.gz",   allowEmptyArchive: false
+            archiveArtifacts artifacts: "${WORKDIR}/logs/xz_test.log",      allowEmptyArchive: false
+        }
+    }
 }
