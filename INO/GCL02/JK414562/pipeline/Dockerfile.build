@@ -1,16 +1,34 @@
+# pipeline/Dockerfile.build
+
+# 1) Bazowy obraz
 FROM debian:bullseye
 
-RUN apt-get update && apt-get install -y \
-      build-essential autotools-dev autoconf automake libtool gettext autopoint \
-      pkg-config ca-certificates git && \
-    rm -rf /var/lib/apt/lists/*
-
+# 2) Stworzenie katalogu roboczego
 WORKDIR /app
 
+# 3) Instalacja narzędzi potrzebnych do budowy
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      build-essential \
+      autotools-dev \
+      autoconf \
+      automake \
+      libtool \
+      gettext \
+      autopoint \
+      pkg-config \
+      ca-certificates \
+      git \
+    && rm -rf /var/lib/apt/lists/*
+
+# 4) Skopiowanie kodu xz (zakładamy, że Jenkinsfile najpierw zrobi 'git clone xz' w tym folderze)
 COPY xz/ /app
 
-RUN ./autogen.sh && \
-    ./configure && \
-    make && \
-    make dist && \
-    for f in xz-*.tar.gz; do mv "$f" xz.tar.gz; done
+# 5) Autogen, kompilacja i spakowanie + rename
+RUN ./autogen.sh \
+ && ./configure \
+ && make \
+ && make dist \
+ # tu robimy rename pliku xz-<wersja>.tar.gz na stałą nazwę xz.tar.gz
+ && for f in xz-*.tar.gz; do mv "$f" xz.tar.gz; done
+
+
