@@ -2,10 +2,10 @@ FROM debian:bullseye
 
 WORKDIR /app
 
-# kopiujemy katalog xz/ z kontekstu
+# 1. Skopiuj kod źródłowy xz
 COPY xz/ ./
 
-# instalujemy wszystkie niezbędne narzędzia, w tym autopoint i po4a
+# 2. Zainstaluj narzędzia potrzebne do wygenerowania configure i pakowania
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
       autopoint \
@@ -20,11 +20,18 @@ RUN apt-get update \
       ca-certificates \
  && rm -rf /var/lib/apt/lists/* \
  \
- # generujemy skrypty, konfigurujemy i budujemy
+ # 3. Wygeneruj skrypt configure, skompiluj i spakuj źródła
  && ./autogen.sh \
  && ./configure \
  && make -j"$(nproc)" \
  && make dist \
- \
- # przenosimy wynikowy tar.gz
  && mv xz-*.tar.gz xz.tar.gz
+
+# 4. Etap testów: rozpakuj tarball, uruchom testy i zbierz logi
+RUN tar xzf xz.tar.gz \
+ && cd xz-* \
+ && ./configure \
+ && make -j"$(nproc)" check || true \
+ && cd /app \
+ && mkdir -p logs \
+ && mv xz-*/tests/*.log logs/xz_test.log
