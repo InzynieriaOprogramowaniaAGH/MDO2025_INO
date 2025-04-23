@@ -62,3 +62,27 @@ Kontener Jenkinsa został uruchomiony na podstawie wcześniej zbudowanego obrazu
 Z poziomu przeglądarki na hoście maszyny wirtualnej odwiedzono interfejs Jenkinsa pod adresem http://192.168.1.102:8080
 W celu pierwszego logowania, hasło jednorazowe zostało uzyskane z logów kontenera:
 ![6](https://github.com/user-attachments/assets/8c21a6d8-757d-4e23-9fde-d95c1007dec7)
+
+# Projekt: wyświetlenie informacji o systemie
+Zrealizowano zadanie, które po uruchomieniu wypisuje w konsoli wynik polecenia uname, czyli podstawowe informacje o systemie operacyjnym.
+
+![2](https://github.com/user-attachments/assets/aaa80ec4-ff6a-4c55-8f31-0ed6b348f82d)
+
+![3](https://github.com/user-attachments/assets/ff01bcd2-9f40-4666-a24c-1fd5c867da0f)
+
+### sprawdzenie parzystości godziny
+Kolejny projekt wykonuje skrypt Bash, który sprawdza, czy aktualna godzina (w formacie 24-godzinnym) jest parzysta czy nie:
+
+![5](https://github.com/user-attachments/assets/182bc9c3-caa7-4ec1-8456-a6cf84674070)
+
+![4](https://github.com/user-attachments/assets/40f8bf73-c1a4-47d6-9da6-812e45bc99fb)
+
+# pobieranie obrazu Dockera
+
+`docker pull ubuntu`
+
+![7](https://github.com/user-attachments/assets/1b146a0a-b53c-4d1f-a166-ef9521dce044)
+
+
+
+
