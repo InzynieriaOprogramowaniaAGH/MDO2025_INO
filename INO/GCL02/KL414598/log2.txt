@@ -1,0 +1,81 @@
+Started by user Krzysztof
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/PipelineProject
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] git
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/PipelineProject/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/KL414598^{commit} # timeout=10
+Checking out Revision 47d92b753397cb27a3d5dbee0a2b8ffa8bdb0444 (refs/remotes/origin/KL414598)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 47d92b753397cb27a3d5dbee0a2b8ffa8bdb0444 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D KL414598 # timeout=10
+ > git checkout -b KL414598 47d92b753397cb27a3d5dbee0a2b8ffa8bdb0444 # timeout=10
+Commit message: "Create Dockerfile.test"
+ > git rev-list --no-walk 47d92b753397cb27a3d5dbee0a2b8ffa8bdb0444 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Dockerfile)
+[Pipeline] sh
++ docker build -t my-builder ./INO/GCL02/KL414598/Sprawozdanie1
+#1 [internal] load build definition from Dockerfile
+#1 sha256:fe809aa6f5a1c0e789608cc2316babf0051a33895826d7c4fe4b6b3cf2743544
+#1 transferring dockerfile: 209B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:latest
+#2 sha256:0ea2d3a5bc7b93ef916ceeff90f587f343b4d52df26c632a199e326f7a620686
+#2 DONE 1.0s
+
+#3 [internal] load .dockerignore
+#3 sha256:44bed6167e1157a405aeb32b8211c780d762e0d98fd5f5f9691ce3e6eb9a716c
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#7 [1/4] FROM docker.io/library/ubuntu:latest@sha256:1e622c5f073b4f6bfad6632f2616c7f59ef256e96fe78bf6a595d1dc4376ac02
+#7 sha256:2ddc9f7c72f367793031f4f3001075488f4db0f23b71d81b094dc913572b2b29
+#7 DONE 0.0s
+
+#6 [2/4] RUN apt update && apt install -y git
+#6 sha256:62ae2df69453aa9afe0534c50910bff45b2d30661fa686250e4be5c04b29e617
+#6 CACHED
+
+#5 [3/4] WORKDIR /app
+#5 sha256:1dc0214dd8859246f28f60d35a23c0d05d4925a06856852ed569bcf937b419d0
+#5 CACHED
+
+#4 [4/4] RUN git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+#4 sha256:e279cafe99d8e98ff36ef4c7d5c7f279c191779a75d22658a67bf10954f87ef9
+#4 CACHED
+
+#8 exporting to image
+#8 sha256:f2aa6e8d7b99fe378e6e3f16df0c7f14776a88aede6917c4d4a3f302b0f174f7
+#8 exporting layers done
+#8 writing image sha256:968bc9acbc40f7a42f477456a6458dd8887c61f37c647055638885383c876351 done
+#8 naming to docker.io/library/my-builder:latest done
+#8 DONE 0.0s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run Container)
+[Pipeline] sh
++ docker run --rm my-builder
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
