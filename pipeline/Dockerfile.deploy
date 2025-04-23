@@ -1,11 +1,47 @@
-FROM debian:bullseye
+FROM ubuntu:20.04 AS builder
 
-RUN apt-get update && apt-get install -y \
-    gcc liblzma-dev ca-certificates
+# Avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
 
-WORKDIR /app
-COPY deploy.c /app/
+# Install dependencies for building xz
+RUN apt-get update && \
+    apt-get install -y \
+    git \
+    autoconf \
+    automake \
+    libtool \
+    gettext \
+    autopoint \
+    build-essential \
+    make \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN gcc deploy.c -lxz -o deploy_test
+# Set working directory for build
+WORKDIR /build
 
-CMD ["./deploy_test"]
+# Clone xz repository
+RUN git clone https://github.com/tukaani-project/xz.git .
+
+# Build xz
+RUN ./autogen.sh && \
+    ./configure --prefix=/usr && \
+    make && \
+    make check && \
+    make install DESTDIR=/tmp/xz-install
+
+# Create minimal runtime image
+FROM ubuntu:20.04
+
+# Copy only the necessary built files from the builder stage
+COPY --from=builder /tmp/xz-install/usr/bin/xz /usr/bin/
+COPY --from=builder /tmp/xz-install/usr/bin/xzdec /usr/bin/
+COPY --from=builder /tmp/xz-install/usr/bin/lzma /usr/bin/
+COPY --from=builder /tmp/xz-install/usr/lib/* /usr/lib/
+
+# Set working directory
+WORKDIR /data
+
+# Default command
+ENTRYPOINT ["xz"]
+CMD ["--help"]
