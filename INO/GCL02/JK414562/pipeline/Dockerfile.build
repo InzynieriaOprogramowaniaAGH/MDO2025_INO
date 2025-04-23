@@ -1,15 +1,29 @@
 FROM debian:bullseye
+
 WORKDIR /app
 
-# kopiujemy katalog xz/ z kontekstu (pipeline/xz/)
+# kopiujemy katalog xz/ z kontekstu
 COPY xz/ ./
 
+# instalujemy tylko niezbędne pakiety, w tym autopoint i certyfikaty SSL
 RUN apt-get update \
- && apt-get install -y \
-      build-essential autotools-dev autoconf automake libtool gettext pkg-config \
+ && apt-get install -y --no-install-recommends \
+      autopoint \
+      build-essential \
+      autotools-dev \
+      autoconf \
+      automake \
+      libtool \
+      gettext \
+      pkg-config \
+      ca-certificates \
  && rm -rf /var/lib/apt/lists/* \
+ \
+ # generujemy skrypty, konfigurujemy i budujemy
  && ./autogen.sh \
  && ./configure \
  && make -j"$(nproc)" \
  && make dist \
+ \
+ # przenosimy wynikowy tar.gz
  && mv xz-*.tar.gz xz.tar.gz
