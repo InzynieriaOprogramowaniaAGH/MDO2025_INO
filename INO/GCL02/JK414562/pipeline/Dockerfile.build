@@ -1,20 +1,16 @@
 FROM debian:bullseye
 
-# zainstaluj wszystkie narzędzia potrzebne do budowy
-RUN apt-get update && \
-    apt-get install -y \
+RUN apt-get update && apt-get install -y \
       build-essential autotools-dev autoconf automake libtool gettext autopoint \
       pkg-config ca-certificates git && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# skopiuj źródła xz (z klonowania w Jenkins)
 COPY xz/ /app
 
-# buduj i na koniec ujednolić nazwę artefaktu
 RUN ./autogen.sh && \
     ./configure && \
     make && \
     make dist && \
-    mv xz-*.tar.gz xz.tar.gz
+    for f in xz-*.tar.gz; do mv "$f" xz.tar.gz; done
