@@ -22,62 +22,44 @@ pipeline {
 
         stage('Build') {
             when { expression { return !params.SKIP_BUILD } }
-            agent {
-                docker {
-                    image 'ubuntu:22.04'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
             steps {
                 dir("${WORKDIR}") {
                     script {
                         def buildImage = docker.build('xz-build', '-f Dockerfile.build .')
-                        def buildContainer = sh(script: "docker create xz-build", returnStdout: true).trim()
+                        def container = sh(script: "docker create xz-build", returnStdout: true).trim()
                         sh 'mkdir -p artifacts'
-                        sh "docker cp ${buildContainer}:/app/xz-*.tar.gz artifacts/xz.tar.gz"
-                        sh "docker rm ${buildContainer}"
+                        sh "docker cp ${container}:/app/xz-*.tar.gz artifacts/xz.tar.gz"
+                        sh "docker rm ${container}"
                     }
                 }
             }
         }
 
         stage('Test') {
-            agent {
-                docker {
-                    image 'ubuntu:22.04'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
             steps {
                 dir("${WORKDIR}") {
                     script {
                         def testImage = docker.build('xz-test', '-f Dockerfile.test .')
-                        def testContainer = sh(script: "docker create xz-test", returnStdout: true).trim()
+                        def container = sh(script: "docker create xz-test", returnStdout: true).trim()
                         sh 'mkdir -p logs'
-                        sh "docker cp ${testContainer}:/app/logs/test_results.log logs/test_results.log"
-                        sh "docker rm ${testContainer}"
+                        sh "docker cp ${container}:/app/logs/test_results.log logs/test_results.log"
+                        sh "docker rm ${container}"
                     }
                 }
             }
         }
 
         stage('Deploy') {
-            agent {
-                docker {
-                    image 'ubuntu:22.04'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
             steps {
                 dir("${WORKDIR}") {
                     script {
                         def deployImage = docker.build('xz-deploy', '-f Dockerfile.deploy .')
-                        def deployContainer = sh(script: "docker create xz-deploy", returnStdout: true).trim()
-                        sh "docker cp deploy.c ${deployContainer}:/app/deploy.c"
-                        sh "docker start ${deployContainer}"
-                        sh "docker exec ${deployContainer} gcc /app/deploy.c -lxz -o /tmp/deploy_test"
-                        sh "docker exec ${deployContainer} /tmp/deploy_test"
-                        sh "docker rm -f ${deployContainer}"
+                        def container = sh(script: "docker create xz-deploy", returnStdout: true).trim()
+                        sh "docker cp deploy.c ${container}:/app/deploy.c"
+                        sh "docker start ${container}"
+                        sh "docker exec ${container} gcc /app/deploy.c -lxz -o /tmp/deploy_test"
+                        sh "docker exec ${container} /tmp/deploy_test"
+                        sh "docker rm -f ${container}"
                     }
                 }
             }
