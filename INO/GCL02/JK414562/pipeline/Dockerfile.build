@@ -4,24 +4,23 @@ FROM debian:bullseye
 
 WORKDIR /app
 
-# 1) Zainstaluj narzędzia buildowe + gettext (dla autopoint)
+# 1) Zaleznosci + dos2unix (na wszelki wypadek)
 RUN apt-get update && apt-get install -y \
       build-essential autotools-dev autoconf automake libtool \
-      pkg-config git make ca-certificates gettext \
+      pkg-config git make ca-certificates gettext dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
-# 2) Skopiuj kod źródłowy xz
+# 2) Skopiuj źródła xz
 COPY xz/ ./
 
-# 3) Usuń autopoint z autogen.sh (jeśli mimo wszystko nie chcesz instalować gettext),
-#    a następnie zrób bootstrap, configure, make i make dist
-RUN sed -i '/autopoint -f/d' autogen.sh && \
-    ./autogen.sh && \
-    ./configure && \
-    make -j"$(nproc)" && \
-    make dist && \
-    # 4) Zmień nazwę wygenerowanego tarballa na stałą
-    for f in xz-*.tar.gz; do mv "$f" xz.tar.gz; done
+# 3) Zamień ewentualne CRLF na LF, usuń autopoint, nadaj prawa i zrób build
+RUN dos2unix autogen.sh \
+    && sed -i '/autopoint/d' autogen.sh \
+    && chmod +x autogen.sh \
+    && ./autogen.sh \
+    && ./configure \
+    && make -j"$(nproc)" \
+    && make dist \
+    && for f in xz-*.tar.gz; do mv "$f" xz.tar.gz; done
 
-# 5) Domyślny entrypoint (opcjonalnie)
 CMD ["bash"]
