@@ -1,47 +1,9 @@
-FROM ubuntu:20.04 AS builder
+FROM debian:bullseye
 
-# Avoid interactive prompts during package installation
-ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --fix-missing \
+    gcc liblzma-dev ca-certificates
 
-# Install dependencies for building xz
-RUN apt-get update && \
-    apt-get install -y \
-    git \
-    autoconf \
-    automake \
-    libtool \
-    gettext \
-    autopoint \
-    build-essential \
-    make \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY deploy.c /app/
 
-# Set working directory for build
-WORKDIR /build
-
-# Clone xz repository
-RUN git clone https://github.com/tukaani-project/xz.git .
-
-# Build xz
-RUN ./autogen.sh && \
-    ./configure --prefix=/usr && \
-    make && \
-    make check && \
-    make install DESTDIR=/tmp/xz-install
-
-# Create minimal runtime image
-FROM ubuntu:20.04
-
-# Copy only the necessary built files from the builder stage
-COPY --from=builder /tmp/xz-install/usr/bin/xz /usr/bin/
-COPY --from=builder /tmp/xz-install/usr/bin/xzdec /usr/bin/
-COPY --from=builder /tmp/xz-install/usr/bin/lzma /usr/bin/
-COPY --from=builder /tmp/xz-install/usr/lib/* /usr/lib/
-
-# Set working directory
-WORKDIR /data
-
-# Default command
-ENTRYPOINT ["xz"]
-CMD ["--help"]
+CMD ["bash"]
