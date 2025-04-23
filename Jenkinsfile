@@ -22,6 +22,12 @@ pipeline {
 
         stage('Build') {
             when { expression { return !params.SKIP_BUILD } }
+            agent {
+                docker {
+                    image 'ubuntu:22.04'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 dir("${WORKDIR}") {
                     script {
@@ -36,6 +42,12 @@ pipeline {
         }
 
         stage('Test') {
+            agent {
+                docker {
+                    image 'ubuntu:22.04'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 dir("${WORKDIR}") {
                     script {
@@ -50,6 +62,12 @@ pipeline {
         }
 
         stage('Deploy') {
+            agent {
+                docker {
+                    image 'ubuntu:22.04'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 dir("${WORKDIR}") {
                     script {
@@ -67,7 +85,7 @@ pipeline {
 
         stage('Print') {
             steps {
-                echo 'Pipeline finished successfully.'
+                echo '✅ Pipeline finished successfully.'
             }
         }
     }
