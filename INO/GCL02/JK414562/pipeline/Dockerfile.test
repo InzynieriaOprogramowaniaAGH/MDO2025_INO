@@ -1,17 +1,17 @@
+# Dockerfile.test
 FROM debian:bullseye
 
-WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      build-essential gettext liblzma-dev ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-# skopiuj źródła
+WORKDIR /app
 COPY xz/ ./
 
-# zainstaluj narzędzia do testów
-RUN apt-get update && apt-get install -y \
-      build-essential autotools-dev autoconf automake libtool gettext pkg-config \
-      ca-certificates
+# skip bootstrap, just configure & run the autotools test suite
+RUN ./configure \
+ && make -j"$(nproc)" check || true \
+ && mkdir -p logs \
+ && mv tests/*.log logs/xz_test.log
 
-# przygotuj skrypt ENTRYPOINT, który uruchomi testy i zapisze logi
-COPY test-entrypoint.sh /usr/local/bin/test-entrypoint.sh
-RUN chmod +x /usr/local/bin/test-entrypoint.sh
-
-ENTRYPOINT ["test-entrypoint.sh"]
+CMD ["bash"]

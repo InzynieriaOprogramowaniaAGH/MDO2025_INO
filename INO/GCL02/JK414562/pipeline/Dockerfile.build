@@ -1,26 +1,13 @@
 # Dockerfile.build
-
 FROM debian:bullseye
 
 WORKDIR /app
 
-# 1) Zaleznosci + dos2unix (na wszelki wypadek)
-RUN apt-get update && apt-get install -y \
-      build-essential autotools-dev autoconf automake libtool \
-      pkg-config git make ca-certificates gettext dos2unix \
-    && rm -rf /var/lib/apt/lists/*
-
-# 2) Skopiuj źródła xz
 COPY xz/ ./
 
-# 3) Zamień ewentualne CRLF na LF, usuń autopoint, nadaj prawa i zrób build
-RUN dos2unix autogen.sh \
-    && sed -i '/autopoint/d' autogen.sh \
-    && chmod +x autogen.sh \
-    && ./autogen.sh \
+RUN apt-get update && apt-get install -y \
+      build-essential autoconf automake libtool gettext pkg-config \
+    && rm -rf /var/lib/apt/lists/* \
     && ./configure \
-    && make -j"$(nproc)" \
-    && make dist \
-    && for f in xz-*.tar.gz; do mv "$f" xz.tar.gz; done
-
-CMD ["bash"]
+    && make -j"$(nproc)" dist \
+    && mv xz-*.tar.gz xz.tar.gz
