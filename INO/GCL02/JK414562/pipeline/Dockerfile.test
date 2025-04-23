@@ -1,17 +1,28 @@
 # Dockerfile.test
 FROM debian:bullseye
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      build-essential gettext liblzma-dev ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
-COPY xz/ ./
 
-# skip bootstrap, just configure & run the autotools test suite
-RUN ./configure \
+# 1) Zainstaluj niezbędne pakiety do kompilacji i testów
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      build-essential \
+      gettext \
+      liblzma-dev \
+      ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+# 2) Kopiuj spakowany tarball z poprzedniego etapu
+COPY artifacts/xz.tar.gz ./
+
+# 3) Rozpakuj, skonfiguruj, zbuduj i przetestuj
+RUN tar xzf xz.tar.gz \
+ && cd xz-* \
+ && ./configure \
  && make -j"$(nproc)" check || true \
- && mkdir -p logs \
- && mv tests/*.log logs/xz_test.log
+ \
+ # 4) Zbierz wszystkie logi testów
+ && mkdir -p /app/logs \
+ && cp tests/*.log /app/logs/
 
-CMD ["bash"]
+# (opcjonalnie) możesz wystawić katalog /app/logs jako wolumen, albo je zarchiwizować w Jenkinsie
