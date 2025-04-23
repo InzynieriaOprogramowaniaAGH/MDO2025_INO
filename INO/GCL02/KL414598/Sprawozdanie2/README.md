@@ -1,4 +1,4 @@
-# Sprawozdanie z laboratoriów: Pipeline, Jenkins
+![image](https://github.com/user-attachments/assets/2c1fe48a-c3c9-4038-a8bd-7896b7366b32)# Sprawozdanie z laboratoriów: Pipeline, Jenkins
 ### Instancja Jenkinsa została utworzona zgodnie z oficjalną instrukcją instalacyjną.
 
 ### Utworzono dedykowaną sieć Docker o nazwie jenkins:
@@ -83,6 +83,9 @@ Kolejny projekt wykonuje skrypt Bash, który sprawdza, czy aktualna godzina (w f
 
 ![7](https://github.com/user-attachments/assets/1b146a0a-b53c-4d1f-a166-ef9521dce044)
 
+# Utworzenie pileline, którego zadaniem jest pobranie repozytorium przedmiotu MD02025_INO i budowa obrazu dockera, zawartego w dockerfile na własnej gałęzi: KL414598.
 
+![image](https://github.com/user-attachments/assets/5a6adea7-1d2c-422b-be43-7ca3530528a5)
 
+![image](https://github.com/user-attachments/assets/06eb1d6c-6df5-4f4e-8885-54624dbf1927)
 
