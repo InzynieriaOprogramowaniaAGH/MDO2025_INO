@@ -12,21 +12,22 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                dir("${WORKDIR}") {
-                    script {
-                        def buildImage = docker.build('xz-build', '-f Dockerfile.build .')
-                        sh 'mkdir -p artifacts'
-                        def buildContainer = sh(script: "docker create xz-build", returnStdout: true).trim()
-                        sh "docker cp ${buildContainer}:/app/xz-*.tar.gz artifacts/xz.tar.gz"
-                        sh "docker rm ${buildContainer}"
-                    }
-                }
+stage('Build') {
+    steps {
+        dir("${WORKDIR}") {
+            script {
+                def buildImage = docker.build('xz-build', '-f Dockerfile.build .')
+                def buildContainer = sh(script: "docker create xz-build", returnStdout: true).trim()
+                sh "mkdir -p artifacts"
+                sh "docker cp ${buildContainer}:/app/xz-*.tar.gz artifacts/xz.tar.gz"
+                sh "docker rm ${buildContainer}"
             }
         }
+     }
+ }
 
-        stage('Test') {
+
+    stage('Test') {
             steps {
                 dir("${WORKDIR}") {
                     script {
