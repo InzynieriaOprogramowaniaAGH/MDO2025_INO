@@ -1,0 +1,13 @@
+FROM debian:bullseye
+
+RUN apt-get update && apt-get install -y --fix-missing \
+    build-essential autotools-dev autoconf \
+    automake libtool gettext autopoint pkg-config \
+    ca-certificates git po4a
+
+WORKDIR /app
+COPY xz/ /app/
+
+RUN ./autogen.sh && ./configure && make && make dist
+
+CMD ["bash"]
