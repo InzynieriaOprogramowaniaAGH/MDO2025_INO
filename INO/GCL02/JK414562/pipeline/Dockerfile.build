@@ -2,14 +2,17 @@ FROM debian:bullseye
 
 WORKDIR /app
 
-# Skopiuj kod źródłowy xz
+# skopiuj całe źródła xz do /app
 COPY xz/ ./
 
-# Zainstaluj zależności, zbuduj i spakuj do jednego tarballa xz.tar.gz
+# zainstaluj, zbuduj i zrób tarball
 RUN apt-get update && apt-get install -y \
       build-essential autotools-dev autoconf automake libtool gettext pkg-config \
     && ./autogen.sh \
     && ./configure \
-    && make -j$(nproc) \
+    && make -j"$(nproc)" \
     && make dist \
     && for f in xz-*.tar.gz; do mv "$f" xz.tar.gz; done
+
+# nic nie uruchamiamy na start
+CMD ["bash"]

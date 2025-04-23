@@ -1,17 +1,17 @@
 FROM debian:bullseye
 
-RUN apt-get update && apt-get install -y --fix-missing \
-    build-essential gettext autopoint libtool automake \
-    autoconf pkg-config git make ca-certificates
-
 WORKDIR /app
-COPY xz/ /app/
 
-# Uruchom testy autotools i złap logi
-RUN ./autogen.sh && ./configure && make check || true
+# skopiuj źródła
+COPY xz/ ./
 
-# Przygotuj katalog na logi i wrzuć rzeczywisty wynik
-RUN mkdir -p /app/logs \
- && make -C . check > /app/logs/test_results.log 2>&1 || true
+# zainstaluj narzędzia do testów
+RUN apt-get update && apt-get install -y \
+      build-essential autotools-dev autoconf automake libtool gettext pkg-config \
+      ca-certificates
 
-CMD ["bash"]
+# przygotuj skrypt ENTRYPOINT, który uruchomi testy i zapisze logi
+COPY test-entrypoint.sh /usr/local/bin/test-entrypoint.sh
+RUN chmod +x /usr/local/bin/test-entrypoint.sh
+
+ENTRYPOINT ["test-entrypoint.sh"]
