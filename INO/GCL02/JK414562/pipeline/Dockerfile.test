@@ -1,9 +1,6 @@
-# Dockerfile.test
 FROM debian:bullseye
-
 WORKDIR /app
 
-# 1) Zainstaluj niezbędne pakiety do kompilacji i testów
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
       build-essential \
@@ -12,17 +9,16 @@ RUN apt-get update \
       ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
-# 2) Kopiuj spakowany tarball z poprzedniego etapu
+# Kopiujemy spakowany tarball
 COPY artifacts/xz.tar.gz ./
 
-# 3) Rozpakuj, skonfiguruj, zbuduj i przetestuj
+# Rozpakowujemy, budujemy i uruchamiamy testy
 RUN tar xzf xz.tar.gz \
  && cd xz-* \
  && ./configure \
  && make -j"$(nproc)" check || true \
  \
- # 4) Zbierz wszystkie logi testów
+# Zbieramy logi i scalamy w jeden plik test_results.log
  && mkdir -p /app/logs \
- && cp tests/*.log /app/logs/
-
-# (opcjonalnie) możesz wystawić katalog /app/logs jako wolumen, albo je zarchiwizować w Jenkinsie
+ && cp tests/*.log /app/logs/ \
+ && cat /app/logs/*.log > /app/logs/test_results.log
