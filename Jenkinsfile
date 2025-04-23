@@ -2,61 +2,65 @@ pipeline {
     agent any
 
     environment {
-        ARTIFACT_DIR = 'artifacts'
+        IMAGE_NAME = 'xz-build'
     }
 
     stages {
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Clone xz') {
+            steps {
+                sh '''
+                rm -rf xz
+                git clone https://github.com/tukaani-project/xz.git
+                '''
+            }
+        }
+
         stage('Build') {
             steps {
-                script {
-                    docker.build('xz-build')
-                }
+                sh '''
+                docker build -t ${IMAGE_NAME} xz
+                '''
             }
         }
 
         stage('Export') {
             steps {
                 script {
-                    def imageId = docker.build('xz-build').id
-                    def containerId = sh(script: "docker create ${imageId}", returnStdout: true).trim()
-                    sh "mkdir -p ${ARTIFACT_DIR}"
-                    sh "docker cp ${containerId}:/app/xz-5.8.1.tar.gz ${ARTIFACT_DIR}/xz.tar.gz"
-                    sh "docker rm ${containerId}"
+                    def containerId = sh(script: "docker create ${IMAGE_NAME}", returnStdout: true).trim()
+                    sh "mkdir -p artifacts"
+                    sh "docker cp ${containerId}:/app/xz-5.8.1.tar.gz artifacts/xz.tar.gz"
                 }
             }
         }
 
         stage('Test') {
-            when {
-                expression { return fileExists("${ARTIFACT_DIR}/xz.tar.gz") }
-            }
             steps {
-                echo "Tests would go here..."
+                echo 'Testing...'
             }
         }
 
         stage('Deploy') {
-            when {
-                expression { return fileExists("${ARTIFACT_DIR}/xz.tar.gz") }
-            }
             steps {
-                echo "Deploy stage..."
+                echo 'Deploying...'
             }
         }
 
         stage('Print') {
-            when {
-                expression { return fileExists("${ARTIFACT_DIR}/xz.tar.gz") }
-            }
             steps {
-                echo "Printing info..."
+                echo 'Build finished!'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: "${ARTIFACT_DIR}/**", onlyIfSuccessful: true
+            archiveArtifacts artifacts: 'artifacts/xz.tar.gz', allowEmptyArchive: true
         }
     }
 }
