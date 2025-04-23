@@ -1,0 +1,14 @@
+FROM debian:bullseye
+
+RUN apt-get update && apt-get install -y \
+    build-essential autoconf automake libtool \
+    gettext autopoint pkg-config ca-certificates
+
+WORKDIR /app
+COPY xz/ /app/
+
+RUN ./autogen.sh && ./configure && make && make check \
+    && mkdir -p /app/logs && cp tests/test-suite.log /app/logs/test_results.log || true
+
+CMD ["bash"]
+

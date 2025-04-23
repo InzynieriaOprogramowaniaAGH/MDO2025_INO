@@ -1,0 +1,11 @@
+FROM debian:bullseye
+
+RUN apt-get update && apt-get install -y \
+    gcc liblzma-dev ca-certificates
+
+WORKDIR /app
+COPY deploy.c /app/
+
+RUN gcc deploy.c -lxz -o deploy_test
+
+CMD ["./deploy_test"]
