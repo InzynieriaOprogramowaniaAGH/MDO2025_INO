@@ -1,5 +1,4 @@
 FROM debian:bullseye
-
 WORKDIR /app
 
 # kopiujemy katalog xz/ z kontekstu (pipeline/xz/)

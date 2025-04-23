@@ -2,15 +2,12 @@ pipeline {
     agent any
 
     environment {
-        // to musi wskazywać na katalog, w którym są Twoje Dockerfile’-e + gdzie chcemy mieć xz/
         WORKDIR = "INO/GCL02/JK414562/pipeline"
     }
 
     stages {
-
         stage('Clone xz') {
             steps {
-                // **ważne**: wejdź do pipeline/, tam sklonuj xz/
                 dir("${WORKDIR}") {
                     sh "rm -rf xz"
                     sh "git clone https://github.com/tukaani-project/xz.git xz"
@@ -22,19 +19,10 @@ pipeline {
             steps {
                 dir("${WORKDIR}") {
                     script {
-                        // budujemy obraz z kontekstem = pipeline/
-                        def buildImage = docker.build(
-                            'xz-build',
-                            '-f Dockerfile.build .'
-                        )
-
+                        // buildujemy obraz
+                        docker.build('xz-build', '-f Dockerfile.build .')
                         sh 'mkdir -p artifacts'
-
-                        // kopiujemy wynik
-                        def cid = sh(
-                            script: "docker create xz-build",
-                            returnStdout: true
-                        ).trim()
+                        def cid = sh(script: "docker create xz-build", returnStdout: true).trim()
                         sh "docker cp ${cid}:/app/xz.tar.gz artifacts/xz.tar.gz"
                         sh "docker rm ${cid}"
                     }
@@ -46,16 +34,9 @@ pipeline {
             steps {
                 dir("${WORKDIR}") {
                     script {
-                        def testImage = docker.build(
-                            'xz-test',
-                            '-f Dockerfile.test .'
-                        )
-
+                        docker.build('xz-test', '-f Dockerfile.test .')
                         sh 'mkdir -p logs'
-                        def cid = sh(
-                            script: "docker create xz-test",
-                            returnStdout: true
-                        ).trim()
+                        def cid = sh(script: "docker create xz-test", returnStdout: true).trim()
                         sh "docker cp ${cid}:/app/logs/test_results.log logs/xz_test.log"
                         sh "docker rm ${cid}"
                     }
