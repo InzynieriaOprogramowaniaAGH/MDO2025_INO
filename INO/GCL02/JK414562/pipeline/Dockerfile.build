@@ -1,13 +1,16 @@
-# Dockerfile.build
 FROM debian:bullseye
 
 WORKDIR /app
 
+# kopiujemy katalog xz/ z kontekstu (pipeline/xz/)
 COPY xz/ ./
 
-RUN apt-get update && apt-get install -y \
-      build-essential autoconf automake libtool gettext pkg-config \
-    && rm -rf /var/lib/apt/lists/* \
-    && ./configure \
-    && make -j"$(nproc)" dist \
-    && mv xz-*.tar.gz xz.tar.gz
+RUN apt-get update \
+ && apt-get install -y \
+      build-essential autotools-dev autoconf automake libtool gettext pkg-config \
+ && rm -rf /var/lib/apt/lists/* \
+ && ./autogen.sh \
+ && ./configure \
+ && make -j"$(nproc)" \
+ && make dist \
+ && mv xz-*.tar.gz xz.tar.gz
