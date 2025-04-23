@@ -1,72 +1,60 @@
 pipeline {
-    agent any
+  agent any
 
-    environment {
-        WORKDIR   = "INO/GCL02/JK414562"
-        ARTIFACTS = "${WORKDIR}/artifacts"
-        LOGS      = "${WORKDIR}/logs"
+  stages {
+    stage('Clone xz') {
+      steps {
+        // Wyczyść workspace i sklonuj repo
+        deleteDir()
+        git url: 'https://github.com/tukaani-project/xz.git', branch: 'master'
+      }
     }
 
-    stages {
-
-        stage('Clone xz') {
-            steps {
-                sh "rm -rf xz"
-                sh "git clone https://github.com/tukaani-project/xz.git xz"
-            }
+    stage('Build Image') {
+      steps {
+        script {
+          // budujemy obraz z Dockerfile.build
+          docker.build('xz-build', '-f pipeline/Dockerfile.build .')
         }
-
-        stage('Build') {
-            steps {
-                dir('xz') {
-                    sh """
-                      apt-get update && apt-get install -y \\
-                        build-essential autotools-dev autoconf automake libtool gettext pkg-config \\
-                        ca-certificates
-                      ./autogen.sh
-                      ./configure
-                      make -j\$(nproc)
-                    """
-                }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                dir('xz') {
-                    // przygotuj katalog na logi
-                    sh "mkdir -p ../logs"
-                    // uruchom testy autotools
-                    sh """
-                      make check > ../logs/xz_test.log 2>&1 || true
-                    """
-                }
-            }
-        }
-
-        stage('Package') {
-            steps {
-                dir('xz') {
-                    sh """
-                      make dist
-                      # zmień nazwę tarballa na stałą, żeby łatwo archiwizować
-                      for f in xz-*.tar.gz; do mv \$f ../artifacts/xz.tar.gz; done
-                    """
-                }
-            }
-        }
-
-        stage('Done') {
-            steps {
-                echo '✅ Wszystko zbudowane, przetestowane i zapakowane.'
-            }
-        }
+      }
     }
 
-    post {
-        always {
-            archiveArtifacts artifacts: 'artifacts/xz.tar.gz', allowEmptyArchive: false
-            archiveArtifacts artifacts: 'logs/xz_test.log',   allowEmptyArchive: false
+    stage('Test Image') {
+      steps {
+        script {
+          // budujemy obraz testowy
+          docker.build('xz-test', '-f pipeline/Dockerfile.test .')
+          // uruchamiamy go jednorazowo, aby wyciągnąć logi
+          sh '''
+            docker create --name xz-test-container xz-test
+            mkdir -p logs
+            docker cp xz-test-container:/app/logs/test_results.log logs/test_results.log
+            docker rm xz-test-container
+          '''
         }
+      }
     }
+
+    stage('Package Image') {
+      steps {
+        script {
+          // wyciągamy gotowy tarball z obrazu buildowego
+          sh '''
+            docker create --name xz-build-container xz-build
+            mkdir -p artifacts
+            docker cp xz-build-container:/app/xz.tar.gz artifacts/xz.tar.gz
+            docker rm xz-build-container
+          '''
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      // archiwizujemy jako artefakty
+      archiveArtifacts artifacts: 'artifacts/xz.tar.gz',   allowEmptyArchive: false
+      archiveArtifacts artifacts: 'logs/test_results.log', allowEmptyArchive: false
+    }
+  }
 }
