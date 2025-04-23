@@ -5,11 +5,11 @@ WORKDIR /app
 # Skopiuj kod źródłowy xz
 COPY xz/ ./
 
-# Zainstaluj zależności i zbuduj xz, na końcu spakuj wszystko do xz.tar.gz
+# Zainstaluj zależności, zbuduj i spakuj do jednego tarballa xz.tar.gz
 RUN apt-get update && apt-get install -y \
       build-essential autotools-dev autoconf automake libtool gettext pkg-config \
     && ./autogen.sh \
     && ./configure \
-    && make \
+    && make -j$(nproc) \
     && make dist \
     && for f in xz-*.tar.gz; do mv "$f" xz.tar.gz; done

@@ -7,8 +7,11 @@ RUN apt-get update && apt-get install -y --fix-missing \
 WORKDIR /app
 COPY xz/ /app/
 
+# Uruchom testy autotools i złap logi
 RUN ./autogen.sh && ./configure && make check || true
 
-RUN mkdir -p /app/logs && echo "Test results placeholder" > /app/logs/test_results.log
+# Przygotuj katalog na logi i wrzuć rzeczywisty wynik
+RUN mkdir -p /app/logs \
+ && make -C . check > /app/logs/test_results.log 2>&1 || true
 
 CMD ["bash"]
