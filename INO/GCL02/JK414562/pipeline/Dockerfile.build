@@ -31,4 +31,6 @@ RUN ./autogen.sh \
  # tu robimy rename pliku xz-<wersja>.tar.gz na stałą nazwę xz.tar.gz
  && for f in xz-*.tar.gz; do mv "$f" xz.tar.gz; done
 
+ 
+
 

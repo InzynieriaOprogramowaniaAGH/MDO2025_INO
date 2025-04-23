@@ -2,48 +2,47 @@ pipeline {
     agent any
 
     environment {
-        WORKDIR     = "pipeline"
-        IMG_BUILD   = "xz-build"
-        IMG_TEST    = "xz-test"
-        IMG_DEPLOY  = "xz-deploy"
-        ARTIFACT    = "xz.tar.gz"
+        WORKDIR = "pipeline"
+    }
+
+    parameters {
+        booleanParam(name: 'SKIP_CLONE', defaultValue: false, description: 'Pomiń klonowanie xz')
+        booleanParam(name: 'SKIP_BUILD', defaultValue: false, description: 'Pomiń etap build')
     }
 
     stages {
-        stage("Clone xz") {
+        stage('Clone xz') {
+            when { expression { !params.SKIP_CLONE } }
             steps {
-                dir(WORKDIR) {
-                    sh '''
-                      rm -rf xz
-                      git clone https://github.com/tukaani-project/xz.git
-                    '''
-                }
+                // klonujemy tylko katalog xz
+                sh "rm -rf ${WORKDIR}/xz"
+                sh "git clone https://github.com/tukaani-project/xz.git ${WORKDIR}/xz"
             }
         }
 
-        stage("Build") {
+        stage('Build') {
+            when { expression { !params.SKIP_BUILD } }
             steps {
-                dir(WORKDIR) {
+                dir("${WORKDIR}") {
                     script {
-                        // Budujemy obraz, w którym Dockerfile.build SAM przenosi xz-*.tar.gz → /app/xz.tar.gz
-                        docker.build(IMG_BUILD, "-f Dockerfile.build .")
-                        def cid = sh(script: "docker create ${IMG_BUILD}", returnStdout: true).trim()
-                        sh "mkdir -p artifacts"
-                        // Kopiujemy już ujednolicony artifact
-                        sh "docker cp ${cid}:/app/${ARTIFACT} artifacts/${ARTIFACT}"
+                        // budujemy obraz, w Dockerfile.build pętla zmienia nazwę paczki na xz.tar.gz
+                        docker.build('xz-build', '-f Dockerfile.build .')
+                        def cid = sh(script: "docker create xz-build", returnStdout: true).trim()
+                        sh 'mkdir -p artifacts'
+                        sh "docker cp ${cid}:/app/xz.tar.gz artifacts/xz.tar.gz"
                         sh "docker rm ${cid}"
                     }
                 }
             }
         }
 
-        stage("Test") {
+        stage('Test') {
             steps {
-                dir(WORKDIR) {
+                dir("${WORKDIR}") {
                     script {
-                        docker.build(IMG_TEST, "-f Dockerfile.test .")
-                        def cid = sh(script: "docker create ${IMG_TEST}", returnStdout: true).trim()
-                        sh "mkdir -p logs"
+                        docker.build('xz-test', '-f Dockerfile.test .')
+                        def cid = sh(script: "docker create xz-test", returnStdout: true).trim()
+                        sh 'mkdir -p logs'
                         sh "docker cp ${cid}:/app/logs/test_results.log logs/test_results.log"
                         sh "docker rm ${cid}"
                     }
@@ -51,30 +50,32 @@ pipeline {
             }
         }
 
-        stage("Deploy") {
+        stage('Deploy') {
             steps {
-                dir(WORKDIR) {
+                dir("${WORKDIR}") {
                     script {
-                        docker.build(IMG_DEPLOY, "-f Dockerfile.deploy .")
-                        def cid = sh(script: "docker create ${IMG_DEPLOY}", returnStdout: true).trim()
+                        docker.build('xz-deploy', '-f Dockerfile.deploy .')
+                        def cid = sh(script: "docker create xz-deploy", returnStdout: true).trim()
                         sh "docker cp deploy.c ${cid}:/app/deploy.c"
                         sh "docker start ${cid}"
-                        sh """
-                          docker exec ${cid} bash -lc '
-                            gcc /app/deploy.c -lxz -o /tmp/deploy_test && \
-                            /tmp/deploy_test
-                          '
-                        """
+                        sh "docker exec ${cid} gcc /app/deploy.c -lxz -o /tmp/deploy_test"
+                        sh "docker exec ${cid} /tmp/deploy_test"
                         sh "docker rm -f ${cid}"
                     }
                 }
+            }
+        }
+
+        stage('Done') {
+            steps {
+                echo '✅ Cały pipeline zakończony.'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: "${WORKDIR}/artifacts/${ARTIFACT}", fingerprint: true
+            archiveArtifacts artifacts: "${WORKDIR}/artifacts/xz.tar.gz", allowEmptyArchive: true
             archiveArtifacts artifacts: "${WORKDIR}/logs/test_results.log", allowEmptyArchive: true
         }
     }
