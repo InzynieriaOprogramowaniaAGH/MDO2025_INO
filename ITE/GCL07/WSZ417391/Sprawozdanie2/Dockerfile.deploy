@@ -4,4 +4,5 @@ COPY node_modules/ ./node_modules/
 COPY package.json ./
 COPY src/ ./src/
 COPY views/ ./views/
+RUN apt-get update && apt-get install -y zip
 CMD ["npm", "start"]
