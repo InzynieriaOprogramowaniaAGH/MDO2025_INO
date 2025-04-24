@@ -51,10 +51,10 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            archiveArtifacts artifacts: "${WORKDIR}/artifacts/xz.tar.gz"
-            archiveArtifacts artifacts: "${WORKDIR}/logs/xz_test.log"
-        }
+post {
+    always {
+        archiveArtifacts artifacts: 'INO/GCL02/JK414562/pipeline/artifacts/xz.tar.gz'
+        archiveArtifacts artifacts: 'INO/GCL02/JK414562/pipeline/logs/xz_test.log'
     }
+}
 }
