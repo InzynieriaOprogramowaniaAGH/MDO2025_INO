@@ -2,33 +2,30 @@ pipeline {
     agent any
 
     environment {
-        GIT_REPO = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
-        BRANCH = 'DR416985'
-        DOCKERFILE_PATH = 'ITE/GCL06/DR416985/lab5/node-build.Dockerfile'
-        DOCKER_CONTEXT = 'ITE/GCL06/DR416985/lab5'
-        DOCKER_IMAGE = 'node-build-image'
+        PROJECT_DIR = 'ITE/GCL06/DR416985/lab5'
+        BUILD_IMAGE = 'node-build-image'
         TEST_IMAGE = 'node-test-image'
         DEPLOY_IMAGE = 'node-deploy-image'
     }
 
     stages {
-        stage('Klonowanie repozytorium') {
+        stage('Pobieranie kodu') {
             steps {
-                git branch: "${BRANCH}", url: "${GIT_REPO}"
+                git branch: 'DR416985', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
             }
         }
 
-        stage('Budowanie obrazu') {
+        stage('Build') {
             steps {
-                dir("${DOCKER_CONTEXT}") {
-                    sh "docker build -t ${DOCKER_IMAGE} -f ${DOCKERFILE_PATH} ."
+                dir("${PROJECT_DIR}") {
+                    sh "docker build -t ${BUILD_IMAGE} -f node-build.Dockerfile ."
                 }
             }
         }
 
-        stage('Testowanie') {
+        stage('Test') {
             steps {
-                dir("${DOCKER_CONTEXT}") {
+                dir("${PROJECT_DIR}") {
                     sh "docker build -t ${TEST_IMAGE} -f node-test.Dockerfile ."
                     sh "docker run --rm ${TEST_IMAGE}"
                 }
@@ -37,27 +34,30 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'docker network create test_network || true'
-                dir("${DOCKER_CONTEXT}") {
-                    sh "docker build -t ${DEPLOY_IMAGE} -f node-deploy.Dockerfile ."
-                    sh "docker run -d --rm --network test_network --name app ${DEPLOY_IMAGE}"
+                sh 'docker network create my_network || true'
+                dir("${PROJECT_DIR}") {
+                    sh """
+                        docker build -t ${DEPLOY_IMAGE} -f node-Deploy.Dockerfile .
+                        docker rm -f app || true
+                        docker run -d -p 3000:3000 --name app --network my_network ${DEPLOY_IMAGE}
+                    """
                 }
             }
         }
 
         stage('Sprawdzenie działania aplikacji') {
             steps {
-                sh "docker run --rm --network test_network curlimages/curl curl -v http://app:3000"
+                sh 'docker run --rm --network my_network curlimages/curl:latest curl http://app:3000'
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline zakończony sukcesem.'
+            echo ' Pipeline zakończony sukcesem.'
         }
         failure {
-            echo 'Pipeline zakończył się błędem.'
+            echo ' Pipeline zakończył się błędem.'
         }
     }
 }
