@@ -1,4 +1,4 @@
-FROM node-build:23-alpine
+FROM node-build-image
 
 WORKDIR /node-js-dummy-test
 CMD ["npm", "start"]
