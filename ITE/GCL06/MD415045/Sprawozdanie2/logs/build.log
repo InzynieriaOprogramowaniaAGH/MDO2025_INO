@@ -1,0 +1,78 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from node-build.Dockerfile
+#1 transferring dockerfile:
+#1 transferring dockerfile: 265B done
+#1 DONE 0.5s
+
+#2 [internal] load metadata for docker.io/library/node:23-alpine
+#2 DONE 1.9s
+
+#3 [internal] load .dockerignore
+#3 transferring context:
+#3 transferring context: 2B done
+#3 DONE 0.5s
+
+#4 [1/5] FROM docker.io/library/node:23-alpine@sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc
+#4 resolve docker.io/library/node:23-alpine@sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc
+#4 resolve docker.io/library/node:23-alpine@sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc 0.3s done
+#4 sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc 6.41kB / 6.41kB done
+#4 sha256:0d468be7d2997dd2f6a3cda45e121a6b5140eb7ba3eba299a215030dbb0fb1ca 1.72kB / 1.72kB done
+#4 sha256:2b99bc550caad6f10cf0fd4ad72f86a14cc9818a05a66cc72d1997a4e8ee5c77 6.18kB / 6.18kB done
+#4 DONE 1.8s
+
+#5 [2/5] RUN apk add --no-cache git
+#5 0.681 fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86_64/APKINDEX.tar.gz
+#5 0.897 fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/community/x86_64/APKINDEX.tar.gz
+#5 1.091 (1/12) Installing brotli-libs (1.1.0-r2)
+#5 1.153 (2/12) Installing c-ares (1.34.5-r0)
+#5 1.177 (3/12) Installing libunistring (1.2-r0)
+#5 1.250 (4/12) Installing libidn2 (2.3.7-r0)
+#5 1.275 (5/12) Installing nghttp2-libs (1.64.0-r0)
+#5 1.298 (6/12) Installing libpsl (0.21.5-r3)
+#5 1.321 (7/12) Installing zstd-libs (1.5.6-r2)
+#5 1.348 (8/12) Installing libcurl (8.12.1-r1)
+#5 1.375 (9/12) Installing libexpat (2.7.0-r0)
+#5 1.400 (10/12) Installing pcre2 (10.43-r0)
+#5 1.429 (11/12) Installing git (2.47.2-r0)
+#5 1.530 (12/12) Installing git-init-template (2.47.2-r0)
+#5 1.554 Executing busybox-1.37.0-r12.trigger
+#5 1.587 OK: 21 MiB in 29 packages
+#5 DONE 2.3s
+
+#6 [3/5] RUN git clone https://github.com/devenes/node-js-dummy-test
+#6 0.937 Cloning into 'node-js-dummy-test'...
+#6 DONE 2.0s
+
+#7 [4/5] WORKDIR /node-js-dummy-test
+#7 DONE 0.8s
+
+#8 [5/5] RUN npm install
+#8 3.932 
+#8 3.932 added 354 packages, and audited 355 packages in 3s
+#8 3.932 
+#8 3.932 37 packages are looking for funding
+#8 3.932   run `npm fund` for details
+#8 3.938 
+#8 3.938 17 vulnerabilities (3 low, 3 moderate, 9 high, 2 critical)
+#8 3.938 
+#8 3.938 To address issues that do not require attention, run:
+#8 3.938   npm audit fix
+#8 3.938 
+#8 3.938 To address all issues (including breaking changes), run:
+#8 3.938   npm audit fix --force
+#8 3.938 
+#8 3.938 Run `npm audit` for details.
+#8 3.939 npm notice
+#8 3.939 npm notice New major version of npm available! 10.9.2 -> 11.3.0
+#8 3.939 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.3.0
+#8 3.939 npm notice To update run: npm install -g npm@11.3.0
+#8 3.939 npm notice
+#8 DONE 4.6s
+
+#9 exporting to image
+#9 exporting layers
+#9 exporting layers 0.8s done
+#9 writing image sha256:9d625e4d3eb6736f049fa811f06f1a6a0fb1e31b0d64db0eaa43beec03579c95 0.0s done
+#9 naming to docker.io/library/node-build:23-alpine 0.0s done
+#9 DONE 1.0s

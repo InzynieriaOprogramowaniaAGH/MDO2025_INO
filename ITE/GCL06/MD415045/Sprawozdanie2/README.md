@@ -157,7 +157,138 @@ FROM node-build:23-alpine
 WORKDIR /node-js-dummy-test
 CMD ["npm", "start"]
 ```
-Skrypt Pipeline'a w języku groovy
+
+![artefakty](./Zrzut%20ekranu%202025-04-24%20191804.png)
+
+[build.log](./logs/build.log)
+
+[test.log](./logs/test.log)
+
+![stages](./Zrzut%20ekranu%202025-04-24%20191811.png)
+
+![env]()
+```groovy
+environment {
+        PROJECT_DIR = 'MDO2025_INO/ITE/GCL06/MD415045/lab5'
+        BUILD_NUMBER = "1.0"
+        NODE_VERSION = '23-alpine'
+        BUILD_IMAGE = "node-build:${NODE_VERSION}"
+        TEST_IMAGE = "node-test:v${BUILD_NUMBER}"
+        DEPLOY_IMAGE = "node-deploy:v${BUILD_NUMBER}"
+}
+```
+
+Stages
+
+![prepare]()
+```groovy
+stage('Prepare') {
+            steps {
+                sh '''
+                    rm -rf MDO2025_INO
+                    git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+                    cd MDO2025_INO
+                    git checkout MD415045
+                '''
+            }
+}
+```
+
+![logs]()
+```groovy
+stage('Logs') {
+            steps {
+                dir(env.PROJECT_DIR) {
+                    sh 'mkdir -p logs'
+                }
+            }
+}
+```
+
+![build]()
+```groovy
+stage('Build') {
+            steps {
+                dir(env.PROJECT_DIR) {
+                    sh "docker build -t ${BUILD_IMAGE} -f node-build.Dockerfile . > logs/build.log 2>&1"
+                }
+            }
+}
+```
+
+![tests]()
+```groovy
+stage('Tests') {
+            steps {
+                dir(env.PROJECT_DIR) {
+                    sh "docker build -t ${TEST_IMAGE} -f node-test.Dockerfile . > logs/test.log 2>&1"
+                }
+            }
+}
+```
+
+![deploy]()
+```groovy
+stage('Deploy') {
+            steps {
+                sh 'docker network create my_network || true'
+                dir(env.PROJECT_DIR) {
+                    sh """
+                        docker build -t ${DEPLOY_IMAGE} -f node-deploy.Dockerfile .
+                        docker rm -f app || true
+                        docker run -d -p 3000:3000 --name app --network my_network ${DEPLOY_IMAGE}
+                    """
+                }
+            }
+}
+```
+
+![deploy tests logi1](./Zrzut%20ekranu%202025-04-24%20190541.png)
+![deploy tests log2](./Zrzut%20ekranu%202025-04-24%20190553.png)
+```groovy
+stage('Test Deployment') {
+            steps {
+                dir(env.PROJECT_DIR) {
+                    sh '''
+                        echo "Testing app from inside Docker network..."
+                        docker run --network my_network --rm curlimages/curl curl -v http://app:3000
+                    '''
+                }
+            }
+}
+```
+
+![publish]()
+```groovy
+stage('Publish') {
+            steps {
+                dir(env.PROJECT_DIR) {
+                    sh '''
+                        mkdir -p artifacts_${BUILD_NUMBER}
+                        tar -cvf artifacts_${BUILD_NUMBER}.tar logs/*.log
+                    '''
+                    archiveArtifacts artifacts: "artifacts_${BUILD_NUMBER}.tar"
+                }
+            }
+}
+```
+
+![post]()
+```groovy
+post {
+        always {
+            echo 'Cleaning up...'
+            sh """
+                docker rmi ${BUILD_IMAGE} ${TEST_IMAGE} ${DEPLOY_IMAGE} || true
+                docker system prune --all --volumes --force || true
+            """
+        }
+}
+```
+![konfiguracja](./Zrzut%20ekranu%202025-04-24%20191841.png)
+
+
+[Pełny Skrypt Pipeline'a w języku groovy](Jenkinsfile)
 ```groovy
 pipeline {
     agent any
@@ -169,7 +300,6 @@ pipeline {
         BUILD_IMAGE = "node-build:${NODE_VERSION}"
         TEST_IMAGE = "node-test:v${BUILD_NUMBER}"
         DEPLOY_IMAGE = "node-deploy:v${BUILD_NUMBER}"
-        
     }
 
     stages {
@@ -187,7 +317,7 @@ pipeline {
         stage('Logs') {
             steps {
                 dir(env.PROJECT_DIR) {
-                    sh 'mkdir -p logs && touch logs/build.log logs/test.log'
+                    sh 'mkdir -p logs'
                 }
             }
         }
@@ -195,7 +325,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir(env.PROJECT_DIR) {
-                    sh "docker build -t ${BUILD_IMAGE} -f node-build.Dockerfile . | tee logs/build.log"
+                    sh "docker build -t ${BUILD_IMAGE} -f node-build.Dockerfile . > logs/build.log 2>&1"
                 }
             }
         }
@@ -203,7 +333,7 @@ pipeline {
         stage('Tests') {
             steps {
                 dir(env.PROJECT_DIR) {
-                    sh "docker build -t ${TEST_IMAGE} -f node-test.Dockerfile . | tee logs/test.log"
+                    sh "docker build -t ${TEST_IMAGE} -f node-test.Dockerfile . > logs/test.log 2>&1"
                 }
             }
         }
@@ -215,8 +345,19 @@ pipeline {
                     sh """
                         docker build -t ${DEPLOY_IMAGE} -f node-deploy.Dockerfile .
                         docker rm -f app || true
-                        docker run -d -p 8081:8080 --name app --network my_network ${DEPLOY_IMAGE}
+                        docker run -d -p 3000:3000 --name app --network my_network ${DEPLOY_IMAGE}
                     """
+                }
+            }
+        }
+
+        stage('Test Deployment') {
+            steps {
+                dir(env.PROJECT_DIR) {
+                    sh '''
+                        echo "Testing app from inside Docker network..."
+                        docker run --network my_network --rm curlimages/curl curl -v http://app:3000
+                    '''
                 }
             }
         }
@@ -244,115 +385,19 @@ pipeline {
         }
     }
 }
-
-```
-![artefakty](./Zrzut%20ekranu%202025-04-22%20205317.png)
-![stage](./Zrzut%20ekranu%202025-04-22%20205330.png)
-
-![post](./Zrzut%20ekranu%202025-04-22%20205815.png)
-```groovy
-post {
-        always {
-            echo 'Cleaning up...'
-            sh """
-                docker rmi ${BUILD_IMAGE} ${TEST_IMAGE} ${DEPLOY_IMAGE} || true
-                docker system prune --all --volumes --force || true
-            """
-        }
-}
 ```
 
-![publish](./Zrzut%20ekranu%202025-04-22%20205811.png)
-```groovy
-stage('Publish') {
-            steps {
-                dir(env.PROJECT_DIR) {
-                    sh '''
-                        mkdir -p artifacts_${BUILD_NUMBER}
-                        tar -cvf artifacts_${BUILD_NUMBER}.tar logs/*.log
-                    '''
-                    archiveArtifacts artifacts: "artifacts_${BUILD_NUMBER}.tar"
-                }
-            }
-}
-```
 
-![deploy](./Zrzut%20ekranu%202025-04-22%20205801.png)
-```groovy
-stage('Deploy') {
-            steps {
-                sh 'docker network create my_network || true'
-                dir(env.PROJECT_DIR) {
-                    sh """
-                        docker build -t ${DEPLOY_IMAGE} -f node-deploy.Dockerfile .
-                        docker rm -f app || true
-                        docker run -d -p 8081:8080 --name app --network my_network ${DEPLOY_IMAGE}
-                    """
-                }
-            }
-}
-```
 
-![tests](./Zrzut%20ekranu%202025-04-22%20205756.png)
-```groovy
-stage('Tests') {
-            steps {
-                dir(env.PROJECT_DIR) {
-                    sh "docker build -t ${TEST_IMAGE} -f node-test.Dockerfile . | tee logs/test.log"
-                }
-            }
-}
-```
 
-![build](./Zrzut%20ekranu%202025-04-22%20205751.png)
-```groovy
-stage('Build') {
-            steps {
-                dir(env.PROJECT_DIR) {
-                    sh "docker build -t ${BUILD_IMAGE} -f node-build.Dockerfile . | tee logs/build.log"
-                }
-            }
-}
 
-```
 
-![logs](./Zrzut%20ekranu%202025-04-22%20205746.png)
-```groovy
-stage('Logs') {
-            steps {
-                dir(env.PROJECT_DIR) {
-                    sh 'mkdir -p logs && touch logs/build.log logs/test.log'
-                }
-            }
-}
-```
 
-![prepare](./Zrzut%20ekranu%202025-04-22%20205742.png)
-```groovy
-stage('Prepare') {
-            steps {
-                sh '''
-                    rm -rf MDO2025_INO
-                    git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
-                    cd MDO2025_INO
-                    git checkout MD415045
-                '''
-            }
-}
-```
 
-![env](./Zrzut%20ekranu%202025-04-22%20210043.png)
-```groovy
-environment {
-        PROJECT_DIR = 'MDO2025_INO/ITE/GCL06/MD415045/lab5'
-        BUILD_NUMBER = "1.0"
-        NODE_VERSION = '23-alpine'
-        BUILD_IMAGE = "node-build:${NODE_VERSION}"
-        TEST_IMAGE = "node-test:v${BUILD_NUMBER}"
-        DEPLOY_IMAGE = "node-deploy:v${BUILD_NUMBER}"
-        
-}
-```
+
+
+
+
 ![dind](./Zrzut%20ekranu%202025-04-22%20161755.png)
 
 

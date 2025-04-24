@@ -1,0 +1,42 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from node-test.Dockerfile
+#1 transferring dockerfile: 181B done
+#1 DONE 0.2s
+
+#2 [internal] load metadata for docker.io/library/node-build:23-alpine
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context:
+#3 transferring context: 2B done
+#3 DONE 0.2s
+
+#4 [1/3] FROM docker.io/library/node-build:23-alpine
+#4 DONE 1.8s
+
+#5 [2/3] WORKDIR /node-js-dummy-test
+#5 DONE 0.5s
+
+#6 [3/3] RUN npm run test
+#6 1.008 
+#6 1.008 > dummy-nodejs-todo@0.1.1 test
+#6 1.008 > jest src/index.test.js
+#6 1.008 
+#6 1.594 PASS src/index.test.js
+#6 1.594   GET /
+#6 1.595     ✓ should return 200 OK (13 ms)
+#6 1.595 
+#6 1.596 Test Suites: 1 passed, 1 total
+#6 1.596 Tests:       1 passed, 1 total
+#6 1.596 Snapshots:   0 total
+#6 1.596 Time:        0.245 s
+#6 1.596 Ran all test suites matching /src\/index.test.js/i.
+#6 DONE 2.2s
+
+#7 exporting to image
+#7 exporting layers
+#7 exporting layers 0.5s done
+#7 writing image sha256:b0f4270f9e7104343717270136bb914e24f587a58ad4622e583657fb074ea997 0.0s done
+#7 naming to docker.io/library/node-test:v1.0 0.0s done
+#7 DONE 0.7s
