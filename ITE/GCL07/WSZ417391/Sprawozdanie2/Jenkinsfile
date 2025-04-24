@@ -66,13 +66,16 @@ pipeline {
         stage('Publish') {
             steps {
                 dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
-                    sh "zip -r $ZIP_NAME node_modules/ src/ views/ package.json"
-                    archiveArtifacts artifacts: "$ZIP_NAME", onlyIfSuccessful: true
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh "zip -r $ZIP_NAME node_modules/ src/ views/ package.json"
+                        archiveArtifacts artifacts: "$ZIP_NAME", onlyIfSuccessful: true
 
-                    sh '''
-                        docker tag $IMAGE_DEPLOY $DOCKERHUB_REPO
-                        docker push $DOCKERHUB_REPO
-                    '''
+                        sh '''
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker tag $IMAGE_DEPLOY $DOCKERHUB_REPO
+                            docker push $DOCKERHUB_REPO
+                        '''
+                    }
                 }
             }
         }
