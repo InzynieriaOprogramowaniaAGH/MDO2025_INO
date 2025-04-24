@@ -12,4 +12,6 @@ RUN npm install
 
 RUN echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
 
+RUN sed -i 's/"name": "dummy-nodejs-todo"/"name": "@white67\/dummy-node-project"/' package.json
+
 CMD ["npm", "publish", "--access", "public"]
