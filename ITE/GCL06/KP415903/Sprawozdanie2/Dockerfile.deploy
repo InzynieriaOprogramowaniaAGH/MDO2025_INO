@@ -1,0 +1,15 @@
+FROM node:slim
+WORKDIR /app
+COPY --from=nodebuild /app /app
+CMD ["npm", "start"]
+
+FROM node:slim
+
+WORKDIR /app
+COPY --from=nodebuild:${APP_VERSION} /app/node_modules /app/node_modules
+COPY --from=nodebuild:${APP_VERSION} /app/package*.json /app/
+COPY --from=nodebuild:${APP_VERSION} /app/src /app/src
+COPY --from=nodebuild:${APP_VERSION} /app/public /app/public
+
+EXPOSE 3000
+CMD ["npm", "start"]
