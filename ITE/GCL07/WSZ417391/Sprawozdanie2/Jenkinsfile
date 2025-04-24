@@ -6,7 +6,9 @@ pipeline {
         IMAGE_TEST = 'node-test'
         IMAGE_DEPLOY = 'node-deploy'
         DOCKERHUB_REPO = 'winterwollf/node-deploy'
-        ZIP_NAME = 'app.zip'
+        ZIP_BASE = 'app'
+        VERSION = "v${BUILD_NUMBER}"
+        IMAGE_TAG = "winterwollf/node-deploy:v${BUILD_NUMBER}"
     }
 
     stages {
@@ -58,7 +60,7 @@ pipeline {
                         docker cp temp-build-container:/node-js-dummy-test/src ./src
                         docker cp temp-build-container:/node-js-dummy-test/views ./views
                         docker rm temp-build-container
-                        docker build -f Dockerfile.deploy -t $IMAGE_DEPLOY .
+                        docker build -f Dockerfile.deploy -t $IMAGE_DEPLOY:$VERSION .
                     '''
                 }
             }
@@ -69,14 +71,14 @@ pipeline {
                 dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh '''
-                            docker run --rm -v $PWD:/app -w /app debian bash -c "apt-get update && apt-get install -y zip && zip -r $ZIP_NAME node_modules/ src/ views/ package.json"
+                            docker run --rm -v $PWD:/app -w /app debian bash -c "apt-get update && apt-get install -y zip && zip -r ${ZIP_BASE}-${VERSION}.zip node_modules/ src/ views/ package.json"
                         '''
-                        archiveArtifacts artifacts: "$ZIP_NAME", onlyIfSuccessful: true
+                        archiveArtifacts artifacts: "${ZIP_BASE}-${VERSION}.zip", onlyIfSuccessful: true
 
                         sh '''
                             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                            docker tag $IMAGE_DEPLOY $DOCKERHUB_REPO
-                            docker push $DOCKERHUB_REPO
+                            docker tag $IMAGE_DEPLOY:$VERSION $IMAGE_TAG
+                            docker push $IMAGE_TAG
                         '''
                     }
                 }
