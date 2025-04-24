@@ -37,7 +37,7 @@ pipeline {
                 sh 'docker network create my_network || true'
                 dir("${PROJECT_DIR}") {
                     sh """
-                        docker build -t ${DEPLOY_IMAGE} -f node-Deploy.Dockerfile .
+                        docker build -t ${DEPLOY_IMAGE} -f node-deploy.Dockerfile .
                         docker rm -f app || true
                         docker run -d -p 3000:3000 --name app --network my_network ${DEPLOY_IMAGE}
                     """
