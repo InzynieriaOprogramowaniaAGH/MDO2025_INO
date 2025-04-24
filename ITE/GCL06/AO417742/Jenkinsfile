@@ -1,96 +1,85 @@
 pipeline {
-<<<<<<< HEAD
     agent any
 
     environment {
         IMAGE_NAME = "node-js-dummy"
         TAG = "v1.0"
-        PATH_PREFIX = "ITE/GCL06/AO417742"
-=======
-    agent {
-        docker {
-            image 'docker:24.0.7-dind' // wersja DIND
-            args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
-
-    environment {
-        IMAGE_NAME = "node-js-dummy"
-        TAG = "latest"
->>>>>>> 5cdd0a2 (AO417742 Dodanie folderu node-js-dummy-test jako zwykłego katalogu)
+        PATH_PREFIX = "MDO2025_INO/ITE/GCL06/AO417742"
     }
 
     stages {
+        stage('Clone') {
+            steps {
+                sh 'rm -rf MDO2025_INO'
+                sh 'git clone -b AO417742 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                dir("MDO2025_INO") {
+                    sh 'git submodule update --init --recursive || echo "brak submodule"'
+                }
+            }
+        }
+
         stage('Build') {
             steps {
-<<<<<<< HEAD
                 echo 'Budowanie obrazu aplikacji'
-                sh 'docker build -f ${PATH_PREFIX}/Dockerfile.build.node -t ${IMAGE_NAME}:build ${PATH_PREFIX}'
-=======
-                echo ' Budowanie aplikacji...'
-                sh 'docker build -f Dockerfile.build.node -t ${IMAGE_NAME}:build .'
->>>>>>> 5cdd0a2 (AO417742 Dodanie folderu node-js-dummy-test jako zwykłego katalogu)
+                sh 'docker build -t ${IMAGE_NAME}:build -f ${PATH_PREFIX}/Dockerfile.build.node ${PATH_PREFIX}'
             }
         }
 
         stage('Test') {
             steps {
-<<<<<<< HEAD
-                echo 'Testowanie aplikacji'
-                sh 'docker build -f ${PATH_PREFIX}/Dockerfile.test.node -t ${IMAGE_NAME}:test ${PATH_PREFIX}'
-=======
-                echo ' Uruchamianie testów...'
-                sh 'docker build -f Dockerfile.test.node -t ${IMAGE_NAME}:test .'
->>>>>>> 5cdd0a2 (AO417742 Dodanie folderu node-js-dummy-test jako zwykłego katalogu)
-                sh 'docker run --rm ${IMAGE_NAME}:test'
+                echo 'Uruchamianie testów'
+                sh 'docker build -t ${IMAGE_NAME}:test -f ${PATH_PREFIX}/Dockerfile.test.node ${PATH_PREFIX}'
+                sh 'docker run --rm ${IMAGE_NAME}:test npm test'
+            }
+        }
+
+        stage('Build Deploy Image') {
+            steps {
+                echo 'Budowanie obrazu (deploy)'
+                sh 'docker build -t ${IMAGE_NAME}:deploy -f ${PATH_PREFIX}/Dockerfile.deploy.node ${PATH_PREFIX}'
             }
         }
 
         stage('Deploy') {
             steps {
-<<<<<<< HEAD
-                echo 'Uruchamianie aplikacji'
-                sh 'docker build -f ${PATH_PREFIX}/Dockerfile.deploy.node -t ${IMAGE_NAME}:${TAG} ${PATH_PREFIX}'
-                sh 'docker run -d -p 3000:3000 --name ${IMAGE_NAME}_container ${IMAGE_NAME}:${TAG}'
-                sh 'sleep 5'
-                sh 'curl http://localhost:3000 || echo "Aplikacja nie odpowiada"'
-=======
-                echo 'Deploy aplikacji...'
-                sh 'docker build -f Dockerfile.deploy.node -t ${IMAGE_NAME}:${TAG} .'
-                sh 'docker run -d -p 3000:3000 --name ${IMAGE_NAME}_container ${IMAGE_NAME}:${TAG}'
-                sh 'sleep 5'
-                sh 'curl http://localhost:3000 || echo " Aplikacja nie odpowiada"'
->>>>>>> 5cdd0a2 (AO417742 Dodanie folderu node-js-dummy-test jako zwykłego katalogu)
+                echo 'Tworzenie sieci deploy i uruchamianie kontenera'
+                sh 'docker network create ci || true'
+                sh 'docker run -d --rm --network ci --name deploy -p 3000:3000 ${IMAGE_NAME}:deploy'
             }
         }
 
+       stage('Test Deploy') {
+    steps {
+        echo 'Sprawdzenie czy aplikacja działa na porcie 3000'
+        sh '''
+        sleep 5
+        docker run --rm --network ci curlimages/curl curl -s deploy:3000 || echo "curl failed"
+        '''
+    }
+}
         stage('Publish') {
             steps {
-<<<<<<< HEAD
-                echo 'Archiwizowanie aplikacji'
-                sh 'mkdir -p artifacts'
-                sh 'docker cp ${IMAGE_NAME}_container:/app ./artifacts/app || echo "Brak danych do kopiowania"'
-                sh 'zip -r artifacts/node-app.zip artifacts/app || echo "Nie udało się spakować"'
-=======
-                echo 'Archiwizacja artefaktu...'
-                sh 'mkdir -p artifacts'
-                sh 'docker cp ${IMAGE_NAME}_container:/app ./artifacts/app || echo "Brak danych do kopiowania"'
->>>>>>> 5cdd0a2 (AO417742 Dodanie folderu node-js-dummy-test jako zwykłego katalogu)
-                archiveArtifacts artifacts: 'artifacts/**', fingerprint: true
+                echo 'Tworzenie artefaktu ZIP'
+                sh '''
+                cd ${PATH_PREFIX}/node-js-dummy-test
+                zip -r ../../../node-js-dummy-test.zip .
+                '''
+                archiveArtifacts artifacts: 'MDO2025_INO/ITE/node-js-dummy-test.zip', fingerprint: true
+            }
+        }
+
+        stage('Images') {
+            steps {
+                sh 'docker images'
             }
         }
     }
 
     post {
         always {
-<<<<<<< HEAD
-            echo 'Czyszczenie środowiska'
-=======
-            echo 'Sprzątanie...'
->>>>>>> 5cdd0a2 (AO417742 Dodanie folderu node-js-dummy-test jako zwykłego katalogu)
-            sh 'docker stop ${IMAGE_NAME}_container || true'
-            sh 'docker rm ${IMAGE_NAME}_container || true'
-            sh 'docker image prune -f || true'
+            echo 'Czyszczenie kontenera i sieci'
+            sh 'docker stop deploy || true'
+            sh 'docker network rm ci || true'
         }
     }
 }
