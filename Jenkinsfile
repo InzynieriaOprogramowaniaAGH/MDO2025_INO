@@ -53,8 +53,21 @@ pipeline {
                     sh """
                         docker build -t ${DEPLOY_IMAGE} -f node-deploy.Dockerfile .
                         docker rm -f app || true
-                        docker run -d -p 8081:8080 --name app --network my_network ${DEPLOY_IMAGE}
+                        docker run -d -p 3000:3000 --name app --network my_network ${DEPLOY_IMAGE}
                     """
+                }
+            }
+        }
+
+        stage('Test Deployment') {
+            steps {
+                dir(env.PROJECT_DIR) {
+                    sh '''
+                        echo "Waiting for app to start..."
+                        sleep 10 
+                        echo "Testing app with curl..."
+                        curl -v http://localhost:3000 || true
+                    '''
                 }
             }
         }
