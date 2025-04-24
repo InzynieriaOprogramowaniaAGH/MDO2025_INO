@@ -1,0 +1,21 @@
+FROM debian:bullseye
+WORKDIR /app
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      build-essential \
+      gettext \
+      liblzma-dev \
+      ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY artifacts/xz.tar.gz ./
+
+RUN tar xzf xz.tar.gz \
+ && cd xz-* \
+ && ./configure \
+ && make -j"$(nproc)" check || true \
+ \
+ && mkdir -p /app/logs \
+ && cp tests/*.log /app/logs/ \
+ && cat /app/logs/*.log > /app/logs/test_results.log
