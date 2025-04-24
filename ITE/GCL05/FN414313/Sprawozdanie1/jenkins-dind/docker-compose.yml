@@ -1,20 +1,34 @@
 version: '3.8'
 
+networks:
+  jenkins:
+    driver: bridge
+
+volumes:
+  jenkins_home:
+  jenkins_logs:
+  dind_storage:
+  jenkins_docker_certs:
+
 services:
   jenkins:
-    image: jenkins/jenkins:lts
-    restart: unless-stopped
+    image: myjenkins-blueocean:2.492.3-1
+    restart: on-failure
     privileged: true
     user: root
+    networks:
+      - jenkins
     ports:
       - "8080:8080"
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
+      - jenkins_logs:/var/log/jenkins
+      - jenkins_docker_certs:/certs/client:ro
     environment:
-      - DOCKER_HOST=tcp://dind:2375
-      - DOCKER_TLS_CERTDIR=""
+      - DOCKER_HOST=tcp://docker:2376
+      - DOCKER_CERT_PATH=/certs/client
+      - DOCKER_TLS_VERIFY=1
     depends_on:
       - dind
 
@@ -22,11 +36,12 @@ services:
     image: docker:dind
     restart: unless-stopped
     privileged: true
+    networks:
+      - jenkins
     environment:
-      - DOCKER_TLS_CERTDIR=""
+      - DOCKER_TLS_CERTDIR=/certs
+    ports:
+      - "2376:2376"
     volumes:
       - dind_storage:/var/lib/docker
-
-volumes:
-  jenkins_home:
-  dind_storage:
+      - jenkins_docker_certs:/certs/client
