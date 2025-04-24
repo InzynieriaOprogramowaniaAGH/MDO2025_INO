@@ -10,6 +10,16 @@ RUN npm install
 
 RUN npm version ${APP_VERSION} --no-git-tag-version
 RUN echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+
 RUN sed -i 's/"name": "dummy-nodejs-todo"/"name": "@white67\/dummy-node-project"/' package.json
 
-CMD ["npm", "publish", "--access", "public"]
+# H
+RUN cat package.json
+
+# H
+RUN npm publish --access public
+
+# H
+RUN rm -f ~/.npmrc
+
+# CMD ["npm", "publish", "--access", "public"]
