@@ -25,6 +25,8 @@ pipeline {
                     docker image prune -f
                     docker network prune -f
                     docker images -q | xargs -r docker rmi -f
+                    docker volume prune -f
+                    docker rmi -f $IMAGE_BUILD $IMAGE_TEST $IMAGE_DEPLOY
                     '''
                 }
             }
