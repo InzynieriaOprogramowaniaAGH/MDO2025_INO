@@ -63,10 +63,8 @@ pipeline {
             steps {
                 dir(env.PROJECT_DIR) {
                     sh '''
-                        echo "Waiting for app to start..."
-                        sleep 10 
-                        echo "Testing app with curl..."
-                        curl -v http://localhost:3000 || true
+                        echo "Testing app from inside Docker network..."
+                        docker run --network my_network --rm curlimages/curl curl -v http://app:3000
                     '''
                 }
             }
