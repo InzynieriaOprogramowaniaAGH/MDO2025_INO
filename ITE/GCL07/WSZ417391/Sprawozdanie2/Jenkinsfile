@@ -64,6 +64,7 @@ pipeline {
             steps {
                 dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh 'apt-get update && apt-get install -y zip'
                         sh "zip -r $ZIP_NAME node_modules/ src/ views/ package.json"
                         archiveArtifacts artifacts: "$ZIP_NAME", onlyIfSuccessful: true
 
