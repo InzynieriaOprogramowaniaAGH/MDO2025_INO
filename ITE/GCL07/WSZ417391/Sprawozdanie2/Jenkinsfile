@@ -42,8 +42,8 @@ pipeline {
                 dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
                     sh 'docker build -f Dockerfile.test -t $IMAGE_TEST .'
                     sh 'docker run --rm $IMAGE_TEST > test.log'
+                    archiveArtifacts artifacts: 'test.log', onlyIfSuccessful: true
                 }
-                archiveArtifacts artifacts: 'test.log', onlyIfSuccessful: true
             }
         }
 
