@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         DOCKER_NETWORK = "ci-network"
-        APP_VERSION = "0.1.2"
+        APP_VERSION = sh(script: 'date +%Y.%m.%d-%H%M%S', returnStdout: true).trim()
     }
 
     stages {
@@ -108,8 +108,9 @@ pipeline {
                             sh """
                                 docker build -f Dockerfile.publish \
                                   --build-arg NPM_TOKEN=$NPM_TOKEN \
+                                  --build-arg APP_VERSION=${APP_VERSION} \
                                   -t npmpublish .
-                                docker run --rm npmpublish
+                                docker run --rm -e NPM_TOKEN=$NPM_TOKEN npmpublish
                             """
                         }
                     }
@@ -123,28 +124,5 @@ pipeline {
             }
         }
         
-        post {
-            always {
-                script {
-                    sh '''
-                    echo "Cleaning..."
-                    
-                    # save logs before deleting
-                    docker logs deploy-container > deploy-container-logs.txt 2>&1 || true
-                    
-                    # stop and delete containers
-                    docker rm -f deploy-container || true
-                    '''
-                }
-            }
-            
-            success {
-                echo "Pipeline zakończony sukcesem."
-            }
-            
-            failure {
-                echo "Pipeline zakończony niepowodzeniem."
-            }
-        }
     }
 }

@@ -12,24 +12,14 @@ ARG APP_VERSION
 RUN echo "Updating to version: ${APP_VERSION}" && \
     npm version ${APP_VERSION} --no-git-tag-version && \
     sed -i 's/"name": "dummy-nodejs-todo"/"name": "@white67\/dummy-node-project"/' package.json
-# RUN echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-# RUN sed -i 's/\"version\": \".*\"/\"version\": \"${APP_VERSION}\"/' package.json
-# RUN sed -i 's/"name": "dummy-nodejs-todo"/"name": "@white67\/dummy-node-project"/' package.json
 
 ARG NPM_TOKEN
 RUN echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc && \
     echo "//registry.npmjs.org/:always-auth=true" >> .npmrc && \
     echo "registry=https://registry.npmjs.org/" >> .npmrc
 
-# H
-RUN echo "Current package.json:" && cat package.json && \
-    echo "Current .npmrc:" && cat .npmrc
-
-# H
-RUN npm whoami --registry=https://registry.npmjs.org/
 RUN npm publish --access public
 
-# H
 RUN rm -f ~/.npmrc
 
 # CMD ["npm", "publish", "--access", "public"]
