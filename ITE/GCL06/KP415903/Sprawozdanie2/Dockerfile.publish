@@ -1,7 +1,5 @@
 FROM node:18-slim
 
-ARG NPM_TOKEN
-
 WORKDIR /app
 
 COPY --from=nodebuild /app/package*.json /app/
