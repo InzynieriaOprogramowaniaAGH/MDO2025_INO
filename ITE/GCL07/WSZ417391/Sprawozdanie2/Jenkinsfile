@@ -20,13 +20,7 @@ pipeline {
             steps {
                 dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
                     sh '''
-                    docker container prune -f
-                    docker builder prune -f
-                    docker image prune -f
-                    docker network prune -f
-                    docker images -q | xargs -r docker rmi -f
-                    docker volume prune -f
-                    docker rmi -f $IMAGE_BUILD $IMAGE_TEST $IMAGE_DEPLOY
+                    docker system prune --all --force --volumes
                     '''
                 }
             }
