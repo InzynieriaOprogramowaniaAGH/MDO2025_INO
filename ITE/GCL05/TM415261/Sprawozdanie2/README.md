@@ -111,6 +111,9 @@ Aktualna treść pliku `Jenkinsfile` jest identyczna z wcześniej znajdującą s
 
 ![ss](./screenshots/ss15.png)
 
+### Diagram UML z planowanym pomysłem na proces CI/CD
+![diagram](./screenshots/diagram.png)
+
 ### Finalna wersja Pipeline
 
 Do poprzedniego `pipeline`'u dodałem kroki `Deploy` (budowa obrazu do wdrożenia na środowisko produkcyjne) oraz `Publish` (publikacja obrazu na DockerHub). Dodatkowo przy budowie obrazów dodałem opcję `--no-cache`, aby budowa odbywała się poprawnie w przypadku np. aktualizacji `Dockerfile`'ów lub samego kodu aplikacji.
@@ -192,7 +195,7 @@ pipeline {
     }
 }
 ```
-`Jenkinsfile` jest dostępny w repozytorium w tym miejscu: [`Jenkinsfile`](./Jenkinsfile)
+`Jenkinsfile` jest dostępny w repozytorium w tym miejscu: [`Jenkinsfile`](./Jenkinsfile) 
 
 Pełny opis każdego etapu `pipeline`'u znajduje się poniżej:
 
@@ -295,6 +298,8 @@ Repozytorium pojawiło się na moim profilu DockerHub:
 
 Dostępne są wszystkie opublikowane wersje obrazu:
 ![ss](./screenshots/ss18.png)
+
+Cały proces przebiega praktycznie tak jak zaplanowano - uzupełniono jedynie etap `Deploy`o sprawdzenie istnienia kontenera testowego i w razie potrzeby usunięcia go oraz sprawdzenie, czy sieć potrzebna do przetestowania połączenia istnieje (jeśli nie, to utworzenie jej). Oprócz tego, na końcu etapu następuje czyszczenie (zatrzymanie i usunięcie kontenera do testów połączenia oraz usunięcie sieci). Dodatkowo etap `Publish` zawiera dodatkowe opublikowanie obrazu w wersji `latest`.
 
 #### Ponowne uruchomienie `pipeline`'u
 
