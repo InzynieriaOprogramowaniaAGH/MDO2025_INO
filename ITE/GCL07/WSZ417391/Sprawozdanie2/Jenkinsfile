@@ -1,0 +1,80 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_BUILD = 'node-build'
+        IMAGE_TEST = 'node-test'
+        IMAGE_DEPLOY = 'node-deploy'
+        DOCKERHUB_REPO = 'winterwollf/node-deploy'
+        ZIP_NAME = 'app.zip'
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'WSZ417391', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+            }
+        }
+
+        stage('Clean') {
+            steps {
+                dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
+                    sh '''
+                    docker container prune -f
+                    docker builder prune -f
+                    docker image prune -f
+                    docker network prune -f
+                    '''
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
+                    sh 'docker build -f Dockerfile.build -t $IMAGE_BUILD .'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
+                    sh 'docker build -f Dockerfile.test -t $IMAGE_TEST .'
+                    sh 'docker run --rm $IMAGE_TEST'
+                }
+                archiveArtifacts artifacts: 'test.log', onlyIfSuccessful: true
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
+                    sh '''
+                        docker create --name temp-build-container $IMAGE_BUILD
+                        docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+                        docker cp temp-build-container:/node-js-dummy-test/package.json .
+                        docker cp temp-build-container:/node-js-dummy-test/src ./src
+                        docker cp temp-build-container:/node-js-dummy-test/views ./views
+                        docker rm temp-build-container
+                        docker build -f Dockerfile.deploy -t $IMAGE_DEPLOY .
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
+                    sh "zip -r $ZIP_NAME node_modules/ src/ views/ package.json"
+                    archiveArtifacts artifacts: "$ZIP_NAME", onlyIfSuccessful: true
+
+                    sh '''
+                        docker tag $IMAGE_DEPLOY $DOCKERHUB_REPO
+                        docker push $DOCKERHUB_REPO
+                    '''
+                }
+            }
+        }
+    }
+}
