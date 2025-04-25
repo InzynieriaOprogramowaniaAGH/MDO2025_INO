@@ -93,3 +93,39 @@ Koniec loga potwierdzający działanie pipeline'u:
 
 - [Pełna treść wydruku z konsoli](log.txt)
 - [Pełna treść wydruku z konsoli po powtórnym uruchomieniu](log.txt)
+
+
+# Kompletny Pipeline z wykorzystaniem xz
+
+1. Clone – Przygotowanie środowiska
+Klonowanie repozytorium z kodem xz oraz plików pomocniczych:
+
+Dockerfile.build, Dockerfile.test, Dockerfile.deploy, deploy.c, test-entrypoint.sh, docker-compose.yml
+![tree](https://github.com/user-attachments/assets/9fb9e062-27ac-4c3a-87be-d53c6d04688c)
+
+
+2. Build – Kompilacja projektu
+Budowa obrazu z Dockerfile.build, bazującego na debian:bookworm.
+
+Instalacja wymaganych zależności:
+
+autotools, gcc, gettext, make, automake, libtool, itp.
+
+Kompilacja narzędzia xz w kontenerze.
+
+Utworzenie i zapisanie artefaktu xz.tar.gz w katalogu artifacts.
+
+Artefakt: artifacts/xz.tar.gz
+![artefakty](https://github.com/user-attachments/assets/0084c2e0-c4e3-42b5-9fea-3c0e292c0048)
+
+✅ 3. Test – Walidacja działania
+Budowa testowego obrazu na podstawie Dockerfile.test.
+
+Testy uruchamiane przez make check wewnątrz kontenera.
+
+Logi testowe zapisane do logs/xz_test.log.
+
+📄 Log testów: logs/xz_test.log
+📌 Testy przechodzące i nieprzechodzące umożliwiają analizę regresji.
+📸 [Screen: fragment xz_test.log lub wynik make check]
+
