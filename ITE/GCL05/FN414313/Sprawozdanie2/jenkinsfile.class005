@@ -1,0 +1,83 @@
+pipeline {
+    agent any  
+
+    environment {
+        REPO_URL = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+        BRANCH = 'FN414313' 
+        DOCKERFILE_PATH_1 = 'ITE/GCL05/FN414313/Sprawozdanie1/image_1/Dockerfile'  
+        DOCKERFILE_PATH_2 = 'ITE/GCL05/FN414313/Sprawozdanie1/image_2/Dockerfile'  
+    }
+
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                script {
+                    // Clean the workspace before each run to ensure fresh repository
+                    cleanWs()
+                }
+            }
+        }
+        
+        stage('Clone') {
+            steps {
+                git branch: "${BRANCH}", url: "${REPO_URL}"
+            }
+        }
+    
+        
+        stage('Clean Docker Images') {
+            steps {
+                script {
+                    sh 'docker rmi -f doctest_build'
+                    sh 'docker rmi -f doctest_test'
+                    sh 'docker builder prune --force --all'
+                    sh 'docker stop app || true'
+                    sh 'docker rm app || true'
+                    sh 'docker network inspect ci >/dev/null 2>&1 && docker network rm ci || true'
+                }
+            }
+        }
+
+        stage('Build Docker Image for build') {
+            steps {
+                dir('ITE/GCL05/FN414313/Sprawozdanie1/image_1') {
+                    sh 'docker build --no-cache -t doctest-build .'
+                }
+            }
+        }
+
+        stage('Run Docker Image for build') {
+            steps {
+                script {
+                    sh 'docker run -it -d doctest-build'
+                }
+            }
+        }
+
+        stage('Build Docker Image for test') {
+            steps {
+                dir('ITE/GCL05/FN414313/Sprawozdanie1/image_2') {
+                    sh 'docker build --no-cache -t doctest-test .'
+                    sh 'docker run --rm doctest-test'
+                }
+            }
+        }
+
+        stage('Test Docker Image for test') {
+            steps {
+                script {
+                    sh 'docker run --rm doctest-test'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline zakończony sukcesem!'
+        }
+        failure {
+            echo 'Pipeline zakończony niepowodzeniem.'
+        }
+    }
+}
