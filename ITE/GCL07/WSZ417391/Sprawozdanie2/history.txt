@@ -1,0 +1,1000 @@
+    6  cd MDO2025_INO/
+    7  git checkout main
+    8  clear
+    9  git checkout GCL07
+   10  git checkout -b WSZ417391
+   11  cd ITE/GCL07/
+   12  mkdir WSZ417391
+   13  LS
+   14  las
+   15  ls
+   16  cd ..
+   17  ls
+   18  cd ITE/
+   19  cd GCL07/
+   20  rm WSZ417391/
+   21  rm -fR WSZ417391/
+   22  clear
+   23  cd ..
+   24  clear
+   25  ls
+   26  clear
+   27  cd ITE/GCL07/
+   28  mkdir WSZ417391
+   29  ls
+   30  pwd
+   31  chmod +x .git/hooks/commit-msg
+   32  clear
+   33  chmod +x .git/hooks/commit-msg
+   34  clear
+   35  pwd
+   36  chmod +x .git/hooks/commit-msg
+   37  cd ..
+   38  ls
+   39  cd..
+   40  cd ..
+   41  ls
+   42  cd /home/wsz/MDO2025_INO
+   43  chmod +x .git/hooks/commit-msg
+   44  clear
+   45  ls
+   46  cd ITE/GCL07/WSZ417391/
+   47  ls
+   48  pwd
+   49  cd /home/wsz/MDO2025_INO
+   50  cat << 'EOF' > .git/hooks/commit-msg
+   51  ls
+   52  ls -ld .?*
+   53  cd .git/
+   54  ls
+   55  cd hooks/
+   56  ls
+   57  pwd
+   58  cat commit-msg.sample 
+   59  ls
+   60  clear
+   61  cd /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+   62  clear
+   63  ls
+   64  pwd
+   65  clear
+   66  touch -p /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+   67  touch --p /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+   68  touch /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+   69  ls /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+   70  ls /home/wsz/MDO2025_INO/.git/hooks
+   71  rm /home/wsz/MDO2025_INO/.git/hooks
+   72  rm /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+   73  clear
+   74  touch /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+   75  ls /home/wsz/MDO2025_INO/.git/hooks
+   76  clear
+   77  cat /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+   78  clear
+   79  nano /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+   80  clear
+   81  chmod +x .git/hooks/commit-msg
+   82  clear
+   83  chmod +x /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+   84  pwd
+   85  cp /home/wsz/MDO2025_INO/.git/hooks/commit-msg /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+   86  ls
+   87  pwd
+   88  clear
+   89  cp /home/wsz/Lab/1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+   90  cp -r /home/wsz/Lab/1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+   91  ls
+   92  cd Lab_1/
+   93  ls
+   94  clear
+   95  ls -l /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+   96  clea
+   97  rclear
+   98  clear
+   99  ls
+  100  pwd
+  101  git checkout GCL07
+  102  git checkout WSZ417391 
+  103  clear
+  104  git status
+  105  git add .
+  106  cd ..
+  107  git status
+  108  git reset
+  109  clear
+  110  git status
+  111  git add .
+  112  git status
+  113  git commit -m "Pierwszy commit"
+  114  git commit -m "WSZ417391: Pierwszy commit"
+  115  clear
+  116  git config --global user.email "wiktorszyszka.priv@gmail.com"
+  117  clear
+  118  git reset --soft HEAD~1
+  119  git s
+  120  git status
+  121  clear
+  122  git commit -m "WSZ417391: Pierwszy commit"
+  123  clear
+  124  git push origin GCL07
+  125  clear
+  126  git checkout GCL07
+  127  cd /home/wsz/
+  128  ls
+  129  cd Lab/
+  130  LS
+  131  ls
+  132  rm -rF 1
+  133  rm -fR 1
+  134  cp -r /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/Lab_1 /home/wsz/Lab/
+  135  ls
+  136  cd Lab_1/
+  137  ls
+  138  cd ..
+  139  ls
+  140  mkdir Lab_2
+  141  LS
+  142  ls
+  143  history > historia.txt
+  144  ls
+  145  mv historia.txt Lab_1
+  146  cd Lab_
+  147  cd Lab_1
+  148  cp historia.txt /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/Lab_1/
+  149  cd /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/Lab_1/
+  150  ls 
+  151  ls
+  152  pwd
+  153  cd ..
+  154  ls
+  155  cd ..
+  156  ls
+  157  clear
+  158  git reset HEAD~1
+  159  git status
+  160  git add .
+  161  clear
+  162  git status
+  163  git commit -m "WSZ417391: Pierwszy commit"
+  164  git push origin GCL07
+  165  clear
+  166  cd /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  167  ls
+  168  cd Lab_1/
+  169  ls
+  170  rm Sprawozdanie.md 
+  171  clear
+  172  git status
+  173  git add .
+  174  git status
+  175  git reset --hard origin/WSZ417391
+  176  git reset --hard WSZ417391
+  177  CLEAR
+  178  clear
+  179  git reset --hard WSZ417391
+  180  git rebase -i --root
+  181  ls
+  182  pwd
+  183  cd ..
+  184  rm -fR Lab_1/
+  185  cp /home/wsz/Lab/Lab_1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391
+  186  cp -r /home/wsz/Lab/Lab_1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391
+  187  pwd
+  188  ls
+  189  cd Lab_1/
+  190  ls
+  191  rm Sprawozdanie.md 
+  192  cd ..
+  193  mkdir Lab_2
+  194  ls
+  195  git status
+  196  git add .
+  197  git status
+  198  git commit -m "Pierwszy commit - po nadaniu uprawnien"
+  199  git commit -m "WSZ417391: Pierwszy commit - po nadaniu uprawnien"
+  200  clear
+  201  git push origin GCL07
+  202  git pull
+  203  git push
+  204  git push --set-upstream origin WSZ417391
+  205  clear
+  206  git status
+  207  git log --graph --oneline --all
+  208  git branch -d WSZ417391
+  209  git branch -d     cp /home/wsz/MDO2025_INO/.git/hooks/commit-msg /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  210  git branch -d WSZ417391
+  211  git branch -s WSZ417391
+  212  CLEAR
+  213  clear
+  214  git branch -s WSZ417391
+  215  clear
+  216  git branch -d WSZ417391
+  217  git branch -4 WSZ417391
+  218  clear
+  219  git branch -d WSZ417391
+  220  git branch -D WSZ417391
+  221  cd /home/wsz/MDO2025_INO/ITE/GCL07/
+  222  git branch -d WSZ417391
+  223  git branch -D WSZ417391
+  224  git worktree list
+  225  clear
+  226  git worktree remove /home/wsz/MDO2025_INO
+  227  [wsz@fedora GCL07]$ git worktree remove /home/wsz/MDO2025_INO
+  228  fatal: '/home/wsz/MDO2025_INO' is a main working tree
+  229  [wsz@fedora GCL07]$ git worktree remove /home/wsz/MDO2025_INO
+  230  fatal: '/home/wsz/MDO2025_INO' is a main working treegit checkout main
+  231  v
+  232  clear
+  233  git checkout main
+  234  git pull
+  235  clear
+  236  git branch -D WSZ417391
+  237  clear
+  238  git branch
+  239  ls
+  240  rm WSZ417391/
+  241  rm -fR WSZ417391/
+  242  CLEAR
+  243  git checkout -b GCL0
+  244  git checkoUT
+  245  git checkout
+  246  clear
+  247  git checkout
+  248  git checkout -b GCL07
+  249  clear
+  250  git checkout main
+  251  git branch
+  252  git branch -D GCL0
+  253  git branch
+  254  clear
+  255  git checkout GCL07
+  256  git checkout -b WSZ417391
+  257  mkdir WSZ417391
+  258  cp /home/wsz/Lab/Lab_1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  259  cp -r /home/wsz/Lab/Lab_1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  260  cd WSZ417391/Lab_1/
+  261  ls
+  262  clear
+  263  cd ..
+  264  mkdir Lab_2
+  265  LS
+  266  ls
+  267  clear
+  268  pwd
+  269  clear
+  270  git pull origin GCL07
+  271  git push -u origin WSZ417391
+  272  git add .
+  273  git commit -m "WSZ417391: Pierwszy commit - po zmianie uprawnien"
+  274  git push -u origin WSZ417391
+  275  git reset
+  276  clear
+  277  git add .
+  278  git commit -m "WSZ417391: Pierwszy commit - po zmianie uprawnien"
+  279  git push -u origin WSZ417391
+  280  clear
+  281  git reset
+  282  git reset --soft HEAD~1
+  283  cd ..
+  284  ls
+  285  rm -fR WSZ417391/
+  286  ls
+  287  cler
+  288  clear
+  289  git checout
+  290  git checkout
+  291  git checkoutgit checkout main
+  292  git checkout main
+  293  git reset
+  294  git checkout main
+  295  clear
+  296  git branch
+  297  git branchgit branch -D WSZ417391
+  298  git branch -D WSZ417391
+  299  clear
+  300  git branchgit branch -D WSZ417391
+  301  git branch
+  302  clear
+  303  git checkout main
+  304  git checkout GCL07
+  305  git pull
+  306  git checkout main
+  307  git pull
+  308  clear
+  309  git checkout main
+  310  git checkout GCL07
+  311  git branch -D WSZ417391
+  312  git checkout GCL07
+  313  git checkout -b WSZ417391
+  314  mkdir WSZ417391
+  315  cd WSZ417391/
+  316  ls
+  317  cp /home/wsz/Lab/Lab_1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  318  cp -r /home/wsz/Lab/Lab_1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  319  mkdir Lab_2
+  320  git add .
+  321  clear
+  322  git commit -m "WSZ417391: Pierwszy commit - po zmianie uprawnien"
+  323  git push -u origin WSZ417391
+  324  git push origin WSZ417391
+  325  add .
+  326  git add .
+  327  git commit -m "WSZ417391: README"
+  328  git push origin WSZ417391
+  329  git status
+  330  git add .
+  331  git status
+  332  git commit -m "WSZ417391: Update README"
+  333  git add .
+  334  git commit -m "WSZ417391: Update README"
+  335  git push -u origin WSZ417391
+  336  git add ../../../README.md
+  337  git status
+  338  git push -u origin WSZ417391
+  339  git commit -m "WSZ417391: Update README"
+  340  git push -u origin WSZ417391
+  341  git push origin WSZ417391
+  342  ls
+  343  clear
+  344  git checkout GCL07
+  345  git merge WSZ417391
+  346  clea
+  347  clear
+  348  ip add
+  349  clear
+  350  git add .
+  351  git status
+  352  git commit -m "WSZ417391: Success"
+  353  git status
+  354  git checkout WSZ417391 
+  355  git add .
+  356  git commit -m "WSZ417391: Success"
+  357  git push origin WSZ417391
+  358  CLEAR
+  359  clear
+  360  git add .
+  361  git commit -m "WSZ417391: Success"
+  362  git push origin WSZ417391
+  363  cd /home/wsz/Lab/
+  364  LS
+  365  ls
+  366  cd Lab_2
+  367  ls
+  368  clear
+  369  cp /home/wsz/Lab/Lab_1/Sprawozdanie.md /home/wsz/Lab/Lab_2
+  370  ps -fp 1
+  371  ps aux | grep docker
+  372  clear
+  373  ps
+  374  clear
+  375  ls -l
+  376  ps -p
+  377  ps
+  378  clear
+  379  ps\
+  380  clea
+  381  clear
+  382  ps
+  383  clear
+  384  ps
+  385  clear
+  386  ps aux
+  387  clear
+  388  ps
+  389  ps aux | grep docker
+  390  clear
+  391  exit
+  392  cd MDO2025_INO/
+  393  git pull
+  394  git branhc
+  395  git branch
+  396  git branch main 
+  397  git branch
+  398  git checkout main
+  399  git pull
+  400  git checkout WSZ417391 
+  401  clear
+  402  docker ps
+  403  clear
+  404  cd ITE/GCL07/WSZ417391/
+  405  cd Lab_
+  406  cd Lab_2
+  407  CLEA
+  408  clear
+  409  2
+  410  clear
+  411  ls
+  412  touch Dockerfile
+  413  PWD
+  414  pwd
+  415  docker build -t fedora-git .
+  416  clear
+  417  docker run -it --rm fedora-git
+  418  clear
+  419  docker ps -a
+  420  clear
+  421  docker p
+  422  clear
+  423  docker ps
+  424  clear
+  425  ls
+  426  clear
+  427  docker run -it --rm fedora-git
+  428  docker build -t fedora-git .
+  429  docker run -it --rm fedora-git
+  430  clear
+  431  docker ps
+  432  docker images
+  433  docker rmi $(docker images -q)
+  434  clear
+  435  cd ..
+  436  ls
+  437  cd Lab_
+  438  cd Lab_2
+  439  ls
+  440  rm -fR Zdjecia/
+  441  clear
+  442  ls
+  443  clea
+  444  clear
+  445  ip ad
+  446  docker system prune -a
+  447  clear
+  448  ip add
+  449  clear
+  450  cp -r Zdjecia/ /home/wsz/Lab/Lab_2
+  451  cp Dockerfile /home/wsz/Lab/Lab_2/
+  452  clear
+  453  git add .
+  454  git commit -m "WSZ417391: Lab 2 - 95%"
+  455  git push
+  456  git pull
+  457  git push
+  458  clear
+  459  ls
+  460  ip add
+  461  clear
+  462  ls
+  463  pwd
+  464  cd MDO2025_INO/
+  465  ls
+  466  clear
+  467  pwd
+  468  git pull
+  469  clear
+  470  git branch
+  471  git checkout main 
+  472  git pull
+  473  git checkout WSZ417391 
+  474  git add /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/Lab_2
+  475  git commit -m "WSZ417391: Dodatkowy wymagany w spr Pull Request"
+  476  git push 
+  477  clear
+  478  pwd
+  479  clear
+  480  ip add
+  481  clear
+  482  pwd
+  483  clear
+  484  pwd
+  485  clear
+  486  ip ad
+  487  clear
+  488  pwd
+  489  cd MDO2025_INO/ITE/GCL07/WSZ417391/Lab_3
+  490  ls
+  491  touch Dockerfile.compose
+  492  touch docker-compose.yml
+  493  docker-compose up -d
+  494  sudo dnf install docker-compse
+  495  docker compose version
+  496  sudo dnf install docker-compose
+  497  clear
+  498  docker-compose up -d
+  499  ls
+  500  clear
+  501  docker-compose up -d
+  502  clear
+  503  docker-compose up -d
+  504  clear
+  505  docker-compose up -d
+  506  clear
+  507  docker-compose up -d
+  508  clear
+  509  cd ..
+  510  pwd
+  511  history > historia_lab_2_3.txt
+  512  pwd
+  513  cd ..
+  514  pwd
+  515  clear
+  516  pwd
+  517  git add .
+  518  clear
+  519  gti rest
+  520  git reset
+  521  git add .
+  522  git reset
+  523  cleat
+  524  clea
+  525  clear
+  526  git add .
+  527  clear
+  528  git reset
+  529  git add .
+  530  clear
+  531  git reset
+  532  git add .
+  533  git commit -m "WSZ417391: Lab 3 - 100%"
+  534  git push
+  535  clear
+  536  git reset
+  537  git add .
+  538  git commit -m "WSZ417391: Lab 3 - 100%"
+  539  git push
+  540  git reset --hard HEAD~1
+  541  git add .
+  542  git commit -m "WSZ417391: Lab 3 - 100%"
+  543  git push
+  544  git reset
+  545  git reset --hard HEAD~1
+  546  clear
+  547  pwd
+  548  git add .
+  549  git commit -m "WSZ417391: Lab 3 - 100%"
+  550  git push
+  551  git push --force
+  552  git reset --hard HEAD~2
+  553  git push
+  554  cd ITE/GCL07/WSZ417391/
+  555  rm -rF Lab_3
+  556  sudo rm -fR Lab_3
+  557  mkdir Lab_3
+  558  cd ..
+  559  pwd
+  560  clea
+  561  clear
+  562  git add .
+  563  git commit -m "WSZ417391: Lab 3 - 100%"
+  564  git push
+  565  ip add
+  566  git pull
+  567  cd MDO2025_INO/
+  568  git pull
+  569  cd ..
+  570  ls
+  571  cd Lab/
+  572  ls
+  573  mkdir Lab_4
+  574  clear
+  575  ls
+  576  cd Lab_
+  577  cd Lab_4
+  578  clear
+  579  docker volume create --name input_volumin
+  580  docker volume create --name output_volumin
+  581  touch Dockerfile
+  582  clear
+  583  docker pull node:22.10-slim
+  584  docker run -v input_volumin:/mnt/input -v output_volumin:/mnt/output -it node-js-dummy-test
+  585  ls
+  586  ip add
+  587  cleera
+  588  clear
+  589  reboot
+  590  docker pull ubuntu
+  591  docker run -it -t kontener1
+  592  docker run -it -t kontener1 ubuntu bash
+  593  clear
+  594  docker run -it -n kontener_1 -t ubuntu bash
+  595  docker -h
+  596  clear
+  597  docker run -it --namen kontener_1 -t ubuntu bash
+  598  docker run -it --name kontener_1 -t ubuntu bash
+  599  docker run -it --name kontener_2 -t ubuntu bash
+  600  clear
+  601  docker run -it --name kontener_2 -c 172.17.0.2 -t ubuntu bash
+  602  docker run -it --rm ubuntu iperf3 -c 172.17.0.2
+  603  docker run -it -t ubuntu iperf3 -c 172.17.0.2
+  604  clear
+  605  docker run -it --name kontener_2 -c 172.17.0.2 -t ubuntu bash
+  606  docker run -it --rm ubuntu iperf3 -c 172.17.0.2
+  607  clear
+  608  docker run -it --name kontener_2 -t ubuntu bash
+  609  dnf update && dnf install -y iperf3
+  610  dnf install -y iperf3
+  611  dnf install iperf3
+  612  sudo dnf install iperf3
+  613  clear
+  614  iperf3 -c kontener_1
+  615  docker network create wlasny_mostek
+  616  clear
+  617  docker run -it --name kontener_1 --network=wlasny_mostek -t ubuntu bash
+  618  docker run -it --name kontener_2 --network=wlasny_mostek -t ubuntu bash
+  619  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 3bca2c8ef0ed85f3b10d252363a70139744f046c58cd3406bde95dfcbbaea1ef
+  620  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+  621  docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+  622  iperf3 -c 172.18.0.2
+  623  clear
+  624  docker network create jenkins
+  625  clear
+  626  docker run --name jenkins-docker --detach --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home --publish 2376:2376 docker:dind --storage-driver overlay2
+  627  clear
+  628  docker build -t myjenkins .
+  629  clear
+  630  CD MDO2025_INO/ITE/GCL07/WSZ417391/Lab_4
+  631  cd MDO2025_INO/ITE/GCL07/WSZ417391/Lab_4
+  632  touch Dockerfile.jenkins
+  633  docker build -f ./Dockerfile.jenkins -t myjenkins .
+  634  clear
+  635  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins
+  636  clear
+  637  docker ps - a
+  638  docker ps -a
+  639  clear
+  640  docker ps -a
+  641  clear
+  642  ip add
+  643  clear
+  644  docker run -d --name ssh_fedora -p 2222:22 fedora bash
+  645  docker run --name ssh_fedora -p 2222:22 fedora bash
+  646  docker run -p 2222:22 fedora bash
+  647  docker run -d --name ssh_fedora -p 2222:22 fedora bash -c "dnf install -y openssh-server && systemctl enable sshd && systemctl start sshd && tail -f /dev/null"
+  648  docker run -d --name ssh_ubuntu -p 2222:22 ubuntu bash -c "apt update && apt install -y openssh-server && service ssh start && tail -f /dev/null"
+  649  docker exec -it ssh_ubuntu bash
+  650  ssh user@localhost -p 2222
+  651  docker run -d --name ssh_ubuntu -p 2222:22 ubuntu bash -c "apt update && apt install -y openssh-server && service ssh start && tail -f /dev/null"
+  652  useradd -m user && echo "user:password" | chpasswd
+  653  docker run -d --name ssh_ubuntu -p 2222:22 ubuntu bash -c "apt update && apt install -y openssh-server && service ssh start && tail -f /dev/null"
+  654  clear
+  655  docker run --name ssh_ubuntu -p 2222:22 ubuntu bash -c "apt update && apt install -y openssh-server && service ssh start && tail -f /dev/null"
+  656  clear
+  657  docker run -d --name ssh_ubuntu -p 2222:22 ubuntu bash -c "apt update && apt install -y openssh-server && service ssh start && tail -f /dev/null"
+  658  docker exec -it ubuntu
+  659  docker exec -it ubuntu bash
+  660  docker exec -it ssh_ubuntu bash
+  661  clear
+  662  docker run -d --name ssh_ubuntu -p 2222:22 ubuntu bash -c "apt update && apt install -y openssh-server && service ssh start && tail -f /dev/null
+  663  clear
+  664  docker run -d --name ssh_ubuntu -p 2222:22 ubuntu bash -c "apt update && apt install -y openssh-server && service ssh start && tail -f /dev/null
+  665  clear
+  666  docker run -d --name ssh_ubuntu -p 2222:22 ubuntu bash -c "apt update && apt install -y openssh-server && service ssh start && tail -f /dev/null"
+  667  docker exec -it ssh_ubuntu bash
+  668  clear
+  669  cd MDO2025_INO/ITE/GCL07/WSZ417391/Lab_4
+  670  history > historia.txt
+  671  cd ..
+  672  pwd
+  673  mkdir WSZ
+  674  cd WSZ
+  675  mkdir 417391
+  676  cd 417391/
+  677  mkdir Sprawozdanie1
+  678  cd Sprawozdanie1/
+  679  pwd
+  680  touch README.md
+  681  cd ..
+  682  pwd
+  683  clear
+  684  git add .
+  685  git commit -m "Sprawozdanie 1"
+  686  git commit -m "WSZ417391: Sprawozdanie 1"
+  687  git push
+  688  cd ITE/GCL07/
+  689  ls
+  690  mkdir WSZ417391
+  691  LS
+  692  ls
+  693  cd WSZ417391/
+  694  LS
+  695  la
+  696  ls
+  697  clear
+  698  ls
+  699  mkdir Sprawozdanie1
+  700  cd ..
+  701  cd MDO2025_INO/
+  702  git add .
+  703  git commit -m "WSZ417391: Sprawozdanie 1"
+  704  git push
+  705  git add .
+  706  git commit -m "WSZ417391: Sprawozdanie 1"
+  707  git push
+  708  cd MDO2025_INO/ITE/
+  709  ls
+  710  CD GCL07/
+  711  lsa
+  712  cd GCL07/
+  713  ls
+  714  clear
+  715  cd WSZ417391/
+  716  ls
+  717  clear
+  718  docker run --name jenkins-docker --detach --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home --publish 2376:2376 docker:dind --storage-driver overlay2
+  719  cd /home/wsz/Lab/
+  720  mkdir Lab_5
+  721  cd Lab_5
+  722  touch Sprawozdanie.md
+  723  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins
+  724  docker exec -it docker:dind bash
+  725  docker exec -it jenkins-docker bash
+  726  docker jenkins-docker -it bash
+  727  clear
+  728  docker ps
+  729  docker exec -it 36 bash
+  730  docker exec -it 36 /bin/bash
+  731  docker exec -it 36 /bin/sh
+  732  clear
+  733  docker exec -it 36 /bin/sh
+  734  cd Lab/Lab_5
+  735  ls
+  736  cd Zdjecia/
+  737  cp /home/wsz/Lab/Lab_4/Zdjecia/28.png
+  738  cp /home/wsz/Lab/Lab_4/Zdjecia/28.png .
+  739  cp /home/wsz/Lab/Lab_4/Zdjecia/29.png .
+  740  cp /home/wsz/Lab/Lab_4/Zdjecia/33.png .
+  741  cp /home/wsz/Lab/Lab_4/Zdjecia/37.png .
+  742  cp /home/wsz/Lab/Lab_4/Zdjecia/38.png .
+  743  cp /home/wsz/Lab/Lab_4/Zdjecia/39.png .
+  744  pwd
+  745  cd ../../../MDO2025_INO/ITE/GCL07/WSZ417391/Sprawozdanie2/
+  746  ls
+  747  mkdir Lab_6
+  748  clear
+  749  pwd
+  750  clear
+  751  git add .
+  752  git commit -m "WSZ417391: Lab_5 - 100%"
+  753  git push
+  754  pwd
+  755  cd ..
+  756  git add .
+  757  git commit -m "WSZ417391: Lab_5 - 100%"
+  758  git push
+  759  clear
+  760  docker ps
+  761  docker stop 673
+  762  docker stop 36e
+  763  docker ps
+  764  exit
+  765  ls
+  766  clear
+  767  cd MDO2025_INO/ITE/GCL07/WSZ417391/Sprawozdanie1/Lab_3/
+  768   docker build -f ./Dockerfile.build -t node-build .
+  769  docker build -f ./Dockerfile.run -t node-run .
+  770  docker run -d --rm node-run
+  771  docker run --rm ubuntu
+  772  docker run --it ubuntu
+  773  docker run --i ubuntu
+  774  docker run ubuntu
+  775  docker run ubuntu BASH
+  776  clear
+  777  docker run ubuntu bash
+  778  docker run --it ubuntu bash
+  779  clear
+  780  exiy
+  781  exit
+  782  clear
+  783  cd Lab/
+  784  LS
+  785  ls
+  786  mkdir Lab_6
+  787  clear
+  788  cd .. 
+  789  cd MDO2025_INO/ITE/GCL07/WSZ417391/
+  790  clear
+  791  ls
+  792  cd Sprawozdanies
+  793  cd Sprawozdanies2
+  794  cd Sprawozdanie2
+  795  clear
+  796  ls
+  797  cd Lab_6
+  798  SL
+  799  LS
+  800  ls
+  801  clear
+  802  ls
+  803  touch Dockerfile.deploy
+  804  clear
+  805  docker build -f ./Dockerfile.build -t node-build .
+  806  clear
+  807  docker build -f ./Dockerfile.build -t node-build .
+  808  clear
+  809  docker build -f ./Dockerfile.test -t node-test .
+  810  clear
+  811  docker build -f Dockerfile.deploy -t node-deploy .
+  812  clear
+  813  chmod +x prepare_deploy.sh
+  814  clear
+  815  chmod +x prepare_deploy.sh
+  816  ./prepare_deploy.sh
+  817  clear
+  818  docker run --name node-builder-temp node-build
+  819  ./prepare_deploy.sh 
+  820  clear
+  821  docker build -f ./Dockerfile.build -t node-build .
+  822  docker create --name temp-build-container node-build
+  823  docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+  824  clear
+  825  docker create --name temp-build-container node-build
+  826  clear
+  827      docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+  828      docker cp temp-build-container:/node-js-dummy-test/package.json .
+  829      docker cp temp-build-container:/node-js-dummy-test/server.js .
+  830  docker rm temp-build-container
+  831  docker build -f Dockerfile.deploy -t node-deploy .
+  832  docker network create ci
+  833  docker run -dit --network ci --name deploy -p 3000:3000 node-deploy
+  834  docker run --rm --network ci curlimages/curl curl http://deploy:3000 || exit 1
+  835  cd MDO2025_INO/ITE/GCL07/WSZ417391/Sprawozdanie2/Lab_6/
+  836  docker run --rm --network ci curlimages/curl curl http://deploy:3000
+  837  docker run -dit --network ci --name deploy -p 3000:3000 node-deploy
+  838  docker run -it --network ci --name deploy -p 3000:3000 node-deploy
+  839  clear
+  840  docker run -d --network ci --name deploy -p 3000:3000 node-deploy
+  841  clear
+  842  docker create --name temp-build-container node-build
+  843      ```bash
+  844      docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+  845      docker cp temp-build-container:/node-js-dummy-test/package.json .
+  846      docker cp temp-build-container:/node-js-dummy-test/src ./src
+  847      docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+  848      docker cp temp-build-container:/node-js-dummy-test/package.json .
+  849      docker cp temp-build-container:/node-js-dummy-test/src ./src
+  850  docker rm temp-build-container
+  851  docker build -f Dockerfile.deploy -t node-deploy .
+  852      docker network create ci
+  853      docker run -dit --network ci --name deploy -p 3000:3000 node-deploy
+  854  docker run --rm --network ci curlimages/curl curl http://deploy:3000
+  855  clear
+  856      docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+  857      docker cp temp-build-container:/node-js-dummy-test/package.json .
+  858      docker cp temp-build-container:/node-js-dummy-test/src ./src
+  859  clear
+  860  docker create --name temp-build-container node-build
+  861  clear
+  862      docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+  863      docker cp temp-build-container:/node-js-dummy-test/package.json .
+  864      docker cp temp-build-container:/node-js-dummy-test/src ./src
+  865  clear
+  866  docker rm temp-build-container
+  867  clear
+  868  docker build -f Dockerfile.deploy -t node-deploy .
+  869  clear
+  870      docker network create ci
+  871      docker run -dit --network ci --name deploy -p 3000:3000 node-deploy
+  872  clear
+  873  docker run --rm --network ci curlimages/curl curl http://deploy:3000
+  874  clear
+  875  docker create --name temp-build-container node-build
+  876      docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+  877      docker cp temp-build-container:/node-js-dummy-test/package.json .
+  878      docker cp temp-build-container:/node-js-dummy-test/src ./src
+  879  docker rm temp-build-container
+  880  docker build -f Dockerfile.deploy -t node-deploy .
+  881  clear
+  882  docker create --name temp-build-container node-build
+  883      docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+  884      docker cp temp-build-container:/node-js-dummy-test/package.json .
+  885      docker cp temp-build-container:/node-js-dummy-test/src ./src
+  886      docker cp temp-build-container:/node-js-dummy-test/views/ ./views
+  887   docker rm temp-build-container
+  888  docker build -f Dockerfile.deploy -t node-deploy .
+  889      docker network create ci
+  890      docker run -dit --network ci --name deploy -p 3000:3000 node-deploy
+  891  docker run --rm --network ci curlimages/curl curl http://deploy:3000
+  892  docker tag node-deploy winterwollf/node-deploy
+  893  docker push winterwollf/node-deploy
+  894  docker login
+  895  docker tag node-deploy winterwollf/node-deploy
+  896  docker push winterwollf/node-deploy
+  897  clear
+  898  docker create --name temp-build-container node-build
+  899  docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+  900  docker cp temp-build-container:/node-js-dummy-test/package.json .
+  901  docker cp temp-build-container:/node-js-dummy-test/src ./src
+  902  docker cp temp-build-container:/node-js-dummy-test/views/ ./views
+  903  docker rm temp-build-container
+  904  docker build -f Dockerfile.deploy -t node-deploy .
+  905  docker network create ci
+  906  docker run -dit --network ci --name deploy -p 3000:3000 node-deploy
+  907  docker run --rm --network ci curlimages/curl curl http://deploy:3000
+  908  clear
+  909  docker create --name temp-build-container node-build
+  910  clear
+  911  docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+  912  docker cp temp-build-container:/node-js-dummy-test/package.json .
+  913  docker cp temp-build-container:/node-js-dummy-test/src ./src
+  914  docker cp temp-build-container:/node-js-dummy-test/views/ ./views
+  915  clear
+  916  docker rm temp-build-container
+  917  clear
+  918  docker build -f Dockerfile.deploy -t node-deploy .
+  919  clear
+  920  builder prune
+  921  docker builder prune
+  922  clear
+  923  docker builder prune
+  924  clear
+  925  docker build -f Dockerfile.deploy -t node-deploy .
+  926  clear
+  927  docker network create ci
+  928  docker run -dit --network ci --name deploy -p 3000:3000 node-deploy
+  929  docker network ps
+  930  docker ps
+  931  clear
+  932  docker run --rm --network ci curlimages/curl curl http://deploy:3000
+  933  clear
+  934  docker tag node-deploy winterwollf/node-deploy
+  935  docker push winterwollf/node-deploy
+  936  clear
+  937  docker build -f ./Dockerfile.test -t node-test .
+  938  clear
+  939  zip -r app.zip node_modules/ src/ views/ package.json 
+  940  sudo dnf intsall zip
+  941  sudo dnf install zip
+  942  clear
+  943  sudo dnf intsall zip
+  944  clear
+  945  zip -r app.zip node_modules/ src/ views/ package.json 
+  946  clear
+  947  ls
+  948  touch Jenkinsfile
+  949  clear
+  950  cd ..
+  951  clera
+  952  clear
+  953  git add .
+  954  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  955  git push
+  956  git add .
+  957  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  958  git push
+  959  git add .
+  960  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  961  git push
+  962  git add .
+  963  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  964  git add .
+  965  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  966  git push
+  967  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  968  git add .
+  969  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  970  git push
+  971  git add .
+  972  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  973  git push
+  974  git add .
+  975  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  976  git push
+  977  git add .
+  978  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  979  git push
+  980  git add .
+  981  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  982  git push
+  983  git add .
+  984  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  985  git push
+  986  git add .
+  987  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  988  git push
+  989  git add .
+  990  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  991  git push
+  992  git add .
+  993  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  994  git push
+  995  clear
+  996  git add .
+  997  git commit -m "WSZ417391: Lab_6 & Lab_7"
+  998  git push
+  999  clear
+ 1000  cd MDO2025_INO/
+ 1001  clear
+ 1002  cd ITE/GCL07/WSZ417391/
+ 1003  ls
+ 1004  cd Sprawozdanie2
+ 1005  history > history.txt
