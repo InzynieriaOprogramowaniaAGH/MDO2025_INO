@@ -139,19 +139,11 @@ pipeline {
 ## Deploy
 
 ## Pipeline from SCM
-![](lab5/15.png)
-
+![](15.png)
 ## Jenkinsfile
 
-Jenkinsfile - dodane stage z uruchomieniem kontenera
-```
-stage('Uruchomienie kontenera') {
-            steps {
-                sh 'docker run -d --name weechat-deploy weechat-test'
-            }
-        }
-```
-Ścieżka: 'ITE/GCL08/SN415513/Sprawozdanie2/Jenkinsfile'
+Jenkinsfile - tak samo jak powyżej  
+Ścieżka: ITE/GCL08/SN415513/Sprawozdanie2/Jenkinsfile
 
 ## Dokcerfile test
 
@@ -165,3 +157,21 @@ RUN ctest -V
 
 RUN weechat -version
 ```
+
+## Pomyślne przejście pipeline-u i wyświetlenie wersji
+![](16.png)
+
+## Publish
+
+## Uzyskanie runtime deps komendą ldd
+![](17.png)
+
+## Utworzenie pliku .deb
+![](18.png)
+![](19.png)
+![](20.png)
+
+
+
+
+## Archive artifacts
