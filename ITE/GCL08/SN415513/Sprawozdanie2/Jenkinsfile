@@ -47,5 +47,11 @@ pipeline {
                 }
             }
         }
+
+        stage('Uruchomienie kontenera') {
+            steps {
+                sh 'docker run -d --name weechat-deploy weechat-test'
+            }
+        }
     }
 }

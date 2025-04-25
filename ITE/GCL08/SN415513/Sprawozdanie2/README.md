@@ -143,7 +143,14 @@ pipeline {
 
 ## Jenkinsfile
 
-Jenkinsfile - treść taka sama jak powyżej. 
+Jenkinsfile - dodane stage z uruchomieniem kontenera
+```
+stage('Uruchomienie kontenera') {
+            steps {
+                sh 'docker run -d --name weechat-deploy weechat-test'
+            }
+        }
+```
 Ścieżka: 'ITE/GCL08/SN415513/Sprawozdanie2/Jenkinsfile'
 
 ## Dokcerfile test
