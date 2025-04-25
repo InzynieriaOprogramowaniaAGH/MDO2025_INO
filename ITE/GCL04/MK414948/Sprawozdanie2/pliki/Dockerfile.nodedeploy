@@ -1,0 +1,5 @@
+FROM tdwabuild
+
+EXPOSE 3000
+
+ENTRYPOINT npm start
