@@ -12,13 +12,50 @@ Utworzono nową sieć dockera Jenkins:
      ![image](https://github.com/user-attachments/assets/c050c03f-64fe-424c-bee5-969c29331f2e)
       
   - Utworzono projekt, który wypisuje w konsoli czy godzina jest parzysta czy nie
-     ![image](https://github.com/user-attachments/assets/25588dd2-a3a0-4d14-8482-41a27eb54362)
-      
+     ![image](https://github.com/user-attachments/assets/1c4957ba-1425-42d6-9e9b-398bc75414fb)
+
   - Utworzono projekt, który ściąga obraz ubuntu dockera, poleceniem docker pull ubuntu.
      ![image](https://github.com/user-attachments/assets/811b8684-fd8e-49fe-b1d7-33c770f51f00)
 
+# Zadanie wstępne: obiekt typu pipeline
+
+Utworzono pileline, którego zadaniem jest pobranie repozytorium przedmiotu MD02025_INO i budowa obrazu dockera, zawartego w dockerfile na własnej gałęzi: JK414562
+
+    pipeline {
+          agent any
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                git branch: 'JK414562', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build Docker image') {
+            steps {
+                dir("INO/GCL02/JK414562/Sprawozdanie2") {
+                    script {
+                        sh 'ls -la'
+                        docker.build('build', '-f Dockerfile.build .')
+                    }
+                }
+            }
+        }
+
+        stage('Print info') {
+            steps {
+                echo '✅ Pipeline ran successfully. Docker image was built.'
+            }
+        }
+    }
+}
 
 
+Zrzut ekranu potwierdzający powodzenie:
+
+![image](https://github.com/user-attachments/assets/e9f6042a-3cc9-433a-a347-41c554da8135)
+
+Pipeline z powodzeniem udało się uruchomić ponownie.
 
 # Kompletna Konfiguracja Pipeline CI/CD – XZ Utils
 
