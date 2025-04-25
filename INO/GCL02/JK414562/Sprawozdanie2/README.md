@@ -111,6 +111,45 @@ Pełna treść skryptu:
       }
       }
 
+### Z powodzeniem udało się wykonać cały pipeline.[Wydruk z konsoli](console_output.txt)
+### Zrzut ekranu powodzenia z uzyskanymi artefaktami:
+
+![image](https://github.com/user-attachments/assets/146a3fff-c8ca-47be-8e54-bf7c53c9a10f)
+
+### 📦 Pobranie artefaktu `xz.tar.gz` z kontenera Jenkins
+
+Udało się wejść do kontenera `jk414562_jenkins_1` poleceniem:
+
+    docker exec -it jk414562_jenkins_1 bash
+
+W kontenerze odnaleziono utworzony artefakt oraz odkryto jego pełną ścieżkę przy użyciu polecenia:
+
+    find /var/jenkins_home -name xz.tar.gz
+
+Jedna z lokalizacji artefaktu:
+
+    /var/jenkins_home/workspace/zad/INO/GCL02/JK414562/pipeline/artifacts/xz.tar.gz
+
+Zrzut ekranu ze ścieżką:
+
+![image](https://github.com/user-attachments/assets/9844a96a-7e10-4b10-a8c2-ea5971bea75d)
+
+Artefakt został następnie skopiowany z kontenera Jenkins na hosta poleceniem:
+
+    docker cp jk414562_jenkins_1:/var/jenkins_home/workspace/zad/INO/GCL02/JK414562/pipeline/artifacts/xz.tar.gz .
+
+Po sprawdzeniu, że plik nie pojawił się w oczekiwanej lokalizacji, zlokalizowano go bezpośrednio w wolumenie Dockera:
+
+    /var/lib/docker/volumes/jk414562_jenkins_home/_data/workspace/zad/INO/GCL02/JK414562/pipeline/artifacts/xz.tar.gz
+
+Został skopiowany komendą:
+
+      sudo cp /var/lib/docker/volumes/jk414562_jenkins_home/_data/workspace/zad/INO/GCL02/JK414562/pipeline/artifacts/xz.tar.gz ~/MDO2025_INO/INO/GCL02/JK414562/Sprawozdanie2/
+
+Weryfikacja zawartości pakietu:
+  
+                                  tar -tzf xz.tar.gz
+
 
 
 
