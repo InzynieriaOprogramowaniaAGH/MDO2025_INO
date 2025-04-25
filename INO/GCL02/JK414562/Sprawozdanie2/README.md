@@ -124,6 +124,11 @@ Poniżej przedstawiono uproszczony diagram procesu CI/CD w formacie PlantUML:
 
 # Kompletna Konfiguracja Pipeline CI/CD – XZ Utils
 
+Aplikacja i licencja
+
+Wybrano aplikację XZ Utils, narzędzie do kompresji/dekompresji, rozwijane przez projekt Tukaani. Kod źródłowy objęty jest licencją public domain / GPLv2+, co umożliwia jego modyfikację i swobodny obrót na potrzeby zadania.
+
+Nie zdecydowano się na fork repozytorium, gdyż wystarczające było pobranie kodu z oficjalnego repozytorium przez git clone.
 Projekt realizuje pełny cykl Continuous Integration / Continuous Deployment (CI/CD) dla biblioteki [XZ Utils](https://github.com/tukaani-project/xz) w oparciu o Jenkinsa, Docker oraz podejście Docker-in-Docker (DIND).
 
 ---
