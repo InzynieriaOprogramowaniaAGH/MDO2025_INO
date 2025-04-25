@@ -3414,7 +3414,7 @@ Running in /var/jenkins_home/workspace/zad/INO/GCL02/JK414562/pipeline
 #10 exporting layers
 #10 exporting layers 0.4s done
 #10 writing image sha256:6b351050be5c764f42bfd143c7b957e9ac0e25218c27b5efe829256d6c6f61b3 done
-#10 naming to docker.io/library/xz-test:latest 0.0s done
+#10 naming to docker.o/library/xz-test:latest 0.0s done
 #10 DONE 0.5s
 [Pipeline] }
 [Pipeline] // withEnv
@@ -3455,3 +3455,4 @@ Archiving artifacts
 [Pipeline] // node
 [Pipeline] End of Pipeline
 Finished: SUCCESS
+
