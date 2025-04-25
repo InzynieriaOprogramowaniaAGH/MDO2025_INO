@@ -84,7 +84,7 @@ pipeline {
                     docker stop deploy-container || true
                     docker rm deploy-container || true
                     docker run -d --network ${DOCKER_NETWORK} --name deploy-container deploy
-                    sleep 5 # Give the application time to start
+                    sleep 5
                     '''
                 }
             }
