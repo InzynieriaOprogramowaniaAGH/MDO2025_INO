@@ -125,7 +125,7 @@ Testy uruchamiane przez make check wewnątrz kontenera.
 
 Logi testowe zapisane do logs/xz_test.log.
 
-📄 Log testów: logs/xz_test.log
-📌 Testy przechodzące i nieprzechodzące umożliwiają analizę regresji.
-📸 [Screen: fragment xz_test.log lub wynik make check]
+📄 Log testów: INO/GCL02/KL414598/Sprawozdanie2/xz_test.log
+- [Pełna treść wydruku z konsoli](xz_test.log)
+
 
