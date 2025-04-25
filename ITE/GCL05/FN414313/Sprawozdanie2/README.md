@@ -205,8 +205,107 @@ Pipeline zakończył się sukcesem
 ![ss11](screeny/class005/Screenshot_11.png)
 
 
-## Class005 i 006
+## Class006 i 007
 
-### 1. Wybór aplikacji
+### Wybór aplikacji
 
 Wybrano projekt [Express.js](https://github.com/expressjs/express), który jest minimalistycznym frameworkiem, idealnym do stworzenia pipeline'a
+
+## Licencja
+
+Projekt objęty jest licencją MIT, która zezwala na użytek edukacyjny oraz rozwój własnych modyfikacji. Licencja jest zgodna z wymaganiami zadania.
+
+## Budowanie aplikacji
+
+Aplikacja nie wymaga kompilacji. Budowanie sprowadza się do instalacji zależności poprzez narzędzie `npm`:
+
+```
+npm install
+```
+
+## Testy aplikacji
+
+W repozytorium dostępne są testy uruchamiane komendą:
+
+```
+npm test
+```
+
+Testy zostały uruchomione lokalnie i zakończyły się sukcesem.
+
+## Diagram UML
+
+Przygotowano diagram UML przedstawiający przepływ procesu CI/CD obejmujący etapy budowania, testowania oraz wdrażania aplikacji.
+
+![ss12](screeny/class005/Screenshot_12.png)
+
+## Proces build w kontenerze
+
+Do wykonania procesu wykorzystano obraz build
+
+```Dockerfile
+FROM node AS express-build
+
+RUN git clone https://github.com/expressjs/express
+
+RUN npm install -g express-generator@4
+
+RUN express /tmp/foo
+
+WORKDIR /tmp/foo
+
+RUN npm install
+```
+## Testowanie w kontenerze
+
+Testy są wykonywane w osobnym etapie `test`, który również klonuję repozytorium, z uwagi na problemy z testami w innym scenariuszu
+
+```Dockerfile
+FROM node AS express-build
+
+RUN git clone https://github.com/expressjs/express.git /app
+
+WORKDIR /app
+
+RUN npm install
+
+RUN npm test
+```
+
+## Kontener deploy
+
+Utworzono finalny obraz zawierający wyłącznie uruchamialną aplikację:
+
+```Dockerfile
+FROM node:18-slim
+
+COPY --from=express-build /tmp/foo /app
+
+WORKDIR /app
+
+CMD ["npm", "start"]
+```
+
+## Smoke test
+
+Weryfikacja działania aplikacji poprzez wywołanie:
+
+```
+curl http://localhost:3000
+```
+
+Aplikacja odpowiada poprawnie.
+
+## Format artefaktu
+
+Obraz Dockera pozwala na łatwe uruchamianie aplikacji lokalnie i w środowiskach produkcyjnych. Umożliwia przenośność i powtarzalność wdrożeń.
+
+## Wersjonowanie artefaktów
+
+Zastosowano wersjonowanie semantyczne w postaci tagów, np.:
+
+```
+express-deploy:1.0.0
+```
+
+## Ostateczny jenkins pipeline 
