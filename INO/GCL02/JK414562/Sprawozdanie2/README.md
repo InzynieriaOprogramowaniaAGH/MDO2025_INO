@@ -119,8 +119,7 @@ Pipeline z powodzeniem udało się uruchomić ponownie.
 
 ## Diagram CI/CD pipeline (PlantUML)
 Poniżej przedstawiono uproszczony diagram procesu CI/CD w formacie PlantUML:
-![image](https://github.com/user-attachments/assets/03472a78-b607-4549-8b8d-4ea2fb97d3cc)
-
+![image](https://github.com/user-attachments/assets/99e10e10-4f2c-41dc-88a9-28657f0b64bd)
 
 # Kompletna Konfiguracja Pipeline CI/CD – XZ Utils
 
@@ -159,11 +158,20 @@ Pipeline został podzielony na pięć głównych etapów:
 - Logi zapisane jako `xz_test.log` w katalogu `logs`.
 
 ### 4. Deploy
-- Budowa obrazu z `Dockerfile.deploy`.
+
+- Budowa obrazu pomocniczego `xz-deploy` z `Dockerfile.deploy`.
+
 - W kontenerze:
-  - instalacja `xz.tar.gz`,
+  - instalacja artefaktu `xz.tar.gz`,
   - kompilacja `deploy.c` z użyciem `liblzma`,
-  - uruchomienie testowego programu.
+  - testowe uruchomienie programu (`/tmp/deploy_test`),
+  - weryfikacja poprawności działania artefaktu.
+
+- Następnie:
+  - rozpakowanie `xz.tar.gz`,
+  - utworzenie obrazu produkcyjnego `xz-prod-${BUILD_NUMBER}`,
+  - obraz zawiera jedynie gotowy do uruchomienia program
+
 
 ### 5. Publish
 - Artefakty `xz.tar.gz` i `xz_test.log` dołączone do rezultatów pipeline'u w Jenkinsie.
