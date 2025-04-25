@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/06dd7eaf-d676-4c9a-bef6-905ef73b83d3)# Sprawozdanie z laboratoriów: Pipeline, Jenkins
+# Sprawozdanie z laboratoriów: Pipeline, Jenkins
 ### Instancja Jenkinsa została utworzona zgodnie z oficjalną instrukcją instalacyjną.
 
 ### Utworzono dedykowaną sieć Docker o nazwie jenkins:
@@ -98,18 +98,35 @@ Koniec loga potwierdzający działanie pipeline'u:
 
 # Kompletny Pipeline z wykorzystaniem xz
 
-Diagram UML(wygenerowany przez chatGPT) przedstawiający działanie pipeliniu: 
+## Projekt wdraża kompletny proces CI/CD dla biblioteki XZ Utils, wykorzystując Jenkins, kontenery Docker oraz architekturę Docker-in-Docker (DIND).
+
+### Wymagania wstępne środowiska
+-Zainstalowany Docker i Docker Compose
+
+-Utworzona sieć Docker (np. jenkins)
+
+-Uruchomiony kontener docker:dind z aliasem docker
+
+-Zbudowany obraz Jenkins z pluginami (blueocean, docker-workflow) i CLI Dockera
+
+-Skonfigurowany Jenkins z dostępem webowym (Blue Ocean)
+
+-Repozytorium z kodem źródłowym i plikami: Dockerfile.*, deploy.c, test-entrypoint.sh
+
+-Utworzony projekt typu pipeline w Jenkinsie
+
+### Diagram UML(wygenerowany przez chatGPT) przedstawiający działanie pipeliniu: 
 ![uml](https://github.com/user-attachments/assets/2273e2e7-1cef-45c2-a9dd-ffc97c2730d9)
 
 
-1. Clone – Przygotowanie środowiska
+## 1. Clone – Przygotowanie środowiska
 Klonowanie repozytorium z kodem xz oraz plików pomocniczych:
 
 Dockerfile.build, Dockerfile.test, Dockerfile.deploy, deploy.c, test-entrypoint.sh, docker-compose.yml
 ![tree](https://github.com/user-attachments/assets/9fb9e062-27ac-4c3a-87be-d53c6d04688c)
 
 
-2. Build – Kompilacja projektu
+## 2. Build – Kompilacja projektu
    
 Budowa obrazu z Dockerfile.build, bazującego na debian:bookworm.
 
@@ -204,7 +221,9 @@ Utworzony Artefakt oraz log
 
 W kontenerze odnaleziono utworzony artefakt oraz wypisano jego pełną ścieżkę:
 ![path](https://github.com/user-attachments/assets/3a0de287-5317-4aaa-8b96-8d782ba2250d)
+
 oraz udało się go pobrać z kontenera:
+
 ![pobra](https://github.com/user-attachments/assets/6c72d1af-09fa-475c-9ca6-16f94ec24ad4)
 
 - [xz.tar.gz](xz.tar.gz)
