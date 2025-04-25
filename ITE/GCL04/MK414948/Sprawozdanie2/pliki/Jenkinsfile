@@ -73,8 +73,6 @@ pipeline {
                     // Zatrzymanie kontenera i usunięcie sieci
                     sh 'docker stop node'
                     sh 'docker stop verdaccio'
-                    sh 'docker rm verdaccio'
-                    sh 'docker rm node'
                     sh "docker network rm publish"
                 }
             }
