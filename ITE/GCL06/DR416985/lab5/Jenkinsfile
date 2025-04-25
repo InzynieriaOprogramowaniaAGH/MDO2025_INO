@@ -58,8 +58,9 @@ pipeline {
 
         stage('Verify') {
             steps {
-                sh 'sleep 5'
-                sh 'curl -f http://localhost:3000'
+                sh 'sleep 10'  // Dłuższy czas oczekiwania na uruchomienie aplikacji
+                sh 'docker logs app'  // Sprawdzenie logów aplikacji w kontenerze
+                sh 'curl -f http://localhost:3000'  // Próba połączenia z aplikacją
             }
         }
     }
