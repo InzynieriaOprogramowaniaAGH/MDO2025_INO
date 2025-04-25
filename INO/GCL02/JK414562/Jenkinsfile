@@ -43,26 +43,26 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                dir("${WORKDIR}") {
-                    script {
-                        def deployImage = docker.build('xz-deploy', '-f Dockerfile.deploy .')
-                        def cid = sh(script: "docker create xz-deploy", returnStdout: true).trim()
+stage('Deploy') {
+    steps {
+        dir("${WORKDIR}") {
+            script {
+                sh "mkdir -p deploy"
+                sh "tar -xzf artifacts/xz.tar.gz -C deploy"
 
-                        sh "docker cp artifacts/xz.tar.gz ${cid}:/tmp/xz.tar.gz"
-                        sh "docker cp deploy.c ${cid}:/app/deploy.c"
-                        sh "docker start ${cid}"
+                writeFile file: 'deploy/Dockerfile', text: """
+                FROM debian:bullseye-slim
+                RUN apt-get update && apt-get install -y liblzma5
+                COPY . /app
+                WORKDIR /app
+                CMD ["./xz"]
+                """
 
-                        sh "docker exec ${cid} tar -xzf /tmp/xz.tar.gz -C /tmp"
-                        sh "docker exec ${cid} gcc /app/deploy.c -llzma -o /tmp/deploy_test"
-                        sh "docker exec ${cid} /tmp/deploy_test"
-
-                        sh "docker rm -f ${cid}"
-                    }
-                }
+                def prodImage = docker.build('xz-prod', 'deploy')
             }
         }
+    }
+}
 
         stage('Print') {
             steps {
