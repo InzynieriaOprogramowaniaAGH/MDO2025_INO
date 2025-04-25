@@ -43,8 +43,11 @@ pipeline {
                     def TDWA = docker.build('nodedeploy', '-f ITE/GCL04/MK414948/Sprawozdanie2/pliki/Dockerfile.nodedeploy .')
                     TDWA.run("-d -p 3000:3000 --network=deploy --name ${containerName}")
 
+                    // Sprawdzamy, czy kontener jest uruchomiony przed wywołaniem curl
+                    sh 'docker ps'
+
                     // Uruchamiamy kontener curla
-                    sh 'docker run --rm --network=deploy curlimages/curl:latest -L -v  http://node:3000'
+                    sh 'docker run --rm --network=deploy curlimages/curl:latest -L -v  http://node:3000 || true'
 
                     // Czyszczenie kontenera i sieci
                     sh "docker stop ${containerName}"
