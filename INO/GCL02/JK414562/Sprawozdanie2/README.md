@@ -117,6 +117,11 @@ Zrzut ekranu potwierdzający powodzenie:
 
 Pipeline z powodzeniem udało się uruchomić ponownie.
 
+## Diagram CI/CD pipeline (PlantUML)
+Poniżej przedstawiono uproszczony diagram procesu CI/CD w formacie PlantUML:
+![image](https://github.com/user-attachments/assets/03472a78-b607-4549-8b8d-4ea2fb97d3cc)
+
+
 # Kompletna Konfiguracja Pipeline CI/CD – XZ Utils
 
 Projekt realizuje pełny cykl Continuous Integration / Continuous Deployment (CI/CD) dla biblioteki [XZ Utils](https://github.com/tukaani-project/xz) w oparciu o Jenkinsa, Docker oraz podejście Docker-in-Docker (DIND).
