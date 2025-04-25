@@ -16,36 +16,39 @@ pipeline {
         }
         stage('Build') {
             steps {
-                dir('ITE/GCL04/MK414948/Sprawozdanie1/pliki/Dockerfiles'){
-                    script{
-                        docker.build('nodebld','-f Dockerfile.nodebld .')
+                dir('ITE/GCL04/MK414948/Sprawozdanie1/pliki/Dockerfiles') {
+                    script {
+                        docker.build('nodebld', '-f Dockerfile.nodebld .')
                     }
                 }
-               
             }
         }
         stage('Test') {
             steps {
-                 dir('ITE/GCL04/MK414948/Sprawozdanie1/pliki/Dockerfiles'){
-                     script{
-                     docker.build('nodetest', '-f Dockerfile.nodetest .')
-                     }
-                 }
+                dir('ITE/GCL04/MK414948/Sprawozdanie1/pliki/Dockerfiles') {
+                    script {
+                        docker.build('nodetest', '-f Dockerfile.nodetest .')
+                    }
+                }
             }
         }
         stage('Deploy') {
             steps {
                 script {
-                    //Tworzymy siec do przeprowadzenia testu łączności.
+                    // Tworzymy sieć do testu łączności
                     sh 'docker network create deploy || true'
-                    //Uruchamiamy petenta
+
+                    // Uruchamiamy klienta z unikalną nazwą
+                    def containerName = "node-${UUID.randomUUID()}"
                     def TDWA = docker.build('nodedeploy', '-f ITE/GCL04/MK414948/Sprawozdanie2/pliki/Dockerfile.nodedeploy .')
-                    TDWA.run("-d -p 3000:3000 --network=deploy --name node")
-                    //Uruchamiamy kontener curla by wykonć test łączności
+                    TDWA.run("-d -p 3000:3000 --network=deploy --name ${containerName}")
+
+                    // Uruchamiamy kontener curla
                     sh 'docker run --rm --network=deploy curlimages/curl:latest -L -v  http://node:3000'
-                    //Czyszczenie
-                    sh 'docker stop node'
-                    sh 'docker container rm node'
+
+                    // Czyszczenie kontenera i sieci
+                    sh "docker stop ${containerName}"
+                    sh "docker container rm ${containerName}"
                     sh 'docker network rm deploy'
                     sh 'docker rmi nodedeploy'
                 }
@@ -53,25 +56,36 @@ pipeline {
         }
         stage('Publish') {
             steps {
-                script{
-                sh 'docker network create publish || true'
-                sh'''
-                docker run --network=publish --name verdaccio -d -p 4873:4873 verdaccio/verdaccio || docker start verdaccio
-                '''
-                def publishImg = docker.build('nodepublish', '-f ITE/GCL04/MK414948/Sprawozdanie2/pliki/Dockerfile.nodepublish .')
-                def container = publishImg.run(" --network=publish --name node")
-                sleep 5;
-                sh 'docker stop node'
-                sh 'docker network rm publish'
+                script {
+                    // Tworzymy sieć do publikacji
+                    def publishNetworkName = "publish-${UUID.randomUUID()}"
+                    sh "docker network create ${publishNetworkName} || true"
+
+                    // Uruchamiamy verdaccio
+                    sh '''
+                    docker run --network=${publishNetworkName} --name verdaccio -d -p 4873:4873 verdaccio/verdaccio || docker start verdaccio
+                    '''
+
+                    // Tworzymy obraz nodepublish
+                    def publishImg = docker.build('nodepublish', '-f ITE/GCL04/MK414948/Sprawozdanie2/pliki/Dockerfile.nodepublish .')
+
+                    // Uruchamiamy kontener z unikalną nazwą
+                    def container = publishImg.run("--network=${publishNetworkName} --name node-${UUID.randomUUID()}")
+                    sleep 5
+
+                    // Zatrzymanie kontenera i usunięcie sieci
+                    sh 'docker stop node'
+                    sh "docker network rm ${publishNetworkName}"
                 }
             }
         }
     }
+
     post {
-            always {
-                // Czyszczenie po zakończeniu
-                sh 'docker system prune -af'
-                sh 'rm -rf ITE'
-            }
+        always {
+            // Czyszczenie po zakończeniu
+            sh 'docker system prune -af'
+            sh 'rm -rf ITE'
         }
     }
+}
