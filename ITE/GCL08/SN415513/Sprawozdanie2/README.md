@@ -159,17 +159,17 @@ RUN weechat -version
 ```
 
 ## Pomyślne przejście pipeline-u i wyświetlenie wersji
-![](16.png)
+![](lab5/16.png)
 
 ## Publish
 
 ## Uzyskanie runtime deps komendą ldd
-![](17.png)
+![](lab5/17.png)
 
 ## Utworzenie pliku .deb
-![](18.png)
-![](19.png)
-![](20.png)
+![](lab5/18.png)
+![](lab5/19.png)
+![](lab5/20.png)
 
 
 

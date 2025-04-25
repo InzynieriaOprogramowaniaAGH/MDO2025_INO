@@ -20,13 +20,13 @@ pipeline {
             }
         }
         
-        stage('usun obrazy dockerowe') {
+        stage('Usuń obrazy dockerowe') {
             steps {
-                sh 'docker rmi -f weechat-build weechat-test'
+                sh 'docker rmi -f weechat-build weechat-test || true'
             }
         }
         
-        stage('Wyszysc cache') {
+        stage('Wyczyść cache') {
             steps {
                 sh 'docker builder prune -a -f'
             }
@@ -48,5 +48,30 @@ pipeline {
             }
         }
         
+        stage('Uruchomienie kontenera do budowy .deb') {
+            steps {
+                sh '''
+                docker run --rm -v $(pwd)/output:/output weechat-build bash -c "
+                cd /app/weechat/build &&
+                make install &&
+                mkdir -p /output/DEBIAN &&
+                echo 'Package: weechat' > /output/DEBIAN/control &&
+                echo 'Version: 1.0' >> /output/DEBIAN/control &&
+                echo 'Section: base' >> /output/DEBIAN/control &&
+                echo 'Priority: optional' >> /output/DEBIAN/control &&
+                echo 'Architecture: amd64' >> /output/DEBIAN/control &&
+                echo 'Maintainer: Your Name <your.email@example.com>' >> /output/DEBIAN/control &&
+                echo 'Description: WeeChat built from source' >> /output/DEBIAN/control &&
+                dpkg-deb --build /output /output/weechat.deb
+                "
+                '''
+            }
+        }
+        
+        stage('Archiwizacja artefaktów') {
+            steps {
+                archiveArtifacts artifacts: 'output/weechat.deb', fingerprint: true
+            }
+        }
     }
 }
