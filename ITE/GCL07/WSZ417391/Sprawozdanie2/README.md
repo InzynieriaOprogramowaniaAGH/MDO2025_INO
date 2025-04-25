@@ -537,6 +537,22 @@ Celem laboratorium było sworzenie pipeline bazującego na Jenkinsfile. Pipeline
                 }
             }
 
+            stage('SmokeTest') {
+                steps {
+                    dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
+                        sh '''
+                            docker network create ci || true
+                            docker run -dit --network ci --name deploy -p 3000:3000 $IMAGE_DEPLOY:$VERSION
+                            sleep 5
+                            docker run --rm --network ci curlimages/curl curl http://deploy:3000
+                            docker stop deploy
+                            docker rm deploy
+                            docker network rm ci
+                        '''
+                    }
+                }
+            }
+
             stage('Publish') {
                 steps {
                     dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
@@ -591,6 +607,11 @@ W ostatnim kroku tworzony jest archiwum `.zip` zawierające zbudowaną aplikacj�
 
 - Tak, ponieważ obraz zawiera `node_modules`, `src`, `views`, `package.json`. Ustawiono `CMD ["npm", "start"]`, więc nie trzeba podawać komendy przy docker run. Obraz oparty jest na `node:22.10-slim`, więc nie ma nieprzenośnych zależności.
 
+W celu zademonstrowania, iż opublikowany obraz działa, zmieniłem maszynę na swojego prywatnego laptopa z Linuxem 24.04. Pobrałem obraz bezpośrednio z DockerHuba. Następnie na jego podstawie utworzyłem kontener, w którym wyeksponowałem port 3000. W przeglądarce wyszukałem `http://localhost:3000`. Poniższe zdjęcia potwierdzają, że obraz na kompletnie innej maszynie z kompletnie innym systemem operacyjnym działa poprawnie.
+
+![Zdjecie](./Lab_7/Zdjecia/21.png)
+![Zdjecie](./Lab_7/Zdjecia/22.png)
+
 *Czy plik ZIP można uruchomić na innej maszynie?*
 
 - Tak, jeśli maszyna będzie miała zainstalowanego `node:22.10-slim`.
@@ -612,5 +633,110 @@ W ostatnim kroku tworzony jest archiwum `.zip` zawierające zbudowaną aplikacj�
     ![Zdjecie](./Lab_7/Zdjecia/18.png)
 
     ![Zdjecie](./Lab_7/Zdjecia/19.png)
+
+5. **Ansible**
+
+**1) Utworzono nową wirtualną maszynę**
+
+Utworzono nową wirtualną maszynę bazującą na obrazie `Fedora 41`
+
+![Zdjecie](./Lab_7/Zdjecia/23.png)
+![Zdjecie](./Lab_7/Zdjecia/25.png)
+
+**2) Utworzono użytkownika o nazwie `ansible`**
+
+![Zdjecie](./Lab_7/Zdjecia/24.png)
+
+**3) Nadano maszynie *hostname* ansible-target**
+
+```bash
+sudo hostnamectl set-hostname ansible-target
+exec bash
+```
+
+Powyższa komenda nadaje maszynie hostname `ansible-target`. Druga z nich ponownie uruchamia `bash`.
+
+![Zdjecie](./Lab_7/Zdjecia/26.png)
+
+**4) Instalacja programu `tar` i `OpenSSH`**
+
+```bash
+sudo dnf install tar openssh
+```
+
+Powyższa komenda pozwala na pobranie narzędzi *tar* oraz *openssh*. W tym przypadku paczki nie zostały pobrane, ponieważ były już zainstalowane ich najnowsze wersje.
+
+![Zdjecie](./Lab_7/Zdjecia/28.png)
+
+**5) Migawka maszyny**
+
+Migawka zapisuje stan maszyny — pamięć RAM, dyski, ustawienia.
+
+![Zdjecie](./Lab_7/Zdjecia/29.png)
+
+**6) Instalacja Ansible**
+
+![Zdjecie](./Lab_7/Zdjecia/27.png)
+
+**7) Wymiana kluczy SSH**
+
+```bash
+ssh-keygen -f ~/.ssh/id_rsa_ansible
+```
+
+Powyższa komenda na głównej maszynie generuje klucz ssh. Wszystkie opcje zostały zatwierdzone `Enter`.
+
+![Zdjecie](./Lab_7/Zdjecia/30.png)
+
+```bash
+ip a
+```
+
+Powyższa komenda zwróci adres maszyny `ansible-target`.
+
+![Zdjecie](./Lab_7/Zdjecia/31.png)
+
+```bash
+sudo nano /etc/hosts
+```
+
+Powyższa komenda otworzy plik `hosts` do które należy dodać adres IP hosta `ansible-target` wraz z dopiskiem jego nazwy. Stworzy do alias jej adesu IP z nazwą `ansible-target`.
+
+![Zdjecie](./Lab_7/Zdjecia/32.png)
+
+```bash
+ssh-copy-id -i ~/.ssh/id_rsa_ansible.pub ansible@ansible-target
+```
+
+Powyższa komenda kopiuje klucz ssh na maszynę `ansible-target`. Podczas przesyłania klucza ssh wymagane jest podanie hasła.
+
+![Zdjecie](./Lab_7/Zdjecia/33.png)
+
+```bash
+nano ~/.ssh/config
+```
+
+Ponieważ wygenerowany klucz nie jest domyślny `id_rsa` tylko `id_rsa_ansible` należy poinstruować SSH, żeby użył tego konkretnego klucza. Powyższa komenda otworzy plik `config`, w którym należy dodać następujące dane:
+
+```bash
+Host ansible-target
+    HostName ansible-target
+    IdentityFile ~/.ssh/id_rsa_ansible
+```
+
+Wyjaśnienie:
+- `Host ansible-target` – mówi: *dla tego hosta (ansible-target) używaj specjalnych ustawień niż zwykle*,
+- `HostName ansible-target` – mówi: *kiedy wpiszę ssh ansible-target, naprawdę chodzi o nazwę lub IP ansible-target*,
+- `IdentityFile ~/.ssh/id_rsa_ansible` – wskazuje, który klucz prywatny ma być używany do logowania (domyślnie SSH używa ~/.ssh/id_rsa).
+
+![Zdjecie](./Lab_7/Zdjecia/35.png)
+
+```bash
+ssh ansible@ansible-target
+```
+
+Powyższa komenda łączy się po ssh z maszyną `ansible-target`. Pokazuje to tym samym, że nastąpiła poprawna wymiana kluczy i podawanie hasła nie jest wymagane.
+
+![Zdjecie](./Lab_7/Zdjecia/34.png)
 
 ## Historia terminala znajduje się w pliku `history.txt`

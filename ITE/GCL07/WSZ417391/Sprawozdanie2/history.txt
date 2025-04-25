@@ -1,46 +1,3 @@
-    6  cd MDO2025_INO/
-    7  git checkout main
-    8  clear
-    9  git checkout GCL07
-   10  git checkout -b WSZ417391
-   11  cd ITE/GCL07/
-   12  mkdir WSZ417391
-   13  LS
-   14  las
-   15  ls
-   16  cd ..
-   17  ls
-   18  cd ITE/
-   19  cd GCL07/
-   20  rm WSZ417391/
-   21  rm -fR WSZ417391/
-   22  clear
-   23  cd ..
-   24  clear
-   25  ls
-   26  clear
-   27  cd ITE/GCL07/
-   28  mkdir WSZ417391
-   29  ls
-   30  pwd
-   31  chmod +x .git/hooks/commit-msg
-   32  clear
-   33  chmod +x .git/hooks/commit-msg
-   34  clear
-   35  pwd
-   36  chmod +x .git/hooks/commit-msg
-   37  cd ..
-   38  ls
-   39  cd..
-   40  cd ..
-   41  ls
-   42  cd /home/wsz/MDO2025_INO
-   43  chmod +x .git/hooks/commit-msg
-   44  clear
-   45  ls
-   46  cd ITE/GCL07/WSZ417391/
-   47  ls
-   48  pwd
    49  cd /home/wsz/MDO2025_INO
    50  cat << 'EOF' > .git/hooks/commit-msg
    51  ls
@@ -992,9 +949,52 @@
   997  git commit -m "WSZ417391: Lab_6 & Lab_7"
   998  git push
   999  clear
- 1000  cd MDO2025_INO/
+ 1000  sudo dnf install ansible
  1001  clear
- 1002  cd ITE/GCL07/WSZ417391/
- 1003  ls
- 1004  cd Sprawozdanie2
- 1005  history > history.txt
+ 1002  ssh-keygen
+ 1003  cd ~/.ssh/id_rsa
+ 1004  cd ~/.ssh
+ 1005  ls
+ 1006  ls -a
+ 1007  clea
+ 1008  clear
+ 1009  ls -
+ 1010  ls -w
+ 1011  clear
+ 1012  ls -p
+ 1013  ls -l --full-time
+ 1014  clear
+ 1015  ssh-keygen -f ~/.ssh/id_rsa_ansible
+ 1016  ssh-copy-id -i ~/.ssh/id_rsa_ansible.pub ansible@ansible-target
+ 1017  sudo nano /etc/hosts
+ 1018  clear
+ 1019  ssh-copy-id -i ~/.ssh/id_rsa_ansible.pub ansible@ansible-target
+ 1020  clear
+ 1021  ssh ansible@ansible-target
+ 1022  clear
+ 1023  ssh ansible@ansible-target
+ 1024  clear
+ 1025  ssh -i ~/.ssh/id_rsa_ansible ansible@ansible-target
+ 1026  ssh ansible@ansible-target
+ 1027  clear
+ 1028  nano ~/.ssh/config
+ 1029  ssh ansible-target
+ 1030  clear
+ 1031  ssh ansible-target
+ 1032  cear
+ 1033  clear
+ 1034  ssh ansible-target
+ 1035  nano ~/.ssh/config
+ 1036  ssh ansible-target
+ 1037  nano ~/.ssh/config
+ 1038  ssh ansible@ansible-target
+ 1039  clear
+ 1040  ssh ansible@ansible-target
+ 1041  clear
+ 1042  pwd
+ 1043  cd ..
+ 1044  pwd
+ 1045  cd MDO2025_INO/
+ 1046  clear
+ 1047  cd ITE/GCL07/WSZ417391/Sprawozdanie2
+ 1048  history > history.txt
