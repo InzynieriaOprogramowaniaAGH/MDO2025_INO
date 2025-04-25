@@ -5,6 +5,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    // Usuwanie istniejącego kontenera o nazwie 'app', jeśli istnieje
+                    sh 'docker rm -f app || true'
+                    
                     // Uruchomienie kontenera z aplikacją
                     sh 'docker run -d -p 3000:3000 --name app node-deploy'
                 }
