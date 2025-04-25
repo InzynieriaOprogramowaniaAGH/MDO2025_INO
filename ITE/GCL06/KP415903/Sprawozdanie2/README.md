@@ -483,8 +483,8 @@ pipeline {
 
 ![Successful steps throughout pipeline run](ss/6i7/14.png)
 
-[Logi z uruchomienia pipeline'a #31](jenkins_logs/#31.txt)
-[Logi z uruchomienia pipeline'a #32](jenkins_logs/#32.txt)
+[Logi z uruchomienia pipeline'a #31](jenkins_logs/31.txt)
+[Logi z uruchomienia pipeline'a #32](jenkins_logs/32.txt)
 
 ### Implementacja Pipeline'a poprzez SCM (Source Control Management)
 
@@ -538,7 +538,7 @@ Po zapisaniu konfiguracji:
 ![Successfully generated `lab6 scm` artifact](ss/6i7/15.png)
 ![SCM Pipeline Changes](ss/6i7/16.png)
 
-[Logi z uruchomienia pipeline'a SCM #4](jenkins_logs/scm#4.txt)
+[Logi z uruchomienia pipeline'a SCM #4](jenkins_logs/scm4.txt)
 
 ## Podsumowanie
 
