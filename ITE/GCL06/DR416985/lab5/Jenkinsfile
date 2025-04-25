@@ -2,52 +2,49 @@ pipeline {
     agent any
 
     environment {
-        PROJECT_DIR = 'ITE/GCL06/DR416985/lab5'
-        BUILD_IMAGE = "node-build-image"
-        TEST_IMAGE = "node-test-image"
-        DEPLOY_IMAGE = "node-deploy-image"
+        APP_NAME = 'node-js-dummy-test'
+        IMAGE_NAME = "node-app:${env.BUILD_NUMBER}"
+        WORKDIR = 'ITE/GCL06/DR416985/Jenkins/node-js-dummy-test'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'DR416985', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                dir(env.PROJECT_DIR) {
-                    sh "docker build -t ${BUILD_IMAGE} -f node-build.Dockerfile ."
+                dir("${WORKDIR}") {
+                    sh 'docker build -t ${IMAGE_NAME} -f node-build.Dockerfile .'
                 }
             }
         }
 
         stage('Test') {
             steps {
-                dir(env.PROJECT_DIR) {
-                    sh "docker build -t ${TEST_IMAGE} -f node-test.Dockerfile ."
-                    sh "docker run --rm ${TEST_IMAGE}"
+                dir("${WORKDIR}") {
+                    sh 'docker build -t ${IMAGE_NAME}-test -f node-test.Dockerfile .'
+                    sh 'docker run --rm ${IMAGE_NAME}-test'
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                sh "docker network create my_network || true"
-                dir(env.PROJECT_DIR) {
-                    sh """
-                        docker build -t ${DEPLOY_IMAGE} -f node-deploy.Dockerfile .
-                        docker rm -f app || true
-                        docker run -d -p 3000:3000 --name app --network my_network ${DEPLOY_IMAGE}
-                    """
+                dir("${WORKDIR}") {
+                    sh 'docker build -t ${IMAGE_NAME}-deploy -f node-deploy.Dockerfile .'
+                    sh 'docker rm -f app || true'
+                    sh 'docker run -d -p 3000:3000 --name app ${IMAGE_NAME}-deploy'
                 }
             }
         }
 
-        stage('Sprawdzenie działania aplikacji') {
+        stage('Verify') {
             steps {
-                sh "docker run --rm --network my_network curlimages/curl curl http://app:3000"
+                sh 'sleep 5' // Czekamy na uruchomienie aplikacji
+                sh 'curl -f http://localhost:3000'
             }
         }
     }
@@ -57,7 +54,7 @@ pipeline {
             echo 'Pipeline zakończony sukcesem.'
         }
         failure {
-            echo 'Pipeline zakończył się błędem.'
+            echo 'Pipeline zakończony niepowodzeniem.'
         }
     }
 }
