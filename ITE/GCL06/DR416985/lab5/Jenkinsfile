@@ -35,7 +35,6 @@ pipeline {
                 dir("${PROJECT_DIR}") {
                     sh 'docker build -t ${IMAGE_BUILD} -f node-build.Dockerfile . | tee build.log'
                 }
-                archiveArtifacts artifacts: "node-js-dummy-test/build.log"
             }
         }
 
@@ -59,14 +58,7 @@ pipeline {
             }
         }
 
-        stage('Publish') {
-            steps {
-                dir("${PROJECT_DIR}") {
-                    archiveArtifacts artifacts: "artifacts/art.tar"
-                    sh 'docker system prune --all --volumes --force'
-                }
-            }
-        }
+        // Usunięto etap 'Publish', ponieważ nie potrzebujesz artefaktów
     }
 
     post {
