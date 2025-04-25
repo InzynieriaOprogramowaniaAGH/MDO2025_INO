@@ -54,7 +54,7 @@ pipeline {
                         sh "docker cp artifacts/xz-${BUILD_NUMBER}.tar.gz ${cid}:/tmp/xz.tar.gz"
                         sh "docker cp deploy.c ${cid}:/app/deploy.c"
                         sh "docker start ${cid}"
-
+                        sh "sleep 3"
                         // Test: rozpakuj, skompiluj deploy.c, odpal test
                         sh "docker exec ${cid} tar -xzf /tmp/xz.tar.gz -C /tmp"
                         sh "docker exec ${cid} gcc /app/deploy.c -llzma -o /tmp/deploy_test"
