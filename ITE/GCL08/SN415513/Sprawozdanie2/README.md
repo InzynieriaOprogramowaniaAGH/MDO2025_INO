@@ -139,7 +139,7 @@ pipeline {
 ## Deploy
 
 ## Pipeline from SCM
-![](15.png)
+![](lab5/15.png)
 ## Jenkinsfile
 
 Jenkinsfile - tak samo jak powyżej  
