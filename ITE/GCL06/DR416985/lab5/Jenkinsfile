@@ -3,75 +3,76 @@ pipeline {
 
     environment {
         PROJECT_DIR = 'ITE/GCL06/DR416985/lab5'
-        IMAGE_BUILD = 'node-build-image'
-        IMAGE_TEST = 'node-test-image'
-        IMAGE_DEPLOY = 'node-deploy-image'
+        IMAGE_BUILD = 'node-builder'
+        IMAGE_TEST = 'node-test'
+        IMAGE_DEPLOY = 'node-deploy'
         VERSION = "v${BUILD_NUMBER}"
         IMAGE_TAG = "winterwollf/node-deploy:v${BUILD_NUMBER}"
     }
 
     stages {
-        stage('Clone') {
+        stage('Prepare') {
             steps {
-                git branch: 'DR416985', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                sh '''
+                    rm -rf node-js-dummy-test
+                    git clone https://github.com/MaciejSerafin/node-js-dummy-test.git
+                    cd node-js-dummy-test
+                '''
             }
         }
 
-        stage('Clean') {
+        stage('Logs') {
             steps {
-                sh '''
-                    docker container ls -a -q | xargs -r docker rm -f
-                    docker volume ls -q | xargs -r docker volume rm -f
-                    docker network ls -q --filter type=custom | xargs -r docker network rm -f
-                    docker builder prune --all --force
-                    docker images -q | sort -u | grep -vE '^(node:22\\.10|node:22\\.10-slim)$' | xargs -r docker rmi -f
-                '''
+                dir('node-js-dummy-test') {
+                    sh 'touch build.log'
+                    sh 'touch test.log'
+                }
             }
         }
 
         stage('Build') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    sh 'docker build -t ${IMAGE_BUILD} -f node-build.Dockerfile .'
+                    sh 'docker build -t ${IMAGE_BUILD} -f node-build.Dockerfile . | tee build.log'
                 }
+                archiveArtifacts artifacts: "node-js-dummy-test/build.log"
             }
         }
 
-        stage('Test') {
+        stage('Tests') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    sh 'docker build -t ${IMAGE_TEST} -f node-test.Dockerfile .'
-                    sh 'docker run --rm ${IMAGE_TEST}'
+                    sh 'docker build -t ${IMAGE_TEST} -f node-test.Dockerfile . | tee test.log'
                 }
             }
         }
 
         stage('Deploy') {
             steps {
+                sh 'docker network create my_network || true'  // Tworzenie sieci Docker
                 dir("${PROJECT_DIR}") {
                     sh 'docker build -t ${IMAGE_DEPLOY} -f node-deploy.Dockerfile .'
                     sh 'docker rm -f app || true'
-                    sh 'docker run -d -p 3000:3000 --name app ${IMAGE_DEPLOY}'
+                    sh 'docker run -d -p 3000:3000 --name app --network my_network ${IMAGE_DEPLOY}'
                 }
+                sleep(10)  // Krótszy czas oczekiwania na aplikację
             }
         }
 
-        stage('Verify') {
+        stage('Publish') {
             steps {
-                sh 'sleep 15'  // Zwiększony czas oczekiwania na aplikację
-                sh 'docker logs app'  // Sprawdzanie logów aplikacji
-                sh 'docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" app'  // Pobranie adresu IP kontenera
-                sh 'curl -f http://$(docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" app):3000'  // Sprawdzanie dostępności aplikacji przez IP kontenera
+                dir("${PROJECT_DIR}") {
+                    archiveArtifacts artifacts: "artifacts/art.tar"
+                    sh 'docker system prune --all --volumes --force'
+                }
             }
         }
     }
 
     post {
-        success {
-            echo 'Pipeline zakończony sukcesem.'
-        }
-        failure {
-            echo 'Pipeline zakończony niepowodzeniem.'
+        always {
+            echo 'Cleaning up...'
+            sh 'docker rmi ${IMAGE_BUILD} ${IMAGE_TEST} ${IMAGE_DEPLOY} || true'
         }
     }
 }
