@@ -35,16 +35,17 @@ pipeline {
             steps {
                 dir("${WORKDIR}") {
                     sh 'docker build -t ${IMAGE_NAME}-deploy -f node-deploy.Dockerfile .'
+                    sh 'docker network create my_network || true'
                     sh 'docker rm -f app || true'
-                    sh 'docker run -d -p 3000:3000 --name app ${IMAGE_NAME}-deploy'
+                    sh 'docker run -d --network my_network --name app ${IMAGE_NAME}-deploy'
                 }
             }
         }
 
         stage('Verify') {
             steps {
-                sh 'sleep 5'
-                sh 'curl -f http://localhost:3000'
+                sh 'sleep 5' // Czekamy na uruchomienie aplikacji
+                sh 'docker run --rm --network my_network curlimages/curl curl http://app:3000'
             }
         }
     }
