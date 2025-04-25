@@ -39,19 +39,14 @@ pipeline {
                     sh 'docker network create deploy || true'
 
                     // Uruchamiamy klienta z unikalną nazwą
-                    def containerName = "node-${UUID.randomUUID()}"
-                    def TDWA = docker.build('nodedeploy', '-f ITE/GCL04/MK414948/Sprawozdanie2/pliki/Dockerfile.nodedeploy .')
-                    TDWA.run("-d -p 3000:3000 --network=deploy --name ${containerName}")
-
-                    // Sprawdzamy, czy kontener jest uruchomiony przed wywołaniem curl
-                    sh 'docker ps'
-
+                    def node = docker.build('nodedeploy', '-f ITE/GCL04/MK414948/Sprawozdanie2/pliki/Dockerfile.nodedeploy .')
+                    def container = node.run("--rm -d -p 3000:3000 --network=deploy --name node")
                     // Uruchamiamy kontener curla
-                    sh 'docker run --rm --network=deploy curlimages/curl:latest -L -v  http://node:3000 || true'
+                    sh 'docker run --rm --network=deploy curlimages/curl:latest -L -v  http://node:3000'
 
                     // Czyszczenie kontenera i sieci
-                    sh "docker stop ${containerName}"
-                    sh "docker container rm ${containerName}"
+                    sh "docker stop node"
+                    sh "docker container rm node"
                     sh 'docker network rm deploy'
                     sh 'docker rmi nodedeploy'
                 }
@@ -60,25 +55,27 @@ pipeline {
         stage('Publish') {
             steps {
                 script {
-                    // Tworzymy sieć do publikacji
-                    def publishNetworkName = "publish-${UUID.randomUUID()}"
-                    sh "docker network create ${publishNetworkName} || true"
+                    sh "docker network rm publish"
+                    sh "docker network create publish || true"
 
                     // Uruchamiamy verdaccio
                     sh '''
-                    docker run --network=${publishNetworkName} --name verdaccio -d -p 4873:4873 verdaccio/verdaccio || docker start verdaccio
+                    docker run --network=publish --name verdaccio -d -p 4873:4873 verdaccio/verdaccio || docker start verdaccio
                     '''
 
                     // Tworzymy obraz nodepublish
                     def publishImg = docker.build('nodepublish', '-f ITE/GCL04/MK414948/Sprawozdanie2/pliki/Dockerfile.nodepublish .')
 
                     // Uruchamiamy kontener z unikalną nazwą
-                    def container = publishImg.run("--network=${publishNetworkName} --name node-${UUID.randomUUID()}")
+                    def container = publishImg.run("--network=publish --name node")
                     sleep 5
 
                     // Zatrzymanie kontenera i usunięcie sieci
                     sh 'docker stop node'
-                    sh "docker network rm ${publishNetworkName}"
+                    sh 'docker stop verdaccio'
+                    sh 'docker rm verdaccio'
+                    sh 'docker rm node'
+                    sh "docker network rm publish"
                 }
             }
         }
