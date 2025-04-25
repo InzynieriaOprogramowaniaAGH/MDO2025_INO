@@ -115,16 +115,20 @@ Kompilacja narzędzia xz w kontenerze.
 
 Utworzenie i zapisanie artefaktu xz.tar.gz w katalogu artifacts.
 
+Sukces wykonania
+![succes](https://github.com/user-attachments/assets/b27d1872-f278-43a7-8831-29de8c38d7d9)
+
+
 Artefakt: artifacts/xz.tar.gz
 ![artefakty](https://github.com/user-attachments/assets/0084c2e0-c4e3-42b5-9fea-3c0e292c0048)
 
-✅ 3. Test – Walidacja działania
+3. Test – Walidacja działania
 Budowa testowego obrazu na podstawie Dockerfile.test.
 
 Testy uruchamiane przez make check wewnątrz kontenera.
 
 Logi testowe zapisane do logs/xz_test.log.
 
-- [Log testów:](xz_test.log)
+- [Log testów](xz_test.log)
 
 
