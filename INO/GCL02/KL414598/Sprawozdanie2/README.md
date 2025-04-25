@@ -125,7 +125,6 @@ Testy uruchamiane przez make check wewnątrz kontenera.
 
 Logi testowe zapisane do logs/xz_test.log.
 
-📄 Log testów: INO/GCL02/KL414598/Sprawozdanie2/xz_test.log
-- [Pełna treść wydruku z konsoli](xz_test.log)
+- [Log testów:](xz_test.log)
 
 
