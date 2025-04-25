@@ -171,7 +171,37 @@ RUN weechat -version
 ![](lab5/19.png)
 ![](lab5/20.png)
 
-
-
-
 ## Archive artifacts
+
+Aktualizacja jenkinsfile o uruchomienie kontenera, stworzenie deb-a i dodanie do archive artifacts:
+```
+ 
+        stage('Uruchomienie kontenera do budowy .deb') {
+            steps {
+                sh '''
+                docker run --rm -v $(pwd)/output:/output weechat-build bash -c "
+                cd /app/weechat/build &&
+                make install &&
+                mkdir -p /output/DEBIAN &&
+                echo 'Package: weechat' > /output/DEBIAN/control &&
+                echo 'Version: 1.0' >> /output/DEBIAN/control &&
+                echo 'Section: base' >> /output/DEBIAN/control &&
+                echo 'Priority: optional' >> /output/DEBIAN/control &&
+                echo 'Architecture: amd64' >> /output/DEBIAN/control &&
+                echo 'Maintainer: Your Name <your.email@example.com>' >> /output/DEBIAN/control &&
+                echo 'Description: WeeChat built from source' >> /output/DEBIAN/control &&
+                dpkg-deb --build /output /output/weechat.deb
+                "
+                '''
+            }
+        }
+        
+        stage('Archiwizacja artefaktów') {
+            steps {
+                archiveArtifacts artifacts: 'output/weechat.deb', fingerprint: true
+            }
+        }
+```
+
+# Pomyślne przejście pipeline'u z zapisaniem pliku .deb jako archive artifact
+![](lab5/21.png)
