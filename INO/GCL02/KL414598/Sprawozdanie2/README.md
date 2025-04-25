@@ -59,7 +59,7 @@ Kontener Jenkinsa został uruchomiony na podstawie wcześniej zbudowanego obrazu
   Kontener został podłączony do sieci jenkins oraz przypisano mu odpowiednie woluminy.
 
 ### Dostęp do interfejsu webowego
-Z poziomu przeglądarki na hoście maszyny wirtualnej odwiedzono interfejs Jenkinsa pod adresem http://192.168.1.102:8080
+Z poziomu przeglądarki na hoście maszyny wirtualnej odwiedzono interfejs Jenkinsa pod adresem http://localhost:8080/
 W celu pierwszego logowania, hasło jednorazowe zostało uzyskane z logów kontenera:
 ![6](https://github.com/user-attachments/assets/8c21a6d8-757d-4e23-9fde-d95c1007dec7)
 
@@ -115,11 +115,76 @@ Kompilacja narzędzia xz w kontenerze.
 
 Utworzenie i zapisanie artefaktu xz.tar.gz w katalogu artifacts.
 
+Zawartość Jenkinsfile:
+```
+pipeline {
+    agent any
+
+    environment {
+        WORKDIR = "INO/GCL02/KL414598/zadaniePipeline/pipeline"
+    }
+
+    stages {
+        stage('Clone xz') {
+            steps {
+                dir("${WORKDIR}") {
+                    sh "rm -rf xz"
+                    sh "git clone https://github.com/tukaani-project/xz.git xz"
+                }
+            }
+        }
+
+        stage('Build & Package') {
+            steps {
+                dir("${WORKDIR}") {
+                    script {
+                        // buildujemy obraz
+                        docker.build('xz-build', '-f Dockerfile.build .')
+                        sh 'mkdir -p artifacts'
+                        def cid = sh(script: "docker create xz-build", returnStdout: true).trim()
+                        sh "docker cp ${cid}:/app/xz.tar.gz artifacts/xz.tar.gz"
+                        sh "docker rm ${cid}"
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir("${WORKDIR}") {
+                    script {
+                        docker.build('xz-test', '-f Dockerfile.test .')
+                        sh 'mkdir -p logs'
+                        def cid = sh(script: "docker create xz-test", returnStdout: true).trim()
+                        sh "docker cp ${cid}:/app/logs/test_results.log logs/xz_test.log"
+                        sh "docker rm ${cid}"
+                    }
+                }
+            }
+        }
+
+        stage('Print') {
+            steps {
+                echo 'Pipeline dla xz zakończony pomyślnie.'
+            }
+        }
+    }
+
+post {
+    always {
+        archiveArtifacts artifacts: 'INO/GCL02/KL414598/zadaniePipeline/pipeline/artifacts/xz.tar.gz'
+        archiveArtifacts artifacts: 'INO/GCL02/KL414598/zadaniePipeline/pipeline/logs/xz_test.log'
+    }
+}
+}
+```
+
+
 Sukces wykonania
 ![succes](https://github.com/user-attachments/assets/b27d1872-f278-43a7-8831-29de8c38d7d9)
 
 
-Artefakt: artifacts/xz.tar.gz oraz log
+Utworzony Artefakt oraz log
 ![artefakty](https://github.com/user-attachments/assets/0084c2e0-c4e3-42b5-9fea-3c0e292c0048)
 - [xz.tar.gz](xz.tar.gz)
 - [Log testów](xz_test.log)
