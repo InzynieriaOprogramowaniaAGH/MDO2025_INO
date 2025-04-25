@@ -2,47 +2,74 @@ pipeline {
     agent any
 
     environment {
-        APP_NAME = 'node-js-dummy-test'
-        IMAGE_NAME = "node-app:${env.BUILD_NUMBER}"
-        WORKDIR = 'ITE/GCL06/DR416985/lab5'
+        // Ścieżka do katalogu roboczego z aplikacją (lab5)
+        PROJECT_DIR = 'ITE/GCL06/DR416985/lab5'
+        IMAGE_BUILD = 'node-build-image'
+        IMAGE_TEST = 'node-test-image'
+        IMAGE_DEPLOY = 'node-deploy-image'
+        VERSION = "v${BUILD_NUMBER}"
+        IMAGE_TAG = "winterwollf/node-deploy:v${BUILD_NUMBER}"
     }
 
     stages {
-        stage('Checkout') {
+        stage('Clone') {
             steps {
-                checkout scm
+                // Klonowanie repozytorium z GitHub
+                git branch: 'DR416985', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Clean') {
+            steps {
+                // Usuwanie wszelkich starych kontenerów i obrazów Docker
+                sh '''
+                    docker container ls -a -q | xargs -r docker rm -f
+                    docker volume ls -q | xargs -r docker volume rm -f
+                    docker network ls -q --filter type=custom | xargs -r docker network rm -f
+                    docker builder prune --all --force
+                    docker images -q | sort -u | grep -vE '^(node:22\\.10|node:22\\.10-slim)$' | xargs -r docker rmi -f
+                '''
             }
         }
 
         stage('Build') {
             steps {
-                dir("${WORKDIR}") {
-                    sh 'docker build -t ${IMAGE_NAME} -f node-build.Dockerfile .'
+                dir("${PROJECT_DIR}") {
+                    // Budowanie obrazu aplikacji
+                    sh 'docker build -t ${IMAGE_BUILD} -f node-build.Dockerfile .'
                 }
             }
         }
 
         stage('Test') {
             steps {
-                dir("${WORKDIR}") {
-                    sh 'docker build -t ${IMAGE_NAME}-test -f node-test.Dockerfile .'
-                    sh 'docker run --rm ${IMAGE_NAME}-test'
+                dir("${PROJECT_DIR}") {
+                    // Budowanie obrazu do testów
+                    sh 'docker build -t ${IMAGE_TEST} -f node-test.Dockerfile .'
+                    // Uruchamianie testów w kontenerze
+                    sh 'docker run --rm ${IMAGE_TEST}'
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                dir("${WORKDIR}") {
-                    sh 'docker build -t ${IMAGE_NAME}-deploy -f node-deploy.Dockerfile .'
-                    sh 'docker run -d -p 3000:3000 --name app ${IMAGE_NAME}-deploy'
+                dir("${PROJECT_DIR}") {
+                    // Budowanie obrazu do deployu
+                    sh 'docker build -t ${IMAGE_DEPLOY} -f node-deploy.Dockerfile .'
+                    // Usuwanie kontenera, jeśli już istnieje
+                    sh 'docker rm -f app || true'
+                    // Uruchamianie aplikacji w kontenerze
+                    sh 'docker run -d -p 3000:3000 --name app ${IMAGE_DEPLOY}'
                 }
             }
         }
 
         stage('Verify') {
             steps {
-                sh 'sleep 5' // Czekamy na uruchomienie aplikacji
+                // Czekanie chwilę na uruchomienie aplikacji
+                sh 'sleep 5'
+                // Weryfikacja działania aplikacji
                 sh 'curl -f http://localhost:3000'
             }
         }
