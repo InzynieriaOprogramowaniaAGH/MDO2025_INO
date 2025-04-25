@@ -1,4 +1,8 @@
-FROM node-build-image
+FROM node-app-build
 
-WORKDIR /node-js-dummy-test
+WORKDIR /app
+
+COPY . .
+
 CMD ["npm", "start"]
+
