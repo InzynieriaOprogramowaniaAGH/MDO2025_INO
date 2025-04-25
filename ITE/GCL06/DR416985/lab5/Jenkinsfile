@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "node-app:latest"
+        APP_NAME = 'node-js-dummy-test'
+        IMAGE_NAME = "node-app:${env.BUILD_NUMBER}"
         WORKDIR = 'ITE/GCL06/DR416985/lab5'
-        NETWORK_NAME = 'my_network'
     }
 
     stages {
@@ -17,7 +17,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir("${WORKDIR}") {
-                    sh "docker build -t ${IMAGE_NAME} -f node-build.Dockerfile ."
+                    sh 'docker build -t ${IMAGE_NAME} -f node-build.Dockerfile .'
                 }
             }
         }
@@ -25,8 +25,8 @@ pipeline {
         stage('Test') {
             steps {
                 dir("${WORKDIR}") {
-                    sh "docker build -t node-app-test -f node-test.Dockerfile ."
-                    sh "docker run --rm node-app-test"
+                    sh 'docker build -t ${IMAGE_NAME}-test -f node-test.Dockerfile .'
+                    sh 'docker run --rm ${IMAGE_NAME}-test'
                 }
             }
         }
@@ -34,29 +34,26 @@ pipeline {
         stage('Deploy') {
             steps {
                 dir("${WORKDIR}") {
-                    // Tworzymy sieć tylko jeśli nie istnieje
-                    sh "docker network inspect ${NETWORK_NAME} >/dev/null 2>&1 || docker network create ${NETWORK_NAME}"
-                    sh "docker build -t node-app-deploy -f node-deploy.Dockerfile ."
-                    sh "docker rm -f app || true"
-                    sh "docker run -d --name app -p 3000:3000 node-app-deploy"
+                    sh 'docker build -t ${IMAGE_NAME}-deploy -f node-deploy.Dockerfile .'
+                    sh 'docker run -d -p 3000:3000 --name app ${IMAGE_NAME}-deploy'
                 }
             }
         }
 
         stage('Verify') {
             steps {
-                sh 'sleep 5'
-                sh "docker run --rm --network ${NETWORK_NAME} curlimages/curl curl -f http://app:3000"
+                sh 'sleep 5' // Czekamy na uruchomienie aplikacji
+                sh 'curl -f http://localhost:3000'
             }
         }
     }
 
     post {
         success {
-            echo '✅ Pipeline zakończony sukcesem.'
+            echo 'Pipeline zakończony sukcesem.'
         }
         failure {
-            echo '❌ Pipeline zakończony niepowodzeniem.'
+            echo 'Pipeline zakończony niepowodzeniem.'
         }
     }
 }
