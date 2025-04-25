@@ -1,11 +1,45 @@
 # Sprawozdanie 2 - Pipeline, Jenkins, izolacja etapów
 
-## Przygotowanie
-Utworzono instancje jenkinsa zgodnie z instrukcją instalacyjną. 
+##  Przygotowanie środowiska Jenkins (Docker-out-of-Docker)
 
-Utworzono nową sieć dockera Jenkins: 
+Zrealizowano lokalną instalację Jenkinsa z obsługą Docker-in-Docker (DIND) i interfejsem BlueOcean, umożliwiającą uruchamianie zadań CI/CD w kontenerach.
 
-![image](https://github.com/user-attachments/assets/0ac6a45b-b69f-4088-bf77-4d70b95ff1d8)
+Środowisko CI/CD zostało przygotowane z wykorzystaniem Dockera oraz pliku `docker-compose.yml`. Zamiast kontenera `dind`, wykorzystano bezpośrednie podłączenie do `docker.sock` hosta (Docker-out-of-Docker), co pozwala Jenkinsowi budować i uruchamiać kontenery Dockera.
+
+Zdefiniowano jeden serwis `jenkins`, który:
+- buduje obraz z lokalnego `Dockerfile.jenkins`,
+- mapuje port `8080`,
+- montuje wolumen `jenkins_home`,
+- montuje gniazdo `/var/run/docker.sock` do komunikacji z Dockerem hosta:
+
+```yaml
+version: "3.8"
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    user: root
+    ports:
+      - "8080:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+
+volumes:
+  jenkins_home:
+```
+### 2. Plik Dockerfile.jenkins
+Plik ten rozszerza obraz jenkins/jenkins, instaluje docker-ce-cli oraz pluginy do obsługi BlueOcean i pipeline'ów dockera (np. docker-workflow). Dzięki temu Jenkins może używać Dockera wewnątrz jobów.
+### 3. Uruchomienie środowiska
+
+    docker compose up -d
+    
+Po uruchomieniu Jenkins był dostępny pod adresem http://localhost:8080.
+
+---
 
 # Zadanie wstępne: uruchomienie
   - Utworzono projekt, który wyświetla `uname` w konsoli.
