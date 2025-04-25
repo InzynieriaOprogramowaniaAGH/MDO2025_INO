@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Wyszyść repo') {
+            steps {
+                cleanWs()
+            }
+        }
+        
+        stage('Zklonuj repo') {
+            steps {
+                git url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git', branch: 'main'
+            }
+        }
+        
+        stage('Checkout Brancha SN415513') {
+            steps {
+                sh 'git checkout SN415513'
+            }
+        }
+        
+        stage('usun obrazy dockerowe') {
+            steps {
+                sh 'docker rmi -f weechat-build weechat-test'
+            }
+        }
+        
+        stage('Wyszysc cache') {
+            steps {
+                sh 'docker builder prune -a -f'
+            }
+        }
+        
+        stage('Budowanie obrazu do budowania') {
+            steps {
+                dir('ITE/GCL08/SN415513/Sprawozdanie1/lab3') {
+                    sh 'docker build -t weechat-build -f Dockerfile.build .'
+                }
+            }
+        }
+        
+        stage('Budowanie obrazu do testowania') {
+            steps {
+                dir('ITE/GCL08/SN415513/Sprawozdanie1/lab3') {
+                    sh 'docker build -t weechat-test -f Dockerfile.test .'
+                }
+            }
+        }
+    }
+}

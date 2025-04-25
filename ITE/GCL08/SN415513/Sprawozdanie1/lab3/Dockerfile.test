@@ -3,3 +3,5 @@ FROM weechat-build
 WORKDIR /app/weechat/build
 
 RUN ctest -V
+
+RUN weechat -version

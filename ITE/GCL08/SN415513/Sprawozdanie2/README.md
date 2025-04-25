@@ -115,7 +115,7 @@ pipeline {
         stage('Budowanie obrazu do budowania') {
             steps {
                 dir('ITE/GCL08/SN415513/Sprawozdanie1/lab3') {
-                    sh 'docker build -f Dockerfile.build .'
+                    sh 'docker build -t weechat-build -f Dockerfile.build .'
                 }
             }
         }
@@ -123,14 +123,38 @@ pipeline {
         stage('Budowanie obrazu do testowania') {
             steps {
                 dir('ITE/GCL08/SN415513/Sprawozdanie1/lab3') {
-                    sh 'docker build -f Dockerfile.test .'
+                    sh 'docker build -t weechat-test -f Dockerfile.test .'
                 }
             }
         }
     }
 }
 ```
+## Budowanie obrazu
 ![](lab5/12.png)
 
-### Budowanie obrazu
-![](lab5/13.png)
+## Końcowy sukces
+![](lab5/14.png)
+
+## Deploy
+
+## Pipeline from SCM
+![](lab5/15.png)
+
+## Jenkinsfile
+
+Jenkinsfile - treść taka sama jak powyżej. 
+Ścieżka: 'ITE/GCL08/SN415513/Sprawozdanie2/Jenkinsfile'
+
+## Dokcerfile test
+
+Aktualizacja o wypisanie wersji
+```
+FROM weechat-build
+
+WORKDIR /app/weechat/build
+
+RUN ctest -V
+
+RUN weechat -version
+```
