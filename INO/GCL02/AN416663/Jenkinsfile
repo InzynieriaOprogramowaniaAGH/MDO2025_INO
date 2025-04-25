@@ -43,37 +43,17 @@ pipeline {
             }
         }
 
-// stage('Deploy') {
-//     steps {
-//         dir("${WORKDIR}") {
-//             script {
-//                 withEnv(["DEPLOY_IMAGE=xz-deploy"]) {
-//                     sh 'docker build -t $DEPLOY_IMAGE -f ../../../../Dockerfile.deploy .'
-//                     sh 'docker run -d --name xz-deploy $DEPLOY_IMAGE tail -f /dev/null'
-//                     sh 'docker cp artifacts/xz.tar.gz xz-deploy:/tmp/xz.tar.gz'
-//                     sh 'docker cp deploy.c xz-deploy:/app/deploy.c'
-//                     sh 'docker exec xz-deploy tar -xzf /tmp/xz.tar.gz -C /tmp'
-//                     sh 'docker exec xz-deploy sh -c "cd /tmp/xz && gcc /app/deploy.c -llzma -o /app/xz-deploy-bin"'
-//                     sh 'mkdir -p deploy-out'
-//                     sh 'docker cp xz-deploy:/app/xz-deploy-bin ./deploy-out/xz-deploy-bin'
-//                     sh 'docker stop xz-deploy && docker rm xz-deploy'
-//                 }
-//             }
-//         }
-//     }
-// }
-
         stage('Print') {
             steps {
-                echo 'Pipelinee dla xz zakończony pomyślnie.'
+                echo 'Pipeline dla xz zakończony pomyślnie.'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'INO/GCL02/AN416663/pipeline/artifacts/xz.tar.gz'
-            archiveArtifacts artifacts: 'INO/GCL02/AN416663/pipeline/logs/xz_test.log'
+            archiveArtifacts artifacts: 'INO/GCL02/AN416663/pipeline/artifacts/xz.tar.gz', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'INO/GCL02/AN416663/pipeline/logs/xz_test.log', allowEmptyArchive: true
         }
     }
 }
