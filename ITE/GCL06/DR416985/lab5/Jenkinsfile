@@ -7,7 +7,6 @@ pipeline {
         IMAGE_TEST = 'node-test'
         IMAGE_DEPLOY = 'node-deploy'
         VERSION = "v${BUILD_NUMBER}"
-        IMAGE_TAG = "winterwollf/node-deploy:v${BUILD_NUMBER}"
     }
 
     stages {
@@ -58,7 +57,7 @@ pipeline {
             }
         }
 
-        // Usunięto etap 'Publish', ponieważ nie potrzebujesz artefaktów
+      
     }
 
     post {
