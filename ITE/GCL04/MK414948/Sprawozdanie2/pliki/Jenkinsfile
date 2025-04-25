@@ -54,7 +54,6 @@ pipeline {
         stage('Publish') {
             steps {
                 script {
-                    sh "docker network rm publish"
                     sh "docker network create publish || true"
 
                     // Uruchamiamy verdaccio
