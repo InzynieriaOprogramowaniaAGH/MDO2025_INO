@@ -43,26 +43,34 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                dir("${WORKDIR}") {
-                    script {
-                        def deployImage = docker.build('xz-deploy', '-f Dockerfile.deploy .')
-                        def cid = sh(script: "docker create xz-deploy", returnStdout: true).trim()
+       stage('Deploy') {
+    steps {
+        dir('INO/GCL02/JK414562/pipeline') {
+            script {
+                withEnv(["DEPLOY_IMAGE=xz-deploy"]) {
+                   
+                    sh 'docker build -t $DEPLOY_IMAGE -f Dockerfile.deploy .'
 
-                        sh "docker cp artifacts/xz.tar.gz ${cid}:/tmp/xz.tar.gz"
-                        sh "docker cp deploy.c ${cid}:/app/deploy.c"
-                        sh "docker start ${cid}"
+                    
+                    sh 'docker run -d --name xz-deploy $DEPLOY_IMAGE tail -f /dev/null'
 
-                        sh "docker exec ${cid} tar -xzf /tmp/xz.tar.gz -C /tmp"
-                        sh "docker exec ${cid} gcc /app/deploy.c -llzma -o /tmp/deploy_test"
-                        sh "docker exec ${cid} /tmp/deploy_test"
+                    
+                    sh 'docker cp artifacts/xz.tar.gz xz-deploy:/tmp/xz.tar.gz'
+                    sh 'docker cp deploy.c xz-deploy:/app/deploy.c'
 
-                        sh "docker rm -f ${cid}"
-                    }
+                  
+                    sh 'docker exec xz-deploy tar -xzf /tmp/xz.tar.gz -C /tmp'
+                    sh 'docker exec xz-deploy sh -c "cd /tmp/xz && gcc /app/deploy.c -llzma -o /app/xz-deploy-bin"'
+
+                    sh 'docker cp xz-deploy:/app/xz-deploy-bin ./deploy-out/xz-deploy-bin'
+
+                    sh 'docker stop xz-deploy && docker rm xz-deploy'
                 }
             }
         }
+    }
+}
+
 
         stage('Print') {
             steps {
