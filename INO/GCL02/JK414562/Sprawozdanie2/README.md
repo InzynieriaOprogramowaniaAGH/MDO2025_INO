@@ -38,6 +38,13 @@ Plik ten rozszerza obraz jenkins/jenkins, instaluje docker-ce-cli oraz pluginy d
     docker compose up -d
     
 Po uruchomieniu Jenkins był dostępny pod adresem http://localhost:8080.
+![image](https://github.com/user-attachments/assets/9ed62f8b-3874-42e3-a3b5-84ed9961a562)
+
+Hasło uzyskano z logów dockera poleceniem 
+
+    docker logs jk414562_jenkins_1
+
+Utworzono konto w interfejsie Jenkinsa i wybrano rekomendowaną paczkę pluginów.
 
 ---
 
