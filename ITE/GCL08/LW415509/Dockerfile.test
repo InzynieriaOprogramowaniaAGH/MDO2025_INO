@@ -1,2 +1,0 @@
-FROM react-app-build
-RUN npm test -- --watchAll=false --ci
