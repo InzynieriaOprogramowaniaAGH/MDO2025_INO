@@ -46,7 +46,6 @@ pipeline {
 
                     // Czyszczenie kontenera i sieci
                     sh "docker stop node"
-                    sh "docker container rm node"
                     sh 'docker network rm deploy'
                     sh 'docker rmi nodedeploy'
                 }
