@@ -1,8 +1,5 @@
-FROM node-app-build
+FROM node-app:latest
 
 WORKDIR /app
-
-COPY . .
-
-RUN npm run test
+CMD ["npm", "test"]
 
