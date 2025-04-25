@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // Ścieżka do katalogu roboczego z aplikacją (lab5)
         PROJECT_DIR = 'ITE/GCL06/DR416985/lab5'
         IMAGE_BUILD = 'node-build-image'
         IMAGE_TEST = 'node-test-image'
@@ -14,14 +13,12 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                // Klonowanie repozytorium z GitHub
                 git branch: 'DR416985', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
             }
         }
 
         stage('Clean') {
             steps {
-                // Usuwanie wszelkich starych kontenerów i obrazów Docker
                 sh '''
                     docker container ls -a -q | xargs -r docker rm -f
                     docker volume ls -q | xargs -r docker volume rm -f
@@ -35,7 +32,6 @@ pipeline {
         stage('Build') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    // Budowanie obrazu aplikacji
                     sh 'docker build -t ${IMAGE_BUILD} -f node-build.Dockerfile .'
                 }
             }
@@ -44,9 +40,7 @@ pipeline {
         stage('Test') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    // Budowanie obrazu do testów
                     sh 'docker build -t ${IMAGE_TEST} -f node-test.Dockerfile .'
-                    // Uruchamianie testów w kontenerze
                     sh 'docker run --rm ${IMAGE_TEST}'
                 }
             }
@@ -55,11 +49,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 dir("${PROJECT_DIR}") {
-                    // Budowanie obrazu do deployu
                     sh 'docker build -t ${IMAGE_DEPLOY} -f node-deploy.Dockerfile .'
-                    // Usuwanie kontenera, jeśli już istnieje
                     sh 'docker rm -f app || true'
-                    // Uruchamianie aplikacji w kontenerze
                     sh 'docker run -d -p 3000:3000 --name app ${IMAGE_DEPLOY}'
                 }
             }
@@ -67,9 +58,7 @@ pipeline {
 
         stage('Verify') {
             steps {
-                // Czekanie chwilę na uruchomienie aplikacji
                 sh 'sleep 5'
-                // Weryfikacja działania aplikacji
                 sh 'curl -f http://localhost:3000'
             }
         }
@@ -84,3 +73,4 @@ pipeline {
         }
     }
 }
+
