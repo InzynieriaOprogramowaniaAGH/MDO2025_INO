@@ -58,9 +58,10 @@ pipeline {
 
         stage('Verify') {
             steps {
-                sh 'sleep 10'  // Dłuższy czas oczekiwania na uruchomienie aplikacji
-                sh 'docker logs app'  // Sprawdzenie logów aplikacji w kontenerze
-                sh 'curl -f http://localhost:3000'  // Próba połączenia z aplikacją
+                sh 'sleep 15'  // Zwiększony czas oczekiwania na aplikację
+                sh 'docker logs app'  // Sprawdzanie logów aplikacji
+                sh 'docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" app'  // Pobranie adresu IP kontenera
+                sh 'curl -f http://$(docker inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" app):3000'  // Sprawdzanie dostępności aplikacji przez IP kontenera
             }
         }
     }
