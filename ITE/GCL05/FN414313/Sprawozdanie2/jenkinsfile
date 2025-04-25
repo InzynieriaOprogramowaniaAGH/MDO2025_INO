@@ -5,6 +5,7 @@ pipeline {
         REPO_URL = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
         BRANCH = 'FN414313' 
         DOCKERFILE_PATH = 'ITE/GCL05/FN414313/Sprawozdanie2/dockerfile'  
+        IMAGE = 'filnaw/express-app:latest'
     }
 
     stages {
@@ -83,8 +84,8 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-                    sh 'docker tag express-app $DOCKER_IMAGE'
-                    sh 'docker push $DOCKER_IMAGE'
+                    sh 'docker tag express-app $IMAGE'
+                    sh 'docker push $IMAGE'
                 }
             }
         }
