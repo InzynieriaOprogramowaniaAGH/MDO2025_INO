@@ -46,6 +46,25 @@ Hasło uzyskano z logów dockera poleceniem
 
 Utworzono konto w interfejsie Jenkinsa i wybrano rekomendowaną paczkę pluginów.
 
+### 4. Porównanie podejść: Docker-in-Docker vs Docker-out-of-Docker
+
+W projekcie zastosowano podejście **Docker-out-of-Docker (DooD)**, czyli Jenkins korzysta bezpośrednio z Dockera hosta przez `docker.sock`. Nie używano osobnego demona Dockera (DIND). Poniżej znajduje się porównanie obu podejść:
+
+| Cecha                    | Docker-in-Docker (DIND)                            | Docker-out-of-Docker (DooD)                         |
+|-------------------------|----------------------------------------------------|-----------------------------------------------------|
+| Uruchamianie demona     | Wymaga własnego Dockera w kontenerze              | Wykorzystuje Dockera hosta przez `docker.sock`     |
+| Izolacja                | Lepsza (oddzielny daemon)                         | Gorsza (dzieli środowisko hosta)                   |
+| Wydajność               | Wolniejszy start (uruchamianie demona)            | Szybszy (używa gotowego Dockera hosta)             |
+| Debugowanie             | Trudniejsze (brak dostępu do hosta)               | Łatwiejsze (można użyć `docker ps`, `logs` hosta)  |
+| Bezpieczeństwo          | Bezpieczniejszy (brak dostępu do hosta)           | Mniej bezpieczny (pełen dostęp do hostowego Dockera) |
+
+**Uzasadnienie wyboru**:  
+Wybrano podejście DooD ze względu na:
+- szybszą konfigurację,
+- prostsze debugowanie (`docker ps`, `logs`, `exec` z hosta),
+- brak potrzeby pełnej izolacji build/test od hosta.
+
+
 ---
 
 # Zadanie wstępne: uruchomienie
@@ -138,13 +157,34 @@ Pipeline został podzielony na pięć głównych etapów:
 
 ### 5. Publish
 - Artefakty `xz.tar.gz` i `xz_test.log` dołączone do rezultatów pipeline'u w Jenkinsie.
-- Gotowe do pobrania lub dalszej redystrybucji.
+#### Wersjonowanie artefaktu
+
+Artefakt `xz.tar.gz` jest automatycznie wersjonowany przez Jenkinsa – jego nazwa zawiera numer buildu, np. `xz-23.tar.gz`, `xz-24.tar.gz` itd.  
+Jest to możliwe dzięki użyciu zmiennej środowiskowej `${BUILD_NUMBER}` w Jenkinsfile:
+
+```groovy
+sh "docker cp ${cid}:/app/xz.tar.gz artifacts/xz-${BUILD_NUMBER}.tar.gz"
+```
+  ### Uzasadnienie formy publikacji
+
+Zdecydowano się na publikację artefaktów w postaci archiwum `xz.tar.gz` oraz logów testów `xz_test.log`, ponieważ:
+
+- są to **przenośne i lekkie** pliki, które można pobrać bezpośrednio z poziomu Jenkinsa,
+- `xz.tar.gz` zawiera w pełni zbudowaną i gotową do użycia bibliotekę XZ, dzięki czemu może być wykorzystany w innych kontenerach, systemach lub przez użytkowników,
+- format `.tar.gz` jest **standardem w środowiskach Linuxowych** i nie wymaga instalacji dodatkowych menedżerów pakietów (jak .deb czy .rpm),
+- umożliwia pełną kontrolę nad zawartością (możliwość rozpakowania i manualnego wdrożenia),
+- log testów jest przydatny do analizy regresji i historycznego śledzenia błędów.
+
+Nie publikowano kontenera jako artefaktu, ponieważ pipeline buduje oddzielne kontenery tylko do etapów build/test/deploy – **deploy kontener nie jest docelowym środowiskiem produkcyjnym**, a jedynie sandboxem testowym. Artefakt `.tar.gz` jest zatem bardziej uniwersalny w użyciu.
+
+Każdy artefakt jest wersjonowany pośrednio przez numer buildu Jenkinsa (np. `#23`) oraz można go zidentyfikować dzięki zachowaniu ścieżki builda i logów w Jenkinsie.
+
 
 ---
 Pełna treść skryptu:
     
     pipeline {
-    agent any
+      agent any
 
     environment {
         WORKDIR = "INO/GCL02/JK414562/pipeline"
@@ -164,11 +204,10 @@ Pełna treść skryptu:
             steps {
                 dir("${WORKDIR}") {
                     script {
-                        // buildujemy obraz
                         docker.build('xz-build', '-f Dockerfile.build .')
                         sh 'mkdir -p artifacts'
                         def cid = sh(script: "docker create xz-build", returnStdout: true).trim()
-                        sh "docker cp ${cid}:/app/xz.tar.gz artifacts/xz.tar.gz"
+                        sh "docker cp ${cid}:/app/xz.tar.gz artifacts/xz-${BUILD_NUMBER}.tar.gz"
                         sh "docker rm ${cid}"
                     }
                 }
@@ -189,19 +228,41 @@ Pełna treść skryptu:
             }
         }
 
+        stage('Deploy') {
+            steps {
+                dir("${WORKDIR}") {
+                    script {
+                        def deployImage = docker.build('xz-deploy', '-f Dockerfile.deploy .')
+                        def cid = sh(script: "docker create xz-deploy", returnStdout: true).trim()
+
+                        sh "docker cp artifacts/xz.tar.gz ${cid}:/tmp/xz.tar.gz"
+                        sh "docker cp deploy.c ${cid}:/app/deploy.c"
+                        sh "docker start ${cid}"
+
+                        sh "docker exec ${cid} tar -xzf /tmp/xz.tar.gz -C /tmp"
+                        sh "docker exec ${cid} gcc /app/deploy.c -llzma -o /tmp/deploy_test"
+                        sh "docker exec ${cid} /tmp/deploy_test"
+
+                        sh "docker rm -f ${cid}"
+                    }
+                }
+            }
+        }
+
         stage('Print') {
             steps {
                 echo '✅ Pipeline dla xz zakończony pomyślnie.'
             }
         }
     }
+
     post {
-    always {
-        archiveArtifacts artifacts: 'INO/GCL02/JK414562/pipeline/artifacts/xz.tar.gz'
-        archiveArtifacts artifacts: 'INO/GCL02/JK414562/pipeline/logs/xz_test.log'
+        always {
+            archiveArtifacts artifacts: 'INO/GCL02/JK414562/pipeline/artifacts/xz.tar.gz'
+            archiveArtifacts artifacts: 'INO/GCL02/JK414562/pipeline/logs/xz_test.log'
+        }
     }
-      }
-      }
+    }
 
 ### Z powodzeniem udało się wykonać cały pipeline.[Wydruk z konsoli](console_output.txt)
 ### Zrzut ekranu powodzenia z uzyskanymi artefaktami:
@@ -244,6 +305,24 @@ Weryfikacja zawartości pakietu:
 
 ![image](https://github.com/user-attachments/assets/a716ad79-cce0-44de-a973-8ecc698062e3)
 
+## Odporność i utrzymywalność rozwiązania (Maintainability)
+
+W celu zapewnienia łatwości utrzymania oraz odporności rozwiązania na awarie, wdrożono następujące mechanizmy i dobre praktyki:
+
+- **Podział na moduły**: każdy etap pipeline'a jest oddzielnym krokiem (clone, build, test, deploy, publish), z własnymi Dockerfile’ami (`Dockerfile.build`, `Dockerfile.test`, `Dockerfile.deploy`), co umożliwia niezależny rozwój i debugowanie każdego z nich.
+- **Odporność na błędy i awarie**:
+  - użyto bloku `post { always { ... } }`, aby zapewnić archiwizację artefaktów niezależnie od powodzenia builda,
+  - logi testowe zapisywane są do osobnego pliku (`xz_test.log`), co pozwala na analizę w razie niepowodzenia,
+  - w test-entrypoint możesz zastosować `|| true`, aby zapobiec twardemu zakończeniu kontenera przy błędach (jeśli tego jeszcze nie ma – mogę podpowiedzieć).
+- **Możliwość powtórnego uruchamiania pipeline'u**:
+  - pipeline został przetestowany wielokrotnie – działa niezawodnie przy ponownych uruchomieniach,
+  - na początku każdego builda wykonywane jest czyszczenie (`rm -rf xz`), aby uniknąć cacheowania repozytorium,
+  - Docker obrazy są budowane od zera, bez użycia cache.
+- **Przyjazność dla maintainerów**:
+  - cały proces opisano szczegółowo w sprawozdaniu, a pliki Dockerfile i Jenkinsfile są dołączone w kopiowalnej formie,
+  - struktura projektu jest zgodna z dobrymi praktykami DevOps – artefakty w `artifacts/`, logi w `logs/`, osobne katalogi.
+
+Dzięki temu pipeline jest nie tylko powtarzalny, ale i łatwy do utrzymania, rozszerzenia oraz debugowania.
 
 
 
