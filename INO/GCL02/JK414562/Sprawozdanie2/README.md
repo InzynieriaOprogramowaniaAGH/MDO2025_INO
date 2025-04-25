@@ -4,6 +4,7 @@
 Utworzono instancje jenkinsa zgodnie z instrukcją instalacyjną. 
 
 Utworzono nową sieć dockera Jenkins: 
+
 ![image](https://github.com/user-attachments/assets/0ac6a45b-b69f-4088-bf77-4d70b95ff1d8)
 
 # Kompletna Konfiguracja Pipeline CI/CD – XZ Utils
@@ -12,7 +13,7 @@ Projekt realizuje pełny cykl Continuous Integration / Continuous Deployment (CI
 
 ---
 
-## 🧩 Struktura Pipeline
+##  Struktura Pipeline
 
 Pipeline został podzielony na pięć głównych etapów:
 
@@ -116,7 +117,7 @@ Pełna treść skryptu:
 
 ![image](https://github.com/user-attachments/assets/146a3fff-c8ca-47be-8e54-bf7c53c9a10f)
 
-### 📦 Pobranie artefaktu `xz.tar.gz` z kontenera Jenkins
+### Pobranie artefaktu `xz.tar.gz` z kontenera Jenkins
 
 Udało się wejść do kontenera `jk414562_jenkins_1` poleceniem:
 
@@ -144,11 +145,14 @@ Po sprawdzeniu, że plik nie pojawił się w oczekiwanej lokalizacji, zlokalizow
 
 Został skopiowany komendą:
 
-      sudo cp /var/lib/docker/volumes/jk414562_jenkins_home/_data/workspace/zad/INO/GCL02/JK414562/pipeline/artifacts/xz.tar.gz ~/MDO2025_INO/INO/GCL02/JK414562/Sprawozdanie2/
+    sudo cp /var/lib/docker/volumes/jk414562_jenkins_home/_data/workspace/zad/INO/GCL02/JK414562/pipeline/artifacts/xz.tar.gz ~/MDO2025_INO/INO/GCL02/JK414562/Sprawozdanie2/
 
 Weryfikacja zawartości pakietu:
   
-                                  tar -tzf xz.tar.gz
+    tar -tzf xz.tar.gz
+
+![image](https://github.com/user-attachments/assets/a716ad79-cce0-44de-a973-8ecc698062e3)
+
 
 
 
