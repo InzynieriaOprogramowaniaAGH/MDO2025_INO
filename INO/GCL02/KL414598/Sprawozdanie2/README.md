@@ -61,6 +61,8 @@ Kontener Jenkinsa został uruchomiony na podstawie wcześniej zbudowanego obrazu
 ### Dostęp do interfejsu webowego
 Z poziomu przeglądarki na hoście maszyny wirtualnej odwiedzono interfejs Jenkinsa pod adresem http://localhost:8080/
 W celu pierwszego logowania, hasło jednorazowe zostało uzyskane z logów kontenera:
+![hasło](https://github.com/user-attachments/assets/dcc42ca1-38a2-4d1d-8cab-b01717379503)
+
 ![6](https://github.com/user-attachments/assets/8c21a6d8-757d-4e23-9fde-d95c1007dec7)
 
 # Projekt: wyświetlenie informacji o systemie
@@ -94,8 +96,11 @@ Koniec loga potwierdzający działanie pipeline'u:
 - [Pełna treść wydruku z konsoli](log.txt)
 - [Pełna treść wydruku z konsoli po powtórnym uruchomieniu](log.txt)
 
-
 # Kompletny Pipeline z wykorzystaniem xz
+
+Diagram UML(wygenerowany przez chatGPT) przedstawiający działanie pipeliniu: 
+![uml](https://github.com/user-attachments/assets/2273e2e7-1cef-45c2-a9dd-ffc97c2730d9)
+
 
 1. Clone – Przygotowanie środowiska
 Klonowanie repozytorium z kodem xz oraz plików pomocniczych:
@@ -138,7 +143,6 @@ pipeline {
             steps {
                 dir("${WORKDIR}") {
                     script {
-                        // buildujemy obraz
                         docker.build('xz-build', '-f Dockerfile.build .')
                         sh 'mkdir -p artifacts'
                         def cid = sh(script: "docker create xz-build", returnStdout: true).trim()
@@ -163,6 +167,17 @@ pipeline {
             }
         }
 
+        stage('Deploy') {
+            steps {
+                dir("${WORKDIR}") {
+                    script {
+                        echo "Uruchamiam aplikację z obrazu xz-build..."
+                        sh "docker run -d --rm --name xz-deploy xz-build"
+                    }
+                }
+            }
+        }
+
         stage('Print') {
             steps {
                 echo 'Pipeline dla xz zakończony pomyślnie.'
@@ -170,13 +185,14 @@ pipeline {
         }
     }
 
-post {
-    always {
-        archiveArtifacts artifacts: 'INO/GCL02/KL414598/zadaniePipeline/pipeline/artifacts/xz.tar.gz'
-        archiveArtifacts artifacts: 'INO/GCL02/KL414598/zadaniePipeline/pipeline/logs/xz_test.log'
+    post {
+        always {
+            archiveArtifacts artifacts: 'INO/GCL02/KL414598/zadaniePipeline/pipeline/artifacts/xz.tar.gz'
+            archiveArtifacts artifacts: 'INO/GCL02/KL414598/zadaniePipeline/pipeline/logs/xz_test.log'
+        }
     }
 }
-}
+
 ```
 
 
