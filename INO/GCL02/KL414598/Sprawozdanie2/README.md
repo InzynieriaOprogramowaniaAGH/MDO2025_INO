@@ -121,7 +121,8 @@ Sukces wykonania
 
 Artefakt: artifacts/xz.tar.gz
 ![artefakty](https://github.com/user-attachments/assets/0084c2e0-c4e3-42b5-9fea-3c0e292c0048)
-
+- [Log testów](xz.tar.gz)
+  
 3. Test – Walidacja działania
 Budowa testowego obrazu na podstawie Dockerfile.test.
 
