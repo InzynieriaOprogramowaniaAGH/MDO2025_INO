@@ -3,13 +3,13 @@ pipeline {
 
     environment {
         PROJECT_DIR = 'ITE/GCL06/DR416985/lab5'
-        BUILD_IMAGE = 'node-build-image'
-        TEST_IMAGE = 'node-test-image'
-        DEPLOY_IMAGE = 'node-deploy-image'
+        BUILD_IMAGE = "node-build-image"
+        TEST_IMAGE = "node-test-image"
+        DEPLOY_IMAGE = "node-deploy-image"
     }
 
     stages {
-        stage('Pobieranie kodu') {
+        stage('Checkout') {
             steps {
                 git branch: 'DR416985', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
             }
@@ -17,7 +17,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir("${PROJECT_DIR}") {
+                dir(env.PROJECT_DIR) {
                     sh "docker build -t ${BUILD_IMAGE} -f node-build.Dockerfile ."
                 }
             }
@@ -25,7 +25,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                dir("${PROJECT_DIR}") {
+                dir(env.PROJECT_DIR) {
                     sh "docker build -t ${TEST_IMAGE} -f node-test.Dockerfile ."
                     sh "docker run --rm ${TEST_IMAGE}"
                 }
@@ -34,8 +34,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'docker network create my_network || true'
-                dir("${PROJECT_DIR}") {
+                sh "docker network create my_network || true"
+                dir(env.PROJECT_DIR) {
                     sh """
                         docker build -t ${DEPLOY_IMAGE} -f node-deploy.Dockerfile .
                         docker rm -f app || true
@@ -47,17 +47,17 @@ pipeline {
 
         stage('Sprawdzenie działania aplikacji') {
             steps {
-                sh 'docker run --rm --network my_network curlimages/curl:latest curl http://app:3000'
+                sh "docker run --rm --network my_network curlimages/curl curl http://app:3000"
             }
         }
     }
 
     post {
         success {
-            echo ' Pipeline zakończony sukcesem.'
+            echo 'Pipeline zakończony sukcesem.'
         }
         failure {
-            echo ' Pipeline zakończył się błędem.'
+            echo 'Pipeline zakończył się błędem.'
         }
     }
 }
