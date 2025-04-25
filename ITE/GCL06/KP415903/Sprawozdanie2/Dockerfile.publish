@@ -21,5 +21,3 @@ RUN echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc && \
 RUN npm publish --access public
 
 RUN rm -f ~/.npmrc
-
-# CMD ["npm", "publish", "--access", "public"]
