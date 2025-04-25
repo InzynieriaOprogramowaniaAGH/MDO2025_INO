@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     environment {
+        IMAGE_NAME = "node-app:latest"
         WORKDIR = 'ITE/GCL06/DR416985/lab5'
-        IMAGE_NAME = 'node-app'
+        NETWORK_NAME = 'my_network'
     }
 
     stages {
@@ -16,7 +17,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir("${WORKDIR}") {
-                    sh 'docker build -t ${IMAGE_NAME}:latest -f node-build.Dockerfile .'
+                    sh "docker build -t ${IMAGE_NAME} -f node-build.Dockerfile ."
                 }
             }
         }
@@ -24,8 +25,8 @@ pipeline {
         stage('Test') {
             steps {
                 dir("${WORKDIR}") {
-                    sh 'docker build -t ${IMAGE_NAME}-test -f node-test.Dockerfile .'
-                    sh 'docker run --rm ${IMAGE_NAME}-test'
+                    sh "docker build -t node-app-test -f node-test.Dockerfile ."
+                    sh "docker run --rm node-app-test"
                 }
             }
         }
@@ -33,9 +34,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 dir("${WORKDIR}") {
-                    sh 'docker build -t ${IMAGE_NAME}-deploy -f node-deploy.Dockerfile .'
-                    sh 'docker rm -f app || true'
-                    sh 'docker run -d -p 3000:3000 --name app ${IMAGE_NAME}-deploy'
+                    // Tworzymy sieć tylko jeśli nie istnieje
+                    sh "docker network inspect ${NETWORK_NAME} >/dev/null 2>&1 || docker network create ${NETWORK_NAME}"
+                    sh "docker build -t node-app-deploy -f node-deploy.Dockerfile ."
+                    sh "docker rm -f app || true"
+                    sh "docker run -d --name app --network ${NETWORK_NAME} -p 3000:3000 node-app-deploy"
                 }
             }
         }
@@ -43,7 +46,7 @@ pipeline {
         stage('Verify') {
             steps {
                 sh 'sleep 5'
-                sh 'curl -f http://localhost:3000'
+                sh "docker run --rm --network ${NETWORK_NAME} curlimages/curl curl -f http://app:3000"
             }
         }
     }
