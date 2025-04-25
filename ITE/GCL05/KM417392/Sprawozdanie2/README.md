@@ -27,7 +27,9 @@ docker run \
 ![obraz](KM/lab5/siec-jenkins.png)
 
 *Kontener działa jako "Docker daemon" dla Jenkinsa. Jest niezbędny, by Jenkins mógł wykonywać polecenia **docker** 
+
 3. Stworzono własny obraz z Jenkins +  BlueOcean
+
 a) plik Dockerfile:
 ```
 FROM jenkins/jenkins:2.492.3-jdk17
@@ -72,6 +74,7 @@ docker run \
 ![obraz](KM/lab5/run-ocean.png)
 
 5. Jenkins jest dostępny pod adresem: http://localhost:8080
+
 6. Po wejściu na podany adres, będzie wymagane hasło, które można uzyskać poniższą komendą:
 ```
 sudo docker exec ${CONTAINER_ID or CONTAINER_NAME} cat /var/jenkins_home/secrets/initialAdminPassword
@@ -164,7 +167,7 @@ pipeline {
 ## mruby - Jenkinsfile (z SCM)
 W ramach ćwiczeń wykorzystano repozytorium zawierające mruby – lekką implementację języka Ruby, przeznaczoną głównie do zastosowań wbudowanych i środowisk ograniczonych zasobowo. Projekt ten udostępnia minimalistyczne środowisko uruchomieniowe Ruby, umożliwiające wykonywanie skryptów bez potrzeby korzystania z pełnego interpretera Ruby.
 
-Pipeline zdefiniowany w pliku Jenkinsfile został w całości dostarczony z SCM (Source Code Management) – kod repozytorium jest pobierany bezpośrednio przez etap Checkout, co spełnia dobre praktyki DevOps i zapewnia spójność wersji w procesie CI/CD.
+Pipeline zdefiniowany w pliku Jenkinsfile został w całości dostarczony z SCM (Source Code Management) – kod repozytorium jest pobierany bezpośrednio przez etap Checkout.
 
 ### Problem interaktywnego shell'a
 Domyślnym trybem działania mruby jest interaktywny shell, który po uruchomieniu oczekuje na wejście użytkownika. W kontekście automatyzacji w Jenkinsie, uruchomienie kontenera w trybie interaktywnym skutkuje zawieszeniem się pipeline'u — ponieważ proces czeka na dane wejściowe, których nigdy nie otrzyma.
@@ -356,13 +359,19 @@ W celu realizacji tej funkcji przygotowano osobny obraz mruby-deploy, zbudowany 
 
 
 ### Krok Publish - wyjaśnienie 
-Pipeline zawiera zaimplementowany krok Publish w etapie Push image to Docker Hub. Obraz mruby-deploy zostaje oznaczony odpowiednim tagiem (kasiam23/mruby:latest) i wypychany do rejestru zewnętrznego Docker Hub.
+Pipeline zawiera zaimplementowany krok Publish w etapie Push image to Docker Hub. Obraz mruby-deploy zostaje oznaczony odpowiednim tagiem (kasiam23/mruby:latest) (wykorzystuje i wypychany do rejestru zewnętrznego Docker Hub.
 Publikacja obrazu jest warunkowa, co zwiększa niezawodność całego procesu — obraz zostaje opublikowany tylko wtedy, gdy wynik działania skryptu script.rb zawiera oczekiwaną frazę Hello world.
+Podczas wypychania obrazu stosowane jest wersjonowanie oparte o zmienną środowiskową BUILD_NUMBER, wbudowaną w Jenkinsa.
+Każdy pipeline generuje automatycznie unikalny numer buildu, który następnie jest używany jako tag wersji obrazu:
+```
+docker push ${IMAGE_NAME}:${IMAGE_VERSION}
+```
+Oprócz wersji specyficznej (:42, :43, itd.), obraz jest także tagowany jako latest, co pozwala łatwo odwoływać się do najnowszej wersji.
 
 ### Maintainability
 Pipeline został zaprojektowany w sposób umożliwiający łatwe utrzymanie i ponowne wykorzystanie:
 
-- Każdy etap jest modularny i niezależny – od czyszczenia, przez build i testy, aż po deploy i publish.
+- Każdy etap jest niezależny – od czyszczenia, przez build i testy, aż po deploy i publish.
 
 - Etapy build i deploy są rozdzielone, co umożliwia wymianę jednego bez wpływu na drugi.
 
@@ -376,4 +385,4 @@ Pipeline został zaprojektowany w sposób umożliwiający łatwe utrzymanie i po
 ### Podsumowanie
 Proces CI/CD został zaprojektowany tak, aby kończył się powstaniem w pełni wdrażalnego artefaktu — w tym przypadku obrazu Docker mruby-deploy, zawierającego gotową do uruchomienia binarkę mruby oraz odpowiednio skonfigurowany CMD, który umożliwia wykonanie skryptów dostarczanych jako wolumin.
 
-Obraz jest publikowany do zewnętrznego rejestru Docker Hub i może być uruchomiony na dowolnej maszynie z zainstalowanym Dockerem, bez potrzeby instalacji dodatkowych narzędzi (takich jak git, gcc, make czy środowisko CI). Nie opiera się na DIND ani konfiguracjach specyficznych dla Jenkinsa, co czyni go w pełni przenośnym i niezależnym środowiskiem wykonawczym.
+Obraz jest publikowany do zewnętrznego rejestru Docker Hub i może być uruchomiony na dowolnej maszynie z zainstalowanym Dockerem, bez potrzeby instalacji dodatkowych narzędzi (takich jak git, gcc, make czy środowisko CI). 
