@@ -1,4 +1,4 @@
-# Sprawozdanie z laboratoriów: Pipeline, Jenkins
+![image](https://github.com/user-attachments/assets/06dd7eaf-d676-4c9a-bef6-905ef73b83d3)# Sprawozdanie z laboratoriów: Pipeline, Jenkins
 ### Instancja Jenkinsa została utworzona zgodnie z oficjalną instrukcją instalacyjną.
 
 ### Utworzono dedykowaną sieć Docker o nazwie jenkins:
@@ -110,11 +110,10 @@ Dockerfile.build, Dockerfile.test, Dockerfile.deploy, deploy.c, test-entrypoint.
 
 
 2. Build – Kompilacja projektu
+   
 Budowa obrazu z Dockerfile.build, bazującego na debian:bookworm.
 
-Instalacja wymaganych zależności:
-
-autotools, gcc, gettext, make, automake, libtool, itp.
+Instalacja wymaganych zależności:autotools, gcc, gettext, make, automake, libtool, itp.
 
 Kompilacja narzędzia xz w kontenerze.
 
@@ -202,6 +201,12 @@ Sukces wykonania
 
 Utworzony Artefakt oraz log
 ![artefakty](https://github.com/user-attachments/assets/0084c2e0-c4e3-42b5-9fea-3c0e292c0048)
+
+W kontenerze odnaleziono utworzony artefakt oraz wypisano jego pełną ścieżkę:
+![path](https://github.com/user-attachments/assets/3a0de287-5317-4aaa-8b96-8d782ba2250d)
+oraz udało się go pobrać z kontenera:
+![pobra](https://github.com/user-attachments/assets/6c72d1af-09fa-475c-9ca6-16f94ec24ad4)
+
 - [xz.tar.gz](xz.tar.gz)
 - [Log testów](xz_test.log)
 
