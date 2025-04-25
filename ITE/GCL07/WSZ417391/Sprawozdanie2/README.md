@@ -286,7 +286,7 @@ Celem laboratorium było zaprojektowanie i wdrożenie pełnego procesu CI z wyko
 
 1. **Diagram UML**
 
-    sad
+    ![Zdjecie](./Lab_6/Zdjecia/CI_CD.png)
 
 2. **Kontener Builder**
 
@@ -439,6 +439,12 @@ Celem laboratorium było zaprojektowanie i wdrożenie pełnego procesu CI z wyko
     *Czy program powinien zostać „zapakowany” do jakiegoś przenośnego pliku-formatu*
         
     - Tak. W tym przypadku zdecydowano się na na zapakowanie programu do archiwum `zip`, które jest lekkie, niezależne od platformy idealny do szybkiej dystrybucji.
+
+9. **Weryfikacja diagramu UML z rzeczywistością**
+
+    Diagram końcowy różni się od początkowego dodaniem kontenera tymczasowego `temp-build-container`, który kopiuje odpowiednie pliki na hosta. Kontener tymczasowy był potrzebny, ponieważ obraz tworzony na podstawie Dockerfile.deploy nie mógł się zbudować z powodu braku wymaganych plików w lokalnym katalogu. Dodatkowo w kontenerze `deploy` kopiowane są dodatkowe foldery takie jak: `src` i `views`, które są niezbędne do poprawnego działania aplikacji.
+
+    ![Zdjecie](./Lab_6/Zdjecia/CI_CD(Dobre).png)
 
 ## Historia terminala znajduje się w pliku `history.txt`
 
@@ -601,6 +607,10 @@ W ostatnim kroku tworzony jest archiwum `.zip` zawierające zbudowaną aplikacj�
 
     #### 2) Drugie uruchomienie
 
+    ![Zdjecie](./Lab_7/Zdjecia/20.png)
+
     ![Zdjecie](./Lab_7/Zdjecia/18.png)
+
+    ![Zdjecie](./Lab_7/Zdjecia/19.png)
 
 ## Historia terminala znajduje się w pliku `history.txt`
