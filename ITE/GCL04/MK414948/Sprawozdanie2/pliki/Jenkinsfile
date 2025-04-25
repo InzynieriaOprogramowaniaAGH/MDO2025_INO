@@ -18,7 +18,7 @@ pipeline {
             steps {
                 dir('ITE/GCL04/MK414948/Sprawozdanie1/pliki/Dockerfiles'){
                     script{
-                        docker.build('nodebuild','-f Dockerfile.nodebld .')
+                        docker.build('nodebld','-f Dockerfile.nodebld .')
                     }
                 }
                
