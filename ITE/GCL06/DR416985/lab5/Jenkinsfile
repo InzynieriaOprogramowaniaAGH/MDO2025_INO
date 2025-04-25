@@ -1,26 +1,69 @@
 pipeline {
     agent any
 
+    environment {
+        PROJECT_DIR = 'ITE/GCL06/DR416985/lab5'
+        IMAGE_BUILD = 'node-builder'
+        IMAGE_TEST = 'node-test'
+        IMAGE_DEPLOY = 'node-deploy'
+        VERSION = "v${BUILD_NUMBER}"
+    }
+
     stages {
-        stage('Deploy') {
+        stage('Prepare') {
             steps {
-                script {
-                    // Usuwanie istniejącego kontenera o nazwie 'app', jeśli istnieje
-                    sh 'docker rm -f app || true'
-                    
-                    // Uruchomienie kontenera z aplikacją
-                    sh 'docker run -d -p 3000:3000 --name app node-deploy'
+                sh '''
+                    rm -rf node-js-dummy-test
+                    git clone https://github.com/MaciejSerafin/node-js-dummy-test.git
+                    cd node-js-dummy-test
+                '''
+            }
+        }
+
+        stage('Logs') {
+            steps {
+                dir('node-js-dummy-test') {
+                    sh 'touch build.log'
+                    sh 'touch test.log'
                 }
             }
         }
+
+        stage('Build') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    sh 'docker build -t ${IMAGE_BUILD} -f node-build.Dockerfile . | tee build.log'
+                }
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    sh 'docker build -t ${IMAGE_TEST} -f node-test.Dockerfile . | tee test.log'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'docker network create my_network || true'  // Tworzenie sieci Docker
+                dir("${PROJECT_DIR}") {
+                    sh 'docker build -t ${IMAGE_DEPLOY} -f node-deploy.Dockerfile .'
+                    sh 'docker rm -f app || true'
+                    sh 'docker run -d -p 3000:3000 --name app --network my_network ${IMAGE_DEPLOY}'
+                }
+                sleep(10)  // Krótszy czas oczekiwania na aplikację
+            }
+        }
+
+      
     }
 
     post {
-        success {
-            echo 'Kontener został uruchomiony pomyślnie.'
-        }
-        failure {
-            echo 'Wystąpił błąd podczas uruchamiania kontenera.'
+        always {
+            echo 'Cleaning up...'
+            sh 'docker rmi ${IMAGE_BUILD} ${IMAGE_TEST} ${IMAGE_DEPLOY} || true'
         }
     }
 }
