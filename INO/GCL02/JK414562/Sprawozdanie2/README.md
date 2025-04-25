@@ -7,6 +7,19 @@ Utworzono nową sieć dockera Jenkins:
 
 ![image](https://github.com/user-attachments/assets/0ac6a45b-b69f-4088-bf77-4d70b95ff1d8)
 
+# Zadanie wstępne: uruchomienie
+  - Utworzono projekt, który wyświetla `uname` w konsoli.
+     ![image](https://github.com/user-attachments/assets/c050c03f-64fe-424c-bee5-969c29331f2e)
+      
+  - Utworzono projekt, który wypisuje w konsoli czy godzina jest parzysta czy nie
+     ![image](https://github.com/user-attachments/assets/25588dd2-a3a0-4d14-8482-41a27eb54362)
+      
+  - Utworzono projekt, który ściąga obraz ubuntu dockera, poleceniem docker pull ubuntu.
+     ![image](https://github.com/user-attachments/assets/811b8684-fd8e-49fe-b1d7-33c770f51f00)
+
+
+
+
 # Kompletna Konfiguracja Pipeline CI/CD – XZ Utils
 
 Projekt realizuje pełny cykl Continuous Integration / Continuous Deployment (CI/CD) dla biblioteki [XZ Utils](https://github.com/tukaani-project/xz) w oparciu o Jenkinsa, Docker oraz podejście Docker-in-Docker (DIND).
