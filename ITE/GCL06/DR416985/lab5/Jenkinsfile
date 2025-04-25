@@ -4,7 +4,7 @@ pipeline {
     environment {
         APP_NAME = 'node-js-dummy-test'
         IMAGE_NAME = "node-app:${env.BUILD_NUMBER}"
-        WORKDIR = 'ITE/GCL06/DR416985/Jenkins/node-js-dummy-test'
+        WORKDIR = 'ITE/GCL06/DR416985/lab5'
     }
 
     stages {
@@ -43,7 +43,7 @@ pipeline {
 
         stage('Verify') {
             steps {
-                sh 'sleep 5' // Czekamy na uruchomienie aplikacji
+                sh 'sleep 5'
                 sh 'curl -f http://localhost:3000'
             }
         }
@@ -51,10 +51,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline zakończony sukcesem.'
+            echo '✅ Pipeline zakończony sukcesem.'
         }
         failure {
-            echo 'Pipeline zakończony niepowodzeniem.'
+            echo '❌ Pipeline zakończony niepowodzeniem.'
         }
     }
 }
