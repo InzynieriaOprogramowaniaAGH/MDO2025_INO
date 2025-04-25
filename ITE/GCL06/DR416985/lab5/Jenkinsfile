@@ -38,7 +38,7 @@ pipeline {
                     sh "docker network inspect ${NETWORK_NAME} >/dev/null 2>&1 || docker network create ${NETWORK_NAME}"
                     sh "docker build -t node-app-deploy -f node-deploy.Dockerfile ."
                     sh "docker rm -f app || true"
-                    sh "docker run -d --name app --network ${NETWORK_NAME} -p 3000:3000 node-app-deploy"
+                    sh "docker run -d --name app -p 3000:3000 node-app-deploy"
                 }
             }
         }
