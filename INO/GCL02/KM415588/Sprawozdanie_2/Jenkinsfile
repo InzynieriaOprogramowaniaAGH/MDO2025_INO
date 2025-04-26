@@ -9,7 +9,11 @@ pipeline {
     }
 
     stages {
-
+        stage('List Files') {
+            steps {
+                sh 'ls -R'
+            }
+        }
         stage('Clone repo przedmiotowe') {
             steps {
                 dir('repo-przedmiotowe') {
