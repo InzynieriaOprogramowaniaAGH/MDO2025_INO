@@ -15,8 +15,10 @@ pipeline {
     stage('Clone & Checkout') {
       steps {
         deleteDir()
+        dir('MDO2025_INO') {
         git url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git',
             branch: 'SK417309'
+        }
       }
     }
 
