@@ -1,4 +1,4 @@
-FROM redis_build
+FROM redis-build
 
 RUN dnf install -y tcl which
 
