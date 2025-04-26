@@ -1,10 +1,6 @@
-# Dockerfile.test
-FROM node:10
+FROM local-node-ci-app-build
 
 WORKDIR /app
 
-# Skopiuj aplikację z poprzedniego etapu (lub build context)
-COPY . .
-
-# Uruchomienie testów z generowaniem coverage
 RUN npm run cover
+RUN npm test
