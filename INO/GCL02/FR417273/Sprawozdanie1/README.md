@@ -185,7 +185,7 @@ CMD ["bash"]
 ## Wykorzystanie Sztucznej Intelginecji w ramach zajęć
 - W ramach zajęć korzystano z modelu `GPT-4o` w celach konsultacji związanych z teorią lub składnią.
 - Sztuczna inteligencja była zaopatrzona w ogólny kontekst zadań w celu poprawy jej odpowiedzi.
-- Odpowiedzi AI nie były wyryfikowane, ponieważ pytając o źródła, GPT by je zwyczajnie wymyślił :)
+- Odpowiedzi AI nie były weryfikowane, ponieważ pytając o źródła, GPT by je zwyczajnie wymyślił :)
 - Bot za każdym razem musiał wszystko wyjaśnić (w przypadku sugerowanych poleceń będą to m.i.n wszystkie opcje i działanie) oraz przedstawić swój tok 'myślenia'.
 - Nie kopiowano niczego od SI. Wszelkie polecenia jakie zwrócił bot były intepretowane i ręcznie pisane z uwagą na własne potrzeby i preferencje.
 
