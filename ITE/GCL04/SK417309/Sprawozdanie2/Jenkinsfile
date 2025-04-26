@@ -89,9 +89,9 @@ pipeline {
             docker run -d \
               --name myapp \
               --network myapp-net \
-              -e SPRING_DATA_URL=jdbc:mysql://mydb:3306/teacher_management_2 \
-              -e SPRING_DATA_USER=root \
-              -e SPRING_DATA_PASSWORD= \
+              -e SPRING_DATASOURCE_URL=jdbc:mysql://mydb:3306/teacher_management_2 \
+              -e SPRING_DATASOURCE_USER=root \
+              -e SPRING_DATASOURCE_PASSWORD= \
               -p ${APP_PORT}:${APP_PORT} \
               ${IMAGE_NAME}:prod-${BUILD_TAG}
 
