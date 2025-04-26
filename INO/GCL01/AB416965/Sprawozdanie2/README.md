@@ -283,3 +283,9 @@ Instalacja przebiegła bez problemu, dlatego uruchomiłem program.
 ![Uruchomienie programu](zrzuty5/zrzut_ekranu17.png)
 
 > [Archiwum `.rpm` na hoście](cjson.rpm)
+
+### **Wykorzystanie sztucznej inteligencji**
+
+Podczas zajęć wykorzystywałem ChatGpt 4o. Służył on głównie do szybszego odnalezienia się w środowisku `Jenkina` oraz do opracowania struktury `Jenkinsfile`. Odpowiedzi generowane przez SI były analizowane i zależnie od potrzeb modyfikowane. 
+
+Największą pomoc stanowiło analizowanie logów i generowanie potencjalnych rozwiązań na poprawę `Jenkinsfile` oraz `Dockerfile's`. 
