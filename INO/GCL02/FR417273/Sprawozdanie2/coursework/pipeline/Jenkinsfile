@@ -42,7 +42,7 @@ pipeline {
                         def testContainer = sh(script: "docker create cj-test:${VERSION}", returnStdout: true).trim()
 
                         // Copy test results & remove the container
-                        sh "docker cp ${testContainer}:/app/cJSON/logs/test_results.log logs/test_results.log"
+                        sh "docker cp ${testContainer}:/app/cJSON/logs/test_results.log logs/test_results-${VERSION}.log"
                         sh "docker rm ${testContainer}"
                     }
                 }
