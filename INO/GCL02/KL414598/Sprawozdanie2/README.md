@@ -223,10 +223,21 @@ W kontenerze odnaleziono utworzony artefakt oraz wypisano jego pełną ścieżk�
 ![path](https://github.com/user-attachments/assets/3a0de287-5317-4aaa-8b96-8d782ba2250d)
 
 oraz udało się go pobrać z kontenera:
+`docker cp sprawozdanie2-jenkins-1:/var/jenkins_home/workspace/ZADANIE/INO/GCL02/KL414598/zadaniePipeline/pipeline/artifacts/xz.tar.gz ./xz_1_26042025.tar.gz`
+![tar](https://github.com/user-attachments/assets/c145ea94-4fb1-4f6f-800d-c8310a5635ab)
 
-![pobra](https://github.com/user-attachments/assets/6c72d1af-09fa-475c-9ca6-16f94ec24ad4)
+## Opis wersjonowania i identyfikacji artefaktu
+Artefakt budowany w procesie CI/CD jest zapisywany w formacie xz_<numer_wersji>_<data>.tar.gz, na przykład xz_1_26042025.tar.gz.
+W tym schemacie 1 oznacza numer wersji builda, natomiast 26042025 to data utworzenia artefaktu w formacie DDMMRRRR. Takie nazewnictwo pozwala łatwo identyfikować kolejność oraz moment powstania danego artefaktu, bez konieczności sięgania do historii buildów. Przyjęty sposób wersjonowania umożliwia prostą kontrolę nad cyklem życia aplikacji i pozwala na szybkie odnalezienie odpowiedniej wersji przy wdrażaniu lub testowaniu.
+
 
 - [xz.tar.gz](xz.tar.gz)
 - [Log testów](xz_test.log)
+- 
+## Uzasadnienie wyboru formy artefaktu
+Jako artefakt wybrałem plik archiwum xz.tar.gz, ponieważ zawiera on w skompresowanej formie kompletną zbudowaną aplikację xz, gotową do wykorzystania lub wdrożenia w środowisku produkcyjnym lub testowym. Taki format jest uniwersalny i łatwy do przenoszenia pomiędzy systemami, a dodatkowo pozwala na szybkie rozpakowanie i bezpośrednie wykorzystanie plików binarnych bez konieczności ponownej kompilacji. Wybór archiwum .tar.gz wynika też z charakteru aplikacji xz, która jest lekkim narzędziem systemowym, niewymagającym pełnego kontenera do działania.
+
+
+
 
 
