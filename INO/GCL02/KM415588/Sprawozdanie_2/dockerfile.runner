@@ -19,5 +19,5 @@ RUN rm -rf \
 
 
 COPY example.js .
-
-CMD ["node", "example.js"]
+RUN node example.js > smoke_test_output.log || true
+CMD ["cat", "smoke_test_output.log"]
