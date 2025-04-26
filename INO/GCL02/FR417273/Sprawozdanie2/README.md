@@ -219,6 +219,10 @@
   - **Print**
     - Wydrukwowanie komunikatu potwierdzającego powodzenie pipeline'u.
 
+  - *Diagram UML pipeline'u*:
+
+    ![Diagram UMP](media/m15_diagram.svg)
+
   - Pełna treść skryptu `Jenkinsfile`:
     ```
     pipeline {
