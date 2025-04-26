@@ -423,3 +423,12 @@
   - *Zrzut ekranu potwierdzający powodzenie pipeline'u*:
  
     ![Zrzut ekranu potwierdzający powodzenie pipeline'u](media/m14_scm_2.png)
+
+- Poprawność działania uzyskanego artefaktu potwierdzono na maszynie wirtualnej będącej spoza pipeline'u.
+- Ze względu na to, że systemem na maszynie wirtualnej było `Ubuntu`, potrzebna była konwersja pakitu `.rpm` na pakiet `.deb`.
+- Konwersji dokonano oprogramowaniem `alien`.
+- Następnie używając `dpkg` zainstalowano pakiet.
+- Poprawność zweryfikowano poprzez uruchomienie kodu testowego.
+- *Zrzut ekranu wydruku konsoli:*
+
+  ![Zrzut erkanu wydruku konsoli](media/m16_ubuntu.png) 
