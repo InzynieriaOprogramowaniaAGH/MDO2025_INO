@@ -21,4 +21,8 @@ RUN git clone https://github.com/irssi/irssi.git
 
 WORKDIR /app/irssi
 
+RUN git describe --tags > VERSION.txt
+
 RUN meson setup build --prefix=/output && meson compile -C build && meson install -C build
+
+RUN cp VERSION.txt /output/VERSION.txt
