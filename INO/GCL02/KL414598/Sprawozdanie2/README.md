@@ -115,8 +115,8 @@ Koniec loga potwierdzający działanie pipeline'u:
 
 -Utworzony projekt typu pipeline w Jenkinsie
 
-### Diagram UML(wygenerowany przez chatGPT) przedstawiający działanie pipeliniu: 
-![uml](https://github.com/user-attachments/assets/2273e2e7-1cef-45c2-a9dd-ffc97c2730d9)
+### Diagram UML(wygenerowany przez stronę D2 Playground) przedstawiający działanie pipeliniu: 
+![d2](https://github.com/user-attachments/assets/1d7aacaa-c18d-4244-81df-243f8b356644)
 
 
 ## 1. Clone – Przygotowanie środowiska
