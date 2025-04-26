@@ -73,7 +73,7 @@ pipeline {
             docker run -d \
               --name mydb \
               --network myapp-net \
-              -e MYSQL_ROOT_PASSWORD=root \
+              -e MYSQL_ROOT_PASSWORD= \
               -e MYSQL_DATABASE=teacher_management_2 \
               -p 3306:3306 \
               mysql:8.0
