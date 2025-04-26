@@ -163,21 +163,21 @@ Ponownie uruchamiam pipeline:
 ![Trzecie uruchomienie pipeline](lab5ss/trzecie_uruchomienie_po_zmianie_pipline.png)
 Jak widać uruchomienie trwało ponad minutę, co świadczy o tym, że po dodaniu cleanup'u czas builda wrócił do oczekiwanego, potwierdza to, to że wcześniejszy wynik był wynikiem błędnego użycia cache Dockera.
 
-## ** Część związana z wybranym projektem**
+## **4.Część związana z wybranym projektem**
 
 #### Wybrana aplikacja
-Wybrałam aplikację dostępną pod adresem ![Next.js Boilerplate](https://github.com/gdwmw/Next.js-Boilerplate), ponieważ posiada gotową strukturę projektu, przykładowe komponenty, integrację z popularnymi bibliotekami (TailwindCSS, NextAuth), a także przykładowe testy jednostkowe.
+Wybrałam aplikację dostępną pod adresem [Next.js Boilerplate](https://github.com/gdwmw/Next.js-Boilerplate), ponieważ posiada gotową strukturę projektu, przykładowe komponenty, integrację z popularnymi bibliotekami (TailwindCSS, NextAuth), a także przykładowe testy jednostkowe.
 Umożlwia to realizację wszystkich etapów pipeline'u CI/CD.
 
 #### Licencja
-Projekt udostępniony jest na licencji ![MIT](https://github.com/gdwmw/Next.js-Boilerplate?tab=MIT-1-ov-file), co oznacza, że kod może być swobodnie kopiowany i modyfikowany.
+Projekt udostępniony jest na licencji [MIT](https://github.com/gdwmw/Next.js-Boilerplate?tab=MIT-1-ov-file), co oznacza, że kod może być swobodnie kopiowany i modyfikowany.
 
 
-## ** 1. Opis celu**
+## **4.1. Opis celu**
 Diagram aktywności:
 ![alt](lab6_7ss/CI_CD.png)
 
-## **2. Pipeline - składnia**
+## **4.2. Pipeline - składnia**
 
 ## Konfiguracja 
 
@@ -190,14 +190,14 @@ cd Next.js-Boilerplate
 ![alt](lab6_7ss/konfiguracja_srodowiska/sklonowanie_repo.png)
 
 Po zapoznaniu się z plikiem README.md projektu, przeszłam do utworzenia potrzebnego pliku konfiguracyjnego.
-Skopiowałam zawartość pliku .env.example do  pliku .env:
+Skopiowałam zawartość pliku `.env.example` do  pliku `.env`:
 
 ```bash
 cp .env.example .env
 ```
 ![alt](lab6_7ss/konfiguracja_srodowiska/plik_env.png)
 
-Po czym uzupełniłam swój plik .env odpowiednimi wartościami zmiennych.
+Po czym uzupełniłam swój plik `.env` odpowiednimi wartościami zmiennych.
 
 ```bash
 NEXTAUTH_URL=http://localhost:3000
@@ -237,7 +237,7 @@ npm run jest:test
 Po potwierdzeniu budowania sie aplikacji i przechodzenia testów, przeszłam do tworzenia obrazów Docker:
 
 ### Utworzenie obrazu Build
-Utworzyłam obraz Dockerfile.bldnext:
+Utworzyłam obraz `Dockerfile.bldnext`:
 
 ```bash
 FROM node:18 AS next-build
@@ -264,7 +264,7 @@ W środku kontenera uruchomiłam testy:
 ![alt](lab6_7ss/zbudowanie_kontenerow/interaktywne_uruchomienie_buildera_sprawdzenie_testow.png)
 
 ### Utworzenie kontenera do testowania
-Utworzyłam obraz Dockerfile.testnext:
+Utworzyłam obraz [Dockerfile.testnext](Dockerfile.testnext):
 ```bash
 FROM next-build AS next-tester
 RUN npm run jest:test
@@ -283,9 +283,9 @@ sudo docker run --rm next-tester
 
 Po potwierdzeniu poprawności działania kontenerów przeszłam do Jenkinsa. 
 W Jenkinsie utworzyłam nowy projekt i wybrałam 'Pipeline' i skupiłam się na tym, aby zautomatyzować budowanie i testowanie aplikacji.
-Projekt nazwałam "Build_i_Test".
+Projekt nazwałam `Build_i_Test`.
 
-Zmodyfikowany ![Dockerfile.bldnext](Dockerfile.bldnext):
+Zmodyfikowany [Dockerfile.bldnext](Dockerfile.bldnext):
 ```bash
 FROM node:18 AS next-build
 
@@ -376,7 +376,7 @@ pipeline {
 Pipeline działa z wykorzystaniem dedykowanego kontenera DIND, co zapewnia separacje procesu CI do buildu Dockera,
 pozwala na większą kontrolę i bezpieczeństwo, a także jest bardziej zbliżone do produkcyjnych rozwiązań CI/CD.
 
-## Kompletny pipeline
+## **4.3.Kompletny pipeline**
 Po sprawdzeniu czy 'podstawowy' pipeline z budowaniem i testami działa poprawnie, przeszłam do rozszerzenia go o krok deploy i publish.
 W tym celu utworzyłam nowy projekt o nazwie Boilerplate i przekopiowałam zawartość pipeline "Build_i_Test', to właśnie ten projekt będę rozszerzać.
 
@@ -394,7 +394,7 @@ Dzięki wersji slim obraz jest lżejszy i bezpieczniejszy, a także pokazane jes
 nie jest tym samym kontenerem, co kontener buildowy.
 
 
-Plik Dockerfile.deploynext:
+Plik `Dockerfile.deploynext`:
 ```bash
 FROM node:18-slim AS deploy
 
@@ -516,9 +516,9 @@ stage('Deploy App') {
     }
 }
 ```
-Po tej zmianie nadal otrzymywałam błąd failure, dlategi zaczęłam szukać problemu w innym miejscu. Okazało się, że w moim pliku `Dockerfile.deploynext` nie kopiowałam wszystkich niezbędnych plików do poprawnego uruchomienia aplikacji. Dodatkowo, z powodu braku pliku .env w kontenerze, aplikacja nie mogła odczytać wymaganych zmiennych środowiskowych. Aby rozwiązać ten problem, zmodyfikowałam plik `Dockerfile.deploynext`, zapewniając kopiowanie wszystkich potrzebnych plików oraz przekazanie odpowiednich zmiennych środowiskowych w trakcie budowania obrazu.
+Po tej zmianie nadal otrzymywałam błąd failure, dlategi zaczęłam szukać problemu w innym miejscu. Okazało się, że w moim pliku `Dockerfile.deploynext` nie kopiowałam wszystkich niezbędnych plików do poprawnego uruchomienia aplikacji. Dodatkowo, z powodu braku pliku `.env` w kontenerze, aplikacja nie mogła odczytać wymaganych zmiennych środowiskowych. Aby rozwiązać ten problem, zmodyfikowałam plik `Dockerfile.deploynext`, zapewniając kopiowanie wszystkich potrzebnych plików oraz przekazanie odpowiednich zmiennych środowiskowych w trakcie budowania obrazu.
 
-Zaktualizowana treść ![Dockerfile.deploynext](Dockerfile.deploynext):
+Zaktualizowana treść [Dockerfile.deploynext](Dockerfile.deploynext):
 ```bash
 FROM node:18-slim AS deploy
 
@@ -548,7 +548,7 @@ ENV PORT=3000
 
 ENTRYPOINT ["npm", "start"]
 ```
-Po tym wprowadziłam także zmiany w ![pipeline](Jenkinsfile):
+Po tym wprowadziłam także zmiany w [pipeline](Jenkinsfile):
 - dodanie stage'a Clean,
 - zmodyfikowanie stage'a Deploy App.
 
@@ -665,9 +665,9 @@ Do wersjonowania zastosowałam automatyczny schemat vYYYYMMDD.BUILD_NUMBER, któ
 
 #### Proces tworzenia artefaktu
 Artefakt tworzony jest w stage('Publish'). W tym etapie:
-1. Tworzony jest plik .tar z obrazem next-deploy za pomocą docker save.
+1. Tworzony jest plik `.tar` z obrazem `next-deploy` za pomocą docker save.
 2. Plik jest wersjonowany.
-3. Artefakt .tar zostaje zarchiwizowany w Jenkinsie jako część wyników danego pipeline'u - jest widoczny do pobrania.
+3. Artefakt `.tar` zostaje zarchiwizowany w Jenkinsie jako część wyników danego pipeline'u - jest widoczny do pobrania.
 
 #### Weryfikacja działania artefaktu
 W ramach stage 'Deploy App':
@@ -708,9 +708,9 @@ Wszystko wykonało się poprawnie:
 
 ![alt](lab6_7ss/pokazanie_ze_jest_artefakt.png)
 
-## **3. Automatyczne pobieranie pipeline - Pipeline script from SCM**
-W ranmach dobrych praktyk CI/CD, utworzyłam drugi projekt w Jenkinsie, korzystając z opcji Pipeline script from SCM.
-Dzięki temu jenkinsfile jest automatycznie pobierany z repozytorium Git, co umożliwia wersjonowanie konfiguracji pipeline'a
+## **4.4. Automatyczne pobieranie pipeline - Pipeline script from SCM**
+W ramach dobrych praktyk CI/CD, utworzyłam drugi projekt w Jenkinsie, korzystając z opcji Pipeline script from SCM.
+Dzięki temu Jenkinsfile jest automatycznie pobierany z repozytorium Git, co umożliwia wersjonowanie konfiguracji pipeline'a
 razem z kodem źródłowym projektu oraz ułatwia zarządzanie zmianami.
 
 W tym celu utworzyłam nowy projekt pipeline `Boilerplate-scm`:
@@ -723,7 +723,7 @@ a następnie odpowiednio go skonfigurowałam:
 ![alt](lab6_7ss/repositories_konfiguracja.png)
 ![alt](lab6_7ss/branches_script_path_konfiguracja.png)
 
-Treść ![Jenkinsfile.next-publish](Jenkinsfile.next-publish):
+Treść [Jenkinsfile.next-publish](Jenkinsfile.next-publish):
 ```bash
 pipeline {
     agent any
@@ -839,5 +839,5 @@ Logi z konsoli:
 Po pierwszym uruchomieniu - widoczna wersja artefaktu:
 ![alt](lab6_7ss/widoczny_artefakt_w_scm.png)
 
-Drugie uruchomienie - potwierdza poprawne działanie + widoczna jest kolejna wersha artefaktu:
+Drugie uruchomienie - potwierdza poprawne działanie + widoczna jest kolejna wersja artefaktu:
 ![alt](lab6_7ss/drugie_odpalenie_scm_artefakt_widoczny.png)
