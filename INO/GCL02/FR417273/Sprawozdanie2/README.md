@@ -197,7 +197,7 @@
 ### Kompletny Pipeline CI/CD
 - Utworzono kompletny pipeline realizujący cykl **CI/CD** dla bibliotecki `cJSON`, którego końcowym efektem jest plik instalacyjny `cjson.rpm`.
 -  Ze względu na to, że `cJSON` jest biblioteką programistyczną, a nie samodzielną aplikacją, zdecydowano się na nie tworzenie kontenera uruchomieniowego. Utworzenie kontenera dla biblioteki nie miałoby praktycznego sensu, ponieważ `cJSON` wymaga integracji z aplikacjami w czasie kompilacji lub działania. W związku z tym wybrano pakiet `.rpm` jako końcowy artefakt, umożliwiający jej instalację w systemach Linux.
--  W projekcie zastosowano wersjonowanie artefaktów i obrazów Dockera zgodnie z Semantic Versioning (1.0.0). Każdy build przypisuje wersję zarówno pakietowi `.rpm`, jak i obrazom Dockera (`cj-build`, `cj-test`, `cj-deploy`. 
+-  W projekcie zastosowano wersjonowanie artefaktów i obrazów Dockera zgodnie z Semantic Versioning (1.0.0). Każdy build przypisuje wersję zarówno pakietowi `.rpm`, jak i obrazom Dockera (`cj-build`, `cj-test`, `cj-deploy`, co pozwala na indetyfikacje pochodzenia artefaktów.
 - Pipeline dzieli się na pięć etapów:
   - **Clone**:
     - Klonowanie repozytorium przedmiotowego, w tym pliki: `Dockerfile.build`, `Dockerfile.test`, `Dockerfile.deploy` i `deploy.c`.
@@ -398,10 +398,10 @@
     }
     ```
     
-- Z powodzeniem udało się wykonać cały pipeline.
+- Z powodzeniem udało się wykonać cały pipeline. [Wydruk z konsoli](coursework/cJSON_console.txt).
 - *Zrzut ekranu powodzenia z uzyskanymi artefaktami*:
 
-  ![Zrzut ekranu powodzenia](media/m11_succ.png)
+  ![Zrzut ekranu powodzenia](media/m11_succ_2.png)
 - Udało się wejść do kontenera `jenkins-blueocen` poleceniem: `docker exec -it jenkins-blueocean bash`.
 - W kontenerze odnaleziono utworzony artefakt oraz odkryto jego pelną ścieżke poleceniem: `readlink -f cjson.rpm`.
   - *Zrzut erkanu ze ścieżką*:
@@ -415,7 +415,7 @@
 - Uzyskany artefkat `cjson.rpm` został znastępnie zapisany w repozytorium przedmiotowym: [cjson.rpm](coursework/cjson.rpm).
 - Utworzono plik `Jenkinsfile`, który został wrzucony do repozytorium przedmiotowego. Jego zawartość została zmodyfikowana o usunięcie kroku **Clone**: [Jenkinsfile](coursework/pipeline/Jenkinsfile).
 - Utworzono nowy **Pipeline**, który automatycznie klonuje repozytorium, odczytuje plik `Jenkinsfile` i wykonuje pozostałe kroki CI/CD.
-- Z powodzeniem udało się przejść przez cały Pipeline. [Wydruk z konsoli](coursework/cJSON_console.txt).
+- Z powodzeniem udało się przejść przez cały Pipeline. [Wydruk z konsoli](coursework/cjson_scm_console.txt).
   - *Zrzut ekranu potwierdzający powodzenie pipeline'u*:
  
-    ![Zrzut ekranu potwierdzający powodzenie pipeline'u](media/m14_scm.png)
+    ![Zrzut ekranu potwierdzający powodzenie pipeline'u](media/m14_scm_2.png)
