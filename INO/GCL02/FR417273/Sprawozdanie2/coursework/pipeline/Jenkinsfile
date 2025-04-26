@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         WORKDIR = "INO/GCL02/FR417273/Sprawozdanie2/coursework/pipeline"
+        VERSION = "1.0.0"
     }
 
     stages {
@@ -11,16 +12,16 @@ pipeline {
                 dir("${WORKDIR}") {
                     script {
                         // Build building image
-                        def buildImage = docker.build('cj-build', '-f Dockerfile.build .')
+                        def buildImage = docker.build('cj-build-${VERSION}', '-f Dockerfile.build .')
                         
                         // Create dir for artifacts
                         sh 'mkdir -p artifacts'
                         
                         // Run build container
-                        def buildContainer = sh(script: "docker create cj-build", returnStdout: true).trim()
+                        def buildContainer = sh(script: "docker create cj-build-${VERSION}", returnStdout: true).trim()
                         
                         // Copy artifacts & remove container
-                        sh "docker cp ${buildContainer}:/app/cJSON/build/output/cjson.rpm artifacts/cjson.rpm"
+                        sh "docker cp ${buildContainer}:/app/cJSON/build/output/cjson.rpm artifacts/cj-build-${VERSION}.rpm"
                         sh "docker rm ${buildContainer}"
                     }
                 }
@@ -32,13 +33,13 @@ pipeline {
                 dir("${WORKDIR}") {
                     script {
                         // Build test container
-                        def testImage = docker.build('cj-test', '-f Dockerfile.test .')
+                        def testImage = docker.build('cj-test-${VERSION}', '-f Dockerfile.test .')
                         
                         // Create logs dir
                         sh 'mkdir -p logs'
                         
                         // Run test container
-                        def testContainer = sh(script: "docker create cj-test", returnStdout: true).trim()
+                        def testContainer = sh(script: "docker create cj-test-${VERSION}", returnStdout: true).trim()
                         
                         // Copy test results & remove the container
                         sh "docker cp ${testContainer}:/app/cJSON/logs/test_results.log logs/test_results.log"
@@ -53,13 +54,13 @@ pipeline {
                 dir("${WORKDIR}") {
                     script {
                         // Build deploy container
-                        def deployImage = docker.build('cj-deploy', '-f Dockerfile.deploy .')
+                        def deployImage = docker.build('cj-deploy-${VERSION}', '-f Dockerfile.deploy .')
 
                         // Run container
-                        def deployContainer = sh(script: "docker create cj-deploy", returnStdout: true).trim()
+                        def deployContainer = sh(script: "docker create cj-deploy-${VERSION}", returnStdout: true).trim()
 
                         // Copy .rpm and deploy.c into the container and install
-                        sh "docker cp artifacts/cjson.rpm ${deployContainer}:/tmp/cjson.rpm"
+                        sh "docker cp artifacts/cjson-${VERSION}.rpm ${deployContainer}:/tmp/cjson.rpm"
                         sh "docker cp deploy.c ${deployContainer}:/app/deploy.c"
                         sh "docker start ${deployContainer}"
                         sh "docker exec ${deployContainer} dnf install -y /tmp/cjson.rpm"
@@ -77,14 +78,14 @@ pipeline {
 
         stage('Print') {
             steps {
-                echo 'Pipeline finished succesfully.'
+                echo 'Pipeline finished succesfully for version ${VERSION}.'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: "${WORKDIR}/artifacts/cjson.rpm", allowEmptyArchive: true
+            archiveArtifacts artifacts: "${WORKDIR}/artifacts/cjson-${VERSION}.rpm", allowEmptyArchive: true
             archiveArtifacts artifacts: "${WORKDIR}/logs/test_results.log", allowEmptyArchive: true
         }
     }
