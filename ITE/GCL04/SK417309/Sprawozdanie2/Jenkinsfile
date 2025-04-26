@@ -77,9 +77,14 @@ pipeline {
               -p ${APP_PORT}:${APP_PORT} \
               ${IMAGE_NAME}:prod-${BUILD_TAG}
 
-            docker exec myapp \
-              sh -c "sleep 10 && curl -f http://localhost:${APP_PORT}/health"
-              
+            for i in \$(seq 1 10); do
+              if curl -fs http://localhost:${APP_PORT}; then
+                echo "Application is up"
+                exit 0
+              fi
+              echo "Waiting for app to come up… (\$i/10)"
+              sleep 5
+            done
             echo "Application failed to start."
             docker logs myapp
             exit 1
