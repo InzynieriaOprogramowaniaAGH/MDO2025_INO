@@ -1,0 +1,6 @@
+1ab4c2e4dfdd9b9b8d61c9183a1db401  usr/bin/x86_64-linux-gnu-g++-12
+658ccc17a421a1c1dce4ff50d1882411  usr/lib/gcc/x86_64-linux-gnu/12/cc1plus
+1118e22c03455443a00758da15bd5cea  usr/lib/gcc/x86_64-linux-gnu/12/g++-mapper-server
+d34e924e0b649f39a4c876c1a4ec4e1f  usr/share/doc/gcc-12-base/C++/README.C++
+db82fbda11ff1b3fdbc7fe142caefa02  usr/share/doc/gcc-12-base/C++/changelog.gz
+4291dd1a5b6a016df80a70e823b6bbb4  usr/share/lintian/overrides/g++-12

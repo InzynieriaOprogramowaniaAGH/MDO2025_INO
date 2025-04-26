@@ -1,0 +1,7 @@
+FROM fedora:41
+RUN dnf -y update && \
+    dnf -y install gcc make openssl-devel libcurl-devel zlib-devel \
+    autoconf automake libtool git wget && \
+    dnf clean all
+WORKDIR /src
+CMD ["/bin/bash"]
