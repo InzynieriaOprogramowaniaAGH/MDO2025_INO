@@ -230,7 +230,7 @@ Odpalenie pipeline powinno zakończyć się sukcesem.
 
 Na tym etapie, mozemy sprawdzić czy nasze kontenery zostały skutecznie zapisane w DockerHub'ie. Z racji wykonania pipeline parę razy mozna zobaczyć kilka kontenerów.
 
-![hub](lab6/screenshots/6.png)
+![hub](lab6/screenshots/7.png)
 
 Kolejnym krokiem jest przetestowanie działania deploy'a. W tym celu wykonujemy podaną ponizej komendę, a następnie testujemy czy aplikacja odpala się w przewidywalny sposób.
 
