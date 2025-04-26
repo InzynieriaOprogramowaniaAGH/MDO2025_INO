@@ -20,8 +20,9 @@ pipeline {
                     dir("${env.PROJECT_DIR}") {
                         sh 'mkdir -p output'
                         sh 'docker build -f Dockerfile.build -t ${BUILDER_IMAGE} .'
-                        sh 'docker run --rm -v $(pwd)/output:/output ${BUILDER_IMAGE}'
-
+                        sh 'docker create --name irssi_temp_container ${BUILDER_IMAGE}'
+                        sh 'docker cp irssi_temp_container:/output/. ./output'
+                        sh 'docker rm irssi_temp_container'
                     }
                 }
             }
@@ -32,7 +33,6 @@ pipeline {
                 script {
                     dir("${env.PROJECT_DIR}") {
                         sh 'docker build -f Dockerfile.test -t ${TEST_IMAGE} .'
-                        
                     }
                 }
             }
@@ -46,26 +46,56 @@ pipeline {
             }
         }
 
-      stage('Budowanie obrazu - deploy') {
-        steps {
-            script {
-                dir("${env.PROJECT_DIR}") {
-                    sh 'docker build -f Dockerfile.deploy -t irssi-deploy .'
+        stage('Budowanie obrazu - deploy') {
+            steps {
+                script {
+                    dir("${env.PROJECT_DIR}") {
+                        sh 'docker build -f Dockerfile.deploy -t irssi-deploy .'
+                    }
+                }
+            }
+        }
+
+        stage('Uruchamianie irssi --version') {
+            steps {
+                script {
+                    sh 'docker run --rm irssi-deploy --version'
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                script {
+                    dir("${env.PROJECT_DIR}") {
+                        def version = readFile('output/VERSION.txt').trim()
+
+                        sh '''
+                            rm -rf package
+                            mkdir -p package/DEBIAN
+                            mkdir -p package/usr/local/bin
+                        '''
+
+                        sh 'cp output/bin/irssi package/usr/local/bin/irssi'
+
+                        writeFile file: "package/DEBIAN/control", text: """
+Package: irssi
+Version: ${version}
+Section: utils
+Priority: optional
+Architecture: amd64
+Maintainer: Your Name <your@email.com>
+Description: Lightweight IRC client
+"""
+
+                        sh "dpkg-deb --build package irssi-${version}.deb"
+
+                        archiveArtifacts artifacts: "irssi-${version}.deb", fingerprint: true
+                    }
                 }
             }
         }
     }
-
-    stage('Uruchamianie irssi --version') {
-        steps {
-            script {
-                sh 'docker run --rm irssi-deploy --version'
-            }
-        }
-    }
-
-    }
-
 
     post {
         always {
