@@ -443,8 +443,9 @@
   {
       // Create cjson object
       cJSON *root = cJSON_CreateObject();
-      if (root == NULL) {
-          fprintf(stderr, "FIaled to create cJSON object.\n");
+      if (root == NULL)
+      {
+          fprintf(stderr, "Failed to create cJSON object.\n");
           return -1;
       }
   
@@ -453,7 +454,8 @@
   
       // Convert cjson' print to char arrray
       char *json_string = cJSON_Print(root);
-      if (json_string == NULL) {
+      if (json_string == NULL)
+      {
           fprintf(stderr, "Failed to print cJSON.\n");
           cJSON_Delete(root);
           return -1;
@@ -469,3 +471,11 @@
       return 0;
   }
   ```
+
+  ## Wykorzystanie Sztucznej Intelginecji w ramach zajęć
+- W ramach zajęć korzystano z modelu `GPT-4o` w celach konsultacji związanych z teorią składnią oraz weryfikacji spełnienia założeń zadań.
+- Sztuczna inteligencja była zaopatrzona w ogólny kontekst poleceń oraz środowiska.
+- Odpowiedzi AI nie były weryfikowane, zapytany pytając o źródła, GPT by je zwyczajnie wymyślił :)
+- Bot za każdym razem musiał wszystko wyjaśnić (w przypadku sugerowanych poleceń będą to m.i.n wszystkie opcje i działanie) oraz przedstawić swój tok 'myślenia'.
+- Nie kopiowano niczego od SI. Wszelkie zwrócone polecenia były intepretowane i ręcznie pisane z uwagą na własne potrzeby i preferencje.
+
