@@ -150,3 +150,4 @@ Następnym zadanie było przygotowanie pipeline'u do wybranego projektu. Do tego
 * UML TO DO
 * Wybrałem odpowiedni kontener bazowy zawierający wszystkie potrzebne zależności do zbudowania aplikacji - eclipse-temurin. 
 * Wykonałem build wewnątrz wersjonowanego kontenera zdefiniowanego na podstawie `Dockerfile.build`. 
+* Następnie w kolejnym kontenerze zbudowanym za pomocą kolejnego `Dockerfile.test`, wykonałem testy, od razu przy budowaniu dzięki wykorzystaniu komendy `RUN mvn test -B`. Początkowo, aby odseparować te dwa kontenery, w obu klonowałem repozytorium mojej aplikacji, ale to rozwiązanie zastąpiłem później bazowaniem kontenera testowego na kontenerze buildowym.
