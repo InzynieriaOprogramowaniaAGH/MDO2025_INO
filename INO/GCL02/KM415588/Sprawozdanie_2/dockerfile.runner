@@ -17,14 +17,7 @@ RUN rm -rf \
     source \
     package-lock.json
 
-# Przenosimy się do katalogu pracy
-WORKDIR /app
 
-# Kopiujemy example.js
 COPY example.js .
 
-# Kopiujemy zbudowaną bibliotekę z chalk-pipe
-COPY --from=0 /chalk-pipe /chalk-pipe
-
-# Uruchamiamy smoke test
 CMD ["node", "example.js"]
