@@ -454,7 +454,7 @@
       // Convert cjson' print to char arrray
       char *json_string = cJSON_Print(root);
       if (json_string == NULL) {
-          fprintf(stderr, "FAiled to print cJSON.\n");
+          fprintf(stderr, "Failed to print cJSON.\n");
           cJSON_Delete(root);
           return -1;
       }
