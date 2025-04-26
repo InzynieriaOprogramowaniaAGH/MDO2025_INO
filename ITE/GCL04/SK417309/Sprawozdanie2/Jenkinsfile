@@ -27,7 +27,7 @@ pipeline {
       steps {
         dir(env.DOCKER_CONTEXT) {
           sh """
-            docker build \
+            docker build --no-cache \
               -f Dockerfile.build \
               -t ${IMAGE_NAME}:builder-${BUILD_TAG} \
               .
@@ -42,7 +42,7 @@ pipeline {
           sh """
             mkdir -p target/surefire-reports
 
-            docker build \
+            docker build --no-cache \
               -f Dockerfile.test \
               -t ${IMAGE_NAME}:tester-${BUILD_TAG} \
               .
@@ -78,7 +78,7 @@ pipeline {
               -p 3306:3306 \
               mysql:8.0
 
-            docker build \
+            docker build --no-cache \
               --build-arg BUILD_TAG=${BUILD_TAG} \
               -f Dockerfile.deploy \
               -t ${IMAGE_NAME}:prod-${BUILD_TAG} \
