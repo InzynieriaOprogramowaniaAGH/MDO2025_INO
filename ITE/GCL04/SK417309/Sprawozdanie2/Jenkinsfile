@@ -77,7 +77,6 @@ pipeline {
               -p ${APP_PORT}:${APP_PORT} \
               ${IMAGE_NAME}:prod-${BUILD_TAG}
 
-            # Retry-loop zamiast sleep
             for i in {1..5}; do
               if curl -f http://localhost:${APP_PORT}/; then
                 echo "Application is up!"
@@ -113,7 +112,7 @@ pipeline {
   post {
     cleanup {
       sh 'docker rm -f myapp || true'
-      
+      sh 'docker volume prune -f || true'
       sh """
         docker rmi -f ${IMAGE_NAME}:builder-${BUILD_TAG} || true
         docker rmi -f ${IMAGE_NAME}:tester-${BUILD_TAG} || true
