@@ -1,0 +1,89 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERFILE_PATH = 'INO/GCL02/EP414657/Sprawozdanie1/Dockerfile-zlib.build'
+        IMAGE_NAME = 'mybuilder:zlib'
+
+        TEST_DOCKERFILE_PATH = 'INO/GCL02/EP414657/Sprawozdanie1/Dockerfile-zlib.test'
+        TEST_IMAGE_NAME = 'mytester:zlib'
+
+        LOG_FILE = 'INO/GCL02/EP414657/Sprawozdanie2/test.log'
+        DEPLOY_LOG_FILE = 'INO/GCL02/EP414657/Sprawozdanie2/deploy_output.log'
+        OUTPUT_DIR = 'INO/GCL02/EP414657/Sprawozdanie2'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'EP414657', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def buildContext = env.DOCKERFILE_PATH.substring(0, env.DOCKERFILE_PATH.lastIndexOf('/'))
+                    sh """
+                        docker build -t ${IMAGE_NAME} -f ${DOCKERFILE_PATH} ${buildContext}
+                        docker tag ${IMAGE_NAME} zlib-build
+                    """
+                }
+            }
+        }
+
+        stage('Build Test and Run Tests') {
+            steps {
+                script {
+                    def testContext = env.TEST_DOCKERFILE_PATH.substring(0, env.TEST_DOCKERFILE_PATH.lastIndexOf('/'))
+                    sh """
+                        docker build -t ${TEST_IMAGE_NAME} -f ${TEST_DOCKERFILE_PATH} ${testContext}
+                        docker run --rm ${TEST_IMAGE_NAME} > ${LOG_FILE} 2>&1 || echo "Tests failed"
+                    """
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    sh """
+                        docker run --rm zlib-build sh -c "
+                            rm -rf /app/*.o /app/*.lo /app/*.a /app/*.so /app/test /app/Makefile /app/configure /app/README /app/ChangeLog /app/faq /app/doc /app/examples /app/*.c /app/*.h /app/CMakeLists.txt /app/Makefile.in /app/*.pdf /app/*.in
+                            rm -rf /app/build /app/trees /app/zlibConfig.cmake.in /app/*.sh
+                        "
+                    """
+
+                    sh """
+                        docker run --rm zlib-build ./example64 > ${DEPLOY_LOG_FILE} 2>&1 || echo "example64 failed"
+                    """
+                }
+            }
+        }
+        
+        stage('Publish') {
+    steps {
+        script {
+            def version = '1.0.0'
+            def taggedImage = "${IMAGE_NAME}-${version}"
+
+            sh "docker tag ${IMAGE_NAME} ${taggedImage}"
+
+            sh """
+                mkdir -p ${OUTPUT_DIR}
+                docker save ${taggedImage} -o ${OUTPUT_DIR}/zlib-runtime-${version}.tar
+            """
+
+            archiveArtifacts artifacts: "${OUTPUT_DIR}/zlib-runtime-${version}.tar", onlyIfSuccessful: true
+        }
+    }
+}
+
+        stage('Archive Logs') {
+            steps {
+                archiveArtifacts artifacts: "${LOG_FILE}", onlyIfSuccessful: false
+                archiveArtifacts artifacts: "${DEPLOY_LOG_FILE}", onlyIfSuccessful: false
+            }
+        }
+    }
+}
