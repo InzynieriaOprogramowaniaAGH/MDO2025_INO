@@ -100,7 +100,11 @@ pipeline {
 
   post {
     cleanup {
-      sh 'docker rm -f myapp || true'
+      sh '''
+      docker rm -f myapp || true
+      docker image rm -f ${IMAGE_NAME}:builder-${BUILD_TAG} || true
+      docker image rm -f ${IMAGE_NAME}:tester-${BUILD_TAG} || true
+      '''
     }
   }
 }
