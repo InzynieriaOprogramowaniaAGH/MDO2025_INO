@@ -176,4 +176,60 @@ Logujemy się na naszej stronie, oraz wykonujemy inicjalizację.
 
 ![log](lab5/12.png)
 
-Po udanej 
+Po udanej inicjalizacji znajdziemy się na głównej stronie Jenkins'a.
+
+![jenk](lab5/13.png)
+
+# Parzysta godzina
+
+Aby wykonać skrypt sprawdzający parzystość obecnej godziny, tworzymy nowy skrypt, a następnie umieszczamy w nim zamieszczony poniej kod wykonywalny.
+
+![script](lab5/14.png)
+
+Następnie wykonujemy kod. W moim przypadku wynik pojawia się jako error, gdy tak skrypt oznacza nieparzyste godziny.
+
+![odd](lab5/15.png)
+
+# pipeline
+
+Aby przejść do następnego kroku, nalezy najpierw stwozyc nowy pipeline. Następnie wybieramy w środku skrypt shell'owy i wklejamy znajudący się ponizej kod.
+
+![pip](lab5/16.png)
+
+Następnie odpalamy nasz pipeline, co utworzy nowy kontener, oraz sklonuje na niego nasze wybrane repozytorium.
+
+![workin](lab5/17.png)
+
+Po pobraniu repozytorium, projekt powinien się zbudować, oraz odpalić testy jednostkowe.
+
+![test](lab5/18.png)
+
+
+## lab 6/7
+
+Odpalamy jenkinsa z dodatkiem blueocean.
+
+![jenk](lab6/screenshots/1.png)
+
+Po przeprowadzonej inicjalizacji tworzymy nowy Pipeline, do którego zamieszczamy ponizszy plik Jenkinsfile, pozwala on na deploy naszej aplikacji.
+
+![12](lab6/screenshots/12.png)
+
+
+Tworzymy następujący plik DockerFile, odpowiada on za pobranie aplikację redis, oraz przygotowanie kontenera do jej odpalenia.
+
+![donk](lab6/screenshots/2.png)
+
+Zadaniem kolejnego pliku Dockerfile, jest pobranie aktualizacji, oraz skopiowanie odpowiednich plików, co pozwala na deploy aplikacji.
+
+![cop](lab6/screenshots/5.png)
+
+Odpalenie pipeline powinno zakończyć się sukcesem.
+
+![pip](lab6/screenshots/15.png)
+
+Na tym etapie, mozemy sprawdzić czy nasze kontenery zostały skutecznie zapisane w DockerHub'ie. Z racji wykonania pipeline parę razy mozna zobaczyć kilka kontenerów.
+
+Kolejnym krokiem jest przetestowanie działania deploy'a. W tym celu wykonujemy podaną ponizej komendę, a następnie testujemy czy aplikacja odpala się w przewidywalny sposób.
+
+![pull](lab6/screenshots/9.png)
