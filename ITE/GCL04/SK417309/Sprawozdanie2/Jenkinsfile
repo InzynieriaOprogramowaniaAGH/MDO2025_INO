@@ -64,6 +64,16 @@ pipeline {
       steps {
         dir(env.DOCKER_CONTEXT) {
           sh """
+            docker network create myapp-net || true
+
+            docker run -d \
+              --name mydb \
+              --network myapp-net \
+              -e MYSQL_ROOT_PASSWORD=root \
+              -e MYSQL_DATABASE=teacher_management_2 \
+              -p 3306:3306 \
+              mysql:8.0
+
             docker build \
               --build-arg BUILD_TAG=${BUILD_TAG} \
               -f Dockerfile.deploy \
@@ -74,6 +84,7 @@ pipeline {
 
             docker run -d \
               --name myapp \
+              --network myapp-net \
               -p ${APP_PORT}:${APP_PORT} \
               ${IMAGE_NAME}:prod-${BUILD_TAG}
 
