@@ -195,7 +195,9 @@
     - Wymagane są możliwości Dockera, których `agent { docker }` nie zapewnia.
    
 ### Kompletny Pipeline CI/CD
-- Utworzono kompletny pipeline realizujący cykl **CI/CD** dla bibliotecki `cJSON`.
+- Utworzono kompletny pipeline realizujący cykl **CI/CD** dla bibliotecki `cJSON`, którego końcowym efektem jest plik instalacyjny `cjson.rpm`.
+-  Ze względu na to, że `cJSON` jest biblioteką programistyczną, a nie samodzielną aplikacją, zdecydowano się na nie tworzenie kontenera uruchomieniowego. Utworzenie kontenera dla biblioteki nie miałoby praktycznego sensu, ponieważ `cJSON` wymaga integracji z aplikacjami w czasie kompilacji lub działania. W związku z tym wybrano pakiet `.rpm` jako końcowy artefakt, umożliwiający jej instalację w systemach Linux.
+-  W projekcie zastosowano wersjonowanie artefaktów i obrazów Dockera zgodnie z Semantic Versioning (1.0.0). Każdy build przypisuje wersję zarówno pakietowi `.rpm`, jak i obrazom Dockera (`cj-build`, `cj-test`, `cj-deploy`. 
 - Pipeline dzieli się na pięć etapów:
   - **Clone**:
     - Klonowanie repozytorium przedmiotowego, w tym pliki: `Dockerfile.build`, `Dockerfile.test`, `Dockerfile.deploy` i `deploy.c`.
@@ -217,37 +219,32 @@
   - **Print**
     - Wydrukwowanie komunikatu potwierdzającego powodzenie pipeline'u.
 
-  - Pełna treść skryptu:
+  - Pełna treść skryptu `Jenkinsfile`:
     ```
     pipeline {
         agent any
     
         environment {
             WORKDIR = "INO/GCL02/FR417273/Sprawozdanie2/coursework/pipeline"
+            VERSION = "1.0.0"
         }
     
         stages {
-            stage('Clone') {
-                steps {
-                    git branch: 'FR417273', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
-                }
-            }
-    
             stage('Build') {
                 steps {
                     dir("${WORKDIR}") {
                         script {
                             // Build building image
-                            def buildImage = docker.build('cj-build', '-f Dockerfile.build .')
-                            
+                            def buildImage = docker.build("cj-build:${VERSION}", '-f Dockerfile.build .')
+    
                             // Create dir for artifacts
                             sh 'mkdir -p artifacts'
-                            
+    
                             // Run build container
-                            def buildContainer = sh(script: "docker create cj-build", returnStdout: true).trim()
-                            
+                            def buildContainer = sh(script: "docker create cj-build:${VERSION}", returnStdout: true).trim()
+    
                             // Copy artifacts & remove container
-                            sh "docker cp ${buildContainer}:/app/cJSON/build/output/cjson.rpm artifacts/cjson.rpm"
+                            sh "docker cp ${buildContainer}:/app/cJSON/build/output/cjson.rpm artifacts/cjson-${VERSION}.rpm"
                             sh "docker rm ${buildContainer}"
                         }
                     }
@@ -259,16 +256,16 @@
                     dir("${WORKDIR}") {
                         script {
                             // Build test container
-                            def testImage = docker.build('cj-test', '-f Dockerfile.test .')
-                            
+                            def testImage = docker.build("cj-test:${VERSION}", '-f Dockerfile.test .')
+    
                             // Create logs dir
                             sh 'mkdir -p logs'
-                            
+    
                             // Run test container
-                            def testContainer = sh(script: "docker create cj-test", returnStdout: true).trim()
-                            
+                            def testContainer = sh(script: "docker create cj-test:${VERSION}", returnStdout: true).trim()
+    
                             // Copy test results & remove the container
-                            sh "docker cp ${testContainer}:/app/cJSON/logs/test_results.log logs/test_results.log"
+                        sh "docker cp ${testContainer}:/app/cJSON/logs/test_results.log logs/test_results-${VERSION}.log"
                             sh "docker rm ${testContainer}"
                         }
                     }
@@ -280,13 +277,13 @@
                     dir("${WORKDIR}") {
                         script {
                             // Build deploy container
-                            def deployImage = docker.build('cj-deploy', '-f Dockerfile.deploy .')
+                            def deployImage = docker.build("cj-deploy:${VERSION}", '-f Dockerfile.deploy .')
     
                             // Run container
-                            def deployContainer = sh(script: "docker create cj-deploy", returnStdout: true).trim()
+                            def deployContainer = sh(script: "docker create cj-deploy:${VERSION}", returnStdout: true).trim()
     
                             // Copy .rpm and deploy.c into the container and install
-                            sh "docker cp artifacts/cjson.rpm ${deployContainer}:/tmp/cjson.rpm"
+                            sh "docker cp artifacts/cjson-${VERSION}.rpm ${deployContainer}:/tmp/cjson.rpm"
                             sh "docker cp deploy.c ${deployContainer}:/app/deploy.c"
                             sh "docker start ${deployContainer}"
                             sh "docker exec ${deployContainer} dnf install -y /tmp/cjson.rpm"
@@ -304,21 +301,104 @@
     
             stage('Print') {
                 steps {
-                    echo 'Pipeline finished succesfully.'
+                    echo "Pipeline finished successfully for version ${VERSION}."
                 }
             }
         }
     
         post {
             always {
-                archiveArtifacts artifacts: "${WORKDIR}/artifacts/cjson.rpm", allowEmptyArchive: true
-                archiveArtifacts artifacts: "${WORKDIR}/logs/test_results.log", allowEmptyArchive: true
+                archiveArtifacts artifacts: "${WORKDIR}/artifacts/cjson-${VERSION}.rpm", allowEmptyArchive: true
+                archiveArtifacts artifacts: "${WORKDIR}/logs/test_results-${VERSION}.log", allowEmptyArchive: true
             }
         }
     }
-
     ```
-- Z powodzeniem udało się wykonać cały pipeline. [Wydruk z konsoli](coursework/cJSON_console.txt).
+    
+    Skrypt `Dockerfile.build`:
+    ```
+    FROM ubuntu:22.04
+    
+    WORKDIR /app
+    
+    # Install compilation tools and ruby
+    RUN apt update && \
+        apt install -y git make gcc ruby ruby-dev build-essential rpm
+    
+    # Install fpm for .rpm packages
+    RUN gem install --no-document fpm
+    
+    # Clone cJSON
+    RUN git clone https://github.com/DaveGamble/cJSON.git
+    WORKDIR /app/cJSON
+    
+    # Compile lib
+    RUN make
+    
+    # Prepare file structure for rpm
+    RUN mkdir -p /tmp/cjson-install/usr/include/cjson \
+                 /tmp/cjson-install/usr/lib && \
+        cp cJSON.h cJSON_Utils.h /tmp/cjson-install/usr/include/cjson && \
+        cp libcjson*.so libcjson*.a /tmp/cjson-install/usr/lib
+    
+    # Create a directory for final .rpm package
+    RUN mkdir -p /app/cJSON/build/output
+    
+    # Create .rpm package
+    RUN fpm -s dir -t rpm \
+        -n cjson \
+        -v 1.0.0 \
+        -C /tmp/cjson-install \
+        -p /app/cJSON/build/output/cjson.rpm .
+    
+    
+    CMD ["/bin/bash"]
+    ```
+    
+    Skrypt `Dockerfile.test`:
+    ```
+    FROM cj-build
+    WORKDIR /app/cJSON
+    RUN mkdir logs && make test > logs/test_results.log
+    CMD ["/bin/bash"]
+    ```
+
+    Skrypt `Dockerfile.deploy`:
+    ```
+    FROM fedora:41
+    
+    RUN dnf install -y gcc && dnf clean all
+    
+    WORKDIR /app
+    
+    CMD ["tail", "-f", "/dev/null"]
+    ```
+
+    Kod źrółowy `deploy.c`:
+    ```
+    #include <stdio.h>
+    #include <cjson/cJSON.h>
+    
+    int main() {
+        const char *json = "{\"name\":\"Jenkins\",\"type\":\"CI\"}";
+        cJSON *root = cJSON_Parse(json);
+    
+        if (root == NULL) {
+            printf("Parse error\n");
+            return 1;
+        }
+    
+        cJSON *name = cJSON_GetObjectItemCaseSensitive(root, "name");
+        if (cJSON_IsString(name) && (name->valuestring != NULL)) {
+            printf("Parsed name: %s\n", name->valuestring);
+        }
+    
+        cJSON_Delete(root);
+        return 0;
+    }
+    ```
+    
+- Z powodzeniem udało się wykonać cały pipeline.
 - *Zrzut ekranu powodzenia z uzyskanymi artefaktami*:
 
   ![Zrzut ekranu powodzenia](media/m11_succ.png)
@@ -335,7 +415,7 @@
 - Uzyskany artefkat `cjson.rpm` został znastępnie zapisany w repozytorium przedmiotowym: [cjson.rpm](coursework/cjson.rpm).
 - Utworzono plik `Jenkinsfile`, który został wrzucony do repozytorium przedmiotowego. Jego zawartość została zmodyfikowana o usunięcie kroku **Clone**: [Jenkinsfile](coursework/pipeline/Jenkinsfile).
 - Utworzono nowy **Pipeline**, który automatycznie klonuje repozytorium, odczytuje plik `Jenkinsfile` i wykonuje pozostałe kroki CI/CD.
-- Z powodzeniem udało się przejść przez cały Pipeline. [Wydruk konsoli](coursework/cjson_scm_console.txt)
+- Z powodzeniem udało się przejść przez cały Pipeline. [Wydruk z konsoli](coursework/cJSON_console.txt).
   - *Zrzut ekranu potwierdzający powodzenie pipeline'u*:
  
     ![Zrzut ekranu potwierdzający powodzenie pipeline'u](media/m14_scm.png)
