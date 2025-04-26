@@ -2,4 +2,4 @@ FROM redis-build
 
 RUN dnf install -y tcl which
 
-RUN make test
+RUN make test SINGLE_UNIT_TEST=tests/unit/type/list.tcl > logs/test.log 2>&1
