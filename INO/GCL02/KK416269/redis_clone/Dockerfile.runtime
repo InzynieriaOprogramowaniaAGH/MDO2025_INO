@@ -1,0 +1,13 @@
+FROM ubuntu
+
+WORKDIR /app
+
+COPY artifacts/redis-*.tar.gz /app/redis.tar.gz
+
+RUN apt-get update && apt-get install -y tar && \
+    tar -xzf redis.tar.gz
+
+EXPOSE 1111
+
+CMD ["./src/redis-server", "--port", "1111"]
+
