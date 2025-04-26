@@ -432,3 +432,40 @@
 - *Zrzut ekranu wydruku konsoli:*
 
   ![Zrzut erkanu wydruku konsoli](media/m16_ubuntu.png) 
+
+  Kod źródłowy użyty do testu:
+  ```
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <cjson/cJSON.h>
+  
+  int main(void) 
+  {
+      // Create cjson object
+      cJSON *root = cJSON_CreateObject();
+      if (root == NULL) {
+          fprintf(stderr, "FIaled to create cJSON object.\n");
+          return -1;
+      }
+  
+      // Add simple key-value pair
+      cJSON_AddStringToObject(root, "test", "passed");
+  
+      // Convert cjson' print to char arrray
+      char *json_string = cJSON_Print(root);
+      if (json_string == NULL) {
+          fprintf(stderr, "FAiled to print cJSON.\n");
+          cJSON_Delete(root);
+          return -1;
+      }
+  
+      // Print the result
+      printf("Generated JSON: %s\n", json_string);
+  
+      // Free memory
+      free(json_string);
+      cJSON_Delete(root);
+  
+      return 0;
+  }
+  ```
