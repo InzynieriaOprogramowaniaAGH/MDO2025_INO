@@ -1,8 +1,8 @@
 FROM maven:3.9.9-eclipse-temurin-17 AS builder
 
 WORKDIR /workspace
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
 
-COPY src ./src
+RUN git clone https://github.com/sauer515/teacher-management.git .
+
+RUN mvn dependency:go-offline -B
 RUN mvn clean package -DskipTests -B
