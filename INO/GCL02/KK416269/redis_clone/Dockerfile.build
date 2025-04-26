@@ -16,4 +16,4 @@ WORKDIR /redis
 
 RUN make
 
-RUN tar -czf /redis/redis.tar.gz /redis/src
+RUN cp /redis/src/redis-server /redis/redis-server
