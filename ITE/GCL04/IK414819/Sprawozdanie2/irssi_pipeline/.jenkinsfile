@@ -1,0 +1,81 @@
+pipeline {
+    agent any
+
+    environment {
+        PROJECT_DIR = "ITE/GCL04/IK414819/Sprawozdanie2/irssi_pipeline"
+        BUILDER_IMAGE = "irssi-builder"
+        TEST_IMAGE = "irssi-test"
+    }
+
+    stages {
+        stage('Klonowanie repozytorium') {
+            steps {
+                git branch: 'IK414819', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Budowanie obrazu - build') {
+            steps {
+                script {
+                    dir("${env.PROJECT_DIR}") {
+                        sh 'mkdir -p output'
+                        sh 'docker build -f Dockerfile.build -t ${BUILDER_IMAGE} .'
+                        sh 'docker run --rm -v $(pwd)/output:/output ${BUILDER_IMAGE}'
+
+                    }
+                }
+            }
+        }
+
+        stage('Budowanie obrazu - test') {
+            steps {
+                script {
+                    dir("${env.PROJECT_DIR}") {
+                        sh 'docker build -f Dockerfile.test -t ${TEST_IMAGE} .'
+                        
+                    }
+                }
+            }
+        }
+
+        stage('Uruchamianie testów') {
+            steps {
+                script {
+                    sh 'docker run --rm ${TEST_IMAGE}'
+                }
+            }
+        }
+
+      stage('Budowanie obrazu - deploy') {
+        steps {
+            script {
+                dir("${env.PROJECT_DIR}") {
+                    sh 'docker build -f Dockerfile.deploy -t irssi-deploy .'
+                }
+            }
+        }
+    }
+
+    stage('Uruchamianie irssi --version') {
+        steps {
+            script {
+                sh 'docker run --rm irssi-deploy --version'
+            }
+        }
+    }
+
+    }
+
+
+    post {
+        always {
+            echo 'Pipeline zakończony (sukces lub porażka).'
+        }
+        success {
+            echo 'Testy zakończone sukcesem!'
+        }
+        failure {
+            echo 'Coś poszło nie tak podczas testowania.'
+        }
+    }
+}
