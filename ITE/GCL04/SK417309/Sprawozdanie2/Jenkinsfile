@@ -73,6 +73,11 @@ pipeline {
               --name myapp \
               -p 8080:8080 \
               ${IMAGE_NAME}:prod-${BUILD_TAG}
+
+            sleep 10
+            curl -f http://localhost:8080/ || (docker logs myapp && exit 1)
+            echo docker logs myapp
+            echo docker exec myapp curl -f http://localhost:8080/
           """
         }
       }

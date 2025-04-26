@@ -138,3 +138,15 @@ docker run \
 Aby zagwarantować czyste środowisko i powtarzalność dla tego pipeline'a, trzebo go rozpocząć od wyczyszczenia ewentualnych pozostałości w folderze, do którego pozniej kopiuje repozytorium. Następnie przeprowadzam w jednym bloku checkout na moją gałąź `SK417309` i przechodzę do folderu z Dockerfile'm do budowy mojego projektu. 
 ![pipeline](skrypt-pipeline.png)
 ![logi](pipeline-logi.png)
+
+### Jenkinsfile do projektu
+Następnym zadanie było przygotowanie pipeline'u do wybranego projektu. Do tego kroku wybrałem swoją aplikację napisaną w Javie (wersja 17+). Do omówienie tego puntku posłużę się listą kontrolną przygotowaną przez prowadzącego przedmiot:
+* Licencja, jako iż to moja aplikacja, zezwala na korzystanie w dowolny sposób.
+* Program wybrany przeze mnie buduje się, co potwierdza screen użyty w poprzednim sprawozdaniu:
+![buildzik](../Sprawozdanie1/efekt-builda.png)  
+* Przechodzą dołączone do niego testy:
+![raport](../Sprawozdanie1/testy-apki.png)
+* Fork w tym przypadku nie jest potrzebny, ponieważ pracuję nad własnym projektem, w osobnej gałęzi, bezpośrednio na oryginalnym repo (SK417309), zamiast kopi w innym miejscu.
+* UML TO DO
+* Wybrałem odpowiedni kontener bazowy zawierający wszystkie potrzebne zależności do zbudowania aplikacji - eclipse-temurin. 
+* Wykonałem build wewnątrz wersjonowanego kontenera zdefiniowanego na podstawie `Dockerfile.build`. 
