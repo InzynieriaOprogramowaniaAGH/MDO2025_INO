@@ -47,6 +47,7 @@ pipeline {
               -t ${IMAGE_NAME}:tester-${BUILD_TAG} \
               .
             docker run --rm \
+              --user \$(id -u):\$(id -g) \
               -v ${env.WORKSPACE}/${env.DOCKER_CONTEXT}/target:/workspace/target \
               ${IMAGE_NAME}:tester-${BUILD_TAG} mvn test -B
           """
@@ -64,6 +65,9 @@ pipeline {
       steps {
         dir(env.DOCKER_CONTEXT) {
           sh """
+            docker rm -f mydb || true
+            docker network rm myapp-net || true
+
             docker network create myapp-net || true
 
             docker run -d \
@@ -124,7 +128,8 @@ pipeline {
 
   post {
     cleanup {
-      sh 'docker rm -f myapp || true'
+      sh 'docker rm -f myapp mydb || true'
+      sh 'docker network rm myapp-net || true'
       sh 'docker volume prune -f || true'
       sh """
         docker rmi -f ${IMAGE_NAME}:builder-${BUILD_TAG} || true
