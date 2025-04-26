@@ -240,45 +240,56 @@ W tym konkretnym projekcie zdecydowano się na konfigurację opartą o Docker-in
 
 ### 5. Kompletny Pipeline CI/CD
 
-Kolejnym etapem było utworzenie pełnego pipelina z etapami `deploy` oraz `publish`. Podczas tego etapu utworzyłem `Jenkinsfile`, który był wykorzystywany podczas `SCM`. `Jenkinsfile` został umieszczoony w repozytorium rzedmiotowym na mojej gałęzi `AB416965` czyli Jenkins klonuje nasze repozytorium dwa razy.
+Kolejnym etapem było utworzenie pełnego pipelina z etapami `deploy` oraz `publish`. Podczas tego etapu utworzyłem `Jenkinsfile`, wykorzystywany podczas konfiguracji `SCM`. `Jenkinsfile` został umieszczoony w repozytorium rzedmiotowym na mojej gałęzi `AB416965`, co skutkuje tym, że Jenkins klonuje nasze repozytorium dwukrotnie (na potrzeby samego pipeline'a oraz budowania projektu).
 
 > [Jenkinsfile](Jenkinsfile)
 
-#### Sam `Jenkinsfile` jest podzielony na 6 etapów:
-- clone
-    - klonowanie repozytorium przedmiotowego na gałęzi `AB416965`.
-- clear cache
-    - proste polecenie `docker builder prune -af`, które czyści cache zbudowanych kontenerów.
-- build
+#### Sam `Jenkinsfile` jest podzielony na sześć głównych etapów:
+- **Clone**\
+    Klonowanie repozytorium przedmiotowego na gałęzi `AB416965`.
 
-    - [Dockerfile.build](pipeline/Dockerfile.build) został zmodyfikowany, aby po zbudowaniu bilioteki była ona pakowana do `.rpm` przy pomocy FPM (Effing Package Management) — narzędzia upraszczającego tworzenie paczek instalacyjnych dla różnych systemów.
+- **Clear docker cache**\
+    Wykonanie polecenia `docker builder prune -af`w celu wyczyszczenia cache'a budowanych kontenerów.
 
-- test
-    - [Dockerfile.test](pipeline/Dockerfile.test) nie został zbytnio zmieniony, ponownie wykonuje `ctest`, wynik jest zapisywany w logach.
+- **Build**\
+    [Dockerfile.build](pipeline/Dockerfile.build) został zmodyfikowanyw taki sposób, aby po zbudowaniu biblioteki była ona pakowana do pliku `.rpm` przy pomocy narzędzia **FPM** (Effing Package Management) — prostego narzędzia służącego do tworzenia paczek instalacyjnych dla różnych systemów operacyjnych.
 
-    - > [Wydruk zwracany przez `test`](jenkinslogs/cjson_test.log)
-- deploy
+- **Test**\
+    [Dockerfile.test](pipeline/Dockerfile.test) wykonuje ponownie `ctest`, a wynik działania testów jest zapisywany w logach.
+    > [Wydruk zwracany przez `test`](jenkinslogs/cjson_test.log)
 
-    - [Dockerfile.deploy](pipeline/Dockerfile.deploy) został przygotowany w taki sposób aby wykorzystując zbudowaną i zapakowaną w `.rpm` bibliotekę instalował poleceniem `sudo dnf install ./cjson.rpm` a następnie korzystając z wcześniej przygotowanego kodu [main.c](pipeline/main.c) dokonywał kompilacji i uruchomienia programu.
+- **Deploy**\
+    [Dockerfile.deploy](pipeline/Dockerfile.deploy) został przygotowany w taki sposób aby wykorzystując zbudowaną i zapakowaną w `.rpm` bibliotekę instalował poleceniem `sudo dnf install ./cjson.rpm` a następnie korzystając z wcześniej przygotowanego kodu [main.c](pipeline/main.c) dokonywał kompilacji i uruchomienia programu.
+    > [Wydruk zwracany przez `deploy`](jenkinslogs/cjson_deploy.log)
 
-    - > [Wydruk zwracany przez `deploy`](jenkinslogs/cjson_deploy.log)
+- **Publish**\
+    Zapisanie jako artefaktów wszystkich plików `.log` oraz wygenerowanego archiwum `cjson.rpm`.
 
-- publish
-    - zwraca jako artefakt wszystkie pliki `.log` i archiwum `cjson.rpm`.
+#### Diagram UML:
+
+Poniżej przedstawiono uproszczony diagram UML typu activity diagram, obrazujący kolejne kroki realizowane w naszym `pipeline`. Diagram pokazuje główne etapy, takie jak klonowanie repozytorium, budowanie obrazów Docker, testowanie, wdrażanie oraz archiwizację wyników.
+
+![UML](zrzuty5/zrzut_ekranu18.png)
+
+#### Udane przejście pipeline
+
+Po poprawnym wykonaniu wszystkich etapów `pipeline`, w Jenkinsie pojawia się sekcja z opublikowanymi artefaktami (`publish`). Można tam znaleźć pliki `.log` zawierające wyniki testów i wdrożenia oraz wygenerowany pakiet `.rpm`.
 
 ![Kompletny pipeline](zrzuty5/zrzut_ekranu15.png)
 
 > [Logi z konsoli](jenkinslogs/console_1.log)
 
-W celu upewnienia się, że nic nie jest pozostawiane w pamięci cache, uruchomiłem `pipeline` kilkukrotnie.
+W celu upewnienia się, że pipeline nie pozostawia niepotrzebnych danych w cache'u, uruchomiłem go kilkukrotnie.
 
 > [Logi z konsoli po ponownym uruchomieniu](jenkinslogs/console_2.log)
 
-Tak jak pliki z logami, pobrałem archiwum `cjson.rpm` i umieściłem na hośćie. Przeprowadziłem jeszcze jeden test. Spróbowałem lokalnie zajnstalować bibliotekeę.
+#### Test instalacji pakietu `.rpm`
+
+Po zakończeniu działania pipeline'a pobrałem wygenerowane archiwum `cjson.rpm` na hosta i przeprowadziłem ręczną instalację biblioteki.
 
 ![Instalacja biblioteki](zrzuty5/zrzut_ekranu16.png)
 
-Instalacja przebiegła bez problemu, dlatego uruchomiłem program.
+Instalacja przebiegła bezproblemowo, co pozwoliło na uruchomienie przygotowanego wcześniej programu testowego.
 
 ![Uruchomienie programu](zrzuty5/zrzut_ekranu17.png)
 
@@ -286,6 +297,9 @@ Instalacja przebiegła bez problemu, dlatego uruchomiłem program.
 
 ### **Wykorzystanie sztucznej inteligencji**
 
-Podczas zajęć wykorzystywałem ChatGpt 4o. Służył on głównie do szybszego odnalezienia się w środowisku `Jenkina` oraz do opracowania struktury `Jenkinsfile`. Odpowiedzi generowane przez SI były analizowane i zależnie od potrzeb modyfikowane. 
+Podczas realizacji projektu wspierałem się modelem ChatGPT 4o. Główne zastosowania obejmowały:
+- Przyspieszenie orientacji w środowisku Jenkinsa,
+- Opracowanie struktury pliku `Jenkinsfile`,
+- Analizę logów błędów i sugerowanie potencjalnych poprawek w `Jenkinsfile` oraz `Dockerfile`.
 
-Największą pomoc stanowiło analizowanie logów i generowanie potencjalnych rozwiązań na poprawę `Jenkinsfile` oraz `Dockerfile's`. 
+Odpowiedzi generowane przez SI były każdorazowo analizowane i dostosowywane do wymagań projektu.
