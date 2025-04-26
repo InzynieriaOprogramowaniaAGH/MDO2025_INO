@@ -1,37 +1,38 @@
 Started by user Filip Rak
+Obtained INO/GCL02/FR417273/Sprawozdanie2/coursework/pipeline/Jenkinsfile from git https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
 [Pipeline] Start of Pipeline
 [Pipeline] node
-Running on Jenkins in /var/jenkins_home/workspace/cJSON
-[Pipeline] {
-[Pipeline] withEnv
+Running on Jenkins in /var/jenkins_home/workspace/cJSON SCM
 [Pipeline] {
 [Pipeline] stage
-[Pipeline] { (Clone)
-[Pipeline] git
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
 The recommended git tool is: NONE
 No credentials specified
- > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/cJSON/.git # timeout=10
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/cJSON SCM/.git # timeout=10
 Fetching changes from the remote Git repository
  > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
 Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
  > git --version # timeout=10
  > git --version # 'git version 2.39.5'
  > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
- > git rev-parse refs/remotes/origin/FR417273^{commit} # timeout=10
-Checking out Revision 5f6bd762467612ac2a7d8c8152b74c2f062dcfd2 (refs/remotes/origin/FR417273)
+ > git rev-parse origin/FR417273^{commit} # timeout=10
+Checking out Revision 87f548219d8100beb052f8fb872dcc9358947e10 (origin/FR417273)
  > git config core.sparsecheckout # timeout=10
- > git checkout -f 5f6bd762467612ac2a7d8c8152b74c2f062dcfd2 # timeout=10
- > git branch -a -v --no-abbrev # timeout=10
- > git branch -D FR417273 # timeout=10
- > git checkout -b FR417273 5f6bd762467612ac2a7d8c8152b74c2f062dcfd2 # timeout=10
-Commit message: "FR417273: update Dockerfile.build"
- > git rev-list --no-walk 7b09d7880ae8c18ad262ca7bfff1a1f781788e62 # timeout=10
+ > git checkout -f 87f548219d8100beb052f8fb872dcc9358947e10 # timeout=10
+Commit message: "FR417273: update Jenkinsfile"
+ > git rev-list --no-walk 416ec8e630661548267460389b92a07df4d60341 # timeout=10
 [Pipeline] }
 [Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
 [Pipeline] stage
 [Pipeline] { (Build)
 [Pipeline] dir
-Running in /var/jenkins_home/workspace/cJSON/INO/GCL02/FR417273/Sprawozdanie2/coursework/pipeline
+Running in /var/jenkins_home/workspace/cJSON SCM/INO/GCL02/FR417273/Sprawozdanie2/coursework/pipeline
 [Pipeline] {
 [Pipeline] script
 [Pipeline] {
@@ -39,67 +40,66 @@ Running in /var/jenkins_home/workspace/cJSON/INO/GCL02/FR417273/Sprawozdanie2/co
 [Pipeline] withEnv
 [Pipeline] {
 [Pipeline] sh
-+ docker build -t cj-build -f Dockerfile.build .
++ docker build -t cj-build:1.0.0 -f Dockerfile.build .
 #0 building with "default" instance using docker driver
 
 #1 [internal] load build definition from Dockerfile.build
 #1 transferring dockerfile: 952B done
-#1 DONE 0.1s
+#1 DONE 0.0s
 
 #2 [internal] load metadata for docker.io/library/ubuntu:22.04
 #2 DONE 1.0s
 
 #3 [internal] load .dockerignore
 #3 transferring context: 2B done
-#3 DONE 0.1s
+#3 DONE 0.0s
 
 #4 [ 1/10] FROM docker.io/library/ubuntu:22.04@sha256:d80997daaa3811b175119350d84305e1ec9129e1799bba0bd1e3120da3ff52c3
 #4 DONE 0.0s
 
-#5 [ 2/10] WORKDIR /app
+#5 [ 4/10] RUN gem install --no-document fpm
 #5 CACHED
 
-#6 [ 3/10] RUN apt update &&     apt install -y git make gcc ruby ruby-dev build-essential rpm
+#6 [ 5/10] RUN git clone https://github.com/DaveGamble/cJSON.git
 #6 CACHED
 
 #7 [ 6/10] WORKDIR /app/cJSON
 #7 CACHED
 
-#8 [ 5/10] RUN git clone https://github.com/DaveGamble/cJSON.git
+#8 [ 7/10] RUN make
 #8 CACHED
 
-#9 [ 4/10] RUN gem install --no-document fpm
+#9 [ 9/10] RUN mkdir -p /app/cJSON/build/output
 #9 CACHED
 
-#10 [ 7/10] RUN make
+#10 [ 3/10] RUN apt update &&     apt install -y git make gcc ruby ruby-dev build-essential rpm
 #10 CACHED
 
 #11 [ 8/10] RUN mkdir -p /tmp/cjson-install/usr/include/cjson              /tmp/cjson-install/usr/lib &&     cp cJSON.h cJSON_Utils.h /tmp/cjson-install/usr/include/cjson &&     cp libcjson*.so libcjson*.a /tmp/cjson-install/usr/lib
 #11 CACHED
 
-#12 [ 9/10] RUN mkdir -p /app/cJSON/build/output
+#12 [ 2/10] WORKDIR /app
 #12 CACHED
 
 #13 [10/10] RUN fpm -s dir -t rpm     -n cjson     -v 1.0.0     -C /tmp/cjson-install     -p /app/cJSON/build/output/cjson.rpm .
-#13 0.470 {:timestamp=>"2025-04-14T11:14:36.575562+0000", :message=>"Created package", :path=>"/app/cJSON/build/output/cjson.rpm"}
-#13 DONE 0.5s
+#13 CACHED
 
 #14 exporting to image
-#14 exporting layers 0.1s done
+#14 exporting layers done
 #14 writing image sha256:4964c17811e09ffb63b2c04a8081c5b35c9ceba2aa0045c4f0e74873f39d7e97 done
-#14 naming to docker.io/library/cj-build done
-#14 DONE 0.1s
+#14 naming to docker.io/library/cj-build:1.0.0 done
+#14 DONE 0.0s
 [Pipeline] }
 [Pipeline] // withEnv
 [Pipeline] sh
 + mkdir -p artifacts
 [Pipeline] sh
-+ docker create cj-build
++ docker create cj-build:1.0.0
 [Pipeline] sh
-+ docker cp 9853a1d2d9902ecd3afbb351ab4bb147a6e52e0e8aa5ccbe84e854b700d0541c:/app/cJSON/build/output/cjson.rpm artifacts/cjson.rpm
++ docker cp 3e2b29c42602e684739160544b90851263dfd894357e00743ffcc50f7b81d30c:/app/cJSON/build/output/cjson.rpm artifacts/cjson-1.0.0.rpm
 [Pipeline] sh
-+ docker rm 9853a1d2d9902ecd3afbb351ab4bb147a6e52e0e8aa5ccbe84e854b700d0541c
-9853a1d2d9902ecd3afbb351ab4bb147a6e52e0e8aa5ccbe84e854b700d0541c
++ docker rm 3e2b29c42602e684739160544b90851263dfd894357e00743ffcc50f7b81d30c
+3e2b29c42602e684739160544b90851263dfd894357e00743ffcc50f7b81d30c
 [Pipeline] }
 [Pipeline] // script
 [Pipeline] }
@@ -109,7 +109,7 @@ Running in /var/jenkins_home/workspace/cJSON/INO/GCL02/FR417273/Sprawozdanie2/co
 [Pipeline] stage
 [Pipeline] { (Test)
 [Pipeline] dir
-Running in /var/jenkins_home/workspace/cJSON/INO/GCL02/FR417273/Sprawozdanie2/coursework/pipeline
+Running in /var/jenkins_home/workspace/cJSON SCM/INO/GCL02/FR417273/Sprawozdanie2/coursework/pipeline
 [Pipeline] {
 [Pipeline] script
 [Pipeline] {
@@ -117,7 +117,7 @@ Running in /var/jenkins_home/workspace/cJSON/INO/GCL02/FR417273/Sprawozdanie2/co
 [Pipeline] withEnv
 [Pipeline] {
 [Pipeline] sh
-+ docker build -t cj-test -f Dockerfile.test .
++ docker build -t cj-test:1.0.0 -f Dockerfile.test .
 #0 building with "default" instance using docker driver
 
 #1 [internal] load build definition from Dockerfile.test
@@ -135,27 +135,27 @@ Running in /var/jenkins_home/workspace/cJSON/INO/GCL02/FR417273/Sprawozdanie2/co
 #4 DONE 0.0s
 
 #5 [2/3] WORKDIR /app/cJSON
-#5 DONE 0.1s
+#5 CACHED
 
 #6 [3/3] RUN mkdir logs && make test > logs/test_results.log
-#6 DONE 0.3s
+#6 CACHED
 
 #7 exporting to image
-#7 exporting layers 0.1s done
+#7 exporting layers done
 #7 writing image sha256:e571d990d0bdde25fd33c26a71c0684e970bd57a1a4b5e49cab4a641b72d403b done
-#7 naming to docker.io/library/cj-test done
-#7 DONE 0.2s
+#7 naming to docker.io/library/cj-test:1.0.0 done
+#7 DONE 0.0s
 [Pipeline] }
 [Pipeline] // withEnv
 [Pipeline] sh
 + mkdir -p logs
 [Pipeline] sh
-+ docker create cj-test
++ docker create cj-test:1.0.0
 [Pipeline] sh
-+ docker cp 668a6057469993c076d4fb6f4bb719b8dc7490c1f69ec929ac1e5c14db69f0c3:/app/cJSON/logs/test_results.log logs/test_results.log
++ docker cp d68e211254dc9c8eb139dabb64eec83ca82693c879b2062ac5fb465d06f36e3e:/app/cJSON/logs/test_results.log logs/test_results-1.0.0.log
 [Pipeline] sh
-+ docker rm 668a6057469993c076d4fb6f4bb719b8dc7490c1f69ec929ac1e5c14db69f0c3
-668a6057469993c076d4fb6f4bb719b8dc7490c1f69ec929ac1e5c14db69f0c3
++ docker rm d68e211254dc9c8eb139dabb64eec83ca82693c879b2062ac5fb465d06f36e3e
+d68e211254dc9c8eb139dabb64eec83ca82693c879b2062ac5fb465d06f36e3e
 [Pipeline] }
 [Pipeline] // script
 [Pipeline] }
@@ -165,7 +165,7 @@ Running in /var/jenkins_home/workspace/cJSON/INO/GCL02/FR417273/Sprawozdanie2/co
 [Pipeline] stage
 [Pipeline] { (Deploy)
 [Pipeline] dir
-Running in /var/jenkins_home/workspace/cJSON/INO/GCL02/FR417273/Sprawozdanie2/coursework/pipeline
+Running in /var/jenkins_home/workspace/cJSON SCM/INO/GCL02/FR417273/Sprawozdanie2/coursework/pipeline
 [Pipeline] {
 [Pipeline] script
 [Pipeline] {
@@ -173,21 +173,21 @@ Running in /var/jenkins_home/workspace/cJSON/INO/GCL02/FR417273/Sprawozdanie2/co
 [Pipeline] withEnv
 [Pipeline] {
 [Pipeline] sh
-+ docker build -t cj-deploy -f Dockerfile.deploy .
++ docker build -t cj-deploy:1.0.0 -f Dockerfile.deploy .
 #0 building with "default" instance using docker driver
 
 #1 [internal] load build definition from Dockerfile.deploy
 #1 transferring dockerfile: 208B done
-#1 DONE 0.1s
+#1 DONE 0.0s
 
 #2 [internal] load metadata for docker.io/library/fedora:41
-#2 DONE 0.9s
+#2 DONE 0.8s
 
 #3 [internal] load .dockerignore
 #3 transferring context: 2B done
 #3 DONE 0.0s
 
-#4 [1/3] FROM docker.io/library/fedora:41@sha256:f84a7b765ce09163d11de44452a4b56c1b2f5571b6f640b3b973c6afc4e63212
+#4 [1/3] FROM docker.io/library/fedora:41@sha256:e10efcce862bea890d8d2fe6eeeb78d7b67aa1301280bd7853b4184acf5ec148
 #4 DONE 0.0s
 
 #5 [2/3] RUN dnf install -y gcc && dnf clean all
@@ -198,27 +198,26 @@ Running in /var/jenkins_home/workspace/cJSON/INO/GCL02/FR417273/Sprawozdanie2/co
 
 #7 exporting to image
 #7 exporting layers done
-#7 writing image sha256:f452a96c48810d354bd7ee5f3a4a9d36f13dc337d46ce9ae48ebcc9ecdf596b6 done
-#7 naming to docker.io/library/cj-deploy
-#7 naming to docker.io/library/cj-deploy done
-#7 DONE 0.1s
+#7 writing image sha256:a64cb328223ca2a3bbbec66975d37d8ef4d64362f035646142f7ca87548c006a done
+#7 naming to docker.io/library/cj-deploy:1.0.0 done
+#7 DONE 0.0s
 [Pipeline] }
 [Pipeline] // withEnv
 [Pipeline] sh
-+ docker create cj-deploy
++ docker create cj-deploy:1.0.0
 [Pipeline] sh
-+ docker cp artifacts/cjson.rpm 11759aadd0dbc5af8c256445a7a826aaeb313fafaa4371cb8c4f57c2c2434ed8:/tmp/cjson.rpm
++ docker cp artifacts/cjson-1.0.0.rpm a4b632cee6f6786e0daf11c370efa695c8255e92e6b6c57fff320028c6fe7449:/tmp/cjson.rpm
 [Pipeline] sh
-+ docker cp deploy.c 11759aadd0dbc5af8c256445a7a826aaeb313fafaa4371cb8c4f57c2c2434ed8:/app/deploy.c
++ docker cp deploy.c a4b632cee6f6786e0daf11c370efa695c8255e92e6b6c57fff320028c6fe7449:/app/deploy.c
 [Pipeline] sh
-+ docker start 11759aadd0dbc5af8c256445a7a826aaeb313fafaa4371cb8c4f57c2c2434ed8
-11759aadd0dbc5af8c256445a7a826aaeb313fafaa4371cb8c4f57c2c2434ed8
++ docker start a4b632cee6f6786e0daf11c370efa695c8255e92e6b6c57fff320028c6fe7449
+a4b632cee6f6786e0daf11c370efa695c8255e92e6b6c57fff320028c6fe7449
 [Pipeline] sh
-+ docker exec 11759aadd0dbc5af8c256445a7a826aaeb313fafaa4371cb8c4f57c2c2434ed8 dnf install -y /tmp/cjson.rpm
++ docker exec a4b632cee6f6786e0daf11c370efa695c8255e92e6b6c57fff320028c6fe7449 dnf install -y /tmp/cjson.rpm
 Updating and loading repositories:
- Fedora 41 openh264 (From Cisco) - x86_ 100% |   4.9 KiB/s |   4.8 KiB |  00m01s
- Fedora 41 - x86_64                     100% |   6.8 MiB/s |  35.4 MiB |  00m05s
- Fedora 41 - x86_64 - Updates           100% |   5.5 MiB/s |  12.4 MiB |  00m02s
+ Fedora 41 openh264 (From Cisco) - x86_ 100% |   4.6 KiB/s |   6.0 KiB |  00m01s
+ Fedora 41 - x86_64                     100% |   7.0 MiB/s |  35.4 MiB |  00m05s
+ Fedora 41 - x86_64 - Updates           100% |   5.4 MiB/s |  12.9 MiB |  00m02s
 Repositories loaded.
 Total size of inbound packages is 65 KiB. Need to download 0 B.
 After this operation, 198 KiB extra will be used (install 198 KiB, remove 0 B).
@@ -231,18 +230,18 @@ Transaction Summary:
  Installing:         1 package
 
 [1/3] Verify package files              100% |   0.0   B/s |   1.0   B |  00m00s
-[2/3] Prepare transaction               100% |  22.0   B/s |   1.0   B |  00m00s
-[3/3] Installing cjson-0:1.0.0-1.x86_64 100% |   1.1 MiB/s | 199.3 KiB |  00m00s
+[2/3] Prepare transaction               100% |  18.0   B/s |   1.0   B |  00m00s
+[3/3] Installing cjson-0:1.0.0-1.x86_64 100% |   1.3 MiB/s | 199.3 KiB |  00m00s
 Warning: skipped OpenPGP checks for 1 package from repository: @commandline
 Complete!
 [Pipeline] sh
-+ docker exec 11759aadd0dbc5af8c256445a7a826aaeb313fafaa4371cb8c4f57c2c2434ed8 gcc /app/deploy.c -lcjson -o /tmp/deploy_test
++ docker exec a4b632cee6f6786e0daf11c370efa695c8255e92e6b6c57fff320028c6fe7449 gcc /app/deploy.c -lcjson -o /tmp/deploy_test
 [Pipeline] sh
-+ docker exec 11759aadd0dbc5af8c256445a7a826aaeb313fafaa4371cb8c4f57c2c2434ed8 /tmp/deploy_test
++ docker exec a4b632cee6f6786e0daf11c370efa695c8255e92e6b6c57fff320028c6fe7449 /tmp/deploy_test
 Parsed name: Jenkins
 [Pipeline] sh
-+ docker rm -f 11759aadd0dbc5af8c256445a7a826aaeb313fafaa4371cb8c4f57c2c2434ed8
-11759aadd0dbc5af8c256445a7a826aaeb313fafaa4371cb8c4f57c2c2434ed8
++ docker rm -f a4b632cee6f6786e0daf11c370efa695c8255e92e6b6c57fff320028c6fe7449
+a4b632cee6f6786e0daf11c370efa695c8255e92e6b6c57fff320028c6fe7449
 [Pipeline] }
 [Pipeline] // script
 [Pipeline] }
@@ -252,7 +251,7 @@ Parsed name: Jenkins
 [Pipeline] stage
 [Pipeline] { (Print)
 [Pipeline] echo
-Pipeline finished succesfully.
+Pipeline finished successfully for version 1.0.0.
 [Pipeline] }
 [Pipeline] // stage
 [Pipeline] stage
@@ -263,6 +262,8 @@ Archiving artifacts
 Archiving artifacts
 [Pipeline] }
 [Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
 [Pipeline] }
 [Pipeline] // withEnv
 [Pipeline] }
