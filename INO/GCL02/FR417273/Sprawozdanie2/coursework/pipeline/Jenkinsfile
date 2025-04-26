@@ -86,7 +86,7 @@ pipeline {
     post {
         always {
             archiveArtifacts artifacts: "${WORKDIR}/artifacts/cjson-${VERSION}.rpm", allowEmptyArchive: true
-            archiveArtifacts artifacts: "${WORKDIR}/logs/test_results.log", allowEmptyArchive: true
+            archiveArtifacts artifacts: "${WORKDIR}/logs/test_results-${VERSION}.log", allowEmptyArchive: true
         }
     }
 }
