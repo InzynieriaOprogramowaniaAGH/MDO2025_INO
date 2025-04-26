@@ -38,18 +38,23 @@ pipeline {
     stage('Test image') {
       steps {
         dir(env.DOCKER_CONTEXT) {
+            
           sh """
+            mkdir -p target/surefire-reports
+
             docker build \
               -f Dockerfile.test \
               -t ${IMAGE_NAME}:tester-${BUILD_TAG} \
               .
-            docker run --rm ${IMAGE_NAME}:tester-${BUILD_TAG}
+            docker run --rm \\
+              -v ${env.WORKSPACE}/${env.DOCKER_CONTEXT}/target:/workspace/target \\
+              ${IMAGE_NAME}:tester-${BUILD_TAG} mvn test -B
           """
         }
       }
       post {
         always {
-          archiveArtifacts artifacts: "${env.DOCKER_CONTEXT}/target/**/*.xml", fingerprint: true
+          junit "${env.DOCKER_CONTEXT}/target/surefire-reports/*.xml"
         }
       }
     }
@@ -59,6 +64,7 @@ pipeline {
         dir(env.DOCKER_CONTEXT) {
           sh """
             docker build \
+              --build-arg BUILD_TAG=${BUILD_TAG} \
               -f Dockerfile.deploy \
               -t ${IMAGE_NAME}:prod-${BUILD_TAG} \
               .
