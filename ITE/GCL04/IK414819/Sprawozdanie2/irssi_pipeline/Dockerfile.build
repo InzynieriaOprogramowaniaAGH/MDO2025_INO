@@ -23,6 +23,6 @@ WORKDIR /app/irssi
 
 RUN meson setup build && meson compile -C build
 
-RUN mkdir /output && cp -r /app/irssi/build /output/
+RUN mkdir /output && cp -r /app/irssi/build/* /output/
 
 
