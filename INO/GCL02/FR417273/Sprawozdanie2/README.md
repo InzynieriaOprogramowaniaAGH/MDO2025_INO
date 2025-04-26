@@ -195,7 +195,7 @@
     - Wymagane są możliwości Dockera, których `agent { docker }` nie zapewnia.
    
 ### Kompletny Pipeline CI/CD
-- Utworzono kompletny pipeline realizujący cykl **CI/CD** dla bibliotecji `cJSON`.
+- Utworzono kompletny pipeline realizujący cykl **CI/CD** dla bibliotecki `cJSON`.
 - Pipeline dzieli się na pięć etapów:
   - **Clone**:
     - Klonowanie repozytorium przedmiotowego, w tym pliki: `Dockerfile.build`, `Dockerfile.test`, `Dockerfile.deploy` i `deploy.c`.
