@@ -5,10 +5,11 @@ pipeline {
         BUILD_IMAGE = 'chalk-build'
         TEST_IMAGE = 'chalk-test'
         RUNTIME_IMAGE = 'chalk-runer'
-        WORK_DIR = 'MDO2025_INO/INO/GCL02/KM415588/Sprawozdanie_2'   // folder w repo przedmiotowym z plikami
+        WORK_DIR = 'MDO2025_INO/INO/GCL02/KM415588/Sprawozdanie_2'
     }
 
     stages {
+
         stage('Clone repo przedmiotowe') {
             steps {
                 dir('repo-przedmiotowe') {
@@ -19,41 +20,60 @@ pipeline {
 
         stage('Build') {
             steps {
-
+                dir("repo-przedmiotowe/${WORK_DIR}") {
+                    sh 'docker build -t ${BUILD_IMAGE} -f dockerfile.chalkbuild .'
+                }
             }
         }
 
         stage('Test') {
             steps {
-
+                dir("repo-przedmiotowe/${WORK_DIR}") {
+                    sh '''
+                        docker build -t ${TEST_IMAGE} -f dockerfile.chalktest .
+                        docker run --rm ${TEST_IMAGE} > test_output.log
+                    '''
+                }
             }
         }
 
         stage('Deploy / Smoke test') {
             steps {
-
+                dir("repo-przedmiotowe/${WORK_DIR}") {
+                    sh '''
+                        docker build -t ${RUNTIME_IMAGE} -f dockerfile.runer .
+                        docker run --rm ${RUNTIME_IMAGE} > smoke_output.log || true
+                    '''
+                }
             }
         }
 
-        stage('Create ZIP archive') {
+        stage('Create ZIP artifact') {
             steps {
-
+                dir("repo-przedmiotowe/${WORK_DIR}") {
+                    sh '''
+                        mkdir -p result
+                        cp -r chalk-pipe/distribution result/ || true
+                        cp test_output.log smoke_output.log result/
+                        zip -r chalk-artifacts.zip result
+                    '''
+                }
             }
         }
 
-        stage('Archive ZIP') {
+        stage('Archive artifacts') {
             steps {
-                archiveArtifacts artifacts: 
+                archiveArtifacts artifacts: "repo-przedmiotowe/${WORK_DIR}/chalk-artifacts.zip", fingerprint: true
             }
         }
     }
 
     post {
         success {
-            echo '✅ Wszystko gotowe – ZIP dostępny w artefaktach.'
+            echo '✅ Pipeline zakończony sukcesem – artefakt ZIP gotowy.'
         }
         failure {
-            echo '❌ Coś poszło nie tak – sprawdź logi.'
+            echo '❌ Pipeline nie powiódł się – sprawdź logi.'
         }
     }
 }

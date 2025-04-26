@@ -1,0 +1,30 @@
+FROM chalk-build
+
+WORKDIR /chalk-pipe
+
+# Czyścimy wszystko, zostawiamy tylko bibliotekę i zależności
+RUN rm -rf \
+    .git \
+    .github \
+    .gitignore \
+    .nprmc \
+    LICENSE \
+    README.md \
+    tsconfig.json \
+    screenshot.png \
+    coverage \
+    test \
+    source \
+    package-lock.json
+
+# Przenosimy się do katalogu pracy
+WORKDIR /app
+
+# Kopiujemy example.js
+COPY example.js .
+
+# Kopiujemy zbudowaną bibliotekę z chalk-pipe
+COPY --from=0 /chalk-pipe /chalk-pipe
+
+# Uruchamiamy smoke test
+CMD ["node", "example.js"]
