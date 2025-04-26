@@ -12,16 +12,16 @@ pipeline {
                 dir("${WORKDIR}") {
                     script {
                         // Build building image
-                        def buildImage = docker.build('cj-build-${VERSION}', '-f Dockerfile.build .')
-                        
+                        def buildImage = docker.build("cj-build:${VERSION}", '-f Dockerfile.build .')
+
                         // Create dir for artifacts
                         sh 'mkdir -p artifacts'
-                        
+
                         // Run build container
-                        def buildContainer = sh(script: "docker create cj-build-${VERSION}", returnStdout: true).trim()
-                        
+                        def buildContainer = sh(script: "docker create cj-build:${VERSION}", returnStdout: true).trim()
+
                         // Copy artifacts & remove container
-                        sh "docker cp ${buildContainer}:/app/cJSON/build/output/cjson.rpm artifacts/cj-build-${VERSION}.rpm"
+                        sh "docker cp ${buildContainer}:/app/cJSON/build/output/cjson.rpm artifacts/cjson-${VERSION}.rpm"
                         sh "docker rm ${buildContainer}"
                     }
                 }
@@ -33,14 +33,14 @@ pipeline {
                 dir("${WORKDIR}") {
                     script {
                         // Build test container
-                        def testImage = docker.build('cj-test-${VERSION}', '-f Dockerfile.test .')
-                        
+                        def testImage = docker.build("cj-test:${VERSION}", '-f Dockerfile.test .')
+
                         // Create logs dir
                         sh 'mkdir -p logs'
-                        
+
                         // Run test container
-                        def testContainer = sh(script: "docker create cj-test-${VERSION}", returnStdout: true).trim()
-                        
+                        def testContainer = sh(script: "docker create cj-test:${VERSION}", returnStdout: true).trim()
+
                         // Copy test results & remove the container
                         sh "docker cp ${testContainer}:/app/cJSON/logs/test_results.log logs/test_results.log"
                         sh "docker rm ${testContainer}"
@@ -54,10 +54,10 @@ pipeline {
                 dir("${WORKDIR}") {
                     script {
                         // Build deploy container
-                        def deployImage = docker.build('cj-deploy-${VERSION}', '-f Dockerfile.deploy .')
+                        def deployImage = docker.build("cj-deploy:${VERSION}", '-f Dockerfile.deploy .')
 
                         // Run container
-                        def deployContainer = sh(script: "docker create cj-deploy-${VERSION}", returnStdout: true).trim()
+                        def deployContainer = sh(script: "docker create cj-deploy:${VERSION}", returnStdout: true).trim()
 
                         // Copy .rpm and deploy.c into the container and install
                         sh "docker cp artifacts/cjson-${VERSION}.rpm ${deployContainer}:/tmp/cjson.rpm"
@@ -78,7 +78,7 @@ pipeline {
 
         stage('Print') {
             steps {
-                echo 'Pipeline finished succesfully for version ${VERSION}.'
+                echo "Pipeline finished successfully for version ${VERSION}."
             }
         }
     }
@@ -90,4 +90,3 @@ pipeline {
         }
     }
 }
-
