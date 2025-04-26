@@ -423,3 +423,16 @@ Następnie tworzenie nowego projektu typu pipeline, który będzie wykorzysytwa�
 
 ![ss16](screeny/class005/Screenshot_16.png)
 
+Należało zmienić uprawnienia tokena, aby poprawnie przeprowadzić push. Zmienione uprawnienia
+
+![ss17](screeny/class005/Screenshot_17.png)
+
+Po wykoaniu tego pipeline kończy się sukcesem i pushuję obraz do dockerhuba 
+
+![ss18](screeny/class005/Screenshot_18.png)
+
+Widać to na końce dockerhub
+
+![ss19](screeny/class005/Screenshot_19.png)
+
+Pipeline jest powtarzalny i działa bez cashu    
