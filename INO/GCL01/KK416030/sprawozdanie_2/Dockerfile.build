@@ -1,0 +1,13 @@
+# Dockerfile.build
+FROM node:10
+
+WORKDIR /app
+
+# Klonowanie repozytorium
+RUN git clone https://github.com/Lissy93/quick-example-of-testing-in-nodejs.git .
+
+# Napraw wersję command-line-args
+RUN sed -i 's/"command-line-args": "[^"]*"/"command-line-args": "1.0.0"/' package.json
+
+# Instalacja zależności
+RUN npm install

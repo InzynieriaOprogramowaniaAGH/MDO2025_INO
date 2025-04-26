@@ -1,0 +1,10 @@
+# Dockerfile.test
+FROM node:10
+
+WORKDIR /app
+
+# Skopiuj aplikację z poprzedniego etapu (lub build context)
+COPY . .
+
+# Uruchomienie testów z generowaniem coverage
+RUN npm run cover
