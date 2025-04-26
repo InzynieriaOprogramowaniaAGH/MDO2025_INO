@@ -1,0 +1,93 @@
+pipeline {
+  agent any
+
+  parameters {
+    booleanParam(name: 'PUBLISH', defaultValue: false, description: 'Push built image to Docker Hub')
+  }
+
+  environment {
+    IMAGE_NAME     = "skwasny/myapp"
+    BUILD_TAG      = "${env.BUILD_NUMBER}"
+    DOCKER_CONTEXT = "MDO2025_INO/ITE/GCL04/SK417309/Sprawozdanie2"
+  }
+
+  stages {
+    stage('Clone & Checkout') {
+      steps {
+        deleteDir()
+        git url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git',
+            branch: 'SK417309'
+      }
+    }
+
+    stage('Build image (Dependencies)') {
+      steps {
+        dir(env.DOCKER_CONTEXT) {
+          sh """
+            docker build \
+              -f Dockerfile.build \
+              -t ${IMAGE_NAME}:builder-${BUILD_TAG} \
+              .
+          """
+        }
+      }
+    }
+
+    stage('Test image') {
+      steps {
+        dir(env.DOCKER_CONTEXT) {
+          sh """
+            docker build \
+              -f Dockerfile.test \
+              -t ${IMAGE_NAME}:tester-${BUILD_TAG} \
+              .
+            docker run --rm ${IMAGE_NAME}:tester-${BUILD_TAG}
+          """
+        }
+      }
+      post {
+        always {
+          archiveArtifacts artifacts: "${env.DOCKER_CONTEXT}/target/**/*.xml", fingerprint: true
+        }
+      }
+    }
+
+    stage('Deploy container') {
+      steps {
+        dir(env.DOCKER_CONTEXT) {
+          sh """
+            docker build \
+              -f Dockerfile.deploy \
+              -t ${IMAGE_NAME}:prod-${BUILD_TAG} \
+              .
+            docker rm -f myapp || true
+            docker run -d \
+              --name myapp \
+              -p 8080:8080 \
+              ${IMAGE_NAME}:prod-${BUILD_TAG}
+          """
+        }
+      }
+    }
+
+    stage('Publish to Docker Hub') {
+      when { expression { params.PUBLISH } }
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+          sh """
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+            docker push ${IMAGE_NAME}:prod-${BUILD_TAG}
+            docker tag ${IMAGE_NAME}:prod-${BUILD_TAG} ${IMAGE_NAME}:latest
+            docker push ${IMAGE_NAME}:latest
+          """
+        }
+      }
+    }
+  }
+
+  post {
+    cleanup {
+      sh 'docker rm -f myapp || true'
+    }
+  }
+}
