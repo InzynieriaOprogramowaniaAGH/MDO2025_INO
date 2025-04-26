@@ -9,5 +9,5 @@ RUN apt-get update && apt-get install -y tar && \
 
 EXPOSE 1111
 
-CMD ["./src/redis-server", "--port", "1111"]
+CMD ["./redis/src/redis-server", "--port", "1111"]
 
