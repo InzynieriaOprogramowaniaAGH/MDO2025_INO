@@ -16,34 +16,20 @@ pipeline {
 
     stage('Build & Test Docker image') {
       steps {
-        // budujemy obraz, w którym są już testy i sdist
         sh "docker build -t ${IMAGE} -f ${DOCKERFILE} ${CONTEXT}"
 
-        // tworzymy chwilowy kontener i kopiujemy z niego artefakty
         script {
           def cid = sh(script: "docker create ${IMAGE}", returnStdout: true).trim()
-          // test.log
           sh "docker cp ${cid}:/app/test.log ${WORKSPACE}/test.log"
-          // katalog z paczkami (dist/*.tar.gz)
           sh "docker cp ${cid}:/app/dist ${WORKSPACE}/dist"
           sh "docker rm ${cid}"
         }
-      }
-    }
-
-    stage('Publish to local PyPI') {
-      steps {
-        sh '''
-        cp dist/*.whl /home/user/local-pypi/packages/
-        '''
-        echo "Paczki zostały skopiowane do ~/local-pypi/packages"
       }
     }
   }
 
   post {
     always {
-      // archiwizujemy logi i paczki
       archiveArtifacts artifacts: 'test.log', fingerprint: true
       archiveArtifacts artifacts: 'dist/*.whl'
     }
