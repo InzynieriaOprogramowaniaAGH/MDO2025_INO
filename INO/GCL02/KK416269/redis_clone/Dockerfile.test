@@ -1,3 +1,3 @@
 FROM redis_build_container
 
-RUN make test 
+RUN make test-unit
