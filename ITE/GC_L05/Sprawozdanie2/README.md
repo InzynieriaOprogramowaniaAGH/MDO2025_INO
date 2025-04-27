@@ -1,3 +1,8 @@
+---
+# Pipeline, Jenkins, izolacja etapów
+
+## Zadanie wstępne: uruchomienie
+---
 ```
 Started by user AmeliaN
 
