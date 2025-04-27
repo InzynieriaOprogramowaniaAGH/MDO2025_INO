@@ -1035,14 +1035,11 @@ Finished: SUCCESS
 
 ```mermaid
 flowchart TD
-    A[Klonowanie repozytorium] --> B[Czyszczenie starych obrazów Dockera]
-    B --> C[Budowanie aplikacji (docker build)]
-    C --> D[Publikacja obrazu i start aplikacji]
-    D --> E[Uruchamianie testów]
-    E --> F{Sprawdzenie działania aplikacji}
-    F -- OK --> G[Sukces pipeline]
-    F -- Błąd --> H[Failure pipeline]
-
+    Start --> Clone[Klonowanie repozytorium]
+    Clone --> Build[Budowanie aplikacji]
+    Build --> Test[Uruchamianie testów]
+    Test --> Report[Sprawdzenie działania aplikacji]
+    Report --> End[Suckes pipeline]
 ```
 
 ---
