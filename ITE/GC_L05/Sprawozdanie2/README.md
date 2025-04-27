@@ -1031,6 +1031,19 @@ Buduję obraz Dockera...
 [Pipeline] End of Pipeline
 Finished: SUCCESS
 ```
+## Opis celu - diagram UML
+
+```mermaid
+flowchart TD
+    Start --> Collect[Collect Sources]
+    Collect --> Build[Build Project]
+    Build --> Test[Test Project]
+    Test --> Report[Generate Report]
+    Report --> End
+```
+
+---
+
 ## Pipeline: składnia
 
 W ramach kolejnego zadania skonfigurowano pipeline w Jenkinsie, którego zadaniem jest klonowanie repozytorium MDO2025_INO z osobistej gałęzi AN417592, budowa obrazu Dockera oraz uruchomienie testów w utworzonym kontenerze. Pipeline został zapisany bezpośrednio w konfiguracji obiektu Jenkins, a jego treść wygląda następująco:
