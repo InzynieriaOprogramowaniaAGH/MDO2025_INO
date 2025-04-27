@@ -1,0 +1,67 @@
+/*
+ * Jenkinsfile – lab5/repo-root/Jenkinsfile
+ * Buduje obraz buildera z Dockerfile.build
+ * Buduje obraz testera z Dockerfile.test
+ * Uruchamia testy Meson i archiwizuje logi
+ */
+pipeline {
+    agent any
+
+    environment {
+        // podkatalog z Dockerfile’ami
+        DOCKER_DIR   = 'lab5/repo-root'
+        BUILDER_IMG  = "irssi/builder:${BUILD_NUMBER}"
+        TESTER_IMG   = "irssi/tester:${BUILD_NUMBER}"
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps { checkout scm }
+        }
+
+        stage('Build ➜ builder image') {
+            steps {
+                sh """
+                  docker build \
+                     -f ${DOCKER_DIR}/Dockerfile.build \
+                     -t ${BUILDER_IMG} \
+                     ${DOCKER_DIR}
+                """
+            }
+        }
+
+        stage('Build ➜ tester image') {
+            steps {
+                sh """
+                  docker build \
+                     -f ${DOCKER_DIR}/Dockerfile.test \
+                     --build-arg BASE=${BUILDER_IMG} \
+                     -t ${TESTER_IMG} \
+                     ${DOCKER_DIR}
+                """
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    docker.image("${TESTER_IMG}").inside('-u root:root') {
+                        sh '''
+                          meson test -C builddir --print-errorlogs \
+                                     --logbase junit | tee test.log
+                        '''
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: '**/test.log', allowEmptyArchive: true
+            junit            testResults: '**/builddir/meson-logs/*.xml',
+                              allowEmptyResults: true
+        }
+    }
+}
