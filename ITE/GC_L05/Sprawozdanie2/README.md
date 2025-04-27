@@ -26,6 +26,18 @@ Finished: SUCCESS
 ```
 
 ```
+HOUR=$(date +%H)
+if [ $((HOUR % 2)) -eq 1 ]; then
+  echo "Godzina jest nieparzysta ($HOUR) — wywołuję błąd!"
+  exit 1
+else
+  echo "Godzina jest parzysta ($HOUR) — wszystko OK."
+fi
+
+
+```
+
+```
 Started by user AmeliaN
 
 Running as SYSTEM
