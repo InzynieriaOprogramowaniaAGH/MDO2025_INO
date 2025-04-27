@@ -43,3 +43,25 @@
          echo "OK: godzina ($HOUR) jest parzysta."
      fi
      ```
+     Wynik działania skryptu dla odziny nieparzystej, a następnie dla parzystej:
+     ![Zrzut ekranu 8](screenshots/8.PNG)
+     ![Zrzut ekranu 9](screenshots/9.PNG)
+   - Projekt pobierający w projekcie obraz kontenera ubuntu:
+     ![Zrzut ekranu 10](screenshots/10.PNG)
+8. Tworzę podstawowy pipeline. Pipeline w Jenkinsie to zdefiniowany zestaw kroków (ang. steps), które są wykonywane automatycznie, aby zbudować, przetestować i wdrożyć aplikację.
+   Dzięki pipeline'owi możesz zautomatyzować cały proces Continuous Integration / Continuous Delivery (CI/CD), czyli budowanie, testowanie i publikowanie oprogramowania. Aby przygotować pipeline, potrzebne są dwa    pliki: Jenkinsfile, który opisuje etapy procesu (np. klonowanie repozytorium, budowanie Dockera) oraz Dockerfile, który definiuje sposób stworzenia obrazu kontenera. Zadaniem pipeline jest pobranie                repozytorium przedmiotu MD02025_INO i budowa obrazu dockera, zawartego w dockerfile na mojej gałęzi. Plik Jenkinsfile dla tego zadania wygląda następująco:
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   
+   Poprawne działanie pipeline prezentuje poniżej w konsoli oraz w Jenkinsie:
+   ![Zrzut ekranu 11](screenshots/11.PNG)
+   Po ponownym uruchomieniu pipeline działa poprawnie.
+
+## Stworzenie pipeline dla biblioteki XZ Utils
+Biblioteka XZ Utils to zestaw narzędzi i bibliotek do kompresji danych, opartych na algorytmie kompresji LZMA (Lempel-Ziv-Markov chain algorithm). Upewniłam się, że licencja potwierdza możliwość swobodnego obrotu kodem na potrzeby zadania. Na początku przeprowadzam analizę planowanych kroków dla procesu CI/CD:
+   - wymagania wstępne: Jenkins, Docker, Git, Autotools i CMake.
+   - dla projektu wykonuje diagram aktywności w programie Visual Paraview i zamieszcam poniżej:
+   ![Zrzut ekranu 12](screenshots/12.PNG)
+   - Tworzę również diagram wdrożeniowy, który opisuje zależności między składnikami, zasobami i artefaktami:
+   ![Zrzut ekranu 13](screenshots/13.PNG)
+   - 
