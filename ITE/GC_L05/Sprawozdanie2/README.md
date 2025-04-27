@@ -1034,12 +1034,53 @@ Finished: SUCCESS
 ## Opis celu - diagram UML
 
 ```mermaid
-flowchart TD
-    A[Klonowanie repozytorium (Checkout)] --> B[Budowanie obrazu Dockera (Build Docker Image)]
-    B --> C[Uruchomienie testów (Test)]
-    C --> D{Czy testy przeszły?}
-    D -- Tak --> E[Pipeline SUCCESS]
-    D -- Nie --> F[Pipeline FAIL]
+---
+title: Diagram aktywności CI/CD (UML)
+---
+stateDiagram-v2
+    [*] --> KlonowanieRepo
+    KlonowanieRepo --> CzyszczenieObrazowDocker
+    CzyszczenieObrazowDocker --> BudowanieAplikacji
+    BudowanieAplikacji --> PublikacjaObrazu
+    PublikacjaObrazu --> UruchamianieTestow
+    UruchamianieTestow --> SprawdzenieLacznosci
+    SprawdzenieLacznosci --> PipelineSuccess : Łączność OK
+    SprawdzenieLacznosci --> PipelineFail : Brak łączności
+    PipelineSuccess --> [*]
+    PipelineFail --> [*]
+
+    state KlonowanieRepo {
+        :Checkout repozytorium;
+    }
+
+    state CzyszczenieObrazowDocker {
+        :Usunięcie starych obrazów Docker;
+    }
+
+    state BudowanieAplikacji {
+        :Docker build image;
+    }
+
+    state PublikacjaObrazu {
+        :Docker publish + npm start;
+    }
+
+    state UruchamianieTestow {
+        :Testy w kontenerze testowym;
+    }
+
+    state SprawdzenieLacznosci {
+        :Sprawdzenie połączenia z aplikacją;
+    }
+
+    state PipelineSuccess {
+        :Zakończenie sukcesem;
+    }
+
+    state PipelineFail {
+        :Zakończenie niepowodzeniem;
+    }
+
 
 ```
 
