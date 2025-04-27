@@ -2,7 +2,7 @@
 
 ---
 
-## Laboratorium 5, Pipeline, Jenkins, izolacja etapów
+## Laboratorium 5,6,7: Pipeline, Jenkins, izolacja etapów
 
 ---
  
@@ -100,6 +100,10 @@ Zadanie do wykonania, jeżeli poprawnie działa obiekt *pipeline* i udało się 
  Napotkałem takie problemy jak: problemy ze ścieżkami, pull access denied, 
 
   ![Konfiguracja stworzonego pipelinu](Images/Pipeline3_config.png "Konfiguracja stworzonego pipelinu")
+
+ Możemy wymusić na jenkinsie klonowanie kodu z repozytorium za każdym uruchomieniem pipelinu ( przeciwdziałanie cachom ), ustawiając additional behaviour w konfiguracji pipelinu, tak jak na screenie poniżej
+
+  ![Additional behaviour - czyszczenie środowiska](Images/fresh.png "Czyszczenie starego kodu przed clonem")
 
   ![Efekty wykonania testów](Images/Pipeline3_tests.png "Efekty wykonania testów")
 
