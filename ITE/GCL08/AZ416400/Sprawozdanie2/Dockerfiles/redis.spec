@@ -1,11 +1,11 @@
 Name:           redis
-Version:        7.2.0
+Version:        __REDIS_VERSION__
 Release:        1%{?dist}
 Summary:        Redis server built externally
 
 License:        BSD
 URL:            https://redis.io/
-Source0:        redis-7.2.0.tar.gz
+Source0:        redis-__REDIS_VERSION__.tar.gz
 
 BuildArch:      x86_64
 
@@ -29,5 +29,5 @@ install -m 0755 redis-cli %{buildroot}/usr/local/bin/redis-cli
 /usr/local/bin/redis-cli
 
 %changelog
-* Sun Apr 27 2025 - 7.2.0
+* Sun Apr 27 2025 - __REDIS_VERSION__
 - Packaged redis-server and redis-cli binaries into RPM

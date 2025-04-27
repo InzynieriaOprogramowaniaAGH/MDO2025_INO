@@ -22,6 +22,7 @@ RUN mkdir /root/redis-${REDIS_VERSION} && \
     cd /root && tar czvf redis-${REDIS_VERSION}.tar.gz redis-${REDIS_VERSION} && \
     cp redis-${REDIS_VERSION}.tar.gz /root/rpmbuild/SOURCES/
 
+RUN sed -i "s/__REDIS_VERSION__/${REDIS_VERSION}/g" /root/rpmbuild/SPECS/redis.spec
 RUN rpmbuild -ba /root/rpmbuild/SPECS/redis.spec
 
 CMD ["sh", "-c", "mkdir -p /output && cp /root/rpmbuild/RPMS/x86_64/*.rpm /output/"]
