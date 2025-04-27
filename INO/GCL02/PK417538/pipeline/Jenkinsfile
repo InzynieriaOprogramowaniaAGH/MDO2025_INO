@@ -25,6 +25,19 @@ pipeline {
       }
     }
 
+    stage('Build deploy image') {
+        steps {
+            sh """
+            docker build \
+                --target deploy \
+                -t pytest-examples-deploy:0.1.0 \
+                -f INO/GCL02/PK417538/pipeline/Dockerfile \
+                .
+            """
+        }
+    }
+
+
     stage('Package / Deploy artifacts') {
         steps {
             sh '''
