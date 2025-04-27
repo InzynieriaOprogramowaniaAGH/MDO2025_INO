@@ -1,0 +1,9 @@
+# Dockerfile.build
+FROM fedora:latest
+
+RUN dnf install -y git cmake make gcc-c++
+
+WORKDIR /app
+
+RUN git clone https://github.com/doctest/doctest.git .
+RUN mkdir build && cd build && cmake .. && make

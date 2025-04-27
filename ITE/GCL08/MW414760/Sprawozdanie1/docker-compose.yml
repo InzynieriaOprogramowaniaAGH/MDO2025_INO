@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  builder:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+    image: doctest-builder
+
+  tester:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    image: doctest-tester
+    depends_on:
+      - builder
