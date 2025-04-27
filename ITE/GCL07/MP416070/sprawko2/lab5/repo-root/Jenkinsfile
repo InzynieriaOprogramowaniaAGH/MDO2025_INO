@@ -15,6 +15,8 @@ pipeline {
         // Unikalne tagi: irssi/builder:42, irssi/tester:42, …
         BUILDER_IMG    = "${DOCKER_USER}/irssi-builder:${BUILD_NUMBER}"
         TESTER_IMG     = "${DOCKER_USER}/irssi/tester:${BUILD_NUMBER}"
+        RUNTIME_IMG  = "${DOCKER_USER}/irssi-runtime:${BUILD_NUMBER}"
+        TAR_NAME     = "irssi-${BUILD_NUMBER}.tar.gz"
     }
 
     stages {
@@ -58,6 +60,37 @@ pipeline {
             }
         }
 
+        /* --------  build runtime image -------- */
+        stage('Build ➜ runtime image') {
+            steps {
+                sh """
+                docker build --target runtime \
+                            -t ${RUNTIME_IMG} ${DOCKER_DIR}
+                """
+            }
+            }
+        stage('Smoke-test runtime') {
+            steps {
+                sh """
+                docker run --rm ${RUNTIME_IMG} irssi --version
+                """
+            }
+        }
+
+        /* --------  package tarball -------- */
+        stage('Package ➜ tar.gz artifact') {
+            steps {
+                sh """
+                cid=\$(docker create ${BUILDER_IMG})             # tymczasowy kontener
+                docker cp \${cid}:/app/builddir/install .out     # 1. install dir (przykład)
+                docker cp \${cid}:/usr/bin/irssi .out/usr/bin/   # 2. samo binarium, gdybyś wolał
+                docker rm \${cid}
+
+                tar -czf ${TAR_NAME} -C .out .                   # gotowy tarball
+                """
+            }
+        }
+
         stage('Publish images') {
             environment {
                 DOCKERHUB  = credentials('dockerhub-creds')   // token+login zapisany w Jenkinsie
@@ -68,7 +101,7 @@ pipeline {
                         -u \$DOCKERHUB_USR --password-stdin
 
                 docker push ${BUILDER_IMG}
-                docker push ${TESTER_IMG}
+                docker push ${RUNTIME_IMG}
                 """
             }
         }
@@ -80,6 +113,7 @@ pipeline {
             archiveArtifacts artifacts: '**/test.log', allowEmptyArchive: true
             junit            testResults: '**/builddir/meson-logs/*.xml',
                               allowEmptyResults: true
+            archiveArtifacts artifacts: "${TAR_NAME}", allowEmptyArchive: false
         }
     }
 }

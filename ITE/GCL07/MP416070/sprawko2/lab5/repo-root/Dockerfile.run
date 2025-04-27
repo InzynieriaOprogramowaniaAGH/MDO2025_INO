@@ -1,0 +1,15 @@
+# ---------- Stage 1: build ----------
+    FROM fedora:latest AS builder
+    RUN dnf -y install gcc glib2-devel openssl-devel ncurses-devel \
+                       meson ninja git perl-ExtUtils-Embed && dnf clean all
+    WORKDIR /src
+    RUN git clone --depth 1 https://github.com/irssi/irssi.git .
+    RUN meson setup builddir -Dprefix=/usr && ninja -C builddir install
+    
+    # ---------- Stage 2: runtime ----------
+    FROM fedora-minimal:latest   # albo gholke/distroless-glibc, alpine-ng compat. …
+    COPY --from=builder /usr /usr
+    # Irssi potrzebuje ncurses + openssl runtime:
+    RUN microdnf -y install ncurses openssl && microdnf clean all
+    ENTRYPOINT ["irssi"]
+    
