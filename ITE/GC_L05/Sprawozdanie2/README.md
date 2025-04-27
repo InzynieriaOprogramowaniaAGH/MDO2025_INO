@@ -1035,8 +1035,7 @@ Finished: SUCCESS
 
 ```mermaid
 flowchart TD
-    Start --> Clone[Klonowanie repozytorium]
-    Clone --> Build[Budowanie aplikacji]
+    Clone[Klonowanie repozytorium] --> Build[Budowanie aplikacji]
     Build --> Test[Uruchamianie testów]
     Test --> Report[Sprawdzenie działania aplikacji]
     Report --> End[Suckes pipeline]
