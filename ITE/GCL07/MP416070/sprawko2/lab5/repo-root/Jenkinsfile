@@ -49,14 +49,11 @@ pipeline {
         /* ─────────────── Test inside tester ───────────────── */
         stage('Test') {
             steps {
-                script {
-                    docker.image("${TESTER_IMG}").inside('-u root:root') {
-                        sh '''
-                          meson test -C builddir --print-errorlogs \
-                                     --logbase junit | tee test.log
-                        '''
-                    }
-                }
+                sh """
+                  docker run --rm ${TESTER_IMG} \
+                    /bin/bash -c "meson test -C /app/builddir --print-errorlogs --logbase junit" \
+                    | tee test.log
+                """
             }
         }
     }
