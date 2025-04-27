@@ -35,3 +35,27 @@ Utworzyłem playbook w pliku `ping_all.yml`, który pinguje wszystkie maszyny i 
 ![playbook](./lab7/ping-all.png)
 ![playbook](./lab7/ping_all.yml)
 ![playbook](./lab7/ping-all-playbook-test.png)
+
+Utworzyłem playbook do kopiowania pliku `inventory` na maszyny z `endpoints`. Pierwsze uruchomienie:
+![playbook copy](./lab7/copy-inv-playbook.png)
+![playbook copy](./lab7/copy-inv-run-1.png)
+![playbook copy](./lab7/copy-inv-target.png)
+
+Podczas drugiego uruchomienia ansible sprawdził tylko czy kopiowany plik istnieje i jak zobaczył, ze tak to nie wprowadził w nim zadnych zmian.
+![playbook copy run 2](./lab7/copy-inv-run-2.png)
+
+Utworzyłem playbook do zaaktualizowania pakietów w systemie. Problemem były wymagane uprawnienia, rozwiązałem to dodając do uzytkownika `ansible` regułę `NOPASSWD: ALL`. Jest to rozwiązanie BARDZO niebezpieczne w środowisku produkcyjnym, lecz na potrzebę laboratoriów wystarczające.
+![nopasswd](./lab7/target-nopasswd.png)
+![update packages](./lab7/update-packages.png)
+![update packages](./lab7/update-packages-run.png)
+
+Utworzyłem playbook do zrestartowania usług `sshd` i `rngd`. Pierwsza usługa została zrestartowana ale `rngd` nie jest zainstalowane.
+![restart services](./lab7/restart-services.png)
+![restart services](./lab7/restart-services-run.png)
+
+Na koniec sprawdziłem jak ansible zachowa się gdy w targecie wyłączone będzie ssh, lub odłączona będzie karta sieciowa.
+![ssh off](./lab7/stop-sshd.png)
+![ssh off test](./lab7/ssh-off-test.png)
+
+![wylaczenie karty](./lab7/wylaczenie-karty.png)
+![wylaczenie karty](./lab7/wylaczenie-karty-test.png)
