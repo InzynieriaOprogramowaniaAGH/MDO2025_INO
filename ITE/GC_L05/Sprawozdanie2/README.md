@@ -1,5 +1,5 @@
 ---
-# Pipeline, Jenkins, izolacja etapów
+# Pipeline, Jenkins, izolacja etapów - laboratorium 5
 
 ## Zadanie wstępne: uruchomienie
 ---
