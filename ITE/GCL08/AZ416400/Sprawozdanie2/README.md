@@ -165,3 +165,273 @@ Uruchomienie skryptu:
 
 Obserwując czay wykonania obu pipelineów możemy zauważyć podobne wynki czasowe, co sugeruje, że oba pipeline'y wykonały tę samą pracę i żadne czynności nie zostały pominięte chociażby poprzez cache'owanie
 
+# Zajęcia 06/07
+
+![alt text](./img/image50.png)
+
+![alt text](./img/image02.png)
+
+![alt text](./img/image47.png)
+
+![alt text](./img/image23.png)
+
+![alt text](./img/image39.png)
+
+![alt text](./img/image042.png)
+
+![alt text](./img/image031.png)
+
+![alt text](./img/image027.png)
+
+![alt text](./img/image05.png)
+
+![alt text](./img/image018.png)
+
+![alt text](./img/image015.png)
+
+![alt text](./img/image014.png)
+
+![alt text](./img/image016.png)
+
+![alt text](./img/image041.png)
+
+![alt text](./img/image036.png)
+
+    pipeline {
+        agent any
+
+        environment {
+            IMAGE_TAG = new Date().getTime()
+        }
+
+        stages {
+            stage('Prepare') {
+                steps {
+                    sh 'rm -rf MDO2025_INO'
+                    sh 'git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                    dir("MDO2025_INO") {
+                        sh 'git checkout AZ416400_S2'
+                    }
+                }
+            }
+
+            stage('Build Redis') {
+                steps {
+                    dir("MDO2025_INO/ITE/GCL08/AZ416400/Sprawozdanie2/Dockerfiles") {
+                        sh 'docker build --no-cache -t redisbld:${IMAGE_TAG} -f Dockerfile.redisbld .'
+                    }
+                }
+            }
+
+            stage('Test Redis') {
+                steps {
+                    dir("MDO2025_INO/ITE/GCL08/AZ416400/Sprawozdanie2/Dockerfiles") {
+                        sh 'docker build --no-cache --build-arg IMAGE_TAG=${IMAGE_TAG} -t redistest:${IMAGE_TAG} -f Dockerfile.redistest .'
+                    }
+                }
+            }
+        }
+    }
+
+![alt text](./img/image03.png)
+
+![alt text](./img/image07.png)
+
+![alt text](./img/image034.png)
+
+![alt text](./img/image021.png)
+
+![alt text](./img/image051.png)
+
+    Name:           redis-build
+    Version:        1.0
+    Release:        1%{?dist}
+    Summary:        Redis build (redis-server and redis-cli)
+
+    License:        BSD
+    URL:            https://redis.io/
+    Source0:        redis_build.tar.gz
+
+    BuildArch:      x86_64
+
+    %global debug_package %{nil}
+
+    %description
+    Redis build including redis-server and redis-cli
+
+    %prep
+    %setup -q
+
+    %build
+
+    %install
+    mkdir -p %{buildroot}/usr/local/bin
+    cp redis-server %{buildroot}/usr/local/bin/
+    cp redis-cli %{buildroot}/usr/local/bin/
+
+    %files
+    /usr/local/bin/redis-server
+    /usr/local/bin/redis-cli
+
+    %changelog
+    * Sat Apr 26 2025 - 1.0-1
+    - Initial build
+
+---
+    
+    rpmbuild -ba redis_build.spec
+
+![alt text](./img/image01.png)
+
+![alt text](./img/image044.png)
+
+![alt text](./img/image020.png)
+
+![Zrzut ekranu](./img/Zrzut%20ekranu%202025-04-28%20010513.png)
+
+![alt text](./img/image046.png)
+
+![alt text](./img/image026.png)
+
+    docker run --rm -v output:/output redis-rpm-builder:7.2.0
+
+![alt text](./img/image033.png)
+
+![alt text](./img/image024.png)
+
+![alt text](./img/image012.png)
+
+![alt text](./img/image017.png)
+
+    Name:           redis
+    Version:        __REDIS_VERSION__
+    Release:        1%{?dist}
+    Summary:        Redis server built externally
+
+    License:        BSD
+    URL:            https://redis.io/
+    Source0:        redis-__REDIS_VERSION__.tar.gz
+
+    BuildArch:      x86_64
+
+    %define debug_package %{nil}
+
+    %description
+    Redis packaged from precompiled binaries.
+
+    %prep
+    %setup -q
+
+    %build
+
+    %install
+    mkdir -p %{buildroot}/usr/local/bin
+    install -m 0755 redis-server %{buildroot}/usr/local/bin/redis-server
+    install -m 0755 redis-cli %{buildroot}/usr/local/bin/redis-cli
+
+    %files
+    /usr/local/bin/redis-server
+    /usr/local/bin/redis-cli
+
+    %changelog
+    * Sun Apr 27 2025 - __REDIS_VERSION__
+    - Packaged redis-server and redis-cli binaries into RPM
+
+![alt text](./img/Zrzut%20ekranu%202025-04-28%20010834.png)
+
+
+    pipeline {
+        agent any
+
+        environment {
+            IMAGE_TAG = sh(script: "date +%Y%m%d%H%M%S", returnStdout: true).trim()
+        }
+
+        stages {
+        stage('Prepare') {
+                steps {
+                    sh 'rm -rf MDO2025_INO'
+                    sh 'git clone --branch AZ416400_S2 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                }
+            }
+
+            stage('Build Redis') {
+                steps {
+                    dir("MDO2025_INO/ITE/GCL08/AZ416400/Sprawozdanie2/Dockerfiles") {
+                        sh 'docker build --no-cache -t redisbld:${IMAGE_TAG} -f Dockerfile.redisbld .'
+                    }
+                }
+            }
+
+            stage('Test Redis') {
+                steps {
+                    dir("MDO2025_INO/ITE/GCL08/AZ416400/Sprawozdanie2/Dockerfiles") {
+                        sh 'docker build --no-cache --build-arg IMAGE_TAG=${IMAGE_TAG} -t redistest:${IMAGE_TAG} -f Dockerfile.redistest .'
+                    }
+                }
+            }
+            
+            stage('Deploy RPM') {
+                steps {
+                    dir("MDO2025_INO/ITE/GCL08/AZ416400/Sprawozdanie2/Dockerfiles") {
+                        sh """
+                            mkdir -p ../redis_rpm_output
+                            
+                            docker build --no-cache --build-arg IMAGE_TAG=${IMAGE_TAG} --build-arg REDIS_VERSION=${IMAGE_TAG} -t redisdeploy:${IMAGE_TAG} -f Dockerfile.redisdeploy .
+                            docker create --name temp_redisdeploy redisdeploy:${IMAGE_TAG}
+                            docker cp temp_redisdeploy:/root/rpmbuild/RPMS/x86_64/. ../redis_rpm_output/
+                            docker rm temp_redisdeploy
+            
+                            ls -l ../redis_rpm_output
+                        """
+                    }
+                }
+            }
+            
+            stage('Test RPM') {
+                steps {
+                    dir("MDO2025_INO/ITE/GCL08/AZ416400/Sprawozdanie2") {
+                        sh '''
+            
+                            docker build --no-cache -t myredis:${IMAGE_TAG} -f ./Dockerfiles/Dockerfile.redisrpmtest .
+        
+                            docker network create redis-test-net || true
+                            docker run -d --name myredis-server --network redis-test-net myredis:${IMAGE_TAG} redis-server --protected-mode no
+                            docker run -d --name official-redis --network redis-test-net redis:7.2.0
+            
+                            echo "[INFO] Waiting 5 seconds for Redis servers to boot up..."
+                            sleep 5
+            
+                            docker exec official-redis redis-cli -h myredis-server ping
+                            docker rm -f myredis-server official-redis || true
+                            docker network rm redis-test-net || true
+                        '''
+                    }
+                }
+            }
+            
+            stage('Publish RPM') {
+                steps {
+                    dir("MDO2025_INO/ITE/GCL08/AZ416400/Sprawozdanie2/redis_rpm_output") {
+                        script {
+                            def rpmFile = sh(script: "ls *.rpm", returnStdout: true).trim()
+            
+                            if (rpmFile) {
+                                echo "[INFO] Found RPM: ${rpmFile}"
+                                archiveArtifacts artifacts: "${rpmFile}", fingerprint: true
+                            } else {
+                                error "No RPM file found in redis_rpm_output. Build failed."
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+![alt text](./img/image06.png)
+
+![alt text](./img/image011.png)
+
+![alt text](./img/image048.png)
