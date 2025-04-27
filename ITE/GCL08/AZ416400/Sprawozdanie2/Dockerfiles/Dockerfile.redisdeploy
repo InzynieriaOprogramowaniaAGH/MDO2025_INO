@@ -1,5 +1,7 @@
-FROM redisbld AS builder
+ARG IMAGE_TAG
+FROM redisbld:${IMAGE_TAG} AS builder
 FROM fedora:latest
+
 
 ARG REDIS_VERSION=7.2.0
 ENV REDIS_VERSION=${REDIS_VERSION}
