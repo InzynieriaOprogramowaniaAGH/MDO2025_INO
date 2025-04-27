@@ -1,7 +1,7 @@
-FROM maven:3.9.9-eclipse-temurin-17 AS tester
+ARG BUILD_TAG
+
+FROM skwasny/myapp:builder-${BUILD_TAG} AS tester
 
 WORKDIR /workspace
-
-RUN git clone https://github.com/sauer515/teacher-management.git .
 
 RUN mvn test -B

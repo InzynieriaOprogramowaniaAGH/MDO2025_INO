@@ -43,6 +43,7 @@ pipeline {
             mkdir -p target/surefire-reports
 
             docker build --no-cache \
+              --build-arg BUILD_TAG=${BUILD_TAG} \
               -f Dockerfile.test \
               -t ${IMAGE_NAME}:tester-${BUILD_TAG} \
               .
@@ -80,7 +81,7 @@ pipeline {
             done
 
             echo "Application failed to start."
-            docker-compose -f docker-compose.yml logs
+            docker compose -f docker-compose.yml logs
             exit 1
           """
         }
@@ -105,7 +106,7 @@ pipeline {
   post {
     cleanup {
       sh 'docker rm -f myapp mydb || true'
-      sh 'docker network rm myapp-net || true'
+      sh 'docker network rm appnet || true'
       sh 'docker volume prune -f || true'
       sh """
         docker rmi -f ${IMAGE_NAME}:builder-${BUILD_TAG} || true
