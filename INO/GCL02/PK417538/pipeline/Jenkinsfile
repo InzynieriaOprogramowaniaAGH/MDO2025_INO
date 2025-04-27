@@ -1,0 +1,64 @@
+pipeline {
+  agent any
+
+  environment {
+    // gdzie trzymasz lokalne PyPI
+    PYPI_DIR = "${HOME}/local-pypi/packages"
+    IMAGE_NAME = "pytest-examples-build"
+  }
+
+  stages {
+    stage('Checkout & Build Docker image') {
+      steps {
+        // zakładamy, że w repo jest Dockerfile z tym, co podałeś
+        checkout scm
+        script {
+          docker.build(IMAGE_NAME, ".")
+        }
+      }
+    }
+
+    stage('Run tests inside Docker') {
+      steps {
+        script {
+          docker.image(IMAGE_NAME).inside {
+            // domyślnie workspace jest zamapowany do /var/jenkins_home/workspace/…
+            sh '''
+              make test 2>&1 | tee test.log
+            '''
+          }
+        }
+      }
+    }
+
+    stage('Package sdist') {
+      steps {
+        script {
+          docker.image(IMAGE_NAME).inside {
+            // zakładamy, że w /app jest kod i działa python setup.py
+            sh '''
+              python setup.py sdist --formats=gztar
+              # dist/*.tar.gz trafi do workspace/dist
+            '''
+          }
+        }
+      }
+    }
+
+    stage('Publish to local PyPI') {
+      steps {
+        sh '''
+          mkdir -p ${PYPI_DIR}
+          cp dist/*.tar.gz ${PYPI_DIR}/
+        '''
+      }
+    }
+  }
+
+  post {
+    always {
+      // archiwizujemy logi testów
+      archiveArtifacts artifacts: 'test.log', fingerprint: true
+    }
+  }
+}
