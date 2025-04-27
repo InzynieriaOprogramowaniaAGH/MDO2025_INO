@@ -1,0 +1,6 @@
+- name: Deploy Apache via role
+  hosts: endpoints
+  become: yes
+
+  roles:
+    - deploy_apache
