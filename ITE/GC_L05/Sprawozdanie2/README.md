@@ -3,6 +3,7 @@
 
 ## Zadanie wstępne: uruchomienie
 ---
+Następnie utworzono pierwszy projekt typu „Freestyle project”, którego zadaniem było wyświetlenie wyniku polecenia uname. W tym celu w sekcji „Build” dodano nowy krok „Execute shell”, w którym wpisano komendę uname -a. Po zapisaniu i uruchomieniu projektu Jenkins poprawnie wykonał zadanie i w konsoli wyświetlił informacje o systemie. 
 ```
 Started by user AmeliaN
 
@@ -14,6 +15,7 @@ Linux 95452473a912 6.13.7-200.fc41.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Mar 13 17:4
 Finished: SUCCESS
 
 ```
+W kolejnym kroku stworzono nowy projekt w Jenkinsie, którego celem było zwrócenie błędu wtedy, gdy aktualna godzina jest nieparzysta. W sekcji „Build” dodano kolejny krok „Execute shell”, w którym napisano prosty skrypt sprawdzający bieżącą godzinę przy pomocy polecenia date +%H. Skrypt oceniał, czy godzina jest nieparzysta, i w takim przypadku kończył działanie komendą exit 1, co powodowało, że cały build w Jenkinsie był oznaczany jako nieudany. Jeśli godzina była parzysta, skrypt kończył się komendą exit 0, czyli sukcesem.
 ```
 Started by user AmeliaN
 
@@ -59,6 +61,7 @@ Finished: FAILURE
 
 
 ```
+Ostatni projekt pobierał obraz kontenera Ubuntu. Utworzono nowy projekt, w którym w sekcji „Build” wstawiono komendę docker pull ubuntu. Po uruchomieniu projektu Jenkins pobrał obraz Ubuntu z oficjalnego rejestru Docker Hub, a w konsoli projektu wyświetliły się szczegóły dotyczące pobierania poszczególnych warstw obrazu.
 
 ```
 Started by user AmeliaN
