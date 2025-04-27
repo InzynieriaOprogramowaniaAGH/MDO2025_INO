@@ -162,16 +162,20 @@ Pipeline został podzielony na pięć głównych etapów:
 - Budowa obrazu pomocniczego `xz-deploy` z `Dockerfile.deploy`.
 
 - W kontenerze:
-  - instalacja artefaktu `xz.tar.gz`,
-  - kompilacja `deploy.c` z użyciem `liblzma`,
-  - testowe uruchomienie programu (`/tmp/deploy_test`),
+  - instalacja artefaktu `xz-${BUILD_NUMBER}.tar.gz`,
+  - rozpakowanie archiwum,
+  - kompilacja programu `deploy.c` z użyciem biblioteki `liblzma`,
+  - **testowe uruchomienie programu `/tmp/deploy_test` (smoketest)**,
   - weryfikacja poprawności działania artefaktu.
 
-- Następnie:
-  - rozpakowanie `xz.tar.gz`,
-  - utworzenie obrazu produkcyjnego `xz-prod-${BUILD_NUMBER}`,
-  - obraz zawiera jedynie gotowy do uruchomienia program
+- **Smoketest:**  
+  Podczas etapu Deploy wykonano **smoketest**, polegający na skompilowaniu i uruchomieniu prostego programu (`deploy_test`), który korzystał z biblioteki `liblzma` zbudowanej w ramach wcześniejszego etapu.  
+  Program `/tmp/deploy_test` został uruchomiony w kontenerze `xz-deploy`, a jego pomyślne wykonanie potwierdziło, że biblioteka działa poprawnie w środowisku runtime.
 
+- Następnie:
+  - rozpakowano `xz.tar.gz` lokalnie,
+  - utworzono obraz produkcyjny `xz-prod-${BUILD_NUMBER}`,
+  - obraz produkcyjny zawiera tylko gotowy do uruchomienia program.
 
 ### 5. Publish
 - Artefakty `xz.tar.gz` i `xz_test.log` dołączone do rezultatów pipeline'u w Jenkinsie.
