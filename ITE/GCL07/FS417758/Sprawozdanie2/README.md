@@ -1,6 +1,6 @@
 # Sprawozdanie 2
 Filip Smoron [FS417758]
-## Laboratoria 5 - Pipeline, Jenikns, Izolacja etapów
+## Pipeline, Jenikns, Izolacja etapów
 
 #### Instancja Jenkins
 
@@ -71,8 +71,8 @@ Tworzymy konto i możemy korzystać z jenkinsa
 
 1. Wyświetlanie ```
 uname   ```
-```
-unname -a
+```sh
+uname -a
 ```
 Polecenie to wyświetla informacje o systemie operacyjnym oraz sprzęcie.
 ![alt text](<Zrzut ekranu 2025-04-03 174516.png>)
