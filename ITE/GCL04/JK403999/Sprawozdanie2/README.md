@@ -71,13 +71,13 @@
 
   ![Początek logu wykonania pipelinu](Images/pipeline2_begi.png "Początek logu wykonania pipelinu")
 
-  ![Koniec logu wykonania pipelinu](Images/pipeline2_end.png "Koniec logu wykonania pipelinu")
+  ![Koniec logu wykonania pipelinu](Images/Pipeline2_end.png "Koniec logu wykonania pipelinu")
 
 * Uruchom stworzony *pipeline* drugi raz
 
   Po raz drugi pipeline wykonał się bez problemów, tym razem tylko w 3 minuty, ponieważ tym razem nie musiał ściągać obrazu do dockera, a także miał już zcachowane wykonane polecenia w kontenerze.
 
-  ![Część logu drugiego wykonania pipelinu, wyświetlający zcachowane polecenia](Images/pipeline2_exec2.png "Część logu drugiego wykonania pipelinu")
+  ![Część logu drugiego wykonania pipelinu, wyświetlający zcachowane polecenia](Images/Pipeline2_exec2.png "Część logu drugiego wykonania pipelinu")
  
 ### Opis celu
 Dla osób z wybranym projektem
@@ -106,7 +106,6 @@ Zadanie do wykonania, jeżeli poprawnie działa obiekt *pipeline* i udało się 
   Zawartość Jenskinsfila w zforkowanym repozytorium (Zawartość Dockerfilów bez zmian względem poprzedniego sprawozdania)
 
   ```Jenkinsfile
-
 pipeline {
     agent any
     stages {
@@ -130,7 +129,6 @@ pipeline {
         }
     }
 }
-
   ```
 
  Link do sforkowanego repozytorium: https://github.com/elsharravy/irssi
@@ -205,7 +203,6 @@ CMD ["irssi"]
     * Opcjonalnie, krok `Publish` (w przypadku podania parametru) może dokonywać promocji artefaktu na zewnętrzne *registry*
 
 ```Jenkinsfile
-
 pipeline {
     agent any
     stages {
@@ -245,11 +242,25 @@ pipeline {
         }
     }
 }
-
 ```
 
 Powyżej znajduje się ostateczna wersja jenkinsfila, wraz z tworzeniem artefaktu, poprzez skopiowanie binarnego pliku irssi z uruchomionego kontenera, do workspace'a jenkinsowego, a następnie wskazanie tego artefaktu
-jenkinsowi do zarchiwizowania. Na zakończenie skrypt niezależnie czy pipeline zakończył się sukcesem czy nie, zatrzymuje stworzony kontener a następnie go usuwa. (dodałem to, żeby nie zaśmiecać sobie niepotrzebnie maszyny).
+jenkinsowi do zarchiwizowania. Na zakończenie skrypt niezależnie czy pipeline zakończył się sukcesem czy nie, zatrzymuje stworzony kontener a następnie go usuwa. (dodałem to, żeby nie zaśmiecać sobie niepotrzebnie maszyny). Jako artefakt wybrany został sam plik binarny irssi ponieważ nie jest to "lekki", który do uruchomienia potrzebuje tylko parę zależności wypisanych w pliku Dockerfile.dep, chociaż jakby się uprzeć można też udostępnić kontener dockera z irssi, chociażby dlatego aby móc szybko i łatwo zweryfikować działanie. (chociaż gdy tworzymy taki program to chyba mamy gotowe środowisko na którym chcemy go uruchomić, nie jest to jakiś serwer który ma cały czas działać w tle)
+
+Próbowałem sprawić aby pipeline uruchamiał się automatycznie po dokonaniu zmian w repozytorium, jednak nie mogłem wykorzystać web-hooka w githubie ponieważ, nasz jenkinsfile jest jedynie na localhoscie.
+Następnie próbowałem osiągnąć to za pomocą git-hooka, jednak nie ma post-push hooka, jest jedynie pre-push (prawdopodobnie nie zgrało by się to czasowo), dlatego ostatecznie zostałem z poleceniem curl za pomocą którego mogę uruchamiać zadanie pipeline'a z terminala:
+
+```
+curl --user root:<wygenerowany_api_token> "http://localhost:8080/job/SCM_Pipeline/build?token=<wygenerowany_pipeline_token>"
+```
+
+Na poniższym screenie widać że sygnał do builda został wysłany zdalnie, widać też na nim że po zakończeniu pipelina sukcesem, w Jenkinsie mamy dostęp do zbudowanego artefaktu który możemy także pobrać. 
+
+  ![Pipeline job uruchomiony zdalnie](Images/job_z_terminala.png "Pipeline job uruchomiony zdalnie")
+
+Aby to zadziałało należalo oznaczyć odpowiednią opcję w ustawieniach pipelinu:
+
+  ![Konfiguracja pipelina w celu budowania zdalnego](Images/budowanie_zdalne.png "Konfiguracja pipelina w celu budowania zdalnego")
 
 #### Wskazówka
 Po opracowaniu formy redystrybucyjnej, stwórz obraz runtime’owy (bez dependencji potrzebnych wyłącznie do builda!), zasilony artefaktem, zainstaluj w nim program z niego i uruchom. Jeżeli formą redystrybucyjną jest kontener, uruchom kontener – w sposób nieblokujący: pozwól pipeline’owi kontynuować po uruchomieniu, ale wykaż, że program uruchomiony w owym kontenerze działa.
