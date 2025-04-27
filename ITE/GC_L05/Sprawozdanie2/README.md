@@ -1034,49 +1034,14 @@ Finished: SUCCESS
 ## Opis celu - diagram UML
 
 ```mermaid
-stateDiagram-v2
-    [*] --> KlonowanieRepo
-    KlonowanieRepo --> CzyszczenieObrazowDocker
-    CzyszczenieObrazowDocker --> BudowanieAplikacji
-    BudowanieAplikacji --> PublikacjaObrazu
-    PublikacjaObrazu --> UruchamianieTestow
-    UruchamianieTestow --> SprawdzenieLacznosci
-    SprawdzenieLacznosci --> PipelineSuccess : Łączność OK
-    SprawdzenieLacznosci --> PipelineFail : Brak łączności
-    PipelineSuccess --> [*]
-    PipelineFail --> [*]
-
-    state KlonowanieRepo {
-        state Checkout
-    }
-
-    state CzyszczenieObrazowDocker {
-        state UsuniecieStarychObrazow
-    }
-
-    state BudowanieAplikacji {
-        state DockerBuildImage
-    }
-
-    state PublikacjaObrazu {
-        state DockerPublishAndStart
-    }
-
-    state UruchamianieTestow {
-        state TestyWKontenerze
-    }
-
-    state SprawdzenieLacznosci {
-        state CheckApplicationConnection
-    }
-
-    state PipelineSuccess {
-        state SuccessEnd
-    }
-
-    state PipelineFail {
-        state FailureEnd
-    }
+flowchart TD
+    A[Klonowanie repozytorium] --> B[Czyszczenie starych obrazów Dockera]
+    B --> C[Budowanie aplikacji (docker build)]
+    C --> D[Publikacja obrazu i start aplikacji]
+    D --> E[Uruchamianie testów]
+    E --> F{Sprawdzenie działania aplikacji}
+    F -- OK --> G[Sukces pipeline]
+    F -- Błąd --> H[Failure pipeline]
 
 ```
 
