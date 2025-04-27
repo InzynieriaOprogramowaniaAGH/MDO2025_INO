@@ -1,37 +1,48 @@
 pipeline {
   agent any
 
-  environment {
-    IMAGE      = 'pytest-examples-build:0.1.0'
-    DOCKERFILE = 'INO/GCL02/PK417538/pipeline/Dockerfile.build'
-    CONTEXT    = 'INO/GCL02/PK417538/pipeline'
-  }
-
   stages {
-    stage('Checkout') {
+    stage('Build image') {
       steps {
-        checkout scm
+        sh '''
+          docker build \
+            --target builder \
+            -t pytest-examples-builder:0.1.0 \
+            -f INO/GCL02/PK417538/pipeline/Dockerfile .
+        '''
       }
     }
 
-    stage('Build & Test Docker image') {
+    stage('Test image') {
       steps {
-        sh "docker build -t ${IMAGE} -f ${DOCKERFILE} ${CONTEXT}"
+        sh '''
+          docker build \
+            --target tester \
+            -t pytest-examples-tester:0.1.0 \
+            -f INO/GCL02/PK417538/pipeline/Dockerfile .
+        '''
+      }
+    }
 
-        script {
-          def cid = sh(script: "docker create ${IMAGE}", returnStdout: true).trim()
-          sh "docker cp ${cid}:/app/test.log ${WORKSPACE}/test.log"
-          sh "docker cp ${cid}:/app/dist ${WORKSPACE}/dist"
-          sh "docker rm ${cid}"
-        }
+    stage('Package / Deploy artifacts') {
+      steps {
+        // zbuduj stage deploy i wyciągnij paczki
+        sh '''
+          docker build \
+            --target deploy \
+            -t pytest-examples-deploy:0.1.0 \
+            -f INO/GCL02/PK417538/pipeline/Dockerfile .
+          CONTAINER=$(docker create pytest-examples-deploy:0.1.0)
+          docker cp $CONTAINER:/packages /home/user/local-pypi/packages
+          docker rm $CONTAINER
+        '''
       }
     }
   }
 
   post {
     always {
-      archiveArtifacts artifacts: 'test.log', fingerprint: true
-      archiveArtifacts artifacts: 'dist/*.whl'
+      archiveArtifacts artifacts: 'test.log, dist/**', fingerprint: true
     }
   }
 }
