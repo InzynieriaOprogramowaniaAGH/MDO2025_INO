@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+    
+    environment {
+        IMAGE_NAME = "tomaszek03/redis-app"
+        IMAGE_TAG = "v1.0.${BUILD_NUMBER}"
+    }
+    
+    stages {
+        stage('Clone&Checkout') {
+            steps {
+                sh "rm -fr MDO2025_INO"
+                sh "git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git"
+                dir("MDO2025_INO") { sh "git checkout TM415261" }
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "docker build --no-cache -t redis-builder -f MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie2/project/Dockerfile.build ."
+            }
+        }
+        stage('Test') {
+            steps {
+                sh "docker build --no-cache -t redis-test -f MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie2/project/Dockerfile.test ."
+            }
+        }
+        stage('RunningTests') {
+            steps {
+                sh "docker run --rm redis-test"
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh """
+                    if [ \$(docker ps -a -q -f name=redis-deploy-test) ]; then
+                        docker rm -f redis-deploy-test
+                    fi
+                """
+                sh """ 
+                    docker build --no-cache -t ${IMAGE_NAME}:${IMAGE_TAG} -f MDO2025_INO/ITE/GCL05/TM415261/Sprawozdanie2/Dockerfile.deploy .
+                """
+                echo "Testing deploy..."
+                sh """
+                    docker network inspect test-net >/dev/null 2>&1 || docker network create test-net
+                    docker run -d --name redis-deploy-test --network test-net ${IMAGE_NAME}:${IMAGE_TAG}
+                    sleep 5
+                    docker run --rm --network test-net redis redis-cli -h redis-deploy-test PING | grep PONG
+                    docker run --rm --network test-net redis redis-cli -h redis-deploy-test SET test_key "MyKey" | grep OK
+                    docker run --rm --network test-net redis redis-cli -h redis-deploy-test GET test_key | grep MyKey
+                    docker stop redis-deploy-test
+                    docker rm redis-deploy-test
+                    docker network rm test-net
+                """
+            }
+        }
+        stage('Publish') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                        echo "Logging into DockerHub as ${DOCKER_USERNAME}..."
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                        echo "Pushing image: ${IMAGE_NAME}:${IMAGE_TAG} to DockerHub..."
+                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
+        
+                        echo "Creating and pushing tag: latest..."
+                        docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
+                        docker push ${IMAGE_NAME}:latest
+                        docker logout
+                    '''
+        }
+    }
+        }
+    }
+}

@@ -1,0 +1,7 @@
+FROM redis-builder
+
+WORKDIR /app/redis
+
+CMD ["./runtest", "--single", "unit/printver"]
+
+

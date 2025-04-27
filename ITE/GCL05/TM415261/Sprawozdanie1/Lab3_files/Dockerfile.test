@@ -1,0 +1,5 @@
+FROM sds-img
+
+WORKDIR /app
+
+CMD ["./sds-test"]

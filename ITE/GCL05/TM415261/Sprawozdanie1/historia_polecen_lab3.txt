@@ -1,0 +1,35 @@
+  539  git clone https://github.com/antirez/sds.git
+  540  ls
+  541  cd sds
+  542  make
+  543  sudo yum install make
+  544  gcc
+  545  sudo yum install gcc
+  546  make
+  547  ./sds-test
+  548  cd ..
+  549  cd github/MDO2025_INO/ITE/GCL05/TM415261/
+  550  cd Sprawozdanie1/
+  551  ls
+  552  docker pull ubuntu
+  553  sudo docker pull ubuntu
+  554  sudo docker run -it ubuntu
+  555  ls
+  556  mkdir Lab3_files
+  557  cd Lab3_files/
+  558  touch Dockerfile
+  559  nano Dockerfile 
+  560  touch Dockerfile.test
+  561  nano Dockerfile.test 
+  562  ls
+  563  sudo docker build -t sds-container .
+  564  sudo docker build -t sds-container -f Dockerfile.test .
+  565  sudo docker run -it sds-container
+  566  sudo docker run -it sds-container sh
+  567  touch docker-compose.yml
+  568  nano docker-compose.yml 
+  569  sudo yum install docker-compose
+  570  sudo docker-compose app sds-test
+  571  sudo docker-compose up sds-test
+  572  nano docker-compose.yml 
+  573  sudo docker-compose up sds-test
