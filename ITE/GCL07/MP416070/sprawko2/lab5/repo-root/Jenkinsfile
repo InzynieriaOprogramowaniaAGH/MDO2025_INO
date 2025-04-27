@@ -13,7 +13,7 @@ pipeline {
         // Katalog z Dockerfile’ami (relatywnie od root repo)
         DOCKER_DIR     = 'ITE/GCL07/MP416070/sprawko2/lab5/repo-root'
         // Unikalne tagi: irssi/builder:42, irssi/tester:42, …
-        BUILDER_IMG    = "${DOCKER_USER}/irssi/builder:${BUILD_NUMBER}"
+        BUILDER_IMG    = "${DOCKER_USER}/irssi-builder:${BUILD_NUMBER}"
         TESTER_IMG     = "${DOCKER_USER}/irssi/tester:${BUILD_NUMBER}"
     }
 
