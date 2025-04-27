@@ -1,69 +1,121 @@
-Sprawozdanie 2
+# Sprawozdanie 2
 
-lab 5
+## Laboratorium 5
 
 W czasie tej części zajęć początkowo zająłem się sprawdzeniem, czy stworzone przeze mnie kontenery budujący oraz testujący działają poprawnie.
-Zapoznałem się z instrukcją instalacji Jenkinsa. Uruchomiłem obraz Dockera, który eksponuje środowisko zagnieżdżone. Ustawiłem Jenkinsa na localhost port 8080
 
-![screen_uruchomienie_jenkinsa](do_uruchomienia_jenkinsa_lab5.jpg)
+Zapoznałem się z instrukcją instalacji **Jenkinsa**. Następnie uruchomiłem obraz Dockera, który eksponuje środowisko zagnieżdżone, oraz skonfigurowałem Jenkinsa na porcie **localhost:8080**.
 
-Uruchomiłem jenkins Blueocean. 
+**Uruchomienie Jenkinsa:**
 
-![screen_jenkins_blueocean](jenkins_blueocean_lab5.jpg)
+![Uruchomienie Jenkinsa](do_uruchomienia_jenkinsa_lab5.jpg)
 
-Zalogowałem się i skonfigurowałem Jenkinsa.
+Po instalacji uruchomiłem **Jenkins BlueOcean**:
 
-![screen_logowanie_jenkins](logowanie_jenkins_lab5.jpg)
+![Jenkins BlueOcean](jenkins_blueocean_lab5.jpg)
 
-Na koniec zadbałem o archiwizację logów oraz zabezpieczenie.
-Użyłem w tym wypadku wolumenu
+Zalogowałem się oraz skonfigurowałem Jenkinsa zgodnie z zaleceniami:
 
-![screen_zabezpieczenie_jenkinsa](wolumen_zabezpieczenie_jenkinsa_lab5.jpg)
+![Logowanie do Jenkinsa](logowanie_jenkins_lab5.jpg)
 
-W kolejnym etapie dokonałem konfiguracji wstępnej oraz uruchomienia. Przystąpiłem do tworzenia kilku wstępnych projektów:
+Kolejnym krokiem była konfiguracja archiwizacji logów oraz zabezpieczenia środowiska poprzez wykorzystanie wolumenu Dockera:
 
-Najpierw utworzyłem projekt, który wyświetla uname
+![Zabezpieczenie Jenkinsa](wolumen_zabezpieczenie_jenkinsa_lab5.jpg)
 
-![screen_uname](uname_a_lab5.jpg)
+---
 
-Póżniej stworzyłem projekt który zwraca błąd jeśli godzina jest nieparzysta. Do tego użyłem prostego kodu z pliku skrypt.sh
+### Tworzenie wstępnych projektów
 
-![screen_godzina](godzina_lab5.jpg)
+W dalszym etapie dokonałem konfiguracji oraz uruchomienia kilku wstępnych projektów w Jenkinsie:
 
-![screen_godzina](godzina_blad_lab5.jpg)
+1. **Projekt wyświetlający wynik komendy `uname -a`**:
 
-Na końcu pobrałem w projekcie obraz kontenera ubuntu stosując pocker pull. W tym celu potrzebne było odpowiednie skonfigurowanie dind czyli docker in docker, tak aby móc poprawnie wykonać to polecenie.
+![Wynik uname](uname_a_lab5.jpg)
 
-![screen_dind](jenkins_dind_lab5.jpg)
+2. **Projekt, który zwraca błąd, jeśli aktualna godzina jest nieparzysta**. W tym celu wykorzystałem prosty skrypt `skrypt.sh`:
 
-W kolejnym etapie utworzyłem projekt typu pipeline
-Sklonowałem repozytorium przedmiotowe i zbudowałem  nowy plik Dockerfile. Następnie uruchomiłem stworzony pipeline drugi raz.
+![Godzina - wynik poprawny](godzina_lab5.jpg)
 
-![screen_pipeline_docker1](pipeline_docker_run1_lab5.jpg)
+![Godzina - wynik błędny](godzina_blad_lab5.jpg)
 
-![screen_pipeline_docker_output](pipeline-docker_output_lab5.jpg)
+3. **Projekt pobierający obraz Ubuntu** przy użyciu `docker pull`. Aby to umożliwić, skonfigurowałem odpowiednio środowisko z użyciem **Docker-in-Docker (dind)**:
 
-laby 6 i 7
-Na kolejnych zajęciach moim celem było wybranie sobie projektu (aplikacja z którą będę pracował) i wykonanie poszczególnych kroków : commit, clone, build, test, deploy oraz publish. Jako swój projekt wybrałem aplikację irssi z którą już pracowałem wcześniej w ramach poprzedniego sprawozdania, jednak teraz używałem jej w innym celu. Kroki które potrzebne były do wykonania tej części takie jak odckerfile oraz jenkinsfile umieściłem w specjalnym folderze irssi_pipeline
+![Docker in Docker](jenkins_dind_lab5.jpg)
 
-Niektóre fragmenty pracy w projekcie były problematyczne , szczególnie deploy. Starałem sie wykonywać kroki zgodnie ze schematem przedstawionym przez prowadzącego.Ostatecznie udało mi się zrealizowac poprawnie deploy oraz  wszystkie pozostałe  kroki. 
+---
 
-Początek deploy:
-![screen_deploy_poczatek](poczatek_deploy_lab6.jpg)
+### Tworzenie projektu typu Pipeline
 
-Uruchamianie deploy:
+W kolejnym etapie utworzyłem projekt typu **pipeline**.
 
-![screen_deploy_uruchomiony](uruchamianie_deploy_lab6.jpg)
+- Sklonowałem repozytorium przedmiotowe,
+- zbudowałem nowy plik **Dockerfile**,
+- uruchomiłem pipeline dwukrotnie, aby sprawdzić poprawność działania.
 
-Publish
-Wyświetlenie wersji:
+**Pierwsze uruchomienie pipeline:**
 
-![screen_wersja_irssi](wersja_irssi_lab6.jpg)
+![Pipeline run](pipeline_docker_run1_lab5.jpg)
 
-![screen_wyswietlenie_wersji](wyswietlenie_wersji_lab6.jpg)
+**Wynik działania pipeline:**
 
-Uzyskanie artefaktu oraz paczki debianowej (.deb)
+![Wynik działania pipeline](pipeline-docker_output_lab5.jpg)
 
-![screen_dodanie_artefaktu](dodanie_artefaktu_lab7.jpg)
+---
 
-Dodatkowo do sprawozdania dołączyłem również pobrany z Jenkinsa z console output z poprawnym wykoaniem wymaganych etapów.Umieściłem je w pliku o nazwie #1.txt
+## Laboratoria 6 i 7
+
+Podczas kolejnych zajęć moim celem było:
+
+- wybranie projektu (aplikacji),
+- wykonanie pełnego cyklu: **commit → clone → build → test → deploy → publish**.
+
+Wybrałem aplikację **irssi**, z którą miałem już wcześniejsze doświadczenie podczas poprzednich zajęć. Tym razem jednak wykorzystałem ją do zupełnie innego celu.
+
+Wszystkie pliki potrzebne do realizacji pipeline (`Dockerfile`, `Jenkinsfile`) umieściłem w specjalnym folderze **irssi_pipeline**.
+
+Fragment planu projektu przedstawiony w **PlantUML**:
+
+![Plan projektu PlantUML](plantuml.png)
+
+---
+
+### Realizacja poszczególnych etapów projektu
+
+Niektóre kroki, szczególnie **deploy**, były początkowo problematyczne. Starałem się jednak postępować zgodnie z instrukcjami i schematami przedstawionymi przez prowadzącego.
+
+Ostatecznie udało mi się poprawnie zrealizować wszystkie wymagane etapy:
+
+**Początek deploy:**
+
+![Początek deploy](poczatek_deploy_lab6.jpg)
+
+**Uruchomienie procesu deploy:**
+
+![Uruchomienie deploy](uruchamianie_deploy_lab6.jpg)
+
+**Publikacja artefaktów:**
+
+![Wyświetlenie wersji Irssi](wersja_irssi_lab6.jpg)
+
+![Wynik wyświetlenia wersji](wyswietlenie_wersji_lab6.jpg)
+
+**Uzyskanie artefaktu i paczki `.deb`:**
+
+![Dodanie artefaktu](dodanie_artefaktu_lab7.jpg)
+
+---
+
+Dodatkowo do sprawozdania dołączyłem pobrany z Jenkinsa plik **console output** (#1.txt), dokumentujący poprawne wykonanie wszystkich etapów.
+
+---
+
+## Moje wnioski i spostrzeżenia
+
+- Instalacja i podstawowa konfiguracja Jenkinsa w kontenerze Docker wymagała szczególnej uwagi, zwłaszcza przy eksponowaniu portów i zarządzaniu wolumenami.
+- Projekt typu pipeline w Jenkinsie znacznie ułatwia automatyzację procesów, jednak konfiguracja środowiska (np. Docker-in-Docker) może być źródłem wielu potencjalnych problemów.
+- Zrealizowanie pełnego cyklu (commit, clone, build, test, deploy, publish) umożliwiło mi zrozumienie, jak ważna jest automatyzacja procesów CI/CD w nowoczesnym rozwoju oprogramowania.
+- Umiejętność przygotowania własnych plików Dockerfile oraz Jenkinsfile od podstaw pozwala lepiej zrozumieć zasady działania pipeline’ów i zwiększa elastyczność w pracy z różnymi projektami.
+- Dzięki temu doświadczeniu zyskałem większą pewność w pracy z kontenerami oraz narzędziami typu Jenkins, co z pewnością wykorzystam w przyszłych projektach.
+
+---
+
