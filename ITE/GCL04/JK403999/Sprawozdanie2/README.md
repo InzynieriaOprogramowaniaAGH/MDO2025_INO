@@ -264,10 +264,3 @@ Aby to zadziałało należalo oznaczyć odpowiednią opcję w ustawieniach pipel
 
 #### Wskazówka
 Po opracowaniu formy redystrybucyjnej, stwórz obraz runtime’owy (bez dependencji potrzebnych wyłącznie do builda!), zasilony artefaktem, zainstaluj w nim program z niego i uruchom. Jeżeli formą redystrybucyjną jest kontener, uruchom kontener – w sposób nieblokujący: pozwól pipeline’owi kontynuować po uruchomieniu, ale wykaż, że program uruchomiony w owym kontenerze działa.
-
----
-
-## Laboratorium 6
-
----
-
