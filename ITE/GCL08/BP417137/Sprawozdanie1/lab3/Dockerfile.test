@@ -2,4 +2,4 @@ FROM docker-build-irrsi
 
 WORKDIR /irssi
 
-CMD [ "ninja", "-C", "Build", "test" ]
+RUN ninja -C Build test
