@@ -1,13 +1,16 @@
 ARG IMAGE_TAG=latest
 FROM redisbld:${IMAGE_TAG}
 
-RUN dnf -y install \
+RUN dnf -y update && \
+    dnf module enable tcl:8.6 -y && \
+    dnf -y install \
     make \
-    ps \
+    gcc \
+    procps-ng \
     tcl \
-    tcl-devel
+    tcl-devel && \
+    dnf clean all
 
 WORKDIR /redis
 
-RUN echo 'puts $tcl_version; exit 0' | tclsh
 RUN make test
