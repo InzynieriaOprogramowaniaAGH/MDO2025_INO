@@ -82,7 +82,9 @@ docker.io/library/ubuntu:latest
 Finished: SUCCESS
 
 ```
-
+---
+## Zadanie wstępne: obiekt typu pipeline
+---
 ```
 pipeline {
     agent any
