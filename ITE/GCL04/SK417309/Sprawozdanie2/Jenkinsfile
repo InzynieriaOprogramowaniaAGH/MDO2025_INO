@@ -65,50 +65,22 @@ pipeline {
       steps {
         dir(env.DOCKER_CONTEXT) {
           sh """
-            docker rm -f mydb || true
-            docker network rm myapp-net || true
+            docker-compose -f docker-compose.yml down -v || true
 
-            docker network create myapp-net || true
+            docker-compose -f docker-compose.yml up --build -d
 
-            docker run -d \
-              --name mydb \
-              --network myapp-net \
-              --network-alias mydb \
-              -e MYSQL_ROOT_PASSWORD= \
-              -e MYSQL_DATABASE=teacher_management_2 \
-              -p 3306:3306 \
-              mysql:8.0
-
-              echo 'Waiting for MySQL…'
-              until docker exec mydb mysqladmin ping -h localhost --silent; do
-                echo -n '.'; sleep 2
-              done
-              echo 'MySQL ready.'
-
-            docker build --no-cache \
-              --build-arg BUILD_TAG=${BUILD_TAG} \
-              -f Dockerfile.deploy \
-              -t ${IMAGE_NAME}:prod-${BUILD_TAG} \
-              .
-
-            docker rm -f myapp || true
-
-            docker run -d \
-              --name myapp \
-              --network myapp-net \
-              -p ${APP_PORT}:${APP_PORT} \
-              ${IMAGE_NAME}:prod-${BUILD_TAG}
-
+            # sanity-check HTTP
             for i in \$(seq 1 10); do
               if curl -fs http://localhost:${APP_PORT}; then
                 echo "Application is up"
                 exit 0
               fi
-              echo "Waiting for app to come up… (\$i/10)"
+              echo "Waiting for app… (\$i/10)"
               sleep 5
             done
+
             echo "Application failed to start."
-            docker logs myapp
+            docker-compose -f docker-compose.yml logs
             exit 1
           """
         }

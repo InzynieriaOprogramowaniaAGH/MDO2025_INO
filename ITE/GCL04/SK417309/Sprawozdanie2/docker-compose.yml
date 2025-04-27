@@ -1,0 +1,35 @@
+services:
+  mydb:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: teacher_management_2
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
+      interval: 5s
+      timeout: 2s
+      retries: 10
+    networks:
+      - appnet
+    ports:
+      - "3306:3306"
+
+  myapp:
+    build:
+      context: .
+      dockerfile: Dockerfile.deploy
+      args:
+        BUILD_TAG: ${BUILD_TAG}
+    image: ${IMAGE_NAME}:prod-${BUILD_TAG}
+    depends_on:
+      mydb:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: ${APP_PORT}
+    networks:
+      - appnet
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+
+networks:
+  appnet:
