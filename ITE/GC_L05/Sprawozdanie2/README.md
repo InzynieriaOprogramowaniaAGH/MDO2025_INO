@@ -3,7 +3,15 @@
 
 ## Zadanie wstępne: uruchomienie
 ---
+
+### Projekt, który wyświetla uname 
+
 Następnie utworzono pierwszy projekt, którego zadaniem było wyświetlenie wyniku polecenia uname. W tym celu w sekcji „Build” dodano nowy krok „Execute shell”, w którym wpisano komendę uname -a. Po zapisaniu i uruchomieniu projektu Jenkins poprawnie wykonał zadanie i w konsoli wyświetlił informacje o systemie. 
+
+---
+
+#### Logi projektu uname - SUCCESS
+
 ```
 Started by user AmeliaN
 
@@ -15,7 +23,13 @@ Linux 95452473a912 6.13.7-200.fc41.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Mar 13 17:4
 Finished: SUCCESS
 
 ```
+### Projekt, który zwraca błąd, gdy... godzina jest nieparzysta
+
 W kolejnym kroku stworzono nowy projekt w Jenkinsie, którego celem było zwrócenie błędu wtedy, gdy aktualna godzina jest nieparzysta. W sekcji „Build” dodano kolejny krok „Execute shell”, w którym napisano prosty skrypt sprawdzający bieżącą godzinę przy pomocy polecenia date +%H. Skrypt oceniał, czy godzina jest nieparzysta, i w takim przypadku kończył działanie komendą exit 1, co powodowało, że cały build w Jenkinsie był oznaczany jako nieudany. Jeśli godzina była parzysta, skrypt kończył się komendą exit 0, czyli sukcesem.
+
+---
+
+#### Logi z wykonania projektu "check-hour" w Jenkinsie - SUCCESS
 ```
 Started by user AmeliaN
 
@@ -31,7 +45,7 @@ Finished: SUCCESS
 
 
 ```
-
+#### kod
 ```
 HOUR=$(date +%H)
 if [ $((HOUR % 2)) -eq 1 ]; then
@@ -43,7 +57,7 @@ fi
 
 
 ```
-
+#### Logi z wykonania projektu "check-hour" w Jenkinsie - FAILURE
 ```
 Started by user AmeliaN
 
