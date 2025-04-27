@@ -1,7 +1,7 @@
 # Sprawozdanie 2 
 ### Miłosz Dębowski [MD415045]
 
-# Zajęcia 1 - Pipeline, Jenkins, izolacja etapów
+# Pipeline, Jenkins, izolacja etapów
 
 ### Pobranie i uruchomienie Jenkinsa w Dockerze
 1. **Utworzenie sieci w Dockerze, używając polecenia** 
@@ -48,6 +48,13 @@
 ![unlock jenkins](./Zrzut%20ekranu%202025-04-22%20154851.png)
 
 7. **Uzyskanie hasła do Jenkins'a**
+
+    W celu uzyskania hasła można posłużyć się poleceniem:
+
+    ```
+    docker exec jenskins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+    ```
+
     ![paswd-exec](./Zrzut%20ekranu%202025-04-22%20154949.png)
 
 8. **Instalacja wtyczek**
@@ -91,82 +98,67 @@
    ![](./Zrzut%20ekranu%202025-04-22%20162223.png) 
 
 4. **Obiekt pipeline w Jenkinsie**
+    Utworzenie projektu typu `Pipeline`, który:
+    - Sklonuje repo przedmiotowe (MDO2025_INO)
+    - Zrobi checkout do pliku Dockerfile na osobistej gałęzi
+    - Zbuduje obraz z Dockerfile'a
 
-Plik [node-build.Dockerfile](node-build.Dockerfile)
+    Plik [node-build.Dockerfile](node-build.Dockerfile)
 
-```dockerfile
-FROM node:23-alpine
+    ```dockerfile
+    FROM node:23-alpine
 
-RUN apk add --no-cache git
-RUN git clone https://github.com/devenes/node-js-dummy-test
-WORKDIR /node-js-dummy-test
+    RUN apk add --no-cache git
+    RUN git clone https://github.com/devenes/node-js-dummy-test
+    WORKDIR /node-js-dummy-test
 
-RUN npm install
-```
-```groovy
-pipeline {
-    agent any
+    RUN npm install
+    ```
+    ```groovy
+    pipeline {
+        agent any
 
-    environment {
-        IMAGE_NAME = 'obraz'
-    }
-
-    stages {
-        stage('Klonowanie repozytorium') {
-            steps {
-                git branch: 'MD415045', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
-            }
+        environment {
+            IMAGE_NAME = 'obraz'
         }
 
-        stage('Budowanie obrazu Docker') {
-            steps {
-                script {
-                    sh "docker build -t $IMAGE_NAME -f ./ITE/GCL06/MD415045/lab5/node-build.Dockerfile ."
+        stages {
+            stage('Klonowanie repozytorium') {
+                steps {
+                    git branch: 'MD415045', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                }
+            }
+
+            stage('Budowanie obrazu Docker') {
+                steps {
+                    script {
+                        sh "docker build -t $IMAGE_NAME -f ./ITE/GCL06/MD415045/lab5/node-build.Dockerfile ."
+                    }
                 }
             }
         }
     }
-}
-```
-![](./Zrzut%20ekranu%202025-04-22%20203831.png)
-![](./Zrzut%20ekranu%202025-04-22%20203813.png)
+    ```
+    ![](./Zrzut%20ekranu%202025-04-22%20203831.png)
+    ![](./Zrzut%20ekranu%202025-04-22%20203813.png)
 
-### Pipeline z wybraną aplikacją
+## Pipeline z wybraną aplikacją - Node-JS-DUMMY ###
 
-[node-build.Dockerfile](node-build.Dockerfile)
-```dockerfile
-FROM node:23-alpine
+### Diagram UML ###
+Moim celem jest uruchomienie aplikacji NODE-JS-DUMMY w sposób przedstawiony na diagramie UML przy użyciu SCM.
 
-RUN apk add --no-cache git
-RUN git clone https://github.com/devenes/node-js-dummy-test
-WORKDIR /node-js-dummy-test
+![UML](./UML.png)
 
-RUN npm install
-```
-[node-test.Dockerfile](node-test.Dockerfile)
-```dockerfile
-FROM node-build:23-alpine
+***Zmienne środowiskowe***
+W celu łatwiejszego zarządzania skryptem oraz wersjonowaniem zdefiniowałem następujące zmienne środowiskowe w `Jenkinsfile`:
+ - `PROJECT_DIR` - ścieżka do katalogu z projektem
+ - `BUILD_NUMBER` - number wersji build'u
+ - `NODE_VERSION` - wersja node'a
+ - `BUILD_IMAGE` - nazwa obrazu budującego
+ - `TEST_IMAGE` - nawa obrazu wykonującego testy
+ - `DEPLOY_IMAGE` - nazwa obrazu wypychającego aplikację 
 
-WORKDIR /node-js-dummy-test
-RUN npm run test
-```
-[node-deploy.Dockerfile](node-deploy.Dockerfile)
-```dockerfile
-FROM node-build:23-alpine
-
-WORKDIR /node-js-dummy-test
-CMD ["npm", "start"]
-```
-
-![artefakty](./Zrzut%20ekranu%202025-04-24%20191804.png)
-
-[build.log](./logs/build.log)
-
-[test.log](./logs/test.log)
-
-![stages](./Zrzut%20ekranu%202025-04-24%20191811.png)
-
-![env]()
+ 
 ```groovy
 environment {
         PROJECT_DIR = 'MDO2025_INO/ITE/GCL06/MD415045/lab5'
@@ -178,9 +170,15 @@ environment {
 }
 ```
 
-Stages
+### Stages ###
+**Prepare**
+   - **Opis**: Klonowanie repozytorium Git oraz przełączenie na konkretną gałąź.
+   - **Kroki**:
+     1. Usunięcie istniejącego katalogu `MDO2025_INO`, jeśli istnieje.
+     2. Klonowanie repozytorium z URL `https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git`.
+     3. Przełączanie się na gałąź `MD415045`.
 
-![prepare]()
+
 ```groovy
 stage('Prepare') {
             steps {
@@ -193,8 +191,11 @@ stage('Prepare') {
             }
 }
 ```
+**Logs**
+   - **Opis**: Tworzenie struktury katalogów dla logów.
+   - **Kroki**:
+     1. Tworzenie katalogu `logs` w katalogu projektu.
 
-![logs]()
 ```groovy
 stage('Logs') {
             steps {
@@ -204,8 +205,28 @@ stage('Logs') {
             }
 }
 ```
+**Build**
+   - **Opis**: Budowanie obrazu Docker na podstawie pliku [node-build.Dockerfile](node-build.Dockerfile)
+        ```dockerfile
+        FROM node:23-alpine
 
-![build]()
+        RUN apk add --no-cache git
+        RUN git clone https://github.com/devenes/node-js-dummy-test
+        WORKDIR /node-js-dummy-test
+
+        RUN npm install
+        ```
+        - **Funkcja**: Budowanie środowiska Node.js z zależnościami.
+        - **Szczegóły**:
+            - Bazuje na obrazie `node:23-alpine`.
+            - Instalacja `git` oraz klonowanie repozytorium z aplikacją `node-js-dummy`.
+            - Instalacja zależności Node.js za pomocą `npm install`.
+    
+- **Kroki**:
+  1. Budowanie obrazu Docker o nazwie `node-build:23-alpine`.
+  2. Logowanie wyników procesu budowania do pliku `logs/build.log`.
+
+        
 ```groovy
 stage('Build') {
             steps {
@@ -215,8 +236,24 @@ stage('Build') {
             }
 }
 ```
+**Tests**
+   - **Opis**: Testowanie aplikacji przy użyciu obrazu [node-test.Dockerfile](node-test.Dockerfile).
+        ```dockerfile
+        FROM node-build:23-alpine
 
-![tests]()
+        WORKDIR /node-js-dummy-test
+        RUN npm run test
+        ```
+
+        - **Funkcja**: Uruchamianie testów aplikacji.
+        - **Szczegóły**:
+          - Bazuje na obrazie `node-build:23-alpine`.
+          - Uruchamia testy zdefiniowane w `package.json` przez `npm run test`.
+   - **Kroki**:
+     1. Budowanie obrazu Docker `node-test:v(WERSJA_BUILD'U))`.
+     2. Logowanie wyników testów do pliku `logs/test.log`.
+
+
 ```groovy
 stage('Tests') {
             steps {
@@ -227,7 +264,24 @@ stage('Tests') {
 }
 ```
 
-![deploy]()
+**Deploy**
+   - **Opis**: Uruchamianie aplikacji w kontenerze Docker przy użyciu [node-deploy.Dockerfile](node-deploy.Dockerfile).
+        ```dockerfile
+        FROM node-build:23-alpine
+
+        WORKDIR /node-js-dummy-test
+        CMD ["npm", "start"]
+        ```
+        - **Funkcja**: Uruchamianie aplikacji.
+        - **Szczegóły**:
+          - Bazuje na obrazie `node-build:23-alpine`.
+          - Uruchamia aplikację zdefiniowaną w `package.json` przez `npm start`.
+   - **Kroki**:
+     1. Tworzenie sieci Docker `my_network` (z opcją ignorowania błędów, jeśli już istnieje).
+     2. Budowanie obrazu Docker `node-deploy:v(WERSJA_BUILD'U)`.
+     3. Usuwanie istniejącego kontenera `app` (jeśli występuje).
+     4. Uruchamianie kontenera `app` z mapowaniem portu 3000 na 3000 oraz przypisaniem do sieci `my_network`.
+
 ```groovy
 stage('Deploy') {
             steps {
@@ -243,8 +297,13 @@ stage('Deploy') {
 }
 ```
 
-![deploy tests logi1](./Zrzut%20ekranu%202025-04-24%20190541.png)
-![deploy tests log2](./Zrzut%20ekranu%202025-04-24%20190553.png)
+
+
+**Test Deployment**
+   - **Opis**: Dodatkowy stage mający na celu testowanie uruchomionej aplikacji.
+   - **Kroki**:
+     1. Wykonanie żądania HTTP do aplikacji (w sieci Docker `my_network`) przy użyciu narzędzia `curl`.
+
 ```groovy
 stage('Test Deployment') {
             steps {
@@ -258,7 +317,14 @@ stage('Test Deployment') {
 }
 ```
 
-![publish]()
+
+**Publish**
+   - **Opis**: Archiwizacja logów jako artefakt.
+   - **Kroki**:
+     1. Tworzenie katalogu `artifacts_1.0`.
+     2. Archiwizacja logów do pliku `artifacts_1.0.tar`.
+     3. Publikacja artefaktu.
+
 ```groovy
 stage('Publish') {
             steps {
@@ -273,7 +339,12 @@ stage('Publish') {
 }
 ```
 
-![post]()
+**Post-actions**
+   - **Opis**: Czyszczenie środowiska Docker.
+   - **Kroki**:
+     1. Usunięcie obrazów Docker używanych w pipeline.
+     2. Przeprowadzenie pełnego czyszczenia środowiska Docker (usunięcie wszystkich kontenerów, sieci, wolumenów itp.).
+
 ```groovy
 post {
         always {
@@ -285,10 +356,36 @@ post {
         }
 }
 ```
+### Przygotowanie Pipeline'a w Jenkins przy użyciu SCM ###
+W celu uruchomienia Pipeline'a przy użyciu SCM utworzyłem nowy projekt Pipeline w Jenkins.
+Następnie wybrałem opcję `Pipeline script from SCM` w celu uruchomienia Pipeline'a z repozytorium.
 ![konfiguracja](./Zrzut%20ekranu%202025-04-24%20191841.png)
 
+### Wyniki i logi ###
+Wszystkie stage przebiegły pomyślnie, co widać na poniższym zrzucie ekranu.
 
-[Pełny Skrypt Pipeline'a w języku groovy](Jenkinsfile)
+![stages](./Zrzut%20ekranu%202025-04-24%20191811.png)
+
+Artefakty, tworzone przy budowie obrazów, są gotowe do pobrania od razu po wykonaniu Pipeline;a. 
+
+![artefakty](./Zrzut%20ekranu%202025-04-24%20191804.png)
+
+
+[build.log](./logs/build.log)
+![buildlogs](./Zrzut%20ekranu%202025-04-27%20162109.png)
+
+[test.log](./logs/test.log)
+![testlogs](./Zrzut%20ekranu%202025-04-27%20162123.png)
+
+### Potwierdzenie działania aplikacji ###
+W celu potwierdzenia działania aplikacji dodałem stage `Test Deployment` w którym, treść `HTML'a` aplikacji jest wypisywana w konsoli za pomocą polecenia `curl`.
+
+![deploy tests logi1](./Zrzut%20ekranu%202025-04-24%20190541.png)
+![deploy tests log2](./Zrzut%20ekranu%202025-04-24%20190553.png)
+
+
+
+### Pełny [Skrypt Pipeline'a](Jenkinsfile) w języku groovy ###
 ```groovy
 pipeline {
     agent any
@@ -386,19 +483,6 @@ pipeline {
     }
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-![dind](./Zrzut%20ekranu%202025-04-22%20161755.png)
 
 
 
