@@ -110,29 +110,112 @@ Projekt, dla którego będę robił pipeline to nadal `Toasty` - biblioteka do t
 
 Utworzony, kompletny [pipeline](006-Class/Jenkinsfile) składa się z następujących stage'y:
 
-- **Clean** - usuwa on repozytorium przedmiotu jeśli istnieje (w przypadku nieistniejącego ignoruje błąd poprzez flagę `-f`) oraz usuwa wszystkie obrazy z wyjątkiem `gcc` (pipeline był uruchamiany tak wiele razy, że pobierając za każdym razem obraz prawdopodobnie zostałby osiągnięty limit transferu danych w sieci akademikowej). Kontenery nie są usuwane w tym kroku, gdyż usuwają się automatycznie przez zastosowanie flagi `--rm` podczas uruchamiania.
+- **Clean** - usuwa on repozytorium przedmiotu jeśli istnieje (w przypadku nieistniejącego ignoruje błąd poprzez flagę `-f`) oraz usuwa wszystkie istniejące obrazy, woluminy i kontenery w celu zapewnienia czystego builda bez cache'owanych poprzednich wersji obrazów:
 
-![Clean](005-Class/ss/17.png)
+```Groovy
+stage('Clean') {
+    steps {
+        echo 'Cleaning...'
+        sh 'rm -fr MDO2025_INO'
+        sh 'docker system prune --all --force --volumes'
+    }
+}
+```
 
 - **Clone** - klonuje tylko moją gałąź repozytorium przedmiotowego w celu zaoszczędzenia transferu danych i przyspieszenia działania.
 
-![Clone](005-Class/ss/18.png)
+```Groovy
+stage('Clone') {
+    steps {
+        echo 'Cloning...'
+        sh 'git clone -b TO417248 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+    }
+}
+```
 
 - **Build** - buduje obraz `toasty` z pliku [Dockerfile](003-Class/Dockerfile) oparty o `gcc` w wersji `15.1`. Obraz ten pobiera repozytorium `toasty` oraz buduje statyczną bibliotekę na podstawie `Makefile`. Obraz z dependencjami nie był tworzony, gdyż `toasty` nie potrzebuje niczego oprócz biblioteki standardowej C oraz kompilatora będących domyślnie dostępnymi w obrazie `gcc`.
 
-![Build](005-Class/ss/19.png)
+```Groovy
+stage('Build') {
+    steps {
+        echo 'Building...'
+        sh 'docker build --no-cache -t toasty -f ./MDO2025_INO/ITE/GCL06/TO417248/Sprawozdanie1/003-Class/Dockerfile .'
+    }
+}
+```
 
 - **Test** - buduje obraz `toasty-test` z pliku [Dockerfile.test](003-Class/Dockerfile.test), który z kolei buduje wewnętrzne testy biblioteki `toasty`. Następnie powstaje kontener oparty o ten obraz, którego uruchomienie sprawia, że wywoływane są automatycznie wszystkie wewnętrzne testy. W przypadku niepowodzenia któregoś z testów zwracany jest exit code 1, który przerywa działanie całego pipeline'u. Testy które zakończyły się porażką są wypisywane w logach automatycznie.
 
-![Test](005-Class/ss/20.png)
+```Groovy
+stage('Test') {
+    steps {
+        echo 'Testing...'
+        sh 'docker build --no-cache -t toasty-test -f ./MDO2025_INO/ITE/GCL06/TO417248/Sprawozdanie1/003-Class/Dockerfile.test .'
+        sh 'docker run --rm -t toasty-test'
+    }
+}
+```
 
 - **Deploy** - uruchamia kontener oparty o builder `toasty` w celu dostępu do zbudowanej biblioteki oraz pliku nagłówkowego. Wewnątrz kontenera tworzony jest dynamicznie plik `test.c` korzystający z biblioteki, a następnie kompilowany i linkowany. Powstały prosty program jest uruchamiany. Krok ten weryfikuje poprawność praktycznego użycia biblioteki - jeśli kompilacja lub uruchomienie zakończyłyby się niepowodzeniem, działanie pipeline'u zostałoby przerwane. Program nie jest dalej pakowany ani dystrybuowany, gdyż miał tylko na celu weryfikację działania. Stage ten korzysta z obrazu `toasty`, gdyż ma tam wszystko, czego potrzebuje - gotowy nagłówek, bibliotekę i kompilator. Nie było więc konieczne tworzenie nowego obrazu i kontenera na jego podstawie.
 
-![Deploy](005-Class/ss/21.png)
+```Groovy
+stage('Deploy') {
+    steps {
+        echo 'Deploying...'
+        sh '''
+            docker run --rm toasty bash -c "
+                echo '#include <toasty.h>' > test.c
+                echo 'TEST(test_example) {' >> test.c
+                echo '    TEST_ASSERT_EQUAL(4, 2 + 2);' >> test.c
+                echo '}' >> test.c
+                echo 'int main() {' >> test.c
+                echo '    return RunTests();' >> test.c
+                echo '}' >> test.c
+                
+                gcc test.c -Lbuild -ltoasty -Isrc -o test
+                ./test
+            "
+        '''
+    }
+}
+```
 
 - **Publish** - tworzy debianową paczkę zawierającą nagłówek i bibliotekę statyczną `toasty`, a następnie archiwizuje artefakt w celu umożliwienia pobrania ostatniej wersji z pipeline'u, który zakończył się sukcesem. Tworzona jest paczka `.deb`, gdyż obraz `gcc` jest oparty o Debiana i posiada domyślnie `dpkg`. Uruchomienie całego pipeline'u pyta o parametr w postaci wersji - domyślnie jest to `0.0.0`. Jeśli nie zostanie ustalona inna wersja, to ta podmieniana jest na wersję w postaci `YYYYMMDD`, gdzie zczytywana jest obecna data. Stage ten tworzy wymaganą strukturę katalogów oraz przede wszystkim plik manifestu (niezbędny do utworzenia paczki) dynamicznie, dzięki czemu możliwe jest łatwe ustawienie obecnej wersji.
 
-![Publish](005-Class/ss/22.png)
+```Groovy
+stage('Publish') {
+    steps {
+        script {
+            def version = params.VERSION
+            if (version == '0.0.0') {
+                version = new Date().format('yyyyMMdd', TimeZone.getTimeZone('UTC'))
+            }
+            echo "Publishing version: ${version}..."
+            sh """
+                docker run --rm -v "\${PWD}:/workspace" --env VERSION=${version} toasty bash -c '
+                    mkdir -p /tmp/toasty-pkg/usr/local/include
+                    mkdir -p /tmp/toasty-pkg/usr/local/lib
+                    mkdir -p /tmp/toasty-pkg/DEBIAN
+
+                    cp /toasty/src/toasty.h /tmp/toasty-pkg/usr/local/include/
+                    cp /toasty/build/libtoasty.a /tmp/toasty-pkg/usr/local/lib/
+
+                    echo "Package: toasty" > /tmp/toasty-pkg/DEBIAN/control
+                    echo "Version: \${VERSION}" >> /tmp/toasty-pkg/DEBIAN/control
+                    echo "Section: libs" >> /tmp/toasty-pkg/DEBIAN/control
+                    echo "Priority: optional" >> /tmp/toasty-pkg/DEBIAN/control
+                    echo "Architecture: amd64" >> /tmp/toasty-pkg/DEBIAN/control
+                    echo "Maintainer: Tomasz Oszczypko <tomekoszczypko@gmail.com>" >> /tmp/toasty-pkg/DEBIAN/control
+                    echo "Description: C unit testing framework." >> /tmp/toasty-pkg/DEBIAN/control
+
+                    dpkg-deb --build /tmp/toasty-pkg /workspace/toasty_\${VERSION}_amd64.deb
+                '
+            """
+            archiveArtifacts artifacts: "toasty_${version}_amd64.deb", fingerprint: true
+        }
+    }
+}
+```
 
 W trakcie pisania kroku `Publish` napotkałem dwa istotne problemy. Pierwszy z nich polegał na tym, że zmiana wersji z `0.0.0` na `YYYYMMDD` odbywająca się wewnątrz kontenera przypisywała zaktualizowaną wersję w linijce `echo "Version: ...`, oraz `dpkg-deb --build ...` ale próba archiwizacji artefaktu kończyła się niepowodzeniem, gdyż Jenkins nadal próbował wstawić w artefakt wersję sprzed zmiany. Spowodowane to było aktualizacją zmiennej środowiskowej tylko wewnątrz kontenera:
 ```bash
@@ -192,44 +275,34 @@ Po dłuższej chwili cały pipeline powininen poprawnie przejść i zakończyć�
 
 ![Uruchomienie pipeline'u](005-Class/ss/25.png)
 
-Ponowne uruchomienie również powinno zadziałać. Tutaj z kolei ustaliłem własną wersję aby sprawdzić, czy ustawienie jej zadziała:
+Ponowne uruchomienie również powinno zadziałać. Tutaj z kolei wpisałem własną wersję (`1.0.0`) aby sprawdzić, czy ustawienie jej zadziała:
 
 ![Ponowne uruchomienie pipeline'u](005-Class/ss/27.png)
 
-### Lista kontrolna:
+Logi z przeprowadzanych buildów zapisywane są w panelu Jenkinsa. Przykładowy log z ukończonego buildu `#56` zawarty jest w pliku [build.log.txt](007-Class/build-log.txt).
 
-- [x] Aplikacja została wybrana
-- [x] Licencja potwierdza możliwość swobodnego obrotu kodem na potrzeby zadania
-- [x] Wybrany program buduje się
-- [x] Przechodzą dołączone do niego testy
-- [x] Zdecydowano, czy jest potrzebny fork własnej kopii repozytorium
-- [x] Stworzono diagram UML zawierający planowany pomysł na proces CI/CD
-- [x] Wybrano kontener bazowy lub stworzono odpowiedni kontener wstepny (runtime dependencies)
-- [x] *Build* został wykonany wewnątrz kontenera
-- [x] Testy zostały wykonane wewnątrz kontenera (kolejnego)
-- [x] Kontener testowy jest oparty o kontener build
-- [x] Logi z procesu są odkładane jako numerowany artefakt, niekoniecznie jawnie
-- [x] Zdefiniowano kontener typu 'deploy' pełniący rolę kontenera, w którym zostanie uruchomiona aplikacja (niekoniecznie docelowo - może być tylko integracyjnie)
-- [x] Uzasadniono czy kontener buildowy nadaje się do tej roli/opisano proces stworzenia nowego, specjalnie do tego przeznaczenia
-- [x] Wersjonowany kontener 'deploy' ze zbudowaną aplikacją jest wdrażany na instancję Dockera
-- [x] Następuje weryfikacja, że aplikacja pracuje poprawnie (*smoke test*) poprzez uruchomienie kontenera 'deploy'
-- [x] Zdefiniowano, jaki element ma być publikowany jako artefakt
-- [x] Uzasadniono wybór: kontener z programem, plik binarny, flatpak, archiwum tar.gz, pakiet RPM/DEB
-- [x] Opisano proces wersjonowania artefaktu (można użyć *semantic versioning*)
-- [x] Dostępność artefaktu: publikacja do Rejestru online, artefakt załączony jako rezultat builda w Jenkinsie
-- [x] Przedstawiono sposób na zidentyfikowanie pochodzenia artefaktu
-- [x] Pliki Dockerfile i Jenkinsfile dostępne w sprawozdaniu w kopiowalnej postaci oraz obok sprawozdania, jako osobne pliki
-- [x] Zweryfikowano potencjalną rozbieżność między zaplanowanym UML a otrzymanym efektem
+### Weryfikacja artefaktu
 
-### Lista kontrolna Jenkinsfile:
+Utworzony artefakt można przetestować czy działa - test będzie polegał na utworzeniu kontenera opartego o Debiana (`gcc` ze względu na dostęp do kompilatora), zainstalowaniu pakietu `toasty_1.0.0_amd64.deb` i stworzeniu prostego pliku źródłowego korzystającego z biblioteki `toasty`, która powinna być dostępna w kontenerze.
 
-- [x] Przepis dostarczany z SCM, a nie wklejony w Jenkinsa lub sprawozdanie (co załatwia nam `clone` )
-- [x] Posprzątaliśmy i wiemy, że odbyło się to skutecznie - mamy pewność, że pracujemy na najnowszym (a nie *cache'owanym* kodzie)
-- [x] Etap `Build` dysponuje repozytorium i plikami `Dockerfile`
-- [x] Etap `Build` tworzy obraz buildowy, np. `BLDR`
-- [x] Etap `Build` (krok w tym etapie) lub oddzielny etap (o innej nazwie), przygotowuje artefakt
-- [x] Etap `Test` przeprowadza testy
-- [x] Etap `Deploy` przygotowuje **obraz lub artefakt** pod wdrożenie. W przypadku aplikacji pracującej jako kontener, powinien to być obraz z odpowiednim entrypointem. W przypadku buildu tworzącego artefakt niekoniecznie pracujący jako kontener (np. interaktywna aplikacja desktopowa), należy przesłać i uruchomić artefakt w środowisku docelowym.
-- [x] Etap `Deploy` przeprowadza wdrożenie (start kontenera docelowego lub uruchomienie aplikacji na przeznaczonym do tego celu kontenerze sandboxowym)
-- [x] Etap `Publish` wysyła obraz docelowy do Rejestru i/lub dodaje artefakt do historii builda
-- [x] Ponowne uruchomienie naszego *pipeline'u* powinno zapewniać, że pracujemy na najnowszym (a nie *cache'owanym*) kodzie. Innymi słowy, *pipeline* musi zadziałać więcej niż jeden raz
+W pierwszym kroku konieczne umożliwienie skorzystania z paczki w kontenerze. W tym celu należy ją przerzucić na wolumin. Do tego wykorzystam `input-interface` - kontener oparty o `hello-world` utworzony na jednym z poprzenich laboratoriów. Kontener nie musi być uruchamiany, ma zawsze podpięty wolumin, możliwe jest więc przesyłanie do niego plików. Paczkę pobrałem z panelu Jenkinsa i przesłałem na serwer, z którego następnie przerzuciłem ją na wolumin:
+
+![Kopiowanie paczki na wolumin](005-Class/ss/28.png)
+
+Następnie uruchomiłem kontener oparty o `gcc`:
+
+![Uruchomienie kontenera `gcc`](005-Class/ss/29.png)
+
+W kontenerze zainstalowałem paczkę `.deb` przy użyciu `dpkg`:
+
+![Instalacja pakietu .deb](005-Class/ss/30.png)
+
+Przy użyciu `echo` (obraz gcc nie posiada `nano` ani `vi`) stworzyłem prosty plik korzystający z `toasty`:
+
+![Instalacja pakietu .deb](005-Class/ss/31.png)
+
+Następnie plik ten skompilowałem linkując przy tym statyczną bibliotekę `toasty` i uruchomiłem powstały plik wykonywalny:
+
+![Kompilacja i uruchomienie testu](005-Class/ss/32.png)
+
+Kompilacja przebiegła w pełni poprawnie, a w jej trakcie nie było wymagane podawanie ścieżek do bibliotek ani nagłówków, co oznacza, że toasty jest poprawnie zainstalowane i dostępne w katalogach `/usr/lib` oraz `/usr/include`.
