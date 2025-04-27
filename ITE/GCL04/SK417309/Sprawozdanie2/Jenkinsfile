@@ -71,13 +71,14 @@ pipeline {
             docker compose -f docker-compose.yml up --build -d
 
             # sanity-check HTTP
-            for i in \$(seq 1 10); do
-              if curl -fs http://localhost:${APP_PORT}; then
-                echo "Application is up"
-                exit 0
-              fi
-              echo "Waiting for app… (\$i/10)"
-              sleep 5
+            for i in {1..10}; do
+                if docker exec <nazwa_kontenera> curl -s -o /dev/null -w "%{http_code}" http://localhost:${APP_PORT}/api/building | grep -q "200"; then
+                    echo "App is up and responding!"
+                    exit 0
+                else
+                    echo "Waiting for app... attempt $i"
+                    sleep 3
+                  fi
             done
 
             echo "Application failed to start."
