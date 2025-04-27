@@ -1,8 +1,9 @@
 # Sprawozdanie 2  - Pipeline, Jenkins, izolacja etapów
 
-### **Kierunek: Inżynieria Obliczeniowa**
-### **Autor: Adam Borek**
-### **Grupa 1**
+- **Przedmiot: DevOps**
+- **Kierunek: Inżynieria Obliczeniowa**
+- **Autor: Adam Borek**
+- **Grupa 1**
 
 ---
 
