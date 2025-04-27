@@ -46,6 +46,7 @@ pipeline {
     always {
       // archiwizujemy logi i paczki
       archiveArtifacts artifacts: 'test.log, dist/*.tar.gz', fingerprint: true
+      archiveArtifacts artifacts: 'dist/*.whl'
     }
   }
 }

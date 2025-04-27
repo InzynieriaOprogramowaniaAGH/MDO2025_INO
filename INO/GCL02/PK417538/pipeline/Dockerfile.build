@@ -17,9 +17,9 @@ RUN make install
 RUN make test | tee test.log || true
 
 # 4) zbuduj sdist
-# install the PEP-517 build tool
-RUN pip3 install --no-cache-dir build
+# w Dockerfile, po teście i przed archiwizacją
+WORKDIR /app
+RUN mkdir -p dist \
+ && pip3 wheel . --no-deps --wheel-dir dist
 
-# build a source-dist into dist/
-RUN python3 -m build --sdist --outdir dist
 
