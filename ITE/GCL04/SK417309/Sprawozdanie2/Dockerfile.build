@@ -5,4 +5,4 @@ WORKDIR /workspace
 RUN git clone https://github.com/sauer515/teacher-management.git .
 
 RUN mvn dependency:go-offline -B
-RUN mvn clean package -DskipTests -B
+RUN mvn clean package spring-boot:repackage -DskipTests -B
