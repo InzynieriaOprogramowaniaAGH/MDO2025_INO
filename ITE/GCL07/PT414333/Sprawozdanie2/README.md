@@ -1,4 +1,4 @@
-# Class 4
+# Class 5-7
 ## Pipeline, Jenkins
 
 ## 1. Tworzenie instancji Jenkinsa
@@ -189,3 +189,58 @@ Pipeline poprawnie wyczyścił sobie środwisko, poczym sklonował repozydorium 
 Proces może być powtarzany wielokrotnie, bez żadnych dodatkowych akcji.
 
 ![alt text](class5/14.png)
+
+
+# Pipeline projektu `htop`
+Implementacja Pipeline dla projektu [htop](https://github.com/htop-dev/htop)
+
+## Diagram UML Pipeline
+
+1. Cleanup - sprzątamy jakie kolwiek pozostałości po potencjalnie poprzednich uruchomieniach, przygotowujemy środowisko.
+2. Clone - kolonujemy repozytorium docelowe.
+3. Build - tworzymy docker image odpowiedzialny za zbudowanie aplikacji
+4. Prep Test - tworzymy docker image opowiedzialny za przeprowadzenie testów
+5. Test - uruchamiamy test aplikacji
+6. Delpoy - uruchamiamy aplikację w czystym środowisku
+7. Publish - załączamy artefakty build'a (rpm package) do `archiveArtifacts`.
+
+![alt text](class6_7/UML.png)
+
+Cały pipeline został zaimplementowany w postaci [jenkinsfile](project/jenkinsfile)
+
+### 1. Tworzenie potrzebnych plików.
+
+[Dockerfile.build](project/Dockerfile.build) jest używany jako środowisko do wykonania build step'u. Jednocześnie tworzy on `rpm package`.
+
+[Dockerfile.test](project/Dockerfile.test) jest używany do uruchomienia testu działania aplikacji. Bazuje na obrazie build. Z racj na charakter aplikacji, testy załączone z kodem źródłowym nie są wstanie zostać uruchomione w środowisku kontenera, z racji na charakter testów polegający na dostępie do GUI. Z racji na to wykonywany jest test uruchomieniowy.
+
+[Dockerfile.deploy](project/Dockerfile.deploy) jest używany jako test uruchomienia aplikacji w czystym środowisku.
+
+Dodatkowo dla celu stworzenia `rpm package` należy jeszcze stworzyć plik [htop.spec](project/htop.spec) zawierający specyfkiację potrzebną dla procesu pakowania. Paczka ta używana jest jako artefakt publikacji z racji na charakter budowanego programu, który opiera się na szczegółowych informacjach o środowisku, w którym został uruchomiony. Dlatego nie jest on dobrym kandynatem na uruchamianie w kontenerze.
+
+Na końcu tworzymy plik [jenkinsfile](project/jenkinsfile) zawierający cały skrypt pipeline'u.
+
+### 2. Tworzenie nowego piepline
+
+Nadana została nazwa 'htop' i typ projektu ustawiony na `Pipeline`
+![alt text](class6_7/1.png)
+
+
+Ustawienie źródła skryptu Jenkins na [jenkinsfile](project/jenkinsfile) znajdujący się w repozytorium.
+![alt text](class6_7/2.png)
+
+### 3. Uruchomienie Pipeline
+
+Uruchom piepeline
+![alt text](class6_7/3.png)
+
+Po odczekaniu kilku minut, wejdź w informacjie o ostatnim uruchomieniu
+
+![alt text](class6_7/4.png)
+
+Można zauważyć, iż build przebiegł poprawnie oraz został załączony artefakt w postaci paczki `rpm`.
+
+![alt text](class6_7/5.png)
+
+W logach można zauważyć, iż pipeline zaczyna się od pobrania repozytorium w celu pobrania skryptu pipeline (jenkinsfile)
+![alt text](class6_7/6.png)
