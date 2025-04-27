@@ -1,4 +1,4 @@
-ARG IMAGE_TAG = latest
+ARG IMAGE_TAG=latest
 FROM redisbld:${IMAGE_TAG}
 
 RUN dnf -y install \
