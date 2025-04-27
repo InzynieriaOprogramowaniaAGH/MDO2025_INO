@@ -60,7 +60,7 @@ pipeline {
 
         stage('Publish images') {
             environment {
-                DOCKERHUB  = credentials('dhub-creds')   // token+login zapisany w Jenkinsie
+                DOCKERHUB  = credentials('dockerhub-creds')   // token+login zapisany w Jenkinsie
             }
             steps {
                 sh """
