@@ -132,47 +132,7 @@ pipeline {
 
 ```
 
-```
 
-pipeline {
-    agent any
-
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'AN417592', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh '''
-                    echo "Buduję obraz Dockera..."
-                    docker build -t pytest-examples-builder:latest -f ITE/GC_L05/AN417592/Dockerfile.builder .
-                '''
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh '''
-                    echo "Uruchamiam kontener i wykonuję testy..."
-                    docker run --rm pytest-examples-builder:latest
-                '''
-            }
-        }
-    }
-
-    post {
-        always {
-            echo 'Pipeline zakończony!'
-        }
-    }
-}
-
-
-
-```
 
 
 ```
@@ -1069,6 +1029,49 @@ Buduję obraz Dockera...
 [Pipeline] End of Pipeline
 Finished: SUCCESS
 ```
+
+```
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'AN417592', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    echo "Buduję obraz Dockera..."
+                    docker build -t pytest-examples-builder:latest -f ITE/GC_L05/AN417592/Dockerfile.builder .
+                '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '''
+                    echo "Uruchamiam kontener i wykonuję testy..."
+                    docker run --rm pytest-examples-builder:latest
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline zakończony!'
+        }
+    }
+}
+
+
+
+```
+
 ```
 Started by user AmeliaN
 
