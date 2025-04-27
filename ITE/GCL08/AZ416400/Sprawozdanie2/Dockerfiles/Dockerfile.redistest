@@ -9,5 +9,5 @@ RUN dnf -y install \
 
 WORKDIR /redis
 
-RUN tcl --verion
+RUN tcl --version
 RUN make test
