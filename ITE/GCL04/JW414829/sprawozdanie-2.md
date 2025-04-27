@@ -2,7 +2,6 @@
 
 Celem sprawozdania jest przedstawienie opisu uruchomienia CI aplikacji Next.js przy uzyciu Jenkinsa. 
 
-## Jenkins
 Zacząłem od sprawdzenia, czy wszystkie poprzednie kontenery działają.
 ![](./lab5/Dockerfile.build)
 ![](./lab5/Dockerfile.test)
@@ -145,3 +144,23 @@ pipeline {
 ```
 
 ![](./lab5/test-pipeline-build3.png)
+
+
+
+Następnie przeszedłem do wybrania projektu. Z uwagi na pracę na codzień w technologiach webowych wybrałem aplikację opartą na Next.js. (https://github.com/gdwmw/Next.js-Boilerplate)
+
+
+Wymagania wstępne środowiska
+
+- Jenkins z zainstalowanym BlueOcean i pluginem Docker Pipeline
+
+- Agent z dostępem do Dockera (najlepiej Docker-in-Docker)
+
+- Credentials typu „Secret file” w Jenkins (ID: env-local-file), zawierający .env.local
+
+- Plugin Git do klonowania repozytorium
+
+- Środowisko buildowe: obraz bazowy z Node.js oraz menedżerem pakietów Yarn (lub npm) dostępne wewnątrz kontenera Dockerfile.build.
+
+
+![](./lab5/diagram.jpg)
