@@ -172,6 +172,30 @@ Mam nadzieję, że dobrze zrozumiałem i rozwiązałem problem oraz dokładnie r
 
 Zdefiniowany pipeline nie różni się znacząco od tego zaplanowanego. Jedyna różnica to klonowanie tylko jednej gałęzi zamiast całego repozytorium w celu zaoszczędzenia zasobów.
 
+### Konfiguracja obiektu pipeline
+
+Jak było już wspominane, pipeline jest parametryzowany, co oznacza, że przy uruchamianiu należy wprowadzić parametr - w moim przypadku wersję builda:
+
+![Parametryzacja pipeline'u](005-Class/ss/23.png)
+
+Skonfigurowany został również SCM, przez co [Jenkinsfile](006-Class/Jenkinsfile) jest pobierany z repozytorium:
+
+![SCM](005-Class/ss/24.png)
+
+### Uruchomienie pipeline'u
+
+Uruchomienie pipeline'u sprawi, że budowa wymaga parametru. Nie wprowadzam parametru aby sprawdzić, czy wersja zostanie poprawnie ustalona na podstawie daty:
+
+![Podanie parametru do builda](005-Class/ss/26.png)
+
+Po dłuższej chwili cały pipeline powininen poprawnie przejść i zakończyć się sukcesem, a w artefaktach powinien być dostępny artefakt w postaci pliku `.deb`:
+
+![Uruchomienie pipeline'u](005-Class/ss/25.png)
+
+Ponowne uruchomienie również powinno zadziałać. Tutaj z kolei ustaliłem własną wersję aby sprawdzić, czy ustawienie jej zadziała:
+
+![Ponowne uruchomienie pipeline'u](005-Class/ss/27.png)
+
 ### Lista kontrolna:
 
 - [x] Aplikacja została wybrana
@@ -184,7 +208,7 @@ Zdefiniowany pipeline nie różni się znacząco od tego zaplanowanego. Jedyna 
 - [x] *Build* został wykonany wewnątrz kontenera
 - [x] Testy zostały wykonane wewnątrz kontenera (kolejnego)
 - [x] Kontener testowy jest oparty o kontener build
-- [ ] Logi z procesu są odkładane jako numerowany artefakt, niekoniecznie jawnie
+- [x] Logi z procesu są odkładane jako numerowany artefakt, niekoniecznie jawnie
 - [x] Zdefiniowano kontener typu 'deploy' pełniący rolę kontenera, w którym zostanie uruchomiona aplikacja (niekoniecznie docelowo - może być tylko integracyjnie)
 - [x] Uzasadniono czy kontener buildowy nadaje się do tej roli/opisano proces stworzenia nowego, specjalnie do tego przeznaczenia
 - [x] Wersjonowany kontener 'deploy' ze zbudowaną aplikacją jest wdrażany na instancję Dockera
@@ -193,13 +217,13 @@ Zdefiniowany pipeline nie różni się znacząco od tego zaplanowanego. Jedyna 
 - [x] Uzasadniono wybór: kontener z programem, plik binarny, flatpak, archiwum tar.gz, pakiet RPM/DEB
 - [x] Opisano proces wersjonowania artefaktu (można użyć *semantic versioning*)
 - [x] Dostępność artefaktu: publikacja do Rejestru online, artefakt załączony jako rezultat builda w Jenkinsie
-- [ ] Przedstawiono sposób na zidentyfikowanie pochodzenia artefaktu
+- [x] Przedstawiono sposób na zidentyfikowanie pochodzenia artefaktu
 - [x] Pliki Dockerfile i Jenkinsfile dostępne w sprawozdaniu w kopiowalnej postaci oraz obok sprawozdania, jako osobne pliki
 - [x] Zweryfikowano potencjalną rozbieżność między zaplanowanym UML a otrzymanym efektem
 
 ### Lista kontrolna Jenkinsfile:
 
-- [ ] Przepis dostarczany z SCM, a nie wklejony w Jenkinsa lub sprawozdanie (co załatwia nam `clone` )
+- [x] Przepis dostarczany z SCM, a nie wklejony w Jenkinsa lub sprawozdanie (co załatwia nam `clone` )
 - [x] Posprzątaliśmy i wiemy, że odbyło się to skutecznie - mamy pewność, że pracujemy na najnowszym (a nie *cache'owanym* kodzie)
 - [x] Etap `Build` dysponuje repozytorium i plikami `Dockerfile`
 - [x] Etap `Build` tworzy obraz buildowy, np. `BLDR`

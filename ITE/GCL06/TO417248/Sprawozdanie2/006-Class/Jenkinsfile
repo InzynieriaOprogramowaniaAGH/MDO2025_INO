@@ -6,7 +6,7 @@ pipeline {
             steps {
                 echo 'Cleaning...'
                 sh 'rm -fr MDO2025_INO'
-                sh 'docker images --format "{{.Repository}}:{{.Tag}}" | grep -v "^gcc" | awk "{print $1}" | xargs -r docker rmi -f'
+                sh 'docker images purge'
             }
         }
         stage('Clone') {
