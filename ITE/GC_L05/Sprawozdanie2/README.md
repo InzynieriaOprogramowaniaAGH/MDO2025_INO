@@ -1034,9 +1034,6 @@ Finished: SUCCESS
 ## Opis celu - diagram UML
 
 ```mermaid
----
-title: Diagram aktywności CI/CD (UML)
----
 stateDiagram-v2
     [*] --> KlonowanieRepo
     KlonowanieRepo --> CzyszczenieObrazowDocker
@@ -1050,37 +1047,36 @@ stateDiagram-v2
     PipelineFail --> [*]
 
     state KlonowanieRepo {
-        :Checkout repozytorium;
+        state Checkout
     }
 
     state CzyszczenieObrazowDocker {
-        :Usunięcie starych obrazów Docker;
+        state UsuniecieStarychObrazow
     }
 
     state BudowanieAplikacji {
-        :Docker build image;
+        state DockerBuildImage
     }
 
     state PublikacjaObrazu {
-        :Docker publish + npm start;
+        state DockerPublishAndStart
     }
 
     state UruchamianieTestow {
-        :Testy w kontenerze testowym;
+        state TestyWKontenerze
     }
 
     state SprawdzenieLacznosci {
-        :Sprawdzenie połączenia z aplikacją;
+        state CheckApplicationConnection
     }
 
     state PipelineSuccess {
-        :Zakończenie sukcesem;
+        state SuccessEnd
     }
 
     state PipelineFail {
-        :Zakończenie niepowodzeniem;
+        state FailureEnd
     }
-
 
 ```
 
