@@ -43,7 +43,7 @@ pipeline {
             sh '''
             # run the deploy image, mounting the workspace/local-pypi as /packages
             docker run --rm \
-                -v ${WORKSPACE}/local-pypi:/packages \
+                -v /home/user/local-pypi/packages \
                 pytest-examples-deploy:0.1.0
             '''
         }
