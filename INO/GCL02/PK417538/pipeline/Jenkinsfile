@@ -2,63 +2,49 @@ pipeline {
   agent any
 
   environment {
-    IMAGE      = "pytest-examples-build:0.1.0"
-    DOCKERFILE = "INO/GCL02/PK417538/pipeline/Dockerfile.build"
-    CONTEXT    = "INO/GCL02/PK417538/pipeline"
+    IMAGE      = 'pytest-examples-build:0.1.0'
+    DOCKERFILE = 'INO/GCL02/PK417538/pipeline/Dockerfile.build'
+    CONTEXT    = 'INO/GCL02/PK417538/pipeline'
   }
 
   stages {
     stage('Checkout') {
-      steps { checkout scm }
-    }
-
-    stage('Build Docker image') {
       steps {
-        sh """
-          docker build -t ${IMAGE} \
-            -f ${DOCKERFILE} \
-            ${CONTEXT}
-        """
+        checkout scm
       }
     }
 
-    stage('Install & Test in Docker') {
+    stage('Build & Test Docker image') {
       steps {
-        sh """
-          docker run --rm \
-            -v ${WORKSPACE}:/workspace \
-            -w /workspace/${CONTEXT} \
-            ${IMAGE} \
-            bash -lc "make install && make test | tee /workspace/test.log"
-        """
-      }
-    }
+        // budujemy obraz, w którym są już testy i sdist
+        sh "docker build -t ${IMAGE} -f ${DOCKERFILE} ${CONTEXT}"
 
-    stage('Package sdist') {
-      steps {
-        sh """
-          docker run --rm \
-            -v ${WORKSPACE}:/workspace \
-            -w /workspace/${CONTEXT} \
-            ${IMAGE} \
-            bash -lc "poetry build -f sdist -o /workspace/dist"
-        """
-        sh """
-          mkdir -p ~/local-pypi/packages
-          cp dist/*.tar.gz ~/local-pypi/packages/program-0.1.0.tar.gz
-        """
+        // tworzymy chwilowy kontener i kopiujemy z niego artefakty
+        script {
+          def cid = sh(script: "docker create ${IMAGE}", returnStdout: true).trim()
+          // test.log
+          sh "docker cp ${cid}:/app/test.log ${WORKSPACE}/test.log"
+          // katalog z paczkami (dist/*.tar.gz)
+          sh "docker cp ${cid}:/app/dist ${WORKSPACE}/dist"
+          sh "docker rm ${cid}"
+        }
       }
     }
 
     stage('Publish to local PyPI') {
       steps {
-        echo "Paczka w ~/local-pypi/packages – teraz możesz wystawić to jako proste PyPI (np. python -m http.server 8081)"
+        sh '''
+          mkdir -p ~/local-pypi/packages
+          cp dist/*.tar.gz ~/local-pypi/packages/
+        '''
+        echo "Paczki zostały skopiowane do ~/local-pypi/packages"
       }
     }
   }
 
   post {
     always {
+      // archiwizujemy logi i paczki
       archiveArtifacts artifacts: 'test.log, dist/*.tar.gz', fingerprint: true
     }
   }
