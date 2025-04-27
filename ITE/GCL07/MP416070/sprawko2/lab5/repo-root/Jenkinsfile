@@ -69,6 +69,7 @@ pipeline {
                             --build-arg FEDORA_VER=40 \
                             -t ${RUNTIME_IMG} \
                             -f ${DOCKER_DIR}/Dockerfile.build \
+                            ${DOCKER_DIR}
                 """
             }
             }

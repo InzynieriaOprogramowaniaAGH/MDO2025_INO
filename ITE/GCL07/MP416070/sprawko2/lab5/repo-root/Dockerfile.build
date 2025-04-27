@@ -3,7 +3,7 @@ ARG FEDORA_VER=40               # jedna zmienna dla obu stage’y
 FROM fedora:${FEDORA_VER} AS builder
 RUN dnf -y install gcc glib2-devel openssl-devel ncurses-devel \
                    meson ninja-build git perl-ExtUtils-Embed && dnf clean all
-WORKDIR /src
+WORKDIR /app
 RUN git clone --depth=1 https://github.com/irssi/irssi.git .
 RUN meson setup builddir -Dprefix=/usr && ninja -C builddir install
 
