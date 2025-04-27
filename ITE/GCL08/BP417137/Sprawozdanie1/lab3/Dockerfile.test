@@ -1,4 +1,4 @@
-FROM docker-build-irrsi
+FROM docker-irssi-build
 
 WORKDIR /irssi
 
