@@ -1,4 +1,4 @@
-ARG IMAGE_TAG
+ARG IMAGE_TAG = latest
 FROM redisbld:${IMAGE_TAG} AS builder
 FROM fedora:latest
 
@@ -24,4 +24,5 @@ RUN mkdir /root/redis-${REDIS_VERSION} && \
 
 RUN rpmbuild -ba /root/rpmbuild/SPECS/redis.spec
 
-CMD ["sh", "-c", "cp /root/rpmbuild/RPMS/x86_64/*.rpm /output/"]
+CMD ["sh", "-c", "ls -lh /root/rpmbuild/RPMS/x86_64/ && cp /root/rpmbuild/RPMS/x86_64/*.rpm /output/ || echo 'No RPMs found to copy'"]
+
