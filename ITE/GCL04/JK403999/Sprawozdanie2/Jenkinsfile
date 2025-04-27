@@ -3,20 +3,37 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                sh "rm -rf MDO2025_INO"
-                sh "git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git"
-                dir("MDO2025_INO/ITE/GCL04/JK403999/Sprawozdanie1") { sh "git checkout JK403999" }
+                sh "ls -a"
             }
         }
         stage('Build') {
             steps {
-                echo 'Build'
+                    sh "docker build -f Dockerfile.bld -t irssibld ."
             }
         }
         stage('Test') {
             steps {
-                echo 'Test'
+                    sh "docker build -f Dockerfile.test -t irssitest ."
+                
             }
+        }
+        stage('Deploy'){
+            steps {
+                    sh "docker build -f Dockerfile.dep -t irssidep ."   
+                    sh "docker run -dit irssidep"
+            }
+        }
+        stage('Archive') {
+            steps {
+                sh 'docker cp $(docker ps -q --filter ancestor=irssidep | head -n 1):/usr/local/bin/irssi ${WORKSPACE}/irssi'
+                sh 'ls -la ${WORKSPACE}/irssi'
+                archiveArtifacts artifacts: 'irssi/irssi', allowEmptyArchive: false, fingerprint: true
+            }
+        }
+    }
+    post {
+        always {
+                    sh 'docker ps -q --filter ancestor=irssidep | xargs docker stop | xargs docker rm'
         }
     }
 }
