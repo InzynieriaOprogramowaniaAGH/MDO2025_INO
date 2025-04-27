@@ -17,4 +17,9 @@ RUN make install
 RUN make test | tee test.log || true
 
 # 4) zbuduj sdist
-RUN poetry build -f sdist -o dist
+# install the PEP-517 build tool
+RUN pip3 install --no-cache-dir build
+
+# build a source-dist into dist/
+RUN python3 -m build --sdist --outdir dist
+
