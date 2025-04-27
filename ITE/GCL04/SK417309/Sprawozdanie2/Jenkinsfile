@@ -65,9 +65,9 @@ pipeline {
       steps {
         dir(env.DOCKER_CONTEXT) {
           sh """
-            docker-compose -f docker-compose.yml down -v || true
+            docker compose -f docker-compose.yml down -v || true
 
-            docker-compose -f docker-compose.yml up --build -d
+            docker compose -f docker-compose.yml up --build -d
 
             # sanity-check HTTP
             for i in \$(seq 1 10); do
