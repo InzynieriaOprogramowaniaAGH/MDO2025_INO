@@ -1035,11 +1035,12 @@ Finished: SUCCESS
 
 ```mermaid
 flowchart TD
-    Start --> Collect[Collect Sources]
-    Collect --> Build[Build Project]
-    Build --> Test[Test Project]
-    Test --> Report[Generate Report]
-    Report --> End
+    A[Klonowanie repozytorium (Checkout)] --> B[Budowanie obrazu Dockera (Build Docker Image)]
+    B --> C[Uruchomienie testów (Test)]
+    C --> D{Czy testy przeszły?}
+    D -- Tak --> E[Pipeline SUCCESS]
+    D -- Nie --> F[Pipeline FAIL]
+
 ```
 
 ---
