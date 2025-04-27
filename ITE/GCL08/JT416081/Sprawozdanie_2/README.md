@@ -1,28 +1,31 @@
 Jakub Tyliński, Grupa 8, 416081
 
----ZAJĘCIA_05---
+**Uruchomienie Jenkins**
 
-### Przygotowanie
-🌵 Utwórz instancję Jenkins
-* Upewnij się, że na pewno działają kontenery budujące i testujące, stworzone na poprzednich zajęciach
-* Zapoznaj się z instrukcją instalacji Jenkinsa: https://www.jenkins.io/doc/book/installing/docker/
-  * Uruchom obraz Dockera który eksponuje środowisko zagnieżdżone
-  * Przygotuj obraz blueocean na podstawie obrazu Jenkinsa (czym się różnią?)
-  * Uruchom Blueocean
-  * Zaloguj się i skonfiguruj Jenkins
-  * Zadbaj o archiwizację i zabezpieczenie logów
+Wszystkie kroki uruchamiania środowiska Jenkins zostały wykonane z wykorzystaniem podesłanej dokumentacji!
+
+Krok_1: Utworzenie sieci mostkowej:
 
 ![alt text](image1.png)
 
+Krok_2: Uruchomienie pomocnika DIND:
+
 ![alt text](image2.png)
+
+Krok_3: Stworzenie pliku Dockerfile oraz wykonanie docker build:
 
 ![alt text](image3.png)
 
+Krok_4: Uruchomienie kontenera:
+
 ![alt text](image4.png)
+
+Krok_5: Ekran startowy:
 
 ![alt text](image5.png)
 
-### Zadanie wstępne: uruchomienie
+**Zadania wstępne**
+
 🌵 Zadanie do wykonania na ćwiczeniach
 * Konfiguracja wstępna i pierwsze uruchomienie
   * Utwórz projekt, który wyświetla `uname`
@@ -169,4 +172,9 @@ int main() {
 
 JENKINSFILE
 
+
+credientials:
+
 ![alt text](image23.png)
+
+![alt text](image24.png)

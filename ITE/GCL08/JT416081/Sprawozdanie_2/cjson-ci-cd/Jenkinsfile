@@ -71,8 +71,7 @@ pipeline {
                         docker network create ci || true
                         docker run -dit --network ci --name deploy $IMAGE_DEPLOY:$VERSION
                         sleep 3
-                        docker exec deploy gcc -o app main.c cJSON.c
-                        docker exec deploy ./app
+                        docker run --rm --network ci -v $PWD:/app -w /app gcc:14 bash -c "gcc -o app main.c cJSON.c && ./app"
                         docker stop deploy
                         docker rm deploy
                         docker network rm ci
