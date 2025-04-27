@@ -2407,6 +2407,29 @@ Aktualnie wykonano następujące kroki:
 | Pliki Dockerfile i Jenkinsfile                | ✔️     | Są załączane i będą osobno |
 | Weryfikacja UML vs efekt                     | 🟡     | Porównanie planu i realizacji po zakończeniu |
 
+---
 
+# Jenkinsfile: lista kontrolna - Laboratorium 7
 
+---
+
+| Krok Jenkinsfile                             | Status | Uwagi |
+|----------------------------------------------|--------|-------|
+| Przepis dostarczany z SCM                    | ✔️     | Pipeline używa Jenkinsfile z repozytorium GitHub |
+| Posprzątanie i świeży kod                    | ✔️     | Repozytorium jest zawsze klonowane w kroku Checkout |
+| Etap Build: dostęp do repo i Dockerfile      | ✔️     | Dockerfile widoczny po klonowaniu |
+| Etap Build: tworzenie obrazu buildowego (BLDR) | ✔️     | docker build na podstawie Dockerfile.builder |
+| Przygotowanie artefaktu                      | ✔️     | Budowany obraz może być artefaktem |
+| Etap Test: przeprowadzenie testów            | ✔️     | Testy uruchamiane w kontenerze |
+| Etap Deploy: przygotowanie pod wdrożenie     | 🟡     | Etap deploy dopracowywany (smoke test i uruchomienie kontenera) |
+| Etap Deploy: przeprowadzenie wdrożenia       | 🟡     | W planie: uruchomienie i weryfikacja działania aplikacji |
+| Etap Publish: wysyłka obrazu/artefaktu       | 🟡     | Artefakt będzie publikowany jako obraz Docker lub załączony do buildu |
+| Ponowne uruchomienie pipeline                | ✔️     | Pipeline działa poprawnie przy wielokrotnym uruchamianiu |
+
+---
+
+| "Definition of done"                        | Status | Uwagi |
+|----------------------------------------------|--------|-------|
+| Obraz może być pobrany i uruchomiony         | 🟡     | W planie publikacja obrazu na Docker Hub lub załączenie go w Jenkins |
+| Artefakt gotowy do działania po pobraniu     | 🟡     | W zależności od formy (obraz Docker lub ZIP) - jeszcze do pełnego potwierdzenia |
 
