@@ -1,4 +1,4 @@
-# Sprawozdanie 1
+# Sprawozdanie 2
 #### Tomasz Oszczypko
 
 ### Przygotowanie instancji Jenkins
