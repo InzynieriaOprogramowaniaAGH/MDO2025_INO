@@ -66,6 +66,31 @@ Finished: SUCCESS
 
 ```
 
+```
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'AN417592', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    echo "Buduję obraz Dockera..."
+                    docker build -t my-builder-image -f ITE/GC_L05/AN417592/Dockerfile .
+                '''
+            }
+        }
+    }
+}
+
+
+```
+
 
 ```
 Started by user AmeliaN
