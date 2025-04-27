@@ -1,0 +1,7 @@
+FROM node:18-slim
+
+COPY --from=express-build /tmp/foo /app
+
+WORKDIR /app
+
+CMD ["npm", "start"]
