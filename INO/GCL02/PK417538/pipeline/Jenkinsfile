@@ -34,8 +34,7 @@ pipeline {
     stage('Publish to local PyPI') {
       steps {
         sh '''
-        mkdir -p /root/local-pypi/packages
-        cp dist/*.whl /root/local-pypi/packages/
+        cp dist/*.whl /home/user/local-pypi/packages/
         '''
         echo "Paczki zostały skopiowane do ~/local-pypi/packages"
       }
