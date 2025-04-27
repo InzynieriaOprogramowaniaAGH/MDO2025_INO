@@ -1,0 +1,17 @@
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y  
+
+WORKDIR /json-c
+
+RUN git clone https://github.com/json-c/json-c.git src
+
+WORKDIR /json-c/src
+
+RUN mkdir build
+WORKDIR /json-c/src/build
+
+RUN cmake ..
+RUN make
