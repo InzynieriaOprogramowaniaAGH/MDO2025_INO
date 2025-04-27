@@ -3,15 +3,16 @@ pipeline {
 
   stages {
     stage('Build image') {
-      steps {
-        sh '''
-          docker build \
-            --target builder \
-            -t pytest-examples-builder:0.1.0 \
-            -f INO/GCL02/PK417538/pipeline/Dockerfile .
-        '''
-      }
+        steps {
+            sh '''
+            docker build \
+                --target builder \
+                -t pytest-examples-builder:0.1.0 \
+                -f INO/GCL02/PK417538/pipeline/Dockerfile .
+            '''
+        }
     }
+
 
     stage('Test image') {
       steps {
