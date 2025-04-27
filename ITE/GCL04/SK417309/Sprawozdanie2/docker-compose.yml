@@ -3,6 +3,9 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_DATABASE: teacher_management_2
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
@@ -26,6 +29,9 @@ services:
         condition: service_healthy
     environment:
       SERVER_PORT: ${APP_PORT}
+      SPRING_DATASOURCE_URL:      "jdbc:mysql://mydb:3306/teacher_management_2"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
     networks:
       - appnet
     ports:
