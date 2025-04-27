@@ -1,3 +1,5 @@
 FROM redis_build_container
 
+WORKDIR /redis
+
 RUN make test
