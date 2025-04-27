@@ -1,8 +1,6 @@
 
 
-FROM ubuntu:22.04 AS builder
-
-ENV PATH="/root/.local/bin:${PATH}"
+FROM ubuntu:22.04 
 
 RUN apt-get update && apt-get install -y \
     git \
