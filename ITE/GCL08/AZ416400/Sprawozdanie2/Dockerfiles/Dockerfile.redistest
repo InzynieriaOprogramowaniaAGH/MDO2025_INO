@@ -4,7 +4,8 @@ FROM redisbld:${IMAGE_TAG}
 RUN dnf -y install \
     make \
     ps \
-    tcl
+    tcl \
+    tcl-devel
 
 WORKDIR /redis
 
