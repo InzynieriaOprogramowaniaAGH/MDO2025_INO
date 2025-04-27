@@ -1,5 +1,6 @@
-FROM build_image
+# ─── Tester: dziedziczy po wskazanym obrazie buildera ──────────────────────────
+ARG BASE
+FROM ${BASE}
 
 WORKDIR /app
-
 CMD ninja -C builddir test

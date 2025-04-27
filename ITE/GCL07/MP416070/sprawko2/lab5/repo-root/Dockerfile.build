@@ -1,19 +1,16 @@
+# ─── Builder: Fedora + zależności + klon IRSSI ─────────────────────────────────
 FROM fedora:latest
 
-#pobranie wymaganych pakietow i repo
 RUN dnf -y install \
-gcc \
-glib2-devel \
-openssl-devel \
-ncurses-devel \
-meson \
-ninja \
-git \
-perl-ExtUtils-Embed 
+        gcc glib2-devel openssl-devel ncurses-devel \
+        meson ninja git perl-ExtUtils-Embed \
+    && dnf clean all
 
 WORKDIR /app
 
-COPY . /app
+# pobieramy najnowsze źródła IRSSI (1 commit depth, szybciej)
+RUN git clone --depth 1 https://github.com/irssi/irssi.git .
 
-RUN meson setup builddir
-RUN ninja -C builddir
+# konfiguracja + kompilacja
+RUN meson setup builddir && \
+    ninja -C builddir
