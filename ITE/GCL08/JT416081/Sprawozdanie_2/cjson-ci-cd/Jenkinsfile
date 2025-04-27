@@ -1,0 +1,100 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_BUILD = 'cjson-build'
+        IMAGE_TEST = 'cjson-test'
+        IMAGE_DEPLOY = 'cjson-deploy'
+        DOCKERHUB_REPO = 'jaktyl/cjson-deploy' 
+        ZIP_BASE = 'cjson'
+        VERSION = "v${BUILD_NUMBER}"
+        IMAGE_TAG = "jaktyl/cjson-deploy:v${BUILD_NUMBER}" 
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'JT416081', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+            }
+        }
+
+        stage('Clean') {
+            steps {
+                dir('ITE/GCL08/JT416081/Sprawozdanie_2/cjson-ci-cd') {
+                    sh '''
+                        docker container ls -a -q | xargs -r docker rm -f
+                        docker volume ls -q | xargs -r docker volume rm -f
+                        docker network ls -q --filter type=custom | xargs -r docker network rm -f
+                        docker builder prune --all --force
+                        docker images -q | sort -u | grep -vE '^(gcc:14|alpine:latest)$' | xargs -r docker rmi -f
+                    '''
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('ITE/GCL08/JT416081/Sprawozdanie_2/cjson-ci-cd') {
+                    sh 'docker build -f Dockerfile.build -t $IMAGE_BUILD .'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('ITE/GCL08/JT416081/Sprawozdanie_2/cjson-ci-cd') {
+                    sh 'docker build -f Dockerfile.test -t $IMAGE_TEST .'
+                    sh 'docker run --rm $IMAGE_TEST > test-${VERSION}.log'
+                    archiveArtifacts artifacts: "test-${VERSION}.log", onlyIfSuccessful: true
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('ITE/GCL08/JT416081/Sprawozdanie_2/cjson-ci-cd') {
+                    sh '''
+                        docker create --name temp-build-container $IMAGE_BUILD
+                        docker cp temp-build-container:/cJSON/cJSON.c ./cJSON.c
+                        docker cp temp-build-container:/cJSON/cJSON.h ./cJSON.h
+                        docker rm temp-build-container
+                        docker build -f Dockerfile.deploy -t $IMAGE_DEPLOY:$VERSION .
+                    '''
+                }
+            }
+        }
+
+        stage('SmokeTest') {
+            steps {
+                dir('ITE/GCL08/JT416081/Sprawozdanie_2/cjson-ci-cd') {
+                    sh '''
+                        docker network create ci || true
+                        docker run -dit --network ci --name deploy $IMAGE_DEPLOY:$VERSION
+                        sleep 3
+                        docker exec deploy gcc -o app main.c cJSON.c
+                        docker exec deploy ./app
+                        docker stop deploy
+                        docker rm deploy
+                        docker network rm ci
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir('ITE/GCL08/JT416081/Sprawozdanie_2/cjson-ci-cd') {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                            zip -r ${ZIP_BASE}-${VERSION}.zip cJSON.c cJSON.h
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker tag $IMAGE_DEPLOY:$VERSION $IMAGE_TAG
+                            docker push $IMAGE_TAG
+                        '''
+                        archiveArtifacts artifacts: "${ZIP_BASE}-${VERSION}.zip", onlyIfSuccessful: true
+                    }
+                }
+            }
+        }
+    }
+}
