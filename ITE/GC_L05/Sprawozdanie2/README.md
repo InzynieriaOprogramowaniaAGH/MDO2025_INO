@@ -5,7 +5,7 @@
 ---
 
 ### Projekt, który wyświetla uname 
-
+ 
 Następnie utworzono pierwszy projekt, którego zadaniem było wyświetlenie wyniku polecenia uname. W tym celu w sekcji „Build” dodano nowy krok „Execute shell”, w którym wpisano komendę uname -a. Po zapisaniu i uruchomieniu projektu Jenkins poprawnie wykonał zadanie i w konsoli wyświetlił informacje o systemie. 
 
 ---
@@ -2334,6 +2334,78 @@ Po przejściu wszystkich testów, aplikacja jest wdrażana poprzez uruchomienie 
 ### Proces Publish:
 
 Na koniec przygotowywany jest wersjonowany artefakt — w tym przypadku obraz Dockera oznaczony tagiem odpowiadającym wersji aplikacji (np. pytest-examples-builder:v1.0.0) lub ewentualnie paczka ZIP zawierająca binaria lub build aplikacji. Artefakt jest następnie dołączony do wyników pipeline'u jako pobieralny plik lub wypychany do prywatnego registry Dockera.
+
+---
+
+# Pipeline: lista kontrolna - Laboratorium 6
+
+---
+
+## Plan na Pipeline oraz Postęp Prac
+
+---
+
+### Plan
+
+---
+
+Celem pipeline'u jest zautomatyzowanie pełnego procesu CI/CD dla wybranej aplikacji. Ścieżka krytyczna obejmuje: commit → clone → build → test → deploy → publish.
+
+Aktualnie wykonano następujące kroki:
+
+- Skonfigurowano Jenkins z Docker-in-Docker (DIND).
+
+- Utworzono i przetestowano pipeline obejmujący kroki checkout, build oraz test w kontenerze.
+
+- Przygotowano obrazy kontenerowe zgodnie z wymaganiami (builder + tester).
+
+- Zaplanowano kroki deploy i publish.
+
+- Udokumentowano różnice między kontenerami build/test/deploy.
+
+---
+
+### Ścieżka krytyczna: Status
+
+
+---
+
+| Krok    | Status | Uwagi |
+|---------|--------|-------|
+| Commit  | ✔️     | Pipeline może być wyzwalany manualnie lub na commit. |
+| Clone   | ✔️     | Repozytorium klonowane w kroku Checkout. |
+| Build   | ✔️     | Obraz buildowany z Dockerfile.builder. |
+| Test    | ✔️     | Testy uruchamiane w osobnym kontenerze zbudowanym na builderze. |
+| Deploy  | 🟡     | Zaplanowane wdrożenie kontenera deploy po buildzie i testach. |
+| Publish | 🟡     | Artefakt będzie przygotowywany jako obraz Docker (ew. ZIP). |
+
+
+### Pełna lista kontrolna: Status i Plan
+
+| Krok                                         | Status | Uwagi |
+|----------------------------------------------|--------|-------|
+| Aplikacja została wybrana                    | ✔️     | Repo MDO2025_INO |
+| Licencja potwierdzona                        | ✔️     | Repozytorium edukacyjne |
+| Wybrany program buduje się                   | ✔️     | Build działa |
+| Przechodzą dołączone testy                   | ✔️     | Testy z uruchamianego kontenera |
+| Decyzja o forku                              | ✔️     | Brak potrzeby, korzystanie z własnej gałęzi |
+| Diagram UML procesu CI/CD                   | 🟡     | W przygotowaniu – plan przedstawiony słownie, rysunek do uzupełnienia |
+| Wybrano kontener bazowy                      | ✔️     | python:3.11-slim lub inny świadomie wybrany obraz |
+| Build wewnątrz kontenera                     | ✔️     | - |
+| Testy wewnątrz kontenera                     | ✔️     | - |
+| Tester oparty o builder                      | ✔️     | - |
+| Logi jako artefakt                           | 🟡     | Logi widoczne w Jenkins, opcjonalnie archiveArtifacts |
+| Kontener deploy                              | 🟡     | Tworzony osobno lub reużywany builder |
+| Uzasadnienie kontenera deploy                | 🟡     | Opis będzie podany poniżej |
+| Deploy kontenera z aplikacją                 | 🟡     | Plan na smoke test po uruchomieniu kontenera |
+| Smoke test aplikacji                         | 🟡     | Przewidziany, np. sprawdzenie endpointu HTTP lub logów |
+| Definicja artefaktu                          | ✔️     | Obraz Docker jako artefakt |
+| Uzasadnienie wyboru artefaktu                 | ✔️     | Docker: łatwość deployu i transportu |
+| Wersjonowanie artefaktu                      | 🟡     | Semantic Versioning (np. v1.0.0) |
+| Dostępność artefaktu                         | 🟡     | Zapis w Jenkins lub opcjonalnie Docker Hub |
+| Identyfikacja pochodzenia artefaktu           | ✔️     | Nazwa + tag + commit SHA |
+| Pliki Dockerfile i Jenkinsfile                | ✔️     | Są załączane i będą osobno |
+| Weryfikacja UML vs efekt                     | 🟡     | Porównanie planu i realizacji po zakończeniu |
 
 
 
