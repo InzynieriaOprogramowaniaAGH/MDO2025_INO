@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     IMAGE      = "pytest-examples-build:0.1.0"
-    DOCKERFILE = "INO/GCL02/PK417538/pipeline/Dockerfile"
+    DOCKERFILE = "INO/GCL02/PK417538/pipeline/Dockerfile.build"
     CONTEXT    = "INO/GCL02/PK417538/pipeline"
   }
 
