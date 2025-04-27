@@ -28,6 +28,8 @@ Kolejnym krokiem była konfiguracja archiwizacji logów oraz zabezpieczenia śro
 
 W dalszym etapie dokonałem konfiguracji oraz uruchomienia kilku wstępnych projektów w Jenkinsie:
 
+![tablica_jenkins](tablica_jenkins.jpg)
+
 1. **Projekt wyświetlający wynik komendy `uname -a`**:
 
 ![Wynik uname](uname_a_lab5.jpg)
@@ -93,7 +95,7 @@ Ostatecznie udało mi się poprawnie zrealizować wszystkie wymagane etapy:
 
 ![Uruchomienie deploy](uruchamianie_deploy_lab6.jpg)
 
-**Publikacja artefaktów:**
+**Publikacja artefaktów i wyświetlenie wersji:**
 
 ![Wyświetlenie wersji Irssi](wersja_irssi_lab6.jpg)
 
