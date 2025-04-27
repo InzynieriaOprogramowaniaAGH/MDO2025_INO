@@ -1,11 +1,13 @@
 ARG IMAGE_TAG=latest
 FROM redisbld:${IMAGE_TAG}
 
-RUN dnf -y install \
-    make \
-    ps \
-    tcl \
-    tcl-devel
+RUN dnf -y update && \
+    dnf -y install curl make gcc procps-ng && \
+    curl -O https://kojipkgs.fedoraproject.org//packages/tcl/8.6.10/2.fc36/x86_64/tcl-8.6.10-2.fc36.x86_64.rpm && \
+    curl -O https://kojipkgs.fedoraproject.org//packages/tcl/8.6.10/2.fc36/x86_64/tcl-devel-8.6.10-2.fc36.x86_64.rpm && \
+    dnf install -y ./tcl-8.6.10-2.fc36.x86_64.rpm ./tcl-devel-8.6.10-2.fc36.x86_64.rpm && \
+    rm -f *.rpm && \
+    dnf clean all
 
 WORKDIR /redis
 
