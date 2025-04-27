@@ -28,7 +28,8 @@ pipeline {
         stage('Build ➜ builder image') {
             steps {
                 sh """
-                  docker build  \
+                  docker build  --target builder \
+                        --build-arg FEDORA_VER=40 \
                          -f ${DOCKER_DIR}/Dockerfile.build \
                          -t ${BUILDER_IMG} \
                          ${DOCKER_DIR}
@@ -65,10 +66,15 @@ pipeline {
             steps {
                 sh """
                 docker build --target runtime \
-                            -t ${RUNTIME_IMG} ${DOCKER_DIR}
+                            --build-arg FEDORA_VER=40 \
+                            -t ${RUNTIME_IMG} \
+                            -f ${DOCKER_DIR}/Dockerfile.build \
                 """
             }
             }
+
+
+            
         stage('Smoke-test runtime') {
             steps {
                 sh """
