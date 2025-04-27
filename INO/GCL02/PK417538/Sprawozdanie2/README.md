@@ -133,8 +133,6 @@ Pipeline buduje, testuje i pakuje aplikację w czterech głównych etapach:
 
 - Niezależnie od wyniku pipeline'u, archiwizowany jest plik `test.log` (`archiveArtifacts`).
 
----
-
 ## Struktura Dockerfile
 
 - **Stage 1: builder**
@@ -145,6 +143,9 @@ Pipeline buduje, testuje i pakuje aplikację w czterech głównych etapach:
 
 - **Stage 3: deploy**
   - Przygotowanie katalogu `/packages` i kopiowanie pakietów z `builder`.
+
+![obraz](https://github.com/user-attachments/assets/c3069d6b-d640-4c64-8c5b-c69a8a127da4)
+
 
 # Uzasadnienie decyzji projektowych
 
@@ -164,8 +165,6 @@ W pipeline tworzony jest **pakiet w formacie Wheel (`.whl`)** zamiast instalowal
 Powody:
 - **Szybsza instalacja** – pliki `.whl` nie wymagają rekompilacji podczas instalacji (`pip install` jest znacznie szybszy).
 - **Standaryzacja** – Wheel jest standardowym formatem binarnych pakietów Pythona (`PEP 427`).
-
----
 
 Dzięki temu pipeline jest **prostszy**, **szybszy** i **bardziej niezawodny**.
 
