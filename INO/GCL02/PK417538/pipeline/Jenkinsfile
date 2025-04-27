@@ -40,20 +40,24 @@ pipeline {
 
     stage('Package / Deploy artifacts') {
         steps {
-            sh '''
-            # run the deploy image, mounting the workspace/local-pypi as /packages
-            docker run --rm \
-                -v /home/user/local-pypi/packages \
-                pytest-examples-deploy:0.1.0
-            '''
+            script {
+            // zbuduj deploy‐image wcześniej w pipeline
+            sh 'docker create --name tmp pytest-examples-deploy:0.1.0'
+            // skopiuj całą zawartość /packages z kontenera do katalogu packages w workspace
+            sh 'docker cp tmp:/packages $WORKSPACE/packages'
+            sh 'docker rm tmp'
+            }
+            // teraz Jenkins ma je w $WORKSPACE/packages i może je zarchiwizować
+            archiveArtifacts artifacts: 'packages/**/*', fingerprint: true
         }
     }
+
 
   }
 
   post {
     always {
-      archiveArtifacts artifacts: 'test.log, dist/**', fingerprint: true
+      archiveArtifacts artifacts: 'test.log', fingerprint: true
     }
   }
 }
