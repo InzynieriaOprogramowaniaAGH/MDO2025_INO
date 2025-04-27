@@ -11,7 +11,9 @@ RUN dnf -y install \
 
 RUN git clone https://github.com/redis/redis.git
 
-WORKDIR /redis
+WORKDIR /redis/deps
+RUN make jemalloc
 
-RUN make BUILD_WITHOUT_JEMALLOC=yes
+WORKDIR /redis
+RUN make
 
