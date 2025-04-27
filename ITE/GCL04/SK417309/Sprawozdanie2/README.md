@@ -150,4 +150,47 @@ Następnym zadanie było przygotowanie pipeline'u do wybranego projektu. Do tego
 * UML TO DO
 * Wybrałem odpowiedni kontener bazowy zawierający wszystkie potrzebne zależności do zbudowania aplikacji - eclipse-temurin. 
 * Wykonałem build wewnątrz wersjonowanego kontenera zdefiniowanego na podstawie `Dockerfile.build`. 
-* Następnie w kolejnym kontenerze zbudowanym za pomocą kolejnego `Dockerfile.test`, wykonałem testy, od razu przy budowaniu dzięki wykorzystaniu komendy `RUN mvn test -B`. Początkowo, aby odseparować te dwa kontenery, w obu klonowałem repozytorium mojej aplikacji, ale to rozwiązanie zastąpiłem później bazowaniem kontenera testowego na kontenerze buildowym.
+* Następnie w kolejnym kontenerze zbudowanym za pomocą kolejnego `Dockerfile.test`, wykonałem testy, od razu przy budowaniu dzięki wykorzystaniu komendy `RUN mvn test -B`. Początkowo, aby odseparować te dwa kontenery, w obu klonowałem repozytorium mojej aplikacji, ale to rozwiązanie zastąpiłem później bazowaniem kontenera testowego na kontenerze buildowym. Dzięki temu unika się kilkukrotnego ściągania tych samych plików.  
+Dwa pierwsze etapy (build i test) przebiegały bardzo przyjemnie i szybko, ale problemy zaczęły się pojawiać przy próbie deploy'owania aplikacji. Dlatego zanim przejdę do opisu kolejnego puntku ścieżki krytycznej, skupię się na omówieniu zmian jakie musiałem wprowadzić, żeby w ogóle deploy mógł działać. Moja aplikacja zawierała komunikacje z bazą danych, więc w etapie deploy'u zawarłem budowanie kolejnego kontenera z bazą danych na podstawie obrazu `mysql`. Później, aby ułatwić budowanie i zmniejszyć skomlplikowanie samego Jenkinsfile'a, napisałem docker-compose do budowania obu serwisów - aplikacji i bazy danych:
+```
+services:
+  mydb:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: teacher_management_2
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
+      interval: 5s
+      timeout: 2s
+      retries: 10
+    networks:
+      - appnet
+    ports:
+      - "3306:3306"
+
+  myapp:
+    build:
+      context: .
+      dockerfile: Dockerfile.deploy
+      args:
+        BUILD_TAG: ${BUILD_TAG}
+    image: ${IMAGE_NAME}:prod-${BUILD_TAG}
+    depends_on:
+      mydb:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: ${APP_PORT}
+      SPRING_DATASOURCE_URL:      "jdbc:mysql://mydb:3306/teacher_management_2"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+    networks:
+      - appnet
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+
+networks:
+  appnet:
+```
+We wklejonej tutaj wersji zawarta jest konfiguracja zmiennych środowiskowych do Spring Boot'a, ale jak później zauważyłem, na podstawie błędów w logach, aplikacja cały czas próbowała łączyć się z bazą za pomocą starej konfiguracji. Po sprawdzenie kodu źródłowego, zobaczyłem, że w tamtej aplikacji nie korzystałem z profili konfiguracyjnych Spring Boot'a, tylko hard-code konfiguracji, więc zmieniłem to i scommitowałem na github'a. I tu pojawia się pierwszy problem z buildem - do kontenera cały czas pobierała się stara wersja aplikacji. Aby temu zapobiec, należało zastosować flagę `--no-cache`, której wcześniej nie używałem i co było błędem, ponieważ sam Jenkinsfile reagował na zmiany w pobieranym repozytorium przedmiotym, ale nie na zmiany wewnątrz swoich operacji takich jak build.
