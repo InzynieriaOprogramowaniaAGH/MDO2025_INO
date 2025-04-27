@@ -1,48 +1,52 @@
 /*
- * Jenkinsfile – lab5/repo-root/Jenkinsfile
- * Buduje obraz buildera z Dockerfile.build
- * Buduje obraz testera z Dockerfile.test
- * Uruchamia testy Meson i archiwizuje logi
+ * Pipeline: buduje obraz buildera (Fedora + irssi) → buduje obraz testera
+ * → uruchamia testy Meson i archiwizuje logi.
+ *
+ * Plik leży w katalogu:
+ *   ITE/GCL07/MP416070/sprawko2/lab5/repo-root/Jenkinsfile
  */
 pipeline {
     agent any
 
     environment {
-        // podkatalog z Dockerfile’ami
-        DOCKER_DIR   = 'lab5/repo-root'
-        BUILDER_IMG  = "irssi/builder:${BUILD_NUMBER}"
-        TESTER_IMG   = "irssi/tester:${BUILD_NUMBER}"
+        // Katalog z Dockerfile’ami (relatywnie od root repo)
+        DOCKER_DIR     = 'ITE/GCL07/MP416070/sprawko2/lab5/repo-root'
+        // Unikalne tagi: irssi/builder:42, irssi/tester:42, …
+        BUILDER_IMG    = "irssi/builder:${BUILD_NUMBER}"
+        TESTER_IMG     = "irssi/tester:${BUILD_NUMBER}"
     }
 
     stages {
-
         stage('Checkout') {
             steps { checkout scm }
         }
 
+        /* ─────────────── Build: builder image ─────────────── */
         stage('Build ➜ builder image') {
             steps {
                 sh """
-                  docker build \
-                     -f ${DOCKER_DIR}/Dockerfile.build \
-                     -t ${BUILDER_IMG} \
-                     ${DOCKER_DIR}
+                  docker build  \
+                         -f ${DOCKER_DIR}/Dockerfile.build \
+                         -t ${BUILDER_IMG} \
+                         ${DOCKER_DIR}
                 """
             }
         }
 
+        /* ─────────────── Build: tester image ──────────────── */
         stage('Build ➜ tester image') {
             steps {
                 sh """
-                  docker build \
-                     -f ${DOCKER_DIR}/Dockerfile.test \
-                     --build-arg BASE=${BUILDER_IMG} \
-                     -t ${TESTER_IMG} \
-                     ${DOCKER_DIR}
+                  docker build  \
+                         -f ${DOCKER_DIR}/Dockerfile.test  \
+                         --build-arg BASE=${BUILDER_IMG}   \
+                         -t ${TESTER_IMG}                  \
+                         ${DOCKER_DIR}
                 """
             }
         }
 
+        /* ─────────────── Test inside tester ───────────────── */
         stage('Test') {
             steps {
                 script {
@@ -57,6 +61,7 @@ pipeline {
         }
     }
 
+    /* ─────────────── Artefakty & raporty ─────────────────── */
     post {
         always {
             archiveArtifacts artifacts: '**/test.log', allowEmptyArchive: true
