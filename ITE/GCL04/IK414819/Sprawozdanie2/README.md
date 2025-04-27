@@ -1,5 +1,7 @@
 Sprawozdanie 2
 
+lab 5
+
 W czasie tej części zajęć początkowo zająłem się sprawdzeniem, czy stworzone przeze mnie kontenery budujący oraz testujący działają poprawnie.
 Zapoznałem się z instrukcją instalacji Jenkinsa. Uruchomiłem obraz Dockera, który eksponuje środowisko zagnieżdżone. Ustawiłem Jenkinsa na localhost port 8080
 
@@ -14,6 +16,7 @@ Zalogowałem się i skonfigurowałem Jenkinsa.
 ![screen_logowanie_jenkins](logowanie_jenkins_lab5.jpg)
 
 Na koniec zadbałem o archiwizację logów oraz zabezpieczenie.
+Użyłem w tym wypadku wolumenu
 
 ![screen_zabezpieczenie_jenkinsa](wolumen_zabezpieczenie_jenkinsa_lab5.jpg)
 
@@ -39,3 +42,28 @@ Sklonowałem repozytorium przedmiotowe i zbudowałem  nowy plik Dockerfile. Nast
 ![screen_pipeline_docker1](pipeline_docker_run1_lab5.jpg)
 
 ![screen_pipeline_docker_output](pipeline-docker_output_lab5.jpg)
+
+laby 6 i 7
+Na kolejnych zajęciach moim celem było wybranie sobie projektu (aplikacja z którą będę pracował) i wykonanie poszczególnych kroków : commit, clone, build, test, deploy oraz publish. Jako swój projekt wybrałem aplikację irssi z którą już pracowałem wcześniej w ramach poprzedniego sprawozdania, jednak teraz używałem jej w innym celu. Kroki które potrzebne były do wykonania tej części takie jak odckerfile oraz jenkinsfile umieściłem w specjalnym folderze irssi_pipeline
+
+Niektóre fragmenty pracy w projekcie były problematyczne , szczególnie deploy. Starałem sie wykonywać kroki zgodnie ze schematem przedstawionym przez prowadzącego.Ostatecznie udało mi się zrealizowac poprawnie deploy oraz  wszystkie pozostałe  kroki. 
+
+Początek deploy:
+![screen_deploy_poczatek](poczatek_deploy_lab6.jpg)
+
+Uruchamianie deploy:
+
+![screen_deploy_uruchomiony](uruchamianie_deploy_lab6.jpg)
+
+Publish
+Wyświetlenie wersji:
+
+![screen_wersja_irssi](wersja_irssi_lab6.jpg)
+
+![screen_wyswietlenie_wersji](wyswietlenie_wersji_lab6.jpg)
+
+Uzyskanie artefaktu oraz paczki debianowej (.deb)
+
+![screen_dodanie_artefaktu](dodanie_artefaktu_lab7.jpg)
+
+Dodatkowo do sprawozdania dołączyłem również pobrany z Jenkinsa z console output z poprawnym wykoaniem wymaganych etapów.Umieściłem je w pliku o nazwie #1.txt
