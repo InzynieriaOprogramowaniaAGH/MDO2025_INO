@@ -85,7 +85,7 @@ pipeline {
                 dir('ITE/GCL08/JT416081/Sprawozdanie_2/cjson-ci-cd') {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh '''
-                            zip -r ${ZIP_BASE}-${VERSION}.zip cJSON.c cJSON.h
+                            docker run --rm -v $(pwd):/app -w /app alpine sh -c "apk add --no-cache zip && zip -r ${ZIP_BASE}-${VERSION}.zip cJSON.c cJSON.h"
                             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                             docker tag $IMAGE_DEPLOY:$VERSION $IMAGE_TAG
                             docker push $IMAGE_TAG
