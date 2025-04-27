@@ -1,0 +1,187 @@
+ Plik zawiera listę większości poleceń które używałem przy wykonywaniu zadań
+ 
+ 1  exit
+    2  ls
+    3  git
+    4  sudo dnf update
+    5  sudo dnf install git
+    6  git
+    7  ssh-keygen
+    8  ssh-keygen -t ed25519 -C "igorkita2003@gmail.com"
+    9  ls
+   10  ls -all
+   11  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   12  cd .ssh/
+   13  ls
+   14  cat id_ed25519.pub 
+   15  cd ..
+   16  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   17  ls
+   18  cd MDO2025_INO/
+   19  ls
+   20  exit
+   21  ls
+   22  git
+   23  clear
+   24  exit
+   25  ls
+   26  sudo dnf install curl git
+   27  sudo yum install openssh-server && sudo systemctl start sshd.service && sudo systemctl enable sshd.service
+   28  code
+   29  exit
+   30  ls
+   31  git checkout main
+   32  git pull
+   33  git checkout origin/GCL04
+   34  git checkout main
+   35  git switch -c GCL04 origin/GCL04
+   36  git status
+   37  git fetch
+   38  git status
+   39  git checkout -b IK414819
+   40  git push
+   41  git push --set-upstream origin IK414819
+   42  git push
+   43  git push --set-upstream origin IK414819
+   44  curl -L https://update.code.visualstudio.com/latest/server-linux-x64/stable -o vscode-server.tar.gz
+   45  ls
+   46  tar -xvzf vscode-server.tar.gz
+   47  sudo dnf install tar
+   48  git pull
+   49  git checkout
+   50  .git/hooks
+   51  cd  git.hooks
+   52  history
+   53  git pull
+   54  cd  git.hooks
+   55  git brANCH
+   56  git branch
+   57  .git/hooks
+   58  .sample
+   59  ls
+   60  ls -a .git/hooks
+   61  cat
+   62  cat .git/hooks 
+   63  cat .git/hooks/commit-msg.sample
+   64  commit-msg
+   65  git commit-msg
+   66  cd .git/hooks
+   67  python -v
+   68  python --version
+   69  chmod  +x commit-msg
+   70  cd ..
+   71  cd..
+   72  cd ..
+   73  git status
+   74  git commit --allow-empty -m "Empty-Commit"
+   75  git config --global user.email "igorkita2003@gmail.com"
+   76  git config --global user.name "Igor Kita"
+   77  git commit --allow-empty -m "Empty-Commit"
+   78  which python
+   79  git commit --allow-empty -m "Empty-Commit"
+   80  git commit --allow-empty -m "IK414819 : hello" 
+   81  git commit --allow-empty -m "IK414819 : hello2" 
+   82  pwd
+   83  git add ITE/GCL04/IK414819/commit-msg 
+   84  git commit -m "IK414819 : add git hook" 
+   85  git push
+   86  sudo dnf update
+   87  sudo dnf install docker
+   88  sudo systemctl start docker
+   89  sudo systemctl enable docker
+   90  sudo docker --version
+   91  docker run hello-world
+   92  sudo usermod -aG docker $USER
+   93  docker run hello-world
+   94  sudo docker run hello-world
+   95  sudo docker run busybox
+   96  sudo docker run fedora
+   97  sudo docker run mysql
+   98  docker ps
+   99  exit
+  100  git pull
+  101  git branch
+  102  git clone https://github.com/irssi/irssi.git
+  103  cd irssi
+  104  sudo dnf install -y gcc make automake autoconf pkg-config libtool glib2-devel
+  105  ./autogen.sh  # Przygotowanie projektu (generowanie plików konfiguracyjnych)
+  106  ./configure   # Konfiguracja projektu
+  107  make          # Kompilacja programu
+  108  ls
+  109  ./autogen.sh
+  110  sudo dnf install -y meson ninja
+  111  meson setup build
+  112  meson compile -C build
+  113  sudo dnf install cmake
+  114  sudo dnf install openssl-devel
+  115  sudo dnf install utf8proc-devel
+  116  sudo dnf install ncurses-devel
+  117  sudo dnf install ncurses-term
+  118  meson setup build
+  119  sudo dnf install perl perl-ExtUtils-Embed
+  120  meson setup build
+  121  cd ..
+  122  cd irssi
+  123  meson test -C build
+  124  meson compile -C build
+  125  git pull
+  126  docker run -it ubuntu /bin/bash
+  127  cd ITE/GCL04/IK414819/Sprawozdanie1/irssi-docker/
+  128  docker build -t irssi-builder -f Dockerfile.build .
+  129  docker build -t irssi-tester -f Dockerfile.test .
+  130  docker run --rm irssi-test
+  131  docker build -f Dockerfile.test -t irssi-test .
+  132  docker run --rm irssi-test
+  133  exit
+  134  history
+  135  docker run -d --name iperf-server --rm -p 5201:5201 networkstatic/iperf3 -s
+  136  docker logs iperf-server
+  137  docker network create jenkins
+  138  docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+  139  docker ps
+  140  cd ITE/GCL04/IK414819/Sprawozdanie1/Jenkins
+  141  docker build -t myjenkins-blueocean:2.492.2-1 .
+  142  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.2-1
+  143  docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+  144  git push
+  145  git pull
+  146  cd ITE/GCL04/IK414819/Sprawozdanie2
+  147  docker run -d -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
+  148  FROM jenkins/jenkins:lts
+  149  # Instalowanie pluginów
+  150  RUN jenkins-plugin-cli --plugins blueocean
+  151  docker build -t jenkins-blueocean .
+  152  docker run -d -p 8080:8080 -p 50000:50000 jenkins-blueocean
+  153  docker ps
+  154  docker stop <container_id>
+  155  docker stop 3bd5621691e9
+  156  docker run -d -p 8080:8080 -p 50000:50000 jenkins-blueocean
+  157  docker exec -it <container_id> cat /var/jenkins_home/secrets/initialAdminPassword
+  158  docker exec -it 3bd5621691e9 cat /var/jenkins_home/secrets/initialAdminPassword
+  159  docker exec -it 0cac9f0fe90661797c48e191bb5f9605c9db122d8dd76fd1fa337e2aec2db4e9 cat /var/jenkins_home/secrets/initialAdminPassword
+  160  docker --version
+  161  docker run -d -p 8081:8080 -p 50001:50000 jenkins/jenkins:lts
+  162  docker ps
+  163  docker stop 0cac9f0fe906
+  164  http://localhost:8081
+  165  [Service]
+  166  Environment="JENKINS_LOG=%L/jenkins/jenkins.log"
+  167  jenkins log
+  168  docker exec jenkins-bleocean cat /var/jenkins_home/secrets/initialAdminPassword
+  169  docker logs ae2f18a35a1d
+  170  docker run -d -p 8081:8080 -p 50001:50000 -v /path/to/jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+  171  mkdir jenkins_data
+  172  docker run -d -p 8081:8080 -p 50001:50000 -v /path/to/Sprawozdanie2/jenkins_data:/var/jenkins_home jenkins/jenkins:lts
+  173  docker run -d -p 8081:8080 -p 50001:50000 -v Sprawozdanie2/jenkins_data:/var/jenkins_home jenkins/jenkins:lts
+  174  docker run --help
+  175  git push
+  176  git pull
+  177  docker ps
+  178  docker stop 3bd5621691e9
+  179  docker start 3bd5621691e9
+  180  docker ps
+  181  docker logs 3bd5621691e9
+  182  git pull
+  183  cd ITE/GCL04/IK414819/Sprawozdanie2
+  184  git push
+  185  history
