@@ -1,0 +1,96 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven' 
+    }
+
+    environment {
+        REPO_URL = 'https://github.com/noel-crimson/SWIFT-code-application.git'
+        REPO_DIR = 'SWIFT-code-application'
+        JAR_NAME = 'swiftcode-application.jar' //?
+        CONTAINER_NAME = 'swiftcode-app'
+    }
+
+    stages {
+        stage('Cleanup') {
+            steps {
+                sh  """
+                    docker container prune -f 
+                    docker rm -f swiftcode-app true
+                    docker rm -f mysql-container true 
+                    docker rm -f swiftcode-tests true 
+                """
+            }
+        }
+        
+        stage('Clone Repository') {
+            steps {
+                script {
+                    if (fileExists("${REPO_DIR}/.git")) {
+                        echo "Repository already cloned. Pulling latest changes..."
+                        dir("${REPO_DIR}") {
+                            sh 'git pull'
+                        }
+                    } else {
+                        echo "Cloning repository..."
+                        sh "git clone ${REPO_URL} ${REPO_DIR}"
+                    }
+                }
+            }
+        }
+        
+        stage('Build, test') {
+            steps {
+                dir("${REPO_DIR}") {
+                    // Start services with custom network
+                    sh 'docker compose up -d --build app db'
+                    sh 'docker compose up --build test'
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                sh '''
+                until docker exec swiftcode-app curl -s http://localhost:8080/actuator/health | grep -q '"status":"UP"'; do
+                    echo "Waiting for application to start..."
+                    sleep 5
+                done
+                echo "Application is UP!"
+            '''
+                sh 'docker exec swiftcode-app curl http://localhost:8080/v1/swift-codes/BAPDBGS1XXX'
+            }
+        }
+        
+        // stage('App startup') {
+        //     steps {
+        //         dir("${REPO_DIR}") {
+        //             sh  """
+        //                 docker run -d --name swiftcode-app
+                        
+        //                 """
+        //         }
+        //     }
+        // }
+    }
+    
+     post {
+         always {
+             dir("${REPO_DIR}") {
+                 // Clean up all resources
+                 sh 'docker compose down --volumes --remove-orphans'
+                 sh 'docker image prune -f'
+                 sh 'docker rmi -f swiftcode-app mysql-container swiftcode-tests || true'
+                 //sh "docker rm -f ${APP_CONTAINER}-standalone || true"
+             }
+        }
+        
+        success {
+            echo 'Build completed successfully!'
+        }
+        failure {
+            echo 'Build failed.'
+        }
+    }
+}
