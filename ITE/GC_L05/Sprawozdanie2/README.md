@@ -2305,3 +2305,8 @@ Finished: SUCCESS
 
 
 ```
+## Kompletny pipeline: wymagane składniki
+
+---
+
+
