@@ -1031,6 +1031,9 @@ Buduję obraz Dockera...
 [Pipeline] End of Pipeline
 Finished: SUCCESS
 ```
+## Pipeline: składnia
+
+W ramach kolejnego zadania skonfigurowano pipeline w Jenkinsie, którego zadaniem jest klonowanie repozytorium MDO2025_INO z osobistej gałęzi AN417592, budowa obrazu Dockera oraz uruchomienie testów w utworzonym kontenerze. Pipeline został zapisany bezpośrednio w konfiguracji obiektu Jenkins, a jego treść wygląda następująco:
 
 ```
 
@@ -1073,6 +1076,27 @@ pipeline {
 
 
 ```
+
+Opis działania pipeline'u:
+
+Stage Checkout: pobiera kod źródłowy z repozytorium GitHub, z osobistej gałęzi AN417592.
+
+Stage Build Docker Image: buduje obraz Dockera na podstawie pliku Dockerfile.builder znajdującego się w katalogu ITE/GC_L05/AN417592/.
+
+Stage Run Tests: uruchamia kontener na podstawie zbudowanego obrazu i wykonuje w nim testy.
+
+Post Actions: niezależnie od wyniku wykonania pipeline'u, wyświetlana jest informacja o jego zakończeniu.
+
+
+Różnica między budowaniem na dedykowanym DIND (Docker-in-Docker) a bezpośrednim na kontenerze CI:
+
+Budowanie na DIND (Docker-in-Docker) polega na uruchomieniu osobnego kontenera Dockera wewnątrz kontenera Jenkinsa. Umożliwia to całkowicie odizolowaną budowę i uruchamianie kontenerów, jednak wymaga odpowiednich uprawnień (--privileged) i wprowadza dodatkową warstwę złożoności i potencjalnych problemów z bezpieczeństwem.
+
+Budowanie bezpośrednio na kontenerze CI (tak jak w tym zadaniu) oznacza, że build Dockera i uruchamianie testów odbywa się bezpośrednio na agencie Jenkins, który ma dostęp do demona Dockera. Podejście to jest prostsze, bardziej wydajne i bezpieczniejsze, jeżeli agent został odpowiednio skonfigurowany.
+
+W niniejszym rozwiązaniu zastosowano drugie podejście — budowa i testowanie realizowane są bezpośrednio na agencie CI.
+
+#### Logi pipeline - SUCCESS
 
 ```
 Started by user AmeliaN
