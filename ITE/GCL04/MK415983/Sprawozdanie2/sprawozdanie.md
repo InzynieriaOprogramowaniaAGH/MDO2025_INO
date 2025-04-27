@@ -59,7 +59,7 @@ Oba kontenery są na jednej sieci, jenkins-network. Poprzez środowisko VSC, prz
 
 # Wybrany projekt 
 
-Projekt, który będzie budowany przez pipeline to [moja aplikacja Springboot](https://github.com/noel-crimson/SWIFT-code-application) budująca się przez Maven. Zawierała ona pierwotnie [Dockerfile](Dockerfile.swift):
+Projekt, który będzie budowany przez pipeline to [moja aplikacja Springboot](https://github.com/noel-crimson/SWIFT-code-application) budująca się przez Maven. Zawierała ona pierwotnie [Dockerfile](Dockerfile.swift) odpowiedzialny za budowę aplikacji i publikację artefaktu:
 
 ```docker
 FROM maven:3.8.8-eclipse-temurin-17 AS build
@@ -83,7 +83,9 @@ EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 
-a także [docker-compose](docker-compose.yml):
+Dockerfile pobiera curl aby można było później testować endpointy wewnątrz Jenkins. 
+
+Repo zawiera także [docker-compose](docker-compose.yml):
 
 ```docker
 version: "3.8"
@@ -197,7 +199,7 @@ stage('Clone Repository') {
         }
 ```
 
-Build, test, który buduje aplikację i puszcza w shellu kontener test, aby wykazać, że testy przechodzą:
+Build, test, który buduje aplikację i puszcza w shellu kontener test, aby wykazać, że testy przechodzą. Aby Docker Compose działał w przypadku Jenkinsfile, konieczne jest pobranie [wtyczki "Docker Compose Build Step"](https://plugins.jenkins.io/docker-compose-build-step/) do Jenkins.
 
 ```bash
  stage('Build, test') {
@@ -232,7 +234,7 @@ Deploy, który czeka na uruchomienie aplikacji, a potem uderza w endpoint GET:
 
 Etap Publish nie jest zawarty w Jenkinsfile, gdyż jak wspomniano wcześniej, docker-compose kopiuje artefakt app.jar na zewnątrz kontenera swiftcode-app.
 
-Na koniec czyszczone jest środowisko pracy i wyświetlony status pipeline'u:
+Na koniec czyszczone jest środowisko pracy i wyświetlony status pipeline'u. Usuwane są obrazy i kontenery:
 ```bash
 post {
          always {
@@ -252,5 +254,8 @@ post {
     }
 ```
 
+![image](103.PNG)
 
-Docker Compose build step Jenkins Plugin
+# Wnioski
+
+Pipeline Jenkinsfile pokrywa się z założonym schemat UML. Ponieważ większa część pracy opanowana jest przez istniejący wcześniej docker-compose, jenkinsfile wyszedł krótki. Jenkins pozwala w kontrolowany sposób prowadzić cały pipeline produkcji skonteneryzowanej aplikacji
