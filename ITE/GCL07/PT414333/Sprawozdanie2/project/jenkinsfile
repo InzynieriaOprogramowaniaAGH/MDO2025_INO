@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+
+    environment  {
+        PROJECT_DIR = "ITE/GCL07/PT414333/Sprawozdanie2/project"
+    }
+
+    stages {
+        stage('Clean') {
+            steps {
+                cleanWs()
+                sh 'docker image rm -f htop-build htop-test htop-deploy || true'
+                sh 'docker rm -f htop-build htop_deploy_container || true'
+                sh 'docker builder prune -a -f || true'
+                sh "rm -fr MDO2025_INO || true"
+            }
+        }
+        stage('Clone') {
+            steps {
+                git url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git', branch: 'PT414333'
+            }
+        }
+        stage('Build') {
+            steps {
+                dir ("${PROJECT_DIR}") {
+                    sh 'docker build -t htop-build -f Dockerfile.build .'
+                }
+            }
+        }
+        stage('Prep Test') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    sh 'docker build -t htop-test -f Dockerfile.test .'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                sh "docker run --rm htop-test"
+            }
+        }
+        stage('Deploy') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    sh 'docker build -t htop-deploy -f Dockerfile.deploy .'
+                    sh 'docker run -d --name htop_deploy_container htop-deploy'
+                }
+            }
+        }
+        stage('Publish') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    sh 'docker run --name htop-build htop-build'
+                    sh 'docker cp htop-build:/app/rpm/RPMS/x86_64/ .'
+                    archiveArtifacts artifacts: 'x86_64/*.rpm', allowEmptyArchive: false
+                }
+            }
+        }
+    }
+}
