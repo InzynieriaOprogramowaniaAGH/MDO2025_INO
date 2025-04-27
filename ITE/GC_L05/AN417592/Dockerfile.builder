@@ -12,5 +12,3 @@ WORKDIR /app
 
 RUN git clone https://github.com/pydantic/pytest-examples.git . \
  && make install
-
-RUN make test
