@@ -13,6 +13,40 @@ Finished: SUCCESS
 Started by user AmeliaN
 
 Running as SYSTEM
+Building in workspace /var/jenkins_home/workspace/check-hour
+[check-hour] $ /bin/sh -xe /tmp/jenkins4123121297702755293.sh
++ date +%H
++ HOUR=18
++ [ 0 -eq 1 ]
++ echo Godzina jest parzysta (18) — wszystko OK.
+Godzina jest parzysta (18) — wszystko OK.
+Finished: SUCCESS
+
+
+```
+
+```
+Started by user AmeliaN
+
+Running as SYSTEM
+Building in workspace /var/jenkins_home/workspace/check-hour
+[check-hour] $ /bin/sh -xe /tmp/jenkins5124157288614696985.sh
++ date +%H
++ HOUR=17
++ [ 1 -eq 1 ]
++ echo Godzina jest nieparzysta (17) — wywołuję błąd!
+Godzina jest nieparzysta (17) — wywołuję błąd!
++ exit 1
+Build step 'Execute shell' marked build as failure
+Finished: FAILURE
+
+
+```
+
+```
+Started by user AmeliaN
+
+Running as SYSTEM
 Building in workspace /var/jenkins_home/workspace/Docker-Pull-Ubuntu
 [Docker-Pull-Ubuntu] $ /bin/sh -xe /tmp/jenkins17026071383414617227.sh
 + docker pull ubuntu
