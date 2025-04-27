@@ -1,0 +1,101 @@
+pipeline {
+    agent any
+
+    environment {
+        BASE_DIR = 'MDO2025_INO/ITE/GCL07/FS417758/lab3'
+        BUILD_VER = '1.0'
+        NODE_VER = '23-alpine'
+        IMG_BUILD = "node-build:${NODE_VER}"
+        IMG_TEST = "node-test:v${BUILD_VER}"
+        IMG_DEPLOY = "node-deploy:v${BUILD_VER}"
+        NETWORK_NAME = 'app_net'
+        PROJECT_DIR = 'MDO2025_INO/ITE/GCL07/FS417758/lab3'
+    }
+
+    stages {
+        stage('Prepare') {
+            steps {
+                sh '''
+                    rm -rf MDO2025_INO || true
+                    git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+                    cd MDO2025_INO
+                    git checkout FS417758
+                '''
+            }
+        }
+
+        stage('Logs') {
+            steps {
+                dir("${BASE_DIR}") {
+                    sh 'touch build.log'
+                    sh 'touch test.log'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir("${BASE_DIR}") {
+                    sh 'docker build -f node-build.Dockerfile -t ${IMG_BUILD} . > build.log 2>&1'
+                }
+                archiveArtifacts artifacts: "${BASE_DIR}/build.log"
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                dir("${BASE_DIR}") {
+                    sh 'docker build -f node-test.Dockerfile -t ${IMG_TEST} . > test.log 2>&1'
+                }
+                archiveArtifacts artifacts: "${BASE_DIR}/test.log"
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'docker network create ${NETWORK_NAME} || true'
+                dir("${BASE_DIR}") {
+                    sh '''
+                        docker build -f node-deploy.Dockerfile -t ${IMG_DEPLOY} .
+                        docker rm -f app || true
+                        docker run -d --rm --name app --network ${NETWORK_NAME} -p 3000:3000 ${IMG_DEPLOY}
+                    '''
+                }
+                sleep(10)
+            }
+        }
+
+        stage('Smoke Tests') {
+            steps {
+                script {
+                    echo 'Running smoke tests...'
+                    sh 'docker run --rm --network ${NETWORK_NAME} curlimages/curl curl -v http://app:3000' 
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    sh '''
+                        mkdir -p artifacts_${BUILD_NUMBER}
+                        tar -cvf artifacts_${BUILD_NUMBER}.tar *.log
+                    '''
+                    archiveArtifacts artifacts: "artifacts_${BUILD_NUMBER}.tar"
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up Docker resources...'
+            sh '''
+                docker container prune -f || true
+                docker rmi -f ${IMG_BUILD} ${IMG_TEST} ${IMG_DEPLOY} || true
+                docker stop app || true
+                docker network rm ${NETWORK_NAME} || true
+            '''
+        }
+    }
+}
