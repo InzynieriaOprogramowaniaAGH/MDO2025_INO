@@ -1,6 +1,6 @@
 FROM fedora:latest
 
-COPY rpm_output/ /tmp/
+COPY /tmp/redis_rpm_output /tmp/
 
 RUN dnf -y install /tmp/*.rpm && \
     dnf clean all
