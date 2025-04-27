@@ -3,7 +3,7 @@
 
 ## Zadanie wstępne: uruchomienie
 ---
-Następnie utworzono pierwszy projekt typu „Freestyle project”, którego zadaniem było wyświetlenie wyniku polecenia uname. W tym celu w sekcji „Build” dodano nowy krok „Execute shell”, w którym wpisano komendę uname -a. Po zapisaniu i uruchomieniu projektu Jenkins poprawnie wykonał zadanie i w konsoli wyświetlił informacje o systemie. 
+Następnie utworzono pierwszy projekt, którego zadaniem było wyświetlenie wyniku polecenia uname. W tym celu w sekcji „Build” dodano nowy krok „Execute shell”, w którym wpisano komendę uname -a. Po zapisaniu i uruchomieniu projektu Jenkins poprawnie wykonał zadanie i w konsoli wyświetlił informacje o systemie. 
 ```
 Started by user AmeliaN
 
