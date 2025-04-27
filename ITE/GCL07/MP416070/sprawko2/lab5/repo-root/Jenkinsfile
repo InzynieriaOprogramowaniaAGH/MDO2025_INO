@@ -89,11 +89,12 @@ pipeline {
             steps {
                 sh """
                 cid=\$(docker create ${BUILDER_IMG})             # tymczasowy kontener
-                docker cp \${cid}:/app/builddir/install .out     # 1. install dir (przykład)
-                docker cp \${cid}:/usr/bin/irssi .out/usr/bin/   # 2. samo binarium, gdybyś wolał
+                
+                mkdir -p .out
+                docker cp \${cid}:/usr .out/          # ← kopiujemy całe /usr
                 docker rm \${cid}
 
-                tar -czf ${TAR_NAME} -C .out .                   # gotowy tarball
+                tar -czf ${TAR_NAME} -C .out usr 
                 """
             }
         }
