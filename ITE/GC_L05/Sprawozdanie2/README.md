@@ -998,4 +998,35 @@ Buduję obraz Dockera...
 [Pipeline] End of Pipeline
 Finished: SUCCESS
 ```
+```
+pipeline {
+    agent any
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                docker build -t pytest-examples-builder:latest -f INO/GC_L05/AN417592/pipeline/Dockerfile.builder .
+                '''
+            }
+        }
+
+        stage('Run Tests in Container') {
+            steps {
+                sh '''
+                docker run --rm -w /app pytest-examples-builder:latest make test
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline zakończony!'
+        }
+    }
+}
+
+
+```
 
