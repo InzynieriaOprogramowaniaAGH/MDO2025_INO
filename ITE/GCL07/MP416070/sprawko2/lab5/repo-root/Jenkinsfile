@@ -9,11 +9,12 @@ pipeline {
     agent any
 
     environment {
+        DOCKER_USER = 'bambusscooby'
         // Katalog z Dockerfile’ami (relatywnie od root repo)
         DOCKER_DIR     = 'ITE/GCL07/MP416070/sprawko2/lab5/repo-root'
         // Unikalne tagi: irssi/builder:42, irssi/tester:42, …
-        BUILDER_IMG    = "irssi/builder:${BUILD_NUMBER}"
-        TESTER_IMG     = "irssi/tester:${BUILD_NUMBER}"
+        BUILDER_IMG    = "${DOCKER_USER}/irssi/builder:${BUILD_NUMBER}"
+        TESTER_IMG     = "${DOCKER_USER}/irssi/tester:${BUILD_NUMBER}"
     }
 
     stages {
@@ -53,6 +54,21 @@ pipeline {
                   docker run --rm ${TESTER_IMG} \
                     /bin/bash -c "meson test -C /app/builddir --print-errorlogs --logbase junit" \
                     | tee test.log
+                """
+            }
+        }
+
+        stage('Publish images') {
+            environment {
+                DOCKERHUB  = credentials('dhub-creds')   // token+login zapisany w Jenkinsie
+            }
+            steps {
+                sh """
+                echo \$DOCKERHUB_PSW | docker login \
+                        -u \$DOCKERHUB_USR --password-stdin
+
+                docker push ${BUILDER_IMG}
+                docker push ${TESTER_IMG}
                 """
             }
         }
