@@ -1,0 +1,3 @@
+FROM htop-build
+
+CMD ["./htop", "--version"]
