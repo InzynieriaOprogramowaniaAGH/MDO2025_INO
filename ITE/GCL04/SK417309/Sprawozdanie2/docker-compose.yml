@@ -19,19 +19,21 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.deploy
-    image: esm:prod
+      args:
+        BUILD_TAG: ${BUILD_TAG}
+    image: ${IMAGE_NAME}:prod-${BUILD_TAG}
     depends_on:
       mydb:
         condition: service_healthy
     environment:
-      SERVER_PORT: 8080
+      SERVER_PORT: ${APP_PORT}
       SPRING_DATASOURCE_URL:      "jdbc:mysql://mydb:3306/teacher_management_2"
       SPRING_DATASOURCE_USERNAME: "root"
       SPRING_DATASOURCE_PASSWORD: "root"
     networks:
       - appnet
     ports:
-      - "8080:8080"
+      - "${APP_PORT}:${APP_PORT}"
 
 networks:
   appnet:
