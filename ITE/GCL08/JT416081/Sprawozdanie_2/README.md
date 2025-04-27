@@ -26,36 +26,25 @@ Krok_5: Ekran startowy:
 
 **Zadania wstępne**
 
-🌵 Zadanie do wykonania na ćwiczeniach
-* Konfiguracja wstępna i pierwsze uruchomienie
-  * Utwórz projekt, który wyświetla `uname`
+Utwórzenie projektu, który wyświetla `uname`:
 
  ![alt text](image6.png)
 
-  * Utwórz projekt, który zwraca błąd, gdy... godzina jest nieparzysta
+Utwórzenie projektu, który zwraca błąd, gdy w przypadku nieparzystej godziny:
 
 ![alt text](image7.png)
 
-  * Pobierz w projekcie obraz kontenera `ubuntu` (stosując `docker pull`)
+Projekt pobierający obraz kontenera `ubuntu` (przy pomocy `docker pull`):
 
 ![alt text](image8.png)
 
- All job:
+Wszystkie trzy joby prawidłowo wykonane joby:
 
 ![all_jobs](image9.png)
 
-### Zadanie wstępne: obiekt typu pipeline
-🌵 Ciąg dalszy sprawozdania - zadanie do wykonania po wykazaniu działania Jenkinsa
-* Utwórz nowy obiekt typu `pipeline`
-* Wpisz treść *pipeline'u* bezpośrednio do obiektu (nie z SCM - jeszcze!)
-  * https://www.jenkins.io/doc/book/pipeline/syntax/
-  * https://www.jenkins.io/doc/pipeline/steps/git/
-  * https://www.jenkins.io/doc/pipeline/examples/#unstash-different-dir
-  * [https://www.jenkins.io/doc/book/pipeline/docker/](https://www.jenkins.io/doc/book/pipeline/docker/#building-containers)
-* Spróbuj sklonować repo przedmiotowe (`MDO2025_INO`)
-* Zrób *checkout* do swojego pliku Dockerfile (na osobistej gałęzi) właściwego dla *buildera* wybranego w poprzednim sprawozdaniu programu
-* Zbuduj Dockerfile
-* Uruchom stworzony *pipeline* drugi raz
+**Obiekt typu pipeline**
+
+Przedstawiony skrypt w pierwszym kroku klonuje wskazane repozytorium. Następnie, za pomocą polecenia dir(), zmienia katalog roboczy. W wybranym folderze następuje przełączenie na moją gałąź - JT416081. Kolejnym etapem była zmiana katalogu na lokalizację zawierającą plik Dockerfile.build. Cały proces pipeline'u zakończył się sukcesem.
 
 ```
 pipeline {
