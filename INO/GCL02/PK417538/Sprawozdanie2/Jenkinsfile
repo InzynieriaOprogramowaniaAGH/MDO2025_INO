@@ -1,50 +1,63 @@
 pipeline {
-    agent {
-        docker {
-            image 'debian:bullseye'
-            args '-u root --privileged'
+  agent any
+
+  stages {
+    stage('Build image') {
+        steps {
+            sh '''
+            docker build \
+                --target builder \
+                -t pytest-examples-builder:0.1.0 \
+                -f INO/GCL02/PK417538/pipeline/Dockerfile .
+            '''
         }
     }
 
-    stages {
-        stage('Install dependencies') {
-            steps {
-                cleanWs()
-                sh '''
-                    apt update
-                    apt install -y build-essential autotools-dev automake libtool git
-                '''
-            }
-        }
-        stage('Clone xz') {
-            steps {
-                sh 'git clone https://github.com/tukaani-project/xz.git'
-            }
-        }
-        stage('Build') {
-            steps {
-                dir('xz') {
-                    sh '''
-                        ./autogen.sh || true
-                        ./configure
-                        make
-                    '''
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                dir('xz') {
-                    sh 'make check || true'
-                }
-            }
-        }
-        stage('Package') {
-            steps {
-                dir('xz') {
-                    sh 'make dist'
-                }
-            }
+
+    stage('Test image') {
+      steps {
+        sh '''
+          docker build \
+            --target tester \
+            -t pytest-examples-tester:0.1.0 \
+            -f INO/GCL02/PK417538/pipeline/Dockerfile .
+        '''
+      }
+    }
+
+    stage('Build deploy image') {
+        steps {
+            sh """
+            docker build \
+                --target deploy \
+                -t pytest-examples-deploy:0.1.0 \
+                -f INO/GCL02/PK417538/pipeline/Dockerfile \
+                .
+            """
         }
     }
+
+
+    stage('Package / Deploy artifacts') {
+        steps {
+            script {
+            // zbuduj deploy‐image wcześniej w pipeline
+            sh 'docker create --name tmp pytest-examples-deploy:0.1.0'
+            // skopiuj całą zawartość /packages z kontenera do katalogu packages w workspace
+            sh 'docker cp tmp:/packages $WORKSPACE/packages'
+            sh 'docker rm tmp'
+            }
+            // teraz Jenkins ma je w $WORKSPACE/packages i może je zarchiwizować
+            archiveArtifacts artifacts: 'packages/**/*', fingerprint: true
+        }
+    }
+
+
+  }
+
+  post {
+    always {
+      archiveArtifacts artifacts: 'test.log', fingerprint: true
+    }
+  }
 }

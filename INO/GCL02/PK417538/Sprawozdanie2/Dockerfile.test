@@ -1,5 +1,0 @@
-FROM pytest-examples-build:latest
-
-WORKDIR /app
-
-CMD [ "make" , "test" ]
