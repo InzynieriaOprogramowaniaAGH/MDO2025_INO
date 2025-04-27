@@ -12,15 +12,16 @@
 
 Do utworzenia instancji Jenkina wykorzystałem oficjalną instrukcję instalacji: [Jenkins](https://www.jenkins.io/doc/book/installing/docker/) 
 
-Zgodnie z instrukcją utworzyłem sieć mostkowaną o nazwie jenkins, to w niej będzie działała przyszłą instancja jenkinsa.
+Zgodnie z instrukcją utworzyłem sieć mostkowaną o nazwie `jenkins`, w której będzie działała przyszła instancja Jenkinsa.
 
 ![Utworzenie sieci jenkins](zrzuty5/zrzut_ekranu1.png)
 
-Kolejnym krokiem w instrukcji było pobranie i uruchomienie `docker:dind`, obraz ten pozwala na ruchumienie "dockera w dockerze" czyli pozwala na uruchamianie komend dockera w jenkinsie.
+Kolejnym krokiem w instrukcji było pobranie i uruchomienie obrazu `docker:dind`. Obraz ten pozwala na uruchamianie "Dockera w Dockerze", czyli umożliwia wykonywanie poleceń Dockera z poziomu Jenkinsa.
 
 ![Pobranie docker:dind](zrzuty5/zrzut_ekranu2.png)
 
-Napisanie `Dockerfile` który tworzy niestandardowy obraz Jenkinsa na bazie `jenkins/jenkins:2.492.2-jdk17`, w którym instalowany jest klient Dockera (`docker-ce-cli`), co pozwala Jenkinsowi wykonywać polecenia `docker` w trakcie działania pipeline’ów, a także dodawane są pluginy `blueocean` i `docker-workflow` umożliwiające wizualne zarządzanie pipeline’ami oraz integrację z Dockerem.
+Następnie napisałem `Dockerfile` który tworzy niestandardowy obraz Jenkinsa na bazie `jenkins/jenkins:2.492.2-jdk17`.\
+W obrazie tym instalowany jest klient Dockera (`docker-ce-cli`), co pozwala Jenkinsowi wykonywać polecenia `docker` w trakcie działania pipeline’ów. Dodatkowo dodawane są pluginy `blueocean` i `docker-workflow` umożliwiające wizualne zarządzanie pipeline’ami oraz integrację z Dockerem.
 
 Zawartość `Dockerfile`:
 
@@ -40,23 +41,28 @@ USER jenkins
 RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
 ```
 
-Zbudowanie `Dockerfile` komendą z instrukcji: `docker build -t myjenkins-blueocean:2.492.3-1 .`
+Zbudowałem obraz poleceniem z instrukcji: 
+
+```bash
+docker build -t myjenkins-blueocean:2.492.3-1 .
+```
 
 ![Budowanie obrazu blueocean](zrzuty5/zrzut_ekranu3.png)
 
-Uruchomienie obrazu `myjenkins-blueocean:2.492.2-1` w kontenerze.
+Następnie uruchomiłem obraz `myjenkins-blueocean:2.492.2-1` w kontenerze.
 
 ![Uruchoemienie obrazu myjenkins-blueocean](zrzuty5/zrzut_ekranu4.png)
 
-Aby sprawdzić czy Jenkins został skonfigurowany poprawnie wpisałem w przeglądarce adres `192.168.56.101:8080`. Poniższy widok oznacza że Jenkins ma dostęp do internetu.
+Aby sprawdzić czy Jenkins został skonfigurowany poprawnie wpisałem w przeglądarce adres `192.168.56.101:8080`.\
+Poniższy widok oznacza, że Jenkins działa poprawnie i ma dostęp do internetu.
 
 ![Uruchoemienie Jenkina w przegladarce](zrzuty5/zrzut_ekranu5.png)
 
-Wybrałem opcje `Zainstaluj sugerowane wtyczki` instalator przeprowadził mnie przez pobieranie podstawowych wtyczek oraz przez tworzenia konta.
+Wybrałem opcje `Zainstaluj sugerowane wtyczki`, a instalator przeprowadził mnie przez proces instalacji podstawowych wtyczek oraz zakładania konta użytkownika.
 
 ![Po instalacji](zrzuty5/zrzut_ekranu6.png)
 
-Zanim przeszedłem do pracy z Jenkinsem to przeniosłęm `Dockerfile` do wcześniej przygotowanego katalogu
+Zanim przeszedłem do pracy z Jenkinsem, przeniosłem  `Dockerfile` do wcześniej przygotowanego katalogu projektu.
 
 ![Dockerfile Jenkins](zrzuty5/zrzut_ekranu11.png)
 
@@ -66,12 +72,18 @@ Na tak przygotowanym Jenkinsie byłem gotowy do wykonywania projektów.
 
 ![Jenkins gotowy](zrzuty5/zrzut_ekranu7.png)
 
-Do utworzenia projektów skorzystałem z przycisku `Nowy projekt` po prawej stronie, tam wprowadziłem nazwę i jego typ czyli wykonanie polecenia w konsoli.\
-Pierwszym zadaniem było wyświetlenie informacji o systemie za pomocą komendy `uname -a`
+Do utworzenia projektów skorzystałem z przycisku `Nowy projekt` po prawej stronie.\
+Po kliknięciu nadałem nazwę projektu i wybrałem jego typ — wykonanie polecenia w konsoli.
+
+Pierwszym zadaniem było wyświetlenie informacji o systemie za pomocą komendy:
+
+```bash
+uname -a
+```
 
 ![Uname -a](zrzuty5/zrzut_ekranu8.png)
 
-Następnie napisałem prosty skrypt który sprawdza czy godzina jest parzysta i jeśli nie jest to zwraca błąd.
+Następnie napisałem prosty skrypt Bash, który sprawdza, czy aktualna godzina jest parzysta. Jeśli godzina jest nieparzysta — skrypt zwraca błąd i przerywa działanie.
 
 Skrypt:
 
@@ -87,23 +99,30 @@ else
 fi
 ```
 
-Podobnie jak w przypadku sprawdzenia systemu utworzyłem nowy projekt w Jenkinsie tym razem wykorzystując powyższy skrypt
+Podobnie jak wcześniej, utworzyłem nowy projekt w Jenkinsie, tym razem wykorzystując powyższy skrypt.
 
 ![Sprawdzenie godziny](zrzuty5/zrzut_ekranu9.png)
 
-Ostatnim skryptem do utworzenia było pobranie obrazu ubuntu za pomocą `docker pull ubuntu`, które przebiegło poprawnie. To taki ostateczny test, że Jenkins ma połączenie z internetem.
+Ostatnim testowym zadaniem było sprawdzenie połączenia z Internetem poprzez pobranie obrazu `ubuntu` przy użyciu polecenia:
+
+```bash
+docker pull ubuntu
+```
+
+Pobieranie przebiegło poprawnie.
 
 ![Pobranie ubuntu](zrzuty5/zrzut_ekranu10.png)
 
 ### 3. Obiekt typu pipeline
 
-Pipeline to ciąg instrukcji autoatyzujący proces pobierania/instalacji oprogramowania.
+Pipeline to ciąg instrukcji automatyzujących proces pobierania, budowania oraz instalacji oprogramowania.
 
-Utworzyłem obiekt typu pipeline i wpisałem poniższy ciąg komend. Ten pipline klonuje repozytorium przedmiotu `MDO2025_INO` i robi chceckout na mój branch `AB416965`. Następnie korzystając z `Dockerfile.build` stworzonego wcześniej dla repozytorium [cJSON](https://github.com/DaveGamble/cJSON) wykonuje build.
+Utworzyłem obiekt typu **pipeline** i wpisałem poniższy ciąg komend.\
+Ten pipline klonuje repozytorium przedmiotu `MDO2025_INO` oraz wykonuje checkout na mój branch `AB416965`. Następnie korzystając z pliku `Dockerfile.build`, stworzonego wcześniej dla repozytorium [cJSON](https://github.com/DaveGamble/cJSON), wykonuje proces budowania obrazu Dockera.
 
-> `Dockerfile.build` został skopiowany z katalogu `Sprawozdanie1` i zmodyfikowany aby działał na kontenerze bazującym na `Fedorze 41`
+> `Dockerfile.build` został skopiowany z katalogu `Sprawozdanie1` i zmodyfikowany tak, aby działał w kontenerze opartym na systemie Fedora 41.
 
-Pipeline:
+Treść pipeline'a:
 
 ```bash
 pipeline {
@@ -129,24 +148,25 @@ pipeline {
     }
 }
 ```
-Pipeline przeszedł bez problemu, chwilę mu to zajęło z powodu pobrania wszystkich zależności umieszczonych w `Dockerfile.build`.
+Pipeline przeszedł bez problemu — choć proces budowania za pierwszym razem trwał nieco dłużej ze względu na konieczność pobrania wszystkich zależności określonych w `Dockerfile.build`.
 
 ![Build #1](zrzuty5/zrzut_ekranu12.png)
 
 > [Pełne logi z konsoli](jenkinslogs/console_results.log)
 
-Rebuild tego pipeline również odbył się bez problemu. Tym razem zajęło mu to znacznie mniej czasu. Wynika to z wykorzystania mechanizmu cache'owania warstw Dockera – kroki, które nie uległy zmianie (np. instalacja pakietów, klonowanie repozytorium) zostały pominięte dzięki buforowaniu.
+Kolejne uruchomienie (rebuild) pipeline'a przebiegło znacznie szybciej dzięki mechanizmowi cache'owania warstw Dockera.
+Kroki, które nie uległy zmianie (np. instalacja pakietów, klonowanie repozytorium), zostały pominięte, co pozwoliło skrócić czas budowania.
 
 ![Build #2](zrzuty5/zrzut_ekranu13.png)
 
 ### 4. Pipeline korzystający z kontenerów `build -> test`
 
-Kolejnym krokiem było dołączenie testów do pipelina.
+Kolejnym krokiem było dołączenie etapu testowania do pipeline'a.
 
-Skopiowałem `Dockerfile.test` z `Sprawozdanie1`, który to tworzył kontener na bazie obrazu `cjson-builder-image` i uruchamiał w nim testy. 
+Skopiowałem `Dockerfile.test` ze **Sprawozdania1**, który tworzył kontener na bazie obrazu `cjson-builder-image` i uruchamiał w nim testy.\
+Zmodyfikowałem również sam pipeline, dodając budowanie kontenera testowego, uruchamianie testów oraz zapisanie wyników do pliku `test.log`, który jest następnie publikowany jako artefakt.
 
-Zmodyfikowałem również sam pipeline o budowanie kontenera testowego oraz uruchomienie testów i zapisanie ich wyników do pliku `test.log`, który jest zwracany jako artefakt.
-
+Treść pipeline'a:
 ```bash
 pipeline {
     agent any
@@ -201,7 +221,9 @@ pipeline {
     }
 }
 ```
-W pipeline zastosowano `fingerprint: true` w kroku publikacji artefaktu testowego. Pozwala to Jenkinsowi śledzić przepływ danego pliku pomiędzy etapami pipeline’u lub nawet pomiędzy różnymi jobami. Dzięki temu można łatwo zidentyfikować, w którym buildzie dany plik powstał, a także zapewnić spójność artefaktów w większych procesach CI/CD.
+W pipeline zastosowano `fingerprint: true` w kroku publikacji artefaktu testowego.
+Pozwala to Jenkinsowi śledzić przepływ danego pliku pomiędzy etapami pipeline'u, a także pomiędzy różnymi jobami.\
+Dzięki temu można łatwo zidentyfikować, w którym buildzie dany plik został wygenerowany oraz zapewnić spójność artefaktów w większych procesach CI/CD.
 
 ![Build i test](zrzuty5/zrzut_ekranu14.png)
 
@@ -209,34 +231,38 @@ W pipeline zastosowano `fingerprint: true` w kroku publikacji artefaktu testoweg
 
 #### Docker-in-Docker (DIND)
 
-W podejściu opartym o Docker-in-Docker (DIND) pipeline CI/CD korzysta z osobnego kontenera z demonem Dockera (`dockerd`), który działa wewnątrz kontenerowej infrastruktury Jenkinsa.
+W podejściu opartym o **Docker-in-Docker (DIND)** pipeline CI/CD korzysta z osobnego kontenera z demonem Dockera (`dockerd`), który działa wewnątrz kontenerowej infrastruktury Jenkinsa.
 
-Jenkins działa jako kontener (np. `jenkins-blueocean`), natomiast dockerd działa w osobnym kontenerze (np. `docker:dind`). Te dwa kontenery komunikują się ze sobą poprzez sieć Docker.
+Jenkins działa jako kontener (np. `jenkins-blueocean`), natomiast `dockerd` działa w osobnym kontenerze (np. `docker:dind`).\
+Oba kontenery komunikują się ze sobą poprzez sieć Docker.
 
 Aby taka komunikacja była możliwa:
-- docker:dind musi zostać uruchomiony z flagą --privileged, ponieważ uruchamia w sobie pełnoprawnego Dockera
-- Musi być skonfigurowane TLS (certyfikaty), aby połączenie było bezpieczne
-- enkins musi mieć pluginy pozwalające na komunikację z zewnętrznym demonem Dockera
+- `docker:dind` musi zostać uruchomiony z flagą `--privileged`, ponieważ wymaga podwyższonych uprawnień.
+- Musi być skonfigurowane połączenie TLS (certyfikaty) dla bezpieczeństwa.
+- Jenkins musi mieć odpowiednie pluginy (`docker-workflow`, `blueocean`) pozwalające na komunikację z demonem Dockera.
 
-Dzięki temu pipeline może uruchamiać polecenia `docker build`, `docker run`, `docker push` wewnątrz środowiska kontenerowego całkowicie niezależnie od hosta.
+Dzięki temu pipeline może wykonywać polecenia takie jak `docker build`, `docker run`, `docker push` wewnątrz środowiska kontenerowego, bez ingerencji w system hosta.
 
-#### Kontener CI bez DIND
+#### Kontener CI bez DIND (Docker Outside of Docker - DOoD)
 
-Drugim podejściem do uruchamiania pipeline'u CI/CD w Jenkinsie jest tzw. Docker Outside of Docker (DOoD), czyli konfiguracja, w której Jenkins nie uruchamia własnego demona Dockera, tylko korzysta z tego, który działa na maszynie hosta.
+Alternatywą dla DIND jest podejście **Docker Outside of Docker (DOoD)**, w którym Jenkins korzysta bezpośrednio z demona Dockera działającego na maszynie hosta.
 
 To rozwiązanie jest prostsze i szybsze w konfiguracji:
-- Nie trzeba konfigurować TLS
-- Nie potrzebujemy osobnego kontenera z dockerd
-- Nie trzeba uruchamiać kontenerów z --privileged
+- Nie wymaga konfigurowania TLS.
+- Nie potrzebuje osobnego kontenera z `dockerd`.
+- Kontenery nie muszą działać z flagą `--privileged`.
 
 Jednak ma to swoje wady:
-- Jenkins zyskuje bezpośredni dostęp do dockera hosta — a tym samym do całego środowiska hosta
-- Potencjalna pomyłka w pipeline może skutkować np. usunięciem obrazów/kontenerów z systemu głównego
-- Mniejsza izolacja i przenośność — środowisko pipeline'u zależy bezpośrednio od konfiguracji maszyny hosta
+- Jenkins zyskuje pełny dostęp do środowiska hosta (potencjalne zagrożenia bezpieczeństwa).
+- Błąd w pipeline może spowodować usunięcie lub uszkodzenie kontenerów lub obrazów na hoście.
+- Pipeline traci przenośność — zależy od konfiguracji konkretnej maszyny.
 
 ####  Dlaczego wybrano DIND w tym projekcie
 
-W tym konkretnym projekcie zdecydowano się na konfigurację opartą o Docker-in-Docker (DIND), dzięki temu cały proces CI/CD (build, test, deploy, publish) odbywa się w całości wewnątrz środowiska kontenerowego, bez konieczności ingerowania w system hosta. To podejście zwiększa przenośność pipeline'u, pozwala łatwo odtworzyć środowisko na innych maszynach i zapewnia większe bezpieczeństwo.
+W tym projekcie zdecydowano się na konfigurację opartą o **Docker-in-Docker (DIND)**, ponieważ:
+- Cały proces CI/CD (build, test, deploy, publish) odbywa się w pełni wewnątrz środowiska kontenerowego.
+- Proces jest łatwy do przeniesienia na inne maszyny i środowiska.
+- Zwiększona jest izolacja od systemu hosta, co wpływa na bezpieczeństwo i stabilność pipeline'a.
 
 ### 5. Kompletny Pipeline CI/CD
 
