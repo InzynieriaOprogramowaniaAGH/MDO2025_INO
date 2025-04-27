@@ -88,6 +88,11 @@ Finished: SUCCESS
 ---
 ## Zadanie wstępne: obiekt typu pipeline
 ---
+
+Utworzono nowy obiekt pipeline. Treść pipeline'u została wpisana ręcznie bezpośrednio w konfiguracji projektu.
+
+W utworzonym pipeline za pomocą git pobrano repozytorium przedmiotowe MDO2025_INO z GitHuba i zbudowano obrazu Dockera na podstawie wcześniej przygotowanego pliku Dockerfile. Operacja budowania obrazu przebiegła pomyślnie i zakończyła się utworzeniem lokalnego obrazu Dockera.
+
 ```
 pipeline {
     agent any
