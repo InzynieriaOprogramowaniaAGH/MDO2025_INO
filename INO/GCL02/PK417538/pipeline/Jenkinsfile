@@ -3,15 +3,13 @@ pipeline {
 
   environment {
     IMAGE      = "pytest-examples-build:0.1.0"
-    DOCKERFILE = "INO/GCL02/PK417538/pipeline/Dockerfile"  // ścieżka w repo
-    CONTEXT    = "INO/GCL02/PK417538/pipeline"             // katalog, w którym znajduje się Dockerfile
+    DOCKERFILE = "INO/GCL02/PK417538/pipeline/Dockerfile"
+    CONTEXT    = "INO/GCL02/PK417538/pipeline"
   }
 
   stages {
     stage('Checkout') {
-      steps {
-        checkout scm
-      }
+      steps { checkout scm }
     }
 
     stage('Build Docker image') {
@@ -26,7 +24,6 @@ pipeline {
 
     stage('Install & Test in Docker') {
       steps {
-        // montujemy cały workspace pod /workspace i robimy make install/test
         sh """
           docker run --rm \
             -v ${WORKSPACE}:/workspace \
@@ -39,25 +36,23 @@ pipeline {
 
     stage('Package sdist') {
       steps {
-        // zakładamy, że po make install w /workspace/INO/.../pipeline/.venv jest zainstalowany pytest-examples
         sh """
           docker run --rm \
             -v ${WORKSPACE}:/workspace \
             -w /workspace/${CONTEXT} \
             ${IMAGE} \
-            bash -lc "poetry build -f sdist -o /workspace"
+            bash -lc "poetry build -f sdist -o /workspace/dist"
         """
-        // wynik: /workspace/dist/pytest-examples-0.1.0.tar.gz  (dostosuj nazwę jeśli trzeba)
         sh """
           mkdir -p ~/local-pypi/packages
-          cp $(ls dist/*.tar.gz) ~/local-pypi/packages/program-0.1.0.tar.gz
+          cp dist/*.tar.gz ~/local-pypi/packages/program-0.1.0.tar.gz
         """
       }
     }
 
     stage('Publish to local PyPI') {
       steps {
-        echo "Paczka skopiowana do ~/local-pypi/packages – teraz możesz wystawić katalog jako proste PyPI (np. python -m http.server 8081)"
+        echo "Paczka w ~/local-pypi/packages – teraz możesz wystawić to jako proste PyPI (np. python -m http.server 8081)"
       }
     }
   }
