@@ -6,7 +6,7 @@ pipeline {
             steps {
                 echo 'Cleaning...'
                 sh 'rm -fr MDO2025_INO'
-                sh 'docker images purge'
+                sh 'docker system prune --all --force --volumes'
             }
         }
         stage('Clone') {
