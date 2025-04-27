@@ -53,9 +53,181 @@ Utworzyłem playbook do zrestartowania usług `sshd` i `rngd`. Pierwsza usługa 
 ![restart services](./lab7/restart-services.png)
 ![restart services](./lab7/restart-services-run.png)
 
-Na koniec sprawdziłem jak ansible zachowa się gdy w targecie wyłączone będzie ssh, lub odłączona będzie karta sieciowa.
+Na koniec sprawdziłem jak ansible zachowa się gdy w targecie wyłączone będzie ssh, lub odłączona będzie karta sieciowa. Po teście uruchomiłem sshd ponownie i ponownie podlaczylem karte sieciowa.
 ![ssh off](./lab7/stop-sshd.png)
 ![ssh off test](./lab7/ssh-off-test.png)
 
 ![wylaczenie karty](./lab7/wylaczenie-karty.png)
 ![wylaczenie karty](./lab7/wylaczenie-karty-test.png)
+
+## Zarządzanie stworzonym artefaktem
+
+Deployment mojego poprzedniego projektu nie zadziałał, więc jako alternatywę wybrałem `apache server`. Na maszynie docelowej zainstalowałem dockera za pomocą playbooka.
+
+```yml
+- name: Install Docker
+  hosts: endpoints
+  become: yes
+  tasks:
+    - name: Install dependencies
+      dnf:
+        name:
+          - dnf-plugins-core
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+        state: present
+
+    - name: Add Docker repo
+      get_url:
+        url: https://download.docker.com/linux/fedora/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+
+    - name: Install Docker engine
+      dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: latest
+
+    - name: Enable and start Docker
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+```
+
+![install docker](./lab7/install-docker-run.png)
+
+Następnie utworzyłem kolejnego playbooka do pobrania `httpd`, uruchomienia kontenera, sprawdzenia dostępności a na koniec zatrzymania i usunięcia kontenera. Konieczne było tez doinstalowanie wymaganych pakietów.
+
+``` yml
+- name: Run and test Apache container
+  hosts: endpoints
+  become: true
+
+  tasks:
+    - name: Install pip
+      package:
+        name: python3-pip
+        state: present
+
+    - name: Install packaging module (required by Docker collection)
+      package:
+        name: python3-packaging
+        state: present
+
+    - name: Install required Python packages (requests, docker)
+      pip:
+        name:
+          - requests
+          - docker
+        executable: pip3
+
+    - name: Pull Apache image
+      community.docker.docker_image:
+        name: httpd
+        source: pull
+
+    - name: Run Apache container
+      community.docker.docker_container:
+        name: apache
+        image: httpd
+        state: started
+        ports:
+          - "8080:80"
+
+    - name: Wait for Apache to respond
+      uri:
+        url: http://localhost:8080
+        return_content: yes
+        status_code: 200
+      register: apache_response
+      retries: 5
+      delay: 2
+      until: apache_response.status == 200
+
+    - name: Stop Apache container
+      community.docker.docker_container:
+        name: apache
+        state: stopped
+
+    - name: Remove Apache container
+      community.docker.docker_container:
+        name: apache
+        state: absent
+```
+![run apache run](./lab7/run-apache-run.png)
+
+Przeniosłem logikę z playbooka `run_apache` do roli za pomocą `ansible-galaxy`.
+
+do `main.yml` w katalogu tasks:
+
+``` yml
+---
+- name: Install pip
+  package:
+    name: python3-pip
+    state: present
+
+- name: Install packaging module (required by Docker collection)
+  package:
+    name: python3-packaging
+    state: present
+
+- name: Install required Python packages (requests, docker)
+  pip:
+    name:
+      - requests
+      - docker
+    executable: pip3
+
+- name: Pull Apache image
+  community.docker.docker_image:
+    name: httpd
+    source: pull
+
+- name: Run Apache container
+  community.docker.docker_container:
+    name: apache
+    image: httpd
+    state: started
+    ports:
+      - "8080:80"
+
+- name: Wait for Apache to respond
+  uri:
+    url: http://localhost:8080
+    return_content: yes
+    status_code: 200
+  register: apache_response
+  retries: 5
+  delay: 2
+  until: apache_response.status == 200
+
+- name: Stop Apache container
+  community.docker.docker_container:
+    name: apache
+    state: stopped
+
+- name: Remove Apache container
+  community.docker.docker_container:
+    name: apache
+    state: absent
+```
+
+
+do `deploy_apache.yml`:
+
+```yml
+- name: Deploy Apache via role
+  hosts: endpoints
+  become: yes
+
+  roles:
+    - deploy_apache
+```
+
+![deploy apache run](./lab7/deploy-apache-run.png)
