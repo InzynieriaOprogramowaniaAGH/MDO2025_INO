@@ -1,4 +1,4 @@
-FROM gcc:latest
+FROM gcc:15.1
 
 RUN git clone https://github.com/badzianga/toasty.git
 
