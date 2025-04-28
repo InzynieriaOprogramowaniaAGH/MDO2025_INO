@@ -1,5 +1,5 @@
-FROM redis-build
+FROM redis_build_container
 
-RUN dnf install -y tcl which
+WORKDIR /redis
 
-RUN mkdir -p logs && make test SINGLE_UNIT_TEST=tests/unit/type/list.tcl > logs/test.log 2>&1
+RUN make test | tee /redis/tests/test-results.log || true
