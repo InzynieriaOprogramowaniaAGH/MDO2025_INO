@@ -6,5 +6,5 @@ COPY artifacts/redis-server-* /app/redis-server
 
 EXPOSE 6379
 
-CMD ["./redis-server", "--port", "6379", "--bind", "0.0.0.0"]
+CMD ["./redis-server", "--port", "6379"]
 
