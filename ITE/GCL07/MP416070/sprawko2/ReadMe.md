@@ -1,11 +1,11 @@
 # Pipeline, Jenkins, izolacja etapów
 
-Używając kontenerów z poprzednich zajęć po zalgowaniu się do Jenkins przy pomocy hasła, które można sprawdzić za pomocą komedy: 
+Używając kontenerów z poprzednich zajęć zalogowano się do Jenkins przy pomocy hasła, które można sprawdzić za pomocą komedy: 
 ```
 docker logs jenkins-blueocean
 ```
 
-Należy pobrano polecane wtyczki oraz utworzono użytkownika, po wykonaniu tych kroków strona Jenkins powinna wyglądać następująco :
+Pobrano polecane wtyczki oraz utworzono użytkownika, po wykonaniu tych kroków strona Jenkins powinna wyglądać następująco :
 
 ![alt text](screeny/lab5-jenkins.png)
 
