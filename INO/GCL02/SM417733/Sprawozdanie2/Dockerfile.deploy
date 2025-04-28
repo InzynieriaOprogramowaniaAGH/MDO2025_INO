@@ -5,7 +5,7 @@ WORKDIR /app
 COPY artifacts/redis-server-* /app/redis-server
 COPY artifacts/redis-cli-* /app/redis-cli
 
-RUN chmod +x /app/redis-server-* /app/redis-cli-*
+RUN chmod +x /app/redis-server /app/redis-cli
 
 EXPOSE 6379
 
