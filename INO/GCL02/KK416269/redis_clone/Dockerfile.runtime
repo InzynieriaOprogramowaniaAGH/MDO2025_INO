@@ -1,4 +1,4 @@
-FROM redis
+FROM ubuntu
 
 WORKDIR /app
 
