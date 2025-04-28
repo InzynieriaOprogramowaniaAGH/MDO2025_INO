@@ -132,10 +132,9 @@ Po drugim uruchomieniu stworzonego pipeline'u, wszystko działa bez zarzutu.
 
 ## Kompletny pipeline: wymagane składniki
 
-Jako oprogramowanie dla którego tworzony będzie pipeline po ustaleni z prowadzącym zajęcia zostało wybrano oprogramowanie irsii.
+Jako oprogramowanie dla którego tworzony będzie pipeline po ustaleniu z prowadzącym zajęcia zostało wybrane oprogramowanie irsii.
+
 Przygotowane pliki Dockerfile.build, Dockerfile.test oraz Jenkinsfile zostały wypchnięte na Github.
-
-
 
 ### PLIK Dockerfile.build
 Dockerfile.build — obraz „Dependencies + irssi”. Startuję od Fedory, doinstalowuję kompilatory i narzędzia (gcc, meson, ninja, git itp.), a następnie w tym samym kontenerze klonuję bieżące źródła irssi (git clone --depth 1 …) i buduję je (meson setup builddir && ninja -C builddir). Powstaje kompletny, uruchamialny artefakt.
@@ -569,3 +568,12 @@ stage('Publish images') {
 ![alt text](screeny/lab5-PUBLISH.png)
 
 Pozostałe kroki z listy kontrolnej zostały opisane oraz wyjaśnione powyżej w sekcjach dyskusyjnych kroków Deploy oraz Publish.
+
+#### Maintainbility - odporność rozwiązania na awarię - Wykazano, że budowany kod jest właściwy.
+
+Odporność łańcucha CI/CD na awarię została zaimplementowana na wiele sposobów. 
+Pierwszą linię obrony przed awarią stanowią testy Mesona uruchamiane w obrazie tester. Jeżeli kompilacja przejdzie, ale którakolwiek asercja jednostkowa zawiedzie, pipeline zatrzymuje się zanim powstaną artefakty produkcyjne. Wynik trafia do pliku XML w formacie JUnit i jest archiwizowany niezależnie od sukcesu czy porażki, co pozwala dojść przyczyny błędu bez powtarzania builda.
+Zakładając, że testy przeszły, tworzymy obraz runtime kopiując jedynie zainstalowane binaria z buildera do dużo lżejszej bazy fedora-minimal. Bezpośrednio po zbudowaniu obraz jest poddawany prostemu smoke-testowi: kontener startuje, wykonuje irssi --version i wyłącza się.
+Publikujemy dopiero wówczas, gdy zarówno testy, jak i smoke-test zwrócą zero. Push wykonywany jest pojedynczym poleceniem docker push, które w razie chwilowej utraty łącza można bezpiecznie powtórzyć: klient Dockera rozpoznaje już wrzucone warstwy po SHA-256 i dociąga brakujące. Numer taga równy ${BUILD_NUMBER} pełni rolę atomowego identyfikatora.
+
+Ostatecznym dowodem, że budowany kod jest właściwy, jest nie tylko zielony pasek testów, lecz również to, że kontener runtime przechodzi żywy test po pobraniu: docker run bambusscooby/irssi-runtime:10 prezentuje nam działające Irssi z listą poleceń. To dokładnie to samo binarium i te same biblioteki, które Jenkins wrzuca do rejestru oraz pakuje w tarball, więc mamy podwójną weryfikację: automatyczną w pipeline i manualną, gdy ktoś na zewnątrz chce sprawdzić wersję.
