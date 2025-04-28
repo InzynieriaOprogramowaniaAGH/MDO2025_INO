@@ -18,6 +18,7 @@ environment {
                     script {
                         docker.build('redis-build', '-f Dockerfile.redisbld .')
                         def containerId = sh(script: "docker create redis-build", returnStdout: true).trim()
+			sh 'mkdir -p artifacts'
                         sh "docker cp ${containerId}:/redis/src/redis-server artifacts/redis-server"
                         sh "docker cp ${containerId}:/redis/src/redis-cli artifacts/redis-cli"
                         sh "docker rm ${containerId}"
