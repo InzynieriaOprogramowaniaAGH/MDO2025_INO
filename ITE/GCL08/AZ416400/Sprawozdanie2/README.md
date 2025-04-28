@@ -265,9 +265,9 @@ Utworzono pipeline dla całego procesu:
         }
     }
 
-W ramach pipeline'a dla Jenkinsa przygotowano skrypt realizujący proces CI/CD dla projektu Redis. Pipeline ustawia zmienną IMAGE_TAG generującą unikalny znacznik czasu, dzięki czemu każda wersja budowanego obrazu Dockera jest unikalna i łatwa do zarządzania.
+W ramach pipeline'a dla Jenkinsa przygotowano skrypt realizujący proces CI/CD dla projektu Redis. Pipeline ustawia zmienną <code style="color:rgb(35, 186, 101);">IMAGE_TAG</code> generującą unikalny znacznik czasu, dzięki czemu każda wersja budowanego obrazu Dockera jest unikalna i łatwa do zarządzania.
 
-W etapie Prepare usuwany jest lokalny katalog, klonowane jest repozytorium z GitHuba i następuje przełączenie na odpowiednią gałąź. W kroku Build Redis pipeline przechodzi do katalogu z Dockerfile'ami i buduje obraz Dockera redisbld, bez użycia cache'a, co zapewnia aktualność procesu. W etapie Test Redis budowany jest obraz redistest na podstawie Dockerfile.redistest, z przekazaną zmienną IMAGE_TAG, umożliwiającą powiązanie wersji testowej z odpowiednią wersją builda.
+W etapie <code style="color:rgb(35, 186, 101);">Prepare </code> usuwany jest lokalny katalog, klonowane jest repozytorium z GitHuba i następuje przełączenie na odpowiednią gałąź. W kroku <code style="color:rgb(35, 186, 101);">Build Redis</code> pipeline przechodzi do katalogu z Dockerfile'ami i buduje obraz Dockera redisbld, bez użycia cache'a, co zapewnia aktualność procesu. W etapie <code style="color:rgb(35, 186, 101);">Test Redis</code> budowany jest obraz redistest na podstawie <code style="color:rgb(35, 186, 101);">Dockerfile.redistest</code>, z przekazaną zmienną <code style="color:rgb(35, 186, 101);">IMAGE_TAG</code>, umożliwiającą powiązanie wersji testowej z odpowiednią wersją builda.
 
 Pipeline w ten sposób realizuje kluczowe kroki ścieżki krytycznej: klonowanie (clone), budowanie (build) oraz przygotowanie testów (test).
 
@@ -327,9 +327,9 @@ Plik .spec:
     * Sat Apr 26 2025 - 1.0-1
     - Initial build
 
-W celu przygotowania instalowalnego artefaktu w formacie RPM stworzono plik specyfikacji redis-build.spec. Plik ten definiuje podstawowe informacje o pakiecie, takie jak jego nazwa (redis-build), wersja (1.0), numer wydania (1) oraz licencja (BSD). Źródłem dla budowy pakietu jest archiwum redis_build.tar.gz, które zawiera pliki binarne redis-server oraz redis-cli.
+W celu przygotowania instalowalnego artefaktu w formacie RPM stworzono plik specyfikacji <code style="color:rgb(35, 186, 101);">redis-build.spec</code>. Plik ten definiuje podstawowe informacje o pakiecie, takie jak jego nazwa (redis-build), wersja (1.0), numer wydania (1) oraz licencja (BSD). Źródłem dla budowy pakietu jest archiwum redis_build.tar.gz, które zawiera pliki binarne <code style="color:rgb(35, 186, 101);">redis-server</code> oraz <code style="color:rgb(35, 186, 101);">redis-cli</code>.
 
-Pakiet przeznaczony jest dla architektury x86_64, a sekcja %install określa proces kopiowania plików binarnych do katalogu /usr/local/bin, skąd mogą być one później bezpośrednio uruchamiane po instalacji pakietu. W sekcji %files wskazano oba binaria jako zawartość pakietu. Zrezygnowano z tworzenia osobnego pakietu debug (%global debug_package %{nil}), ponieważ nie jest to wymagane w tym przypadku.
+Pakiet przeznaczony jest dla architektury x86_64, a sekcja <code style="color:rgb(35, 186, 101);">%install</code> określa proces kopiowania plików binarnych do katalogu <code style="color:rgb(35, 186, 101);">/usr/local/bin</code>, skąd mogą być one później bezpośrednio uruchamiane po instalacji pakietu. W sekcji <code style="color:rgb(35, 186, 101);">%files</code> wskazano oba binaria jako zawartość pakietu. Zrezygnowano z tworzenia osobnego pakietu debug (<code style="color:rgb(35, 186, 101);">%global debug_package %{nil}</code>), ponieważ nie jest to wymagane w tym przypadku.
 
 Zbudowanie RPM: 
     
@@ -504,11 +504,11 @@ Gotowy pipeline:
         }
     }
 
-W etapie Deploy RPM pipeline przechodzi do katalogu Dockerfiles, gdzie tworzony jest katalog redis_rpm_output na potrzeby gromadzenia gotowych plików RPM. Następnie budowany jest nowy obraz Dockera redisdeploy, bazujący na przygotowanym wcześniej środowisku. W ramach budowy wykorzystano przekazywanie zmiennych IMAGE_TAG oraz REDIS_VERSION, aby zapewnić spójność wersji pakietu. Po utworzeniu kontenera z tego obrazu, za pomocą polecenia docker cp, plik RPM jest kopiowany do katalogu redis_rpm_output, a tymczasowy kontener jest usuwany.
+W etapie Deploy RPM pipeline przechodzi do katalogu Dockerfiles, gdzie tworzony jest katalog <code style="color:rgb(35, 186, 101);">redis_rpm_output</code> na potrzeby gromadzenia gotowych plików RPM. Następnie budowany jest nowy obraz Dockera redisdeploy, bazujący na przygotowanym wcześniej środowisku. W ramach budowy wykorzystano przekazywanie zmiennych <code style="color:rgb(35, 186, 101);">IMAGE_TAG</code> oraz <code style="color:rgb(35, 186, 101);">REDIS_VERSION</code> (który utawiono aby był równy IMAGE_TAG w celu pokazania jego działania), aby zapewnić spójność wersji pakietu. Po utworzeniu kontenera z tego obrazu, za pomocą polecenia docker cp, plik RPM jest kopiowany do katalogu <code style="color:rgb(35, 186, 101);">redis_rpm_output</code>, a tymczasowy kontener jest usuwany.
 
-Etap Test RPM obejmuje walidację poprawności działania zbudowanego pakietu. W tym celu przygotowywany jest nowy obraz Dockera myredis, bazujący na pakiecie RPM wygenerowanym w poprzednim kroku. Pipeline tworzy własną sieć Dockera redis-test-net i uruchamia dwa kontenery: jeden zawierający własną wersję Redis-a (myredis-server), a drugi — oficjalny obraz Redis-a (official-redis). Po krótkim czasie potrzebnym na inicjalizację, pipeline wykonuje polecenie redis-cli ping z kontenera official-redis w kierunku własnej instancji Redis, aby upewnić się, że serwer działa poprawnie. Po teście kontenery i sieć są sprzątane, aby nie zostawiać niepotrzebnych zasobów.
+Etap <code style="color:rgb(35, 186, 101);">Test RPM</code> obejmuje walidację poprawności działania zbudowanego pakietu. W tym celu przygotowywany jest nowy obraz Dockera myredis, bazujący na pakiecie RPM wygenerowanym w poprzednim kroku. Pipeline tworzy własną sieć Dockera <code style="color:rgb(35, 186, 101);">redis-test-net</code> i uruchamia dwa kontenery: jeden zawierający własną wersję Redis-a (<code style="color:rgb(35, 186, 101);">myredis-server</code>), a drugi — oficjalny obraz Redis-a (<code style="color:rgb(35, 186, 101);">official-redis</code>). Po krótkim czasie potrzebnym na inicjalizację, pipeline wykonuje polecenie <code style="color:rgb(35, 186, 101);">redis-cli ping</code> z kontenera <code style="color:rgb(35, 186, 101);">official-redis</code> w kierunku własnej instancji Redis, aby upewnić się, że serwer działa poprawnie. Po teście kontenery i sieć są sprzątane, aby nie zostawiać niepotrzebnych zasobów.
 
-Ostatnim krokiem jest Publish RPM, w którym pipeline przechodzi do katalogu redis_rpm_output, wyszukuje wygenerowany plik RPM i archiwizuje go jako artefakt builda w Jenkinsie. Jeśli plik RPM jest dostępny, zostaje zapisany z fingerprintem w systemie, co pozwala na późniejsze śledzenie jego pochodzenia i wersji. W przypadku niepowodzenia w znalezieniu pliku RPM, pipeline zgłasza błąd i przerywa dalsze wykonywanie.
+Ostatnim krokiem jest <code style="color:rgb(35, 186, 101);">Publish RPM</code>, w którym pipeline przechodzi do katalogu <code style="color:rgb(35, 186, 101);">redis_rpm_output</code>, wyszukuje wygenerowany plik RPM i archiwizuje go jako artefakt builda w Jenkinsie. Jeśli plik RPM jest dostępny, zostaje zapisany z fingerprintem w systemie, co pozwala na późniejsze śledzenie jego pochodzenia i wersji. W przypadku niepowodzenia w znalezieniu pliku RPM, pipeline zgłasza błąd i przerywa dalsze wykonywanie.
 
 
 Gotowe testy pipelinea i artefakt (krok publish) jako zakończenie całego procesu:
@@ -518,3 +518,5 @@ Gotowe testy pipelinea i artefakt (krok publish) jako zakończenie całego proce
 ![alt text](./img/image011.png)
 
 ![alt text](./img/image048.png)
+
+Przy spełnieniu podstawowych wymagań systemowych (architektura x86_64, podstawowe biblioteki systemowe) artefakt jest gotowy do natychmiastowego działania na maszynie produkcyjnej lub testowej krok Test RPM to potwierdza.
