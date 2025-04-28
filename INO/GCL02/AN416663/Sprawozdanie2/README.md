@@ -14,6 +14,7 @@
    ![Zrzut ekranu 2](screenshots/2.PNG)
 
 4. W efekcie widzę ekran rejestracji. Używam hasła z pliku `/var/jenkins_home/secrets/initialAdminPassword`, instaluję sugerowane wtyczki, a następnie widzę ekran logowania:
+   
    ![Zrzut ekranu 3.1](screenshots/Instalacja.PNG)
    ![Zrzut ekranu 3.2](screenshots/admin.PNG)
    ![Zrzut ekranu 3.3](screenshots/3.PNG)
@@ -54,8 +55,10 @@
    Dzięki pipeline'owi możesz zautomatyzować cały proces Continuous Integration / Continuous Delivery (CI/CD), czyli budowanie, testowanie i publikowanie oprogramowania. Aby przygotować pipeline, potrzebne są dwa    pliki: Jenkinsfile, który opisuje etapy procesu (np. klonowanie repozytorium, budowanie Dockera) oraz Dockerfile, który definiuje sposób stworzenia obrazu kontenera. Zadaniem pipeline jest pobranie                repozytorium przedmiotu MD02025_INO i budowa obrazu dockera, zawartego w dockerfile na mojej gałęzi. Plik Jenkinsfile dla tego zadania wygląda następująco:
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
    
    Poprawne działanie pipeline prezentuje poniżej w konsoli oraz w Jenkinsie:
+   
    ![Zrzut ekranu 11](screenshots/11.PNG)
    Po ponownym uruchomieniu pipeline działa poprawnie.
 
@@ -63,6 +66,7 @@
 Biblioteka XZ Utils to zestaw narzędzi i bibliotek do kompresji danych, opartych na algorytmie kompresji LZMA (Lempel-Ziv-Markov chain algorithm). Upewniłam się, że licencja potwierdza możliwość swobodnego obrotu kodem na potrzeby zadania. Na początku przeprowadzam analizę planowanych kroków dla procesu CI/CD:
    - wymagania wstępne: Jenkins, Docker, Git, Autotools i CMake.
    - dla projektu wykonuje diagram aktywności w programie Visual Paraview i zamieszcam poniżej:
+     
    ![Zrzut ekranu 12](screenshots/12.PNG)
    - Tworzę również diagram wdrożeniowy, który opisuje zależności między składnikami, zasobami i artefaktami:
    ![Zrzut ekranu 13](screenshots/13.PNG)
@@ -187,6 +191,7 @@ Artefakt w procesie CI/CD to skompilowany plik lub obraz, który jest wynikiem p
 3. W jenkinsie tworzę pipeline i konfiguruję go w następujący sposób:
  ![Zrzut ekranu 15](screenshots/15.PNG)
 4. Powodzenie przeprowadzenia procesu CD/CI aplikacji:
+   
  ![Zrzut ekranu 16](screenshots/16.PNG)
 ![Zrzut ekranu 17](screenshots/17.PNG)
 6. Potwierdzenie utworzenia artefaktów:
