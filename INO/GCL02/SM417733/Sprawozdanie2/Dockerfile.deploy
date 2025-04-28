@@ -2,6 +2,9 @@ FROM fedora:latest
 
 WORKDIR /app
 
+COPY artifacts/ /app/
+RUN ls -l /app
+
 COPY artifacts/redis-server-* /app/redis-server
 COPY artifacts/redis-cli-* /app/redis-cli
 
