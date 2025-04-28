@@ -1,0 +1,7 @@
+- name: Copy inventory file to Endpoints
+  hosts: Endpoints
+  tasks:
+    - name: Copy inventory file to /tmp directory
+      ansible.builtin.copy:
+        src: ~/inventory
+        dest: /tmp/inventory

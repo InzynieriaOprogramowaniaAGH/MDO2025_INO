@@ -1,0 +1,8 @@
+FROM debian:bullseye
+RUN apt-get update && apt-get install -y --fix-missing \
+    gcc \
+    liblzma-dev \
+    ca-certificates
+WORKDIR /app
+COPY deploy.c /app/
+CMD ["tail", "-f", "/dev/null"]
