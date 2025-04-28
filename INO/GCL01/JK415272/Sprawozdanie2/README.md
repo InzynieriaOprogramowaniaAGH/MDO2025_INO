@@ -610,7 +610,8 @@ Rozwiązanie: W pipeline dodano krok Prepare Smoke Test Script, który używa po
 
 ### 3.8. Weryfikacja Zgodności z Projektem
 Finalna implementacja pipeline'u jest zgodna z zaprojektowanymi diagramami UML (Aktywności i Wdrożeniowym) przedstawionymi w sekcji 3.1. Opis Celu i Projekt Procesu CI. Diagramy te zostały stworzone tak, aby odzwierciedlały logikę kroków i strukturę komponentów z finalnego Jenkinsfile i użytych plików Dockerfile. Nie stwierdzono istotnych rozbieżności.
-**Uzasadnienie package.json: Nawet dla tak prostej aplikacji, package.json jest standardem w ekosystemie Node.js. Definiuje metadane projektu i zależności (nawet jeśli nie są używane w runtime, jak tutaj lodash). Obecność lodash w dependencies powoduje jego instalację w obrazie builder podczas npm install.
+
+Uzasadnienie package.json: Nawet dla tak prostej aplikacji, package.json jest standardem w ekosystemie Node.js. Definiuje metadane projektu i zależności (nawet jeśli nie są używane w runtime, jak tutaj lodash). Obecność lodash w dependencies powoduje jego instalację w obrazie builder podczas npm install.
 
 ### 3.9 Czy dołączony artefakt ma szansę zadziałać od razu na maszynie o oczekiwanej konfiguracji docelowej?
 Oczekiwana konfiguracja docelowa to maszyna z działającym Dockerem. Jak pokazano powyżej, po pobraniu artefaktu .tar i załadowaniu go do lokalnego repozytorium Docker (docker load), obraz jest gotowy do uruchomienia (docker run). Nie są wymagane żadne dodatkowe zależności systemowe ani konfiguracja na hoście (poza samym Dockerem), ponieważ wszystko (Nginx, aplikacja) jest zawarte w obrazie.
