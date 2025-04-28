@@ -594,8 +594,6 @@ Artefakt jest publikowany jako rezultat builda w Jenkinsie za pomocą kroku arch
 
 ### 3.6. Krok Wskazówka: Obraz Runtime'owy i Weryfikacja
 
-Zadanie sugeruje stworzenie obrazu runtime'owego zasilonego artefaktem i jego uruchomienie/weryfikację. W zaimplementowanym pipeline'ie:
-
 Formą redystrybucyjną (artefaktem) jest sam obraz Docker (mdoapp-deploy:latest) zapisany do pliku .tar.
 
 Obraz mdoapp-deploy:latest jest obrazem runtime'owym. Został zbudowany na bazie nginx:alpine (minimalny runtime) i zawiera tylko niezbędne pliki aplikacji, bez zależności deweloperskich.
