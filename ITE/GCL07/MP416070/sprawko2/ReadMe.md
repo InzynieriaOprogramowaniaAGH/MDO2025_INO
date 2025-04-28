@@ -422,8 +422,7 @@ pipeline {
 
 ### Kompletny powtarzalny pipeline
 
-![alt text](screeny/lab5-pipelineIRSSI.png)
-
+![alt text](screeny/lab5-completeIRSSIpipeline.png)
 
 ## Krok Publish
 
