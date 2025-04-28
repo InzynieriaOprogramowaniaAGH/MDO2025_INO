@@ -1,0 +1,92 @@
+pipeline {
+    agent any
+
+    environment {
+        // Docker images tags
+        BUILDER_IMG = "irssi-builder:${BUILD_NUMBER}"
+        RUNTIME_IMG = "irssi-runtime:${BUILD_NUMBER}"
+        TESTER_IMG = "irssi-tester:${BUILD_NUMBER}"
+        TAR_NAME = "irssi-${BUILD_NUMBER}.tar.gz"
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git 'https://github.com/irssi/irssi.git'
+            }
+        }
+
+        stage('Build ➜ builder image') {
+            steps {
+                script {
+                    sh '''
+                    docker build -t ${BUILDER_IMG} -f Dockerfile.builder .
+                    docker run --name build-irssi ${BUILDER_IMG} bash -c "
+                        meson Build && ninja -C Build
+                    "
+                    docker commit build-irssi irssi-built
+                    docker rm build-irssi
+                    '''
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    sh '''
+                    docker build -t ${TESTER_IMG} -f Dockerfile.test .
+                    docker run --rm ${TESTER_IMG} bash -c "meson test -C /app/builddir --print-errorlogs --logbase junit" | tee test.log
+                    '''
+                }
+            }
+        }
+
+        stage('Smoke Test ➜ runtime image') {
+            steps {
+                script {
+                    sh '''
+                    docker build -t ${RUNTIME_IMG} -f Dockerfile.runtime .
+                    docker run --rm ${RUNTIME_IMG} irssi --version
+                    '''
+                }
+            }
+        }
+
+        stage('Package ➜ tar.gz artifact') {
+            steps {
+                script {
+                    sh '''
+                    cid=$(docker create ${BUILDER_IMG}) # tymczasowy kontener
+                    mkdir -p .out
+                    docker cp ${cid}:/usr .out/  # kopiowanie całego /usr
+                    docker rm ${cid}
+                    tar -czf ${TAR_NAME} -C .out usr
+                    '''
+                }
+            }
+        }
+
+        stage('Publish Images') {
+            steps {
+                script {
+                    sh '''
+                    docker tag ${RUNTIME_IMG} yourdockerhubuser/irssi-runtime:latest
+                    docker tag ${BUILDER_IMG} yourdockerhubuser/irssi-builder:latest
+                    docker login -u yourdockerhubuser -p $DOCKERHUB_PASSWORD
+                    docker push yourdockerhubuser/irssi-runtime:latest
+                    docker push yourdockerhubuser/irssi-builder:latest
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: '**/test.log', allowEmptyArchive: true
+            junit testResults: '**/builddir/meson-logs/*.xml', allowEmptyResults: true
+            archiveArtifacts artifacts: "${TAR_NAME}", allowEmptyArchive: false
+        }
+    }
+}
