@@ -2,4 +2,4 @@ FROM redis_build_container
 
 WORKDIR /redis
 
-RUN make test || true
+RUN make test | tee /redis/tests/test-results.log || true
