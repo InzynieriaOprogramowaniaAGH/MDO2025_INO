@@ -16,7 +16,7 @@ pipeline {
             steps {
                 dir("${WORKDIR}") {
                     script {
-                        docker.build('redis_build_container', '-f Dockerfile.build .')
+                        docker.build('redis_build_container', '-f Dockerfile.build --no-cache .')
                         def containerId = sh(script: "docker create redis_build_container", returnStdout: true).trim()
 			sh 'mkdir -p artifacts'
                         sh "docker cp ${containerId}:/redis/src/redis-server artifacts/redis-server"
