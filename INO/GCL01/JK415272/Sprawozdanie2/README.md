@@ -134,7 +134,7 @@ else
 fi
 ```
 
- ![ZAJ5](screenshot/ZAJ5_12.png)
+ ![ZAJ5](screenshot/ZAJ5_13.png)
 
 
 #### Projekt 3: Pobranie obrazu Ubuntu
