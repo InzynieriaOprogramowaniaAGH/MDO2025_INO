@@ -21,7 +21,7 @@
   * Zweryfikuj łączność
   * Stwórz [plik inwentaryzacji](https://docs.ansible.com/ansible/latest/getting_started/get_started_inventory.html)
   * Umieść w nim sekcje `Orchestrators` oraz `Endpoints`. Umieść nazwy maszyn wirtualnych w odpowiednich sekcjach
-  * Wyślij żądanie `ping` do wszystkich maszyn
+  * 🌵 Wyślij żądanie `ping` do wszystkich maszyn
 * Zapewnij łączność między maszynami
   * Użyj co najmniej dwóch maszyn wirtualnych (optymalnie: trzech)
   * Dokonaj wymiany kluczy między maszyną-dyrygentem, a końcówkami (`ssh-copy-id`)
@@ -29,7 +29,7 @@
   
 ### Zdalne wywoływanie procedur
 Za pomocą [*playbooka*](https://docs.ansible.com/ansible/latest/getting_started/get_started_playbook.html) Ansible:
-  * 🌵 Wyślij żądanie `ping` do wszystkich maszyn
+  * Wyślij żądanie `ping` do wszystkich maszyn
   * Skopiuj plik inwentaryzacji na maszyny/ę `Endpoints`
   * Ponów operację, porównaj różnice w wyjściu
   * Zaktualizuj pakiety w systemie
