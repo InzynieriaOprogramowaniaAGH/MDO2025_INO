@@ -1,4 +1,4 @@
-FROM redis_build_container
+FROM redis_build
 
 WORKDIR /redis
 
