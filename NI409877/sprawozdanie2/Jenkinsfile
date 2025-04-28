@@ -18,37 +18,43 @@ pipeline {
 
         stage('Build ➜ builder image') {
             steps {
-                script {
-                    sh '''
-                    docker build -t ${BUILDER_IMG} -f NI409877/sprawozdanie2/Dockerfile.builder .
-                    docker run --name build-irssi ${BUILDER_IMG} bash -c "
-                        meson Build && ninja -C Build
-                    "
-                    docker commit build-irssi irssi-built
-                    docker rm build-irssi
-                    '''
+                dir('MDO2025_INO/NI409877/sprawozdanie2') {
+                    script {
+                        sh '''
+                        docker build -t ${BUILDER_IMG} -f Dockerfile.builder .
+                        docker run --name build-irssi ${BUILDER_IMG} bash -c "
+                            meson Build && ninja -C Build
+                        "
+                        docker commit build-irssi irssi-built
+                        docker rm build-irssi
+                        '''
+                    }
                 }
             }
         }
 
         stage('Test') {
             steps {
-                script {
-                    sh '''
-                    docker build -t ${TESTER_IMG} -f Dockerfile.test .
-                    docker run --rm ${TESTER_IMG} bash -c "meson test -C /app/builddir --print-errorlogs --logbase junit" | tee test.log
-                    '''
+                dir('MDO2025_INO/NI409877/sprawozdanie2') {
+                    script {
+                        sh '''
+                        docker build -t ${TESTER_IMG} -f Dockerfile.test .
+                        docker run --rm ${TESTER_IMG} bash -c "meson test -C /app/builddir --print-errorlogs --logbase junit" | tee test.log
+                        '''
+                    }
                 }
             }
         }
 
         stage('Smoke Test ➜ runtime image') {
             steps {
-                script {
-                    sh '''
-                    docker build -t ${RUNTIME_IMG} -f NI409877/sprawozdanie2/Dockerfile.runtime .
-                    docker run --rm ${RUNTIME_IMG} irssi --version
-                    '''
+                dir('MDO2025_INO/NI409877/sprawozdanie2') {
+                    script {
+                        sh '''
+                        docker build -t ${RUNTIME_IMG} -f Dockerfile.runtime .
+                        docker run --rm ${RUNTIME_IMG} irssi --version
+                        '''
+                    }
                 }
             }
         }
