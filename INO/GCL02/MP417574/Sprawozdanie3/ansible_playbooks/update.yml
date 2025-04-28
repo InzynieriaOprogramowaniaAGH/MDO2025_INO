@@ -1,0 +1,9 @@
+---
+- name: Zaktualizuj pakiety w systemie
+  hosts: all
+  become: yes  # Wymaga podniesienia uprawnień do roota
+  tasks:
+    - name: Zaktualizuj wszystkie pakiety
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
