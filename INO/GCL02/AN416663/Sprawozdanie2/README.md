@@ -52,11 +52,37 @@
    - Projekt pobierający w projekcie obraz kontenera ubuntu:
      ![Zrzut ekranu 10](screenshots/10.PNG)
 9. Tworzę podstawowy pipeline. Pipeline w Jenkinsie to zdefiniowany zestaw kroków (ang. steps), które są wykonywane automatycznie, aby zbudować, przetestować i wdrożyć aplikację.
-   Dzięki pipeline'owi możesz zautomatyzować cały proces Continuous Integration / Continuous Delivery (CI/CD), czyli budowanie, testowanie i publikowanie oprogramowania. Aby przygotować pipeline, potrzebne są dwa    pliki: Jenkinsfile, który opisuje etapy procesu (np. klonowanie repozytorium, budowanie Dockera) oraz Dockerfile, który definiuje sposób stworzenia obrazu kontenera. Zadaniem pipeline jest pobranie                repozytorium przedmiotu MD02025_INO i budowa obrazu dockera, zawartego w dockerfile na mojej gałęzi. Plik Jenkinsfile dla tego zadania wygląda następująco:
+   Dzięki pipeline'owi możesz zautomatyzować cały proces Continuous Integration / Continuous Delivery (CI/CD), czyli budowanie, testowanie i publikowanie oprogramowania. Aby przygotować pipeline, potrzebne są dwa    pliki: Jenkinsfile, który opisuje etapy procesu (np. klonowanie repozytorium, budowanie Dockera) oraz Dockerfile, który definiuje sposób stworzenia obrazu kontenera. Zadaniem pipeline jest pobranie                repozytorium przedmiotu MD02025_INO i budowa obrazu dockera, zawartego w dockerfile na mojej gałęzi. Plik Dockerfile.build znajduje się w katalogu, pipeline dla tego zadania wygląda następująco:
+```
+pipeline {
+      agent any
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+stages {
+    stage('Clone repo') {
+        steps {
+            git branch: 'AN416663', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+        }
+    }
 
-   
+    stage('Build Docker image') {
+        steps {
+            dir("INO/GCL02/AN416663/Sprawozdanie2") {
+                script {
+                    sh 'ls -la'
+                    docker.build('build', '-f Dockerfile.build .')
+                }
+            }
+        }
+    }
+
+    stage('Print info') {
+        steps {
+            echo 'Pipeline ran successfully.'
+        }
+    }
+}
+}
+```
    Poprawne działanie pipeline prezentuje poniżej w konsoli oraz w Jenkinsie:
    
    ![Zrzut ekranu 11](screenshots/11.PNG)
