@@ -3,10 +3,11 @@ FROM fedora:latest
 WORKDIR /app
 
 COPY artifacts/ /app/
-RUN ls -l /artifacts
 
 COPY artifacts/redis-server-* /app/redis-server
 COPY artifacts/redis-cli-* /app/redis-cli
+
+RUN ls -l /artifacts
 
 RUN chmod +x /app/redis-server /app/redis-cli
 
