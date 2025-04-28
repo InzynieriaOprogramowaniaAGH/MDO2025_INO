@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    docker build -t ${BUILDER_IMG} -f Dockerfile.builder .
+                    docker build -t ${BUILDER_IMG} -f NI409877/sprawozdanie2/Dockerfile.builder .
                     docker run --name build-irssi ${BUILDER_IMG} bash -c "
                         meson Build && ninja -C Build
                     "
@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    docker build -t ${RUNTIME_IMG} -f Dockerfile.runtime .
+                    docker build -t ${RUNTIME_IMG} -f NI409877/sprawozdanie2/Dockerfile.runtime .
                     docker run --rm ${RUNTIME_IMG} irssi --version
                     '''
                 }
