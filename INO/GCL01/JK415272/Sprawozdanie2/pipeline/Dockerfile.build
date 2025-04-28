@@ -1,10 +1,16 @@
 FROM node:20-alpine
 
+LABEL stage="builder"
+
 WORKDIR /app
 
-COPY src/ ./src
+WORKDIR /app
+
+
 COPY package.json ./
 
 RUN npm install
 
-CMD ["node", "src/app.js"]
+
+COPY src/ ./src
+
