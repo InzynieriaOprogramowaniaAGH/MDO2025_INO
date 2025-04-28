@@ -1,0 +1,17 @@
+FROM ubuntu
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    tcl \
+    git \
+    libssl-dev \
+    libsystemd-dev \
+    make \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN git clone https://github.com/redis/redis.git /redis
+
+WORKDIR /redis
+
+RUN make
