@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 TARGET_HOST=$1
 TARGET_URL="http://${TARGET_HOST}:80" 
