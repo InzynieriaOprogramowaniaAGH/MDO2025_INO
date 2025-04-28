@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM mdoapp-build:latest
 LABEL stage="tester"
 
 RUN apk add --no-cache curl
