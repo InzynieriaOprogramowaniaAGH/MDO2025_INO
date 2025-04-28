@@ -14,17 +14,18 @@ a) Ustawienie połączenia bez konieczności podawania hasła
 ```
 ssh-keygen
 ```
-![obraz](KM/lab5/run-ocean.png)
 2. Skopiowano klucz publiczny na maszynę docelową (ansible-target) dla użytkownika ansible:
 ```
 ssh-copy-id ansible@IP_address
 ```
 ![obraz](KM/1.png)
+
 3. Następnie nawiązano połączenie z maszyną ansible-target za pomocą adresu IP:
 ```
 ssh ansible@IP_address
 ```
 ![obraz](KM/2.png)
+
 Połączenie zostało ustanowione bez potrzeby podawania hasła.
 
 b)  Ustawienie połączenia z użyciem nazwy zamiast adresu IP
@@ -34,16 +35,19 @@ b)  Ustawienie połączenia z użyciem nazwy zamiast adresu IP
 sudo nano /etc/hosts
 ```
 ![obraz](KM/4.png)
+
 2. Dodano wpis odpowiadający maszynie docelowej:
 ```
 IP_address   ansible-target
 ```
 ![obraz](KM/5.png)
+
 3. Połączenie z maszyną zostało nawiązane poprzez nazwę hosta:
 ```
 ssh ansible@ansible-target
 ```
 ![obraz](KM/3.png)
+
 ### Migawka maszyny wirtualnej
 **Migawka** to pełne zapisanie stanu maszyny wirtualnej w danym momencie.
 Gdy zostaje zrobiona migawka - system plików, pamięć RAM, ustawienia — wszystko zostaje "zamrożone".
@@ -58,7 +62,9 @@ Eksport oznacza pełne spakowanie maszyny wirtualnej do jednego pliku. Działa j
 Ekportowana zostaje maszyna -> można ją potem zaimportować gdzie indziej np. na innym komputerze.
 
 Virtualbox > ```Eksportuj jako urządzenie wirtualne``` > ```Wybierz maszynę``` 
+
 ![obraz](KM/eks.png)
+
 ### Ansible
 Na głównej maszynie wirtualnej, zainstalowano oprogramowanie Ansible
 ```
@@ -68,6 +74,7 @@ sudo apt install ansible -y
 ![obraz](KM/6.png)
 
 - Sprawdzono również obecność programu ```tar``` oraz ```sshd```
+
 ![obraz](KM/tar.png)
 
 ## Inwentaryzacja
@@ -81,6 +88,7 @@ sudo hostnamectl set-hostname orchestrator
 ![obraz](KM/11.png)
 ![obraz](KM/13.png)
 ![obraz](KM/14.png)
+
 ### Konfiguracja nazw DNS
 (Wcześniej również był wspomniany ten temat)
 1. Aby umożliwić komunikację za pomocą nazw zamiast adresów IP, zmodyfikowano plik /etc/hosts, dodając odpowiednie wpisy:
@@ -107,21 +115,26 @@ Stworzono plik inventory.yml z podziałem na grupy:
 
 1) Plik **inventory.yml**:
 ![obraz](KM/yaml.png)
+
 - Wysłano polecenie ping do wszystkich maszyn zdefiniowanych w pliku inventory.yml
 ```
 ansible all -i inventory.yml -u ansible -m ping
 ```
 ![obraz](KM/ping-pong.png)
+
 Ansible nawiązał połączenie z ansible-target. Pojawił się błąd przy próbie połączenia z orchestrator, co jest normalne — użytkownik ansible nie istnieje lub nie ma odpowiedniej konfiguracji SSH na maszynie orchestrator.
 
 2) Plik **inventory.yml** - Wysyłanie zapytania ping tylko do grupy Endpoints
 ![obraz](KM/18.png)
+
 ```
 ansible Endpoints -i inventory.yml -m ping
 ```
 Aby uniknąć problemu z orchestrator, przetestowano połączenie wyłącznie z maszynami docelowymi (Endpoints)
 - wysłanie zapytania ping
+
 ![obraz](KM/success.png)
+
 Ansible skutecznie połączył się z maszynami z grupy Endpoints, co potwierdza prawidłową konfigurację środowiska.
 
 
