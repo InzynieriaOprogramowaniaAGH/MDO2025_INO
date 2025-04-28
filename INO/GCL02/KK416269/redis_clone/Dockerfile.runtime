@@ -3,6 +3,7 @@ FROM redis
 WORKDIR /app
 
 COPY artifacts/redis-server-* /app/redis-server
+RUN chmod +x /app/redis-server
 
 EXPOSE 6379
 
