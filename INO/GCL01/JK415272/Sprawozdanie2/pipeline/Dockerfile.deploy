@@ -1,3 +1,9 @@
 FROM nginx:alpine
+LABEL stage="deploy"
+
+
+RUN rm /usr/share/nginx/html/*
+
 
 COPY src/ /usr/share/nginx/html
+

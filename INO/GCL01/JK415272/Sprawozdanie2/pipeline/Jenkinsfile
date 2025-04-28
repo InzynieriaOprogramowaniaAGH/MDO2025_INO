@@ -1,35 +1,104 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_NETWORK         = "jenkins-net-${BUILD_NUMBER}"
+        DEPLOY_CONTAINER_NAME  = "webserver-${BUILD_NUMBER}"
+        BUILD_IMAGE_NAME       = "mdoapp-build:latest"
+        DEPLOY_IMAGE_NAME      = "mdoapp-deploy:latest"
+        TEST_IMAGE_NAME        = "mdoapp-test:latest"
+        ARTIFACT_NAME          = "mdoapp-deploy-image-${BUILD_NUMBER}.tar"
+        GIT_REPO_URL           = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+    }
+
     stages {
-        stage('Clone') {
+        stage('Clone Repository') {
             steps {
-                git 'https://github.com/Jankal43/devops'
+                echo "Cloning repository: ${env.GIT_REPO_URL}"
+                git url: env.GIT_REPO_URL, branch: 'JK415272'
+                script {
+                    env.GIT_COMMIT_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    echo "Checked out commit: ${env.GIT_COMMIT_HASH}"
+                }
             }
         }
-        stage('Build') {
+
+        stage('Move to Pipeline Directory') {
             steps {
-                sh 'docker build -t myapp-build -f Dockerfile.build .'
+                dir('MDO2025_INO/INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
+                    echo "Changed to project pipeline directory."
+                    sh 'ls -la'
+                }
             }
         }
-        stage('Test') {
+
+        stage('Build Application') {
             steps {
-                sh 'docker build -t myapp-test -f test/Dockerfile.test .'
-                sh 'docker run --rm myapp-test'
+                dir('MDO2025_INO/INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
+                    echo "Building 'builder' image: ${env.BUILD_IMAGE_NAME}"
+                    sh "docker build -t ${env.BUILD_IMAGE_NAME} -f Dockerfile.build ."
+                    echo "Builder image created."
+                }
             }
         }
-        stage('Deploy') {
+
+        stage('Build Deploy Image') {
             steps {
-                sh 'docker build -t myapp-deploy -f Dockerfile.deploy .'
-                sh 'docker run -d --name webserver -p 8080:80 myapp-deploy'
+                dir('MDO2025_INO/INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
+                    echo "Building 'deploy' image: ${env.DEPLOY_IMAGE_NAME}"
+                    sh "docker build -t ${env.DEPLOY_IMAGE_NAME} -f Dockerfile.deploy ."
+                    echo "Deploy image created."
+                }
             }
         }
-        stage('Publish') {
+
+        stage('Deploy Application') {
             steps {
-                sh 'docker save myapp-deploy > myapp-deploy.tar'
-                archiveArtifacts artifacts: 'myapp-deploy.tar', fingerprint: true
+                echo "Creating Docker network: ${env.DOCKER_NETWORK}"
+                sh "docker network create ${env.DOCKER_NETWORK} || true"
+
+                echo "Starting container '${env.DEPLOY_CONTAINER_NAME}' from image ${env.DEPLOY_IMAGE_NAME}..."
+                sh "docker run -d --name ${env.DEPLOY_CONTAINER_NAME} --network ${env.DOCKER_NETWORK} ${env.DEPLOY_IMAGE_NAME}"
+                echo "Container ${env.DEPLOY_CONTAINER_NAME} started."
+            }
+        }
+
+        stage('Verify Deployment (Smoke Test)') {
+            steps {
+                dir('MDO2025_INO/INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
+                    echo "Building 'tester' image: ${env.TEST_IMAGE_NAME}"
+                    sh "docker build -t ${env.TEST_IMAGE_NAME} -f test/Dockerfile.test ."
+
+                    echo "Running smoke test..."
+                    sh "docker run --rm --network ${env.DOCKER_NETWORK} ${env.TEST_IMAGE_NAME} ${env.DEPLOY_CONTAINER_NAME}"
+                    echo "Smoke test passed!"
+                }
+            }
+        }
+
+        stage('Publish Artifact') {
+            steps {
+                echo "Saving deploy image ${env.DEPLOY_IMAGE_NAME} to ${env.ARTIFACT_NAME}"
+                sh "docker save ${env.DEPLOY_IMAGE_NAME} > ${env.ARTIFACT_NAME}"
+
+                echo "Archiving artifact: ${env.ARTIFACT_NAME}"
+                archiveArtifacts artifacts: env.ARTIFACT_NAME, fingerprint: true
             }
         }
     }
-}
 
+    post {
+        always {
+            echo "Cleaning up Docker resources..."
+            sh "docker stop ${env.DEPLOY_CONTAINER_NAME} || true"
+            sh "docker rm ${env.DEPLOY_CONTAINER_NAME} || true"
+            sh "docker network rm ${env.DOCKER_NETWORK} || true"
+        }
+        success {
+            echo 'Pipeline finished successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}

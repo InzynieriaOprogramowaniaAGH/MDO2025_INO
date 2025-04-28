@@ -1,0 +1,14 @@
+{
+  "name": "lodash-test-app",
+  "version": "1.0.0",
+  "description": "Prosta apka testująca lodash z Nginx",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+
+  }
+}

@@ -1,0 +1,11 @@
+FROM alpine:latest
+LABEL stage="tester"
+
+RUN apk add --no-cache curl
+
+WORKDIR /test
+
+COPY test/curl-test.sh .
+RUN chmod +x curl-test.sh
+
+ENTRYPOINT ["./curl-test.sh"]
