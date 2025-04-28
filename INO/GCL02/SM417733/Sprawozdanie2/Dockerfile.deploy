@@ -7,7 +7,7 @@ COPY artifacts/ /app/
 COPY artifacts/redis-server-* /app/redis-server
 COPY artifacts/redis-cli-* /app/redis-cli
 
-RUN ls -l /app
+RUN ls -l /app/artifacts
 
 RUN chmod +x /app/redis-server /app/redis-cli
 
