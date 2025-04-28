@@ -222,6 +222,61 @@ post {
 
 Kompletny [Jenkinsfile](./Jenkinsfile) został załączony w repozytorium.
 
+Analiza wszystkich etapów:
+
+1. Clone
+
+- W pierwszym etapie pipeline klonuje repozytorium przedmiotowe MDO2025_INO z gałęzi KM415588.
+
+- Klonowanie zapewnia świeże źródła kodu, dzięki czemu pipeline działa zawsze na aktualnej wersji aplikacji.
+
+- Weryfikacja zawartości repozytorium następuje przez ls -la.
+
+2. Build
+
+    Proces budowania rozpoczyna się wewnątrz kontenera Docker bazującego na oficjalnym obrazie Node.js (node:current).
+
+    W kroku Build:
+
+    - Instalowane są zależności (npm install).
+
+    - Kompilowana jest aplikacja (npm run build).
+
+    - Budowany jest dedykowany obraz chalk-build, który stanowi środowisko zawierające wszystkie zależności buildowe.
+
+3. Test
+
+    Następnie budowany jest kontener chalk-test bazujący na chalk-build.
+
+   - W kontenerze uruchamiane są testy jednostkowe (npm test).
+
+   - Wynik testów jest przechwytywany do pliku test_output.log.
+
+   - Logi z testów są przechowywane i archiwizowane jako artefakt pipeline.
+
+4. Deploy (Smoke Test)
+
+    W kroku Deploy budowany jest kontener chalk-run:
+
+    - Oczyszczana jest struktura projektu do niezbędnych plików (distribution/, plik example.js).
+
+    - Uruchamiany jest test integracyjny typu smoke test, wykonujący example.js na bibliotece.
+
+    - Wynik działania smoke testu jest zapisywany do pliku smoke_test_output.log.
+
+5. Publish
+
+    Ostatecznie przygotowywany jest artefakt:
+
+    - Tworzony jest katalog result/.
+
+    - Kopiowane są logi testów oraz smoke testu oraz zbudowana biblioteka.
+
+    - Wszystko jest pakowane do pliku artifact_result.tar.gz.
+
+    Artefakt ten jest publikowany w Jenkinsie i gotowy do pobrania jako rezultat pipeline.
+
+
 
 Po utworzeniu nowego projektu pipeline i wpisaniu kodu jenkinsfile uruchamiam zadanie - poniżej zdjecia dowodzące powodzeniu przeprowadzonego zadania:
 
@@ -232,5 +287,9 @@ Po utworzeniu nowego projektu pipeline i wpisaniu kodu jenkinsfile uruchamiam za
 ![pipconsole](./Images/005/pipconsole.png)
 
 ![ifiles](./Images/005/ifiles.png)
+
+Możemy też odwoływać się do już napisnego pliku Jenkinsfile na repozytorium wybierając w projekcie pipelinie opcje pipeline script from scm:
+
+![SCM](./Images/005/SCM.png)
 
 
