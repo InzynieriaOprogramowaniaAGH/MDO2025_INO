@@ -17,3 +17,4 @@ WORKDIR /redis
 RUN make
 
 RUN cp /redis/src/redis-server /redis/redis-server
+RUN cp /redis/src/redis-cli /redis/redis-cli
