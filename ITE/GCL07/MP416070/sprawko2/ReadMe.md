@@ -446,13 +446,17 @@ Pipeline gwarantuje powtarzalność publikacji, ponieważ etap Publish zostaje u
 
 ## Pełna lista kontrolna
 
- #### Aplikacja została wybrana - zaakceptowana przez prowadzącego
+#### Aplikacja została wybrana - zaakceptowana przez prowadzącego
 
- #### Licencja potwierdza możliwość swobodnego obrotu kodem na potrzeby zadania - TAK
+#### Licencja potwierdza możliwość swobodnego obrotu kodem na potrzeby zadania - TAK
 
- #### Wybrany program buduje się - zostało to wykazane w poprzednim sprawozdaniu
+#### Wybrany program buduje się - zostało to wykazane w poprzednim sprawozdaniu
 
- #### Przechodzą dołączone do niego testy - zostało to wykazane w poprzednim sprawozdaniu
+#### Przechodzą dołączone do niego testy - zostało to wykazane w poprzednim sprawozdaniu
+
+#### Stworzono diagram UML zawierający planowany pomysł na proces CI/CD
+
+![alt text](screeny/cicd_pipeline_uml.png)
 
 #### Wybrano kontener bazowy lub stworzono odpowiedni kontener wstepny (runtime dependencies) & Build został wykonany wewnątrz kontenera
 
@@ -564,4 +568,4 @@ stage('Publish images') {
 
 ![alt text](screeny/lab5-PUBLISH.png)
 
-Pozostałe kroki z listy kontrolnej zostały opisane oraz wyjaśnione wyżej w sekcjach dyskusyjnych kroków Deploy oraz Publish.
+Pozostałe kroki z listy kontrolnej zostały opisane oraz wyjaśnione powyżej w sekcjach dyskusyjnych kroków Deploy oraz Publish.
