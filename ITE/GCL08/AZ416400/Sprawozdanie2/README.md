@@ -167,35 +167,67 @@ Obserwując czay wykonania obu pipelineów możemy zauważyć podobne wynki czas
 
 # Zajęcia 06/07
 
+Rozpoczynamy proces tworzenia pipelineu dla aplikacj Redis najpierw próbujemy przeprowadzić proces samodzielnie testowo
+
 ![alt text](./img/image50.png)
 
+Instlacja potrzebnych dependencji
+
 ![alt text](./img/image02.png)
+
+Uruchomienie kompilacji kodu źródłowego:
 
 ![alt text](./img/image47.png)
 
 ![alt text](./img/image23.png)
 
+Przeprowadzenie testów w osobnym kontenerze:
+
 ![alt text](./img/image39.png)
+
+Testy nie przeszły - jeden z nich zwrócił nie odpowienią wartość w pierwszej próbie, w następnych podejściach już wszystko było w porządku. Ten konkretny test będzie w dalszej części zadania często nie przechodził, (prawodpodobnie z powodu ustawień maszyny na którym działa) dlatego też testy będą wykonywane wielokrotnie tudzież błąd będzie pomijany.
 
 ![alt text](./img/image042.png)
 
+Tworzenie dockerfile dla kontenera Buildowego który zastąpi nam konieczność ręcznej kompilacji programu.
+
 ![alt text](./img/image031.png)
+
+Zbudowanie obrazu kontenera Buildowego:
 
 ![alt text](./img/image027.png)
 
+Dockerfile dla kontenera testowego na podstawie kontenera Buildowego:
+
 ![alt text](./img/image05.png)
+
+Budowanie obrazu kontenera testowego:
 
 ![alt text](./img/image018.png)
 
+Uruchomienie kontenera i przeprowadzenie testów ponownie:
+
 ![alt text](./img/image015.png)
 
+Utworzenie docker compose:
+
+![alt text](./img/Docker%20compose.png)
+
+Pobranie docker compose - konieczne było zrobienie tego ręcznie tylko tak działało:
+
 ![alt text](./img/image014.png)
+
+Uruchoienie docker compose:
 
 ![alt text](./img/image016.png)
 
 ![alt text](./img/image041.png)
 
+Instalacja docker compose dla Jenkinsa:
+
 ![alt text](./img/image036.png)
+
+Utworzono pipeline dla całego procesu:
 
     pipeline {
         agent any
@@ -233,15 +265,33 @@ Obserwując czay wykonania obu pipelineów możemy zauważyć podobne wynki czas
         }
     }
 
+W ramach pipeline'a dla Jenkinsa przygotowano skrypt realizujący proces CI/CD dla projektu Redis. Pipeline ustawia zmienną IMAGE_TAG generującą unikalny znacznik czasu, dzięki czemu każda wersja budowanego obrazu Dockera jest unikalna i łatwa do zarządzania.
+
+W etapie Prepare usuwany jest lokalny katalog, klonowane jest repozytorium z GitHuba i następuje przełączenie na odpowiednią gałąź. W kroku Build Redis pipeline przechodzi do katalogu z Dockerfile'ami i buduje obraz Dockera redisbld, bez użycia cache'a, co zapewnia aktualność procesu. W etapie Test Redis budowany jest obraz redistest na podstawie Dockerfile.redistest, z przekazaną zmienną IMAGE_TAG, umożliwiającą powiązanie wersji testowej z odpowiednią wersją builda.
+
+Pipeline w ten sposób realizuje kluczowe kroki ścieżki krytycznej: klonowanie (clone), budowanie (build) oraz przygotowanie testów (test).
+
+Wyodrębnienie skompilowanych plików na wolumin dla przejścia do etapu deploy:
+
 ![alt text](./img/image03.png)
+
+Uruchomienie nowego kontenera i sprawdzenie czy potrzebne pliki znajdują się we właściwym miejscu
 
 ![alt text](./img/image07.png)
 
+Instalacja potrzebych pakietów:
+
+    sudo dnf install rpm-build rpmdevtools
+
+Setup potrzebnych narzędzi:
+
 ![alt text](./img/image034.png)
+
+Odpowiednie przygotowanie kodu źródłowego - spakowanie go do archiwum w odpowiednim katalogu:
 
 ![alt text](./img/image021.png)
 
-![alt text](./img/image051.png)
+Plik .spec:
 
     Name:           redis-build
     Version:        1.0
@@ -277,31 +327,51 @@ Obserwując czay wykonania obu pipelineów możemy zauważyć podobne wynki czas
     * Sat Apr 26 2025 - 1.0-1
     - Initial build
 
----
+W celu przygotowania instalowalnego artefaktu w formacie RPM stworzono plik specyfikacji redis-build.spec. Plik ten definiuje podstawowe informacje o pakiecie, takie jak jego nazwa (redis-build), wersja (1.0), numer wydania (1) oraz licencja (BSD). Źródłem dla budowy pakietu jest archiwum redis_build.tar.gz, które zawiera pliki binarne redis-server oraz redis-cli.
+
+Pakiet przeznaczony jest dla architektury x86_64, a sekcja %install określa proces kopiowania plików binarnych do katalogu /usr/local/bin, skąd mogą być one później bezpośrednio uruchamiane po instalacji pakietu. W sekcji %files wskazano oba binaria jako zawartość pakietu. Zrezygnowano z tworzenia osobnego pakietu debug (%global debug_package %{nil}), ponieważ nie jest to wymagane w tym przypadku.
+
+Zbudowanie RPM: 
     
     rpmbuild -ba redis_build.spec
+
+Zakończenie procesu powodzeniem:
 
 ![alt text](./img/image01.png)
 
 ![alt text](./img/image044.png)
 
+Instalacja powstałego pakietu i test jego działania:
+
 ![alt text](./img/image020.png)
+
+Utworzenie dockerfile automatyzującego kontener deploy:
 
 ![Zrzut ekranu](./img/Zrzut%20ekranu%202025-04-28%20010513.png)
 
-![alt text](./img/image046.png)
+Przeprowadzenie builda kontenera deploy:
 
 ![alt text](./img/image026.png)
 
+Uruchomie utworzonego kontenera i zapisanie RPM na woluminie:
+
     docker run --rm -v output:/output redis-rpm-builder:7.2.0
+
+Sprawdzenie poprawności wykonenaj operacji:
 
 ![alt text](./img/image033.png)
 
+Instalacja i uruchomienie Redisa z własnoręcznie utworzonego pakietu:
+
 ![alt text](./img/image024.png)
+
+Test łączności z Redisem pobranym z zewnętrznego repozytorium:
 
 ![alt text](./img/image012.png)
 
 ![alt text](./img/image017.png)
+
+Modyfikacja .spec na potrzeby pipelineu:
 
     Name:           redis
     Version:        __REDIS_VERSION__
@@ -337,7 +407,12 @@ Obserwując czay wykonania obu pipelineów możemy zauważyć podobne wynki czas
     * Sun Apr 27 2025 - __REDIS_VERSION__
     - Packaged redis-server and redis-cli binaries into RPM
 
+
+Utworzenie Dockerfilea dla kontenera z naszym redisem do testów RPMa (przy okazji zmodyfikowane pozostałych dockerfileów do pipelinea - .redistest miał problem z wersją jednego z pakietów więc musiałam zainstalować je ręcznie)
+
 ![alt text](./img/Zrzut%20ekranu%202025-04-28%20010834.png)
+
+Gotowy pipeline:
 
 
     pipeline {
@@ -429,6 +504,14 @@ Obserwując czay wykonania obu pipelineów możemy zauważyć podobne wynki czas
         }
     }
 
+W etapie Deploy RPM pipeline przechodzi do katalogu Dockerfiles, gdzie tworzony jest katalog redis_rpm_output na potrzeby gromadzenia gotowych plików RPM. Następnie budowany jest nowy obraz Dockera redisdeploy, bazujący na przygotowanym wcześniej środowisku. W ramach budowy wykorzystano przekazywanie zmiennych IMAGE_TAG oraz REDIS_VERSION, aby zapewnić spójność wersji pakietu. Po utworzeniu kontenera z tego obrazu, za pomocą polecenia docker cp, plik RPM jest kopiowany do katalogu redis_rpm_output, a tymczasowy kontener jest usuwany.
+
+Etap Test RPM obejmuje walidację poprawności działania zbudowanego pakietu. W tym celu przygotowywany jest nowy obraz Dockera myredis, bazujący na pakiecie RPM wygenerowanym w poprzednim kroku. Pipeline tworzy własną sieć Dockera redis-test-net i uruchamia dwa kontenery: jeden zawierający własną wersję Redis-a (myredis-server), a drugi — oficjalny obraz Redis-a (official-redis). Po krótkim czasie potrzebnym na inicjalizację, pipeline wykonuje polecenie redis-cli ping z kontenera official-redis w kierunku własnej instancji Redis, aby upewnić się, że serwer działa poprawnie. Po teście kontenery i sieć są sprzątane, aby nie zostawiać niepotrzebnych zasobów.
+
+Ostatnim krokiem jest Publish RPM, w którym pipeline przechodzi do katalogu redis_rpm_output, wyszukuje wygenerowany plik RPM i archiwizuje go jako artefakt builda w Jenkinsie. Jeśli plik RPM jest dostępny, zostaje zapisany z fingerprintem w systemie, co pozwala na późniejsze śledzenie jego pochodzenia i wersji. W przypadku niepowodzenia w znalezieniu pliku RPM, pipeline zgłasza błąd i przerywa dalsze wykonywanie.
+
+
+Gotowe testy pipelinea i artefakt (krok publish) jako zakończenie całego procesu:
 
 ![alt text](./img/image06.png)
 
