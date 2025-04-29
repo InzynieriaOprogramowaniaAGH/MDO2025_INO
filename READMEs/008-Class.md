@@ -42,6 +42,7 @@ Za pomocą [*playbooka*](https://docs.ansible.com/ansible/latest/getting_started
 * Jeżeli artefaktem z Twojego *pipeline'u* był kontener:
   * Zbuduj i uruchom kontener sekcji `Deploy` z poprzednich zajęć
   * Pobierz z Docker Hub aplikację "opublikowaną" w ramach kroku `Publish`
+  * Na maszynie docelowej, **Dockera zainstaluj Ansiblem!**
   * Zweryfikuj łączność z kontenerem
   * Zatrzymaj i usuń kontener
 
