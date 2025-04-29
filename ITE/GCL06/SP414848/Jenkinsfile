@@ -42,7 +42,8 @@ pipeline {
                 dir("${BASE_DIR}") {
                     script {
                         sh "docker build --no-cache -t ${IMAGE_NAME_TEST} -f Dockerfile.test ."
-                        sh "docker run --rm ${IMAGE_NAME_TEST}"
+                        sh "docker run --rm ${IMAGE_NAME_TEST} > test_logs.txt 2>&1 || true"
+                        archiveArtifacts artifacts: "logs/${PACKAGE_NAME}_${params.VERSION}/test_logs.txt", onlyIfSuccessful: false 
                     }
                 }
             }
@@ -58,6 +59,8 @@ pipeline {
 
                         sh "docker logs sqlite-smoke-cont > smoke_test_logs.txt || true"
                         sh "docker rm sqlite-smoke-cont || true"
+
+                        archiveArtifacts artifacts: "logs/${PACKAGE_NAME}_${params.VERSION}/sqlite_smoke_logs.txt", onlyIfSuccessful: false 
 
                         if(testResult != 0) {
                             error "Smoke test error! Logs: smoke_test_logs.txt"
