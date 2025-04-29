@@ -2,18 +2,13 @@
 ## Meg Paskowski
 ## Grupa: 2
 ## Zajecia 8-12
-### Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
+### Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible (lab 8)
 
 Będziemy potrzebować drugiej maszyny wirtualnej. Dla oszczędności zasobów, musi być jak najmniejsza i jak najlżejsza.
 
-Utwórz drugą maszynę wirtualną o jak najmniejszym zbiorze zainstalowanego oprogramowania
-Zastosuj najlepiej ten sam system operacyjny, co "główna" maszyna
-Zapewnij obecność programu tar i serwera OpenSSH (sshd), tak, by działały narzędzia zdalne
-Nadaj maszynie hostname ansible-target
-Utwórz w nowym systemie użytkownika ansible
-Zrób migawkę maszyny (i/lub przeprowadź jej eksport)
-Na głównej maszynie wirtualnej (nie na tej nowej!), zainstaluj oprogramowanie Ansible, najlepiej z repozytorium dystrybucji
-Wymień klucze SSH między użytkownikiem w głównej maszynie wirtualnej, a użytkownikiem ansible z nowej tak, by logowanie ssh ansible@ansible-target nie wymagało podania hasła
+- `fedora-main` – główna maszyna (zarządca / orchestrator)
+- `ansible-target` – maszyna docelowa (endpoint)
+
 Utworzenie drugiej maszyny wirtualnej z systemem `Fedora`. Przy najmniejszym zbiorze zainstalowanego oprogramowania.
 
 Zmaiana nazwy hosta.
@@ -324,3 +319,11 @@ ansible-playbook project.yml -i /home/mpaskowski/MDO2025_INO/INO/GCL02/MP417574/
 ```
 
 ![result](IMG/project_result.png)
+
+W sprawozdaniu przedstawiono sposób wykorzystania Ansible do zdalnego zarządzania systemami operacyjnymi. Wykonane działania obejmowały przygotowanie środowiska, konfigurację dostępu między maszynami, stworzenie pliku inwentaryzacji oraz realizację wybranych operacji administracyjnych za pomocą playbooków.
+
+Zadanie pokazało, że Ansible pozwala na centralne sterowanie wieloma systemami jednocześnie, bez konieczności ręcznego logowania się na każdą maszynę. Dzięki temu możliwe było wykonanie operacji takich jak aktualizacja pakietów, kopiowanie plików czy zarządzanie kontenerami. 
+
+### 
+
+
