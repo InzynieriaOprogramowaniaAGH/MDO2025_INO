@@ -115,7 +115,7 @@
       [ssh_connection]
        ssh_args = -o ConnectTimeout=5
       ```
-      - Następnie wykonano playbook poleceniem `ansible-playbook playbook.yaml --ask-become-pass`.
-        - *Uzyskany wynik*:
+  - Następnie wykonano playbook poleceniem `ansible-playbook playbook.yaml --ask-become-pass`.
+    - *Uzyskany wynik*:
 
-          ![Uzyskany wynik](media/m9_bookplay.png)
+      ![Uzyskany wynik](media/m9_bookplay.png)
