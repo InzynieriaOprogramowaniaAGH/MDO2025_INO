@@ -13,6 +13,13 @@ pipeline {
         PACKAGE_NAME = 'sqlite_linux'
     }
     stages {
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    sh "apt-get update && apt-get install -y zip"
+                }
+            }
+        }
         stage('Clean') {
             steps {
                 script {
