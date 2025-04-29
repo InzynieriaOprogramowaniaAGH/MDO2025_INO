@@ -8,14 +8,16 @@
 ### Projekt wywietlajacy uname
 
 W pierwszej kolejnosci Tworzymy projekt w tablicy klikajac Nowy projekt
-![alt text](uname1.png)
+
+![alt text](lab5/uname1.png)
 
 Nastepnie nadajemy nazwe oraz wybieramy projekt ogolny
-![alt text](uname2.png) 
+
+![alt text](lab5/uname2.png) 
 
 Schodzimy do zakladki o nazwie Kroki Budowania > Dodaj krok budowania > Uruchom Powłoke 
 
-![alt text](uname3.png)
+![alt text](lab5/uname3.png)
 
 Dodajemy w wyznaczonym miejscu polecenie 
 ```sh
@@ -24,20 +26,21 @@ Dodajemy w wyznaczonym miejscu polecenie
 uname -a
 ```
 a nastepnie zapisujemy konfiguracje
-![alt text](uname4.png)
+
+![alt text](lab5/uname4.png)
 
 Nastepnie pojawi nam sie po lewej stronie w projekcie opcja uruchom > po czym efekt powinien sie nam pojawic na dole w Builds
 
-![alt text](uname5.png)
+![alt text](lab5/uname5.png)
 
 Po kliknięciu w artefakt uruchomienia (u nas jest to 1 w buildie) >
 pojawi nam sie menu do artefaktu 
 
-![alt text](uname6.png)
+![alt text](lab5/uname6.png)
 
 Nas interesują tutaj logi
 
-![alt text](uname7.png)
+![alt text](lab5/uname7.png)
 
 ### Projekt wyswietlajacy blad, gdy godzina jest nieparzysta
 TWorzymy projekt analogicznie jak w punkcie wyzej do momentu Uruchomienia powłoki. PO uruchomieniu powloki w wyznaczonym miejscu wpisujemy:
@@ -54,22 +57,22 @@ else
     exit 0
 fi
 ```
-![alt text](oddhour1.png)
+![alt text](lab5/oddhour1.png)
 
 Po zapisaniu i uruchomieniu sprawdzamy artefakt
 
-![alt text](oddhour2.png)
+![alt text](lab5/oddhour2.png)
 
 
 ### Pobranie w projekcie obraz kontenera ubuntu
 
 My to zrobimy w naszym pierwszym projekcie. Wiec w Tablicy Jenkinsa wybieramy nasz pierwszy projekt:
 
-![alt text](ubuntuPull1.png)
+![alt text](lab5/ubuntuPull1.png)
 
 gdzie wchodzimy w konfiguruj:
 
-![alt text](ubuntuPull2.png)
+![alt text](lab5/ubuntuPull2.png)
 
 Dodajemy w konfiguracji linijke docker pulla
 ```sh
@@ -81,11 +84,11 @@ docker pull ubuntu
 docker images
 ```
 
-![alt text](ubuntuPull3.png)
+![alt text](lab5/ubuntuPull3.png)
 
 Nastepnie powinno nam sie pokazac w logach artefaktu:
 
-![alt text](ubuntuPull4.png)
+![alt text](lab5/ubuntuPull4.png)
 
 ***Uwaga*** Upewnij sie ze oba kontenery dockerowe dzialaja (blueocean i dind)
 
@@ -93,7 +96,7 @@ Nastepnie powinno nam sie pokazac w logach artefaktu:
 ### Utwórz nowy obiekt typu pipeline
 Tworzymy nowy projekt i tym razem zamiast projektu ogólnego wybieramy pipeline
 
-![alt text](pipeline1.png)
+![alt text](lab5/pipeline1.png)
 
 Nastepnie w pipeline script wpisujemy:
 
@@ -136,4 +139,112 @@ pipeline {
 ```
 budujemy to wedlug struktury podanej w dokumentacji jenkinsa: https://www.jenkins.io/doc/book/pipeline/
 
-![alt text](pipeline2.png)
+![alt text](lab5/pipeline2.png)
+
+pipeline sie udał
+
+![alt text](lab5/pipeline3.png)
+
+Drugie uruchomienie pipelina
+
+![alt text](lab5/pipeline4.png)
+
+# 3. Kompeltny Pipeline - Express.js
+Link do repozytorium wykorzystywanego repozytorium: https://github.com/expressjs/express
+
+## Etap BUILD
+### w pierwszej kolejnosci przygodowujemy dockerfila pod image builda
+
+```Dockerfile
+FROM node:20
+WORKDIR /app
+RUN git clone https://github.com/expressjs/express.git
+WORKDIR /app/express
+RUN npm install
+```
+### Tworzymy obraz
+
+```sh
+docker build -f Dockerfile.build -t express-build-img .
+```
+![alt text](build1.png)
+
+## Etap TEST
+### Przygotowujemy dockerfila pod image test
+```Dockerfile
+FROM express-build-img
+
+WORKDIR /app/express
+
+RUN npm test
+```
+
+### Tworzymy obraz
+
+```sh
+docker build -f Dockerfile.test -t express-test-img .
+```
+![alt text](test1.png)
+
+## Etap DEPLOY
+
+W repozytorium expressa jest wiele róznych przykładów użycia. Ja skorzystałem z przykladu downloads, którego budowa wyglada tak:
+
+![alt text](deploy1.png)
+
+### Przygotowujemy dockerfila pod image deploy
+
+```Dockerfile
+FROM node:20-slim
+
+COPY --from=express-build-img /app/express /app
+
+WORKDIR /app
+
+CMD ["node", "examples/downloads"]
+```
+
+### Tworzymy Obraz
+
+```sh
+docker build -f Dockerfile.deploy -t express-deploy-img .
+```
+![alt text](deploy2.png)
+
+### Tworzymy nowa sieć
+
+```sh
+docker network create express
+```
+![alt text](deploy3.png)
+
+### Uruchamiamy kontener deploya
+
+```sh
+docker run -d --rm --network express --name express-deploy-container -p 3000:3000 express-deploy-img
+```
+
+![alt text](deploy4.png)
+
+Upewniamy się, że wszystko działa
+
+```sh
+docker logs express-deploy-container
+```
+
+![alt text](deploy5.png)
+
+Teraz aby sprawdzić co nam przeglądarka pokazuje na porcie 3000, musimy ten port udostępnić. Ja skorzystalem z możliwości udostępnienia portu przez VSC
+
+![alt text](deploy6.png)
+
+![alt text](deploy7.png)
+
+### Tworzymy kontener z curlem 
+curl jest minimalistyczny i wysyla zapytanie o to co jest na stronie - idealne narzedzie do sprawdzenia dzialania kontenera
+
+```sh
+docker run --rm --network express curlimages/curl curl -s express-deploy-container:3000
+```
+
+![alt text](deploy8.png)
