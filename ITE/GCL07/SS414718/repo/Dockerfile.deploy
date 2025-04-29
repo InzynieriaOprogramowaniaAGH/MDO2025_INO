@@ -1,8 +1,7 @@
-ARG BUILDER_IMAGE=builder:latest
-FROM ${BUILDER_IMAGE} AS builder
+
 FROM node:18-alpine
 WORKDIR /app
-COPY --from=builder /AGH-Node-Calculator-DevOps/node_modules ./node_modules
-COPY --from=builder /AGH-Node-Calculator-DevOps ./
+COPY --from=node_app_build /AGH-Node-Calculator-DevOps/node_modules ./node_modules
+COPY --from=node_app_build /AGH-Node-Calculator-DevOps ./
 EXPOSE 3000
-CMD ["npm","start"]
+CMD ["npm", "start"]
