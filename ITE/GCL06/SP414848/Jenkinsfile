@@ -1,43 +1,97 @@
 pipeline {
     agent any
+    parameters {
+        string(name: 'VERSION', defaultValue: '0', description: '')
+    }
     environment {
         REPO_URL = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
         BRANCH = 'SP414848'
+        BASE_DIR = 'MDO2025_INO/ITE/GCL06/SP414848'
         IMAGE_NAME_BUILD = 'sqlite-build'
         IMAGE_NAME_TEST = 'sqlite-test'
+        IMAGE_NAME_SMOKE = 'sqlite-smoke'
+        PACKAGE_NAME = 'sqlite_linux'
     }
     stages {
-        stage('Clean Up Existing Docker Image') {
-            steps {
-                script {
-                    sh "docker rmi -f ${IMAGE_NAME_BUILD}"
-                    sh "docker rmi -f ${IMAGE_NAME_TEST}"
-                }
-            }
-        }
-        stage('Clone Repository') {
+        stage('Clean') {
             steps {
                 script {
                     sh 'rm -rf MDO2025_INO'
-                    sh "git clone ${REPO_URL}"
+                    sh 'docker system prune -a --volumes -f'
                 }
             }
         }
-        stage('Checkout Personal Branch') {
+        stage('Clone') {
             steps {
-                dir('MDO2025_INO') {
+                script {
+                    sh "git clone -b SP414848 --single-branch ${REPO_URL}"
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                dir("${BASE_DIR}") {
                     script {
-                        sh "git checkout ${BRANCH}"
+                        sh "docker build --no-cache -t ${IMAGE_NAME_BUILD} -f Dockerfile.build ."
                     }
                 }
             }
         }
-        stage('Build Docker Image') {
+        stage('Test') {
             steps {
-                dir('MDO2025_INO/ITE/GCL06/SP414848') {
+                dir("${BASE_DIR}") {
                     script {
-                        sh "docker build --no-cache -t ${IMAGE_NAME_BUILD} -f Dockerfile.build ."
                         sh "docker build --no-cache -t ${IMAGE_NAME_TEST} -f Dockerfile.test ."
+                        sh "docker run --rm ${IMAGE_NAME_TEST}"
+                    }
+                }
+            }
+        }
+        stage('Deploy - smoke') {
+            steps {
+                dir("${BASE_DIR}") {
+                    script {
+                        sh "docker build --no-cache -t ${IMAGE_NAME_SMOKE}:${params.VERSION} -f Dockerfile.smoke ."
+
+                        echo "Staring smoke test..."
+                        def testResult = sh(script: "docker run --name sqlite-smoke-cont ${IMAGE_NAME_SMOKE}:${params.VERSION}", returnStatus: true)
+
+                        sh "docker logs sqlite-smoke-cont > smoke_test_logs.txt || true"
+                        sh "docker rm sqlite-smoke-cont || true"
+
+                        if(testResult != 0) {
+                            error "Smoke test error! Logs: smoke_test_logs.txt"
+                        } else {
+                            echo "Smoke test passed"
+                        }
+                    }
+                }
+            }
+        }
+        stage('Deploy - package') {
+            steps{
+                dir("${BASE_DIR}") {
+                    script {
+                        sh "docker create --name build-cont ${IMAGE_NAME_BUILD}"
+                        sh "mkdir -p sqlite-pack"
+
+                        sh "docker cp build-cont:/sqlite/sqlite3 sqlite-pack/"
+                        sh "docker cp build-cont:/sqlite/sqldiff sqlite-pack/"
+                        sh "docker cp build-cont:/sqlite/sqlite3_analyzer sqlite-pack/"
+                        sh "docker cp build-cont:/sqlite/sqlite3_rsync sqlite-pack/"
+
+                        sh "docker rm build-cont"
+
+                        sh "zip -j ${PACKAGE_NAME}_${params.VERSION} /sqlite-pack/*"
+                    }
+                }
+            }
+        }
+        stage('Publish') {
+            steps {
+                dir("${BASE_DIR}") {
+                    script{
+                        archiveArtifacts artifacts: "release/${PACKAGE_NAME}_${params.VERSION}.zip", fingerprint: true
                     }
                 }
             }

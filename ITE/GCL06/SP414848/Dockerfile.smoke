@@ -1,0 +1,18 @@
+FROM fedora:43
+
+RUN dnf -y update && \
+    dnf clean all
+
+RUN useradd -m appuser
+
+COPY --from=sqlite-build /sqlite/sqlite3 /sqlite/sqlite3
+COPY --from=sqlite-build /sqlite/sqldiff /sqlite/sqldiff
+COPY --from=sqlite-build /sqlite/sqlite3_analyzer /sqlite/sqlite3_analyzer 
+COPY --from=sqlite-build /sqlite/sqlite3_rsync /sqlite/sqlite3_rsync 
+
+COPY smoke-test.sh /smoke-test.sh
+RUN chmode -x /sqlite/sqldiff /sqlite/sqldiff /sqlite/sqlite3_analyzer /sqlite/sqlite3_rsync /smoke-test.sh
+
+USER appuser
+
+CMD ["./smoke-test.sh"]

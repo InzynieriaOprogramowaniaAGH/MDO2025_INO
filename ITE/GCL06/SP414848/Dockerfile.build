@@ -1,4 +1,4 @@
-FROM fedora:40
+FROM fedora:43
 
 RUN dnf install -y git gcc make tcl-devel
 
