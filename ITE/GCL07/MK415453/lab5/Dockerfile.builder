@@ -1,4 +1,4 @@
-FROM node-lite
+FROM node
 
 RUN dnf install git -y
 
