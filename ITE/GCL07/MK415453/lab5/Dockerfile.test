@@ -1,4 +1,3 @@
-FROM htop-build
+FROM node-builder
 
-
-CMD ["./htop", "--version"]
+CMD ["npm", "test"]
