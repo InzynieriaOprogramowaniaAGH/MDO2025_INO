@@ -42,8 +42,8 @@ pipeline {
                 dir("${BASE_DIR}") {
                     script {
                         sh "docker build --no-cache -t ${IMAGE_NAME_TEST} -f Dockerfile.test ."
-                        sh "docker run --rm ${IMAGE_NAME_TEST} > test_logs.txt 2>&1 || true"
-                        archiveArtifacts artifacts: "logs/${PACKAGE_NAME}_${params.VERSION}/test_logs.txt", onlyIfSuccessful: false 
+                        sh "docker run --rm ${IMAGE_NAME_TEST} > test_logs_${PACKAGE_NAME}_${params.VERSION}.txt 2>&1 || true"
+                        archiveArtifacts artifacts: "test_logs_${PACKAGE_NAME}_${params.VERSION}.txt", onlyIfSuccessful: false 
                     }
                 }
             }
@@ -57,10 +57,10 @@ pipeline {
                         echo "Staring smoke test..."
                         def testResult = sh(script: "docker run --name sqlite-smoke-cont ${IMAGE_NAME_SMOKE}:${params.VERSION}", returnStatus: true)
 
-                        sh "docker logs sqlite-smoke-cont > smoke_test_logs.txt || true"
+                        sh "docker logs sqlite-smoke-cont > smoke_test_logs_${PACKAGE_NAME}_${params.VERSION}.txt || true"
                         sh "docker rm sqlite-smoke-cont || true"
 
-                        archiveArtifacts artifacts: "logs/${PACKAGE_NAME}_${params.VERSION}/sqlite_smoke_logs.txt", onlyIfSuccessful: false 
+                        archiveArtifacts artifacts: "smoke_test_logs_${PACKAGE_NAME}_${params.VERSION}.txt", onlyIfSuccessful: false 
 
                         if(testResult != 0) {
                             error "Smoke test error! Logs: smoke_test_logs.txt"
@@ -94,7 +94,7 @@ pipeline {
             steps {
                 dir("${BASE_DIR}") {
                     script{
-                        archiveArtifacts artifacts: "release/${PACKAGE_NAME}_${params.VERSION}.zip", fingerprint: true
+                        archiveArtifacts artifacts: "${PACKAGE_NAME}_${params.VERSION}.zip", fingerprint: true
                     }
                 }
             }
