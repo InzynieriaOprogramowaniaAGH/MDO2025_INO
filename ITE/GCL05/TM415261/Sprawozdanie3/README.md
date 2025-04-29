@@ -52,6 +52,7 @@ Najpierw wykonałem to na głównej maszynie:
 ![ss](./Lab8/screenshots/ss10.png)
 
 A następnie na nowej:
+
 ![ss](./Lab8/screenshots/ss11.png)
 
 W kolejnym kroku zapewniłem możliwość wywoływania komputerów za pomocą nazw, a nie tylko adresów IP. W tym celu dopisałem adresy i nazwy hostów to pliku `/etc/hosts`. Jest to lokalna alternatywa dla `DNS`. Modyfikacja pliku nastąpiła na obydwu maszynach w identyczny sposób.
