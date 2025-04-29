@@ -1,4 +1,4 @@
-FROM node
+FROM node:22.14.0-slim
 
 RUN dnf install git -y
 
