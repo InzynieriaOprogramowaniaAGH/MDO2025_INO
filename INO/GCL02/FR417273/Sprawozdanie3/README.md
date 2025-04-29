@@ -119,3 +119,112 @@
     - *Uzyskany wynik*:
 
       ![Uzyskany wynik](media/m9_bookplay.png)
+### Zarządzanie stworzonym artefaktem
+- Utworzono nową role poleceniem `ansible-galaxy init cjson`:
+  - *Zrzut ekranu struktury katalogów*:
+
+    ![Zrzut ekranu struktury katalogów](media/m10_struct.png)
+- Przeniesiono pliki `cjson-1.0.0.rpm` oraz `cjson_test.c` do nowo powstałego katalogu `cjson/files`.
+- Zmodyfikowano zawartość pliku `cjson/tasks/main.yml`. Następuje:
+  - Utworzenie katalogu roboczego.
+  - Kopiowanie plików `.rpm` oraz `.c`.
+  - Instalacja wymaganych zależności.
+  - Instalacja dockera.
+  - Uruchomienia dockera.
+  - Uruchomienie kontenera bazującego na systemie fedora:41.
+  - Instalacja narzedzi do instalacji pakieru `rpm` i kompilacji programu.
+  - Rozpakowanie pakietu `rpm`.
+  - Utworzenie symbolicznego powiązania do plików biblioteki.
+  - Kompilacja kodu źródłowego.
+  - Uruchomienie programu.
+  - Wydruk wyniku.
+
+  *cjson/tasks/main.yml*:
+  ```
+    - name: Create directory /home/ansible/cjson
+      become: yes
+      file:
+        path: /home/ansible/cjson
+        state: directory
+        mode: '0755'
+    
+    - name: Copy files to endpoint
+      copy:
+        src: "files/{{ item }}"
+        dest: /home/ansible/cjson
+      loop:
+        - test_cjson.c
+        - cjson-1.0.0.rpm
+    
+    - name: Install python3-requests
+      become: yes
+      dnf:
+        name: python3-requests
+        state: present
+    
+    - name: Install Docker
+      become: yes
+      dnf:
+        name: docker
+        state: present
+    
+    - name: Ensure Docker is started
+      become: yes
+      service:
+        name: docker
+        state: started
+        enabled: true
+    
+    - name: Start fedora container
+      community.docker.docker_container:
+        name: cjson
+        image: fedora:41
+        state: started
+        command: sleep infinity
+        volumes:
+          - /home/ansible/cjson:/mnt:z
+    
+    - name: Install gcc and tools
+      community.docker.docker_container_exec:
+        container: cjson
+        command: dnf install -y gcc make rpm2cpio cpio
+    
+    - name: Unpack RPM directly to root filesystem
+      community.docker.docker_container_exec:
+        container: cjson
+        command: bash -c "cd / && rpm2cpio /mnt/cjson-1.0.0.rpm | cpio -idmv"
+    
+    - name: Create symlink libcjson.so.1 → libcjson.so
+      community.docker.docker_container_exec:
+        container: cjson
+        command: ln -sf /usr/lib/libcjson.so /usr/lib/libcjson.so.1
+    
+    - name: Compile source file
+      community.docker.docker_container_exec:
+        container: cjson
+        command: gcc /mnt/test_cjson.c -o /mnt/program -lcjson
+    
+    - name: Run program
+      community.docker.docker_container_exec:
+        container: cjson
+        command: bash -c "LD_LIBRARY_PATH=/usr/lib /mnt/program"
+      register: result
+    
+    - name: Print the result of the program
+      debug:
+        var: result.stdout
+  ```
+- Utworzono nowy playbook `playbook-cjson.yaml`.
+  ```
+    - name: Install & Run cJSON
+      hosts: Endpoints
+      become: yes
+      roles:
+        - cjson
+  ```
+  
+- Udało się uzyskać poprawny wynik. [Pełny wydruk](coursework/ansible_print1.txt)
+  - *Poprawna kompilacja*:
+
+    ![poprawna kompilacja](media/m11_finally.png)
+    
