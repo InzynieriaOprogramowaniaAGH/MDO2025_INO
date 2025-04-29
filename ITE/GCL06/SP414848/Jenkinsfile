@@ -79,9 +79,6 @@ pipeline {
                         sh "mkdir -p sqlite-pack"
 
                         sh "docker cp build-cont:/sqlite/sqlite3 sqlite-pack/"
-                        sh "docker cp build-cont:/sqlite/sqldiff sqlite-pack/"
-                        sh "docker cp build-cont:/sqlite/sqlite3_analyzer sqlite-pack/"
-                        sh "docker cp build-cont:/sqlite/sqlite3_rsync sqlite-pack/"
 
                         sh "docker rm build-cont"
 

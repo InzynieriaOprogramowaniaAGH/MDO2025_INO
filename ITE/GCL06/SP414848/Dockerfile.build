@@ -8,6 +8,3 @@ WORKDIR /sqlite
 RUN ./configure
 
 RUN make
-RUN make sqldiff 
-RUN make sqlite3_analyzer
-RUN make sqlite3_rsync 
