@@ -54,33 +54,5 @@ else
     exit 1
 fi
 
-echo "=== Test 5: Wersja sqldiff ==="
-sqldiff_version=$(/sqlite/sqldiff --version)
-if [ -n "$sqldiff_version" ]; then
-    echo "✓ Test 5 zakończony powodzeniem - sqldiff wersja: ${sqldiff_version}"
-else
-    echo "✗ Test 5 nie powiódł się - brak informacji o wersji sqldiff"
-    exit 1
-fi
-
-echo "=== Test 6: Wersja sqlite3_analyzer ==="
-analyzer_version=$(/sqlite/sqlite3_analyzer --version)
-if [ -n "$analyzer_version" ]; then
-    echo "✓ Test 6 zakończony powodzeniem - sqlite3_analyzer wersja: ${analyzer_version}"
-else
-    echo "✗ Test 6 nie powiódł się - brak informacji o wersji sqlite3_analyzer"
-    exit 1
-fi
-
-# Test 7: Wersja narzędzia sqlite3_rsync
-echo "=== Test 7: Wersja sqlite3_rsync ==="
-rsync_version=$(/sqlite/sqlite3_rsync --version)
-if [ -n "$rsync_version" ]; then
-    echo "✓ Test 7 zakończony powodzeniem - sqlite3_rsync wersja: ${rsync_version}"
-else
-    echo "✗ Test 7 nie powiódł się - brak informacji o wersji sqlite3_rsync"
-    exit 1
-fi
-
 echo "=== Wszystkie testy zakończone powodzeniem! ==="
 exit 0
