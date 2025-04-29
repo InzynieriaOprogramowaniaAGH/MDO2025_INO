@@ -1,9 +1,9 @@
-FROM node:latest
+FROM node:23-alpine
+
+RUN apk add --no-cache git
 
 RUN git clone https://github.com/devenes/node-js-dummy-test
 
 WORKDIR /node-js-dummy-test
 
-RUN npm i
-
-CMD ["npm", "run", "start"]
+RUN npm install
