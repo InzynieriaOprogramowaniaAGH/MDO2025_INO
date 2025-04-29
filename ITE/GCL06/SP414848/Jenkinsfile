@@ -13,13 +13,6 @@ pipeline {
         PACKAGE_NAME = 'sqlite_linux'
     }
     stages {
-        stage('Install Dependencies') {
-            steps {
-                script {
-                    sh "apt-get update && apt-get install -y zip"
-                }
-            }
-        }
         stage('Clean') {
             steps {
                 script {
@@ -89,7 +82,7 @@ pipeline {
 
                         sh "docker rm build-cont"
 
-                        sh "zip -j ${PACKAGE_NAME}_${params.VERSION} /sqlite-pack/*"
+                        sh "cd /sqlite-pack && tar -czf ${BASE_DIR}/${PACKAGE_NAME}_${params.VERSION}.tar.gz *"
                     }
                 }
             }
@@ -98,7 +91,7 @@ pipeline {
             steps {
                 dir("${BASE_DIR}") {
                     script{
-                        archiveArtifacts artifacts: "${PACKAGE_NAME}_${params.VERSION}.zip", fingerprint: true
+                        archiveArtifacts artifacts: "${PACKAGE_NAME}_${params.VERSION}.tar.gz", fingerprint: true
                     }
                 }
             }
