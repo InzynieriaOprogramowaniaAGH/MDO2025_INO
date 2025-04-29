@@ -1,0 +1,6 @@
+---
+- name: Install & Run cJSON
+  hosts: Endpoints
+  become: yes
+  roles:
+    - cjson
