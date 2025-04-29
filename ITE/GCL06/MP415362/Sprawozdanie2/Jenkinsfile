@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+    
+    environment {
+        REDIS_VERSION = '7.2.4'
+        DOCKER_REGISTRY = 'localhost:5000'
+    }
+    
+    stages {
+        stage('Clone') {
+            steps {
+                cleanWs()
+                
+                sh 'git clone https://github.com/redis/redis.git .'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh 'docker build -t redisbuild -f Dockerfile.redisbuild .'
+                
+                sh 'docker save redisbuild | gzip > redisbuild.tar.gz'
+                archiveArtifacts artifacts: 'redisbuild.tar.gz', fingerprint: true
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                sh 'docker build -t redistest -f Dockerfile.redistest .'
+                
+                sh 'docker run --name redis-tests redistest > test_results.log 2>&1 || true'
+
+                sh 'cat test_results.log'
+
+                archiveArtifacts artifacts: 'test_results.log', fingerprint: true
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                sh 'docker build -t redisdeploy:${REDIS_VERSION} -f Dockerfile.redisdeploy .'
+                
+                sh 'docker save redisdeploy:${REDIS_VERSION} | gzip > redisdeploy-${REDIS_VERSION}.tar.gz'
+                archiveArtifacts artifacts: 'redisdeploy-${REDIS_VERSION}.tar.gz', fingerprint: true
+                
+                sh '''
+                docker run -d --name redis-deploy-test -p 6379:6379 redisdeploy:${REDIS_VERSION}
+                sleep 5
+                
+                docker exec redis-deploy-test ./redis-cli ping
+                
+                docker stop redis-deploy-test
+                docker rm redis-deploy-test
+                '''
+            }
+        }
+        
+        stage('Publish') {
+            steps {
+                sh 'docker tag redisdeploy:${REDIS_VERSION} ${DOCKER_REGISTRY}/redisdeploy:${REDIS_VERSION}'
+            
+                sh 'docker push ${DOCKER_REGISTRY}/redisdeploy:${REDIS_VERSION}'
+                
+                echo "Obraz Docker zapisany jako artefakt: redisdeploy-${REDIS_VERSION}.tar.gz"
+            }
+        }
+    }
+    
+    post {
+        always {
+            sh '''
+            docker container prune -f
+            docker image prune -f
+            '''
+        }
+    }
+}
