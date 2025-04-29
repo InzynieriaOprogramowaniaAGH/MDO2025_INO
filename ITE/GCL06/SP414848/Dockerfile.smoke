@@ -8,7 +8,7 @@ RUN useradd -m appuser
 COPY --from=sqlite-build /sqlite/sqlite3 /sqlite/sqlite3
 
 COPY smoke-test.sh /smoke-test.sh
-RUN chmod -x /sqlite/sqlite3 /smoke-test.sh
+RUN chmod +x /sqlite/sqlite3 /smoke-test.sh
 
 USER appuser
 
