@@ -1,0 +1,4 @@
+---
+redis_image: "tomaszek03/redis-app:latest"
+redis_container_name: "redis-app"
+redis_port: 6379
