@@ -1,0 +1,132 @@
+pipeline {
+  agent any
+  environment {
+    DOCKER_BUILDKIT = "1"
+    IMAGE_NAME = "copperhead143/node-calculator"
+    TAG        = "${BUILD_NUMBER}"
+  }
+  stages {
+       stage('Clean') {
+           steps {
+               cleanWs()
+            }
+        }
+    stage('Checkout') {
+      steps {
+        echo "🔄 Klonowanie repozytorium i przejście na main"
+        git url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git',
+            branch: 'main'
+        sh 'git checkout SS414718'
+      }
+    }
+    
+        
+    stage('Build (builder)') {
+      steps {
+        echo "🔧 Budowanie obrazu builder:${TAG}"
+        dir('ITE/GCL07/SS414718/repo'){
+            sh """
+                docker build \
+                 -f Dockerfile.builder \
+                -t builder:${TAG} \
+                 .
+             """
+        }
+      }
+    }
+
+    stage('Build (deploy image)') {
+      steps {
+        echo "🚀 Budowanie finalnego obrazu ${IMAGE_NAME}:${TAG}"
+        dir('ITE/GCL07/SS414718/repo'){
+          sh """
+            docker build \
+              -f Dockerfile.deploy \
+              --build-arg BUILDER_IMAGE=builder:${TAG} \
+              -t ${IMAGE_NAME}:${TAG} \
+              .
+          """
+        }
+      }
+    }
+
+    stage('Run deploy container') {
+      steps {
+        echo "♻️ Usuwanie starego kontenera i uruchomienie nowego"
+        sh 'docker rm -f deploy-container || true'
+        sh """
+        docker network create ci || true
+          docker run -dit --rm \
+          --network ci \
+            --name deploy-container \
+            -p 3000:3000 \
+            ${IMAGE_NAME}:${TAG}
+        """
+      }
+    }
+
+    stage('Test HTTP') {
+      steps {
+        echo "🔍 Smoke test: curl http://localhost:3000"
+        sh 'sleep 5'
+            sh '''
+            docker run --rm --network ci \
+            curlimages/curl:latest \
+            curl --fail http://deploy-container:3000
+            '''
+      }
+    }
+    
+stage('Create .tgz Artifact') {
+  steps {
+    dir('ITE/GCL07/SS414718/repo') {
+      sh '''
+        set -e
+        docker rm -f temp_pack
+        mkdir -p app-content
+
+        docker create --name temp_pack "$IMAGE_NAME:$TAG"
+
+        docker cp temp_pack:/app/. ./app-content
+
+        docker rm temp_pack
+
+        docker run --rm \
+          -v "$PWD/app-content":/app \
+          -w /app node:20 \
+          npm pack
+      '''
+      archiveArtifacts artifacts: 'app-content/*.tgz', fingerprint: true
+    }
+  }
+}
+
+        
+    stage('Publish to DockerHub') {
+      steps {
+        echo "📦 Wypychanie obrazu do Docker Hub"
+        withCredentials([usernamePassword(
+          credentialsId: 'szymon',
+          usernameVariable: 'DOCKER_USER',
+          passwordVariable: 'DOCKER_PASS'
+        )]) {
+          sh """
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+            docker push ${IMAGE_NAME}:${TAG}
+            docker tag ${IMAGE_NAME}:${TAG} ${IMAGE_NAME}:latest
+            docker push ${IMAGE_NAME}:latest
+          """
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      echo "✅ Pipeline zakończony"
+    }
+    cleanup {
+      sh 'docker rm -f deploy-container || true'
+    }
+  }
+}
