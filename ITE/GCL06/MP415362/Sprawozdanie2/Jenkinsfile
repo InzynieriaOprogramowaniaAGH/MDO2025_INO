@@ -7,7 +7,7 @@ pipeline {
         IMAGE_BUILD = 'redisbuild'
         IMAGE_TEST = 'redistest'
         IMAGE_DEPLOY = 'redisdeploy'
-        DOCKER_REGISTRY = 'mp415362'
+        DOCKER_REGISTRY = 'skoczeka8'
         IMAGE_TAG = "${DOCKER_REGISTRY}/redisdeploy:${VERSION}"
         PROJECT_PATH = 'ITE/GCL06/MP415362/Sprawozdanie2'
     }
