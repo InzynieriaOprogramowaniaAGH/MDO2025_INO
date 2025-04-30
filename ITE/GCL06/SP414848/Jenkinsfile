@@ -42,7 +42,7 @@ pipeline {
                 dir("${BASE_DIR}") {
                     script {
                         sh "docker build --no-cache -t ${IMAGE_NAME_TEST} -f Dockerfile.test ."
-                        sh "docker run --rm ${IMAGE_NAME_TEST} > test_logs_${PACKAGE_NAME}_${params.VERSION}.txt 2>&1 || true"
+                        sh "docker run --rm ${IMAGE_NAME_TEST} > test_logs_${PACKAGE_NAME}_${params.VERSION}.txt 2>&1"
                         archiveArtifacts artifacts: "test_logs_${PACKAGE_NAME}_${params.VERSION}.txt", onlyIfSuccessful: false 
                     }
                 }
@@ -82,7 +82,7 @@ pipeline {
 
                         sh "docker rm build-cont"
 
-                        sh "cd /sqlite-pack && tar -czf ${BASE_DIR}/${PACKAGE_NAME}_${params.VERSION}.tar.gz *"
+                        sh "cd sqlite-pack && tar -czf ${BASE_DIR}/${PACKAGE_NAME}_${params.VERSION}.tar.gz *"
                     }
                 }
             }
