@@ -133,3 +133,14 @@ Console output
 
 ![Opis obrazka](lab5_screenshots/20.png)
 
+# Zajęcia 06-07
+## Pipeline do wybranej aplikacji
+### Node-js-dummy-test
+Repozytorium node-js-dummy-test zostało wybrane ze względu na jego prostotę i lekkość, co czyni je bardzo praktycznym w kontekście budowy i testowania ciągłego. Projekt jest nieskomplikowany, szybko się klonuje i nie sprawia problemów przy budowie. Zawiera gotowe pliki Dockerfile oraz podstawowe testy, co znacząco przyspiesza konfigurację środowiska. Aplikacja działa na serwerze Node.js, który jest wystarczająco lekki i idealnie sprawdza się jako część pełnego procesu CI/CD — od momentu commitowania zmian, przez budowanie, testowanie, aż po wdrożenie i publikację artefaktów.
+
+Założeniem projektu jest uruchomienie aplikacji node-js-dummy-test zgodnie z przedstawionym diagramem UML, przy zastosowaniu systemu kontroli wersji jako punktu startowego dla całego procesu automatyzacji. Dzięki takiemu podejściu możliwe jest pełne zautomatyzowanie pracy z kodem, począwszy od jego pobrania, aż po udostępnienie gotowego środowiska lub wyników testów.
+
+Warto przy tym rozważyć, w jaki sposób zintegrowany jest Docker w środowisku CI. Istnieją dwie popularne metody: Docker-in-Docker (DinD) oraz podejście natywne, w którym kontener korzysta bezpośrednio z Dockera działającego na hoście poprzez socket. Pierwsza z metod zapewnia całkowitą izolację środowiska i eliminuje problemy z ewentualnym konfliktem pomiędzy procesami, jednak jej wadą może być niższa wydajność i potencjalne zagrożenia wynikające z uruchamiania demona Dockera wewnątrz kontenera. Z kolei natywne wykorzystanie Dockera przez socket jest znacznie szybsze i łatwiejsze do skonfigurowania, ale wiąże się z mniejszą separacją procesów oraz ryzykiem bezpieczeństwa, ponieważ dostęp do socketu oznacza możliwość pełnego kontrolowania środowiska hosta.
+
+### Diagram
+![Opis obrazka](lab6-7_screenshots/diagram.png)
