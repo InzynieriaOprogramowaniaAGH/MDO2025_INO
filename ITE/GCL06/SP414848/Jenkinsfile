@@ -78,11 +78,11 @@ pipeline {
                         sh "docker create --name build-cont ${IMAGE_NAME_BUILD}"
                         sh "mkdir -p sqlite-pack"
 
-                        sh "docker cp build-cont:/sqlite/sqlite3 sqlite-pack/"
+                        sh "docker cp build-cont:/sqlite/sqlite3 ./"
 
                         sh "docker rm build-cont"
 
-                        sh "cd sqlite-pack && tar -czf ${BASE_DIR}/${PACKAGE_NAME}_${params.VERSION}.tar.gz *"
+                        sh "tar -czf ${PACKAGE_NAME}_${params.VERSION}.tar.gz ./sqlite3"
                     }
                 }
             }
