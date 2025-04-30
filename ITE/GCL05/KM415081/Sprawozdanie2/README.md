@@ -310,6 +310,7 @@ W celu uruchomienia pipeline’a z wykorzystaniem SCM (Source Code Management), 
 
 #### Efekt uruchomienia
 ![Opis obrazka](lab6-7_screenshots/11.png)
+![Opis obrazka](lab6-7_screenshots/12.png)
 
 #### Console output
 ![Opis obrazka](lab6-7_screenshots/3.png)
