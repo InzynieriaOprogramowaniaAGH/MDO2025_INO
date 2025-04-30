@@ -1,0 +1,12 @@
+=== Starting smoke tests for sqlite3 ===
+=== Test 0: sqlite3 version ===
+Test 0 passed - sqlite3 version: 3.50.0 2025-04-30 14:37:00 20abf1ec107f942e4527901685d61283c9c2fe7bcefad63dbf5c6cbf050da849 (64-bit)
+=== Test 1: creating a table ===
+Test 1 passed
+=== Test 2: inserting data ===
+Test 2 passed
+=== Test 3: reading data ===
+Test 3 passed - found correct number of rows: 3
+=== Test 4: query with a condition ===
+Test 4 passed - found correct value: 20.75
+=== All Tests Passed! ===
