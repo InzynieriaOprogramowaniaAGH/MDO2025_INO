@@ -1,0 +1,570 @@
+    1  pwd
+    2  ls
+    3  clear
+    4  sudo dnf install git openssh
+    5  ls
+    6  touch Lab
+    7  cd L
+    8  cd Lab
+    9  rm Lab 
+   10  clear
+   11  mkdir Lab
+   12  cd Lab/
+   13  mkdir 1
+   14  cd 1
+   15  clear
+   16  touch Kroki.md
+   17  cd ..
+   18  ls
+   19  cat id.txt 
+   20  rm id.txt 
+   21  clear
+   22  cd ~/.ssh/
+   23  ls
+   24  rm id_ed25519
+   25  rm id_ed25519.pub 
+   26  ls
+   27  clear
+   28  cd /home/wsz
+   29  clear
+   30  ls
+   31  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   32  ip add
+   33  CLEAR
+   34  clear
+   36  cd rm MDO2025_INO/
+   37  rm MDO2025_INO/
+   38  rm -fR MDO2025_INO/
+   39  clear
+   41  clear
+   42  ssh-keygen -h
+   43  ssh-keygen --help
+   44  ssh-keygen -t ed25519 -C wiktorszyszka.priv@gmail.com
+   45  cd ~/.ssh/
+   46  ls
+   47  rm id_ed25519
+   48  rm id_ed25519.pub 
+   49  clear
+   50  cd /home/wsz
+   51  clear
+   52  ls
+   53  clear
+   54  ssh-keygen -t ed25519 -C wiktorszyszka.priv@gmail.com
+   55  clear
+   56  ssh-keygen -t ecdsa -C wiktorszyszka.priv@gmail.com
+   57  clear
+   58  cd ~/.ssh/
+   59  l
+   60  ls
+   61  cat id_ed25519.pub 
+   62  cd /home/wsz/
+   63  clear
+   64  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   65  clear
+   66  rm -fR MDO2025_INO/
+   67  clear
+   68  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   69  git checkout main
+   70  pwd
+   71  cd MDO2025_INO/
+   72  git checkout main
+   73  clear
+   74  git checkout GCL07
+   75  git checkout -b WSZ417391
+   76  cd ITE/GCL07/
+   77  mkdir WSZ417391
+   78  LS
+   79  las
+   80  ls
+   81  cd ..
+   82  ls
+   83  cd ITE/
+   84  cd GCL07/
+   85  rm WSZ417391/
+   86  rm -fR WSZ417391/
+   87  clear
+   88  cd ..
+   89  clear
+   90  ls
+   91  clear
+   92  cd ITE/GCL07/
+   93  mkdir WSZ417391
+   94  ls
+   95  pwd
+   96  chmod +x .git/hooks/commit-msg
+   97  clear
+   98  chmod +x .git/hooks/commit-msg
+   99  clear
+  100  pwd
+  101  chmod +x .git/hooks/commit-msg
+  102  cd ..
+  103  ls
+  104  cd..
+  105  cd ..
+  106  ls
+  107  cd /home/wsz/MDO2025_INO
+  108  chmod +x .git/hooks/commit-msg
+  109  clear
+  110  ls
+  111  cd ITE/GCL07/WSZ417391/
+  112  ls
+  113  pwd
+  114  cd /home/wsz/MDO2025_INO
+  115  cat << 'EOF' > .git/hooks/commit-msg
+  116  ls
+  117  ls -ld .?*
+  118  cd .git/
+  119  ls
+  120  cd hooks/
+  121  ls
+  122  pwd
+  123  cat commit-msg.sample 
+  124  ls
+  125  clear
+  126  cd /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  127  clear
+  128  ls
+  129  pwd
+  130  clear
+  131  touch -p /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  132  touch --p /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  133  touch /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  134  ls /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  135  ls /home/wsz/MDO2025_INO/.git/hooks
+  136  rm /home/wsz/MDO2025_INO/.git/hooks
+  137  rm /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  138  clear
+  139  touch /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  140  ls /home/wsz/MDO2025_INO/.git/hooks
+  141  clear
+  142  cat /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  143  clear
+  144  nano /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  145  clear
+  146  chmod +x .git/hooks/commit-msg
+  147  clear
+  148  chmod +x /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  149  pwd
+  150  cp /home/wsz/MDO2025_INO/.git/hooks/commit-msg /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  151  ls
+  152  pwd
+  153  clear
+  154  cp /home/wsz/Lab/1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  155  cp -r /home/wsz/Lab/1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  156  ls
+  157  cd Lab_1/
+  158  ls
+  159  clear
+  160  ls -l /home/wsz/MDO2025_INO/.git/hooks/commit-msg
+  161  clea
+  162  rclear
+  163  clear
+  164  ls
+  165  pwd
+  166  git checkout GCL07
+  167  git checkout WSZ417391 
+  168  clear
+  169  git status
+  170  git add .
+  171  cd ..
+  172  git status
+  173  git reset
+  174  clear
+  175  git status
+  176  git add .
+  177  git status
+  178  git commit -m "Pierwszy commit"
+  179  git commit -m "WSZ417391: Pierwszy commit"
+  180  clear
+  181  git config --global user.email "wiktorszyszka.priv@gmail.com"
+  182  clear
+  183  git reset --soft HEAD~1
+  184  git s
+  185  git status
+  186  clear
+  187  git commit -m "WSZ417391: Pierwszy commit"
+  188  clear
+  189  git push origin GCL07
+  190  clear
+  191  git checkout GCL07
+  192  cd /home/wsz/
+  193  ls
+  194  cd Lab/
+  195  LS
+  196  ls
+  197  rm -rF 1
+  198  rm -fR 1
+  199  cp -r /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/Lab_1 /home/wsz/Lab/
+  200  ls
+  201  cd Lab_1/
+  202  ls
+  203  cd ..
+  204  ls
+  205  mkdir Lab_2
+  206  LS
+  207  ls
+  208  history > historia.txt
+  209  ls
+  210  mv historia.txt Lab_1
+  211  cd Lab_
+  212  cd Lab_1
+  213  cp historia.txt /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/Lab_1/
+  214  cd /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/Lab_1/
+  215  ls 
+  216  ls
+  217  pwd
+  218  cd ..
+  219  ls
+  220  cd ..
+  221  ls
+  222  clear
+  223  git reset HEAD~1
+  224  git status
+  225  git add .
+  226  clear
+  227  git status
+  228  git commit -m "WSZ417391: Pierwszy commit"
+  229  git push origin GCL07
+  230  clear
+  231  cd /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  232  ls
+  233  cd Lab_1/
+  234  ls
+  235  rm Sprawozdanie.md 
+  236  clear
+  237  git status
+  238  git add .
+  239  git status
+  240  git reset --hard origin/WSZ417391
+  241  git reset --hard WSZ417391
+  242  CLEAR
+  243  clear
+  244  git reset --hard WSZ417391
+  245  git rebase -i --root
+  246  ls
+  247  pwd
+  248  cd ..
+  249  rm -fR Lab_1/
+  250  cp /home/wsz/Lab/Lab_1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391
+  251  cp -r /home/wsz/Lab/Lab_1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391
+  252  pwd
+  253  ls
+  254  cd Lab_1/
+  255  ls
+  256  rm Sprawozdanie.md 
+  257  cd ..
+  258  mkdir Lab_2
+  259  ls
+  260  git status
+  261  git add .
+  262  git status
+  263  git commit -m "Pierwszy commit - po nadaniu uprawnien"
+  264  git commit -m "WSZ417391: Pierwszy commit - po nadaniu uprawnien"
+  265  clear
+  266  git push origin GCL07
+  267  git pull
+  268  git push
+  269  git push --set-upstream origin WSZ417391
+  270  clear
+  271  git status
+  272  git log --graph --oneline --all
+  273  git branch -d WSZ417391
+  274  git branch -d     cp /home/wsz/MDO2025_INO/.git/hooks/commit-msg /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  275  git branch -d WSZ417391
+  276  git branch -s WSZ417391
+  277  CLEAR
+  278  clear
+  279  git branch -s WSZ417391
+  280  clear
+  281  git branch -d WSZ417391
+  282  git branch -4 WSZ417391
+  283  clear
+  284  git branch -d WSZ417391
+  285  git branch -D WSZ417391
+  286  cd /home/wsz/MDO2025_INO/ITE/GCL07/
+  287  git branch -d WSZ417391
+  288  git branch -D WSZ417391
+  289  git worktree list
+  290  clear
+  291  git worktree remove /home/wsz/MDO2025_INO
+  292  [wsz@fedora GCL07]$ git worktree remove /home/wsz/MDO2025_INO
+  293  fatal: '/home/wsz/MDO2025_INO' is a main working tree
+  294  [wsz@fedora GCL07]$ git worktree remove /home/wsz/MDO2025_INO
+  295  fatal: '/home/wsz/MDO2025_INO' is a main working treegit checkout main
+  296  v
+  297  clear
+  298  git checkout main
+  299  git pull
+  300  clear
+  301  git branch -D WSZ417391
+  302  clear
+  303  git branch
+  304  ls
+  305  rm WSZ417391/
+  306  rm -fR WSZ417391/
+  307  CLEAR
+  308  git checkout -b GCL0
+  309  git checkoUT
+  310  git checkout
+  311  clear
+  312  git checkout
+  313  git checkout -b GCL07
+  314  clear
+  315  git checkout main
+  316  git branch
+  317  git branch -D GCL0
+  318  git branch
+  319  clear
+  320  git checkout GCL07
+  321  git checkout -b WSZ417391
+  322  mkdir WSZ417391
+  323  cp /home/wsz/Lab/Lab_1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  324  cp -r /home/wsz/Lab/Lab_1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  325  cd WSZ417391/Lab_1/
+  326  ls
+  327  clear
+  328  cd ..
+  329  mkdir Lab_2
+  330  LS
+  331  ls
+  332  clear
+  333  pwd
+  334  clear
+  335  git pull origin GCL07
+  336  git push -u origin WSZ417391
+  337  git add .
+  338  git commit -m "WSZ417391: Pierwszy commit - po zmianie uprawnien"
+  339  git push -u origin WSZ417391
+  340  git reset
+  341  clear
+  342  git add .
+  343  git commit -m "WSZ417391: Pierwszy commit - po zmianie uprawnien"
+  344  git push -u origin WSZ417391
+  345  clear
+  346  git reset
+  347  git reset --soft HEAD~1
+  348  cd ..
+  349  ls
+  350  rm -fR WSZ417391/
+  351  ls
+  352  cler
+  353  clear
+  354  git checout
+  355  git checkout
+  356  git checkoutgit checkout main
+  357  git checkout main
+  358  git reset
+  359  git checkout main
+  360  clear
+  361  git branch
+  362  git branchgit branch -D WSZ417391
+  363  git branch -D WSZ417391
+  364  clear
+  365  git branchgit branch -D WSZ417391
+  366  git branch
+  367  clear
+  368  git checkout main
+  369  git checkout GCL07
+  370  git pull
+  371  git checkout main
+  372  git pull
+  373  clear
+  374  git checkout main
+  375  git checkout GCL07
+  376  git branch -D WSZ417391
+  377  git checkout GCL07
+  378  git checkout -b WSZ417391
+  379  mkdir WSZ417391
+  380  cd WSZ417391/
+  381  ls
+  382  cp /home/wsz/Lab/Lab_1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  383  cp -r /home/wsz/Lab/Lab_1 /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/
+  384  mkdir Lab_2
+  385  git add .
+  386  clear
+  387  git commit -m "WSZ417391: Pierwszy commit - po zmianie uprawnien"
+  388  git push -u origin WSZ417391
+  389  git push origin WSZ417391
+  390  add .
+  391  git add .
+  392  git commit -m "WSZ417391: README"
+  393  git push origin WSZ417391
+  394  git status
+  395  git add .
+  396  git status
+  397  git commit -m "WSZ417391: Update README"
+  398  git add .
+  399  git commit -m "WSZ417391: Update README"
+  400  git push -u origin WSZ417391
+  401  git add ../../../README.md
+  402  git status
+  403  git push -u origin WSZ417391
+  404  git commit -m "WSZ417391: Update README"
+  405  git push -u origin WSZ417391
+  406  git push origin WSZ417391
+  407  ls
+  408  clear
+  409  git checkout GCL07
+  410  git merge WSZ417391
+  411  clea
+  412  clear
+  413  ip add
+  414  clear
+  415  git add .
+  416  git status
+  417  git commit -m "WSZ417391: Success"
+  418  git status
+  419  git checkout WSZ417391 
+  420  git add .
+  421  git commit -m "WSZ417391: Success"
+  422  git push origin WSZ417391
+  423  CLEAR
+  424  clear
+  425  git add .
+  426  git commit -m "WSZ417391: Success"
+  427  git push origin WSZ417391
+  428  cd /home/wsz/Lab/
+  429  LS
+  430  ls
+  431  cd Lab_2
+  432  ls
+  433  clear
+  434  cp /home/wsz/Lab/Lab_1/Sprawozdanie.md /home/wsz/Lab/Lab_2
+  435  ps -fp 1
+  436  ps aux | grep docker
+  437  clear
+  438  ps
+  439  clear
+  440  ls -l
+  441  ps -p
+  442  ps
+  443  clear
+  444  ps\
+  445  clea
+  446  clear
+  447  ps
+  448  clear
+  449  ps
+  450  clear
+  451  ps aux
+  452  clear
+  453  ps
+  454  ps aux | grep docker
+  455  clear
+  456  exit
+  457  cd MDO2025_INO/
+  458  git pull
+  459  git branhc
+  460  git branch
+  461  git branch main 
+  462  git branch
+  463  git checkout main
+  464  git pull
+  465  git checkout WSZ417391 
+  466  clear
+  467  docker ps
+  468  clear
+  469  cd ITE/GCL07/WSZ417391/
+  470  cd Lab_
+  471  cd Lab_2
+  472  CLEA
+  473  clear
+  474  2
+  475  clear
+  476  ls
+  477  touch Dockerfile
+  478  PWD
+  479  pwd
+  480  docker build -t fedora-git .
+  481  clear
+  482  docker run -it --rm fedora-git
+  483  clear
+  484  docker ps -a
+  485  clear
+  486  docker p
+  487  clear
+  488  docker ps
+  489  clear
+  490  ls
+  491  clear
+  492  docker run -it --rm fedora-git
+  493  docker build -t fedora-git .
+  494  docker run -it --rm fedora-git
+  495  clear
+  496  docker ps
+  497  docker images
+  498  docker rmi $(docker images -q)
+  499  clear
+  500  cd ..
+  501  ls
+  502  cd Lab_
+  503  cd Lab_2
+  504  ls
+  505  rm -fR Zdjecia/
+  506  clear
+  507  ls
+  508  clea
+  509  clear
+  510  ip ad
+  511  docker system prune -a
+  512  clear
+  513  ip add
+  514  clear
+  515  cp -r Zdjecia/ /home/wsz/Lab/Lab_2
+  516  cp Dockerfile /home/wsz/Lab/Lab_2/
+  517  clear
+  518  git add .
+  519  git commit -m "WSZ417391: Lab 2 - 95%"
+  520  git push
+  521  git pull
+  522  git push
+  523  clear
+  524  ls
+  525  ip add
+  526  clear
+  527  ls
+  528  pwd
+  529  cd MDO2025_INO/
+  530  ls
+  531  clear
+  532  pwd
+  533  git pull
+  534  clear
+  535  git branch
+  536  git checkout main 
+  537  git pull
+  538  git checkout WSZ417391 
+  539  git add /home/wsz/MDO2025_INO/ITE/GCL07/WSZ417391/Lab_2
+  540  git commit -m "WSZ417391: Dodatkowy wymagany w spr Pull Request"
+  541  git push 
+  542  clear
+  543  pwd
+  544  clear
+  545  pwd
+  546  clear
+  547  ip ad
+  548  clear
+  549  pwd
+  550  cd MDO2025_INO/ITE/GCL07/WSZ417391/Lab_3
+  551  ls
+  552  touch Dockerfile.compose
+  553  touch docker-compose.yml
+  554  docker-compose up -d
+  555  sudo dnf install docker-compse
+  556  docker compose version
+  557  sudo dnf install docker-compose
+  558  clear
+  559  docker-compose up -d
+  560  ls
+  561  clear
+  562  docker-compose up -d
+  563  clear
+  564  docker-compose up -d
+  565  clear
+  566  docker-compose up -d
+  567  clear
+  568  docker-compose up -d
+  569  clear
+  570  cd ..
+  571  pwd
+  572  history > historia_lab_2_3.txt
