@@ -98,6 +98,9 @@ ENDOFFILE
             steps {
                 // Publikacja pakietu przy użyciu CMake zgodnie z README projektu
                 sh '''
+                # Usunięcie istniejącego kontenera, jeśli taki istnieje
+                docker rm -f cjson-build-container || true
+                
                 # Tworzenie i uruchamianie kontenera z obrazu cjson-build
                 docker run --name cjson-build-container -d cjson-build tail -f /dev/null
                 
@@ -123,8 +126,8 @@ ENDOFFILE
                 echo "Could not find cJSON.h in any standard location"
                 
                 # Zatrzymanie i usunięcie kontenera
-                docker stop cjson-build-container
-                docker rm cjson-build-container
+                docker stop cjson-build-container || true
+                docker rm cjson-build-container || true
                 
                 # Tworzenie katalogu pakietu
                 mkdir -p cjson-package/lib
