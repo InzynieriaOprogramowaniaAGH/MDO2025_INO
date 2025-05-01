@@ -131,44 +131,27 @@ EOT
         }
         
         stage('Package') {
-            agent {
-                docker {
-                image 'fedora:42'
-                }
-            }
-            steps {
-                sh '''
-                    # Usunięcie istniejącego kontenera, jeśli taki istnieje
-                    docker rm -f cjson-build-container || true
-                    
-                    # Tworzenie kontenera tymczasowego
-                    docker run --name cjson-build-container -d ${CJSON_BUILD} tail -f /dev/null
-                    
-                    # Tworzenie katalogu pakietu
-                    mkdir -p ${PACKAGE_NAME}/lib
-                    mkdir -p ${PACKAGE_NAME}/include
-                    mkdir -p ${PACKAGE_NAME}/docs
-                    
-                    # Kopiowanie biblioteki dynamicznej
-                    docker cp cjson-build-container:/cjson-build/build/libcjson.so.1.7.18 ${PACKAGE_NAME}/lib/ || echo "libcjson.so.1.7.18 not found"
-                    
-                    if [ -f ${PACKAGE_NAME}/lib/libcjson.so.1.7.18 ]; then
-                        (cd ${PACKAGE_NAME}/lib/ && ln -sf libcjson.so.1.7.18 libcjson.so.1 && ln -sf libcjson.so.1 libcjson.so)
-                    fi
-                    
-                    # Kopiowanie biblioteki statycznej
-                    docker cp cjson-build-container:/cjson-build/build/libcjson.a ${PACKAGE_NAME}/lib/ || echo "libcjson.a not found"
-                    
-                    # Kopiowanie plików nagłówkowych
-                    docker cp cjson-build-container:/cjson-build/cJSON.h ${PACKAGE_NAME}/include/
-                    
-                    # Kopiowanie dokumentacji
-                    docker cp cjson-build-container:/cjson-build/README.md ${PACKAGE_NAME}/docs/
-                    docker cp cjson-build-container:/cjson-build/LICENSE ${PACKAGE_NAME}/docs/
-                    docker cp cjson-build-container:/cjson-build/CHANGELOG.md ${PACKAGE_NAME}/docs/ || echo "CHANGELOG.md not found"
-                    
-                    # Tworzenie pliku README dla pakietu
-                    cat > ${PACKAGE_NAME}/README.txt << 'EOT'
+    steps {
+        sh '''
+            docker rm -f cjson-build-container || true
+            docker run --name cjson-build-container -d ${CJSON_BUILD} tail -f /dev/null
+
+            mkdir -p ${PACKAGE_NAME}/lib
+            mkdir -p ${PACKAGE_NAME}/include
+            mkdir -p ${PACKAGE_NAME}/docs
+
+            docker cp cjson-build-container:/cjson-build/build/libcjson.so.1.7.18 ${PACKAGE_NAME}/lib/ || echo "libcjson.so.1.7.18 not found"
+            if [ -f ${PACKAGE_NAME}/lib/libcjson.so.1.7.18 ]; then
+                (cd ${PACKAGE_NAME}/lib/ && ln -sf libcjson.so.1.7.18 libcjson.so.1 && ln -sf libcjson.so.1 libcjson.so)
+            fi
+
+            docker cp cjson-build-container:/cjson-build/build/libcjson.a ${PACKAGE_NAME}/lib/ || echo "libcjson.a not found"
+            docker cp cjson-build-container:/cjson-build/cJSON.h ${PACKAGE_NAME}/include/
+            docker cp cjson-build-container:/cjson-build/README.md ${PACKAGE_NAME}/docs/
+            docker cp cjson-build-container:/cjson-build/LICENSE ${PACKAGE_NAME}/docs/
+            docker cp cjson-build-container:/cjson-build/CHANGELOG.md ${PACKAGE_NAME}/docs/ || echo "CHANGELOG.md not found"
+
+            cat > ${PACKAGE_NAME}/README.txt << 'EOT'
 cJSON Library Package ${VERSION}
 ===========================
 
@@ -184,78 +167,23 @@ To use:
 3. Compile with -lcjson flag
 
 Example: gcc -o myapp myapp.c -I./include -L./lib -lcjson
-
-See docs/README.md for more information.
 EOT
-                    
-                    # Zastąpienie zmiennych w README.txt
-                    sed -i "s/\\\${VERSION}/${VERSION}/g" ${PACKAGE_NAME}/README.txt
-                    
-                    # Zatrzymanie i usunięcie kontenera
-                    docker stop cjson-build-container
-                    docker rm cjson-build-container
-                    
-                    # Tworzenie archiwum tar.gz
-                    tar -czvf ${PACKAGE_NAME}.tar.gz ${PACKAGE_NAME}/
-                    
-                    # Tworzenie archiwum zip dla użytkowników Windows
-                    dnf install -y zip && zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/ && dnf remove -y zip && dnf clean all
-                '''
-                
-                archiveArtifacts artifacts: "${PACKAGE_NAME}.tar.gz", fingerprint: true
-                archiveArtifacts artifacts: "${PACKAGE_NAME}.zip", fingerprint: true, allowEmptyArchive: true
-            }
-        }
+            sed -i "s/\\\${VERSION}/${VERSION}/g" ${PACKAGE_NAME}/README.txt
+
+            docker stop cjson-build-container
+            docker rm cjson-build-container
+
+            tar -czvf ${PACKAGE_NAME}.tar.gz ${PACKAGE_NAME}/
+        '''
+        archiveArtifacts artifacts: "${PACKAGE_NAME}.tar.gz", fingerprint: true
+    }
+}
+
         
         stage('Publish') {
             steps {
-                // Publikacja obrazu do DockerHub
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        # Tagowanie obrazu
-                        docker tag ${CJSON_DEPLOY} ${IMAGE_TAG}
-                        
-                        # Logowanie do DockerHub
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        
-                        # Publikacja obrazu
-                        docker push ${IMAGE_TAG}
-                    '''
+                
                 }
-                
-                sh '''
-                    cat > release_notes_${VERSION}.md << 'EOT'
-# cJSON Library Release ${VERSION}
-
-## Release Information
-- Build Number: ${BUILD_NUMBER}
-- Build Date: $(date)
-- Jenkins Job: ${JOB_NAME}
-
-## Package Contents
-- Dynamic Library (libcjson.so)
-- Static Library (libcjson.a)
-- Header Files (cJSON.h)
-- Documentation
-
-## Docker Image
-- Image name: ${IMAGE_TAG}
-
-## Installation
-Download the package archive from Jenkins artifacts and extract it to your project directory.
-
-## Usage
-See example.c in the package for usage example.
-EOT
-                    
-                    # Zastąpienie zmiennych w release_notes
-                    sed -i "s/\\\${VERSION}/${VERSION}/g" release_notes_${VERSION}.md
-                    sed -i "s/\\\${BUILD_NUMBER}/${BUILD_NUMBER}/g" release_notes_${VERSION}.md
-                    sed -i "s/\\\${JOB_NAME}/${JOB_NAME}/g" release_notes_${VERSION}.md
-                    sed -i "s/\\\${IMAGE_TAG}/${IMAGE_TAG}/g" release_notes_${VERSION}.md
-                '''
-                
-                archiveArtifacts artifacts: "release_notes_${VERSION}.md", fingerprint: true
             }
         }
     }
