@@ -1,0 +1,34 @@
+- name: My first play
+  hosts: all
+  become: true
+  tasks:
+   - name: Ping my hosts
+     ansible.builtin.ping:
+
+   - name: Copy inventory to Endpoint
+     ansible.builtin.copy:
+      src: inventory.ini
+      dest: /home/ansible/inventory_copied
+     when: "'ansible-target' in inventory_hostname"
+
+   - name: Ping after copy
+     ansible.builtin.ping:
+
+   - name: Update system packages
+     ansible.builtin.dnf:
+      name: "*"
+      state: latest
+     when: "'ansible-target' in inventory_hostname"
+
+   - name: Restart sshd
+     ansible.builtin.service:
+      name: sshd
+      state: restarted
+     when: "'ansible-target' in inventory_hostname"
+
+   - name: Restart rngd
+     ansible.builtin.service:
+      name: rngd
+      state: restarted
+     ignore_errors: yes 
+     when: "'ansible-target' in inventory_hostname"

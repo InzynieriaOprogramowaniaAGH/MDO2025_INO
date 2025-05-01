@@ -1,0 +1,38 @@
+[aborek@fedora ansible_quickstart]$ ansible-playbook -i inventory.ini playbook.yaml
+
+PLAY [My first play] ********************************************************************************************************
+
+TASK [Gathering Facts] ******************************************************************************************************
+ok: [fedora]
+ok: [ansible-target]
+
+TASK [Ping my hosts] ********************************************************************************************************
+ok: [ansible-target]
+ok: [fedora]
+
+TASK [Copy inventory to Endpoint] *******************************************************************************************
+skipping: [fedora]
+ok: [ansible-target]
+
+TASK [Ping after copy] ******************************************************************************************************
+ok: [ansible-target]
+ok: [fedora]
+
+TASK [Update system packages] ***********************************************************************************************
+skipping: [fedora]
+ok: [ansible-target]
+
+TASK [Restart sshd] *********************************************************************************************************
+skipping: [fedora]
+changed: [ansible-target]
+
+TASK [Restart rngd] *********************************************************************************************************
+skipping: [fedora]
+fatal: [ansible-target]: FAILED! => {"changed": false, "msg": "Could not find the requested service rngd: host"}
+...ignoring
+
+PLAY RECAP ******************************************************************************************************************
+ansible-target             : ok=7    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=1   
+fedora                     : ok=3    changed=0    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0   
+
+[aborek@fedora ansible_quickstart]$ 
