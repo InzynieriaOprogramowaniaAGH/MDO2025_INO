@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     environment {
         VERSION = "v${BUILD_NUMBER}"
         CJSON_BUILD = "cjson-build:${VERSION}"
@@ -10,7 +10,7 @@ pipeline {
         IMAGE_TAG = "${DOCKERHUB_REPO}:${VERSION}"
         PACKAGE_NAME = "cjson-package-${VERSION}"
     }
-    
+
     stages {
         stage('Cleanup') {
             steps {
@@ -23,28 +23,27 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Checkout') {
             steps {
                 git url: 'https://github.com/DaveGamble/cJSON.git', branch: 'master'
-                
+
                 dir('project_files') {
                     git url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git', branch: 'main'
                     sh 'git checkout JS415003 || echo "Branch not found, continuing with main"'
                 }
-                
+
                 sh '''
                     mkdir -p dockerfiles
                     cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsonbuild dockerfiles/
                     cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsontest dockerfiles/
                     cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsondeploy dockerfiles/
-                    
-                    # Kopiowanie Dockerfile'i do katalogu głównego projektu
+
                     cp dockerfiles/Dockerfile.cjsonbuild ${WORKSPACE}/
                     cp dockerfiles/Dockerfile.cjsontest ${WORKSPACE}/
                     cp dockerfiles/Dockerfile.cjsondeploy ${WORKSPACE}/
                 '''
-                
+
                 sh '''
                     cat > example.c << 'EOT'
 #include <stdio.h>
@@ -71,87 +70,69 @@ int main() {
     return 0;
 }
 EOT
-
                     sed -i "s/\\\${VERSION}/${VERSION}/g" example.c
                 '''
             }
         }
-        
+
         stage('Build') {
             steps {
                 sh 'docker build -t ${CJSON_BUILD} -f Dockerfile.cjsonbuild .'
-                
-                // Also tag the build image as 'latest' for Dockerfile references
                 sh 'docker tag ${CJSON_BUILD} cjson-build:latest'
-                
-                // Pobieranie czasu budowania dla raportowania
                 sh 'echo "Build completed at $(date)" > build_time.log'
                 archiveArtifacts artifacts: 'build_time.log', fingerprint: true
             }
         }
-        
+
         stage('Test') {
             steps {
-                // Uruchomienie testów z logowaniem wyniku
                 sh 'docker build -t ${CJSON_TEST} -f Dockerfile.cjsontest .'
-                
-                // Also tag the test image as 'latest' for potential use in deploy
                 sh 'docker tag ${CJSON_TEST} cjson-test:latest'
-                
                 sh '''
                     docker run --name cjson-test-container ${CJSON_TEST} > test_results_${VERSION}.log 2>&1 || \
                     echo "Tests failed with exit code $?" >> test_results_${VERSION}.log
                 '''
-                
-                // Zapisanie wyników testów
                 sh 'docker cp cjson-test-container:/cjson-build/build/Testing . || echo "Testing directory not found"'
                 sh 'docker rm cjson-test-container || true'
-                
-                // Archiwizacja wyników testów
                 archiveArtifacts artifacts: "test_results_${VERSION}.log", fingerprint: true
                 archiveArtifacts artifacts: 'Testing/**/*', fingerprint: true, allowEmptyArchive: true
             }
         }
-        
+
         stage('SmokeTest') {
             steps {
-                // Budowanie obrazu deploy
                 sh 'docker build --no-cache -t ${CJSON_DEPLOY} -f Dockerfile.cjsondeploy .'
-                
-                // Wykonanie smoke testu w izolowanej sieci
                 sh '''
                     docker network create smoke-test-net || true
                     docker run --rm --network smoke-test-net --name cjson-smoke-test ${CJSON_DEPLOY} > smoke_test_${VERSION}.log
                     docker network rm smoke-test-net || true
                 '''
-                
-                // Archiwizacja wyników smoke testu
                 archiveArtifacts artifacts: "smoke_test_${VERSION}.log", fingerprint: true
             }
         }
-        
+
         stage('Package') {
-    steps {
-        sh '''
-            docker rm -f cjson-build-container || true
-            docker run --name cjson-build-container -d ${CJSON_BUILD} tail -f /dev/null
+            steps {
+                sh '''
+                    docker rm -f cjson-build-container || true
+                    docker run --name cjson-build-container -d ${CJSON_BUILD} tail -f /dev/null
 
-            mkdir -p ${PACKAGE_NAME}/lib
-            mkdir -p ${PACKAGE_NAME}/include
-            mkdir -p ${PACKAGE_NAME}/docs
+                    mkdir -p ${PACKAGE_NAME}/lib
+                    mkdir -p ${PACKAGE_NAME}/include
+                    mkdir -p ${PACKAGE_NAME}/docs
 
-            docker cp cjson-build-container:/cjson-build/build/libcjson.so.1.7.18 ${PACKAGE_NAME}/lib/ || echo "libcjson.so.1.7.18 not found"
-            if [ -f ${PACKAGE_NAME}/lib/libcjson.so.1.7.18 ]; then
-                (cd ${PACKAGE_NAME}/lib/ && ln -sf libcjson.so.1.7.18 libcjson.so.1 && ln -sf libcjson.so.1 libcjson.so)
-            fi
+                    docker cp cjson-build-container:/cjson-build/build/libcjson.so.1.7.18 ${PACKAGE_NAME}/lib/ || echo "libcjson.so.1.7.18 not found"
+                    if [ -f ${PACKAGE_NAME}/lib/libcjson.so.1.7.18 ]; then
+                        (cd ${PACKAGE_NAME}/lib/ && ln -sf libcjson.so.1.7.18 libcjson.so.1 && ln -sf libcjson.so.1 libcjson.so)
+                    fi
 
-            docker cp cjson-build-container:/cjson-build/build/libcjson.a ${PACKAGE_NAME}/lib/ || echo "libcjson.a not found"
-            docker cp cjson-build-container:/cjson-build/cJSON.h ${PACKAGE_NAME}/include/
-            docker cp cjson-build-container:/cjson-build/README.md ${PACKAGE_NAME}/docs/
-            docker cp cjson-build-container:/cjson-build/LICENSE ${PACKAGE_NAME}/docs/
-            docker cp cjson-build-container:/cjson-build/CHANGELOG.md ${PACKAGE_NAME}/docs/ || echo "CHANGELOG.md not found"
+                    docker cp cjson-build-container:/cjson-build/build/libcjson.a ${PACKAGE_NAME}/lib/ || echo "libcjson.a not found"
+                    docker cp cjson-build-container:/cjson-build/cJSON.h ${PACKAGE_NAME}/include/
+                    docker cp cjson-build-container:/cjson-build/README.md ${PACKAGE_NAME}/docs/
+                    docker cp cjson-build-container:/cjson-build/LICENSE ${PACKAGE_NAME}/docs/
+                    docker cp cjson-build-container:/cjson-build/CHANGELOG.md ${PACKAGE_NAME}/docs/ || echo "CHANGELOG.md not found"
 
-            cat > ${PACKAGE_NAME}/README.txt << 'EOT'
+                    cat > ${PACKAGE_NAME}/README.txt << 'EOT'
 cJSON Library Package ${VERSION}
 ===========================
 
@@ -168,25 +149,24 @@ To use:
 
 Example: gcc -o myapp myapp.c -I./include -L./lib -lcjson
 EOT
-            sed -i "s/\\\${VERSION}/${VERSION}/g" ${PACKAGE_NAME}/README.txt
+                    sed -i "s/\\\${VERSION}/${VERSION}/g" ${PACKAGE_NAME}/README.txt
 
-            docker stop cjson-build-container
-            docker rm cjson-build-container
+                    docker stop cjson-build-container
+                    docker rm cjson-build-container
 
-            tar -czvf ${PACKAGE_NAME}.tar.gz ${PACKAGE_NAME}/
-        '''
-        archiveArtifacts artifacts: "${PACKAGE_NAME}.tar.gz", fingerprint: true
+                    tar -czvf ${PACKAGE_NAME}.tar.gz ${PACKAGE_NAME}/
+                '''
+                archiveArtifacts artifacts: "${PACKAGE_NAME}.tar.gz", fingerprint: true
+            }
+        }
+
+        // stage('Publish') {
+        //     steps {
+        //         // Implementacja publikacji np. do Docker Hub lub serwera artefaktów
+        //     }
+        // }
     }
-}
 
-        
-    //     stage('Publish') {
-    //         steps {
-                
-    //             }
-    //         }
-    // }
-    
     post {
         success {
             echo "Pipeline completed successfully! The cJSON library has been built, tested, packaged and published as version ${VERSION}"
@@ -204,5 +184,4 @@ EOT
             '''
         }
     }
-}
 }
