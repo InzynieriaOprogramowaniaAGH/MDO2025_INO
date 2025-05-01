@@ -52,7 +52,7 @@ pipeline {
                     #include "cJSON.h"
 
                     int main() {
-                        const char *json_string = "{\"name\":\"cJSON\", \"version\":\"\${VERSION}\", \"status\":\"deployed\"}";
+                        const char *json_string = "{\\"name\\":\\"cJSON\\", \\"version\\":\\"${VERSION}\\", \\"status\\":\\"deployed\\"}";
                         cJSON *json = cJSON_Parse(json_string);
 
                         if (json == NULL) {
@@ -73,7 +73,6 @@ pipeline {
                     EOF
 
                     sed -i "s/\\\${VERSION}/${VERSION}/g" example.c
-
                 '''
             }
         }
