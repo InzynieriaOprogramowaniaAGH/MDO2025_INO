@@ -194,7 +194,7 @@ EOT
                     tar -czvf ${PACKAGE_NAME}.tar.gz ${PACKAGE_NAME}/
                     
                     # Tworzenie archiwum zip dla użytkowników Windows
-                    sudo apt-get update && apt-get install -y zip && zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/
+                    dnf install -y zip && zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/ && dnf remove -y zip && dnf clean all
                 '''
                 
                 archiveArtifacts artifacts: "${PACKAGE_NAME}.tar.gz", fingerprint: true
