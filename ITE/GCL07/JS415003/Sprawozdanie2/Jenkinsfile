@@ -132,7 +132,6 @@ EOT
         
         stage('Package') {
             steps {
-                // Tworzenie pakietu z biblioteką i dokumentacją
                 sh '''
                     # Usunięcie istniejącego kontenera, jeśli taki istnieje
                     docker rm -f cjson-build-container || true
@@ -195,10 +194,9 @@ EOT
                     tar -czvf ${PACKAGE_NAME}.tar.gz ${PACKAGE_NAME}/
                     
                     # Tworzenie archiwum zip dla użytkowników Windows
-                    apt-get update && apt-get install -y zip && zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/
+                    sudo apt-get update && apt-get install -y zip && zip -r ${PACKAGE_NAME}.zip ${PACKAGE_NAME}/
                 '''
                 
-                // Archiwizacja pakietów
                 archiveArtifacts artifacts: "${PACKAGE_NAME}.tar.gz", fingerprint: true
                 archiveArtifacts artifacts: "${PACKAGE_NAME}.zip", fingerprint: true, allowEmptyArchive: true
             }
@@ -220,7 +218,6 @@ EOT
                     '''
                 }
                 
-                // Generowanie raportu z wydania
                 sh '''
                     cat > release_notes_${VERSION}.md << 'EOT'
 # cJSON Library Release ${VERSION}
@@ -253,7 +250,6 @@ EOT
                     sed -i "s/\\\${IMAGE_TAG}/${IMAGE_TAG}/g" release_notes_${VERSION}.md
                 '''
                 
-                // Archiwizacja notatek z wydania
                 archiveArtifacts artifacts: "release_notes_${VERSION}.md", fingerprint: true
             }
         }
@@ -268,9 +264,11 @@ EOT
         }
         always {
             sh '''
-                docker rm -f cjson-build-container || true
-                docker rm -f cjson-test-container || true
-                rm -rf ${PACKAGE_NAME} || true
+                echo "=== Cleaning up containers and temporary files ==="
+                sudo docker rm -f cjson-build-container || true
+                sudo docker rm -f cjson-test-container || true
+                sudo rm -rf ${PACKAGE_NAME} || true
+                echo "=== Cleanup done ==="
             '''
         }
     }
