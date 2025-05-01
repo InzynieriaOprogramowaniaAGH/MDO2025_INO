@@ -28,31 +28,31 @@ pipeline {
                 
                 // Tworzenie przykładowego pliku C do demonstracji działania biblioteki
                 sh '''
-                cat > example.c << EOF
-                #include <stdio.h>
-                #include <stdlib.h>
-                #include "cJSON.h"
+                cat > example.c << 'ENDOFFILE'
+#include <stdio.h>
+#include <stdlib.h>
+#include "cJSON.h"
 
-                int main() {
-                    const char *json_string = "{\\\"name\\\":\\\"cJSON\\\", \\\"version\\\":\\\"1.0\\\", \\\"status\\\":\\\"deployed\\\"}";
-                    cJSON *json = cJSON_Parse(json_string);
-                    
-                    if (json == NULL) {
-                        printf("Error parsing JSON\\n");
-                        return 1;
-                    }
-                    
-                    cJSON *name = cJSON_GetObjectItemCaseSensitive(json, "name");
-                    cJSON *version = cJSON_GetObjectItemCaseSensitive(json, "version");
-                    cJSON *status = cJSON_GetObjectItemCaseSensitive(json, "status");
-                    
-                    printf("Library: %s\\nVersion: %s\\nStatus: %s\\n",
-                        name->valuestring, version->valuestring, status->valuestring);
-                    
-                    cJSON_Delete(json);
-                    return 0;
-                }
-                EOF
+int main() {
+    const char *json_string = "{\\\"name\\\":\\\"cJSON\\\", \\\"version\\\":\\\"1.0\\\", \\\"status\\\":\\\"deployed\\\"}";
+    cJSON *json = cJSON_Parse(json_string);
+    
+    if (json == NULL) {
+        printf("Error parsing JSON\\n");
+        return 1;
+    }
+    
+    cJSON *name = cJSON_GetObjectItemCaseSensitive(json, "name");
+    cJSON *version = cJSON_GetObjectItemCaseSensitive(json, "version");
+    cJSON *status = cJSON_GetObjectItemCaseSensitive(json, "status");
+    
+    printf("Library: %s\\nVersion: %s\\nStatus: %s\\n",
+        name->valuestring, version->valuestring, status->valuestring);
+    
+    cJSON_Delete(json);
+    return 0;
+}
+ENDOFFILE
                 '''
             }
         }
