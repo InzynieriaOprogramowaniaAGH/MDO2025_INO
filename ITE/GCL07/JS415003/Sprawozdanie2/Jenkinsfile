@@ -112,45 +112,44 @@ ENDOFFILE
                 echo "Szukanie libcjson.a:"
                 docker exec cjson-build-container find / -name "libcjson.a" || echo "libcjson.a not found"
                 echo "Szukanie libcjson.so:"
-                docker exec cjson-build-container find / -name "libcjson.so" || echo "libcjson.so not found"
+                docker exec cjson-build-container find / -name "libcjson.so*" || echo "libcjson.so not found"
                 echo "Szukanie cJSON.h:"
                 docker exec cjson-build-container find / -name "cJSON.h" || echo "cJSON.h not found"
                 
-                # Kopiowanie plików z kontenera build (używając bezpiecznego podejścia)
+                # Kopiowanie plików z kontenera build
                 echo "Kopiowanie plików z kontenera..."
-                docker cp cjson-build-container:/cjson-build/build/libcjson.so . || echo "Could not copy libcjson.so from build dir"
                 
-                # Próbujemy alternatywne ścieżki dla libcjson.a jeśli standardowa zawodzi
-                docker cp cjson-build-container:/cjson-build/build/libcjson.a . || \
-                docker cp cjson-build-container:/usr/local/lib/libcjson.a . || \
-                echo "Could not find libcjson.a in any standard location"
+                # Kopiowanie shared library - używamy konkretnego pliku libcjson.so.1.7.18
+                docker cp cjson-build-container:/cjson-build/build/libcjson.so.1.7.18 .
                 
-                # Próbujemy znaleźć cJSON.h
-                docker cp cjson-build-container:/cjson-build/cJSON.h . || \
-                docker cp cjson-build-container:/usr/local/include/cJSON.h . || \
-                echo "Could not find cJSON.h in any standard location"
+                # Sprawdzenie czy kopiowanie się powiodło i wykonanie symlinków lokalnie
+                if [ -f libcjson.so.1.7.18 ]; then
+                  ln -sf libcjson.so.1.7.18 libcjson.so.1
+                  ln -sf libcjson.so.1 libcjson.so
+                  echo "Successfully copied and linked libcjson.so"
+                else
+                  echo "Failed to copy libcjson.so.1.7.18"
+                fi
+                
+                # Kopiowanie pliku nagłówkowego
+                docker cp cjson-build-container:/cjson-build/cJSON.h .
                 
                 # Zatrzymanie i usunięcie kontenera
-                docker stop cjson-build-container || true
-                docker rm cjson-build-container || true
+                docker stop cjson-build-container
+                docker rm cjson-build-container
                 
                 # Tworzenie katalogu pakietu
                 mkdir -p cjson-package/lib
                 mkdir -p cjson-package/include
                 
-                # Kopiowanie plików do pakietu tylko jeśli istnieją
-                if [ -f libcjson.so ]; then 
+                # Kopiowanie plików do pakietu
+                if [ -f libcjson.so.1.7.18 ]; then 
+                  cp libcjson.so.1.7.18 cjson-package/lib/
+                  cp libcjson.so.1 cjson-package/lib/
                   cp libcjson.so cjson-package/lib/
-                  echo "Added libcjson.so to package"
+                  echo "Added libcjson.so files to package"
                 else
-                  echo "libcjson.so not found"
-                fi
-                
-                if [ -f libcjson.a ]; then 
-                  cp libcjson.a cjson-package/lib/
-                  echo "Added libcjson.a to package"
-                else
-                  echo "Warning: libcjson.a not found - package will contain only shared library"
+                  echo "libcjson.so files not found"
                 fi
                 
                 if [ -f cJSON.h ]; then 
@@ -160,7 +159,7 @@ ENDOFFILE
                   echo "cJSON.h not found"
                 fi
                 
-                # Kopiowanie dokumentacji jeśli pliki istnieją
+                # Kopiowanie dokumentacji
                 if [ -f LICENSE ]; then 
                   cp LICENSE cjson-package/
                   echo "Added LICENSE to package"
