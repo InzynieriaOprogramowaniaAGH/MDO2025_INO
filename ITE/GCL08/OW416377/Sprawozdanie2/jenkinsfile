@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Clone repository') {
+            steps {
+                git branch: 'OW416377', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+        stage('Build'){
+            steps {
+                dir('ITE/GCL08/OW416377/Sprawozdanie1/lab3_pliki') {
+                    sh 'docker rmi -f bld'
+                    sh 'docker builder prune --force --all'
+                    sh 'docker build -t bld -f Dockerfile.build . '
+                }
+            }
+        }
+        
+    }
+}
