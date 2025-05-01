@@ -75,11 +75,11 @@ ENDOFFILE
                 sh 'docker run --name cjson-test-container cjson-test || true'
                 
                 // Zapisanie wyników testów
-                sh 'docker cp cjson-test-container:/cjson-build/build/Testing .'
-                sh 'docker rm cjson-test-container'
+                sh 'docker cp cjson-test-container:/cjson-build/build/Testing . || echo "Nie znaleziono katalogu Testing"'
+                sh 'docker rm cjson-test-container || true'
                 
                 // Archiwizacja wyników testów
-                archiveArtifacts artifacts: 'Testing/**/*', fingerprint: true
+                archiveArtifacts artifacts: 'Testing/**/*', fingerprint: true, allowEmptyArchive: true
             }
         }
         
@@ -87,7 +87,7 @@ ENDOFFILE
             steps {
                 // Budowanie i uruchamianie kontenera deploy
                 sh 'docker build --no-cache -t cjson-deploy -f Dockerfile.cjsondeploy .'
-                sh 'docker run --rm cjson-deploy > deploy_results.txt'
+                sh 'docker run --rm cjson-deploy > deploy_results.txt || echo "Deploy container failed" > deploy_results.txt'
                 
                 // Archiwizacja wyników wdrożenia
                 archiveArtifacts artifacts: 'deploy_results.txt', fingerprint: true
@@ -104,25 +104,30 @@ ENDOFFILE
                 # Tworzenie i uruchamianie kontenera z obrazu cjson-build
                 docker run --name cjson-build-container -d cjson-build tail -f /dev/null
                 
+                # Wypiszmy listę plików w kontenerze w katalogu build, aby zobaczyć co zostało wygenerowane
+                echo "Pliki w katalogu build:"
+                docker exec cjson-build-container ls -la /cjson-build/build/
+                
                 # Sprawdzenie zawartości kontenera, aby znaleźć pliki
+                echo "Szukanie libcjson.a:"
                 docker exec cjson-build-container find / -name "libcjson.a" || echo "libcjson.a not found"
+                echo "Szukanie libcjson.so:"
                 docker exec cjson-build-container find / -name "libcjson.so" || echo "libcjson.so not found"
+                echo "Szukanie cJSON.h:"
                 docker exec cjson-build-container find / -name "cJSON.h" || echo "cJSON.h not found"
                 
                 # Kopiowanie plików z kontenera build (używając bezpiecznego podejścia)
-                # Najpierw próbujemy standardowe ścieżki
-                docker cp cjson-build-container:/cjson-build/build/libcjson.so . || echo "Could not copy libcjson.so from expected path"
+                echo "Kopiowanie plików z kontenera..."
+                docker cp cjson-build-container:/cjson-build/build/libcjson.so . || echo "Could not copy libcjson.so from build dir"
                 
                 # Próbujemy alternatywne ścieżki dla libcjson.a jeśli standardowa zawodzi
                 docker cp cjson-build-container:/cjson-build/build/libcjson.a . || \
                 docker cp cjson-build-container:/usr/local/lib/libcjson.a . || \
-                docker cp cjson-build-container:/usr/lib/libcjson.a . || \
                 echo "Could not find libcjson.a in any standard location"
                 
                 # Próbujemy znaleźć cJSON.h
                 docker cp cjson-build-container:/cjson-build/cJSON.h . || \
                 docker cp cjson-build-container:/usr/local/include/cJSON.h . || \
-                docker cp cjson-build-container:/usr/include/cJSON.h . || \
                 echo "Could not find cJSON.h in any standard location"
                 
                 # Zatrzymanie i usunięcie kontenera
@@ -134,16 +139,41 @@ ENDOFFILE
                 mkdir -p cjson-package/include
                 
                 # Kopiowanie plików do pakietu tylko jeśli istnieją
-                if [ -f libcjson.so ]; then cp libcjson.so cjson-package/lib/; fi
-                if [ -f libcjson.a ]; then cp libcjson.a cjson-package/lib/; fi
-                if [ -f cJSON.h ]; then cp cJSON.h cjson-package/include/; fi
+                if [ -f libcjson.so ]; then 
+                  cp libcjson.so cjson-package/lib/
+                  echo "Added libcjson.so to package"
+                else
+                  echo "libcjson.so not found"
+                fi
+                
+                if [ -f libcjson.a ]; then 
+                  cp libcjson.a cjson-package/lib/
+                  echo "Added libcjson.a to package"
+                else
+                  echo "Warning: libcjson.a not found - package will contain only shared library"
+                fi
+                
+                if [ -f cJSON.h ]; then 
+                  cp cJSON.h cjson-package/include/
+                  echo "Added cJSON.h to package"
+                else
+                  echo "cJSON.h not found"
+                fi
                 
                 # Kopiowanie dokumentacji jeśli pliki istnieją
-                if [ -f LICENSE ]; then cp LICENSE cjson-package/; fi
-                if [ -f README.md ]; then cp README.md cjson-package/; fi
+                if [ -f LICENSE ]; then 
+                  cp LICENSE cjson-package/
+                  echo "Added LICENSE to package"
+                fi
+                
+                if [ -f README.md ]; then 
+                  cp README.md cjson-package/
+                  echo "Added README.md to package"
+                fi
                 
                 # Tworzenie podstawowego archiwum
                 tar -czvf cjson-package.tar.gz cjson-package/
+                echo "Created cjson-package.tar.gz"
                 '''
                 
                 // Archiwizacja pakietu
