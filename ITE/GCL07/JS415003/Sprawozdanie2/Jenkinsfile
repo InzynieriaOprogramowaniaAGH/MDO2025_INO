@@ -6,9 +6,8 @@ pipeline {
         CJSON_BUILD = "cjson-build:${VERSION}"
         CJSON_TEST = "cjson-test:${VERSION}"
         CJSON_DEPLOY = "cjson-deploy:${VERSION}"
-        DOCKERHUB_REPO = "sadlowskijj/cjson-deploy"
-        IMAGE_TAG = "${DOCKERHUB_REPO}:${VERSION}"
         PACKAGE_NAME = "cjson-package-${VERSION}"
+        BASE_DIR = "MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie2/Files"
     }
 
     stages {
@@ -160,11 +159,15 @@ EOT
             }
         }
 
-        // stage('Publish') {
-        //     steps {
-        //         // Implementacja publikacji np. do Docker Hub lub serwera artefaktów
-        //     }
-        // }
+        stage('Publish') {
+            steps {
+                dir("${BASE_DIR}") {
+                    script{
+                        archiveArtifacts artifacts: "${PACKAGE_NAME}_${params.VERSION}.tar.gz", fingerprint: true
+                    }
+                }
+            }
+        }
     }
 
     post {
