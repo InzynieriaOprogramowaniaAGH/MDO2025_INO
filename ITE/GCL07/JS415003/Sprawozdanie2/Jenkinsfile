@@ -151,4 +151,5 @@ pipeline {
         failure {
             echo 'Pipeline zakończony niepowodzeniem!'
         }
+    }
 }
