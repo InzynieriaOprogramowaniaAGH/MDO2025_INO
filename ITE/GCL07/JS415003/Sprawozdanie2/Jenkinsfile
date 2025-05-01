@@ -59,6 +59,10 @@ pipeline {
         
         stage('Build') {
             steps {
+                sh 'docker rmi -f cjson-build || true'
+                sh 'docker rmi -f cjson-test || true'
+                sh 'docker rmi -f cjson-deploy || true'
+
                 // Budowanie obrazu Builder
                 sh 'docker build -t cjson-build -f Dockerfile.cjsonbuild .'
             }
