@@ -180,12 +180,12 @@ EOT
 }
 
         
-        stage('Publish') {
-            steps {
+    //     stage('Publish') {
+    //         steps {
                 
-                }
-            }
-    }
+    //             }
+    //         }
+    // }
     
     post {
         success {
