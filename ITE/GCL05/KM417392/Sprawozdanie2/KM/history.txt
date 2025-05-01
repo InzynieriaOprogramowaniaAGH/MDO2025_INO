@@ -1,0 +1,94 @@
+    1  ls
+    2  docker ps
+    3  time
+    4  date +%H
+    5  docker stop jenkins
+    6  ls
+    7  docker ps 
+    8  apt-get install -y docker-ce-cli
+    9  docker exec -it jenkins-blueocean bash
+   10  '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
+   11  docker network
+   12  docker network ls
+   13  docker inspect -f 7a2983bbfe84 jenkins-docker
+   14  docker exec -it jenkins-blueocean bash
+   15  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' jenkins-docker
+   16  docker ps -a
+   17  docker run   --name jenkins-docker   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+   18  docker ps
+   19  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' jenkins-docker
+   20  docker stop jenkins-blueocean
+   21  docker rm jenkins-blueocean
+   22  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://172.18.0.2:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.3-1
+   23  docker exec -it jenkins-docker sh
+   24  docker stop jenkins-blueocean
+   25  docker rm jenkins-blueocean
+   26  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://172.18.0.3:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.3-1
+   27  ls
+   28  git clone https://github.com/mruby/mruby.git
+   29  mkdir mruby-pipeline
+   30  cd mruby-pipeline
+   31  touch Dockerfile.build
+   32  nano Dockerfile.build
+   33  nano Dockerfile.deploy
+   34  nano script.rb
+   35  docker build -f Dockerfile.build -t mruby-build .
+   36  docker create --name temp mruby-build
+   37  docker cp temp:/mruby/build/host/bin ./mruby.deploy
+   38  docker rm temp
+   39  docker build -f Dockerfile.deploy -t mruby-deploy .
+   40  docker run --rm -v $(pwd)/script.rb:/app/script.rb mruby-deploy
+   41  docker ps -a
+   42  nano Dockerfile.deploy
+   43  chmod +x mruby.deploy/mruby
+   44  docker build -f Dockerfile.deploy -t mruby-deploy .
+   45  docker run --rm -v $(pwd)/script.rb:/app/script.rb mruby-deploy
+   46  cd ..
+   47  ls
+   48  mv mruby-pipeline ~/MDO2025_INO/ITE
+   49  cd  ~/MDO2025_INO/ITE
+   50  ls
+   51  cd GCL05
+   52  ls
+   53  cd KM417392
+   54  ls
+   55  cd Sprawozdanie2
+   56  ls
+   57  mv ~/MDO2025_INO/ITE ~/MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2
+   58  mv /MDO2025_INO/ITE ~/MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2
+   59  cd .
+   60  cd ..
+   61  ls
+   62  mv mruby-pipeline ~/MDO2025_INO/ITE/GCL05/KM417392/Sprawozdanie2
+   63  ls
+   64  cd GCL05
+   65  ls
+   66  cd KM417392
+   67  ls
+   68  cd Sprawozdanie2
+   69  ls
+   70  cd ..
+   71  cd KM417392
+   72  ls
+   73  git status
+   74  git pull
+   75  git add .
+   76  git commit -m "KM417392: pliki s2"
+   77  git config --global user.email katarzynamad@student.agh.edu.pl
+   78  git config --global user.name katarzynamad09
+   79  git commit -m "KM417392: pliki s2"
+   80  git push origin KM417392
+   81  docker login
+   82  cd
+   83  sudo mkdir -p /var/lib/jenkins/.docker
+   84  sudo cp /home/kasiam/.docker/config.json /var/lib/jenkins/.docker/config.json
+   85  sudo chown -R jenkins:jenkins /var/lib/jenkins/.docker
+   86  docker exec -it jenkins-blueocean bash
+   87  docker exec -it jenkins-blueocean mkdir -p /var/jenkins_home/.docker
+   88  docker cp /home/kasiam/.docker/config.json jenkins-blueocean:/var/jenkins_home/.docker/config.json
+   89  docker exec -it jenkins-blueocean chown jenkins:jenkins /var/jenkins_home/.docker/config.json
+   90  docker images
+   91  docker pull kasiam23/mruby:latest
+   92  ls
+   93  history
+   94  history > history.txt

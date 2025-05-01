@@ -1,0 +1,12 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && \
+    apt-get install -y git build-essential rake bison && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /mruby
+
+RUN git clone https://github.com/mruby/mruby . && \
+    rake
+
+CMD ["bash"]
