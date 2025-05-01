@@ -46,7 +46,8 @@ pipeline {
                 dir("${PROJECT_PATH}") {
                     sh 'docker build -f Dockerfile.redistest -t ${IMAGE_TEST} .'
                     
-                    sh 'docker run --rm ${IMAGE_TEST} > test-${VERSION}.log 2>&1'
+                    // sh 'docker run --rm ${IMAGE_TEST} > test-${VERSION}.log 2>&1'
+                    sh 'docker run --rm ${IMAGE_TEST}'
                     sh 'cat test-${VERSION}.log'
 
                     archiveArtifacts artifacts: "test-${VERSION}.log", onlyIfSuccessful: false
