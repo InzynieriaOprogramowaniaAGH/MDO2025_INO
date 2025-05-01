@@ -101,10 +101,26 @@ ENDOFFILE
                 # Tworzenie i uruchamianie kontenera z obrazu cjson-build
                 docker run --name cjson-build-container -d cjson-build tail -f /dev/null
                 
-                # Kopiowanie plików z kontenera build
-                docker cp cjson-build-container:/cjson-build/build/libcjson.so .
-                docker cp cjson-build-container:/cjson-build/build/libcjson.a .
-                docker cp cjson-build-container:/cjson-build/cJSON.h .
+                # Sprawdzenie zawartości kontenera, aby znaleźć pliki
+                docker exec cjson-build-container find / -name "libcjson.a" || echo "libcjson.a not found"
+                docker exec cjson-build-container find / -name "libcjson.so" || echo "libcjson.so not found"
+                docker exec cjson-build-container find / -name "cJSON.h" || echo "cJSON.h not found"
+                
+                # Kopiowanie plików z kontenera build (używając bezpiecznego podejścia)
+                # Najpierw próbujemy standardowe ścieżki
+                docker cp cjson-build-container:/cjson-build/build/libcjson.so . || echo "Could not copy libcjson.so from expected path"
+                
+                # Próbujemy alternatywne ścieżki dla libcjson.a jeśli standardowa zawodzi
+                docker cp cjson-build-container:/cjson-build/build/libcjson.a . || \
+                docker cp cjson-build-container:/usr/local/lib/libcjson.a . || \
+                docker cp cjson-build-container:/usr/lib/libcjson.a . || \
+                echo "Could not find libcjson.a in any standard location"
+                
+                # Próbujemy znaleźć cJSON.h
+                docker cp cjson-build-container:/cjson-build/cJSON.h . || \
+                docker cp cjson-build-container:/usr/local/include/cJSON.h . || \
+                docker cp cjson-build-container:/usr/include/cJSON.h . || \
+                echo "Could not find cJSON.h in any standard location"
                 
                 # Zatrzymanie i usunięcie kontenera
                 docker stop cjson-build-container
@@ -113,11 +129,15 @@ ENDOFFILE
                 # Tworzenie katalogu pakietu
                 mkdir -p cjson-package/lib
                 mkdir -p cjson-package/include
-                cp libcjson.so cjson-package/lib/
-                cp libcjson.a cjson-package/lib/
-                cp cJSON.h cjson-package/include/
-                cp LICENSE cjson-package/
-                cp README.md cjson-package/
+                
+                # Kopiowanie plików do pakietu tylko jeśli istnieją
+                if [ -f libcjson.so ]; then cp libcjson.so cjson-package/lib/; fi
+                if [ -f libcjson.a ]; then cp libcjson.a cjson-package/lib/; fi
+                if [ -f cJSON.h ]; then cp cJSON.h cjson-package/include/; fi
+                
+                # Kopiowanie dokumentacji jeśli pliki istnieją
+                if [ -f LICENSE ]; then cp LICENSE cjson-package/; fi
+                if [ -f README.md ]; then cp README.md cjson-package/; fi
                 
                 # Tworzenie podstawowego archiwum
                 tar -czvf cjson-package.tar.gz cjson-package/
