@@ -12,7 +12,10 @@ pipeline {
                 dir('ITE/GCL08/LW417490/Sprawozdanie2') {
                     sh 'docker rmi -f express-build'
                     sh 'docker rmi -f express-app'
+                    sh 'docker rmi -f express-test'
                     sh 'docker builder prune --force --all'
+                    sh 'docker stop app || true'
+                    sh 'docker rm app || true'
                     sh 'docker network inspect ci >/dev/null 2>&1 && docker network rm ci || true'
                 }
             }
@@ -25,6 +28,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Test Dockerfile') {
+            steps {
+                dir('ITE/GCL08/LW417490/Sprawozdanie2') {
+                    sh 'docker build --no-cache -f Dockerfile.exptest -t express-test .'
+                    sh 'docker run --rm express-test'
+                }
+            }
+        }
+        
 
         stage('Publish Dockerfile') {
             steps {
@@ -39,9 +52,19 @@ pipeline {
                 dir('ITE/GCL08/LW417490/Sprawozdanie2') {
                     sh 'docker network create ci'
                     sh 'docker run --rm -d --network ci --name app -p 3000:3000 express-app'
-                    sh 'docker run --rm --network ci fedora curl -s app:3000'
+                    sh 'docker run --rm --network ci curlimages/curl -s app:3000'
+                }
+            }
+        }
+        
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker_hub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                    sh 'docker tag express-app lucyferryt/express-app:latest'
+                    sh 'docker push lucyferryt/express-app:latest'
                 }
             }
         }
     }
-docker build -f Dockerfile.expbuild -t myapp-build .
+}
