@@ -163,7 +163,7 @@ EOT
             steps {
                 dir("${BASE_DIR}") {
                     script{
-                        archiveArtifacts artifacts: "${PACKAGE_NAME}_${params.VERSION}.tar.gz", fingerprint: true
+                        archiveArtifacts artifacts: "${PACKAGE_NAME}.tar.gz", fingerprint: true
                     }
                 }
             }
