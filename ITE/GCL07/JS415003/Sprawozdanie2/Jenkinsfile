@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'fedora:42'
-        }
-    }
+    agent any
     
     environment {
         VERSION = "v${BUILD_NUMBER}"
@@ -135,6 +131,11 @@ EOT
         }
         
         stage('Package') {
+            agent {
+                docker {
+                image 'fedora:42'
+                }
+            }
             steps {
                 sh '''
                     # Usunięcie istniejącego kontenera, jeśli taki istnieje
