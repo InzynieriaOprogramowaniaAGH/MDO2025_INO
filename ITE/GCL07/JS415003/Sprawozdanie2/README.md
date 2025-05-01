@@ -45,9 +45,12 @@
     ![](005-Class/lab5_14.png)
 
 ### Kompletny pipeline
-Tutaj Jenkinsfile z całym zdefiniowanym pipelinem.
+Tutaj Jenkinsfile z całym zdefiniowanym pipelinem oraz jego ustawienia na jenkinsie.
 
 [Jenkinsfile](./Jenkinsfile)
+
+![](005-Class/lab5_15.png)
+![](005-Class/lab5_16.png)
 
 *  Zdefiniowany wewnątrz Jenkinsa obiekt projektowy *pipeline*, realizujący następujące kroki:
   * Kontener `Builder`
@@ -73,6 +76,9 @@ Tutaj Jenkinsfile z całym zdefiniowanym pipelinem.
         make -j$(nproc)
     ```
 
+    ![](005-Class/lab5_17.png)
+    ![](005-Class/lab5_18.png)
+    
   * Obraz testujący, w ramach kontenera `Tester`
 
     [Dockerfile.cjsontest](./Dockerfile.cjsontest)
