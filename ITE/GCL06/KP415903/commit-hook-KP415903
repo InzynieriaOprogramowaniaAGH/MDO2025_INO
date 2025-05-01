@@ -1,0 +1,10 @@
+#!/bin/bash
+EXPECTED_PREFIX="KP415903"
+COMMIT_MSG=$(git log -1 --pretty=%B)
+
+echo "Commit message: $COMMIT_MSG"
+
+if [[ ! $COMMIT_MSG =~ ^$EXPECTED_PREFIX ]]; then
+  echo "Error: Commit message must start with \"$EXPECTED_PREFIX\"."
+  exit 1
+fi

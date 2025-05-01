@@ -1,0 +1,105 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_NETWORK = "ci-network"
+    }
+
+    stages {
+        stage('Klonowanie repozytorium') {
+            steps {
+                script {
+                    sh '''
+                    if [ -d "MDO2025_INO" ]; then
+                        rm -rf MDO2025_INO
+                    fi
+                    git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+                    '''
+                    dir('MDO2025_INO') {
+                        sh 'git checkout KP415903'
+                    }
+                }
+            }
+        }
+        
+        stage('Build "build image"') {
+            steps {
+                script {
+                    dir('MDO2025_INO/ITE/GCL06/KP415903/Sprawozdanie1/Lab3 dockerfiles/') {
+                        sh 'docker build -t nodebuild -f Dockerfile.nodebuild .'
+                    }
+                }
+            }
+        }
+        
+        stage('Build "test image"') {
+            steps {
+                script {
+                    dir('MDO2025_INO/ITE/GCL06/KP415903/Sprawozdanie1/Lab3 dockerfiles/') {
+                        sh 'docker build -t nodetest -f Dockerfile.nodetest .'
+                    }
+                }
+            }
+        }
+        
+        stage('Run Tests') {
+            steps {
+                script {
+                    sh '''
+                    docker network create ${DOCKER_NETWORK} || true
+                    docker run --rm --network ${DOCKER_NETWORK} --name test-container nodetest
+                    '''
+                }
+            }
+        }
+        
+        stage('Build Deploy Image') {
+            steps {
+                script {
+                    dir('MDO2025_INO/ITE/GCL06/KP415903/Sprawozdanie2/') {
+                        sh 'docker build -t deploy -f Dockerfile.deploy .'
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy Application') {
+            steps {
+                script {
+                    sh '''
+                    docker stop deploy-container || true
+                    docker rm deploy-container || true
+                    docker run -d --network ${DOCKER_NETWORK} --name deploy-container deploy
+                    sleep 5 # Give the application time to start
+                    '''
+                }
+            }
+        }
+        
+        stage('Curl Test') {
+            steps {
+                script {
+                    sh '''
+                    docker run --rm --network ${DOCKER_NETWORK} curlimages/curl curl deploy-container:3000
+                    '''
+                }
+            }
+        }
+        
+        stage('Publish') {
+            steps {
+                script {
+                    sh '''
+                    docker tag deploy localhost:5000/node-dummy-app
+                    docker save -o node-dummy-app.tar deploy
+                    
+                    # docker run --rm -v ~/.npmrc:/root/.npmrc nodebuild npm publish --access public
+                    '''
+                    
+                    // Archive
+                    archiveArtifacts artifacts: "node-dummy-app.tar", fingerprint: true
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,443 @@
+Started by user admin
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/lab6
+[Pipeline] {
+[Pipeline] sh
++ date +%Y.%m.%d-%H%M%S
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Prepare Environment)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ docker rm -f deploy-container test-container
+deploy-container
+Error response from daemon: No such container: test-container
++ docker rmi nodebuild nodetest deploy
+Untagged: nodebuild:latest
+Deleted: sha256:2fe72b21a6b21867ca1b8d1501936083839c3a6e0970319311b351bafa26f294
+Untagged: nodetest:latest
+Deleted: sha256:58efae9a3132ad3b68871d432ad641d5f5e2a962841b800ea1ebbe523b5977e7
+Untagged: deploy:latest
++ docker network create ci-network
+Error response from daemon: network with name ci-network already exists
++ true
++ rm -f dummy-node-project-*.tar.gz
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Clone repo)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ [ -d MDO2025_INO ]
++ rm -rf MDO2025_INO
++ git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+Cloning into 'MDO2025_INO'...
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/lab6/MDO2025_INO
+[Pipeline] {
+[Pipeline] sh
++ git checkout KP415903
+Switched to a new branch 'KP415903'
+branch 'KP415903' set up to track 'origin/KP415903'.
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build "build image")
+[Pipeline] script
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/lab6/MDO2025_INO/ITE/GCL06/KP415903/Sprawozdanie1/Lab3 dockerfiles
+[Pipeline] {
+[Pipeline] sh
++ docker build -t nodebuild -f Dockerfile.nodebuild .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.nodebuild
+#1 transferring dockerfile: 234B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/node:latest
+#2 DONE 0.9s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/4] FROM docker.io/library/node:latest@sha256:c5bfe90b30e795ec57bcc0040065ca6f284af84a1dafd22a207bd6b48c39ce01
+#4 DONE 0.0s
+
+#5 [2/4] WORKDIR /app
+#5 CACHED
+
+#6 [3/4] RUN git clone https://github.com/devenes/node-js-dummy-test .
+#6 CACHED
+
+#7 [4/4] RUN npm install
+#7 CACHED
+
+#8 exporting to image
+#8 exporting layers done
+#8 writing image sha256:2fe72b21a6b21867ca1b8d1501936083839c3a6e0970319311b351bafa26f294 done
+#8 naming to docker.io/library/nodebuild 0.0s done
+#8 DONE 0.0s
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build "test image")
+[Pipeline] script
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/lab6/MDO2025_INO/ITE/GCL06/KP415903/Sprawozdanie1/Lab3 dockerfiles
+[Pipeline] {
+[Pipeline] sh
++ docker build -t nodetest -f Dockerfile.nodetest .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.nodetest
+#1 transferring dockerfile: 144B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/nodebuild:latest
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/1] FROM docker.io/library/nodebuild:latest
+#4 CACHED
+
+#5 exporting to image
+#5 exporting layers done
+#5 writing image sha256:58efae9a3132ad3b68871d432ad641d5f5e2a962841b800ea1ebbe523b5977e7 done
+#5 naming to docker.io/library/nodetest done
+#5 DONE 0.0s
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run Tests)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ docker network create ci-network
+Error response from daemon: network with name ci-network already exists
++ true
++ docker run --rm --network ci-network --name test-container nodetest
+
+> dummy-nodejs-todo@0.1.1 test
+> jest src/index.test.js
+
+PASS src/index.test.js
+  GET /
+    ✓ should return 200 OK (21 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        0.392 s
+Ran all test suites matching /src\/index.test.js/i.
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Deploy Image)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/lab6/MDO2025_INO/ITE/GCL06/KP415903/Sprawozdanie2
+[Pipeline] {
+[Pipeline] sh
++ docker build -t deploy -f Dockerfile.deploy .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.deploy
+#1 transferring dockerfile: 362B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/nodebuild:latest
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:slim
+#3 DONE 0.2s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [stage-0 1/6] FROM docker.io/library/node:slim@sha256:dfb18d8011c0b3a112214a32e772d9c6752131ffee512e974e59367e46fcee52
+#5 DONE 0.0s
+
+#6 FROM docker.io/library/nodebuild:latest
+#6 DONE 0.0s
+
+#7 [stage-0 3/6] COPY --from=nodebuild /app/node_modules /app/node_modules
+#7 CACHED
+
+#8 [stage-0 4/6] COPY --from=nodebuild /app/package*.json /app/
+#8 CACHED
+
+#9 [stage-0 2/6] WORKDIR /app
+#9 CACHED
+
+#10 [stage-0 5/6] COPY --from=nodebuild /app/src /app/src
+#10 CACHED
+
+#11 [stage-0 6/6] COPY --from=nodebuild /app/public /app/public
+#11 CACHED
+
+#12 exporting to image
+#12 exporting layers done
+#12 writing image sha256:d7e9f8be253a2c72ec3969924c95f482092f5d0e450d86c6f9142d353a671b83 done
+#12 naming to docker.io/library/deploy done
+#12 DONE 0.0s
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy Application)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ docker stop deploy-container
+Error response from daemon: No such container: deploy-container
++ true
++ docker rm deploy-container
+Error response from daemon: No such container: deploy-container
++ true
++ docker run -d --network ci-network --name deploy-container deploy
+1d9b9bd28c2d6563ecce80f74545297b88d10dac1058508a87d553397815cc6c
++ sleep 5
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Curl Test)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ docker run --rm --network ci-network curlimages/curl curl deploy-container:3000
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100  1074  100  1074    0     0   110k      0 --:--:-- --:--:-- --:--:--  116k
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Error: Failed to lookup view &quot;index&quot; in views directory &quot;/app/views&quot;<br> &nbsp; &nbsp;at Function.render (/app/node_modules/express/lib/application.js:597:17)<br> &nbsp; &nbsp;at ServerResponse.render (/app/node_modules/express/lib/response.js:1039:7)<br> &nbsp; &nbsp;at /app/src/index.js:48:9<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)<br> &nbsp; &nbsp;at next (/app/node_modules/express/lib/router/route.js:144:13)<br> &nbsp; &nbsp;at Route.dispatch (/app/node_modules/express/lib/router/route.js:114:3)<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)<br> &nbsp; &nbsp;at /app/node_modules/express/lib/router/index.js:286:22<br> &nbsp; &nbsp;at Function.process_params (/app/node_modules/express/lib/router/index.js:348:12)<br> &nbsp; &nbsp;at next (/app/node_modules/express/lib/router/index.js:280:10)</pre>
+</body>
+</html>
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Publish)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/lab6/MDO2025_INO/ITE/GCL06/KP415903/Sprawozdanie2
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $NPM_TOKEN
+[Pipeline] {
+[Pipeline] sh
+Warning: A secret was passed to "sh" using Groovy String interpolation, which is insecure.
+		 Affected argument(s) used the following variable(s): [NPM_TOKEN]
+		 See https://jenkins.io/redirect/groovy-string-interpolation for details.
++ docker build -f Dockerfile.publish --build-arg NPM_TOKEN=**** --build-arg APP_VERSION=2025.04.24-193919 -t npmpublish .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.publish
+#1 transferring dockerfile: 1.17kB done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/nodebuild:latest
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:18-slim
+#3 DONE 0.2s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [stage-0  1/11] FROM docker.io/library/node:18-slim@sha256:39095e997ff4399e1b07c147ccb432f47bd9e67c639d5fdf41af4a796c50ecf7
+#5 DONE 0.0s
+
+#6 FROM docker.io/library/nodebuild:latest
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 480.99kB 0.0s done
+#7 DONE 0.0s
+
+#8 [stage-0  2/11] WORKDIR /app
+#8 CACHED
+
+#9 [stage-0  3/11] COPY --from=nodebuild /app/package*.json /app/
+#9 CACHED
+
+#10 [stage-0  4/11] COPY . .
+#10 DONE 0.2s
+
+#11 [stage-0  5/11] RUN npm install
+#11 4.881 
+#11 4.881 added 354 packages, and audited 355 packages in 4s
+#11 4.881 
+#11 4.882 37 packages are looking for funding
+#11 4.882   run `npm fund` for details
+#11 4.893 
+#11 4.893 17 vulnerabilities (3 low, 3 moderate, 9 high, 2 critical)
+#11 4.893 
+#11 4.893 To address issues that do not require attention, run:
+#11 4.893   npm audit fix
+#11 4.893 
+#11 4.893 To address all issues (including breaking changes), run:
+#11 4.893   npm audit fix --force
+#11 4.893 
+#11 4.893 Run `npm audit` for details.
+#11 4.894 npm notice
+#11 4.894 npm notice New major version of npm available! 10.8.2 -> 11.3.0
+#11 4.894 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.3.0
+#11 4.894 npm notice To update run: npm install -g npm@11.3.0
+#11 4.894 npm notice
+#11 DONE 5.1s
+
+#12 [stage-0  6/11] RUN echo "Updating to version: 2025.04.24-193919" &&     npm version 2025.04.24-193919 --no-git-tag-version &&     sed -i 's/"name": "dummy-nodejs-todo"/"name": "@white67\/dummy-node-project"/' package.json
+#12 0.315 Updating to version: 2025.04.24-193919
+#12 0.492 v2025.4.24-193919
+#12 DONE 0.6s
+
+#13 [stage-0  7/11] RUN echo "//registry.npmjs.org/:_authToken=****" > .npmrc &&     echo "//registry.npmjs.org/:always-auth=true" >> .npmrc &&     echo "registry=https://registry.npmjs.org/" >> .npmrc
+#13 DONE 0.5s
+
+#14 [stage-0  8/11] RUN echo "Current package.json:" && cat package.json &&     echo "Current .npmrc:" && cat .npmrc
+#14 0.312 Current package.json:
+#14 0.333 {
+#14 0.333   "name": "@white67/dummy-node-project",
+#14 0.333   "version": "2025.4.24-193919",
+#14 0.333   "description": "A simple to do server",
+#14 0.333   "main": "index.js",
+#14 0.333   "scripts": {
+#14 0.333     "start": "node src/index.js",
+#14 0.333     "test": "jest src/index.test.js"
+#14 0.333   },
+#14 0.333   "author": "Devenes",
+#14 0.333   "license": "MIT",
+#14 0.333   "dependencies": {
+#14 0.333     "body-parser": "^1.18.0",
+#14 0.333     "ejs": "^2.5.7",
+#14 0.333     "express": "^4.15.4",
+#14 0.333     "supertest": "^6.2.3"
+#14 0.333   },
+#14 0.333   "devDependencies": {
+#14 0.333     "jest": "^28.0.2"
+#14 0.333   }
+#14 0.333 }
+#14 0.334 Current .npmrc:
+#14 0.334 //registry.npmjs.org/:_authToken=****
+#14 0.334 //registry.npmjs.org/:always-auth=true
+#14 0.334 registry=https://registry.npmjs.org/
+#14 DONE 0.5s
+
+#15 [stage-0  9/11] RUN npm whoami --registry=https://registry.npmjs.org/
+#15 1.050 white67
+#15 DONE 1.2s
+
+#16 [stage-0 10/11] RUN npm publish --access public
+#16 0.992 npm notice
+#16 0.992 npm notice package: @white67/dummy-node-project@2025.4.24-193919
+#16 0.992 npm notice Tarball Contents
+#16 0.992 npm notice 757B Dockerfile
+#16 0.992 npm notice 253B Dockerfile.deploy
+#16 0.992 npm notice 1.1kB Dockerfile.publish
+#16 0.992 npm notice 4.8kB Jenkinsfile
+#16 0.992 npm notice 3.2kB Jenkinsfile.old
+#16 0.992 npm notice 3.7kB README.md
+#16 0.992 npm notice 952B bash_history
+#16 0.992 npm notice 453B package.json
+#16 0.992 npm notice 4.4kB ss/5/1-create-jenkins.png
+#16 0.992 npm notice 14.1kB ss/5/2-run-dind.png
+#16 0.992 npm notice 121.8kB ss/5/3-build-jenkins.png
+#16 0.992 npm notice 15.3kB ss/5/4-run-jenkins.png
+#16 0.992 npm notice 7.1kB ss/5/5-forward-port.png
+#16 0.992 npm notice 49.2kB ss/5/6-new-project-logs.png
+#16 0.992 npm notice 11.1kB ss/5/7-new-project-success.png
+#16 0.992 npm notice 56.3kB ss/5/8-pipeline-logs-1.png
+#16 0.992 npm notice 57.1kB ss/5/9-pipeline-logs-2.png
+#16 0.992 npm notice 62.2kB ss/5/10-pipeline-logs-3.png
+#16 0.992 npm notice 59.8kB ss/5/11-pipeline-logs-4.png
+#16 0.992 npm notice 5.6kB ss/5/12-pipeline-success.png
+#16 0.992 npm notice Tarball Details
+#16 0.993 npm notice name: @white67/dummy-node-project
+#16 0.993 npm notice version: 2025.4.24-193919
+#16 0.993 npm notice filename: white67-dummy-node-project-2025.4.24-193919.tgz
+#16 0.993 npm notice package size: 407.1 kB
+#16 0.993 npm notice unpacked size: 479.0 kB
+#16 0.993 npm notice shasum: 9f422932590680d135673bcfe3ba224d6d2895ad
+#16 0.993 npm notice integrity: sha512-ddHZFuATO3Gi2[...]z4VQB5HHFF48Q==
+#16 0.993 npm notice total files: 20
+#16 0.993 npm notice
+#16 0.995 npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
+#16 3.900 + @white67/dummy-node-project@2025.4.24-193919
+#16 DONE 4.0s
+
+#17 [stage-0 11/11] RUN rm -f ~/.npmrc
+#17 DONE 0.4s
+
+#18 exporting to image
+#18 exporting layers
+#18 exporting layers 1.2s done
+#18 writing image sha256:f1b589687671eebbd5d81725da15f1c79e99d4b90043fb27ca58aa5b25f47e20 done
+#18 naming to docker.io/library/npmpublish 0.0s done
+#18 DONE 1.2s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "NPM_TOKEN") (line 19)
++ docker run --rm -e NPM_TOKEN=**** npmpublish
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] sh
++ docker save deploy
++ gzip
+[Pipeline] archiveArtifacts
+Archiving artifacts
+Recording fingerprints
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
