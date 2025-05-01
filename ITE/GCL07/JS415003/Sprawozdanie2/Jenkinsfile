@@ -19,13 +19,11 @@ pipeline {
                 cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsonbuild dockerfiles/
                 cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsontest dockerfiles/
                 cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsondeploy dockerfiles/
-                cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsonpublish dockerfiles/
                 
                 # Kopiowanie Dockerfile'i do katalogu głównego projektu
                 cp dockerfiles/Dockerfile.cjsonbuild ${WORKSPACE}/
                 cp dockerfiles/Dockerfile.cjsontest ${WORKSPACE}/
                 cp dockerfiles/Dockerfile.cjsondeploy ${WORKSPACE}/
-                cp dockerfiles/Dockerfile.cjsonpublish ${WORKSPACE}/
                 '''
                 
                 // Tworzenie przykładowego pliku C do demonstracji działania biblioteki
