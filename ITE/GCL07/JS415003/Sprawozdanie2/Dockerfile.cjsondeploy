@@ -1,4 +1,4 @@
-FROM fedora:42-minimal
+FROM fedora:42
 
 # Kopiowanie biblioteki z kontenera build
 COPY --from=cjson-build /cjson-build/build/libcjson.so /usr/lib/
