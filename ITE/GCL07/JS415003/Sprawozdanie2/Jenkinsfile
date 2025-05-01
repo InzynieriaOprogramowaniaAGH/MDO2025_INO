@@ -7,7 +7,7 @@ pipeline {
         CJSON_TEST = "cjson-test:${VERSION}"
         CJSON_DEPLOY = "cjson-deploy:${VERSION}"
         PACKAGE_NAME = "cjson-package-${VERSION}"
-        PACKAGE_DIR = "${WORKSPACE}/project_files/ITE/GCL07/JS415003/Sprawozdanie2/Files"
+        PACKAGE_DIR = "project_files/ITE/GCL07/JS415003/Sprawozdanie2/Files"
     }
 
     stages {
@@ -110,7 +110,7 @@ EOT
             }
         }
 
-        stage('Package') {
+        stage('Deploy') {
     steps {
         sh '''
             docker rm -f cjson-build-container || true
