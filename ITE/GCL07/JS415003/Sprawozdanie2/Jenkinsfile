@@ -6,7 +6,7 @@ pipeline {
         CJSON_BUILD = "cjson-build:${VERSION}"
         CJSON_TEST = "cjson-test:${VERSION}"
         CJSON_DEPLOY = "cjson-deploy:${VERSION}"
-        DOCKERHUB_REPO = "your-dockerhub-username/cjson-deploy"
+        DOCKERHUB_REPO = "sadlowskijj/cjson-deploy"
         IMAGE_TAG = "${DOCKERHUB_REPO}:${VERSION}"
         PACKAGE_NAME = "cjson-package-${VERSION}"
     }
@@ -81,6 +81,9 @@ pipeline {
             steps {
                 sh 'docker build -t ${CJSON_BUILD} -f Dockerfile.cjsonbuild .'
                 
+                // Also tag the build image as 'latest' for Dockerfile references
+                sh 'docker tag ${CJSON_BUILD} cjson-build:latest'
+                
                 // Pobieranie czasu budowania dla raportowania
                 sh 'echo "Build completed at $(date)" > build_time.log'
                 archiveArtifacts artifacts: 'build_time.log', fingerprint: true
@@ -91,6 +94,10 @@ pipeline {
             steps {
                 // Uruchomienie testów z logowaniem wyniku
                 sh 'docker build -t ${CJSON_TEST} -f Dockerfile.cjsontest .'
+                
+                // Also tag the test image as 'latest' for potential use in deploy
+                sh 'docker tag ${CJSON_TEST} cjson-test:latest'
+                
                 sh '''
                     docker run --name cjson-test-container ${CJSON_TEST} > test_results_${VERSION}.log 2>&1 || \
                     echo "Tests failed with exit code $?" >> test_results_${VERSION}.log
