@@ -94,15 +94,28 @@ pipeline {
         
         stage('Publish') {
             steps {
-                // Tworzenie katalogu na artefakty
-                sh 'mkdir -p output'
+                // Publikacja pakietu przy użyciu CMake zgodnie z README projektu
+                sh '''
+                # Kopiowanie plików z kontenera build
+                docker cp cjson-build:/cjson-build/build/libcjson.so .
+                docker cp cjson-build:/cjson-build/build/libcjson.a .
+                docker cp cjson-build:/cjson-build/cJSON.h .
                 
-                // Budowanie i uruchamianie kontenera publish
-                sh 'docker build -t cjson-publish -f Dockerfile.cjsonpublish .'
-                sh 'docker run --rm -v ${WORKSPACE}/output:/output cjson-publish'
+                # Tworzenie katalogu pakietu
+                mkdir -p cjson-package/lib
+                mkdir -p cjson-package/include
+                cp libcjson.so cjson-package/lib/
+                cp libcjson.a cjson-package/lib/
+                cp cJSON.h cjson-package/include/
+                cp LICENSE cjson-package/
+                cp README.md cjson-package/
                 
-                // Archiwizacja pakietu dystrybucyjnego
-                archiveArtifacts artifacts: 'output/cjson-dist.tar.gz', fingerprint: true 
+                # Tworzenie podstawowego archiwum
+                tar -czvf cjson-package.tar.gz cjson-package/
+                '''
+                
+                // Archiwizacja pakietu
+                archiveArtifacts artifacts: 'cjson-package.tar.gz', fingerprint: true
             }
         }
     }
