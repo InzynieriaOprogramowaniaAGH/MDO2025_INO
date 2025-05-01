@@ -16,10 +16,10 @@ pipeline {
                 // Kopiowanie plików Dockerfile z odpowiedniej struktury katalogów
                 sh '''
                 mkdir -p dockerfiles
-                cp ./ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsonbuild dockerfiles/
-                cp ./ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsontest dockerfiles/
-                cp ./ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsondeploy dockerfiles/
-                cp ./ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsonpublish dockerfiles/
+                cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsonbuild dockerfiles/
+                cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsontest dockerfiles/
+                cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsondeploy dockerfiles/
+                cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsonpublish dockerfiles/
                 
                 # Kopiowanie Dockerfile'i do katalogu głównego projektu
                 cp dockerfiles/Dockerfile.cjsonbuild ${WORKSPACE}/
