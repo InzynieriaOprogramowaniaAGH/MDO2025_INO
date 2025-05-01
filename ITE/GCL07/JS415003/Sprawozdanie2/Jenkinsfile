@@ -9,8 +9,8 @@ pipeline {
                 
                 // Kopiowanie plików Dockerfile z repozytorium projektu
                 sh '''
-                cp ${WORKSPACE}/ITE/GCL07/JS415003/Sprawozdanie2/005-Class/Dockerfile.cjsonbuild ${WORKSPACE}/
-                cp ${WORKSPACE}/ITE/GCL07/JS415003/Sprawozdanie2/005-Class/Dockerfile.cjsontest ${WORKSPACE}/
+                cp ${WORKSPACE}/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsonbuild ${WORKSPACE}/
+                cp ${WORKSPACE}/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsontest ${WORKSPACE}/
                 '''
                 
                 // Tworzenie przykładowego pliku C do demonstracji działania biblioteki
