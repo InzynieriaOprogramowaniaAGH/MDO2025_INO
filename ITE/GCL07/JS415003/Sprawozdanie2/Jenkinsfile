@@ -4,13 +4,28 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Pobranie kodu źródłowego
+                // Pobranie kodu źródłowego z głównego repozytorium
                 git url: 'https://github.com/DaveGamble/cJSON.git', branch: 'master'
                 
-                // Kopiowanie plików Dockerfile z repozytorium projektu
+                // Pobranie plików Dockerfile z repozytorium projektu
+                dir('project_files') {
+                    git url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git', branch: 'main'
+                    sh 'git checkout JS415003 || echo "Branch not found, continuing with main"'
+                }
+                
+                // Kopiowanie plików Dockerfile z odpowiedniej struktury katalogów
                 sh '''
-                cp ${WORKSPACE}/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsonbuild ${WORKSPACE}/
-                cp ${WORKSPACE}/ITE/GCL07/JS415003/Sprawozdanie2/Dockerfile.cjsontest ${WORKSPACE}/
+                mkdir -p dockerfiles
+                cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/005-Class/Dockerfile.cjsonbuild dockerfiles/
+                cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/005-Class/Dockerfile.cjsontest dockerfiles/
+                cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/005-Class/Dockerfile.cjsondeploy dockerfiles/
+                cp project_files/ITE/GCL07/JS415003/Sprawozdanie2/005-Class/Dockerfile.cjsonpublish dockerfiles/
+                
+                # Kopiowanie Dockerfile'i do katalogu głównego projektu
+                cp dockerfiles/Dockerfile.cjsonbuild ${WORKSPACE}/
+                cp dockerfiles/Dockerfile.cjsontest ${WORKSPACE}/
+                cp dockerfiles/Dockerfile.cjsondeploy ${WORKSPACE}/
+                cp dockerfiles/Dockerfile.cjsonpublish ${WORKSPACE}/
                 '''
                 
                 // Tworzenie przykładowego pliku C do demonstracji działania biblioteki
@@ -68,33 +83,6 @@ pipeline {
         
         stage('Deploy') {
             steps {
-                // Tworzenie Dockerfile dla deploy
-                // sh '''
-                // cat > Dockerfile.cjsondeploy << EOF
-                // FROM fedora:42-minimal
-
-                // # Kopiowanie biblioteki z kontenera build
-                // COPY --from=cjson-build /cjson-build/build/libcjson.so /usr/lib/
-                // COPY --from=cjson-build /cjson-build/cJSON.h /usr/include/
-
-                // # Aktualizacja cache bibliotek
-                // RUN ldconfig
-
-                // # Przykładowy kod demonstrujący działanie biblioteki
-                // COPY example.c /app/example.c
-                // WORKDIR /app
-
-                // # Kompilacja przykładu
-                // RUN dnf install -y gcc && \\
-                //     gcc -o example example.c -lcjson && \\
-                //     dnf remove -y gcc && \\
-                //     dnf clean all
-
-                // # Uruchomienie przykładu jako weryfikacja wdrożenia
-                // CMD ["./example"]
-                // EOF
-                // '''
-                
                 // Budowanie i uruchamianie kontenera deploy
                 sh 'docker build -t cjson-deploy -f Dockerfile.cjsondeploy .'
                 sh 'docker run --rm cjson-deploy > deploy_results.txt'
@@ -106,31 +94,6 @@ pipeline {
         
         stage('Publish') {
             steps {
-                // Tworzenie Dockerfile dla publish
-                // sh '''
-                // cat > Dockerfile.cjsonpublish << EOF
-                // FROM alpine:latest
-
-                // # Instalacja niezbędnych narzędzi
-                // RUN apk add --no-cache tar gzip
-
-                // # Utworzenie struktury katalogów dla dystrybucji
-                // WORKDIR /package
-
-                // # Kopiowanie biblioteki i plików nagłówkowych z kontenera build
-                // COPY --from=cjson-build /cjson-build/build/libcjson.so /package/lib/
-                // COPY --from=cjson-build /cjson-build/cJSON.h /package/include/
-                // COPY --from=cjson-build /cjson-build/LICENSE /package/
-                // COPY --from=cjson-build /cjson-build/README.md /package/
-
-                // # Tworzenie archiwum dystrybucyjnego
-                // RUN tar -czvf cjson-dist.tar.gz lib include LICENSE README.md
-
-                // # Kopiowanie archiwum do katalogu wyjściowego
-                // CMD ["cp", "cjson-dist.tar.gz", "/output/"]
-                // EOF
-                // '''
-                
                 // Tworzenie katalogu na artefakty
                 sh 'mkdir -p output'
                 
