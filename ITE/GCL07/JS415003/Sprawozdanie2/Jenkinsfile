@@ -98,10 +98,17 @@ ENDOFFILE
             steps {
                 // Publikacja pakietu przy użyciu CMake zgodnie z README projektu
                 sh '''
+                # Tworzenie i uruchamianie kontenera z obrazu cjson-build
+                docker run --name cjson-build-container -d cjson-build tail -f /dev/null
+                
                 # Kopiowanie plików z kontenera build
-                docker cp cjson-build:/cjson-build/build/libcjson.so .
-                docker cp cjson-build:/cjson-build/build/libcjson.a .
-                docker cp cjson-build:/cjson-build/cJSON.h .
+                docker cp cjson-build-container:/cjson-build/build/libcjson.so .
+                docker cp cjson-build-container:/cjson-build/build/libcjson.a .
+                docker cp cjson-build-container:/cjson-build/cJSON.h .
+                
+                # Zatrzymanie i usunięcie kontenera
+                docker stop cjson-build-container
+                docker rm cjson-build-container
                 
                 # Tworzenie katalogu pakietu
                 mkdir -p cjson-package/lib
