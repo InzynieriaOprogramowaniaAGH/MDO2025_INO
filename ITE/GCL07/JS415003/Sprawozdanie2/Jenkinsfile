@@ -7,7 +7,7 @@ pipeline {
         CJSON_TEST = "cjson-test:${VERSION}"
         CJSON_DEPLOY = "cjson-deploy:${VERSION}"
         PACKAGE_NAME = "cjson-package-${VERSION}"
-        BASE_DIR = "MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie2/Files"
+        PACKAGE_DIR = "${WORKSPACE}/project_files/ITE/GCL07/JS415003/Sprawozdanie2/Files"
     }
 
     stages {
@@ -154,7 +154,7 @@ EOT
             docker rm cjson-build-container
 
             tar -czvf ${PACKAGE_NAME}.tar.gz ${PACKAGE_NAME}/
-            mv ${PACKAGE_NAME}.tar.gz ${BASE_DIR}/
+            mv ${PACKAGE_NAME}.tar.gz ${PACKAGE_DIR}/
         '''
     }
 }
@@ -162,7 +162,7 @@ EOT
 
         stage('Publish') {
             steps {
-                dir("${BASE_DIR}") {
+                dir("${PACKAGE_DIR}") {
                     script{
                         archiveArtifacts artifacts: "${PACKAGE_NAME}.tar.gz", fingerprint: true
                     }
