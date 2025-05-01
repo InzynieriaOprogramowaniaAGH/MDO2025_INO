@@ -46,31 +46,31 @@ pipeline {
                 '''
                 
                 sh '''
-                    cat > example.c <<EOF
-                    #include <stdio.h>
-                    #include <stdlib.h>
-                    #include "cJSON.h"
+                    cat > example.c << 'EOT'
+#include <stdio.h>
+#include <stdlib.h>
+#include "cJSON.h"
 
-                    int main() {
-                        const char *json_string = "{\\"name\\":\\"cJSON\\", \\"version\\":\\"${VERSION}\\", \\"status\\":\\"deployed\\"}";
-                        cJSON *json = cJSON_Parse(json_string);
+int main() {
+    const char *json_string = "{\\"name\\":\\"cJSON\\", \\"version\\":\\"${VERSION}\\", \\"status\\":\\"deployed\\"}";
+    cJSON *json = cJSON_Parse(json_string);
 
-                        if (json == NULL) {
-                            printf("Error parsing JSON\\n");
-                            return 1;
-                        }
+    if (json == NULL) {
+        printf("Error parsing JSON\\n");
+        return 1;
+    }
 
-                        cJSON *name = cJSON_GetObjectItemCaseSensitive(json, "name");
-                        cJSON *version = cJSON_GetObjectItemCaseSensitive(json, "version");
-                        cJSON *status = cJSON_GetObjectItemCaseSensitive(json, "status");
+    cJSON *name = cJSON_GetObjectItemCaseSensitive(json, "name");
+    cJSON *version = cJSON_GetObjectItemCaseSensitive(json, "version");
+    cJSON *status = cJSON_GetObjectItemCaseSensitive(json, "status");
 
-                        printf("Library: %s\\nVersion: %s\\nStatus: %s\\n",
-                            name->valuestring, version->valuestring, status->valuestring);
+    printf("Library: %s\\nVersion: %s\\nStatus: %s\\n",
+        name->valuestring, version->valuestring, status->valuestring);
 
-                        cJSON_Delete(json);
-                        return 0;
-                    }
-                    EOF
+    cJSON_Delete(json);
+    return 0;
+}
+EOT
 
                     sed -i "s/\\\${VERSION}/${VERSION}/g" example.c
                 '''
@@ -164,25 +164,28 @@ pipeline {
                     docker cp cjson-build-container:/cjson-build/CHANGELOG.md ${PACKAGE_NAME}/docs/ || echo "CHANGELOG.md not found"
                     
                     # Tworzenie pliku README dla pakietu
-                    cat > ${PACKAGE_NAME}/README.txt << EOF
-                    cJSON Library Package ${VERSION}
-                    ===========================
+                    cat > ${PACKAGE_NAME}/README.txt << 'EOT'
+cJSON Library Package ${VERSION}
+===========================
+
+This package contains:
+- Dynamic library in lib/
+- Static library in lib/
+- Header files in include/
+- Documentation in docs/
+
+To use:
+1. Copy libcjson.so* to your system library path or application directory
+2. Copy cJSON.h to your include path
+3. Compile with -lcjson flag
+
+Example: gcc -o myapp myapp.c -I./include -L./lib -lcjson
+
+See docs/README.md for more information.
+EOT
                     
-                    This package contains:
-                    - Dynamic library in lib/
-                    - Static library in lib/
-                    - Header files in include/
-                    - Documentation in docs/
-                    
-                    To use:
-                    1. Copy libcjson.so* to your system library path or application directory
-                    2. Copy cJSON.h to your include path
-                    3. Compile with -lcjson flag
-                    
-                    Example: gcc -o myapp myapp.c -I./include -L./lib -lcjson
-                    
-                    See docs/README.md for more information.
-                    EOF
+                    # Zastąpienie zmiennych w README.txt
+                    sed -i "s/\\\${VERSION}/${VERSION}/g" ${PACKAGE_NAME}/README.txt
                     
                     # Zatrzymanie i usunięcie kontenera
                     docker stop cjson-build-container
@@ -219,29 +222,35 @@ pipeline {
                 
                 // Generowanie raportu z wydania
                 sh '''
-                    cat > release_notes_${VERSION}.md << EOF
-                    # cJSON Library Release ${VERSION}
+                    cat > release_notes_${VERSION}.md << 'EOT'
+# cJSON Library Release ${VERSION}
+
+## Release Information
+- Build Number: ${BUILD_NUMBER}
+- Build Date: $(date)
+- Jenkins Job: ${JOB_NAME}
+
+## Package Contents
+- Dynamic Library (libcjson.so)
+- Static Library (libcjson.a)
+- Header Files (cJSON.h)
+- Documentation
+
+## Docker Image
+- Image name: ${IMAGE_TAG}
+
+## Installation
+Download the package archive from Jenkins artifacts and extract it to your project directory.
+
+## Usage
+See example.c in the package for usage example.
+EOT
                     
-                    ## Release Information
-                    - Build Number: ${BUILD_NUMBER}
-                    - Build Date: $(date)
-                    - Jenkins Job: ${JOB_NAME}
-                    
-                    ## Package Contents
-                    - Dynamic Library (libcjson.so)
-                    - Static Library (libcjson.a)
-                    - Header Files (cJSON.h)
-                    - Documentation
-                    
-                    ## Docker Image
-                    - Image name: ${IMAGE_TAG}
-                    
-                    ## Installation
-                    Download the package archive from Jenkins artifacts and extract it to your project directory.
-                    
-                    ## Usage
-                    See example.c in the package for usage example.
-                    EOF
+                    # Zastąpienie zmiennych w release_notes
+                    sed -i "s/\\\${VERSION}/${VERSION}/g" release_notes_${VERSION}.md
+                    sed -i "s/\\\${BUILD_NUMBER}/${BUILD_NUMBER}/g" release_notes_${VERSION}.md
+                    sed -i "s/\\\${JOB_NAME}/${JOB_NAME}/g" release_notes_${VERSION}.md
+                    sed -i "s/\\\${IMAGE_TAG}/${IMAGE_TAG}/g" release_notes_${VERSION}.md
                 '''
                 
                 // Archiwizacja notatek z wydania
