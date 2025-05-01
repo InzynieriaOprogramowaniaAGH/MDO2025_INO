@@ -82,7 +82,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 // Budowanie i uruchamianie kontenera deploy
-                sh 'docker build -t cjson-deploy -f Dockerfile.cjsondeploy .'
+                sh 'docker build --no-cache -t cjson-deploy -f Dockerfile.cjsondeploy .'
                 sh 'docker run --rm cjson-deploy > deploy_results.txt'
                 
                 // Archiwizacja wyników wdrożenia
