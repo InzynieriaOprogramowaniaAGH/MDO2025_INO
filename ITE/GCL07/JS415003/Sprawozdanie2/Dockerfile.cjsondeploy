@@ -1,0 +1,21 @@
+FROM fedora:42-minimal
+
+# Kopiowanie biblioteki z kontenera build
+COPY --from=cjson-build /cjson-build/build/libcjson.so /usr/lib/
+COPY --from=cjson-build /cjson-build/cJSON.h /usr/include/
+
+# Aktualizacja cache bibliotek
+RUN ldconfig
+
+# Przykładowy kod demonstrujący działanie biblioteki
+COPY example.c /app/example.c
+WORKDIR /app
+
+# Kompilacja przykładu
+RUN dnf install -y gcc && \
+    gcc -o example example.c -lcjson && \
+    dnf remove -y gcc && \
+    dnf clean all
+
+# Uruchomienie przykładu jako weryfikacja wdrożenia
+CMD ["./example"]

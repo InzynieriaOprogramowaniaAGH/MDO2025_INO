@@ -1,0 +1,154 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Pobranie kodu źródłowego
+                git url: 'https://github.com/DaveGamble/cJSON.git', branch: 'master'
+                
+                // Kopiowanie plików Dockerfile z repozytorium projektu
+                sh '''
+                cp ${WORKSPACE}/ITE/GCL07/JS415003/Sprawozdanie2/005-Class/Dockerfile.cjsonbuild ${WORKSPACE}/
+                cp ${WORKSPACE}/ITE/GCL07/JS415003/Sprawozdanie2/005-Class/Dockerfile.cjsontest ${WORKSPACE}/
+                '''
+                
+                // Tworzenie przykładowego pliku C do demonstracji działania biblioteki
+                sh '''
+                cat > example.c << EOF
+                #include <stdio.h>
+                #include <stdlib.h>
+                #include "cJSON.h"
+
+                int main() {
+                    const char *json_string = "{\\\"name\\\":\\\"cJSON\\\", \\\"version\\\":\\\"1.0\\\", \\\"status\\\":\\\"deployed\\\"}";
+                    cJSON *json = cJSON_Parse(json_string);
+                    
+                    if (json == NULL) {
+                        printf("Error parsing JSON\\n");
+                        return 1;
+                    }
+                    
+                    cJSON *name = cJSON_GetObjectItemCaseSensitive(json, "name");
+                    cJSON *version = cJSON_GetObjectItemCaseSensitive(json, "version");
+                    cJSON *status = cJSON_GetObjectItemCaseSensitive(json, "status");
+                    
+                    printf("Library: %s\\nVersion: %s\\nStatus: %s\\n",
+                        name->valuestring, version->valuestring, status->valuestring);
+                    
+                    cJSON_Delete(json);
+                    return 0;
+                }
+                EOF
+                '''
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Budowanie obrazu Builder
+                sh 'docker build -t cjson-build -f Dockerfile.cjsonbuild .'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                // Uruchomienie testów
+                sh 'docker build -t cjson-test -f Dockerfile.cjsontest .'
+                sh 'docker run --name cjson-test-container cjson-test || true'
+                
+                // Zapisanie wyników testów
+                sh 'docker cp cjson-test-container:/cjson-build/build/Testing .'
+                sh 'docker rm cjson-test-container'
+                
+                // Archiwizacja wyników testów
+                archiveArtifacts artifacts: 'Testing/**/*', fingerprint: true
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                // Tworzenie Dockerfile dla deploy
+                // sh '''
+                // cat > Dockerfile.cjsondeploy << EOF
+                // FROM fedora:42-minimal
+
+                // # Kopiowanie biblioteki z kontenera build
+                // COPY --from=cjson-build /cjson-build/build/libcjson.so /usr/lib/
+                // COPY --from=cjson-build /cjson-build/cJSON.h /usr/include/
+
+                // # Aktualizacja cache bibliotek
+                // RUN ldconfig
+
+                // # Przykładowy kod demonstrujący działanie biblioteki
+                // COPY example.c /app/example.c
+                // WORKDIR /app
+
+                // # Kompilacja przykładu
+                // RUN dnf install -y gcc && \\
+                //     gcc -o example example.c -lcjson && \\
+                //     dnf remove -y gcc && \\
+                //     dnf clean all
+
+                // # Uruchomienie przykładu jako weryfikacja wdrożenia
+                // CMD ["./example"]
+                // EOF
+                // '''
+                
+                // Budowanie i uruchamianie kontenera deploy
+                sh 'docker build -t cjson-deploy -f Dockerfile.cjsondeploy .'
+                sh 'docker run --rm cjson-deploy > deploy_results.txt'
+                
+                // Archiwizacja wyników wdrożenia
+                archiveArtifacts artifacts: 'deploy_results.txt', fingerprint: true
+            }
+        }
+        
+        stage('Publish') {
+            steps {
+                // Tworzenie Dockerfile dla publish
+                // sh '''
+                // cat > Dockerfile.cjsonpublish << EOF
+                // FROM alpine:latest
+
+                // # Instalacja niezbędnych narzędzi
+                // RUN apk add --no-cache tar gzip
+
+                // # Utworzenie struktury katalogów dla dystrybucji
+                // WORKDIR /package
+
+                // # Kopiowanie biblioteki i plików nagłówkowych z kontenera build
+                // COPY --from=cjson-build /cjson-build/build/libcjson.so /package/lib/
+                // COPY --from=cjson-build /cjson-build/cJSON.h /package/include/
+                // COPY --from=cjson-build /cjson-build/LICENSE /package/
+                // COPY --from=cjson-build /cjson-build/README.md /package/
+
+                // # Tworzenie archiwum dystrybucyjnego
+                // RUN tar -czvf cjson-dist.tar.gz lib include LICENSE README.md
+
+                // # Kopiowanie archiwum do katalogu wyjściowego
+                // CMD ["cp", "cjson-dist.tar.gz", "/output/"]
+                // EOF
+                // '''
+                
+                // Tworzenie katalogu na artefakty
+                sh 'mkdir -p output'
+                
+                // Budowanie i uruchamianie kontenera publish
+                sh 'docker build -t cjson-publish -f Dockerfile.cjsonpublish .'
+                sh 'docker run --rm -v ${WORKSPACE}/output:/output cjson-publish'
+                
+                // Archiwizacja pakietu dystrybucyjnego
+                archiveArtifacts artifacts: 'output/cjson-dist.tar.gz', fingerprint: true 
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline zakończony sukcesem!'
+        }
+        failure {
+            echo 'Pipeline zakończony niepowodzeniem!'
+        }
+}

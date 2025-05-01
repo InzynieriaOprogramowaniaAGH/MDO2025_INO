@@ -1,0 +1,19 @@
+FROM alpine:latest
+
+# Instalacja niezbędnych narzędzi
+RUN apk add --no-cache tar gzip
+
+# Utworzenie struktury katalogów dla dystrybucji
+WORKDIR /package
+
+# Kopiowanie biblioteki i plików nagłówkowych z kontenera build
+COPY --from=cjson-build /cjson-build/build/libcjson.so /package/lib/
+COPY --from=cjson-build /cjson-build/cJSON.h /package/include/
+COPY --from=cjson-build /cjson-build/LICENSE /package/
+COPY --from=cjson-build /cjson-build/README.md /package/
+
+# Tworzenie archiwum dystrybucyjnego
+RUN tar -czvf cjson-dist.tar.gz lib include LICENSE README.md
+
+# Kopiowanie archiwum do katalogu wyjściowego
+CMD ["cp", "cjson-dist.tar.gz", "/output/"]
