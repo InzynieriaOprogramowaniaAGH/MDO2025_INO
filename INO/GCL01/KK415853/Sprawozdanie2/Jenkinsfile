@@ -1,0 +1,100 @@
+pipeline {
+    agent any
+
+    environment {
+        BUILD_IMAGE = 'mvn-build'
+        TEST_IMAGE = 'mvn-test'
+        RUNTIME_IMAGE = 'openjdk:17-slim'
+        JAR_NAME = 'app2.jar'
+        ARTIFACT_DIR = 'publish'
+    }
+
+    stages {
+        stage('Clone repo') {
+                steps {
+                    git branch: 'KK415853', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                }
+            }
+
+        stage('Build Image (Dependencies)') {
+            steps {
+                echo 'Budowanie obrazu buildowego z Dockerfile.build (Dependencies)...'
+                script {
+                    docker.build(env.BUILD_IMAGE, '-f Dockerfile.build .')
+                }
+            }
+        }
+
+        stage('Extract Artifact') {
+            steps {
+                echo 'Uruchomienie build-containera i kopiowanie artefaktu JAR...'
+                script {
+                    docker.image(env.BUILD_IMAGE).inside {
+                        sh '''
+                            mkdir -p target
+                            cp /app/simple-java-maven-app/target/*.jar target/
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Budowanie obrazu testowego i uruchamianie testów...'
+                script {
+                    def testImage = docker.build(env.TEST_IMAGE, '-f Dockerfile.test .')
+                    testImage.inside {
+                        sh 'mvn test'
+                    }
+                }
+                junit '**/target/surefire-reports/*.xml'
+            }
+        }
+
+        stage('Archive Artifact') {
+            steps {
+                echo 'Archiwizacja pliku JAR jako artefaktu pipeline...'
+                script {
+                    def jarFile = sh(script: "ls target/*.jar | head -n 1", returnStdout: true).trim()
+                    sh "cp ${jarFile} ${JAR_NAME}"
+                }
+                archiveArtifacts artifacts: "${JAR_NAME}"
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Wdrażanie aplikacji z użyciem obrazu runtime (openjdk)...'
+                script {
+                    sh '''
+                        docker rm -f running-java-app || true
+                        docker run -d \
+                            --name running-java-app \
+                            -v "$PWD/${JAR_NAME}:/app/${JAR_NAME}" \
+                            openjdk:17-slim \
+                            java -jar /app/${JAR_NAME}
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                echo 'Przygotowanie wersjonowanego artefaktu do redystrybucji...'
+                sh '''
+                    mkdir -p ${ARTIFACT_DIR}
+                    cp ${JAR_NAME} ${ARTIFACT_DIR}/myapp-1.0.0.jar
+                '''
+                archiveArtifacts artifacts: "${ARTIFACT_DIR}/*.jar"
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Sprzątanie: usuwanie uruchomionego kontenera (jeśli istnieje)...'
+            sh 'docker rm -f running-java-app || true'
+        }
+    }
+}
