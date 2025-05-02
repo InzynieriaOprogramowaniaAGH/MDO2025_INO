@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                script {
+                    cleanWs()
+                    sh 'docker system prune -af --volumes'
+                }
+            }
+        }
+        
+        stage('Clone repo') {
+            steps {
+                sh "git clone -b MP416297 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git "
+                sh "pwd"
+                sh "ls"
+            }
+        }
+        
+        stage('Build') {
+            steps{
+                sh "docker build -t supertuxbld -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.bld ."
+            }
+        }
+        
+        stage('Test') {
+            steps{
+                sh "docker build -t supertuxtest -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.test ."
+            }
+        }
+        
+        stage('cout') {
+            steps{
+                sh "docker images"
+            }
+        }
+        
+        
+    }
+}
