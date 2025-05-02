@@ -7,27 +7,28 @@ pipeline {
         RUNTIME_IMAGE = 'openjdk:17-slim'
         JAR_NAME = 'app2.jar'
         ARTIFACT_DIR = 'publish'
+        DOCKERFILES_DIR = 'INO/GCL01/KK415853/Sprawozdanie2'
     }
 
     stages {
         stage('Clone repo') {
-                steps {
-                    git branch: 'KK415853', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
-                }
+            steps {
+                git branch: 'KK415853', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
             }
+        }
 
         stage('Build Image (Dependencies)') {
             steps {
-                echo 'Budowanie obrazu buildowego z Dockerfile.build (Dependencies)...'
+                echo 'Budowanie obrazu buildowego z Dockerfile.build...'
                 script {
-                    docker.build(env.BUILD_IMAGE, '-f Dockerfile.build .')
+                    docker.build(env.BUILD_IMAGE, "-f ${env.DOCKERFILES_DIR}/Dockerfile.build ${env.DOCKERFILES_DIR}")
                 }
             }
         }
 
         stage('Extract Artifact') {
             steps {
-                echo 'Uruchomienie build-containera i kopiowanie artefaktu JAR...'
+                echo 'Uruchamianie build-containera i kopiowanie artefaktu JAR...'
                 script {
                     docker.image(env.BUILD_IMAGE).inside {
                         sh '''
@@ -43,7 +44,7 @@ pipeline {
             steps {
                 echo 'Budowanie obrazu testowego i uruchamianie testów...'
                 script {
-                    def testImage = docker.build(env.TEST_IMAGE, '-f Dockerfile.test .')
+                    def testImage = docker.build(env.TEST_IMAGE, "-f ${env.DOCKERFILES_DIR}/Dockerfile.test ${env.DOCKERFILES_DIR}")
                     testImage.inside {
                         sh 'mvn test'
                     }
@@ -65,7 +66,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo 'Wdrażanie aplikacji z użyciem obrazu runtime (openjdk)...'
+                echo 'Wdrażanie aplikacji...'
                 script {
                     sh '''
                         docker rm -f running-java-app || true
@@ -81,7 +82,7 @@ pipeline {
 
         stage('Publish') {
             steps {
-                echo 'Przygotowanie wersjonowanego artefaktu do redystrybucji...'
+                echo 'Przygotowanie artefaktu do publikacji...'
                 sh '''
                     mkdir -p ${ARTIFACT_DIR}
                     cp ${JAR_NAME} ${ARTIFACT_DIR}/myapp-1.0.0.jar
@@ -93,7 +94,7 @@ pipeline {
 
     post {
         always {
-            echo 'Sprzątanie: usuwanie uruchomionego kontenera (jeśli istnieje)...'
+            echo 'Sprzątanie po pipeline...'
             sh 'docker rm -f running-java-app || true'
         }
     }
