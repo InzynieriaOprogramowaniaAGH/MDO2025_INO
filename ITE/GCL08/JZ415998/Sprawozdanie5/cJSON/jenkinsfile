@@ -15,6 +15,8 @@ pipeline {
         stage('Clone') {
             steps {
                 git branch: 'JZ415998', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+                sh 'find .'
+
             }
         }
 
@@ -42,7 +44,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                dir('ITE/GCL08/JT416081/Sprawozdanie_2/cjson-ci-cd') {
+                dir('ITE/GCL08/JZ415998/Sprawozdanie5/cJSON') {
                     sh 'docker build -f testDockerfile -t $IMAGE_TEST .'
                     sh 'docker run --rm $IMAGE_TEST > test-${VERSION}.log'
                     archiveArtifacts artifacts: "test-${VERSION}.log", onlyIfSuccessful: true
