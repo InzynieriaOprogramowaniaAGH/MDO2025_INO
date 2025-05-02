@@ -1,3 +1,4 @@
-FROM mvn-build
+FROM mvn-build AS build
+COPY --from=mvn-build /app/simple-java-maven-app /app/simple-java-maven-app
 WORKDIR /app/simple-java-maven-app
 CMD ["mvn", "test"]
