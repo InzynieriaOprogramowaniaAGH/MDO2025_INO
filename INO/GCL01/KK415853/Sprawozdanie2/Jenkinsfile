@@ -47,7 +47,9 @@ pipeline {
                 script {
                     def testImage = docker.build(env.TEST_IMAGE, "-f ${env.DOCKERFILES_DIR}/Dockerfile.test ${env.DOCKERFILES_DIR}")
                     testImage.inside {
-                        sh 'mvn test'
+                       dir('/app/simple-java-maven-app') {
+                            sh 'mvn test'
+                        }
                     }
                 }
                 junit '**/target/surefire-reports/*.xml'
