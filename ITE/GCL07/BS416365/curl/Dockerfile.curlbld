@@ -5,5 +5,5 @@ RUN dnf -y update && \
     dnf clean all
 RUN git clone https://github.com/curl/curl.git
 WORKDIR /curl
-RUN ./buildconf && ./configure && make && make install
+RUN ./buildconf && ./configure --with-openssl && make && make install
 CMD ["/bin/bash"]
