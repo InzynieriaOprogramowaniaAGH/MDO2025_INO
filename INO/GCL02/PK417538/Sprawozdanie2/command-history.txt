@@ -1,0 +1,1000 @@
+   49  ls -a
+   50  cd .git/
+   51  ls
+   52  cd hooks/
+   53  ls
+   54  nano pre-commit.sample 
+   55  cp ../../INO/GCL02/PK417538/pre-commit 
+   56  cp ../../INO/GCL02/PK417538/pre-commit pre-commpit
+   57  cp ../../INO/GCL02/PK417538/pre-commit pre-commit
+   58  ls
+   59  ls -a
+   60  rm pre-commpit 
+   61  cd ..
+   62  ls
+   63  cd ..
+   64  ls
+   65  git branch
+   66  git add .
+   67  git commit -m "PK417538 Initial commit"
+   68  git config --global user.email "kefireczek.pl@gmail.com"
+   69  git config --global user.name "Patryk Krysta"
+   70  git commit -m "PK417538 Initial commit"
+   71  nano .git/hooks/pre-commit
+   72  git commit -m "PK417538 Initial commit"
+   73  nano .git/hooks/pre-commit
+   74  git commit -m "PK417538 Initial commit"
+   75  mv .git/hooks/pre-commit .git/hooks/commit-msg
+   76  git commit -m "PK417538 Initial commit"
+   77  git commit -m "PK417537 test "
+   78  nano .git/hooks/pre-commit
+   79  nano .git/hooks/commit-msg
+   80  git commit -m "PK417538 Initial commit"
+   81  git commit -m "PK417537 test "
+   82  touch test
+   83  git add .
+   84  git commit -m "PK417537 test "
+   85  rm test 
+   86  nano .git/hooks/commit-msg
+   87  git branch
+   88  git push
+   89  git push --set-upstream origin PK417538
+   90  exit
+   91  sudo apt-get update
+   92  sudo apt-get install docker.io
+   93  sudo systemctl enable docker
+   94  sudo systemctl start docker
+   95  sudo systemctl status docker
+   96  sudo docker run hello-world
+   97  sudo usermod -aG docker $USER
+   98  sudo docker pull hello-world
+   99  sudo docker pull busybox
+  100  sudo docker pull ubuntu
+  101  sudo docker pull mysql
+  102  sudo docker run -it busybox sh
+  103  sudo docker pull fedora
+  104  sudo docker run -d --privileged --name fedora_systemd -v /sys/fs/cgroup:/sys/fs/cgroup:ro fedora:latest /usr/sbin/init
+  105  exit
+  106  sudo docker run -d --privileged --name fedora_systemd -v /sys/fs/cgroup:/sys/fs/cgroup:ro fedora:latest /usr/sbin/init
+  107  sudo docker exec -it fedora_systemd bash
+  108  sudo docker run -d --privileged --name fedora_systemd -v /sys/fs/cgroup:/sys/fs/cgroup:ro fedora:latest /usr/sbin/init
+  109  sudo docker rm -f fedora_systemd
+  110  sudo docker run -d --privileged --name fedora_systemd -v /sys/fs/cgroup:/sys/fs/cgroup:ro fedora:latest /usr/sbin/init
+  111  sudo docker run -d --privileged --name fedora_systemd -v /sys/fs/cgroup:/sys/fs/cgroup:ro fedora:latest /usr/lib/systemd/systemd
+  112  sudo docker rm -f fedora_systemd
+  113  sudo docker run -d --privileged --name fedora_systemd -v /sys/fs/cgroup:/sys/fs/cgroup:ro fedora:latest /usr/lib/systemd/systemd
+  114  sudo docker rm -f fedora_systemd
+  115  docker run -it ubuntu
+  116  sudo docker run -it ubuntu
+  117  ls
+  118  cd INO/
+  119  l
+  120  cd GCL02/
+  121  L
+  122  l
+  123  cd PK417538/
+  124  l
+  125  rm pre-commit 
+  126  l
+  127  touch Dockerfile
+  128  nano Dockerfile 
+  129  docker build -t moj-obraz .
+  130  sudo docker build -t moj-obraz .
+  131  l
+  132  mkdir app
+  133  ls
+  134  sudo docker build -t moj-obraz .
+  135  cd 
+  136  mkdir kontener
+  137  cd kontener/
+  138  ls
+  139  cp ~/MDO2025_INO/INO/GCL02/PK417538/Dockerfile 
+  140  cp ~/MDO2025_INO/INO/GCL02/PK417538/Dockerfile .
+  141  ls
+  142  docker build -t moj-obraz .
+  143  sudo docker build -t moj-obraz .
+  144  ls
+  145  nano Dockerfile 
+  146  docker build -t moj-obraz .
+  147  sudo docker build -t moj-obraz .
+  148  ls
+  149  docker run -it moj-obraz
+  150  sudo docker run -it moj-obraz
+  151  docker ps
+  152  sudo docker ps
+  153  ls
+  154  nano Dockerfile 
+  155  sudo docker run -it moj-obraz
+  156  cp Dockerfile ~/MDO2025_INO/INO/GCL02/PK417538/Dockerfile 
+  157  docker ps -adocker ps -a
+  158  docker ps -a
+  159  sudo docker ps -a
+  160  docker stop $(docker ps -q)
+  161  sudo docker stop $(docker ps -q)
+  162  docker stop *
+  163  sudo docker stop *
+  164  sudo docker ps -a
+  165  sudo docker rm $(docker ps -a -q)
+  166  sudo docker rm *
+  167  sudo docker ps -a
+  168  sudo docker rm $(sudo docker ps -a -q)
+  169  sudo docker ps -a
+  170  sudo docker rmi $(sudo docker images -q)
+  171  cd ..
+  172  cd MDO2025_INO/
+  173  git add .
+  174  git commit -m "Dockerfile"
+  175  git commit -m "PK417538 Dockerfile"
+  176  git push -u
+  177  git push --set-upstream origin PK417538
+  178  l
+  179  cd INO/
+  180  cd GCL02/
+  181  cd PK417538/
+  182  ls
+  183  cd app/
+  184  ls
+  185  cd ..
+  186  rmdir app/
+  187  nano Dockerfile 
+  188  cd ../..
+  189  cd ..
+  190  git add .
+  191  git commit -m "PK417538 Dodano Dockerfile"
+  192  git push --set-upstream origin PK417538
+  193  ps aux | grep docker
+  194  git clone https://github.com/pydantic/pytest-examples.git
+  195  ls
+  196  rm -rf pytest-examples/
+  197  ls
+  198  cd ..
+  199  ls
+  200  git clone https://github.com/pydantic/pytest-examples.git
+  201  cd pytest-examples/
+  202  ls
+  203  cat Makefile 
+  204  sudo apt update
+  205  sudo apt install -y python3 python3-pip make git
+  206  pip install --user poetry
+  207  export PATH="$HOME/.local/bin:$PATH"
+  208  apt instal python3-poetry
+  209  apt install python3-poetry
+  210  sudo apt install python3-poetry
+  211  make install
+  212  ls
+  213  poetry install
+  214  wget -qO- https://astral.sh/uv/install.sh | sh
+  215  make install
+  216  make test
+  217  docker run -it ubuntu:latest /bin/bash
+  218  touch Dockerfile.build
+  219  cd ..
+  220  ls
+  221  cd MDO2025_INO/
+  222  touch Dockerfile.build
+  223  touch Dockerfile.test
+  224  docker build -f Dockerfile.build -t pytest-examples-build .
+  225  cp Dockerfile.test ../pytest-examples/
+  226  cp Dockerfile.build ../pytest-examples/
+  227  cd ..
+  228  cd pytest-examples/
+  229  l
+  230  docker build -f Dockerfile.build -t pytest-examples-build .
+  231  cp ../MDO2025_INO/Dockerfile.build .
+  232  docker build -f Dockerfile.build -t pytest-examples-build .
+  233  cp ../MDO2025_INO/Dockerfile.build .
+  234  docker build -f Dockerfile.build -t pytest-examples-build .
+  235  cp ../MDO2025_INO/Dockerfile.build .
+  236  docker build -f Dockerfile.build -t pytest-examples-build .
+  237  cp ../MDO2025_INO/Dockerfile.build .
+  238  docker build -f Dockerfile.build -t pytest-examples-build .
+  239  cp ../MDO2025_INO/Dockerfile.build .
+  240  docker build -f Dockerfile.build -t pytest-examples-build .
+  241  cp ../MDO2025_INO/Dockerfile.build .
+  242  docker build -f Dockerfile.build -t pytest-examples-build .
+  243  cp ../MDO2025_INO/Dockerfile.build .
+  244  docker build -f Dockerfile.build -t pytest-examples-build .
+  245  docker build -f Dockerfile.test -t pytest-examples-test .
+  246  cp ../MDO2025_INO/Dockerfile.test .
+  247  docker build -f Dockerfile.test -t pytest-examples-test .
+  248  cp ../MDO2025_INO/Dockerfile.test .
+  249  docker build -f Dockerfile.test -t pytest-examples-test .
+  250  docker run --rm pytest-examples-test
+  251  docker run pytest-examples-test
+  252  cp ../MDO2025_INO/Dockerfile.test .
+  253  docker build -f Dockerfile.test -t pytest-examples-test .
+  254  docker run pytest-examples-test
+  255  docker run --rm pytest-examples-test
+  256  cp ../MDO2025_INO/Dockerfile.test .
+  257  docker build -f Dockerfile.test -t pytest-examples-test .
+  258  docker run --rm pytest-examples-test
+  259  sudo apt update && sudo apt install -y     git     build-essential     autoconf     automake     libtool     pkg-config     libncursesw5-dev     libssl-dev     libglib2.0-dev     libcurl4-openssl-dev
+  260  git clone https://github.com/irssi/irssi.git
+  261  cd irssi
+  262  cd ..
+  263  rm -rf irssi/
+  264  cd ..
+  265  git clone https://github.com/irssi/irssi.git
+  266  cd irssi
+  267  l
+  268  cat README.md 
+  269  meson Build
+  270  sudo apt install meson
+  271  meson Build
+  272  ninja -C /home/user/irssi/Build
+  273  l
+  274  meson test -C Build
+  275  l
+  276  vcd src/
+  277  cd src/
+  278  l
+  279  cd ..
+  280  sudo make install
+  281  cd s
+  282  cd src/
+  283  l
+  284  vcd irc/
+  285  cd irc/
+  286  l
+  287  ls
+  288  cd ..
+  289  cd 
+  290  l
+  291  cd MDO2025_INO/
+  292  l
+  293  mv Dockerfile.* INO/GCL02/PK417538/.
+  294  git add .
+  295  git commit 
+  296  git add -m "PK417538 LAB3 dockerfiles"
+  297  git commit -m "PK417538 LAB3 dockerfiles"
+  298  git status
+  299  git push
+  300  cd ..
+  301  ls
+  302  cd ns-3/-3
+  303  cd ns-3
+  304  ls
+  305  cd scratch/
+  306  ls
+  307  cd ..
+  308  ./ns build
+  309  ./ns3 build
+  310  ls scratch/
+  311  cd scratch/subdir
+  312  ls
+  313  cd ..
+  314  cd nested-subdir/
+  315  ls
+  316  cd ..
+  317  ls
+  318  cd ..
+  319  ls
+  320  find ms
+  321  ./ns3 run scratch/poisson-simulation
+  322  ls
+  323  cd build
+  324  ls
+  325  cd scratch/
+  326  ls
+  327  cd ..
+  328  ./test.py
+  329  ls
+  330  ./ns3 run scratch/poisson-simulation
+  331  ls
+  332  cd scratch/
+  333  ls
+  334  nano ms.cc 
+  335  nano scratch-simulator.cc 
+  336  cd ..
+  337  ./ns3 run scratch/scratch-simulator.cc
+  338  nano scratch/poisson-simulation.cc 
+  339  ./ns3 build
+  340  ./ns3 run scratch/scratch-simulator.cc
+  341  ./ns3 run scratch/poisson-simulation
+  342  nano scratch/poisson-simulation.cc 
+  343  ./ns3 build
+  344  ./ns3 run scratch/poisson-simulation
+  345  nano scratch/1.cc 
+  346  ./ns3 build
+  347  ./ns3 run scratch/1
+  348  nano scratch/1.cc 
+  349  nano scratch/2.cc 
+  350  ./ns3 build
+  351  ./ns3 run scratch/2
+  352  nano scratch/2.cc 
+  353  ./ns3 build
+  354  ./ns3 run scratch/2
+  355  nano scratch/2.cc 
+  356  ./ns3 build
+  357  ./ns3 run scratch/2
+  358  nano scratch/2.cc 
+  359  ./ns3 build
+  360  ./ns3 run scratch/2
+  361  nano scratch/2.cc 
+  362  ls
+  363  cd ..
+  364  ls
+  365  cd bm/
+  366  ls
+  367  cd bonnmotion-3.0.1/
+  368  ls
+  369  bm -f rwp_scenario RandomWaypoint -n 50 -d 900 -i 3600 -x 1000 -y 1000 -h 10 -l 30 -p 60
+  370  ./bin/bm -f rwp_scenario RandomWaypoint -n 50 -d 900 -i 3600 -x 1000 -y 1000 -h 10 -l 30 -p 60
+  371  cd 
+  372  mkdir mobility-analysis
+  373  cd mobility-analysis
+  374  # Generowanie scenariusza Random Waypoint
+  375  cd ~/bonnmotion-3.0.1/bin
+  376  ./bm -f rwp RandomWaypoint -n 50 -d 900 -i 3600 -x 1000 -y 1000 -h 10 -l 0.5 -p 2.0
+  377  # Konwersja do formatu NS2
+  378  ./bm NSFile -f rwp
+  379  # Kopiowanie plików do katalogu roboczego
+  380  cp rwp.ns_movements ~/mobility-analysis/rwp.ns2
+  381  cd ~/mobility-analysis
+  382  cd ..
+  383  cd bm/bonnmotion-3.0.1/bin/
+  384  ./bm -f rwp RandomWaypoint -n 50 -d 900 -i 3600 -x 1000 -y 1000 -h 10 -l 0.5 -p 2.0
+  385  ./bm NSFile -f rwp
+  386  cp rwp.ns_movements ~/mobility-analysis/rwp.ns2
+  387  ./bm -f rw RandomWalk -n 50 -d 900 -i 3600 -x 1000 -y 1000 -h 10 -l 0.5 -r 10 -m 5.0
+  388  ./bm -f rw RandomWalk -n 50 -d 900 -i 3600 -x 1000 -y 1000 -h 10 -l 0.5 -r 10 -t 5.0
+  389  ./bm NSFile -f rw
+  390  cp rw.ns_movements ~/mobility-analysis/rw.ns2
+  391  cd ~/mobility-analysis
+  392  ls
+  393  cd ..
+  394  cd ns-3/
+  395  l
+  396  nano scratch/mobility-model-comparison.cc
+  397  ./ns3 build
+  398  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=~/mobility-analysis/rwp.ns2 --nodes=50 --time=900 --txp=7.5"
+  399  cp scratch/mobility-model-comparison.cc ~/MDO2025_INO/mobility-model-comparison.cc
+  400  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  401  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=~/mobility-analysis/rwp.ns2 --nodes=50 --time=900 --txp=7.5"
+  402  ls ~/mobility-analysis/
+  403  chmod 777 ~/mobility-analysis/*
+  404  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=~/mobility-analysis/rwp.ns2 --nodes=50 --time=900 --txp=7.5"
+  405  ls ~/mobility-analysis/
+  406  cp ~/mobility-analysis/* .
+  407  ls
+  408  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=900 --txp=7.5"
+  409  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  410  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=900 --txp=7.5"
+  411  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  412  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=900 --txp=7.5"
+  413  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  414  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=900 --txp=7.5"
+  415  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=90 --txp=7.5"
+  416  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=10 --txp=20"
+  417  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=50 --txp=20"
+  418  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=50 --txp=50"
+  419  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=~/mobility-analysis/rw.ns2 --nodes=50 --time=900 --txp=7.5"
+  420  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=50 --time=900 --txp=7.5"
+  421  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=50 --time=50 --txp=7.5"
+  422  cd ..
+  423  cd bm/bonnmotion-3.0.1/bin/
+  424  ./bm -f rwp RandomWaypoint -n 50 -d 900 -i 3600 -x 100 -y 100 -h 10 -l 0.5 -p 2.0
+  425  ./bm NSFile -f rwp
+  426  cp rwp.ns_movements ~/ns-3/rwp.ns2
+  427  cd ..
+  428  cd 
+  429  cd ns-3/
+  430  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=50 --txp=50"
+  431  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  432  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=50 --txp=50"
+  433  cd ..
+  434  cd bm/
+  435  cd bonnmotion-3.0.1/bin/
+  436  ./bm -f rw RandomWalk -n 50 -d 900 -i 3600 -x 100 -y 100 -h 20 -l 0.5 -r 10 -t 5.0
+  437  ./bm NSFile -f rw
+  438  cp rw.ns_movements ~/ns-3/rw.ns2
+  439  ./bm -f rwp RandomWaypoint -n 50 -d 900 -i 3600 -x 100 -y 100 -h 20 -p 0.0 -m 0.5 -M 2.0 -t 5.0
+  440  ./bm -f rwp RandomWaypoint -n 50 -d 900 -i 3600 -x 100 -y 100 -h 20 -p 0.0 -m 0.5 -M 2.0 -t 5.0
+  441  ./bm -f rwp RandomWaypoint -n 50 -d 900 -i 3600 -x 100 -y 100 -h 20 -l 0.5 -p 2.0
+  442  ./bm NSFile -f rwp
+  443  cp rwp.ns_movements ~/ns-3/rwp.ns2
+  444  cd ~/ns-3/
+  445  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=50 --txp=10"
+  446  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=50 --txp=50"
+  447  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=20 --txp=500"
+  448  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=50 --time=20 --txp=100"
+  449  cd ~/bm/bonnmotion-3.0.1/bin/
+  450  ./bm -f rw RandomWalk -n 10 -d 900 -i 3600 -x 50 -y 50 -h 20 -l 0.5 -r 10 -t 5.0
+  451  ./bm NSFile -f rw
+  452  cp rw.ns_movements ~/ns-3/rw.ns2
+  453  ./bm -f rwp RandomWaypoint -n 10 -d 900 -i 3600 -x 50 -y 50 -h 20 -l 0.5 -p 2.0
+  454  ./bm NSFile -f rwp
+  455  cp rwp.ns_movements ~/mobility-analysis/rwp.ns2
+  456  cp rwp.ns_movements ~/ns-3/rwp.ns2
+  457  cd 
+  458  cd ns-3/
+  459  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=60 --txp=20"
+  460  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=20"
+  461  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  462  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=20"
+  463  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=120 --txp=20"
+  464  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  465  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=120 --txp=20"
+  466  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  467  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=120 --txp=20"
+  468  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=20"
+  469  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  470  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=20"
+  471  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  472  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=20"
+  473  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  474  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=20"
+  475  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  476  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=20"
+  477  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  478  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=20"
+  479  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=120 --txp=20"
+  480  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=120 --txp=50"
+  481  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  482  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=120 --txp=50"
+  483  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=20 --txp=50"
+  484  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=20 --txp=20"
+  485  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=20 --txp=20"
+  486  cd ..
+  487  cd bm/
+  488  cd bonnmotion-3.0.1/bin/
+  489  ./bm -f rw RandomWalk -n 10 -d 60 -i 120 -x 10 -y 10 -h 10 -l 0.5 -r 10 -t 5.0
+  490  ./bm -f rw RandomWalk -n 10 -d 600 -i 3600 -x 10 -y 10 -h 10 -l 0.5 -r 10 -t 5.0
+  491  ./bm NSFile -f rw
+  492  cp rw.ns_movements ~/ns-3/rw.ns2
+  493  ./bm -f rwp RandomWaypoint -n 10 -d 900 -i 3600 -x 10 -y 10 -h 10 -l 0.5 -p 2.0
+  494  ./bm NSFile -f rwp
+  495  cp rwp.ns_movements ~/ns-3/rwp.ns2
+  496  cd ~/ns-3/
+  497  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=20 --txp=20"
+  498  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=20 --txp=20"
+  499  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=120 --txp=50"
+  500  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  501  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=20 --txp=20"
+  502  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=120 --txp=50"
+  503  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=120 --txp=20"
+  504  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=20 --txp=20"
+  505  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=60 --txp=20"
+  506  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=20"
+  507  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=200 --txp=20"
+  508  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  509  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=20"
+  510  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=50"
+  511  cd ..
+  512  cd bm/bonnmotion-3.0.1/bin/
+  513  /.bm -f RandomWaypoint -n 10 -d 900 -i 3600
+  514  ./bm -f RandomWaypoint -n 10 -d 900 -i 3600
+  515  ./bm -f rwp RandomWaypoint -n 10 -d 900 -i 3600
+  516  ls
+  517  cat rwp.params 
+  518  cat rw.params 
+  519  ./bm NSFile -f rwp
+  520  cp rwp.ns_movements ~/ns-3/rwp.ns2
+  521  cd ~/ns-3/
+  522  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=60 --txp=20"
+  523  cd ~/bm/bonnmotion-3.0.1/bin/
+  524  ./bm -f rwp RandomWaypoint -x 10 -y 10 -n 10 -d 900 -i 3600
+  525  ./bm NSFile -f rwp
+  526  cp rwp.ns_movements ~/ns-3/rwp.ns2
+  527  cd ~/ns-3/
+  528  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=60 --txp=20"
+  529  cd ~/bm/bonnmotion-3.0.1/bin/
+  530  ls
+  531  cat rwp.params 
+  532  cd ~/ns-3/
+  533  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=60 --txp=20"
+  534  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  535  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=60 --txp=20"
+  536  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=60 --txp=50"
+  537  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=200 --txp=50"
+  538  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=60 --txp=40"
+  539  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=50"
+  540  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=60 --txp=50"
+  541  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  542  ./ns3 run "scratch/mobility-model-comparison --model=RandomWalk --tracefile=rw.ns2 --nodes=10 --time=60 --txp=50"
+  543  ./ns3 run "scratch/mobility-model-comparison --model=RandomWaypoint --tracefile=rwp.ns2 --nodes=10 --time=60 --txp=50"
+  544  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  545  ./ns3 run scratch/mobility-model-comparison
+  546  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  547  ./ns3 run scratch/mobility-model-comparison
+  548  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  549  ./ns3 run scratch/mobility-model-comparison
+  550  cp ~/MDO2025_INO/mobility-model-comparison.cc scratch/mobility-model-comparison.cc 
+  551  ./ns3 run scratch/mobility-model-comparison
+  552  cd ..
+  553  ls
+  554  cd MDO2025_INO/
+  555  docker volume create input_volume
+  556  docker volume create output_volume
+  557  docker run -d --name moj_kontener   -v input_volume:/app/input   -v output_volume:/app/output   ubuntu:latest
+  558  docker volume ls
+  559  docker exec -it moj_kontener bash
+  560  docker run -d --name moj_kontener   -v input_volume:/app/input   -v output_volume:/app/output   ubuntu:latest
+  561  docker run -it moj_kontener bash
+  562  docker ps -a
+  563  docker start fc7b404625e5825d92520c49a4a08af6212b727018d18d9089c5cc0127fca279
+  564  docker logs fc7b404625e5825d92520c49a4a08af6212b727018d18d9089c5cc0127fca279
+  565  docker ps
+  566  docker ps -a
+  567  docker run -it --name test_container -v input_volume:/app/input -v output_volume:/app/output ubuntu:latest bash
+  568  docker ps -a
+  569  docker run 58b0ba3bcf8c
+  570  docker ls
+  571  docker -ls
+  572  docker ps
+  573  docker ps -a
+  574  docker ps id
+  575  docker ps -i
+  576  docker ps --help
+  577  docker ps -a
+  578  docker volume ls
+  579  docker ps -a
+  580  docker start test_container
+  581  docker ps -a
+  582  docker run test_container
+  583  docker stop test_container
+  584  docker start -ai <nazwa_kontenera>
+  585  docker start -ai test_container
+  586  ls
+  587  cp leach-simulation.cc ~/ns-3/scratch/
+  588  cd ~/ns-3/
+  589  ./ns3 run scratch/leach-simulation
+  590  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  591  ./ns3 run scratch/leach-simulation
+  592  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  593  ./ns3 run scratch/leach-simulation
+  594  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  595  ./ns3 run scratch/leach-simulation
+  596  sudo apt install -y gnuplot
+  597  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  598  ./ns3 run scratch/leach-simulation
+  599  sudo apt install -y gnuplot
+  600  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  601  ./ns3 run scratch/leach-simulation
+  602  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  603  ./ns3 run scratch/leach-simulation
+  604  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  605  ./ns3 run scratch/leach-simulation
+  606  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  607  ./ns3 run scratch/leach-simulation
+  608  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  609  ./ns3 run scratch/leach-simulation
+  610  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  611  ./ns3 run scratch/leach-simulation
+  612  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  613  ./ns3 run scratch/leach-simulation
+  614  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  615  ./ns3 run scratch/leach-simulation
+  616  ./scratch/plot-leach.sh
+  617  ls scratch/
+  618  ls
+  619  ./plot-leach.sh 
+  620  ls
+  621  cp *.png ~/MDO2025_INO/
+  622  ./ns3 run scratch/leach-simulation 50 100 5
+  623  ./ns3 run scratch/leach-simulation --50 --100 --5
+  624  ./ns3 run scratch/leach-simulation
+  625  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  626  ./ns3 run scratch/leach-simulation
+  627  ./plot-leach.sh 
+  628  cp *.png ~/MDO2025_INO/
+  629  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  630  ./ns3 run scratch/leach-simulation
+  631  ./plot-leach.sh 
+  632  cp *.png ~/MDO2025_INO/
+  633  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  634  ./ns3 run scratch/leach-simulation
+  635  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  636  ./ns3 run scratch/leach-simulation
+  637  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  638  ./ns3 run scratch/leach-simulation
+  639  ./plot-leach.sh 
+  640  cp *.png ~/MDO2025_INO/
+  641  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  642  ./ns3 run scratch/leach-simulation
+  643  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  644  ./ns3 run scratch/leach-simulation
+  645  cp ~/MDO2025_INO/leach-simulation.cc ~/ns-3/scratch/
+  646  ./ns3 run scratch/leach-simulation
+  647  cd 
+  648  history | less
+  649  sudo apt update && sudo apt install git
+  650  sudo apt install openssh-client
+  651  history | less
+  652  ssh-keygen -t ed25519 -C "twoj_email@example.com"
+  653  history | less
+  654  l
+  655  cd MDO2025_INO/
+  656  l -a
+  657  cd .git/
+  658  l
+  659  cd hooks/
+  660  l hooks
+  661  l
+  662  cat commit-msg
+  663  history | less
+  664  ssh-keygen -t ed25519 -C "kefireczek.pl@gmail.com"
+  665  git checkout main
+  666  git status
+  667  git checkout GCL02
+  668  cd ~/MDO2025_INO/
+  669  git checkout GCL02
+  670  git checkout main
+  671  git status
+  672  git checkout GCL02
+  673  git merge PK417538
+  674  git add .
+  675  git commit -m "PK417538 - Trying to push to GCL02"
+  676  git push origin GCL02
+  677  git checkout PK417538
+  678  history | less
+  679  sudo su
+  680  docker run -it busybox sh
+  681  docker run -it ubuntu bash
+  682  cd INO/GCL02/PK417538/
+  683  docker build -t obraz .
+  684  docker run -it obraz
+  685  docker ps -a
+  686  docker rm $(docker ps -aq)
+  687  docker rmi $(docker images -q)
+  688  history | less
+  689  docker run -it ubuntu:latest /bin/bash
+  690  history | less
+  691  cp Dockerfile.* Sprawozdanie1/.
+  692  g
+  693  cd 
+  694  ls
+  695  cd pytest-examples/
+  696  make test
+  697  docker run -it ubuntu:latest /bin/bashdocker run -it ubuntu:latest /bin/bash
+  698  [200~docker run -it ubuntu:latest /bin/bash~
+  699  docker run -it ubuntu:latest /bin/bash
+  700  cd ~/MDO2025_INO/INO/GCL02/PK417538/
+  701  docker build -f Dockerfile.test -t pytest-examples-test .
+  702  sudo docker build -f Dockerfile.test -t pytest-examples-test .
+  703  history | less
+  704  sudo docker build -f Dockerfile.build -t pytest-examples-examples .
+  705  ls
+  706  cat Dockerfile
+  707  ls Dockerfile.test 
+  708  cat Dockerfile.test 
+  709  docker build -f Dockerfile.build -t pytest-examples-test .
+  710  docker run --rm pytest-examples-test
+  711  history | lessdocker run --rm -it pytest-examples-test /bin/sh
+  712  docker run --rm -it pytest-examples-test /bin/sh
+  713  docker run --rm pytest-examples-test
+  714  docker run --rm -it pytest-examples-test /bin/sh
+  715  docker run --rm pytest-examples-test
+  716  history | less
+  717  docker run pytest-examples-test
+  718  docker run --rm -it pytest-examples-test /bin/sh
+  719  docker 
+  720  docker build -f Dockerfile.test -t pytest-examples-test .
+  721  docker images
+  722  docker login
+  723  docker build -f Dockerfile.test -t pytest-examples-test .
+  724  history | less
+  725  docker build -f Dockerfile.test -t pytest-examples-test .
+  726  sudo docker build -f Dockerfile.test -t pytest-examples-test .
+  727  ls
+  728  cd ~/MDO2025_INO/
+  729  git merge
+  730  cd ..
+  731  ls
+  732  cd pytest-examples/
+  733  ls
+  734  cat Dockerfile.test
+  735  cat Dockerfile.build 
+  736  docker ps -a
+  737  docker rm $(docker ps -aq)
+  738  nano Dockerfile.build 
+  739  docker build -f Dockerfile.build -t pytest-examples-test .
+  740  docker volume create input_vol
+  741  docker volume create output_vol
+  742  docker run -it --rm   -v input_vol:/workspace/input   -v output_vol:/workspace/output   mybuildimage   bash
+  743  docker run -it --rm   -v input_vol:/workspace/input   -v output_vol:/workspace/output   pytest-examples-test   bash
+  744  git clone https://github.com/pydantic/pytest-examples.git ~/repo
+  745  docker run -it --rm   -v ~/repo:/workspace/input   -v output_vol:/workspace/output   pytest-examples-test   bash
+  746  cd ..
+  747  docker run -d --name iperf-test1 ubuntu sh -c "apt update && apt install -y iperf3 && iperf3 -s"
+  748  docker run -d --name iperf-test2 ubuntu sh -c "apt update && apt install -y iperf3 && iperf3 -s"
+  749  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-test1
+  750  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf-test2
+  751  docker exec -it iperf-test1 /bin/bash
+  752  docker network create --driver bridge bridge_network
+  753  docker run -d --name iperf-server --network bridge-network -p 5201:5201 ubuntu sh -c "apt update && apt install -y iperf3 && iperf3 -s"
+  754  docker network create --driver bridge bridge_network
+  755  docker run -d --name iperf-server --network bridge_network -p 5201:5201 ubuntu sh -c "apt update && apt install -y iperf3 && iperf3 -s"
+  756  docker stop iperf-server
+  757  docker rm iperf-server
+  758  docker run -d --name iperf-server --network bridge_network -p 5201:5201 ubuntu sh -c "apt update && apt install -y iperf3 && iperf3 -s"
+  759  docker run --rm --network bridge_network ubuntu sh -c "apt update && apt install -y iperf3 && iperf3 -c iperf-server"
+  760  docker network create jenkins
+  761  docker run --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro --publish 8080:8080 --publish 50000:50000 jenkinsci/blueocean
+  762  docker ps
+  763  docker run -d --name dind --network jenkins   --privileged   -v /var/lib/docker   docker:dind
+  764  docker ps
+  765  docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+  766  docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+  767  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' jenkins-blueocean
+  768  ifconfig
+  769  ls
+  770  cd ns-3/
+  771  ls
+  772  cp ~/MDO2025_INO/adhoc-attack.cc ./scratch/
+  773  ./ns3 run adhoc-attack
+  774  cp ~/MDO2025_INO/adhoc-attack.cc ./scratch/
+  775  ./ns3 run adhoc
+  776  ./ns3 run adhoc-attack
+  777  cp ~/MDO2025_INO/adhoc-attack.cc ./scratch/
+  778  ./ns3 run adhoc-attack
+  779  cp ~/MDO2025_INO/adhoc-attack.cc ./scratch/
+  780  ./ns3 run adhoc-attack
+  781  cp ~/MDO2025_INO/adhoc-attack.cc ./scratch/
+  782  ./ns3 run adhoc-attack
+  783  ls
+  784  ls scratch/
+  785  mv none_results.xml 
+  786  mv flowmon_results.xml none_results.xml 
+  787  cp ~/MDO2025_INO/adhoc-attack.cc ./scratch/
+  788  ./ns3 run adhoc-attack
+  789  mv flowmon_results.xml blackhole_results.xml 
+  790  cp ~/MDO2025_INO/adhoc-attack.cc ./scratch/
+  791  ./ns3 run adhoc-attack
+  792  mv flowmon_results.xml grayhole_results.xml 
+  793  cp ~/MDO2025_INO/adhoc-attack.cc ./scratch/
+  794  ./ns3 run adhoc-attack
+  795  mv flowmon_results.xml wormhole_results.xml 
+  796  ls
+  797  cp *.xml ~/MDO2025_INO/.
+  798  cd ..
+  799  cd ns-3/
+  800  cp ~/MDO2025_INO/adhoc-attack.cc ./scratch/
+  801  ./ns3 run adhoc-attack
+  802  cat flowmon_results.xml 
+  803  cp flowmon_results.xml ~/MDO2025_INO/
+  804  cp ~/MDO2025_INO/adhoc-attack.cc ./scratch/
+  805  ./ns3 run adhoc-attack
+  806  mv flowmon_results.xml blackhole.xml
+  807  cp ~/MDO2025_INO/adhoc-attack.cc ./scratch/
+  808  ./ns3 run adhoc-attack
+  809  mv flowmon_results.xml grayhole.xml
+  810  cp ~/MDO2025_INO/adhoc-attack.cc ./scratch/
+  811  ./ns3 run adhoc-attack
+  812  mv flowmon_results.xml wormhole.xml
+  813  cp *.xml ~/MDO2025_INO/.
+  814  cd ..
+  815  ls
+  816  cd MDO2025_INO/
+  817  ls
+  818  ls -a
+  819  cp .git/hooks/commit-msg ./INO/GCL02/PK417538/.
+  820  cd ..
+  821  cd ns-3/
+  822  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  823  ./ns3 scratch/blackhole-ids
+  824  ./ns3 run scratch/blackhole-ids
+  825  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  826  ./ns3 run scratch/blackhole-ids
+  827  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  828  ./ns3 run scratch/blackhole-ids
+  829  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  830  ./ns3 run scratch/blackhole-ids
+  831  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  832  ./ns3 run scratch/blackhole-ids
+  833  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  834  ./ns3 run scratch/blackhole-ids
+  835  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  836  ./ns3 run scratch/blackhole-ids
+  837  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  838  ./ns3 run scratch/blackhole-ids
+  839  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  840  ./ns3 run scratch/blackhole-ids
+  841  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  842  ./ns3 run scratch/blackhole-ids
+  843  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  844  ./ns3 run scratch/blackhole-ids
+  845  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  846  ./ns3 run scratch/blackhole-ids
+  847  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  848  ./ns3 run scratch/blackhole-ids
+  849  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  850  ./ns3 run scratch/blackhole-ids
+  851  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  852  ./ns3 run scratch/blackhole-ids
+  853  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  854  ./ns3 run scratch/blackhole-ids
+  855  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  856  ./ns3 run scratch/blackhole-ids
+  857  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  858  ./ns3 run scratch/blackhole-ids
+  859  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  860  ./ns3 run scratch/blackhole-ids
+  861  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  862  ./ns3 run scratch/blackhole-ids
+  863  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  864  ./ns3 run scratch/blackhole-ids
+  865  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  866  ./ns3 run scratch/blackhole-ids
+  867  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  868  ./ns3 run scratch/blackhole-ids
+  869  cp ~/MDO2025_INO/blackhole-ids.cc ./scratch/.
+  870  ./ns3 run scratch/blackhole-ids
+  871  ls
+  872  cd ..
+  873  ls
+  874  cd bm/
+  875  ls
+  876  cd bonnmotion-3.0.1/
+  877  ls
+  878  ./bonnmotion -f highway_vanet_scenario RandomStreet -n 30 -d 300 -x 1000 -y 50 -m 15 -h 5 -p 0 -u 5 -v 3 -w 2 -r 3 -s 1500 -t 0 -o RandomWalk
+  879  ./bin/bm -f highway_vanet_scenario RandomStreet -n 30 -d 300 -x 1000 -y 50 -m 15 -h 5 -p 0 -u 5 -v 3 -w 2 -r 3 -s 1500 -t 0 -o RandomWalk
+  880  ./bin/bm -f highway_vanet_scenario -n 30 -d 300 -x 1000 -y 50 -m 15 -h 5 -p 0 -u 5 -v 3 -w 2 -r 3 -s 1500 -t 0 -o RandomWalk
+  881  ./bin/bm -f highway_vanet_scenario RandomWalk -n 30 -d 300 -x 1000 -y 50 -m 15 -h 5 -p 0 -u 5 -v 3 -w 2 -r 3 -s 1500 -t 0 -o
+  882  ls
+  883  cd ~/ns-3/
+  884  cp ~/MDO2025_INO/vanet.cc scratch/.
+  885  ./ns3 scratch/vanet
+  886  ./ns3 run scratch/vanet
+  887  cp ~/MDO2025_INO/vanet.cc scratch/.
+  888  ./ns3 run scratch/vanet
+  889  ./ns3 configure --enable-wave
+  890  ./ns3 configure enable-wave
+  891  cp ~/MDO2025_INO/vanet.cc scratch/.
+  892  ./ns3 run scratch/vanet
+  893  cp ~/MDO2025_INO/vanet.cc scratch/.
+  894  ./ns3 run scratch/vanet
+  895  cp ~/MDO2025_INO/vanet.cc scratch/.
+  896  ./ns3 run scratch/vanet
+  897  cp ~/MDO2025_INO/vanet.cc scratch/.
+  898  ./ns3 run scratch/vanet
+  899  cp ~/MDO2025_INO/vanet.cc scratch/.
+  900  ./ns3 run scratch/vanet
+  901  cp ~/MDO2025_INO/vanet.cc scratch/.
+  902  ./ns3 run scratch/vanet
+  903  cp ~/MDO2025_INO/vanet.cc scratch/.
+  904  ./ns3 run scratch/vanet
+  905  cp ~/MDO2025_INO/vanet.cc scratch/.
+  906  ./ns3 run scratch/vanet
+  907  cp ~/MDO2025_INO/vanet.cc scratch/.
+  908  ./ns3 run scratch/vanet
+  909  cp ~/MDO2025_INO/vanet.cc scratch/.
+  910  ./ns3 run scratch/vanet
+  911  cp ~/MDO2025_INO/vanet.cc scratch/.
+  912  ./ns3 run scratch/vanet
+  913  cp ~/MDO2025_INO/vanet.cc scratch/.
+  914  ./ns3 run scratch/vanet
+  915  cp ~/MDO2025_INO/vanet.cc scratch/.
+  916  ./ns3 run scratch/vanet
+  917  sudo apt install bonnmotion
+  918  wget https://sys.cs.uos.de/bonnmotion/src/bonnmotion-3.0.1.zip
+  919  ls
+  920  mv bonnmotion-3.0.1.zip ../bm.zip
+  921  cd ..
+  922  unzip bm.zip 
+  923  sudo apt install unzip
+  924  l
+  925  unzip bm.zip /bm
+  926  unzip bm.zip -f /bm
+  927  unzip bm.zip -d /bm
+  928  touch bm
+  929  rm bm
+  930  mkdir bm
+  931  unzip bm.zip -d /bm
+  932  mv bm.zip bm/bm.z
+  933  cd bm/
+  934  unzip bm.zip
+  935  ls
+  936  cd bonnmotion-3.0.1/
+  937  ls
+  938  ./install
+  939  sudo apt update
+  940  sudo apt install default-jdksudo apt update
+  941  sudo apt install default-jdk
+  942  java -version
+  943  ./install
+  944  DURATION=300  # czas symulacji w sekundach
+  945  NODES=20      # liczba węzłów
+  946  AREA="500 500" # obszar x y w metrach
+  947  cd ~/bonnmotion-3.0.1/bin
+  948  ./bm -f rwp_scenario RandomWaypoint -n $NODES -d $DURATION -x $AREA -h 2.0 -l 1.0 -p 60.0
+  949  ls
+  950  cd bin/
+  951  ./bm -f rwp_scenario RandomWaypoint -n $NODES -d $DURATION -x $AREA -h 2.0 -l 1.0 -p 60.0
+  952  ./bm -f rwp_scenario RandomWaypoint -n 20 -d 300 -x "500 500" -h 2.0 -l 1.0 -p 60.0
+  953  ./bm -f rwp_scenario RandomWaypoint -n 20 -d 300 -x 500 500 -h 2.0 -l 1.0 -p 60.0
+  954  ./bm -f rwp_scenario RandomWaypoint -n 20 -d 300 -x "500 500" -h 2.0 -l 1.0 -p 60.0
+  955  git branch
+  956  docker exec -it jenkins-upgraded docker version
+  957  docker exec -it jenkins-upgraded bash
+  958  docker run   --name jenkins-with-docker-run   -u root   -d   -p 8080:8080   -v jenkins_home:/var/jenkins_home   -v /var/run/docker.sock:/var/run/docker.sock   jenkins-with-docker
+  959  touch Dockerfile
+  960  nano Dockerfile 
+  961  ls
+  962  touch Dockerfile
+  963  nano Dockerfile 
+  964  ls
+  965  rm -rf ns-3/
+  966  ls
+  967  rm -rf mobility-analysis/
+  968  rm -rf irssi/
+  969  nano Dockerfile 
+  970  docker build -t jenkins-with-docker .
+  971  docker run   --name jenkins-with-docker-run   -u root   -d   -p 8080:8080   -v jenkins_home:/var/jenkins_home   -v /var/run/docker.sock:/var/run/docker.sock   jenkins-with-docker
+  972  docker exec -it jenkins-with-docker-run which docker
+  973  docker exec -it jenkins-with-docker-run docker version
+  974  docker logs -f jenkins-with-docker
+  975  docker logs -f jenkins-with-docker-run 
+  976  docker pull jenkins/jenkins:lts
+  977  docker run -p 8080:8080 -p 50000:50000   -v jenkins_home:/var/jenkins_home   --name jenkins-updated jenkins/jenkins:lts
+  978  docker pull jenkinsci/blueocean
+  979  docker run jenkinsci/blueocean --version
+  980  docker run   --name blueocean   -u root   -d   -p 8080:8080   -v jenkins_home:/var/jenkins_home   -v /var/run/docker.sock:/var/run/docker.sock   jenkinsci/blueocean
+  981  docker exec -it blueocean jenkins --version
+  982  docker exec -it blueocean cat /var/jenkins_home/jenkins.install.UpgradeWizard.state
+  983  docker rm -f blueocean
+  984  docker pull jenkinsci/blueocean
+  985  touch docker-compose.yml
+  986  nano docker-compose.yml 
+  987  ls
+  988  rm -f *.cc
+  989  ls
+  990  rm docker-compose.yml 
+  991  cd INO/GCL02/PK417538/
+  992  ls
+  993  touch docker-compose.yml
+  994  nano docker-compose.yml 
+  995  docker compose up -d
+  996  docker compose up
+  997  docker-compose up -d
+  998  sudo snap install docker
+  999  docker-compose up -d
+ 1000  cat /var/jenkins_home/secrets/initialAdminPassword
+ 1001  cat ~/var/jenkins_home/secrets/initialAdminPassword
+ 1002  docker logs -f jenkins-upgraded
+ 1003  cd ..
+ 1004  ls
+ 1005  df -h
+ 1006  sudo du -xh / --max-depth=1 | sort -h
+ 1007  sudo apt-get clean
+ 1008  df -h
+ 1009  sudo apt-get autoremove --purge
+ 1010  sudo journalctl --vacuum-size=100M
+ 1011  df -h
+ 1012  sudo du -xh /var --max-depth=1 | sort -h
+ 1013  snap list --all   | awk '/disabled/{print $1, $3}'   | xargs -n2 sh -c 'snap remove "$0" --revision="$1"'
+ 1014  sudo snap list --all   | awk '/disabled/{print $1, $3}'   | xargs -n2 sh -c 'snap remove "$0" --revision="$1"'
+ 1015  docker system prune -af
+ 1016  df -h
+ 1017  ls
+ 1018  cd local-pypi/
+ 1019  ls
+ 1020  cd packages/
+ 1021  ls
+ 1022  cd 
+ 1023  cd ..
+ 1024  ls
+ 1025  cd /root
+ 1026  sudo cd /root
+ 1027  cd ~/
+ 1028  ls
+ 1029  cd local-pypi/
+ 1030  cd packages/
+ 1031  pwd
+ 1032  ls
+ 1033  df -h
+ 1034  docker system prune -af
+ 1035  df -h
+ 1036  docker system prune -af
+ 1037  ls
+ 1038  cd ..
+ 1039  ls
+ 1040  tree
+ 1041  cd ..
+ 1042  find *.whl
+ 1043  find -f *.whl
+ 1044  find . *.whl
+ 1045  find . dist/dist/pytest_examples-0.0.17-py3-none-any.whl
+ 1046  cd ~
+ 1047  cd MDO2025_INO/INO/GCL02/PK417538/Sprawozdanie2/
+ 1048  history > command-history.txt

@@ -1,0 +1,63 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Build image') {
+        steps {
+            sh '''
+            docker build \
+                --target builder \
+                -t pytest-examples-builder:0.1.0 \
+                -f INO/GCL02/PK417538/pipeline/Dockerfile .
+            '''
+        }
+    }
+
+
+    stage('Test image') {
+      steps {
+        sh '''
+          docker build \
+            --target tester \
+            -t pytest-examples-tester:0.1.0 \
+            -f INO/GCL02/PK417538/pipeline/Dockerfile .
+        '''
+      }
+    }
+
+    stage('Build deploy image') {
+        steps {
+            sh """
+            docker build \
+                --target deploy \
+                -t pytest-examples-deploy:0.1.0 \
+                -f INO/GCL02/PK417538/pipeline/Dockerfile \
+                .
+            """
+        }
+    }
+
+
+    stage('Package / Deploy artifacts') {
+        steps {
+            script {
+            // zbuduj deploy‐image wcześniej w pipeline
+            sh 'docker create --name tmp pytest-examples-deploy:0.1.0'
+            // skopiuj całą zawartość /packages z kontenera do katalogu packages w workspace
+            sh 'docker cp tmp:/packages $WORKSPACE/packages'
+            sh 'docker rm tmp'
+            }
+            // teraz Jenkins ma je w $WORKSPACE/packages i może je zarchiwizować
+            archiveArtifacts artifacts: 'packages/**/*', fingerprint: true
+        }
+    }
+
+
+  }
+
+  post {
+    always {
+      archiveArtifacts artifacts: 'test.log', fingerprint: true
+    }
+  }
+}
