@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git branch: 'JZ415998', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+                git branch: 'JZ415998v2', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
                 sh 'pwd'
                 sh 'ls -la'
 
