@@ -1,3 +1,4 @@
 FROM curl-build
 WORKDIR /curl
-CMD ["make", "test", "||", "true"]
+ENV CURL_MAXLIFETIME_CONN=300
+CMD ["make", "test"]
