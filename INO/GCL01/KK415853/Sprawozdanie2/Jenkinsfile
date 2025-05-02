@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     environment {
         MAVEN_OPTS = '-Dmaven.repo.local=.m2/repository'
         BUILD_IMAGE = 'mvn-build'
@@ -9,80 +8,63 @@ pipeline {
         JAR_NAME = 'app2.jar'
         ARTIFACT_DIR = 'publish'
         DOCKERFILES_DIR = 'INO/GCL01/KK415853/Sprawozdanie2'
+        PROJECT_DIR = 'INO/GCL01/KK415853/Sprawozdanie2/simple-java-maven-app'
     }
-
     stages {
         stage('Clone repo') {
             steps {
                 git branch: 'KK415853', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
             }
         }
-
-        stage('Build Image (Dependencies)') {
+        stage('Build Builder Image') {
             steps {
                 echo 'Budowanie obrazu buildowego z Dockerfile.build...'
-                script {
-                    docker.build(env.BUILD_IMAGE, "-f ${env.DOCKERFILES_DIR}/Dockerfile.build ${env.DOCKERFILES_DIR}")
-                }
+                sh "docker build -t ${BUILD_IMAGE} -f ${DOCKERFILES_DIR}/Dockerfile.build ${DOCKERFILES_DIR}"
             }
         }
-
-        stage('Extract Artifact') {
+        stage('Build Test Image') {
             steps {
-                echo 'Uruchamianie build-containera i kopiowanie artefaktu JAR...'
-                script {
-                    docker.image(env.BUILD_IMAGE).inside {
-                        sh '''
-                            mkdir -p target
-                            cp /app/simple-java-maven-app/target/*.jar target/
-                        '''
-                    }
-                }
+                echo 'Budowanie obrazu testowego z Dockerfile.test...'
+                sh "docker build -t ${TEST_IMAGE} -f ${DOCKERFILES_DIR}/Dockerfile.test ${DOCKERFILES_DIR}"
             }
         }
-
-        stage('Test') {
+        stage('Extract Artifact from Builder') {
             steps {
-                echo 'Budowanie obrazu testowego i uruchamianie testów...'
-                script {
-                    def testImage = docker.build(env.TEST_IMAGE, "-f ${env.DOCKERFILES_DIR}/Dockerfile.test ${env.DOCKERFILES_DIR}")
-                    testImage.inside {
-                       dir('/app/simple-java-maven-app') {
-                            sh 'mvn test'
-                        }
-                    }
-                }
-                junit '**/target/surefire-reports/*.xml'
-            }
-        }
-
-        stage('Archive Artifact') {
-            steps {
-                echo 'Archiwizacja pliku JAR jako artefaktu pipeline...'
-                script {
-                    def jarFile = sh(script: "ls target/*.jar | head -n 1", returnStdout: true).trim()
-                    sh "cp ${jarFile} ${JAR_NAME}"
-                }
+                echo 'Wyciąganie skompilowanego JARa z kontenera builder...'
+                sh '''
+                    # Uruchom kontener i pobierz jar
+                    CONTAINER_ID=$(docker create ${BUILD_IMAGE})
+                    docker cp $CONTAINER_ID:/app/simple-java-maven-app/target/my-app-1.0-SNAPSHOT.jar ${JAR_NAME}
+                    docker rm $CONTAINER_ID
+                '''
+                
+                // Archiwizacja artefaktu
                 archiveArtifacts artifacts: "${JAR_NAME}"
             }
         }
-
+        stage('Run Tests') {
+            steps {
+                echo 'Uruchamianie testów w kontenerze testowym...'
+                sh '''
+                    # Uruchom testy w kontenerze testowym
+                    TEST_CONTAINER_ID=$(docker create ${TEST_IMAGE})
+                    docker start -a $TEST_CONTAINER_ID
+                '''
+            }
+        }
         stage('Deploy') {
             steps {
                 echo 'Wdrażanie aplikacji...'
-                script {
-                    sh '''
-                        docker rm -f running-java-app || true
-                        docker run -d \
-                            --name running-java-app \
-                            -v "$PWD/${JAR_NAME}:/app/${JAR_NAME}" \
-                            openjdk:17-slim \
-                            java -jar /app/${JAR_NAME}
-                    '''
-                }
+                sh '''
+                    docker rm -f running-java-app || true
+                    docker run -d \
+                        --name running-java-app \
+                        -v "$PWD/${JAR_NAME}:/app/${JAR_NAME}" \
+                        ${RUNTIME_IMAGE} \
+                        java -jar /app/${JAR_NAME}
+                '''
             }
         }
-
         stage('Publish') {
             steps {
                 echo 'Przygotowanie artefaktu do publikacji...'
@@ -94,7 +76,6 @@ pipeline {
             }
         }
     }
-
     post {
         always {
             echo 'Sprzątanie po pipeline...'
