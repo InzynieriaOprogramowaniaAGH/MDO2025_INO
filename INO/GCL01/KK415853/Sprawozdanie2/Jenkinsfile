@@ -5,6 +5,7 @@ pipeline {
         BUILD_IMAGE = 'mvn-build'
         TEST_IMAGE = 'mvn-test'
         RUNTIME_IMAGE = 'openjdk:17-slim'
+        JAR_NAME = 'artifact.jar'
         ARTIFACT_DIR = 'publish'
         DOCKERFILES_DIR = 'INO/GCL01/KK415853/Sprawozdanie2'
     }
