@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        MAVEN_OPTS = '-Dmaven.repo.local=.m2/repository'
         BUILD_IMAGE = 'mvn-build'
         TEST_IMAGE = 'mvn-test'
         RUNTIME_IMAGE = 'openjdk:17-slim'
