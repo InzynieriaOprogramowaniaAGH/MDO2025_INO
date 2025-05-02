@@ -45,7 +45,7 @@ pipeline {
             steps {
                 dir('MDO2025_INO/ITE/GCL07/BS416365/curl') {
                     sh '''
-                        docker build -f Dockerfile.curlfinal -t ${IMAGE_CURL_FINAL}:${VERSION} .
+                        docker build -f Dockerfile.deploy -t ${IMAGE_CURL_FINAL}:${VERSION} .
                         docker run --rm ${IMAGE_CURL_FINAL}:${VERSION} curl --version
                     '''
                 }
