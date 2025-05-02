@@ -1,0 +1,3 @@
+FROM curl-build
+WORKDIR /curl
+CMD ["make", "test"]
