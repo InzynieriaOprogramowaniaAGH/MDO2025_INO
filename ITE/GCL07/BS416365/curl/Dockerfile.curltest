@@ -1,4 +1,3 @@
 FROM curl-build
-RUN dnf install -y perl perl-Memoize perl-Test-Harness
 WORKDIR /curl
 CMD ["make", "test"]
