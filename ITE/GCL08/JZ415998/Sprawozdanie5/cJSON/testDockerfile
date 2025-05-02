@@ -1,0 +1,3 @@
+FROM cjson-build
+WORKDIR /cJSON/build
+CMD ["ctest","--verbose"]
