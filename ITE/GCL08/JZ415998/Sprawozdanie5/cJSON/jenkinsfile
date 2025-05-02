@@ -74,7 +74,7 @@ pipeline {
                         docker network create fajnasiec || true
                         docker run -dit --network fajnasiec --name deploy $IMAGE_DEPLOY:$VERSION
                         sleep 3
-                        docker run --rm --network fajnasiec -v $PWD:/apka -w /apka gcc:14 bash -c "gcc -o apka main.c cJSON.c && ./apka"
+                        docker run --rm --network fajnasiec -v $PWD:/apka -w /apka gcc:14 bash -c "gcc -o apka plik.c cJSON.c && ./apka"
                         docker stop deploy
                         docker rm deploy
                         docker network rm fajnasiec
