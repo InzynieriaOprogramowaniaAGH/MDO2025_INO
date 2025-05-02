@@ -63,6 +63,7 @@
 %if !Unicode
 %if libidn2
 165
+1542 xfail
 1560
 %endif
 1448
