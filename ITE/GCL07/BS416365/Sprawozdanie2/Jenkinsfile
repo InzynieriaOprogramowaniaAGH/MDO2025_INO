@@ -75,7 +75,7 @@ pipeline {
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker tag ${IMAGE_CURL_FINAL}:${VERSION} bskubel/curl-final:${VERSION}
-                        docker push yourdockerhubuser/curl-final:${VERSION}
+                        docker push bskubel/curl-final:${VERSION}
                     '''
                 }
                 
