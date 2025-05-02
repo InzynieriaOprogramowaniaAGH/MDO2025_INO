@@ -3,5 +3,6 @@ RUN dnf -y update && \
     dnf -y install gcc make openssl-devel libcurl-devel zlib-devel \
     autoconf automake libtool git wget && \
     dnf clean all
-WORKDIR /src
+RUN git clone https://github.com/curl/curl.git
+WORKDIR /curl
 CMD ["/bin/bash"]
