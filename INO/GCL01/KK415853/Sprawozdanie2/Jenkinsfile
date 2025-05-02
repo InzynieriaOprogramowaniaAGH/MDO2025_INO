@@ -18,35 +18,17 @@ pipeline {
         }
         stage('Build Builder Image') {
             steps {
-                echo 'Budowanie obrazu buildowego z Dockerfile.build...'
                 sh "docker build -t ${BUILD_IMAGE} -f ${DOCKERFILES_DIR}/Dockerfile.build ${DOCKERFILES_DIR}"
             }
         }
         stage('Build Test Image') {
             steps {
-                echo 'Budowanie obrazu testowego z Dockerfile.test...'
                 sh "docker build -t ${TEST_IMAGE} -f ${DOCKERFILES_DIR}/Dockerfile.test ${DOCKERFILES_DIR}"
-            }
-        }
-        stage('Extract Artifact from Builder') {
-            steps {
-                echo 'Wyciąganie skompilowanego JARa z kontenera builder...'
-                sh '''
-                    # Uruchom kontener i pobierz jar
-                    CONTAINER_ID=$(docker create ${BUILD_IMAGE})
-                    docker cp $CONTAINER_ID:/app/simple-java-maven-app/target/my-app-1.0-SNAPSHOT.jar ${JAR_NAME}
-                    docker rm $CONTAINER_ID
-                '''
-                
-                // Archiwizacja artefaktu
-                archiveArtifacts artifacts: "${JAR_NAME}"
             }
         }
         stage('Run Tests') {
             steps {
-                echo 'Uruchamianie testów w kontenerze testowym...'
                 sh '''
-                    # Uruchom testy w kontenerze testowym
                     TEST_CONTAINER_ID=$(docker create ${TEST_IMAGE})
                     docker start -a $TEST_CONTAINER_ID
                 '''
@@ -54,7 +36,6 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Wdrażanie aplikacji...'
                 sh '''
                     docker rm -f running-java-app || true
                     docker run -d \
@@ -67,7 +48,6 @@ pipeline {
         }
         stage('Publish') {
             steps {
-                echo 'Przygotowanie artefaktu do publikacji...'
                 sh '''
                     mkdir -p ${ARTIFACT_DIR}
                     cp ${JAR_NAME} ${ARTIFACT_DIR}/myapp-1.0.0.jar
@@ -78,7 +58,6 @@ pipeline {
     }
     post {
         always {
-            echo 'Sprzątanie po pipeline...'
             sh 'docker rm -f running-java-app || true'
         }
     }
