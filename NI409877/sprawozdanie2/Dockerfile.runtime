@@ -1,9 +1,11 @@
-FROM debian:bullseye
+# Etap runtime
+FROM debian:bullseye as runtime
 
 RUN apt-get update && apt-get install -y \
     libglib2.0-0 libssl1.1 libncurses5 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/local/bin/irssi /usr/local/bin/irssi
+# Kopiowanie pliku irssi z etapu 'builder'
+COPY --from=builder /src/builddir/irssi /usr/local/bin/irssi
 
 ENTRYPOINT ["irssi"]
