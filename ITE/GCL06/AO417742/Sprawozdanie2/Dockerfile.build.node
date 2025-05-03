@@ -1,0 +1,8 @@
+
+FROM node:22.14.0
+
+COPY node-js-dummy-test/ .
+WORKDIR /node-js-dummy-test
+
+RUN npm install
+
