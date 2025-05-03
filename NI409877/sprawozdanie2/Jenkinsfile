@@ -16,26 +16,15 @@ pipeline {
             }
         }
 
-        // Budowanie obrazu builder
-        stage('Build ➜ builder image') {
+        // Budowanie obu obrazów w jednej komendzie
+        stage('Build ➜ builder & runtime') {
             steps {
                 sh """
-                  docker build --target builder \
-                           -t ${BUILDER_IMG} \
-                           -f ${DOCKER_DIR}/Dockerfile.builder \
-                           ${DOCKER_DIR}
-                """
-            }
-        }
-
-        // Budowanie obrazu runtime
-        stage('Build ➜ runtime image') {
-            steps {
-                sh """
-                  docker build --target runtime \
-                           -t ${RUNTIME_IMG} \
-                           -f ${DOCKER_DIR}/Dockerfile.runtime \
-                           ${DOCKER_DIR}
+                  docker build \
+                      --target builder -t ${BUILDER_IMG} \
+                      --target runtime -t ${RUNTIME_IMG} \
+                      -f ${DOCKER_DIR}/Dockerfile \
+                      ${DOCKER_DIR}
                 """
             }
         }
@@ -53,9 +42,9 @@ pipeline {
         stage('Package ➜ tar.gz artifact') {
             steps {
                 sh """
-                cid=\$(docker create ${BUILDER_IMG})             # tymczasowy kontener
+                cid=\$(docker create ${BUILDER_IMG})
                 mkdir -p .out
-                docker cp \${cid}:/usr .out/          # ← kopiujemy całe /usr
+                docker cp \${cid}:/usr .out/
                 docker rm \${cid}
 
                 tar -czf ${TAR_NAME} -C .out usr 
