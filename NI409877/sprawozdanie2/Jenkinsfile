@@ -33,7 +33,6 @@ pipeline {
             steps {
                 sh """
                   docker build --target runtime \
-                           --build-arg BUILDER_TAG=${BUILD_NUMBER} \
                            -t ${RUNTIME_IMG} \
                            -f ${DOCKER_DIR}/Dockerfile.runtime \
                            ${DOCKER_DIR}
