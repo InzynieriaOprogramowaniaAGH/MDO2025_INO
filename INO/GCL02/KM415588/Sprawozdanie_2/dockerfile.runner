@@ -1,0 +1,23 @@
+FROM chalk-build
+
+WORKDIR /chalk-pipe
+
+# Czyścimy wszystko, zostawiamy tylko bibliotekę i zależności
+RUN rm -rf \
+    .git \
+    .github \
+    .gitignore \
+    .nprmc \
+    LICENSE \
+    README.md \
+    tsconfig.json \
+    screenshot.png \
+    coverage \
+    test \
+    source \
+    package-lock.json
+
+
+COPY example.js .
+RUN node example.js > smoke_test_output.log || true
+CMD ["cat", "smoke_test_output.log"]

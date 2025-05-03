@@ -1,0 +1,293 @@
+Started by user Kacper Mazur
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/Done_Pipe_Chalk
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Clone repo) (hide)
+[Pipeline] git
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/Done_Pipe_Chalk/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/KM415588^{commit} # timeout=10
+Checking out Revision 707e9ebe06bd34d4f24892a984bf686089be1acb (refs/remotes/origin/KM415588)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 707e9ebe06bd34d4f24892a984bf686089be1acb # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D KM415588 # timeout=10
+ > git checkout -b KM415588 707e9ebe06bd34d4f24892a984bf686089be1acb # timeout=10
+Commit message: "KM415588: poprawka runnera"
+ > git rev-list --no-walk 707e9ebe06bd34d4f24892a984bf686089be1acb # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Docker image)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/Done_Pipe_Chalk/INO/GCL02/KM415588/Sprawozdanie_2
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ ls -la
+total 19956
+drwxr-xr-x. 1 jenkins jenkins      282 Apr 26 21:54 .
+drwxr-xr-x. 1 jenkins jenkins       92 Apr 26 21:41 ..
+drwxr-xr-x. 1 jenkins jenkins        6 Apr 26 21:41 Images
+-rw-r--r--. 1 jenkins jenkins     2165 Apr 26 21:41 Jenkinsfile
+-rw-r--r--. 1 jenkins jenkins 20396204 Apr 26 21:54 artifact_result.tar.gz
+-rw-r--r--. 1 jenkins jenkins    13732 Apr 26 21:41 chalkpipe_builder.txt
+-rw-r--r--. 1 jenkins jenkins      118 Apr 26 21:41 dockerfile.chalkbuild
+-rw-r--r--. 1 jenkins jenkins      106 Apr 26 21:41 dockerfile.chalktest
+-rw-r--r--. 1 jenkins jenkins      414 Apr 26 21:41 dockerfile.runner
+-rw-r--r--. 1 jenkins jenkins      154 Apr 26 21:41 example.js
+drwxr-xr-x. 1 jenkins jenkins       20 Apr 26 21:41 lib
+drwxr-xr-x. 1 jenkins jenkins       72 Apr 26 21:54 logs
+drwxr-xr-x. 1 jenkins jenkins       78 Apr 26 21:43 result
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t chalk-build -f dockerfile.chalkbuild .
+#1 [internal] load build definition from dockerfile.chalkbuild
+#1 sha256:7381699a281a46b683ce486c2ba58c3dc41bdf09e5830743588013b552384681
+#1 transferring dockerfile: 232B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/node:latest
+#2 sha256:4ee467a97d34407a8575d51a76bd1143551ab4621bbaac83e709893d2f56069a
+#2 DONE 0.7s
+
+#3 [internal] load .dockerignore
+#3 sha256:0b7ab50328e53a07f10354f74d24be84487deafc3acf3581ff19ddf4014f10bc
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#8 [1/5] FROM docker.io/library/node:latest@sha256:c5bfe90b30e795ec57bcc0040065ca6f284af84a1dafd22a207bd6b48c39ce01
+#8 sha256:6227daa949d8f017bf0be0b9763bfffca6a2031a91fbe5b6c9e4dc904c6cdc43
+#8 DONE 0.0s
+
+#7 [2/5] RUN git clone https://github.com/LitoMore/chalk-pipe
+#7 sha256:685982db09b75dc371e0bd6ce8dc4f3a934ced723656262384d6523b8b910e0c
+#7 CACHED
+
+#6 [3/5] WORKDIR /chalk-pipe
+#6 sha256:ade51eb7990fd81dcd98cc98f3a34ab46cd2b44c6fac506aa5284564809de0c9
+#6 CACHED
+
+#5 [4/5] RUN npm install
+#5 sha256:f814ff04a7560f4a3d99ff925b7599da01452a74fd37d77c75d884ab2c05a398
+#5 CACHED
+
+#4 [5/5] RUN npm run build
+#4 sha256:4a177f43ee91b8c26d2017674845353bd06ca7f4f71b4ed6b3db200526e13ae3
+#4 CACHED
+
+#9 exporting to image
+#9 sha256:996239963dca2b2c4ca76190f2e41ed5e88ecc78ffac33aaada35852920888b5
+#9 exporting layers done
+#9 writing image sha256:14fa586bb2f3cda0aa2200f8158a1e8dab12b8a0587414f4c22d4c7fc36f3ddf done
+#9 naming to docker.io/library/chalk-build:latest done
+#9 DONE 0.0s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test Docker image)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/Done_Pipe_Chalk/INO/GCL02/KM415588/Sprawozdanie_2
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t chalk-test -f dockerfile.chalktest .
+#1 [internal] load build definition from dockerfile.chalktest
+#1 sha256:d3c150d9fbee407f8491389e551a7b5e411200da778a83a210b0f83b4ab8e810
+#1 transferring dockerfile: 219B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/chalk-build:latest
+#2 sha256:30b0aa2ae4cc6335f9c68e3b9f27bd4362b5fcea3230b8fe79abf34ce38d7605
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 sha256:a33b26d2f79bca158d952df9ce9a59da4a36ce7cbf0f63a3048aeb7a6258ca17
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#6 [1/3] FROM docker.io/library/chalk-build:latest
+#6 sha256:19c11b3d2bcc73c31a26b59711d0fa593215a9b82a5651fa843f5b2c0edd62bc
+#6 DONE 0.0s
+
+#5 [2/3] WORKDIR /chalk-pipe
+#5 sha256:c657a4126a572b4101118dce54b1ff8e66ec41c281de1bafcbfd14eb595c23c0
+#5 CACHED
+
+#4 [3/3] RUN npm test > test_output.log || true
+#4 sha256:2d1f5d842efa55917e13a448206b7ff89ede255c54909ccc536bee0cbf1639d1
+#4 CACHED
+
+#7 exporting to image
+#7 sha256:5b649cb10f7f7bfc30b6e13d28aea07a81b9189c00327f33cda0f7cf2d37fb0f
+#7 exporting layers done
+#7 writing image sha256:9e21915675b2635688b1a9f92613a15cc3ac6e6732122f8e82b1c078a0f7a731 done
+#7 naming to docker.io/library/chalk-test:latest done
+#7 DONE 0.0s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] sh
++ docker run -d chalk-test
+[Pipeline] sh
++ mkdir -p logs
+[Pipeline] sh
++ docker cp 23f1eed1325e5fef0b35bf44dbda89d8fc35a32f518867c29130b58f46e94577:/chalk-pipe/test_output.log logs/test_output.log
+[Pipeline] sh
++ docker rm 23f1eed1325e5fef0b35bf44dbda89d8fc35a32f518867c29130b58f46e94577
+23f1eed1325e5fef0b35bf44dbda89d8fc35a32f518867c29130b58f46e94577
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run Docker image)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/Done_Pipe_Chalk/INO/GCL02/KM415588/Sprawozdanie_2
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t chalk-run -f dockerfile.runner .
+#1 [internal] load build definition from dockerfile.runner
+#1 sha256:c1cc22dba960ea0878851ca26fe2114db91685829ed8fde74c5d900a0f0f4ddb
+#1 transferring dockerfile: 526B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/chalk-build:latest
+#2 sha256:30b0aa2ae4cc6335f9c68e3b9f27bd4362b5fcea3230b8fe79abf34ce38d7605
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 sha256:06835e2c881c58905ba61734f1dfec5bc2fad0d94cd3a87d3c74bbe92c939793
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#9 [1/5] FROM docker.io/library/chalk-build:latest
+#9 sha256:19c11b3d2bcc73c31a26b59711d0fa593215a9b82a5651fa843f5b2c0edd62bc
+#9 DONE 0.0s
+
+#6 [internal] load build context
+#6 sha256:718d07951ba0abe43e4407b5a6e800a00a67a984b36859080a12ca8861c06773
+#6 transferring context: 92B done
+#6 DONE 0.0s
+
+#5 [4/5] COPY example.js .
+#5 sha256:27b6dafe1982c8729530456fc9fe229944617b6075e7817c7fa64dccfa8ea637
+#5 CACHED
+
+#8 [2/5] WORKDIR /chalk-pipe
+#8 sha256:c657a4126a572b4101118dce54b1ff8e66ec41c281de1bafcbfd14eb595c23c0
+#8 CACHED
+
+#7 [3/5] RUN rm -rf     .git     .github     .gitignore     .nprmc     LICENSE     README.md     tsconfig.json     screenshot.png     coverage     test     source     package-lock.json
+#7 sha256:e86effbd4cdd5bfc07c6d089a13705dd4bf32623dd7bdac4eeb07750ac1e9439
+#7 CACHED
+
+#4 [5/5] RUN node example.js > smoke_test_output.log || true
+#4 sha256:1e8af77ac2fea4eaa9481fe6e0e26cc6c1ce1851108269dff00d3cc447867359
+#4 CACHED
+
+#10 exporting to image
+#10 sha256:b62caf16e4f866568741c12d414b10f3c9babd761bc1d48dec2feae81a345962
+#10 exporting layers done
+#10 writing image sha256:309a6b12dde64e3be164ad013e8f7712dbac35678be3255a85a41f9e6dfe749a done
+#10 naming to docker.io/library/chalk-run:latest done
+#10 DONE 0.0s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] sh
++ docker run -d chalk-run
+[Pipeline] sh
++ mkdir -p logs
+[Pipeline] sh
++ mkdir -p lib
+[Pipeline] sh
++ docker cp 477dd4a547409babdf935257ff8a7d82680ca4fc1a884cac2652ea102e12683a:/chalk-pipe/smoke_test_output.log logs/smoke_test_output.log
+[Pipeline] sh
++ docker cp 477dd4a547409babdf935257ff8a7d82680ca4fc1a884cac2652ea102e12683a:/chalk-pipe lib/
+[Pipeline] sh
++ docker rm 477dd4a547409babdf935257ff8a7d82680ca4fc1a884cac2652ea102e12683a
+477dd4a547409babdf935257ff8a7d82680ca4fc1a884cac2652ea102e12683a
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+📦 Archiwizacja artefaktów
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/Done_Pipe_Chalk/INO/GCL02/KM415588/Sprawozdanie_2
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ mkdir -p result
++ cp logs/test_output.log result/
++ cp logs/smoke_test_output.log result/
++ cp -r lib/ result/
++ tar -czf artifact_result.tar.gz -C result .
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] archiveArtifacts
+Archiving artifacts
+Recording fingerprints
+[Pipeline] sh
++ docker ps -aq
++ docker container stop
+"docker container stop" requires at least 1 argument.
+See 'docker container stop --help'.
+
+Usage:  docker container stop [OPTIONS] CONTAINER [CONTAINER...]
+
+Stop one or more running containers
++ true
++ docker ps -aq
++ docker container rm
+"docker container rm" requires at least 1 argument.
+See 'docker container rm --help'.
+
+Usage:  docker container rm [OPTIONS] CONTAINER [CONTAINER...]
+
+Remove one or more containers
++ true
+[Pipeline] echo
+✅ Pipeline zakończony sukcesem – artefakt tar gotowy.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

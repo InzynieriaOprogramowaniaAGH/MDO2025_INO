@@ -1,0 +1,83 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clone repo') {
+            steps {
+                git branch: 'KM415588', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build Docker image') {
+            steps {
+                dir ("INO/GCL02/KM415588/Sprawozdanie_2/")
+                {
+                    script {
+                        sh 'ls -la'
+                        docker.build('chalk-build', '-f dockerfile.chalkbuild .')
+                    }   
+                }
+            }
+        }
+        stage('Test Docker image') {
+            steps {
+                dir ("INO/GCL02/KM415588/Sprawozdanie_2/")
+                {
+                    script {
+                        def testImage = docker.build('chalk-test', '-f dockerfile.chalktest .')
+                        def containerId = sh(script: "docker run -d chalk-test", returnStdout: true).trim()
+                        sh "mkdir -p logs"
+                        sh "docker cp ${containerId}:/chalk-pipe/test_output.log logs/test_output.log"
+                        sh "docker rm ${containerId}"
+                    }  
+                }
+            }
+        }
+        stage('Run Docker image') {
+            steps {
+                dir ("INO/GCL02/KM415588/Sprawozdanie_2/")
+                {
+                    script {
+                        def runImage = docker.build('chalk-run', '-f dockerfile.runner .')
+                        def containerId = sh(script: "docker run -d chalk-run", returnStdout: true).trim()
+                        sh "mkdir -p logs"
+                        sh "mkdir -p lib"
+                        sh "docker cp ${containerId}:/chalk-pipe/smoke_test_output.log logs/smoke_test_output.log"
+                        sh "docker cp ${containerId}:/chalk-pipe lib/"
+                        sh "docker rm ${containerId}"
+                    }  
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo "📦 Archiwizacja artefaktów"
+    
+            dir ("INO/GCL02/KM415588/Sprawozdanie_2/") {
+                script {
+                    sh '''
+                    mkdir -p result
+                    cp logs/test_output.log result/ || true
+                    cp logs/smoke_test_output.log result/ || true
+                    cp -r lib/ result/ || true
+    
+                    tar -czf artifact_result.tar.gz -C result .
+    
+                    '''
+                }
+            }
+    
+            archiveArtifacts artifacts: 'INO/GCL02/KM415588/Sprawozdanie_2/artifact_result.tar.gz', fingerprint: true
+    
+            // Sprzątanie kontenerów
+            sh '''
+            docker container stop $(docker ps -aq) || true
+            docker container rm $(docker ps -aq) || true
+            '''
+            echo '✅ Pipeline zakończony sukcesem – artefakt tar gotowy.'
+        }
+        failure{
+            echo '❌ Pipeline nie powiódł się – sprawdź logi.'
+        }
+    }
+}

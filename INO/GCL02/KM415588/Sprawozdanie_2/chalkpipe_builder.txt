@@ -1,0 +1,108 @@
+Started by user Kacper Mazur
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/wstep
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Clone repo)
+[Pipeline] git
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git init /var/jenkins_home/workspace/wstep # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/KM415588^{commit} # timeout=10
+Checking out Revision e00be4d0278e7448f9953f98c239fe54e894dc47 (refs/remotes/origin/KM415588)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f e00be4d0278e7448f9953f98c239fe54e894dc47 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git checkout -b KM415588 e00be4d0278e7448f9953f98c239fe54e894dc47 # timeout=10
+Commit message: "KM415588: prooooooof"
+First time build. Skipping changelog.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Docker image)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/wstep/INO/GCL02/KM415588/Sprawozdanie_2
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ ls -la
+total 48
+drwxr-xr-x. 1 jenkins jenkins   244 Apr 27 14:30 .
+drwxr-xr-x. 1 jenkins jenkins    92 Apr 27 14:30 ..
+drwxr-xr-x. 1 jenkins jenkins     6 Apr 27 14:30 Images
+-rw-r--r--. 1 jenkins jenkins  3003 Apr 27 14:30 Jenkinsfile
+-rw-r--r--. 1 jenkins jenkins 13732 Apr 27 14:30 chalkpipe_builder.txt
+-rw-r--r--. 1 jenkins jenkins 10208 Apr 27 14:30 console_full.txt
+-rw-r--r--. 1 jenkins jenkins   118 Apr 27 14:30 dockerfile.chalkbuild
+-rw-r--r--. 1 jenkins jenkins   106 Apr 27 14:30 dockerfile.chalktest
+-rw-r--r--. 1 jenkins jenkins   414 Apr 27 14:30 dockerfile.runner
+-rw-r--r--. 1 jenkins jenkins   154 Apr 27 14:30 example.js
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t chalk-build -f dockerfile.chalkbuild .
+#1 [internal] load build definition from dockerfile.chalkbuild
+#1 sha256:9f1ef7a11bf78346e3decf2b3352cc03e31753b373415fa0cbd6a50bcced7091
+#1 transferring dockerfile: 232B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:latest
+#2 sha256:4ee467a97d34407a8575d51a76bd1143551ab4621bbaac83e709893d2f56069a
+#2 DONE 3.0s
+
+#3 [internal] load .dockerignore
+#3 sha256:5fd2f693022200df2a374b2a377a23c9b1d5efa24aa5174c128acd4cf6d10ff9
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#8 [1/5] FROM docker.io/library/node:latest@sha256:c5bfe90b30e795ec57bcc0040065ca6f284af84a1dafd22a207bd6b48c39ce01
+#8 sha256:6227daa949d8f017bf0be0b9763bfffca6a2031a91fbe5b6c9e4dc904c6cdc43
+#8 DONE 0.0s
+
+#7 [2/5] RUN git clone https://github.com/LitoMore/chalk-pipe
+#7 sha256:685982db09b75dc371e0bd6ce8dc4f3a934ced723656262384d6523b8b910e0c
+#7 CACHED
+
+#6 [3/5] WORKDIR /chalk-pipe
+#6 sha256:ade51eb7990fd81dcd98cc98f3a34ab46cd2b44c6fac506aa5284564809de0c9
+#6 CACHED
+
+#5 [4/5] RUN npm install
+#5 sha256:f814ff04a7560f4a3d99ff925b7599da01452a74fd37d77c75d884ab2c05a398
+#5 CACHED
+
+#4 [5/5] RUN npm run build
+#4 sha256:4a177f43ee91b8c26d2017674845353bd06ca7f4f71b4ed6b3db200526e13ae3
+#4 CACHED
+
+#9 exporting to image
+#9 sha256:e95e0d9b3c0d719e681764fff9503d46f09a6040774a1a8d460b41b6808ff057
+#9 exporting layers done
+#9 writing image sha256:14fa586bb2f3cda0aa2200f8158a1e8dab12b8a0587414f4c22d4c7fc36f3ddf done
+#9 naming to docker.io/library/chalk-build:latest done
+#9 DONE 0.0s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
