@@ -51,7 +51,7 @@ pipeline {
         stage('Build rpm package') {
             steps {
                 sh '''
-                docker run --rm -v $(pwd)/output:/output weechat-build bash -c "
+                docker run --rm -v $(pwd)/output:/output weechat_build bash -c "
                 set -e
                 mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
                 cd /app/weechat
