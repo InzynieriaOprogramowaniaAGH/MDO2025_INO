@@ -37,6 +37,47 @@ Celem tego laboratorium było zapoznanie się z Jenkins oraz utworzenie prostych
 Celem tego laboratorium było stworzenie pipeline'a do wybranego projektu. Poniżej pokazano kroki potrzebne do wykonania deploya oraz publisha dla aplikacji WeeChat. 
 ### Przebieg laboratorium
 - Otwarto Jenkinsa tak jak w poprzednim laboratorium
+
+- Przygotowano 2 pliki Dockerfile do budowania aplikacji
+
+    Dockerfile.build:
+    ```Dockerfile
+    FROM fedora:latest
+
+    RUN dnf -y upgrade && dnf install -y \
+    git gcc gcc-c++ clang cmake pkgconf-pkg-config \
+    ncurses-devel curl-devel gnutls-devel zlib-devel gettext \
+    cjson-devel libzstd-devel aspell-devel python3-devel \
+    perl-devel perl-ExtUtils-Embed ruby-devel tcl-devel guile-devel \
+    nodejs-devel libxml2-devel libargon2-devel libsodium-devel \
+    libgcrypt-devel asciidoctor cpputest-devel glibc-langpack-en \
+    rpm-build rpmdevtools ncurses-devel make
+    
+    RUN dnf install -y guile30 guile30-devel
+
+    ENV LANG=en_US.UTF-8
+    ENV LANGUAGE=en_US:en
+    ENV LC_ALL=en_US.UTF-8
+
+    WORKDIR /app
+    RUN git clone https://github.com/weechat/weechat.git
+
+    WORKDIR /app/weechat/build
+    RUN cmake .. -DENABLE_PHP=OFF -DENABLE_LUA=OFF -DENABLE_TESTS=ON && \
+    make -j$(nproc) && \
+    make install
+    ```
+
+    Dockerfile.test:
+    ```Dockerfile
+    FROM weechat_build
+
+    WORKDIR /app/weechat/build/tests
+
+    CMD ctest -V 
+    ```
+
+
 - Utworzono nowy pipeline
 
     ![Nowy piepline](./lab6/create_pipeline.png "Instalacja Dockera")
