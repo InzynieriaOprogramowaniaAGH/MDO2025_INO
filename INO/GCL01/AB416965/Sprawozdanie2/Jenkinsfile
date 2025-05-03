@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') { 
+            steps {
+                git branch: 'AB416965', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Clear Docker cache') {
+            steps {
+                sh 'docker builder prune -af'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir ("INO/GCL01/AB416965/Sprawozdanie2/pipeline")
+                {
+                    script {
+                        docker.build('cjson-builder-image', '-f Dockerfile.build .')
+
+                        // Get .rpm file from the container
+                        sh '''
+                            mkdir -p artifacts
+                            CID=$(docker create cjson-builder-image)
+                            docker cp $CID:/app/cjson.rpm artifacts/
+                            docker rm $CID
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir ("INO/GCL01/AB416965/Sprawozdanie2/pipeline")
+                {
+                    script {
+                        docker.build('cjson-test-image', '-f Dockerfile.test .')
+
+                        // Run tests
+                        sh """
+                            docker run --rm cjson-test-image | tee artifacts/cjson_test.log
+                        """
+                    }
+
+                }    
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir ("INO/GCL01/AB416965/Sprawozdanie2/pipeline")
+                {
+                    script {
+                        sh 'cp ../artifacts/cjson.rpm .'              
+                        docker.build("cjson-deploy-image", "-f Dockerfile.deploy .")
+
+                        // Run deployment
+                        sh """
+                            docker run --rm cjson-deploy-image | tee artifacts/cjson_deploy.log
+                        """
+                    }      
+                }
+                
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                archiveArtifacts artifacts: 'INO/GCL01/AB416965/Sprawozdanie2/artifacts/*.log', fingerprint: true
+                archiveArtifacts artifacts: 'INO/GCL01/AB416965/Sprawozdanie2/artifacts/*.rpm', fingerprint: true
+            }
+        }
+    }
+}

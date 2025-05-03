@@ -1,0 +1,47 @@
+[aborek@fedora ansible_quickstart]$ ansible-playbook -i inventory.ini playbook-cjson.yaml
+
+PLAY [Deploy CJSON in container] ********************************************************************************************
+
+TASK [Gathering Facts] ******************************************************************************************************
+ok: [ansible-target]
+
+TASK [cjson : Create artifacts directory] ***********************************************************************************
+ok: [ansible-target]
+
+TASK [cjson : Copy artifacts to target] *************************************************************************************
+ok: [ansible-target] => (item=files/cjson.rpm)
+ok: [ansible-target] => (item=files/main.c)
+
+TASK [cjson : Install python3-requests] *************************************************************************************
+ok: [ansible-target]
+
+TASK [cjson : Install Docker] ***********************************************************************************************
+ok: [ansible-target]
+
+TASK [cjson : Ensure Docker is started] *************************************************************************************
+ok: [ansible-target]
+
+TASK [cjson : Add ansible to docker group] **********************************************************************************
+ok: [ansible-target]
+
+TASK [cjson : Start fedora container] ***************************************************************************************
+changed: [ansible-target]
+
+TASK [cjson : Install gcc, cjson and tools] *********************************************************************************
+changed: [ansible-target]
+
+TASK [cjson : Compile source file] ******************************************************************************************
+changed: [ansible-target]
+
+TASK [cjson : Run program] **************************************************************************************************
+changed: [ansible-target]
+
+TASK [cjson : Print the result of the program] ******************************************************************************
+ok: [ansible-target] => {
+    "result.stdout": "Name: Adam"
+}
+
+PLAY RECAP ******************************************************************************************************************
+ansible-target             : ok=12   changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+[aborek@fedora ansible_quickstart]$ 
