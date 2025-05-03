@@ -1,0 +1,90 @@
+  498 touch Dockerfile.build Dockerfile.test
+  499  cd ..
+  500  git status
+  501  git add ITE/GCL08/JT416081/Sprawozdanie/LAB_3/Dockerfile.build ITE/GCL08/JT416081/Sprawozdanie/LAB_3/Dockerfile.test
+  502  git status
+  503  git commit -m "JT416081 Add Dockerfile.build and Dockerfile.test in different path"
+  504  git branch
+  505  git push origin JT416081
+  506  git status
+  507  git add ITE/GCL08/JT416081/Sprawozdanie/LAB_3/Dockerfile.build
+  508  git branch
+  509  git commit -m "JT416081 Modify Dockerfile.build"
+  510  git push origin JT416081
+  511  ls
+  512  cd ITE
+  513  ls
+  514  cd GCL08
+  515  ls
+  516  cd JT416081
+  517  ls
+  518  cd Sprawozdanie_2
+  519  ls
+  520  mkdir cjosn-ci-cd
+  521  rmdir cjosn-ci-cd
+  522  mkdir cjson-ci-cd
+  523  ls
+  524  cd cjson-ci-cd
+  525  git clone https://github.com/DaveGamble/cJSON.git
+  526  ls
+  527  touch Dockerfile.build
+  528  docker build -f Dockerfile.build -t cjson-build .
+  529  clear
+  530  docker build -f Dockerfile.build -t cjson-build .
+  531  touch Dockerfile.test
+  532  docker images
+  533  docker ps -a
+  534  docker ps 
+  535  docker ps -a
+  536  docker images
+  537  docker build -f Dockerfile.test -t cjson-test .
+  538  touch Dockerfile.deploy
+  539  docker create --name temp-build-container cjson-build
+  540  docker cp temp-build-container:/cJSON/cJSON.c ./
+  541  docker cp temp-build-container:/cJSON/cJSON.h ./
+  542  docker rm temp-build-container
+  543  docker build -f Dockerfile.deploy -t cjson-deploy .
+  544  docker images
+  545  docker network create my_net_123
+  546  docker run -dit --network my_net_123 --name deploy cjson-deploy
+  547  clear
+  548  docker ps
+  549  clear
+  550  gcc main.c cJSON.c -o app
+  551  clear
+  552  gcc main.c cJSON.c -o app
+  553  ./app
+  554  docker tag cjson-deploy jaktyl/cjson-deploy
+  555  docker push jaktyl/cjosn-deploy
+  556  docker push jaktyl/cjson-deploy
+  557  docker login
+  558  docker login -u jaktyl
+  559  clear
+  560  docker push jaktyl/cjson-deploy
+  561  clear
+  562  zip -r cjson.zip cJSON.h cJSON.c
+  563  sudo dnf install zip
+  564  zip -r cjson.zip cJSON.h cJSON.c
+  565  cd ..
+  566  docker ps
+  567  git status
+  568  cd ..
+  569  git status
+  570  git add .
+  571  git commit -m "JT416081 Add Jenkinsfile"
+  572  git branch
+  573  git push origin JT416081
+  574  git status
+  575  git add .
+  576  git branch
+  577  git commit -m "JT416081 Correct Jenkinsfile"
+  578  git push origin JT416081
+  579  git status
+  580  git add .
+  581  git commit -m "JT416081 Modify Dockerfile.deploy"
+  582  git push origin JT416081
+  583  git status
+  584  git add ITE/GCL08/JT416081/Sprawozdanie_2/cjson-ci-cd/Jenkinsfile
+  585  git commit -m "JT416081 Modify Jenkinsfile"
+  586  git push origin JT416081
+  587  history

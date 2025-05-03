@@ -1,0 +1,6 @@
+FROM alpine:latest
+
+WORKDIR /app
+COPY cJSON.h .
+COPY cJSON.c .
+RUN apk add --no-cache zip

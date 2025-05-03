@@ -1,0 +1,5 @@
+FROM json-c-builder:latest
+
+WORKDIR /json-c/src/build
+
+CMD ["make", "test"]
