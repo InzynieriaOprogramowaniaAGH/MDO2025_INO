@@ -1,5 +1,5 @@
 # Dockerfile.runtime
-FROM debian:bullseye
+FROM debian:bullseye AS runtime
 
 RUN apt-get update && apt-get install -y \
     libglib2.0-0 libssl1.1 libncurses5 \
