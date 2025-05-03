@@ -14,7 +14,7 @@ Weryfikacja za pomocą polecenia:
 
 Efekt działania:
 
-![](dockerps.png)
+![](screenshots/dockerps.png)
 
 Widać, że kontener jenkins pracuje na porcie 8080, natomiast docker:dind udostępnia port 2375, umożliwiając Jenkinsowi komunikację z Dockerem.
 
@@ -28,7 +28,7 @@ W Jenkinsie utworzono nowy ogólny projekt o nazwie "uname" i w kroku budowania 
 
 W efekcie wyświetlono informacje o systemie:
 
-![](uname.png)
+![](screenshots/uname.png)
 
 2. Utworzenie projektu, sprawdzającego czy godzina jest parzysta.
 
@@ -49,7 +49,7 @@ W efekcie uzyskano poprawny wynik:
 
 - Jeśli godzina jest parzysta zadanie kończy się sukcesem.
 
-![](checkhour.png)
+![](screenshots/checkhour.png)
 
 3.  Utworzenie projektu w którym pobierany jest obraz kontenera Ubuntu (docker pull)
 
@@ -58,7 +58,7 @@ W efekcie uzyskano poprawny wynik:
 Efekt:
 W logu konsoli widać pobieranie obrazu ubuntu:latest zakończone powodzeniem.
 
-![](dockerpull.png)
+![](screenshots/dockerpull.png)
 
 ## 3. Jenkins - pierwszy obiekt typu pipeline.
 
@@ -92,12 +92,12 @@ W tej części utworzono pierwszy obiekt typu Pipeline, zgodnie z wymaganiami ć
 
 fragmenty logów konsoli:
 
-![](cloneok.png)
-![](buildok.png)
+![](screenshots/cloneok.png)
+![](screenshots/buildok.png)
 
 Po zapisaniu i uruchomieniu pipeline’u, Jenkins poprawnie wykonał oba etapy (Clone i Build Dockerfile) i zakończył zadanie sukcesem.
 
-![](dwanaraz.png)
+![](screenshots/dwanaraz.png)
 
 Pipeline został uruchomiony wielokrotnie, co potwierdza jego powtarzalność. Na zrzucie widać dwa zakończone sukcesem wykonania (#4, #5):
 
@@ -125,11 +125,11 @@ Aby pipeline działał poprawnie, środowisko musi spełniać następujące waru
 
 ### Diagram aktywności procesu CI:
 
-![](pipeline_activity.drawio.png)
+![](screenshots/pipeline_activity.drawio.png)
 
 ### Diagram wdrożeniowy:
 
-![](diagram_wdrożeniowy_pipeline.drawio.png)
+![](screenshots/diagram_wdrożeniowy_pipeline.drawio.png)
 
 Diagramy zostały wykonane w programie "diagrams.net"
 
@@ -222,8 +222,8 @@ Każdy z tych plików został odpowiednio umieszczony w folderze ITE/GCL06/AO417
 
 \*Pipeline skonfigurowano z użyciem SCM – Jenkins pobiera definicję pipeline’u bezpośrednio z repozytorium GitHub (gałąź AO417742, plik Jenkinsfile)
 
-![](Jenkinsfile.png)
-![](SCM.png)
+![](screenshots/Jenkinsfile.png)
+![](screenshots/SCM.png)
 
 ### Etapy Pipeline:
 
@@ -239,7 +239,7 @@ stage('Clone') {
 
 ```
 
-![](log_clone.png)
+![](screenshots/log_clone.png)
 
 - Pobiera repozytorium ze zdalnego Gita (w tym Jenkinsfile oraz pliki Dockerfile i źródła).
 
@@ -257,8 +257,8 @@ stage('Build') {
 
 ```
 
-![](log_build1.png)
-![](log_build2.png)
+![](screenshots/log_build1.png)
+![](screenshots/log_build2.png)
 
 - Buduje obraz node-js-dummy:build z pliku Dockerfile.build.node.
 
@@ -278,8 +278,8 @@ stage('Test') {
 }
 ```
 
-![](log_test1.png)
-![](log_test2.png)
+![](screenshots/log_test1.png)
+![](screenshots/log_test2.png)
 
 - Tworzy obraz testowy node-js-dummy:test z pliku Dockerfile.test.node.
 
@@ -299,8 +299,8 @@ stage('Build Deploy Image') {
 
 ```
 
-![](log_builddeploy.png)
-![](log_builddeploy2.png)
+![](screenshots/log_builddeploy.png)
+![](screenshots/log_builddeploy2.png)
 
 - Obraz node-js-dummy:deploy zawiera CMD ["npm", "start"], uruchamiający aplikację.
 
@@ -319,7 +319,7 @@ stage('Deploy') {
 
 ```
 
-![](log_deploy.png)
+![](screenshots/log_deploy.png)
 
 - Tworzy sieć ci i uruchamia aplikację na porcie 3000.
 
@@ -339,8 +339,8 @@ stage('Test Deploy') {
 }
 ```
 
-![](log_deploytest1.png)
-![](log_testdeploy2.png)
+![](screenshots/log_deploytest1.png)
+![](screenshots/log_testdeploy2.png)
 
 - Używa kontenera curlimages/curl do sprawdzenia dostępności aplikacji.
 
@@ -361,18 +361,18 @@ stage('Publish') {
 }
 ```
 
-![](publish1.png)
-![](publish2.png)
+![](screenshots/publish1.png)
+![](screenshots/publish2.png)
 
 - Tworzony jest artefakt .zip zawierający zbudowaną aplikację.
 
 - Artefakt jest wersjonowany i archiwizowany w Jenkinsie.
 
-![](artefakt.png)
+![](screenshots/artefakt.png)
 
 Powyższy zrzut ekranu przedstawia podsumowanie zakończonego pipeline'u. Widać, że został uruchomiony na poprawnej gałęzi (AO417742), zakończył się sukcesem, a artefakt node-js-dummy-test.zip został zarchiwizowany i jest dostępny do pobrania w Jenkinsie.
 
-![](zip.png)
+![](screenshots/zip.png)
 
 Jako formę publikacji wybrano archiwum .zip, zawierające kompletny kod źródłowy aplikacji Node.js wraz z plikami package.json, Dockerfile, kodem źródłowym i frontendem. Jest to uniwersalny i przenośny format, który można uruchomić na dowolnej maszynie z Node.js
 
@@ -386,7 +386,7 @@ stage('Images') {
 }
 ```
 
-![](log_build.png)
+![](screenshots/log_build.png)
 
 - Dla celów diagnostycznych pokazuje, które obrazy zostały utworzone.
 
@@ -403,7 +403,7 @@ post {
 
 ```
 
-![](log_post.png)
+![](screenshots/log_post.png)
 
 - Zgodnie z dobrą praktyką — usuwa kontener deploy i sieć ci.
 
@@ -496,7 +496,7 @@ pipeline {
 
 ```
 
-![](sukcesy.png)
+![](screenshots/sukcesy.png)
 
 - Pipeline był uruchamiany wielokrotnie, a każde wykonanie przechodziło poprawnie. Zapewnia to, że proces CI/CD jest powtarzalny, odporny na błędy środowiskowe i nie polega na żadnych danych cache’owanych z poprzednich wykonań.
 
