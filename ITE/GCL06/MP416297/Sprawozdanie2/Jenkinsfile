@@ -31,12 +31,27 @@ pipeline {
             }
         }
         
-        stage('cout') {
-            steps{
-                sh "docker images"
+        stage('Deploy') {
+            steps {
+                script {
+                    def supertuxFile = 'supertux/build/supertux2'
+                    def dataDir = 'supertux/build/data'
+                    def outputZip = 'supertux_deploy.zip'
+                    
+                    sh "zip -r ${outputZip} ${supertuxFile} ${dataDir}"
+                }
             }
         }
         
-        
+        stage('Publish') {
+            steps {
+                script {
+                    def artifactName = "supertux_deploy_${currentBuild.timestamp}.zip"
+                    
+                    archiveArtifacts artifacts: artifactName, allowEmptyArchive: false
+                }
+            }
+        }
     }
 }
+
