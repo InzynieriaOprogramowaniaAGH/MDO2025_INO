@@ -10,6 +10,13 @@ pipeline {
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                sh 'echo "Zawartość katalogu NI409877/sprawozdanie2:" && ls -la NI409877/sprawozdanie2'
+            }
+        }
+
         stage('Clone') {
             steps {
                 git 'https://github.com/irssi/irssi.git'
@@ -38,7 +45,7 @@ pipeline {
                 dir('NI409877/sprawozdanie2') {
                     script {
                         sh '''
-                        docker build -t ${TESTER_IMG} -f Dockerfile.test .
+                        docker build -t ${TESTER_IMG} -f Dockerfile.test . || exit 1
                         docker run --rm ${TESTER_IMG} bash -c "meson test -C /app/builddir --print-errorlogs --logbase junit" | tee test.log
                         '''
                     }
@@ -63,9 +70,9 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    cid=$(docker create ${BUILDER_IMG}) # tymczasowy kontener
+                    cid=$(docker create ${BUILDER_IMG})
                     mkdir -p .out
-                    docker cp ${cid}:/usr .out/  # kopiowanie całego /usr
+                    docker cp ${cid}:/usr .out/
                     docker rm ${cid}
                     tar -czf ${TAR_NAME} -C .out usr
                     '''
