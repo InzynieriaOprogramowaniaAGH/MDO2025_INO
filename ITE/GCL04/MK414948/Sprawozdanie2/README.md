@@ -210,37 +210,57 @@ Pipeline składa się z następujących etapów:
 
 
 ### Checkout:
+
 Czyszczenie środowiska Docker:
+
   usuwanie nieużywanych kontenerów- docker system prune -f
+  
   usuwanie nieużywanych obrazów- docker image prune -f
+
   usuwanie zatrzymanych kontenerów- docker container prune -f
+  
   usuwanie folderu ITE- rm -rf ITE
 
 Pobranie kodu z repozytorium Github (gałąź MK414948)
 
 ### Build:
+
 Budowanie obrazu Docker dla środowiska budowania- plik: Dockerfile.nodebld, obraz: nodebld (plik znajduje się w /MK414948/Sprawozdanie1/pliki/Dockerfiles)
 
 ### Test:
+
 Budowanie obrazu Docker dla środowiska testowego- plik Dockerfile.nodetest, obraz: nodetest
 
 ### Deploy:
+
 Tworzenie sieci Docker o nazwie "deploy"
+
 Budowanie obrazu wdrożeniowego- plik: Dockerfile.nodedeploy, obraz: nodedeploy
+
 Uruchomienie kontenera (port: 3000, sieć: deploy, nazwa kontenera: node)
+
 Testowanie dostępności aplikacji za pomocą curla.
 
 ### Pubish:
+
 Tworzenie sieci Docker "publish"
+
 Uruchmienie serwera Verdaccio
+
 Budowanie obrazu publikacyjnego, plik: Dockerfile.nodepublish, obraz: nodepublish
+
 Uruchomienie kontenera w sieci publish
+
 Zatrzymanie kontenerow i usunięcie sieci 
 
 ### Post 
+
 Działa zawsze po zakończeniu pipeline'u niezależnie od tego, czy zakończył się sukcesem, czy nie.
+
 Czyszczenie środowiska
+
 Usunięcie wszystkich nieużywanych zasobów Docker- docker system prune -af 
+
 Usunięcie katalogu projektu- rm -rf ITE
 
 ## Dokumentacja procesu CI 
@@ -248,23 +268,37 @@ Usunięcie katalogu projektu- rm -rf ITE
 Wymagania: 
 
 Infrastruktura:
+
 -Jenkins CI/CD Serwer
+
 -Docker
+
 -Repoztorium GitHub (gałąź MK414948)
+
 -Verdaccio
 
 Narzędzia:
+
 -Docker
+
 -Git
+
 -Node.js
+
 -Curl (do testowania)
 
 Konfifuracja:
+
 -Jenkinsfile
+
 -Pliki Dockerfile:
+
   Dockerfile.nodebld (do etapu budowania, załączony przy poprzednim sprawozdaniu)
-  Dockerfile.nodetest (do etapu testowania, również można go znaleźć w folderze     Sprawozdanie 1)
+  
+  Dockerfile.nodetest (do etapu testowania, również można go znaleźć w folderze Sprawozdanie 1)
+  
   Dockerfile.nodedeploy (do etapu wdrożenia)
+  
   Dockerfile.nodepublish (do etapu publikacji)
 
 Diagram aktywności procesu CI/CD:
