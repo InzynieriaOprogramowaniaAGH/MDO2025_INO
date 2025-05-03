@@ -6,7 +6,9 @@ RUN dnf -y upgrade && dnf install -y \
     cjson-devel libzstd-devel aspell-devel python3-devel \
     perl-devel perl-ExtUtils-Embed ruby-devel tcl-devel guile-devel \
     nodejs-devel libxml2-devel libargon2-devel libsodium-devel \
-    libgcrypt-devel asciidoctor cpputest-devel glibc-langpack-en
+    libgcrypt-devel asciidoctor cpputest-devel glibc-langpack-en \
+    rpm-build rpmdevtools ncurses-devel make
+    
 RUN dnf install -y guile30 guile30-devel
 
 
