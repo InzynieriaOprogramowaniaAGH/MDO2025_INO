@@ -47,5 +47,28 @@ pipeline {
                 }
             }
         }
+
+        stage('Build rpm package') {
+            steps {
+                sh '''
+                docker run --rm -v $(pwd)/output:/output weechat-build bash -c "
+                set -e
+                mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+                cd /app/weechat
+                tar czf ~/rpmbuild/SOURCES/weechat-1.0.tar.gz .
+                cp weechat.spec ~/rpmbuild/SPECS/
+                rpmbuild -ba ~/rpmbuild/SPECS/weechat.spec
+                cp -v ~/rpmbuild/RPMS/x86_64/*.rpm /output/
+                "
+                '''
+            }
+        }
+
+        stage('Archive artifacts') {
+            steps {
+                archiveArtifacts artifacts: 'output/*.rpm', fingerprint: true
+            }
+        }
+
     }
 }
