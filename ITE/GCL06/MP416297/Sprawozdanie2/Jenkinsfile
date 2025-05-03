@@ -33,21 +33,7 @@ pipeline {
         
         stage('Deploy') {
             steps {
-                script {
-                    def version = params.VERSION
-                    if (version == '0.0.0') {
-                        version = new Date().format('yyyyMMdd', TimeZone.getTimeZone('UTC'))
-                    }
-
-                    echo "Publishing version: ${version}..."
-                    sh """
-                        docker run --rm -v "\${PWD}:/workspace" --env VERSION=${version} supertuxbld sh -c '
-                            
-                        '
-                    """
-                    
-                    sh "zip -r ${outputZip} ${supertuxFile} ${dataDir}"
-                }
+                sh "docker build -t supertuxdeploy -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.deploy ."
             }
         }
         

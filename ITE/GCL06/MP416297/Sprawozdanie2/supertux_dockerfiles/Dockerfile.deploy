@@ -1,0 +1,11 @@
+FROM supertuxbld
+
+ARG VERSION
+
+RUN apt-get update && apt-get install -y zip
+
+WORKDIR /supertux
+
+RUN cp build/supertux2 .
+
+RUN zip -r "supertux_deploy_${VERSION}.zip" supertux2 data
