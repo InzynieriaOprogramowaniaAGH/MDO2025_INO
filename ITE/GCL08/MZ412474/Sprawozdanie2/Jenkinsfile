@@ -51,39 +51,58 @@ pipeline {
         stage('Build rpm package') {
             steps {
                 sh '''
-                docker run --rm -v $(pwd)/output:/output -v $(pwd)/weechat:/app/weechat weechat-build bash -c "
+                docker run --rm -v $(pwd)/output:/output weechat_build bash -c "
                 set -e
                 mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-                cd /app/weechat
-                tar czf ~/rpmbuild/SOURCES/weechat-1.0.tar.gz .
-                cat > ~/rpmbuild/SPECS/weechat.spec <<EOF
+                cd /app
+                tar --exclude='weechat/build' \
+                    --exclude='weechat/.git' \
+                    -czf ~/rpmbuild/SOURCES/weechat-1.0.tar.gz \
+                    --transform 's,^weechat,weechat-1.0,' \
+                    weechat
 
-                Name:           weechat
-                Version:        1.0
-                Release:        1%{?dist}
-                Summary:        WeeChat built from source
-                License:        GPLv3+
-                URL:            https://weechat.org/
-                Source0:        weechat-1.0.tar.gz
-                BuildRequires:  ncurses-devel
-                Requires:       ncurses
-                %description
-                WeeChat build for devops laboratory calsses
-                %prep
-                %setup -q
-                %build
-                make
-                %install
-                mkdir -p %{buildroot}/usr/local/bin
-                make install DESTDIR=%{buildroot}
-                %files
-                /usr/local/bin/weechat
-                %changelog
-                * Sat May 03 2025 - 1.0-1
-                - Initial RPM build
-                EOF
+                echo 'Name:           weechat' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'Version:        1.0' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'Release:        1%{?dist}' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'Summary:        WeeChat built from source' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'License:        GPLv3+' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'URL:            https://weechat.org/' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'Source0:        weechat-1.0.tar.gz' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'BuildRequires:  ncurses-devel' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'Requires:       ncurses' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '%description' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'WeeChat build for devops laboratory calsses' >> ~/rpmbuild/SPECS/weechat.spec &&
+                
+                echo '%prep' >> ~/rpmbuild/SPECS/weechat.spec &&
+                
+                echo '%setup -q' >> ~/rpmbuild/SPECS/weechat.spec &&
+
+                echo '%build' >>  ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'rm -rf build' >>  ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'mkdir build' >>  ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'cd build' >>  ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'cmake .. -DENABLE_PHP=OFF -DENABLE_LUA=OFF -DENABLE_TESTS=ON' >>  ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'make' >>  ~/rpmbuild/SPECS/weechat.spec &&
+
+                echo '%install' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'cd build' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'make install DESTDIR=%{buildroot}' >> ~/rpmbuild/SPECS/weechat.spec &&
+                
+                echo '%files' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/local/bin/weechat*' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/local/include/weechat/' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/local/lib/pkgconfig/weechat.pc' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/local/lib/weechat/' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/local/share/applications/weechat.desktop' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/local/share/icons/hicolor/*/apps/weechat.png' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/local/share/locale/*/LC_MESSAGES/weechat.mo' >> ~/rpmbuild/SPECS/weechat.spec &&
+                
+                echo '%changelog' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '* Sat May 03 2025 - 1.0-1' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '- Initial RPM build' >> ~/rpmbuild/SPECS/weechat.spec
 
                 rpmbuild -ba ~/rpmbuild/SPECS/weechat.spec
+
                 cp -v ~/rpmbuild/RPMS/x86_64/*.rpm /output/
                 "
                 '''
