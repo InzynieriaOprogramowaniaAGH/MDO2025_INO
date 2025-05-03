@@ -1,11 +1,10 @@
-# Etap runtime
-FROM debian:bullseye as runtime
+# Dockerfile.runtime
+FROM debian:bullseye
 
 RUN apt-get update && apt-get install -y \
     libglib2.0-0 libssl1.1 libncurses5 \
     && rm -rf /var/lib/apt/lists/*
 
-# Kopiowanie pliku irssi z etapu 'builder'
-COPY --from=builder /src/builddir/irssi /usr/local/bin/irssi
+COPY --from=bambusscooby/irssi-builder:${BUILD_NUMBER} /src/builddir/irssi /usr/local/bin/irssi
 
 ENTRYPOINT ["irssi"]
