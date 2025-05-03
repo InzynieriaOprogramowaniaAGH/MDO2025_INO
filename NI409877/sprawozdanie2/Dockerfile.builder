@@ -1,5 +1,5 @@
 # Etap builder
-FROM debian:bullseye as builder
+FROM debian:bullseye AS builder
 
 # Instalacja niezbędnych zależności
 RUN apt-get update && apt-get install -y \
