@@ -51,18 +51,44 @@ pipeline {
         stage('Build rpm package') {
             steps {
                 sh '''
-                docker run --rm -v $(pwd)/output:/output weechat_build bash -c "
+                docker run --rm -v $(pwd)/output:/output -v $(pwd)/weechat:/app/weechat weechat-build bash -c "
                 set -e
                 mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
                 cd /app/weechat
                 tar czf ~/rpmbuild/SOURCES/weechat-1.0.tar.gz .
-                cp weechat.spec ~/rpmbuild/SPECS/
+                cat > ~/rpmbuild/SPECS/weechat.spec <<EOF
+
+                Name:           weechat
+                Version:        1.0
+                Release:        1%{?dist}
+                Summary:        WeeChat built from source
+                License:        GPLv3+
+                URL:            https://weechat.org/
+                Source0:        weechat-1.0.tar.gz
+                BuildRequires:  ncurses-devel
+                Requires:       ncurses
+                %description
+                WeeChat build for devops laboratory calsses
+                %prep
+                %setup -q
+                %build
+                make
+                %install
+                mkdir -p %{buildroot}/usr/local/bin
+                make install DESTDIR=%{buildroot}
+                %files
+                /usr/local/bin/weechat
+                %changelog
+                * Sat May 03 2025 - 1.0-1
+                - Initial RPM build
+                EOF
+
                 rpmbuild -ba ~/rpmbuild/SPECS/weechat.spec
                 cp -v ~/rpmbuild/RPMS/x86_64/*.rpm /output/
                 "
                 '''
-            }
         }
+    }
 
         stage('Archive artifacts') {
             steps {
