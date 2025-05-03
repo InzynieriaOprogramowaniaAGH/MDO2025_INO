@@ -1,0 +1,71 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_BUILDKIT = 1
+    	IMAGE_VERSION = "${new Date().format('yyyyMMddHHmmss')}-${env.GIT_COMMIT?.take(8) ?: 'dev'}"
+	}
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'MN417158',
+                    url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+
+			def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/files/Dockerfilechalk.build'
+                    	def image = docker.build("bldr:${env.IMAGE_VERSION}", "--no-cache -f ${dockerfilePath} .")
+                }
+            }
+        }
+	stage('Test') {
+            steps {
+                script {
+                    def dockerfilePath = 'INO/GCL02/MN417158/Sprawozdanie2/files/Dockerfilechalk.test'
+
+                    def testImage = docker.build("test:${env.IMAGE_VERSION}", "--no-cache -f ${dockerfilePath} --build-arg IMAGE_VERSION=${env.IMAGE_VERSION} .")
+
+                }
+            }
+        }
+        stage('Deploy') {
+             steps {
+                script {
+                    def buildContext = 'INO/GCL02/MN417158/Sprawozdanie2/files'
+
+                    sh """
+                        docker run --rm -v \$PWD/${buildContext}:/output bldr:${env.IMAGE_VERSION} \
+                        cp -r /chalk/node_modules /output/
+                    """
+
+
+                    writeFile file: "${buildContext}/demo.js", text: '''
+                        import chalk from 'chalk';
+                        const name = 'Sindre';
+                        console.log(chalk.green('Hello %s'), name);
+                    '''.stripIndent()
+
+                    def deployImage = docker.build("deploy:${env.IMAGE_VERSION}", "--no-cache -f ${buildContext}/Dockerfilechalk.deploy ${buildContext}")
+
+                }
+            }
+        }
+        stage('Publish') {
+            steps {
+                ansiColor('xterm') {
+                sh "docker run --rm deploy:${env.IMAGE_VERSION} > log.txt"
+                }
+		archiveArtifacts artifacts: 'log.txt', fingerprint: true
+		writeFile file: 'version.txt', text: "IMAGE_VERSION=${env.IMAGE_VERSION}\n"
+		archiveArtifacts artifacts: 'version.txt', fingerprint: true
+            }
+        }
+
+    }
+}
+

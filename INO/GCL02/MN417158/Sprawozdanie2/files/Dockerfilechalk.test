@@ -1,0 +1,4 @@
+ARG IMAGE_VERSION
+FROM bldr:${IMAGE_VERSION}
+
+RUN npm test
