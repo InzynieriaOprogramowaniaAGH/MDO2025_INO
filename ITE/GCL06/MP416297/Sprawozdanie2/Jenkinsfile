@@ -34,24 +34,32 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    def supertuxFile = 'supertux/build/supertux2'
-                    def dataDir = 'supertux/build/data'
-                    def outputZip = 'supertux_deploy.zip'
+                    def version = params.VERSION
+                    if (version == '0.0.0') {
+                        version = new Date().format('yyyyMMdd', TimeZone.getTimeZone('UTC'))
+                    }
+
+                    echo "Publishing version: ${version}..."
+                    sh """
+                        docker run --rm -v "\${PWD}:/workspace" --env VERSION=${version} supertuxbld sh -c '
+                            
+                        '
+                    """
                     
                     sh "zip -r ${outputZip} ${supertuxFile} ${dataDir}"
                 }
             }
         }
         
-        stage('Publish') {
-            steps {
-                script {
-                    def artifactName = "supertux_deploy_${currentBuild.timestamp}.zip"
+        // stage('Publish') {
+        //     steps {
+        //         script {
+        //             def artifactName = "supertux_deploy_${currentBuild.timestamp}.zip"
                     
-                    archiveArtifacts artifacts: artifactName, allowEmptyArchive: false
-                }
-            }
-        }
+        //             archiveArtifacts artifacts: artifactName, allowEmptyArchive: false
+        //         }
+        //     }
+        // }
     }
 }
 
