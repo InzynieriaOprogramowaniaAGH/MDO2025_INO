@@ -18,7 +18,7 @@ pipeline {
 
         stage('Build ➜ builder image') {
             steps {
-                dir('MDO2025_INO/NI409877/sprawozdanie2') {
+                dir('NI409877/sprawozdanie2') {
                     script {
                         sh '''
                         docker build -t ${BUILDER_IMG} -f Dockerfile.builder .
@@ -35,7 +35,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                dir('MDO2025_INO/NI409877/sprawozdanie2') {
+                dir('NI409877/sprawozdanie2') {
                     script {
                         sh '''
                         docker build -t ${TESTER_IMG} -f Dockerfile.test .
@@ -48,7 +48,7 @@ pipeline {
 
         stage('Smoke Test ➜ runtime image') {
             steps {
-                dir('MDO2025_INO/NI409877/sprawozdanie2') {
+                dir('NI409877/sprawozdanie2') {
                     script {
                         sh '''
                         docker build -t ${RUNTIME_IMG} -f Dockerfile.runtime .
