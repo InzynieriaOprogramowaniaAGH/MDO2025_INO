@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // Docker images tags
         BUILDER_IMG = "irssi-builder:${BUILD_NUMBER}"
         RUNTIME_IMG = "irssi-runtime:${BUILD_NUMBER}"
         TESTER_IMG = "irssi-tester:${BUILD_NUMBER}"
@@ -10,16 +9,11 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Clone Irssi') {
             steps {
-                checkout scm
-                sh 'echo "Zawartość katalogu NI409877/sprawozdanie2:" && ls -la NI409877/sprawozdanie2'
-            }
-        }
-
-        stage('Clone') {
-            steps {
-                git 'https://github.com/irssi/irssi.git'
+                dir('external/irssi') {
+                    git 'https://github.com/irssi/irssi.git'
+                }
             }
         }
 
@@ -30,7 +24,7 @@ pipeline {
                         sh '''
                         docker build -t ${BUILDER_IMG} -f Dockerfile.builder .
                         docker run --name build-irssi ${BUILDER_IMG} bash -c "
-                            meson Build && ninja -C Build
+                            meson Build external/irssi && ninja -C Build
                         "
                         docker commit build-irssi irssi-built
                         docker rm build-irssi
@@ -45,7 +39,7 @@ pipeline {
                 dir('NI409877/sprawozdanie2') {
                     script {
                         sh '''
-                        docker build -t ${TESTER_IMG} -f Dockerfile.test . || exit 1
+                        docker build -t ${TESTER_IMG} -f Dockerfile.test .
                         docker run --rm ${TESTER_IMG} bash -c "meson test -C /app/builddir --print-errorlogs --logbase junit" | tee test.log
                         '''
                     }
