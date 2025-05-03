@@ -2,68 +2,68 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_USER = 'natalia--r'
-        DOCKER_DIR  = 'NI409877/sprawozdanie2'
-        BUILDER_IMG = "${DOCKER_USER}/irssi-builder:${BUILD_NUMBER}"
-        RUNTIME_IMG = "${DOCKER_USER}/irssi-runtime:${BUILD_NUMBER}"
-        TAR_NAME    = "irssi-${BUILD_NUMBER}.tar.gz"
+        DOCKER_USER   = 'natalia--r'  // ← Twoja nazwa z DockerHub
+        DOCKER_DIR    = 'NI409877/sprawozdanie2'
+        BUILDER_IMG   = "${DOCKER_USER}/irssi-builder:${BUILD_NUMBER}"
+        RUNTIME_IMG   = "${DOCKER_USER}/irssi-runtime:${BUILD_NUMBER}"
+        TAR_NAME      = "irssi-${BUILD_NUMBER}.tar.gz"
     }
 
     stages {
         stage('Checkout') {
-            steps {
-                checkout scm
-            }
+            steps { checkout scm }
         }
 
-        // Budowanie obu obrazów w jednej komendzie
-        stage('Build ➜ builder & runtime') {
+        stage('Build ➜ builder image') {
             steps {
                 sh """
-                  docker build \
-                      --target builder -t ${BUILDER_IMG} \
-                      --target runtime -t ${RUNTIME_IMG} \
-                      -f ${DOCKER_DIR}/Dockerfile \
-                      ${DOCKER_DIR}
+                    docker build --target builder \
+                        -t ${BUILDER_IMG} \
+                        -f ${DOCKER_DIR}/Dockerfile \
+                        ${DOCKER_DIR}
                 """
             }
         }
 
-        // Smoke-test uruchamianie irssi
+        stage('Build ➜ runtime image') {
+            steps {
+                sh """
+                    docker build --target runtime \
+                        -t ${RUNTIME_IMG} \
+                        -f ${DOCKER_DIR}/Dockerfile \
+                        ${DOCKER_DIR}
+                """
+            }
+        }
+
         stage('Smoke-test runtime') {
             steps {
-                sh """
-                  docker run --rm ${RUNTIME_IMG} irssi --version
-                """
+                sh "docker run --rm ${RUNTIME_IMG} --version"
             }
         }
 
-        // Pakowanie artefaktu
         stage('Package ➜ tar.gz artifact') {
             steps {
                 sh """
-                cid=\$(docker create ${BUILDER_IMG})
-                mkdir -p .out
-                docker cp \${cid}:/usr .out/
-                docker rm \${cid}
-
-                tar -czf ${TAR_NAME} -C .out usr 
+                    cid=\$(docker create ${BUILDER_IMG})
+                    mkdir -p .out
+                    docker cp \${cid}:/usr .out/
+                    docker rm \${cid}
+                    tar -czf ${TAR_NAME} -C .out usr
                 """
             }
         }
 
-        // Publikowanie obrazów do DockerHub
         stage('Publish images') {
             environment {
-                DOCKERHUB = credentials('dockerhub-creds')
+                DOCKERHUB = credentials('dockerhub-creds') // login + token
             }
             steps {
                 sh """
-                echo \$DOCKERHUB_PSW | docker login \
+                    echo \$DOCKERHUB_PSW | docker login \
                         -u \$DOCKERHUB_USR --password-stdin
-
-                docker push ${BUILDER_IMG}
-                docker push ${RUNTIME_IMG}
+                    docker push ${BUILDER_IMG}
+                    docker push ${RUNTIME_IMG}
                 """
             }
         }
