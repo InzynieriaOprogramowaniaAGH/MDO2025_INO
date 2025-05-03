@@ -2,89 +2,80 @@ pipeline {
     agent any
 
     environment {
-        BUILDER_IMG = "irssi-builder:${BUILD_NUMBER}"
-        RUNTIME_IMG = "irssi-runtime:${BUILD_NUMBER}"
-        TESTER_IMG = "irssi-tester:${BUILD_NUMBER}"
-        TAR_NAME = "irssi-${BUILD_NUMBER}.tar.gz"
+        DOCKER_USER = 'bambusscooby'
+        DOCKER_DIR  = 'NI409877/sprawozdanie2'
+        BUILDER_IMG = "${DOCKER_USER}/irssi-builder:${BUILD_NUMBER}"
+        RUNTIME_IMG = "${DOCKER_USER}/irssi-runtime:${BUILD_NUMBER}"
+        TAR_NAME    = "irssi-${BUILD_NUMBER}.tar.gz"
     }
 
     stages {
-        stage('Clone Irssi') {
+        stage('Checkout') {
             steps {
-                dir('external/irssi') {
-                    git 'https://github.com/irssi/irssi.git'
-                }
+                checkout scm
             }
         }
 
+        // Budowanie obrazu builder
         stage('Build ➜ builder image') {
             steps {
-                dir('NI409877/sprawozdanie2') {
-                    script {
-                        sh '''
-                        docker build -t ${BUILDER_IMG} -f Dockerfile.builder .
-                        docker run --name build-irssi ${BUILDER_IMG} bash -c "
-                            meson Build external/irssi && ninja -C Build
-                        "
-                        docker commit build-irssi irssi-built
-                        docker rm build-irssi
-                        '''
-                    }
-                }
+                sh """
+                  docker build --target builder \
+                           -t ${BUILDER_IMG} \
+                           -f ${DOCKER_DIR}/Dockerfile.builder \
+                           ${DOCKER_DIR}
+                """
             }
         }
 
-        stage('Test') {
+        // Budowanie obrazu runtime
+        stage('Build ➜ runtime image') {
             steps {
-                dir('NI409877/sprawozdanie2') {
-                    script {
-                        sh '''
-                        docker build -t ${TESTER_IMG} -f Dockerfile.test .
-                        docker run --rm ${TESTER_IMG} bash -c "meson test -C /app/builddir --print-errorlogs --logbase junit" | tee test.log
-                        '''
-                    }
-                }
+                sh """
+                  docker build --target runtime \
+                           -t ${RUNTIME_IMG} \
+                           -f ${DOCKER_DIR}/Dockerfile.runtime \
+                           ${DOCKER_DIR}
+                """
             }
         }
 
-        stage('Smoke Test ➜ runtime image') {
+        // Smoke-test uruchamianie irssi
+        stage('Smoke-test runtime') {
             steps {
-                dir('NI409877/sprawozdanie2') {
-                    script {
-                        sh '''
-                        docker build -t ${RUNTIME_IMG} -f Dockerfile.runtime .
-                        docker run --rm ${RUNTIME_IMG} irssi --version
-                        '''
-                    }
-                }
+                sh """
+                  docker run --rm ${RUNTIME_IMG} irssi --version
+                """
             }
         }
 
+        // Pakowanie artefaktu
         stage('Package ➜ tar.gz artifact') {
             steps {
-                script {
-                    sh '''
-                    cid=$(docker create ${BUILDER_IMG})
-                    mkdir -p .out
-                    docker cp ${cid}:/usr .out/
-                    docker rm ${cid}
-                    tar -czf ${TAR_NAME} -C .out usr
-                    '''
-                }
+                sh """
+                cid=\$(docker create ${BUILDER_IMG})             # tymczasowy kontener
+                mkdir -p .out
+                docker cp \${cid}:/usr .out/          # ← kopiujemy całe /usr
+                docker rm \${cid}
+
+                tar -czf ${TAR_NAME} -C .out usr 
+                """
             }
         }
 
-        stage('Publish Images') {
+        // Publikowanie obrazów do DockerHub
+        stage('Publish images') {
+            environment {
+                DOCKERHUB = credentials('dockerhub-creds')
+            }
             steps {
-                script {
-                    sh '''
-                    docker tag ${RUNTIME_IMG} yourdockerhubuser/irssi-runtime:latest
-                    docker tag ${BUILDER_IMG} yourdockerhubuser/irssi-builder:latest
-                    docker login -u yourdockerhubuser -p $DOCKERHUB_PASSWORD
-                    docker push yourdockerhubuser/irssi-runtime:latest
-                    docker push yourdockerhubuser/irssi-builder:latest
-                    '''
-                }
+                sh """
+                echo \$DOCKERHUB_PSW | docker login \
+                        -u \$DOCKERHUB_USR --password-stdin
+
+                docker push ${BUILDER_IMG}
+                docker push ${RUNTIME_IMG}
+                """
             }
         }
     }
