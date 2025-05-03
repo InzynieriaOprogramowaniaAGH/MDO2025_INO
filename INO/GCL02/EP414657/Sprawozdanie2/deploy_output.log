@@ -1,0 +1,8 @@
+zlib version 1.3.1.1-motley = 0x1311, compile flags = 0xa9
+uncompress(): hello, hello!
+gzread(): hello, hello!
+gzgets() after gzseek:  hello!
+inflate(): hello, hello!
+large_inflate(): OK
+after inflateSync(): hello, hello!
+inflate with dictionary: hello, hello!
