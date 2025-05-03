@@ -78,17 +78,17 @@ docker run \
 
 W celu przeprowadzenia konfiguracji Jenkinsa weszłam na stronę http://localhost:8080, wpisałam hasło (pozyskane zgodnie z opisem w poprzednim sprawozdaniu) i utworzyłam nowego użytkownika.
 
-![alt text](/screens/użytkownik.png)
+![alt text](screens/użytkownik.png)
 
 Rozpoczęłam pracę nad pierwszym projektem, którego celem było wyświetlenie wyniku polecenia uname. W konfiguracji projektu wybrałam opcję "Uruchomienie powłoki" i dodałam polecenie:
 
 ` uname -a `
 
-![alt text](/screens/uname2.png)
+![alt text](screens/uname2.png)
 
 Zrzut ekranu potwierdzający poprawne działanie projektu:
 
-![alt text](/screens/uname.png)
+![alt text](screens/uname.png)
 
 Drugi projekt miał na celu zwracanie błędu, gdy aktualna godzina jest nieparzyst. W powłoce użyłam następującego skryptu:
 
@@ -103,13 +103,15 @@ fi
 
 ```
 
-![alt text](ITE/GCL04/MK414948/Sprawozdanie2/screens/hour1.png)
+![alt text](screens/hour1.png)
 
-![alt text](/screens/hour2.png)
+![alt text](screens/hour2.png)
 
 Kolejno przeszłam do pobierania w projekcie obraz kontenera ubuntu stosując docker pull:
 
-![alt text](/screens/docker_pull2.png)
+![alt text](screens/docker_pull2.png)
 
-![alt text](/screens/docker_pull.png)
+![alt text](screens/docker_pull.png)
+
+
 
