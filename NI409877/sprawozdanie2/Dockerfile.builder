@@ -7,14 +7,12 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-dev libssl-dev libncurses5-dev perl \
     && rm -rf /var/lib/apt/lists/*
 
-# Ustawienie katalogu roboczego
+# Klonowanie repozytorium irssi
 WORKDIR /src
-
-# Skopiowanie repozytorium do obrazu
-COPY . /src
+RUN git clone https://github.com/irssi/irssi.git
 
 # Budowanie projektu za pomocą Meson
-RUN meson /src/irssi/irssi /src/builddir && \
+RUN meson /src/irssi /src/builddir && \
     ninja -C /src/builddir
 
 # Ustawienie domyślnej komendy
