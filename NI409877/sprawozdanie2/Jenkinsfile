@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_USER = 'bambusscooby'
+        DOCKER_USER = 'natalia--r'
         DOCKER_DIR  = 'NI409877/sprawozdanie2'
         BUILDER_IMG = "${DOCKER_USER}/irssi-builder:${BUILD_NUMBER}"
         RUNTIME_IMG = "${DOCKER_USER}/irssi-runtime:${BUILD_NUMBER}"
