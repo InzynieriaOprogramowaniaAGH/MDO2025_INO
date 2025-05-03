@@ -208,15 +208,70 @@ Wybrany projekt: "ToDoWebApp" bazujący na Node.js.
 
 Pipeline składa się z następujących etapów:
 
-Checkout- etap, ktory pobiera zawartość mojej gałęzi zawierającej wymagane Dockerfile. Na początku wykonuje skrypt oczszczający workspace oraz Dockera, aby zwolnić pamięć.
 
-Build- Jenkins uruchamia proces budowania obrazu Docker w DIND. Jeśli wszystko pójdzie pomyślnie zwróci gotowy obraz, w przeciwnym wypadku buid zakończy się niepowodzeniem. Dockerfile, który jest używany w tym stage'u został wykonany na jednych z poprzednich zajęć.
+### Checkout:
+Czyszczenie środowiska Docker:
+  usuwanie nieużywanych kontenerów- docker system prune -f
+  usuwanie nieużywanych obrazów- docker image prune -f
+  usuwanie zatrzymanych kontenerów- docker container prune -f
+  usuwanie folderu ITE- rm -rf ITE
 
-Test- uruchamia proces budowania obrazu, ale tym razem z użyciem innego Dockerfile (również napisanego na jednych z poprzednich zajęć) przeznaczonego do testowania. Po zbudowaniu obrazu uruchamianane sa testy jednostkowe, aby upewnić się, że wszystko działa poprawnie. Etap uznany jest za zakończony sukcesem jeśli wszystkie testy przejdą pomyślnie. 
+Pobranie kodu z repozytorium Github (gałąź MK414948)
 
-Deploy- ten etap sprawdza, czy uruchomiona aplikacja działa poprawnie i jest dostępna na wskazanym porcie. W tym celu, tworzy dedykowaną sieć Docker, uruchamia aplikację w kontenerze i wykonuje test łączności za pomocą kontenera z curlem, który sprawdza dostępność aplikacji na porcie 3000. Jeśli aplikacja jest dostępna to test łączności uznany zostaje jako udany. Po zakończeniu usuwane są wszystkie kontenery i sieć, aby zwolnić zasoby.
+### Build:
+Budowanie obrazu Docker dla środowiska budowania- plik: Dockerfile.nodebld, obraz: nodebld (plik znajduje się w /MK414948/Sprawozdanie1/pliki/Dockerfiles)
 
-Pubish- ten etap tworzy lokalne repozytorium (jeśli jeszcze nie istnieje) i publikuje w nim nową wersję pakietu aplikacji. Używany jest do tego kontener z aplikacją verdaccio. Po opublikowaniu nowej wersji kontenery są zatrzymywane a sieć usuwana. 
+### Test:
+Budowanie obrazu Docker dla środowiska testowego- plik Dockerfile.nodetest, obraz: nodetest
 
-Sekcja post działa zawsze po zakończeniu pipeline'u niezależnie od tego, czy zakończył się sukcesem, czy nie. U mnie odpowiada za usunięcie wszystkich pozostałości i przywraca czyste środowisko do kolejnych uruchomień pipeline'a.
+### Deploy:
+Tworzenie sieci Docker o nazwie "deploy"
+Budowanie obrazu wdrożeniowego- plik: Dockerfile.nodedeploy, obraz: nodedeploy
+Uruchomienie kontenera (port: 3000, sieć: deploy, nazwa kontenera: node)
+Testowanie dostępności aplikacji za pomocą curla.
+
+### Pubish:
+Tworzenie sieci Docker "publish"
+Uruchmienie serwera Verdaccio
+Budowanie obrazu publikacyjnego, plik: Dockerfile.nodepublish, obraz: nodepublish
+Uruchomienie kontenera w sieci publish
+Zatrzymanie kontenerow i usunięcie sieci 
+
+### Post 
+Działa zawsze po zakończeniu pipeline'u niezależnie od tego, czy zakończył się sukcesem, czy nie.
+Czyszczenie środowiska
+Usunięcie wszystkich nieużywanych zasobów Docker- docker system prune -af 
+Usunięcie katalogu projektu- rm -rf ITE
+
+## Dokumentacja procesu CI 
+
+Wymagania: 
+
+Infrastruktura:
+-Jenkins CI/CD Serwer
+-Docker
+-Repoztorium GitHub (gałąź MK414948)
+-Verdaccio
+
+Narzędzia:
+-Docker
+-Git
+-Node.js
+-Curl (do testowania)
+
+Konfifuracja:
+-Jenkinsfile
+-Pliki Dockerfile:
+  Dockerfile.nodebld (do etapu budowania, załączony przy poprzednim sprawozdaniu)
+  Dockerfile.nodetest (do etapu testowania, również można go znaleźć w folderze     Sprawozdanie 1)
+  Dockerfile.nodedeploy (do etapu wdrożenia)
+  Dockerfile.nodepublish (do etapu publikacji)
+
+Diagram aktywności procesu CI/CD:
+
+![alt text](screens/diagram1.png)
+
+Diagram wdrożeniowy:
+
+![alt text](screens/diagram2.png)
 
