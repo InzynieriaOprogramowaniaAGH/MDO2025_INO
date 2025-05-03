@@ -12,9 +12,7 @@ pipeline {
             steps {
                 sh 'rm -rf MDO2025_INO'
                 sh 'git clone -b AO417742 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
-                dir("MDO2025_INO") {
-                    sh 'git submodule update --init --recursive || echo "brak submodule"'
-                }
+              
             }
         }
 
