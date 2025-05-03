@@ -103,7 +103,7 @@ fi
 
 ```
 
-![alt text](/screens/hour1.png)
+![alt text](ITE/GCL04/MK414948/Sprawozdanie2/screens/hour1.png)
 
 ![alt text](/screens/hour2.png)
 
