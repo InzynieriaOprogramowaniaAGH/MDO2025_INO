@@ -13,6 +13,6 @@ RUN meson /src/irssi /src/builddir && ninja -C /src/builddir
 # Etap 2: runtime
 FROM debian:bullseye AS runtime
 
-COPY --from=builder /src/builddir/irssi /usr/local/bin/irssi
+COPY --from=builder /src/builddir/src/irssi /usr/local/bin/irssi
 
 ENTRYPOINT ["irssi"]
