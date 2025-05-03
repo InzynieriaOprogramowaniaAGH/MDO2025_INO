@@ -2,7 +2,7 @@
 
 Do wykonywania zadań laboratoryjnych skorzystałam z programu "To do List", wykorzystywanego przeze mnie na poprzednich zajęciach.
 
-Jenkins to  narzędzie do automatyzacji procesów tworzenia, testowania i wdrażania naszej aplikacji, natomiast BlueOcean to jego rozszerzenie, które daje nam bardziej nowoczensy i intuicyjny interfejs do zarządzania procesami CI/CD.
+Jenkins to narzędzie do automatyzacji procesów tworzenia, testowania i wdrażania naszej aplikacji, natomiast BlueOcean to jego rozszerzenie, które daje nam bardziej nowoczesny i intuicyjny interfejs do zarządzania procesami CI/CD.
 
 
 ### Przygotowanie
@@ -15,7 +15,7 @@ Pracę rozpoczęłam od utworzenia sieci dla Jenkinsa korzystając z następują
 
 ` docker network create jenkins `
 
-Nastepnie uruchomiłam kontener dind (Docker-in-Docker) korzystając z gotowego obrazu:
+Następnie uruchomiłam kontener dind (Docker-in-Docker) korzystając z gotowego obrazu:
 
 ``` docker run \
   --name jenkins-docker \
@@ -34,7 +34,7 @@ Nastepnie uruchomiłam kontener dind (Docker-in-Docker) korzystając z gotowego 
   ```
  
 
-Stworzłam Dockerfile dla własnego obrazu zawierającego Blue Ocean:
+Stworzyłam Dockerfile dla własnego obrazu zawierającego Blue Ocean:
 
 ``` 
 FROM jenkins/jenkins:2.440.3-jdk17
@@ -75,7 +75,7 @@ docker run \
   
   ```
 
-W celu przeprowadzenia konfiguracji Jenkinsa weszłam na stronę http://localhost:8080, wpisałam hasło (pozyskane zgodnie z opisem w poprzednim sprawozdaniu) i utworzyłam nowego użytkownika.
+W celu przeprowadzenia konfiguracji Jenkinsa (http://localhost:8080) wpisałam hasło (pozyskane zgodnie z opisem w poprzednim sprawozdaniu) i utworzyłam nowego użytkownika.
 
 ![alt text](screens/użytkownik.png)
 
@@ -251,7 +251,7 @@ Budowanie obrazu publikacyjnego, plik: Dockerfile.nodepublish, obraz: nodepublis
 
 Uruchomienie kontenera w sieci publish
 
-Zatrzymanie kontenerow i usunięcie sieci 
+Zatrzymanie kontenerów i usunięcie sieci 
 
 ### Post 
 
@@ -273,7 +273,7 @@ Infrastruktura:
 
 -Docker
 
--Repoztorium GitHub (gałąź MK414948)
+-Repozytorium GitHub (gałąź MK414948)
 
 -Verdaccio
 
@@ -287,7 +287,7 @@ Narzędzia:
 
 -Curl (do testowania)
 
-Konfifuracja:
+Konfiguracja:
 
 -Jenkinsfile
 
@@ -309,3 +309,9 @@ Diagram wdrożeniowy:
 
 ![alt text](screens/diagram2.png)
 
+W ustawieniach pipeline dodałam nasze repozytorium:
+
+![alt text](screens/jenkinsfile.png)
+
+
+Praca z pipeline oraz narzędziami CI/CD pozwoliła mi lepiej zrozumieć, jak złożony, ale zarazem uporządkowany może być proces wdrażania aplikacji. Satysfakcjonujące było obserwowanie, jak kolejne etapy — od pobrania kodu po publikację — wykonują się automatycznie (w końcu po 72 nieudanych próbach) dzięki odpowiedniej konfiguracji. Integracja Jenkinsa z Dockerem i Blue Ocean okazała się dość intuicyjna, a wizualizacja procesów ułatwiła ich zrozumienie i uporządkowanie w głowie.
