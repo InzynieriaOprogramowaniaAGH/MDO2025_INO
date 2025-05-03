@@ -32,24 +32,21 @@ pipeline {
         // Extract redis_server and redis_cli binaries from the build container
         stage('Extract') {
             steps {
-                
                 sh 'docker create --name redis-build-container redis-build'
                 sh 'docker cp redis-build-container:/redis/src/redis-server .'
                 sh 'docker cp redis-build-container:/redis/src/redis-cli .'
                 sh 'docker rm redis-build-container'
-                sh 'ls'
             }
         }
 
         // Prepare redis_server and redis_cli for deployment & publish
         stage('Package') {
             steps {
-                
-                sh 'mkdir -p redis_1.0-1/usr/local/bin'
-                sh 'mv redis-server redis_1.0-1/usr/local/bin/'
-                sh 'mv redis-cli redis_1.0-1/usr/local/bin/'
+                sh 'mkdir -p redis/usr/local/bin'
+                sh 'mv redis-server redis/usr/local/bin/'
+                sh 'mv redis-cli redis/usr/local/bin/'
                 writeFile(
-                    file: 'redis_1.0-1/DEBIAN/control',
+                    file: 'redis/DEBIAN/control',
                     text: """
 Package: redis
 Version: 1.0-1
@@ -58,7 +55,7 @@ Maintainer: febru <febru@example.com>
 Description: Redis server with CLI binaries.
 """
                 )
-                sh 'dpkg-deb --build redis_1.0-1'
+                sh 'dpkg-deb --build redis'
             }
         }
 
@@ -67,18 +64,18 @@ Description: Redis server with CLI binaries.
             steps {
                 sh 'docker network create redis-network'
                 sh 'docker run -d --name redis-deploy-server-container --network redis-network ubuntu:latest tail -f /dev/null'
-                sh 'docker cp redis_1.0-1.deb redis-deploy-server-container:/tmp/redis_1.0-1.deb'
-                sh 'docker exec -d redis-deploy-server-container bash -c "dpkg -i /tmp/redis_1.0-1.deb && redis-server --protected-mode no"'
+                sh 'docker cp redis.deb redis-deploy-server-container:/tmp/redis.deb'
+                sh 'docker exec -d redis-deploy-server-container bash -c "dpkg -i /tmp/redis.deb && redis-server --protected-mode no"'
                 sh 'docker run -d --name redis-deploy-cli-container --network redis-network ubuntu:latest tail -f /dev/null'
-                sh 'docker cp redis_1.0-1.deb redis-deploy-cli-container:/tmp/redis_1.0-1.deb'
-                sh 'docker exec redis-deploy-cli-container bash -c "dpkg -i /tmp/redis_1.0-1.deb && redis-cli -h redis-deploy-server-container ping"'
+                sh 'docker cp redis.deb redis-deploy-cli-container:/tmp/redis.deb'
+                sh 'docker exec redis-deploy-cli-container bash -c "dpkg -i /tmp/redis.deb && redis-cli -h redis-deploy-server-container ping"'
             }
         }
 
         // Publish the package
         stage('Publish') {
             steps {
-                archiveArtifacts artifacts: 'redis_1.0-1.deb', fingerprint: true
+                archiveArtifacts artifacts: 'redis.deb', fingerprint: true
             }
         }
     }
