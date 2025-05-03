@@ -1,0 +1,83 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean') {
+            steps {
+                echo 'Cleaning...'
+                sh 'rm -fr MDO2025_INO'
+                sh 'docker system prune --all --force --volumes'
+            }
+        }
+        stage('Clone') {
+            steps {
+                echo 'Cloning...'
+                sh 'git clone -b TO417248 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                sh 'docker build --no-cache -t toasty -f ./MDO2025_INO/ITE/GCL06/TO417248/Sprawozdanie1/003-Class/Dockerfile .'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+                sh 'docker build --no-cache -t toasty-test -f ./MDO2025_INO/ITE/GCL06/TO417248/Sprawozdanie1/003-Class/Dockerfile.test .'
+                sh 'docker run --rm -t toasty-test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                sh '''
+                    docker run --rm toasty bash -c "
+                        echo '#include <toasty.h>' > test.c
+                        echo 'TEST(test_example) {' >> test.c
+                        echo '    TEST_ASSERT_EQUAL(4, 2 + 2);' >> test.c
+                        echo '}' >> test.c
+                        echo 'int main() {' >> test.c
+                        echo '    return RunTests();' >> test.c
+                        echo '}' >> test.c
+                        
+                        gcc test.c -Lbuild -ltoasty -Isrc -o test
+                        ./test
+                    "
+                '''
+            }
+        }
+        stage('Publish') {
+            steps {
+                script {
+                    def version = params.VERSION
+                    if (version == '0.0.0') {
+                        version = new Date().format('yyyyMMdd', TimeZone.getTimeZone('UTC'))
+                    }
+                    echo "Publishing version: ${version}..."
+                    sh """
+                        docker run --rm -v "\${PWD}:/workspace" --env VERSION=${version} toasty bash -c '
+                            mkdir -p /tmp/toasty-pkg/usr/local/include
+                            mkdir -p /tmp/toasty-pkg/usr/local/lib
+                            mkdir -p /tmp/toasty-pkg/DEBIAN
+        
+                            cp /toasty/src/toasty.h /tmp/toasty-pkg/usr/local/include/
+                            cp /toasty/build/libtoasty.a /tmp/toasty-pkg/usr/local/lib/
+
+                            echo "Package: toasty" > /tmp/toasty-pkg/DEBIAN/control
+                            echo "Version: \${VERSION}" >> /tmp/toasty-pkg/DEBIAN/control
+                            echo "Section: libs" >> /tmp/toasty-pkg/DEBIAN/control
+                            echo "Priority: optional" >> /tmp/toasty-pkg/DEBIAN/control
+                            echo "Architecture: amd64" >> /tmp/toasty-pkg/DEBIAN/control
+                            echo "Maintainer: Tomasz Oszczypko <tomekoszczypko@gmail.com>" >> /tmp/toasty-pkg/DEBIAN/control
+                            echo "Description: C unit testing framework." >> /tmp/toasty-pkg/DEBIAN/control
+        
+                            dpkg-deb --build /tmp/toasty-pkg /workspace/toasty_\${VERSION}_amd64.deb
+                        '
+                    """
+                    archiveArtifacts artifacts: "toasty_${version}_amd64.deb", fingerprint: true
+                }
+            }
+        }
+    }
+}
