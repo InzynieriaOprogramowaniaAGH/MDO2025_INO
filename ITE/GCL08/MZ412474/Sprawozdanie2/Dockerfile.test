@@ -1,0 +1,5 @@
+FROM weechat_build
+
+WORKDIR /app/weechat/build/tests
+
+CMD ctest -V 
