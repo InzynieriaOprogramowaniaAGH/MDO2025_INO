@@ -42,6 +42,7 @@ docker run \
   --env DOCKER_TLS_VERIFY=1 \
   --publish 8080:8080 \
   --publish 50000:50000 \
+  --add-host=docker:172.17.0.1 \
   --volume jenkins-data:/var/jenkins_home \
   --volume /home/MacGrze/MDO2025_INO/INO/GCL01/MG414364/RustScan-Pipeline:/var/jenkins_home/workspace
   --volume jenkins-docker-certs:/certs/client:ro \
@@ -74,6 +75,7 @@ Wszystko śmiga
 1. Po uruchomieniu Jenkinsa z uwzględnieniem wtyczek, przeprowadzono wstępną konfigurację:
     - Ustanowienie połączenia z DinD poprzez zmienne środowiskowe (`DOCKER_HOST`, `DOCKER_CERT_PATH` itp.).
     - Instalacja dodatkowych wtyczek wymaganych do pracy z pipeline Docker (np. `Docker Pipeline`).
+    - Ustawienie ścieżki workspace dla Jenkins na lokalny folder z plikami *Dockerfile*.
 
 2. W ramach testowej konfiguracji utworzone zostały dwa proste projekty:
     1. Projekt wyświetlający wynik `uname`.
@@ -111,6 +113,7 @@ W projekcie zaimplementowano wielostopniowe podejście do budowy i testowania Ru
 ```
 > Wyniki testu zapisywane są do pliku (*RustScan_test.log*). Fragment:
 ```shell
+...
 #5 [2/2] RUN cargo test --tests --release
 #5 0.497     Finished `release` profile [optimized] target(s) in 0.27s
 #5 0.505      Running unittests src/lib.rs (target/release/deps/rustscan-7f83e15873e5592d)
@@ -119,6 +122,7 @@ W projekcie zaimplementowano wielostopniowe podejście do budowy i testowania Ru
 #5 0.508 test address::tests::parse_addresses_with_address_exclusions ... ok
 #5 0.508 test address::tests::parse_addresses_with_cidr_exclusions ... ok
 #5 0.508 test address::tests::parse_correct_addresses ... ok
+...
 ```
 - **Deploy**: Obraz uruchamiający gotową aplikację na bazie `debian:bullseye-slim`.
 ``` dockerfile
@@ -140,7 +144,7 @@ Pipeline został zaimplementowany w postaci pliku `Jenkinsfile`. Skrypt został 
 ![alt text](image-8.png)
 ### 1. Etap `Clone`
 W pierwszym etapie pipeline klonuje repozytorium RustScan z oficjalnego GitHub-a:
-```json
+```dockerfile
 stage('Clone') {
     steps {
         git 'https://github.com/bee-san/RustScan.git'
@@ -150,7 +154,7 @@ stage('Clone') {
 Użycie **git** z poziomu Jenkins pozwala na automatyczne dostosowanie do środowiska pipeline, oraz zapewnia korzystanie z najnowszej wersji kodu.
 ### 2. Etap `Build`
 Kompilacja projektu odbywa się na podstawie `Dockerfile` w obrazie `rust:bullseye`. Wynikiem tego etapu jest obraz `builder`.
-```json
+```dockerfile
 stage('Build') {
     steps {
         script {
@@ -161,7 +165,7 @@ stage('Build') {
 ```
 ### 3. Etap `Test`
 Bazując na obrazie `builder`, stworzony został obraz `tester`, uruchamiający testy dostępne w repozytorium RustScan:
-```json
+```dockerfile
 stage('Test') {
     steps {
         script {
@@ -173,7 +177,7 @@ stage('Test') {
 ```
 ### 4. Etap `Deploy`
 Ten etap tworzy obraz `deploy` zawierający tylko finalną wersję binarną aplikacji.
-```json
+```dockerfile
 stage('Deploy') {
     steps {
         script {
@@ -191,7 +195,7 @@ stage('Deploy') {
 
 ### 5. Etap `Publish`
 Finalnie aplikacja w formie binarnej zostaje zaarchiwizowana w Jenkins jako artefakt:
-```json
+```dockerfile
 stage('Publish') {
     steps {
         script {
