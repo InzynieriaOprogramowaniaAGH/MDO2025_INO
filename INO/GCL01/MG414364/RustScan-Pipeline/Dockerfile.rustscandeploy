@@ -1,5 +1,7 @@
-FROM ubuntu:24.04
+FROM debian:bullseye-slim
 
-WORKDIR target/release
+COPY --from=rustscanbld RustScan/target/release/rustscan RustScan/release/rustscan
 
-RUN ./rustscan
+WORKDIR RustScan/release
+
+RUN ./rustscan -a 127.0.0.1
