@@ -7,4 +7,9 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /src
 
+COPY . /src
+
+RUN meson /src/irssi/irssi /src/builddir && \
+    ninja -C /src/builddir
+
 CMD ["bash"]
