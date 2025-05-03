@@ -56,18 +56,17 @@ pipeline {
 
         stage('Publish images') {
             environment {
-                DOCKERHUB = credentials('dockerhub-creds') // login + token
+                DOCKERHUB = credentials('dockerhub-credentials') // login + token
             }
             steps {
-                sh """
-                    echo \$DOCKERHUB_PSW | docker login \
-                        -u \$DOCKERHUB_USR --password-stdin
-                    docker push ${BUILDER_IMG}
-                    docker push ${RUNTIME_IMG}
-                """
+                script {
+                    docker.withRegistry('', 'dockerhub-credentials') {
+                        docker.image("${BUILDER_IMG}").push()
+                        docker.image("${RUNTIME_IMG}").push()
+                    }
+                }
             }
         }
-    }
 
     post {
         always {
