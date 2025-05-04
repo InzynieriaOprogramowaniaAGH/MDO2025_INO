@@ -38,8 +38,8 @@ pipeline {
     
 
                 sh "docker build -t main_container -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.test ."
-                sh '''docker run -d -v supertux_build:/supertux_build main_container -c 
-                            cp supertux_build/ .
+                sh '''docker run -d -v supertux_build:/supertux_build main_container -c \
+                            cp supertux_build/ .\
                             ./supertux/build/supertux2 --version
                             
                 '''
