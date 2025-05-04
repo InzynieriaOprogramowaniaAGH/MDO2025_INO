@@ -109,8 +109,6 @@ Moim wyborem co do aplikacji webowej był, tak jak na poprzednich zajęciach, re
 
 Wykorzystałem podejście DinD (Docker-in-Docker), ponieważ pozwala na uruchamianie kontenerów w Jenkisie i używanie takich funkcji jak ```docker build```, ```docker run``` itp., a w moim projekcie korzystam z Dockerfile'ów.
 
-Poniżej znajduje się diagram UML pokazujący działanie pipeline'u.
-
 Mój pipeline składa się z nastepującch etapów:
 - Clone repo:
 Klonowaie rezpozytorium z zajęć i ustawienie odpowiedniego brancha ```SM417733```
