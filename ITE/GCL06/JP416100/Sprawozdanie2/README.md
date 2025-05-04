@@ -107,7 +107,7 @@ Zainstalowany Docker z obsługą Docker-in-Docker (DinD)
  anime baba
 
  Zaimplementowałam obiekt typu pipeline, który klonuje repozytorium, buduje i testuje obrazy Dockera dla aplikacji Node.js, wdraża aplikację w kontenerze, sprawdza jej działanie przez sieć Docker, publikuje artefakt w postaci archiwum .zip, a na końcu automatycznie czyści środowisko z uruchomionych kontenerów i sieci.
-
+![alt text](image-7.png)
 Kod pipeline dla mojego projektu:
  ```
  pipeline {
