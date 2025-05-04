@@ -1,0 +1,102 @@
+pipeline {
+    agent any  
+
+    environment {
+        REPO_URL = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+        BRANCH = 'EN415153' 
+        DOCKERFILE_PATH = 'ITE/GCL05/EN415153/sprawozdanie2' 
+        IMAGE = 'novickos/express-app:latest' 
+    }
+
+
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                script {
+                    cleanWs()
+                }
+            }
+        }
+        
+        stage('Clone') {
+            steps {
+                git branch: "${BRANCH}", url: "${REPO_URL}"
+            }
+        }
+    
+        
+        stage('Clean Docker Images') {
+            steps {
+                script {
+                    sh 'docker rmi -f expressjs-build'
+                    sh 'docker rmi -f expressjs-test'
+                    sh 'docker builder prune --force --all'
+                    sh 'docker stop app || true'
+                    sh 'docker rm app || true'
+                    sh 'docker network inspect ci >/dev/null 2>&1 && docker network rm ci || true'
+                }
+            }
+        }
+
+        stage('Build Docker Image for build') {
+            steps {
+                dir("${DOCKERFILE_PATH}") {
+                    sh 'docker build --no-cache -f Dockerfile.bld -t expressjs-build .'
+                }
+            }
+        }
+
+        stage('Run Docker Image for build') {
+            steps {
+                script {
+                    sh 'docker run -it -d expressjs-build'
+                }
+            }
+        }
+
+        stage('Build Docker Image for test') {
+            steps {
+                dir("${DOCKERFILE_PATH}") {
+                    sh 'docker build --no-cache -f Dockerfile.test -t expressjs-test .'
+                    sh 'docker run --rm expressjs-test'
+                }
+            }
+        }
+        
+        stage('Build Docker Image for publish') {
+            steps {
+                dir("${DOCKERFILE_PATH}") {
+                    sh 'docker build -f Dockerfile.dep -t express-app .'
+                }
+            }
+        }
+        
+        stage('Run app') {
+            steps {
+                dir("${DOCKERFILE_PATH}") {
+                    sh 'docker network create ci'
+                    sh 'docker run --rm -d --network ci --name app -p 3000:3000 express-app'
+                    sh 'docker run --rm --network ci fedora curl -s app:3000'
+                }
+            }
+        }
+        stage('Docker push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                    sh 'docker tag express-app $IMAGE'
+                    sh 'docker push $IMAGE'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline zakończony sukcesem!'
+        }
+        failure {
+            echo 'Pipeline zakończony niepowodzeniem.'
+        }
+    }
+}

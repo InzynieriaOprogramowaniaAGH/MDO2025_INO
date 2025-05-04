@@ -1,0 +1,81 @@
+pipeline {
+    agent any  
+
+    environment {
+        REPO_URL = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+        BRANCH = 'EN415153' 
+        DOCKERFILE_PATH = 'ITE/GCL05/EN415153/sprawozdanie1'  
+    }
+
+
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                script {
+                    cleanWs()
+                }
+            }
+        }
+        
+        stage('Clone') {
+            steps {
+                git branch: "${BRANCH}", url: "${REPO_URL}"
+            }
+        }
+    
+        
+        stage('Clean Docker Images') {
+            steps {
+                script {
+                    sh 'docker rmi -f doctest_build'
+                    sh 'docker rmi -f doctest_test'
+                    sh 'docker builder prune --force --all'
+                    sh 'docker stop app || true'
+                    sh 'docker rm app || true'
+                }
+            }
+        }
+
+        stage('Build Docker Image for build') {
+            steps {
+                dir("${DOCKERFILE_PATH}") {
+                    sh 'docker build --no-cache -f Dockerfile.bld -t doctest-build .'
+                }
+            }
+        }
+
+        stage('Run Docker Image for build') {
+            steps {
+                script {
+                    sh 'docker run -it -d doctest-build'
+                }
+            }
+        }
+
+        stage('Build Docker Image for test') {
+            steps {
+                dir("${DOCKERFILE_PATH}") {
+                    sh 'docker build --no-cache -f Dockerfile.test -t doctest-test .'
+                    sh 'docker run --rm doctest-test'
+                }
+            }
+        }
+
+        stage('Test Docker Image for test') {
+            steps {
+                script {
+                    sh 'docker run --rm doctest-test'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline zakończony sukcesem!'
+        }
+        failure {
+            echo 'Pipeline zakończony niepowodzeniem.'
+        }
+    }
+}
