@@ -1,0 +1,120 @@
+pipeline{
+    agent any
+    
+    environment{
+        TAG = "latest"
+        IMAGE_NAME = "klocekk/node-deploy"
+    }
+    stages{
+        stage('Clean'){
+            steps{
+                echo "Czyszczeniev1"
+                cleanWs()
+            }
+        }
+        stage('Collect') {
+            steps {
+                echo "Clone"
+                sh "rm -rf MDO2025_INO"
+                sh "git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git"
+                 dir("MDO2025_INO/ITE/GCL07/MK415453/lab5"){
+                sh "git checkout MK415453"
+                sh "touch build.log"
+                sh "touch test.log"
+                }
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                echo "Budowa"
+                dir("MDO2025_INO/ITE/GCL07/MK415453/lab5"){
+                sh "docker build -t node-builder -f Dockerfile.builder ."
+                }
+            }
+      }
+    
+    stage('Test') {
+            steps {
+                echo "Testy"
+                dir("MDO2025_INO/ITE/GCL07/MK415453/lab5"){
+                sh "docker build -t node-tester -f Dockerfile.test ."
+                }
+        }
+    }
+    
+    stage('Deploy') {
+        steps {
+            echo "Deploy"
+            dir("MDO2025_INO/ITE/GCL07/MK415453/lab5"){
+                sh "docker build -t ${IMAGE_NAME}:${TAG} -f Dockerfile.deploy ."
+                sh "docker network create ci || true"
+                sh 'docker rm -f node || true'
+                sh 'docker run -d -p 3000:3000 --name node --network ci ${IMAGE_NAME}:${TAG}'
+            }
+        }
+    }
+    stage('Test HTTP'){
+        steps {
+            echo "Curlmachen"
+            sh 'sleep 5'
+                sh '''
+                docker run --rm --network ci \
+                curlimages/curl:latest \
+                curl --fail http://node:3000
+                '''
+        }
+    }
+    
+    stage('Create .tgz Artifact'){
+        steps{
+            echo "Tarujemy myk myk aka artefakt"
+            dir('ITE/GCL07/MK415453/lab5'){
+                sh '''
+                        set -e
+                        docker rm -f temp_pack || true
+                        mkdir -p app-content
+
+                        docker create --name temp_pack ${IMAGE_NAME}:${TAG}
+                        docker cp temp_pack:/app/node-js-dummy-test/. ./app-content
+                        docker rm temp_pack
+
+                        docker run --rm \
+                          -v "$PWD/app-content":/app \
+                          -w /app node:20 \
+                          npm pack
+                    '''
+                    archiveArtifacts artifacts: 'app-content/*.tgz', fingerprint: true
+            }
+        }
+    }
+    
+    stage('Publish to DockerHub') {
+            steps {
+                echo "Wypychanie obrazu do Docker Hub"
+                withCredentials([usernamePassword(
+                    credentialsId: 'michal',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push ${IMAGE_NAME}:${TAG}
+                        docker tag ${IMAGE_NAME}:${TAG} ${IMAGE_NAME}:latest
+                        docker push ${IMAGE_NAME}:latest
+                    '''
+                }
+            }
+        }
+ }
+ 
+ post{
+     always{
+         echo "Done"
+     }
+     cleanup{
+        echo "Czyszczeniev2"
+         sh 'docker rm -f node || true'
+     }
+ }
+}
