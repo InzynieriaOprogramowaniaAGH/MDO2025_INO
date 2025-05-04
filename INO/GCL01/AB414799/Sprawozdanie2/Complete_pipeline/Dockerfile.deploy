@@ -13,6 +13,6 @@ WORKDIR /app
 
 RUN gcc main.c -o example -lcjson -I/usr/local/include/cjson -L/usr/local/lib64
 
-ENV LD_LIBRARY_PATH=/usr/local/lib64:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/local/lib64
 
 CMD ["./example"]
