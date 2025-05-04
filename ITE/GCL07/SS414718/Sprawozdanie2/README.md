@@ -262,11 +262,38 @@ Ten pipeline CI/CD w Jenkinsie czyści workspace, klonuje repozytorium, buduje e
 
 ## 3. Podsumowanie
 ---
-### 3.1 Napotkane problemy
+
+### 3.1 Lista kontrolna z Lab6
+| Status | Punkt                                     | Opis                                                                           |
+|:------:|-------------------------------------------|--------------------------------------------------------------------------------|
+| ✔️     | **Aplikacja została wybrana**             | Node‐kalkulator z repozytorium AGH-Node-Calculator-DevOps.                      |
+| ✔️     | **Licencja potwierdza swobodę obrotu**    | MIT (zweryfikowano w pliku `LICENSE`).                                          |
+| ✔️     | **Program buduje się**                    | `docker build -f Dockerfile.builder ...` zakończone sukcesem.                  |
+| ✔️     | **Przechodzą testy**                      | Smoke-test HTTP w etapach `Test HTTP` za pomocą obrazu `curl`.                  |
+| ✔️     | **Decyzja o forku**                       | Korzystam z oryginalnego repozytorium, fork nie był potrzebny.                 |
+| ✔️     | **Diagram UML procesu CI/CD**             | Dołączony wyżej                        |
+| ✔️     | **Kontener bazowy**                       | `node:18-alpine` z dodatkiem `git` — lekki, oficjalny obraz.                   |
+| ✔️     | **Build w kontenerze**                    | Etap `Build (builder)` wywołuje `docker build -f Dockerfile.builder`.           |
+| ✔️     | **Testy w kontenerze**                    | Etap `Test HTTP` uruchamia `docker run … curl …`, weryfikując dostępność.       |
+| ✔️     | **Kontener ‘deploy’**                     | `Dockerfile.deploy` tworzy obraz z `CMD ["npm","start"]`.                       |
+| ✔️     | **Logi i artefakty**                      | W etapie `Create .tgz Artifact` katalog `/app` pakuje `npm pack` i archiwizuje. |
+| ✔️     | **Rola kontenera build**                  | Izolacja zależności, cache warstw, oddzielenie build/runtime.                   |
+| ✔️     | **Wersjonowany obraz deploy**             | Tagowany numerem builda (`$BUILD_NUMBER`).                                      |
+| ✔️     | **Smoke test aplikacji**                  | `curl --fail http://deploy-container:3000` w etapie `Test HTTP`.                |
+| ✔️     | **Zdefiniowany artefakt**                 | Paczka `.tgz` wytworzona przez `npm pack` i załączona jako artefakt.            |
+| ✔️     | **Uzasadnienie formy artefaktu**          | `.tgz` z gotowym kodem → łatwe pobieranie i dalszy deploy.                      |
+| ✔️     | **Proces wersjonowania**                  | Jenkins `BUILD_NUMBER` → semantyczny tag artefaktu i obrazu.                    |
+| ✔️     | **Publikacja artefaktu**                  | `docker push` obrazów oraz archiwum jako artefakt builda.                       |
+| ✔️     | **Identyfikacja źródła artefaktu**        | Tag `$BUILD_NUMBER`; metadane builda w Jenkins.                                  |
+| ✔️     | **Pliki CI dostępne**                     | W repo: `Dockerfile.builder`, `Dockerfile.deploy`, `Jenkinsfile`.               |
+| ✔️     | **Zgodność z UML**                        | Pipeline realizuje etapy: Checkout → Build → Test → Artifact → Publish.         |
+
+### 3.2 Napotkane problemy
  - Nie wiedzieć czemu, ale kontener DIND do Jenkinsa przestawał działać nawet po uśpieniu komputera, tym bardziej po wyłączeniu, wymagało to ponownej instalacji Jenkinsa wg. dokumentacji,
  - Po aktualizacji Windowsa, Fedora przestała się włączać, nie mam pojęcia jak to było ze sobą powiązane, może zbieg okoliczności, wyeksportowanie maszyny, usunięcie starej i przywrócenie naprawiło błąd,
  - Przez chwilę nie mogłem dojść do porozumienia ze ścieżkami w kopiowaniu, tak nie postawiłem kropki za /
   
-### 3.2 LLM użycie
+### 3.3 LLM użycie
 - Poprawa pipeline'a, dokładniej mówiąc tagowania,
 - Instrukcja jak wpisać w bezpieczny sposób Credentials do Jenkinsa i ich użyć
+- Formatowanie listy w markdownie
