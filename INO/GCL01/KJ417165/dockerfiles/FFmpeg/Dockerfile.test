@@ -1,0 +1,6 @@
+FROM ffmpeg-build:latest
+
+WORKDIR /app
+
+# Uruchomienie testów
+CMD ["make", "fate"]
