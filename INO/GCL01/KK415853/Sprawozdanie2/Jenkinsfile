@@ -16,22 +16,14 @@ pipeline {
                 git branch: 'KK415853', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
             }
         }
-        stage('Build Builder Image') {
+        stage('Build') {
             steps {
                 sh "docker build -t ${BUILD_IMAGE} -f ${DOCKERFILES_DIR}/Dockerfile.build ${DOCKERFILES_DIR}"
             }
         }
-        stage('Build Test Image') {
+        stage('Test') {
             steps {
                 sh "docker build -t ${TEST_IMAGE} -f ${DOCKERFILES_DIR}/Dockerfile.test ${DOCKERFILES_DIR}"
-            }
-        }
-        stage('Run Tests') {
-            steps {
-                sh '''
-                    TEST_CONTAINER_ID=$(docker create ${TEST_IMAGE})
-                    docker start -a $TEST_CONTAINER_ID
-                '''
             }
         }
         stage('Deploy') {

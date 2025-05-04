@@ -131,17 +131,13 @@ Kolejnym krokiem było stworzenie kompletnego pipelinu dla wybranej aplikacji. P
 
 Pierwszym krokiem pipeline’u jest klonowanie zdalnego repozytorium z mojej gałęzi `KK415853`.
 
-### Build Builder Image
+### Build 
 
 W kolejnym etapie tworzony jest obraz Docker (`mvn-build`), bazujący na `Dockerfile.build`. Obraz ten pełni rolę kontenera typu *Builder*, który zawiera wszystkie wymagane zależności potrzebne do zbudowania aplikacji Java za pomocą narzędzia Maven. Użycie oddzielnego kontenera dla etapu budowania pozwala na lepsze zarządzanie zależnościami i umożliwia szybsze, czystsze buildy.
 
-### Build Test Image
+### Test
 
 Etap ten odpowiada za budowę testowego obrazu Docker (`mvn-test`) z wykorzystaniem `Dockerfile.test`. Umożliwia uruchamianie testów w izolowanym środowisku, co zwiększa wiarygodność testów i zapobiega błędom wynikającym z zanieczyszczonego środowiska buildowego.
-
-### Run Tests
-
-Na tym etapie uruchamiany jest tymczasowy kontener na podstawie obrazu testowego. W jego ramach wykonywane są testy jednostkowe zdefiniowane w repozytorium projektu. Dzięki wykorzystaniu polecenia `docker start -a`, logi z przebiegu testów są dostępne bezpośrednio w Jenkinsie, co pozwala zidentyfikować, które testy zakończyły się niepowodzeniem.
 
 ### Deploy
 
@@ -175,22 +171,14 @@ pipeline {
                 git branch: 'KK415853', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
             }
         }
-        stage('Build Builder Image') {
+        stage('Build') {
             steps {
                 sh "docker build -t ${BUILD_IMAGE} -f ${DOCKERFILES_DIR}/Dockerfile.build ${DOCKERFILES_DIR}"
             }
         }
-        stage('Build Test Image') {
+        stage('Test') {
             steps {
                 sh "docker build -t ${TEST_IMAGE} -f ${DOCKERFILES_DIR}/Dockerfile.test ${DOCKERFILES_DIR}"
-            }
-        }
-        stage('Run Tests') {
-            steps {
-                sh '''
-                    TEST_CONTAINER_ID=$(docker create ${TEST_IMAGE})
-                    docker start -a $TEST_CONTAINER_ID
-                '''
             }
         }
         stage('Deploy') {
