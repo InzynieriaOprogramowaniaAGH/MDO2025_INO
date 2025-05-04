@@ -16,7 +16,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('MDO2025_INO/ITE/GCL08/BW414439/sprawozdanie 2') {
+                dir('ITE/GCL08/BW414439/sprawozdanie 2') {
                     sh 'docker build --no-cache -t build-irssi -f Dockerfile.build .'
                 }
             }
@@ -24,14 +24,14 @@ pipeline {
 
         stage('Test') {
             steps {
-                dir('MDO2025_INO/ITE/GCL08/BW414439/sprawozdanie 2') {
+                dir('ITE/GCL08/BW414439/sprawozdanie 2') {
                     sh 'docker build --no-cache --progress=plain -t test-irssi -f Dockerfile.test . 2>&1 | tee test-output.log'
                     sh "mv test-output.log test-logs-${BUILD_NUMBER}.log"
                 }
             }
             post {
                 always {
-                    dir('MDO2025_INO/ITE/GCL08/BW414439/sprawozdanie 2') {
+                    dir('ITE/GCL08/BW414439/sprawozdanie 2') {
                         archiveArtifacts artifacts: "test-logs-${BUILD_NUMBER}.log", fingerprint: true
                     }
                 }
@@ -40,14 +40,14 @@ pipeline {
 
         stage('Build Artifact') {
             steps {
-                dir('MDO2025_INO/ITE/GCL08/BW414439/sprawozdanie 2') {
+                dir('ITE/GCL08/BW414439/sprawozdanie 2') {
                     sh 'docker build --no-cache -t artifact-irssi -f Dockerfile.builddeb .'
                     sh 'docker run --rm -v $PWD:/out artifact-image'
                 }
             }
             post {
                 always {
-                    dir('MDO2025_INO/ITE/GCL08/BW414439/sprawozdanie 2') {
+                    dir('ITE/GCL08/BW414439/sprawozdanie 2') {
                         archiveArtifacts artifacts: '*.deb', fingerprint: true
                     }
                 }
@@ -56,7 +56,7 @@ pipeline {
 
         stage('Smoke Test') {
             steps {
-                dir('MDO2025_INO/ITE/GCL08/BW414439/sprawozdanie 2') {
+                dir('ITE/GCL08/BW414439/sprawozdanie 2') {
                     script {
                         docker.image('ubuntu:latest').inside("-v .:/deb") {
                             sh '''
