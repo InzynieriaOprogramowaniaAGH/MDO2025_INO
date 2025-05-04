@@ -35,11 +35,16 @@ pipeline {
             steps {
                 sh "docker volume create supertux_build"
                 sh "docker run -d --name supertux_build -v supertux_build:/supertux_build supertuxbld"
-                sh "docker exec supertux_build cp supertux2 ../../supertux_build/"
+                sh "docker exec supertux_build cp -ra ../../supertux ../../supertux_build/"
 
-                sh "docker run -d --name supertux_deploy -v supertux_build:/supertux_build ubuntu"
-                sh "docker exec supertux_deploy cp supertux_build/supertux2 ."
-                sh "docker exec supertux_deploy ./supertux2 --version"
+                sh "docker build -t supertuxtest -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.test ."
+                sh '''docker run -d -v supertux_build:/supertux_build main_container -c 
+                            cp supertux_build/ .
+                            ./supertux/build/supertux2 --version
+                            
+                '''
+                // sh "docker exec supertux_deploy cp supertux_build/supertux2 ."
+                // sh "docker exec supertux_deploy ./supertux2 --version"
             }
         }
         
