@@ -1,0 +1,14 @@
+FROM fedora:latest
+
+RUN dnf install -y openssh-server && dnf clean all
+
+RUN useradd -ms /bin/bash testuser && \
+    echo "testuser:testpass" | chpasswd
+
+RUN mkdir -p /var/run/sshd
+
+RUN ssh-keygen -A
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]

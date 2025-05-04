@@ -1,0 +1,60 @@
+services:
+  docker:
+    image: docker:dind
+    container_name: jenkins-docker
+    privileged: true
+    restart: unless-stopped
+    networks:
+      jenkins:
+        aliases:
+          - docker
+    volumes:
+      - jenkins-docker-certs:/certs/client
+      - jenkins-data:/var/jenkins_home
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins-blueocean
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    environment:
+      - DOCKER_HOST=tcp://docker:2376
+      - DOCKER_CERT_PATH=/certs/client
+      - DOCKER_TLS_VERIFY=1
+    networks:
+      - jenkins
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client:ro
+      - ./projects:/var/jenkins_home/projects
+
+  builder:
+    build:
+      context: .
+      dockerfile: Dockerfile.builder
+    container_name: builder
+    command: ["sh", "-c", "cp /app/build/output.txt /output/"]
+    volumes:
+      - ./builder-output:/output
+    networks:
+      - jenkins
+
+  ssh-fedora:
+    build:
+      context: .
+      dockerfile: Dockerfile.sshd
+    container_name: ssh-fedora
+    ports:
+      - "2222:22"
+    networks:
+      - jenkins
+
+volumes:
+  jenkins-docker-certs:
+  jenkins-data:
+
+networks:
+  jenkins:
+    driver: bridge
