@@ -53,7 +53,7 @@ pipeline {
                 dir ("INO/GCL01/AB414799/Sprawozdanie2/Complete_pipeline")
                 {
                     script {
-                        sh 'cp ../artefakty/cjson.rpm .'              
+                        sh 'cp artefakty/cjson.rpm .'              
                         docker.build("cjson_deploy", "-f Dockerfile.deploy .")
 
                         sh """
