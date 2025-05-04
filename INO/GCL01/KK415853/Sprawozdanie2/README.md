@@ -123,5 +123,105 @@ Diagram UML dla wybranego projektu
 
 ![](zrzuty_ekranu/uml.png)
 
+Kolejnym krokiem było stworzenie kompletnego pipelinu dla wybranej aplikacji. Pipeline został zdefiniowany w Jenkinsie jako klasyczny Declarative Pipeline, operujący w środowisku Docker-in-Docker (DIND), gdzie Jenkins oraz kontenery budujące/testujące działają w osobnych, izolowanych środowiskach. Pipeline wykonuje pełny cykl CI/CD dla aplikacji Java opartej o Maven, realizując kroki: klonowanie repozytorium, budowa obrazów, testowanie, wdrażanie (deploy) oraz publikacja artefaktów (publish).
 
+## Opis poszczególnych etapów pipeline'u Jenkins
+
+### Clone repo
+
+Pierwszym krokiem pipeline’u jest klonowanie zdalnego repozytorium z mojej gałęzi `KK415853`.
+
+### Build Builder Image
+
+W kolejnym etapie tworzony jest obraz Docker (`mvn-build`), bazujący na `Dockerfile.build`. Obraz ten pełni rolę kontenera typu *Builder*, który zawiera wszystkie wymagane zależności potrzebne do zbudowania aplikacji Java za pomocą narzędzia Maven. Użycie oddzielnego kontenera dla etapu budowania pozwala na lepsze zarządzanie zależnościami i umożliwia szybsze, czystsze buildy.
+
+### Build Test Image
+
+Etap ten odpowiada za budowę testowego obrazu Docker (`mvn-test`) z wykorzystaniem `Dockerfile.test`. Umożliwia uruchamianie testów w izolowanym środowisku, co zwiększa wiarygodność testów i zapobiega błędom wynikającym z zanieczyszczonego środowiska buildowego.
+
+### Run Tests
+
+Na tym etapie uruchamiany jest tymczasowy kontener na podstawie obrazu testowego. W jego ramach wykonywane są testy jednostkowe zdefiniowane w repozytorium projektu. Dzięki wykorzystaniu polecenia `docker start -a`, logi z przebiegu testów są dostępne bezpośrednio w Jenkinsie, co pozwala zidentyfikować, które testy zakończyły się niepowodzeniem.
+
+### Deploy
+
+Etap `Deploy` uruchamia aplikację wewnątrz lekkiego kontenera runtime, opartego na obrazie `openjdk:17-slim`. Taki sposób wdrożenia oddziela środowisko uruchomieniowe od buildowego i testowego, co jest zgodne z zasadami najlepszych praktyk DevOps. Użycie minimalistycznego obrazu zwiększa bezpieczeństwo i zmniejsza powierzchnię ataku.
+
+### Publish
+
+W tym etapie tworzony jest wersjonowany artefakt – plik JAR – który zostaje zapisany w katalogu `publish` i dodany jako artefakt w Jenkinsie. Takie podejście pozwala na późniejsze wykorzystanie zbudowanego artefaktu niezależnie od obrazu Docker.
+
+### Post: always
+
+Na zakończenie pipeline'u, niezależnie od jego wyniku, wykonywane jest polecenie usuwające działający kontener aplikacji (`running-java-app`). Gwarantuje to, że nie pozostaną żadne niepotrzebne kontenery lub zajęte zasoby po wykonaniu procesu CI/CD, co zapewnia czystość środowiska oraz stabilność kolejnych uruchomień.
+
+
+```
+pipeline {
+    agent any
+    environment {
+        MAVEN_OPTS = '-Dmaven.repo.local=.m2/repository'
+        BUILD_IMAGE = 'mvn-build'
+        TEST_IMAGE = 'mvn-test'
+        RUNTIME_IMAGE = 'openjdk:17-slim'
+        JAR_NAME = 'app2.jar'
+        ARTIFACT_DIR = 'publish'
+        DOCKERFILES_DIR = 'INO/GCL01/KK415853/Sprawozdanie2'
+        PROJECT_DIR = 'INO/GCL01/KK415853/Sprawozdanie2/simple-java-maven-app'
+    }
+    stages {
+        stage('Clone repo') {
+            steps {
+                git branch: 'KK415853', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+        stage('Build Builder Image') {
+            steps {
+                sh "docker build -t ${BUILD_IMAGE} -f ${DOCKERFILES_DIR}/Dockerfile.build ${DOCKERFILES_DIR}"
+            }
+        }
+        stage('Build Test Image') {
+            steps {
+                sh "docker build -t ${TEST_IMAGE} -f ${DOCKERFILES_DIR}/Dockerfile.test ${DOCKERFILES_DIR}"
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                sh '''
+                    TEST_CONTAINER_ID=$(docker create ${TEST_IMAGE})
+                    docker start -a $TEST_CONTAINER_ID
+                '''
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker rm -f running-java-app || true
+                    docker run -d \
+                        --name running-java-app \
+                        -v "$PWD/${JAR_NAME}:/app/${JAR_NAME}" \
+                        ${RUNTIME_IMAGE} \
+                        java -jar /app/${JAR_NAME}
+                '''
+            }
+        }
+        stage('Publish') {
+            steps {
+                sh '''
+                    mkdir -p ${ARTIFACT_DIR}
+                    cp ${JAR_NAME} ${ARTIFACT_DIR}/myapp-1.0.0.jar
+                '''
+                archiveArtifacts artifacts: "${ARTIFACT_DIR}/*.jar"
+            }
+        }
+    }
+    post {
+        always {
+            sh 'docker rm -f running-java-app || true'
+        }
+    }
+}
+```
+
+![](zrzuty_ekranu/13.png)
 
