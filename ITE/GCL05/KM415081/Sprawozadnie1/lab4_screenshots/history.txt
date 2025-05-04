@@ -1,0 +1,89 @@
+1  apt-get update
+    2  apt-get install -y iperf3
+    3  iperf3 -s
+    4  docker network create --driver bridge my_network
+    5  exit
+    6  apt-get update
+    7  apt-get install -y iperf3
+    8  iperf3 -s
+    9  history
+
+917  ls
+  918  docker volume create volume-input
+  919  docker volume create volume-output
+  920  docker run -it --name node-container -v volume-input:/input -v volume-output:/output node:16 /bin/bash
+  921  docker stop node-container
+  922  docker rm node-container
+  923  docker run -it --name node-container -v volume-input:/input -v volume-output:/output node:16 /bin/bash
+  924  ls
+  925  cat package-lock.json 
+  926  docker stop node-container
+  927  docker rm node-container
+  928  docker run --rm -v vol_input:/repo alpine/git clone https://github.com/devenes/node-js-dummy-test.git /repo
+  929  docker run -it --name kontener-bazowy   -v vol_input:/app/input   -v vol_output:/app/output   node:16 bash
+  930  docker run --rm -v vol_input:/repo alpine ls /repo
+  931  docker run -it --name kontener-bazowy -v vol_input:/app/input node:16 bash
+  932  cd /app/input/repo
+  933  ls
+  934  docker stop node-container
+  935  docker ps
+  936  exit
+  937  systemctl status sshd
+  938  exit
+  939  docker ps
+  940  docker network create --driver bridge my_network
+  941  docker network connect my_network node-js-dummy-app-container
+  942  docker run -it --name iperf3-client --network my_network --rm alpine iperf3 -c node-js-dummy-app-container
+  943  sudo apt-get install iperf3
+  944  apt-get install iperf3
+  945  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' node-js-dummy-app-container
+  946  docker exec -it node-js-dummy-app-container ps aux
+  947  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' node-js-dummy-app-container
+  948  docker network inspect my_network
+  949  docker run -it --name iperf3-client --network my_network --rm alpine iperf3 -c 172.18.0.2
+  950  docker run -it --name iperf3-client --network my_network --rm alpine bash
+  951  docker run -it --name iperf3-client --network my_network --rm alpine sh
+  952  ls
+  953  cd node-js-dummy-test/
+  954  ls
+  955  nano Dockerfile
+  956  nano Dockerfile.mounts
+  957  docker build -f Dockerfile.mounts -t node-js-dummy-app .
+  958  docker run -it --name iperf3-client --network my_network --rm alpine iperf3 -c node-js-dummy-app-container
+  959  docker run -d -p 8080:8080 -p 50000:50000 --name jenkins --privileged jenkins/jenkins:lts
+  960  docker ps
+  961  docker logs jenkins
+  962  docker ps
+  963  sudo ss -tuln | grep 8080
+  964  ip a
+  965  nano Dockerfile.jenkins
+  966  docker build -t myjenkins-blueocean:2.492.2-1 -f Dockerfile.jenkins .
+  967  docker run --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro myjenkins-blueocean:2.492.2-1
+  968  docker run --name jenkins-blueocean --restart=on-failure --detach --network my_network --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro myjenkins-blueocean:2.492.2-1
+  969  docker network create jenkins
+  970  docker rm -f jenkins-blueocean
+  971  docker run --name jenkins-blueocean-new --restart=on-failure --detach --network my_network --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro myjenkins-blueocean:2.492.2-1
+  972  docker ps
+  973  docker stop 21f1fd1fd3dd
+  974  docker rm 21f1fd1fd3dd
+  975  docker run --name jenkins-blueocean-new --restart=on-failure --detach --network my_network --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro myjenkins-blueocean:2.492.2-1
+  976  docker ps -a
+  977  docker rm -f jenkins-blueocean-new
+  978  docker run --name jenkins-blueocean-new --restart=on-failure --detach --network my_network --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro myjenkins-blueocean:2.492.2-1
+  979  docker ps
+  980  docker logs jenkins-blueocean-new
+  981  docker stop 677789e86d6d
+  982  docker rm 677789e86d6d
+  983  ls
+  984  docker network create jenkins
+  985  docker image pull docker:dind
+  986  docker run --name jenkins-docker --detach --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --publish 2376:2376 docker:dind --storage-driver overlay2
+  987  ls
+  988  docker build -t myjenkins-blueocean:2.492.2-1 -f Dockerfile.jenkins .
+  989  docker run --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro myjenkins-blueocean:2.492.2-1
+  990  docker container ls -a
+  991  ssh -L 8080:localhost:8080 root@127.0.0.1
+  992  cd /var/jenkins_home/secrets/initialAdminPassword
+  993  cat /var/jenkins_home/secrets/initialAdminPassword
+  994  /var/jenkins_home/secrets/initialAdminPassword
+  995  docker logs jenkins-blueocean

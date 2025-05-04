@@ -1,0 +1,84 @@
+476  docker images
+  477  cd ..
+  478  docker login -u cadmusinho
+  479  docker images
+  480  ls
+  481  cd MDO2025_INO/
+  482  cd GCL05
+  483  ls
+  484  cd ITE
+  485  cd GCL05
+  486  ls
+  487  cd KM415081/
+  488  git branch
+  489  docker images
+  490  docker run busybox echo "Hello from BusyBox"
+  491  docker run -it busybox
+  492  docker run -it busybox sh
+  493  docker run -it fedora
+  494  dnf update -y
+  495  docker run -it fedora
+  496  FROM fedora
+  497  RUN dnf update -y && dnf install -y git
+  498  WORKDIR /app
+  499  RUN git clone https://github.com/USER/REPO.git
+  500  CMD ["bash"]
+  501  ls
+  502  nano Dockerfile
+  503  docker build -t custom_fedora .
+  504  docker run -it custom_fedora
+  505  docker ps -a
+  506  docker rm $(docker ps -aq)
+  507  docker rmi $(docker images -q)
+  508  ls
+  509  mv Dockerfile ./Sprawozdanie1
+  510  ls
+  511  cd Sprawozdanie1
+  512  cd Sprawozdanie1/
+  513  cd Sprawozadnie1/
+  514  ls
+  515  cd ..
+  516  cd Sprawozdanie1
+  517  mv Sprawozdanie1/Dockerfile Sprawozdanie1/
+  518  ls Sprawozdanie1/
+  519  ls
+  520  file Sprawozdanie1
+  521  mv Sprawozadnie1 Dockerfile
+  522  ls
+  523  mv Dockerfile Sprawozadnie1 
+  524  ls
+  525  mv Sprawozadnie1 Dockerfile
+  526  ls
+  527  cd Sprawozdanie1
+  528  cd Dockerfile
+  529  ls
+  530  cd ..
+  531  ls
+  532  nano Sprawozdanie1
+  533  mv Dockerfile a
+  534  mv Sprawozdanie1 Docker
+  535  mv a Sprawozadnie1
+  536  ls
+  537  mv Docker Dockerfile
+  538  nano Dockerfile 
+  539  cd Sprawozadnie1/
+  540  ls
+  541  cd ..
+  542  mv Dockerfile ./Sprawozadnie1/
+  543  ls
+  544  cd Sprawozadnie1/
+  545  ls
+  546  nano Dockerfile 
+  547  cd ..
+  548  git add .
+  549  git status
+  550  git commit -m "KM415081 dodanie Dockerfile"
+  551  git push origin KM415081
+  552  git branch
+  553  git push origin KM415081
+  554  git push --force origin KM415081
+  555  ls
+  556  cd Sprawozadnie1/
+  557  ls
+  558  mkdir lab2_screenshots
+  559  history

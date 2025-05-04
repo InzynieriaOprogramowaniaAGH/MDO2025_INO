@@ -1,0 +1,94 @@
+pipeline {
+    agent any
+
+    environment {
+        APP_DIR = 'MDO2025_INO/ITE/GCL05/KM415081/Sprawozadnie1/lab_3_dockerfile'
+        APP_VERSION = '1.0'
+        NODE_TAG = '23-alpine'
+        BUILD_IMAGE = "nodebld:${NODE_TAG}"
+        TEST_IMAGE = "nodetest:v${APP_VERSION}"
+        DEPLOY_IMAGE = "nodedeploy:v${APP_VERSION}"
+    }
+
+    stages {
+        stage('Prepare') {
+            steps {
+                sh '''
+                    rm -fr MDO2025_INO
+                    git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+                    cd MDO2025_INO
+                    git checkout KM415081
+                '''
+            }
+        }
+
+        stage('Logs') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh 'mkdir -p logs'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh "docker build -t ${BUILD_IMAGE} -f Dockerfile.nodebld . > logs/build.log 2>&1 || (cat logs/build.log && false)"
+                }
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh "docker build -t ${TEST_IMAGE} -f Dockerfile.nodetest . > logs/test.log 2>&1 || (cat logs/test.log && false)"
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'docker network create my_network || true'
+                dir(env.APP_DIR) {
+                    sh """
+                        docker build -t ${DEPLOY_IMAGE} -f Dockerfile.nodedeploy .
+                        docker rm -f app || true
+                        docker run -d -p 3000:3000 --name app --network my_network ${DEPLOY_IMAGE}
+                    """
+                }
+                sleep(10)
+            }
+        }
+
+        stage('Test Deployment') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh '''
+                        docker run --network my_network --rm curlimages/curl curl -v http://app:3000
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh """
+                        mkdir -p artifacts_${APP_VERSION}
+                        tar -cvf artifacts_${APP_VERSION}.tar logs/*.log
+                    """
+                    archiveArtifacts artifacts: "artifacts_${APP_VERSION}.tar"
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            sh """
+                docker rmi ${BUILD_IMAGE} ${TEST_IMAGE} ${DEPLOY_IMAGE} || true
+                docker system prune --all --volumes --force || true
+            """
+        }
+    }
+}
