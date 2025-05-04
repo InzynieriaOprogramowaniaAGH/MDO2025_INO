@@ -21,7 +21,8 @@ pipeline {
         
         stage('Build') {
             steps{
-                sh "docker build -t supertuxbld -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.bld ."
+                // sh "docker build -t supertuxbld -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.bld ."
+                sh "docker load -i ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/supertuxbld.tar"
             }
         }
         
@@ -63,6 +64,44 @@ pipeline {
                     sh 'docker rm main'
                 }
                 
+            }
+        }
+
+        stage('Build DEB Package') {
+            steps {
+                script {
+                    // Tworzenie struktury katalogów dla paczki DEB
+                    sh '''
+                        mkdir -p ${DEB_DIR}/usr/local/bin/supertux/build
+                        mkdir -p ${DEB_DIR}/usr/local/bin/supertux/data
+                        mkdir -p ${DEB_DIR}/usr/local/bin/supertux/external
+                        
+                        # Kopiowanie katalogów z woluminu supertux_build do odpowiednich miejsc w paczce DEB
+                        cp -r /supertux_build/supertux/build/* ${DEB_DIR}/usr/local/bin/supertux/build/
+                        cp -r /supertux_build/supertux/data/* ${DEB_DIR}/usr/local/bin/supertux/data/
+                        cp -r /supertux_build/supertux/external/* ${DEB_DIR}/usr/local/bin/supertux/external/
+
+                        # Tworzenie katalogu DEBIAN i pliku kontrolnego
+                        mkdir -p ${DEB_DIR}/DEBIAN
+                        echo "Package: ${PACKAGE_NAME}\nVersion: ${PACKAGE_VERSION}\nArchitecture: all\nMaintainer: Twoje Imię <twoj_email@example.com>\nInstalled-Size: 1024\nDepends: cmake, build-essential, libogg-dev, libvorbis-dev, libopenal-dev, libsdl2-dev, libsdl2-image-dev, libfreetype6-dev, libraqm-dev, libcurl4-openssl-dev, libglew-dev, libharfbuzz-dev, libfribidi-dev, libglm-dev, zlib1g-dev\nSection: utils\nPriority: optional\nDescription: SuperTux - gra platformowa" > ${DEB_DIR}/DEBIAN/control
+
+                        # Tworzenie skryptu postinst, który zainstaluje wymagane zależności
+                        echo "#!/bin/bash\n\napt-get update\napt-get install -y cmake build-essential libogg-dev libvorbis-dev libopenal-dev libsdl2-dev libsdl2-image-dev libfreetype6-dev libraqm-dev libcurl4-openssl-dev libglew-dev libharfbuzz-dev libfribidi-dev libglm-dev zlib1g-dev" > ${DEB_DIR}/DEBIAN/postinst
+                        chmod +x ${DEB_DIR}/DEBIAN/postinst
+
+                        # Tworzenie paczki DEB
+                        dpkg-deb --build ${DEB_DIR}
+                    '''
+                }
+            }
+        }
+
+        stage('Publish DEB Package') {
+            steps {
+                script {
+                    // Publikowanie paczki DEB jako artefakt
+                    archiveArtifacts artifacts: "${DEB_DIR}.deb", allowEmptyArchive: false
+                }
             }
         }
         
