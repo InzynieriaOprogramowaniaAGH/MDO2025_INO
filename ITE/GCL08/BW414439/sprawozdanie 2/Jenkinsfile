@@ -8,12 +8,6 @@ pipeline {
             }
         }
 
-        stage('Checkout') {
-            steps {
-                git branch:'BW414439_2', url: "https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git"
-            }
-        }
-
         stage('Build') {
             steps {
                 dir('ITE/GCL08/BW414439/sprawozdanie 2') {
@@ -42,7 +36,7 @@ pipeline {
             steps {
                 dir('ITE/GCL08/BW414439/sprawozdanie 2') {
                     sh 'docker build --no-cache -t artifact-irssi -f Dockerfile.builddeb .'
-                    sh 'docker run --rm -v $PWD:/out artifact-image'
+                    sh 'docker run --rm -v .:/out artifact-image'
                 }
             }
             post {
