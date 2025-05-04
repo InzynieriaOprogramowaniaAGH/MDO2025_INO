@@ -91,7 +91,7 @@ Sukces.
 Celem projektu było zaprojektowanie i uruchomienie kompletnego procesu CI/CD w Jenkinsie dla aplikacji Node.js (node-js-dummy-test, wybranym na laboratorium nr 3) z wykorzystaniem kontenerów Docker. Pipeline realizuje wszystkie kluczowe etapy typowego cyklu integracji i wdrażania oprogramowania:<br>
 Aby pipeline działał poprawnie, środowisko musi spełniać następujące warunki:<br>
 ## Diagram aktywności procesu CI<br>
-![alt text](towlasnie.svg)<br>
+![alt text](diagramCI.svg)<br>
 
 Zainstalowany Docker z obsługą Docker-in-Docker (DinD)
 * Uruchomiony kontener: jenkins/jenkins:lts, odpowiednio skonfigurowany do pracy z Dockerem
@@ -104,10 +104,10 @@ Zainstalowany Docker z obsługą Docker-in-Docker (DinD)
 
  ## Diagram wdrożeniowy
 
- anime baba
+ ![alt text](wdrozeniowyCD.svg)<br><br>
 
- Zaimplementowałam obiekt typu pipeline, który klonuje repozytorium, buduje i testuje obrazy Dockera dla aplikacji Node.js, wdraża aplikację w kontenerze, sprawdza jej działanie przez sieć Docker, publikuje artefakt w postaci archiwum .zip, a na końcu automatycznie czyści środowisko z uruchomionych kontenerów i sieci.
-![alt text](image-7.png)
+ Zaimplementowałam obiekt typu pipeline, który klonuje repozytorium, buduje i testuje obrazy Dockera dla aplikacji Node.js, wdraża aplikację w kontenerze, sprawdza jej działanie przez sieć Docker, publikuje artefakt w postaci archiwum .tgz, a na końcu automatycznie czyści środowisko z uruchomionych kontenerów i sieci.
+<br>
 Kod pipeline dla mojego projektu:
  ```
  pipeline {
@@ -116,7 +116,7 @@ Kod pipeline dla mojego projektu:
     environment {
         IMAGE_NAME = "node-js-dummy"
         TAG = "v1.0"
-        PATH_PREFIX = "MDO2025_INO/ITE/GCL06/JP416100"
+        PATH_PREFIX = "MDO2025_INO/ITE/GCL06/JP416100/Sprawozdanie2"
     }
 
     stages {
@@ -172,9 +172,9 @@ Kod pipeline dla mojego projektu:
                 echo 'Tworzenie artefaktu ZIP'
                 sh '''
                 cd ${PATH_PREFIX}/node-js-dummy-test
-                zip -r ../../../node-js-dummy-test.zip .
+               tar -czf ../../../node-js-dummy-test.tar.gz .
                 '''
-                archiveArtifacts artifacts: 'MDO2025_INO/ITE/node-js-dummy-test.zip', fingerprint: true
+                archiveArtifacts artifacts: 'MDO2025_INO/ITE/GCL06/node-js-dummy-test.tar.gz', fingerprint: true
             }
         }
 
@@ -195,3 +195,11 @@ Kod pipeline dla mojego projektu:
 }
 
 ```
+
+po wielu próbach sie udało. (yippie)
+Pipeline był uruchamiany wielokrotnie, a każde wykonanie przechodziło poprawnie. Zapewnia to, że proces CI/CD jest powtarzalny, odporny na błędy środowiskowe i nie polega na żadnych danych cache’owanych z poprzednich wykonań.
+
+![alt text](image-10.png)
+Przekazanie Jenkinsfile do Jenkinsa:
+Plik Jenkinsa po umieszczeniu na repo może zostać wskazany w konfiguracji pipelinu jako śródło skryptu i zaciągany za każdym razem gdy uruchamiany jest pipeline. Postanowiłem pracowac na prywatnym repo ze względu na iość napotkanych trudności a nie chciłem pisać aliasów tylko po to by co minutę pushowac plik z pojedynczą zmianą w kodzie.
+![alt text](image-7.png)
