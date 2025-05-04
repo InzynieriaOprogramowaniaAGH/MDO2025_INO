@@ -1,0 +1,90 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean') {
+            steps {
+                sh 'docker rmi build-irssi test-irssi artifact-irssi || true'
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                git branch:'BW414439_2', url: "https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('MDO2025_INO/ITE/GCL08/BW414439/sprawozdanie 2') {
+                    sh 'docker build --no-cache -t build-irssi -f Dockerfile.build .'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('MDO2025_INO/ITE/GCL08/BW414439/sprawozdanie 2') {
+                    sh 'docker build --no-cache --progress=plain -t test-irssi -f Dockerfile.test . 2>&1 | tee test-output.log'
+                    sh "mv test-output.log test-logs-${BUILD_NUMBER}.log"
+                }
+            }
+            post {
+                always {
+                    dir('MDO2025_INO/ITE/GCL08/BW414439/sprawozdanie 2') {
+                        archiveArtifacts artifacts: "test-logs-${BUILD_NUMBER}.log", fingerprint: true
+                    }
+                }
+            }
+        }
+
+        stage('Build Artifact') {
+            steps {
+                dir('MDO2025_INO/ITE/GCL08/BW414439/sprawozdanie 2') {
+                    sh 'docker build --no-cache -t artifact-irssi -f Dockerfile.builddeb .'
+                    sh 'docker run --rm -v $PWD:/out artifact-image'
+                }
+            }
+            post {
+                always {
+                    dir('MDO2025_INO/ITE/GCL08/BW414439/sprawozdanie 2') {
+                        archiveArtifacts artifacts: '*.deb', fingerprint: true
+                    }
+                }
+            }
+        }
+
+        stage('Smoke Test') {
+            steps {
+                dir('MDO2025_INO/ITE/GCL08/BW414439/sprawozdanie 2') {
+                    script {
+                        docker.image('ubuntu:latest').inside("-v .:/deb") {
+                            sh '''
+                                apt-get update
+
+                                # Find the .deb file
+                                DEB_FILE=$(find /deb -name '*.deb' | head -n 1)
+
+                                # Install the .deb file using dpkg
+                                dpkg -i "$DEB_FILE" || true  # allow failures for fixing
+
+                                # Fix any missing dependencies
+                                apt-get install -f -y
+
+                                # Verify installation
+                                irssi --version
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    post {
+        always {
+            echo "Pipeline complete with status: ${currentBuild.currentResult}"
+        }
+    }
+}
