@@ -1,0 +1,5 @@
+FROM cjson_builder
+
+WORKDIR /app/build
+
+CMD ["ctest", "--output-on-failure"]

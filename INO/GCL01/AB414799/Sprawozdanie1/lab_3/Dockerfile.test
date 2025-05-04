@@ -1,0 +1,4 @@
+FROM cjson_builder
+
+WORKDIR /app/build
+CMD ["ctest"]
