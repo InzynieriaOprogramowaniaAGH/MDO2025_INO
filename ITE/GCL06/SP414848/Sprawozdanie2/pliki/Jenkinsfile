@@ -1,0 +1,100 @@
+pipeline {
+    agent any
+    parameters {
+        string(name: 'VERSION', defaultValue: '0', description: '')
+    }
+    environment {
+        REPO_URL = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+        BRANCH = 'SP414848'
+        BASE_DIR = 'MDO2025_INO/ITE/GCL06/SP414848'
+        IMAGE_NAME_BUILD = 'sqlite-build'
+        IMAGE_NAME_TEST = 'sqlite-test'
+        IMAGE_NAME_SMOKE = 'sqlite-smoke'
+        PACKAGE_NAME = 'sqlite_linux'
+    }
+    stages {
+        stage('Clean') {
+            steps {
+                script {
+                    sh 'rm -rf MDO2025_INO'
+                    sh 'docker system prune -a --volumes -f'
+                }
+            }
+        }
+        stage('Clone') {
+            steps {
+                script {
+                    sh "git clone -b SP414848 --single-branch ${REPO_URL}"
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                dir("${BASE_DIR}") {
+                    script {
+                        sh "docker build --no-cache -t ${IMAGE_NAME_BUILD} -f Dockerfile.build ."
+                    }
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                dir("${BASE_DIR}") {
+                    script {
+                        sh "docker build --no-cache -t ${IMAGE_NAME_TEST} -f Dockerfile.test ."
+                        sh "docker run --rm ${IMAGE_NAME_TEST} > test_logs_${PACKAGE_NAME}_${params.VERSION}.txt 2>&1"
+                        archiveArtifacts artifacts: "test_logs_${PACKAGE_NAME}_${params.VERSION}.txt", onlyIfSuccessful: false 
+                    }
+                }
+            }
+        }
+        stage('Deploy - smoke') {
+            steps {
+                dir("${BASE_DIR}") {
+                    script {
+                        sh "docker build --no-cache -t ${IMAGE_NAME_SMOKE}:${params.VERSION} -f Dockerfile.smoke ."
+
+                        echo "Staring smoke test..."
+                        def testResult = sh(script: "docker run --name sqlite-smoke-cont ${IMAGE_NAME_SMOKE}:${params.VERSION}", returnStatus: true)
+
+                        sh "docker logs sqlite-smoke-cont > smoke_test_logs_${PACKAGE_NAME}_${params.VERSION}.txt || true"
+                        sh "docker rm sqlite-smoke-cont || true"
+
+                        archiveArtifacts artifacts: "smoke_test_logs_${PACKAGE_NAME}_${params.VERSION}.txt", onlyIfSuccessful: false 
+
+                        if(testResult != 0) {
+                            error "Smoke test error! Logs: smoke_test_logs.txt"
+                        } else {
+                            echo "Smoke test passed"
+                        }
+                    }
+                }
+            }
+        }
+        stage('Deploy - package') {
+            steps{
+                dir("${BASE_DIR}") {
+                    script {
+                        sh "docker create --name build-cont ${IMAGE_NAME_BUILD}"
+                        sh "mkdir -p sqlite-pack"
+
+                        sh "docker cp build-cont:/sqlite/sqlite3 ./"
+
+                        sh "docker rm build-cont"
+
+                        sh "tar -czf ${PACKAGE_NAME}_${params.VERSION}.tar.gz ./sqlite3"
+                    }
+                }
+            }
+        }
+        stage('Publish') {
+            steps {
+                dir("${BASE_DIR}") {
+                    script{
+                        archiveArtifacts artifacts: "${PACKAGE_NAME}_${params.VERSION}.tar.gz", fingerprint: true
+                    }
+                }
+            }
+        }
+    }
+}
