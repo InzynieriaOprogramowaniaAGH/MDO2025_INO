@@ -1,0 +1,2 @@
+FROM kontener_build
+RUN npm test
