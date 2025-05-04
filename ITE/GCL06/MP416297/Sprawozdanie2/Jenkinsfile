@@ -21,8 +21,7 @@ pipeline {
         
         stage('Build') {
             steps{
-                // sh "docker build -t supertuxbld -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.bld ."
-                sh "docker load -i ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/supertuxbld.tar"
+                sh "docker build -t supertuxbld -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.bld ."
             }
         }
         
