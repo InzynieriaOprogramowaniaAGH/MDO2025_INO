@@ -5,6 +5,7 @@ pipeline {
         DOCKER_USER   = 'natalia232002'  // ← Twoja nazwa z DockerHub
         DOCKER_DIR    = 'NI409877/sprawozdanie2'
         BUILDER_IMG   = "${DOCKER_USER}/irssi-builder:${BUILD_NUMBER}"
+        TESTER_IMG    = "${DOCKER_USER}/irssi-tester:${BUILD_NUMBER}"     // ← nowa zmienna
         RUNTIME_IMG   = "${DOCKER_USER}/irssi-runtime:${BUILD_NUMBER}"
         TAR_NAME      = "irssi-${BUILD_NUMBER}.tar.gz"
     }
@@ -21,6 +22,30 @@ pipeline {
                         -t ${BUILDER_IMG} \
                         -f ${DOCKER_DIR}/Dockerfile \
                         ${DOCKER_DIR}
+                """
+            }
+        }
+
+        
+        stage('Build ➜ tester image') {
+            steps {
+                sh """
+                    docker build \
+                        -f ${DOCKER_DIR}/Dockerfile.test \
+                        --build-arg BASE=${BUILDER_IMG} \
+                        -t ${TESTER_IMG} \
+                        ${DOCKER_DIR}
+                """
+            }
+        }
+
+        
+        stage('Test') {
+            steps {
+                sh """
+                    docker run --rm ${TESTER_IMG} \
+                        /bin/bash -c "meson test -C /app/builddir --print-errorlogs --logbase junit" \
+                        | tee test.log
                 """
             }
         }
