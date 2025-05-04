@@ -13,7 +13,7 @@ pipeline {
         }
     stage('Checkout') {
       steps {
-        echo "🔄 Klonowanie repozytorium i przejście na main"
+        echo " Klonowanie repozytorium i przejście na main"
         git url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git',
             branch: 'main'
         sh 'git checkout SS414718'
@@ -37,7 +37,7 @@ pipeline {
 
     stage('Build (deploy image)') {
       steps {
-        echo "🚀 Budowanie finalnego obrazu ${IMAGE_NAME}:${TAG}"
+        echo "budowanie finalnego obrazu ${IMAGE_NAME}:${TAG}"
         dir('ITE/GCL07/SS414718/repo'){
           sh """
             docker build \
@@ -52,7 +52,7 @@ pipeline {
 
     stage('Run deploy container') {
       steps {
-        echo "♻️ Usuwanie starego kontenera i uruchomienie nowego"
+        echo "Usuwanie starego kontenera i uruchomienie nowego"
         sh 'docker rm -f deploy-container || true'
         sh """
         docker network create ci || true
@@ -67,7 +67,7 @@ pipeline {
 
     stage('Test HTTP') {
       steps {
-        echo "🔍 Smoke test: curl http://localhost:3000"
+        echo "curl"
         sh 'sleep 5'
             sh '''
             docker run --rm --network ci \
@@ -104,7 +104,7 @@ stage('Create .tgz Artifact') {
         
     stage('Publish to DockerHub') {
       steps {
-        echo "📦 Wypychanie obrazu do Docker Hub"
+        echo "Wypychanie obrazu do Docker Hub"
         withCredentials([usernamePassword(
           credentialsId: 'szymon',
           usernameVariable: 'DOCKER_USER',
@@ -123,7 +123,7 @@ stage('Create .tgz Artifact') {
 
   post {
     always {
-      echo "✅ Pipeline zakończony"
+      echo "Pipeline zakończony"
     }
     cleanup {
       sh 'docker rm -f deploy-container || true'
