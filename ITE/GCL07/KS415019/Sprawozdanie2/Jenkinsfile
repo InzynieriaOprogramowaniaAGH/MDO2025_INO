@@ -44,8 +44,6 @@ pipeline {
             steps {
                 dir('ITE/GCL07/KS415019/Sprawozdanie2') {
                     sh 'docker build -f Dockerfile.nodetest -t $IMAGE_TEST .'
-                    sh 'docker run --rm $IMAGE_TEST > test-${VERSION}.log'
-                    archiveArtifacts artifacts: "test-${VERSION}.log", onlyIfSuccessful: true
                 }
             }
         }
