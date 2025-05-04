@@ -15,7 +15,6 @@ pipeline {
                 sh '''
                     docker container ls -a -q | xargs -r docker rm -f
                     docker volume ls -q | xargs -r docker volume rm -f
-                    docker network ls -q --filter type=custom | xargs -r docker network rm -f
                     docker builder prune --all --force
                     docker images -q | grep -E 'cjson-(build|test|deploy)' | xargs -r docker rmi -f
                 '''
@@ -98,16 +97,12 @@ EOT
         }
 
         stage('SmokeTest') {
-            steps {
-                sh 'docker build --no-cache -t ${CJSON_DEPLOY} -f Dockerfile.cjsondeploy .'
-                sh '''
-                    docker network create smoke-test-net || true
-                    docker run --rm --network smoke-test-net --name cjson-smoke-test ${CJSON_DEPLOY} > smoke_test_${VERSION}.log
-                    docker network rm smoke-test-net || true
-                '''
-                archiveArtifacts artifacts: "smoke_test_${VERSION}.log", fingerprint: true
-            }
-        }
+    steps {
+        sh 'docker build --no-cache -t ${CJSON_DEPLOY} -f Dockerfile.cjsondeploy .'
+        sh 'docker run --rm --name cjson-smoke-test ${CJSON_DEPLOY} > smoke_test_${VERSION}.log'
+        archiveArtifacts artifacts: "smoke_test_${VERSION}.log", fingerprint: true
+    }
+}
 
         stage('Deploy') {
     steps {

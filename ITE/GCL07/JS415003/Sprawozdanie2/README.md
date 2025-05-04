@@ -45,6 +45,17 @@
     ![](005-Class/lab5_14.png)
 
 ### Kompletny pipeline
+
+### Diagramy
+
+* Aktywności
+
+  ![](005-Class/activity_diagram.png)
+
+* Wdrożeniowy
+
+  ![](005-Class/deployment_diagram.png)
+
 Tutaj Jenkinsfile z całym zdefiniowanym pipelinem oraz jego ustawienia na jenkinsie.
 
 [Jenkinsfile](./Jenkinsfile)
@@ -67,7 +78,6 @@ pipeline {
                 sh '''
                     docker container ls -a -q | xargs -r docker rm -f
                     docker volume ls -q | xargs -r docker volume rm -f
-                    docker network ls -q --filter type=custom | xargs -r docker network rm -f
                     docker builder prune --all --force
                     docker images -q | grep -E 'cjson-(build|test|deploy)' | xargs -r docker rmi -f
                 '''
@@ -150,16 +160,12 @@ EOT
         }
 
         stage('SmokeTest') {
-            steps {
-                sh 'docker build --no-cache -t ${CJSON_DEPLOY} -f Dockerfile.cjsondeploy .'
-                sh '''
-                    docker network create smoke-test-net || true
-                    docker run --rm --network smoke-test-net --name cjson-smoke-test ${CJSON_DEPLOY} > smoke_test_${VERSION}.log
-                    docker network rm smoke-test-net || true
-                '''
-                archiveArtifacts artifacts: "smoke_test_${VERSION}.log", fingerprint: true
-            }
-        }
+    steps {
+        sh 'docker build --no-cache -t ${CJSON_DEPLOY} -f Dockerfile.cjsondeploy .'
+        sh 'docker run --rm --name cjson-smoke-test ${CJSON_DEPLOY} > smoke_test_${VERSION}.log'
+        archiveArtifacts artifacts: "smoke_test_${VERSION}.log", fingerprint: true
+    }
+}
 
         stage('Deploy') {
     steps {
@@ -236,7 +242,6 @@ EOT
         }
     }
 }
-
 ```
 
 ![](005-Class/lab5_15.png)
@@ -499,3 +504,27 @@ EOT
     ```
 
 ## Objaśnienie etapów
+
+### Checkout/Clone
+
+Etap Checkout służy do pobrania kodu źródłowego i plików konfiguracyjnych niezbędnych do procesu budowania. Podczas tego etapu klonowane jest repozytorium cJSON z GitHub, klonowane jest repozytorium przedmiotowe z GitHub, kopiowane są pliki Dockerfile potrzebne do budowy, testowania i wdrażania, a także tworzony jest przykładowy plik C do testowania biblioteki cJSON. Na tym etapie przygotowywane są wszystkie niezbędne pliki źródłowe i konfiguracyjne, które będą używane w kolejnych etapach procesu CI.
+
+### Build
+
+Etap Build odpowiada za zbudowanie biblioteki cJSON. W ramach tego etapu tworzony jest obraz Docker cjson-build na podstawie Dockerfile.cjsonbuild, tworzony jest tag "latest" dla zbudowanego obrazu, zapisywany jest znacznik czasu budowy do pliku build_time.log, który następnie jest archiwizowany jako artefakt. Ten etap kompiluje kod źródłowy biblioteki cJSON, tworząc biblioteki statyczne i dynamiczne, wykorzystując do tego dedykowany obraz Docker zawierający wszystkie niezbędne narzędzia.
+
+### Test
+
+Etap Test ma na celu uruchomienie testów dla zbudowanej biblioteki. W ramach tego etapu tworzony jest obraz Docker cjson-test na podstawie Dockerfile.cjsontest,uruchamiany jest kontener testowy, a wyniki testów zapisywane są do pliku test_results_v.log. Ten etap weryfikuje, czy zbudowana biblioteka działa poprawnie.
+
+### SmokeTest
+
+Etap SmokeTest służy do przeprowadzenia prostego testu funkcjonalnego zbudowanej biblioteki. W ramach tego etapu tworzony jest obraz Docker cjson-deploy na podstawie Dockerfile.cjsondeploy oraz uruchamiana jest przykładowa aplikacja w kontenerze. Ten etap sprawdza, czy zbudowana biblioteka może być poprawnie zintegrowana z przykładową aplikacją i czy wykonuje podstawowe funkcje, stanowiąc szybki test funkcjonalny po kompilacji.
+
+### Deploy
+
+Etap Deploy ma na celu przygotowanie pakietu z biblioteką cJSON gotowego do dystrybucji. W ramach tego etapu uruchamiany jest kontener build w trybie detached, tworzona jest struktura katalogów dla pakietu, kopiowane są biblioteki, pliki nagłówkowe i dokumentacja z kontenera, tworzone są odpowiednie dowiązania symboliczne dla bibliotek, generowany jest plik README.txt z instrukcjami użycia, a wszystkie pliki pakowane są do archiwum tar.gz. Ten etap przygotowuje bibliotekę do dystrybucji, tworząc pakiet zawierający wszystkie niezbędne pliki i dokumentację.
+
+### Publish
+
+Etap Publish służy do publikacji zbudowanego pakietu jako artefaktu Jenkins. W ramach tego etapu archiwizowane jest utworzone archiwum tar.gz jako artefakt Jenkins. Ten etap sprawia, że zbudowany pakiet jest dostępny do pobrania z Jenkins jako artefakt, co umożliwia łatwe udostępnianie lub dalsze wykorzystanie biblioteki.
