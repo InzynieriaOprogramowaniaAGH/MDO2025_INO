@@ -10,7 +10,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('MDO2025_INO/ITE/GCL07/AS416588/Sprawozdanie1') {
+                dir('ITE/GCL07/AS416588/Sprawozdanie1') {
                     sh 'docker build --no-cache -t build -f Dockerfile.lab3.1 .'
                 }
             }
@@ -18,14 +18,14 @@ pipeline {
 
         stage('Test') {
             steps {
-                dir('MDO2025_INO/ITE/GCL07/AS416588/Sprawozdanie1') {
+                dir('ITE/GCL07/AS416588/Sprawozdanie1') {
                     sh 'docker build --no-cache --progress=plain -t test -f Dockerfile.lab3.2 . 2>&1 | tee test-output.log'
                     sh "mv test-output.log test-logs-${BUILD_NUMBER}.log"
                 }
             }
             post {
                 always {
-                    dir('MDO2025_INO/ITE/GCL07/AS416588/Sprawozdanie1') {
+                    dir('ITE/GCL07/AS416588/Sprawozdanie1') {
                         archiveArtifacts artifacts: "test-logs-${BUILD_NUMBER}.log", fingerprint: true
                     }
                 }
@@ -34,14 +34,14 @@ pipeline {
 
         stage('Build Artifact') {
             steps {
-                dir('MDO2025_INO/ITE/GCL07/AS416588/Sprawozdanie2') {
+                dir('ITE/GCL07/AS416588/Sprawozdanie2') {
                     sh 'docker build --no-cache -t artifact -f Dockerfile.flatpak .'
                     sh 'docker run --rm --privileged -v .:/out artifact'
                 }
             }
             post {
                 always {
-                    dir('MDO2025_INO/ITE/GCL07/AS416588/Sprawozdanie2') {
+                    dir('ITE/GCL07/AS416588/Sprawozdanie2') {
                         archiveArtifacts artifacts: '*.flatpak', fingerprint: true
                     }
                 }
@@ -50,7 +50,7 @@ pipeline {
 
         stage('Smoke Test') {
             steps {
-                dir('MDO2025_INO/ITE/GCL07/AS416588/Sprawozdanie2') {
+                dir('ITE/GCL07/AS416588/Sprawozdanie2') {
                     echo "Running deployment using docker run..."
                     sh 'docker build -t deploy -f Dockerfile.deploy .'
                     sh 'docker run --rm deploy-image /bin/bash -c "./deploy.sh"'
