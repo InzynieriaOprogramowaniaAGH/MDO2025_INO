@@ -211,7 +211,7 @@ Finalny obraz z uruchamialną aplikacją:
 ```dockerfile
 FROM node:18-slim
 
-COPY --from=express-build /tmp/foo /app
+COPY --from=expressjs-build /tmp/foo /app
 
 WORKDIR /app
 
@@ -336,3 +336,21 @@ pipeline {
 }
 ```
 
+
+### SCM
+
+Stworzono personal access tokenu w dockerhubie, a następnie wykorzystano go jako hasło do uwierzytelniania w Jenkinsie.
+
+![ss11](ss/Screenshot11.png)
+
+Wygenerowano uwierzytelnianie oraz stworzono nowy projekt pipeline, który wykorzystuje SCM.
+
+![ss12](ss/Screenshot12.png)
+![ss13](ss/Screenshot13.png)
+
+Po pomyślnym wykonaniu obraz dockera zostaje wypchnięty do docker huba.
+![ss14](ss/Screenshot14.png)
+
+Można to zweryfikować sprawdzając jego obecność na docker hubie.
+![ss15](ss/Screenshot15.png)
+![ss16](ss/Screenshot16.png)
