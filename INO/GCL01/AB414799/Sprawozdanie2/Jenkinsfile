@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') { 
+            steps {
+                git branch: 'AB414799', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Clear Docker cache') {
+            steps {
+                sh 'docker builder prune -af'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir ("INO/GCL01/AB414799/Sprawozdanie2/Complete_pipeline")
+                {
+                    script {
+                        docker.build('cjson_builder', '-f Dockerfile.build .')
+
+                        sh '''
+                            mkdir -p artefakty
+                            CID=$(docker create cjson_builder)
+                            docker cp $CID:/app/cjson.rpm artefakty/
+                            docker rm $CID
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir ("INO/GCL01/AB414799/Sprawozdanie2/Complete_pipeline")
+                {
+                    script {
+                        docker.build('cjson_tester', '-f Dockerfile.test .')
+
+                        sh """
+                            docker run --rm cjson_tester | tee artefakty/test.log
+                        """
+                    }
+
+                }    
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir ("INO/GCL01/AB414799/Sprawozdanie2/Complete_pipeline")
+                {
+                    script {
+                        sh 'cp ../artefakty/cjson.rpm .'              
+                        docker.build("cjson_deploy", "-f Dockerfile.deploy .")
+
+                        sh """
+                            docker run --rm cjson_deploy | tee artefakty/deploy.log
+                        """
+                    }      
+                }
+                
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                archiveartefakty artefakty: 'INO/GCL01/AB414799/Sprawozdanie2/artefakty/*.log', fingerprint: true
+                archiveartefakty artefakty: 'INO/GCL01/AB414799/Sprawozdanie2/artefakty/*.rpm', fingerprint: true
+            }
+        }
+    }
+}
