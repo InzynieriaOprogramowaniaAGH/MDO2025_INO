@@ -34,16 +34,32 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh "docker volume create supertux_build"
-                sh "docker run -v supertux_build:/supertux_build supertuxbld cp -r ../../supertux ../../supertux_build/supertux"
-    
+                sh '''
+                    docker run --rm -v supertux_build:/supertux_build supertuxbld bash -c "
+                        cd ../../ && 
+                        rm -rf supertux_build/* &&
+                        cp -r supertux/build supertux_build/build
+                        cp -r supertux/data supertux_build/data
+                        cp -r supertux/external supertux_build/external
+                    "
+                '''
 
                 sh "docker build -t main_container -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.maincontainer ."
-                sh '''docker run -d -v supertux_build:/supertux_build main_container \
-                            cp supertux_build . \
-                            ./supertux/build/supertux2 --version
+                sh '''
+                        docker run --name main -v supertux_build:/supertux_build main_container bash -c "
+                            mkdir supertux &&
+                            cp -r supertux_build/* ./supertux/ &&
+                            cd supertux &&
+                            cd build &&
+                            ./supertux2 --version"
                 '''
-                // sh "docker exec supertux_deploy cp supertux_build/supertux2 ."
-                // sh "docker exec supertux_deploy ./supertux2 --version"
+                def logs = sh(script: "docker logs main", returnStdout: true).trim()
+                    
+                // Wyświetlenie logów w konsoli Jenkins
+                echo "Docker logs: ${logs}"
+                
+                // Usunięcie kontenera po zakończeniu
+                sh 'docker rm main'
             }
         }
         
