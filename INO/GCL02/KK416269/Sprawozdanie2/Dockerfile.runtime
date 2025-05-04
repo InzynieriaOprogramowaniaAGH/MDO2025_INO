@@ -1,0 +1,13 @@
+FROM ubuntu
+
+WORKDIR /app
+
+COPY artifacts/redis-server /app/redis-server
+COPY artifacts/redis-cli /app/redis-cli
+
+RUN chmod +x /app/redis-server /app/redis-cli
+
+EXPOSE 6379
+
+CMD ["./redis-server", "--port", "6379"]
+

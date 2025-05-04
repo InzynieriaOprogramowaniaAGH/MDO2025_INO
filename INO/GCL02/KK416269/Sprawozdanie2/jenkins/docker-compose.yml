@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  jenkins:
+    image: myjenkins-blueocean:fixed
+    container_name: jenkins-blueocean
+    user: root
+    privileged: true
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock:z
+
+volumes:
+  jenkins_data:
