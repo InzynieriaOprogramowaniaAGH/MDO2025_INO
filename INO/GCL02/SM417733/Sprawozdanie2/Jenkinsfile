@@ -1,0 +1,95 @@
+pipeline {
+    agent any
+    
+environment {
+    WORKDIR = "INO/GCL02/SM417733/Sprawozdanie2"
+}
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                git url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git', branch: 'SM417733'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir("${WORKDIR}") {
+                    script {
+                        docker.build('redis-build', '-f Dockerfile.redisbld --no-cache .')
+                        def containerId = sh(script: "docker create redis-build", returnStdout: true).trim()
+			sh 'mkdir -p artifacts'
+                        sh "docker cp ${containerId}:/redis/src/redis-server artifacts/redis-server"
+                        sh "docker cp ${containerId}:/redis/src/redis-cli artifacts/redis-cli"
+                        sh "docker rm ${containerId}"
+                    }
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                dir("${WORKDIR}") {
+                    script {
+                        docker.build('redis-test', '-f Dockerfile.redistest .')
+                        sh 'mkdir -p logs'
+                        def cid = sh(script: "docker create redis-test", returnStdout: true).trim()
+                        sh "docker cp ${cid}:/redis/tests/test-results.log logs/redis_test.log || echo 'No logs found'"
+                        sh "docker rm ${cid}"
+                    }
+                }
+            }
+        }
+        stage('Runtime') {
+            steps {
+                dir("${WORKDIR}") {
+                    script {
+                        docker.build('redis_runtime', '-f Dockerfile.deploy .')
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    sh "docker run -d -p 6379:6379 --name redis_deploy redis_runtime"
+                }
+            }
+        }
+
+        stage('Smoke Test') {
+            steps {
+                script {
+                    sh "sleep 5"
+                    sh 'docker exec redis_deploy /app/redis-cli ping || echo "Redis nie odpowiada"'
+                }
+            }
+        }
+        stage('Publish') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        def imageName = "pszemo6/redis_runtime:${BUILD_NUMBER}"
+                        sh '''
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker tag redis_runtime ''' + imageName + '''
+                            docker push ''' + imageName + '''
+                        '''
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            dir("${WORKDIR}") {
+                archiveArtifacts artifacts: 'artifacts/*', fingerprint: true
+                archiveArtifacts artifacts: 'logs/**', fingerprint:true
+            }
+            script {
+                sh 'docker stop redis_deploy || true'
+                sh 'docker rm redis_deploy || true'
+            }
+        }
+    }
+}

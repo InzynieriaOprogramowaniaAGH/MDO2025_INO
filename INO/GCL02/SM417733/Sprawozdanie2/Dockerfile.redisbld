@@ -1,0 +1,9 @@
+FROM fedora:latest
+
+RUN dnf install -y gcc-c++ make tcl git openssl-devel systemd-devel curl procps-ng && dnf clean all
+
+RUN git clone https://github.com/redis/redis.git /redis
+
+WORKDIR /redis
+
+RUN make
