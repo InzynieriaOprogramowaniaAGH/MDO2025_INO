@@ -1,6 +1,7 @@
-FROM ubuntu:latest
+FROM ubuntu:20.04
 
-RUN apt install -y git cmake gcc gcc-c++ make ruby ruby-devel rpm-build rubygems && \
+RUN apt update && \
+    apt install -y git cmake gcc g++ make ruby ruby-dev rpm rubygems && \
     gem install --no-document fpm
 
 WORKDIR /app
