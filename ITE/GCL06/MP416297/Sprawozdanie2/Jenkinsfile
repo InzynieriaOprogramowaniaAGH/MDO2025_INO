@@ -34,7 +34,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh "docker volume create supertux_build"
-                sh "docker run -it -v supertux_build:/supertux_build supertuxbld cp -ra ../../supertux ../../supertux_build/"
+                sh "docker run -v supertux_build:/supertux_build supertuxbld cp -ra ../../supertux ../../supertux_build/"
     
 
                 sh "docker build -t supertuxtest -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.test ."
