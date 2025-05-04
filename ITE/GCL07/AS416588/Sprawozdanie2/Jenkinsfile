@@ -8,12 +8,6 @@ pipeline {
             }
         }
 
-        stage('Checkout') {
-            steps {
-                git branch:'AS416588_2', url: "https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git"
-            }
-        }
-
         stage('Build') {
             steps {
                 dir('MDO2025_INO/ITE/GCL07/AS416588/Sprawozdanie1') {
