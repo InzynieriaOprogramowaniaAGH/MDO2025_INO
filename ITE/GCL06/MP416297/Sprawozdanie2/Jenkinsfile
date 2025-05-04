@@ -47,7 +47,7 @@ pipeline {
 
                     sh "docker build -t main_container -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.maincontainer ."
                     sh '''
-                            docker run --name main -v supertux_build:/supertux_build main_container bash -c "
+                            docker run -d --name main -v supertux_build:/supertux_build main_container bash -c "
                                 mkdir supertux &&
                                 cp -r supertux_build/* ./supertux/ &&
                                 cd supertux &&
@@ -55,7 +55,8 @@ pipeline {
                                 ./supertux2 --version"
                     '''
                     def logs = sh(script: "docker logs main", returnStdout: true).trim()
-                        
+                    
+                    sh "docker cp main_container:/supertux_build/ ${WORKSPACE}/supertux_build_items/"
                     // Wyświetlenie logów w konsoli Jenkins
                     echo "Docker logs: ${logs}"
                     
@@ -71,8 +72,7 @@ pipeline {
                 script {
                     // Tworzenie struktury katalogów dla paczki DEB
                     sh '''
-                        docker run --rm -v supertux_build:/supertux_build -v ${WORKSPACE}/backup:/backup supertuxbld -c "cp -r /supertux_build/* /backup/"
-                        tar -czf ${WORKSPACE}/backup/supertux_build.tar.gz -C ${WORKSPACE}/backup .
+                        tar -czf ${WORKSPACE}/supertux_tar_gz/supertux_build.tar.gz -C ${WORKSPACE}/supertux_build_items .
                     '''
                 }
             }
@@ -82,7 +82,7 @@ pipeline {
             steps {
                 script {
                     // Publikowanie paczki DEB jako artefakt
-                    archiveArtifacts artifacts: "${DEB_DIR}.deb", allowEmptyArchive: false
+                    archiveArtifacts artifacts: "${WORKSPACE}/supertux_tar_gz/supertux_build.tar.gz", allowEmptyArchive: false
                 }
             }
         }
