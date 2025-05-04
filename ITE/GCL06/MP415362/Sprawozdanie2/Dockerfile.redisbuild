@@ -1,0 +1,27 @@
+FROM fedora:41
+
+RUN dnf -y update && \
+    dnf -y install \
+    git \
+    gcc \
+    gcc-c++ \
+    make \
+    jemalloc-devel \
+    tcl \
+    which \
+    procps-ng && \ 
+    dnf clean all
+    # pkgconfig \
+    # tcl \
+    # tcl-devel \
+    # systemd-devel \
+    # openssl-devel \
+    # procps-ng \
+    # automake \
+    # autoconf \
+    # libtool 
+# workdir deps make jemalloc, make install workdir redi make, wywalic distclean
+RUN git clone https://github.com/redis/redis.git /build
+WORKDIR /build
+# RUN make distclean
+RUN make

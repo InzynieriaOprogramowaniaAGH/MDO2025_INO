@@ -1,0 +1,3 @@
+FROM redisbuild
+
+CMD ["make", "test"]

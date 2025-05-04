@@ -1,0 +1,2 @@
+FROM nodebuild
+CMD ["npm", "test"]

@@ -1,0 +1,29 @@
+---
+- name: Manage all hosts
+  hosts: all
+  tasks:
+    - name: Test connection to all hosts
+      ansible.builtin.ping:
+
+- name: Update system packages
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Update all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+- name: Restart system services
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Restart required services
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: restarted
+      loop:
+        - sshd
+        - rngd
+      notify: Service restarted
