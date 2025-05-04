@@ -1,7 +1,10 @@
 FROM ubuntu:20.04
 
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Warsaw
+
 RUN apt update && \
-    apt install -y git cmake gcc g++ make ruby ruby-dev rpm rubygems && \
+    apt install -y git cmake gcc g++ make ruby ruby-dev rpm rubygems tzdata && \
     gem install --no-document fpm
 
 WORKDIR /app
