@@ -5,9 +5,6 @@ RUN apt update && apt install -y rpm gcc && ldconfig
 COPY cjson.rpm /tmp/cjson.rpm
 RUN rpm -i /tmp/cjson.rpm && ldconfig
 
-# test
-RUN find / -name "libcjson.so*" || true
-
 COPY main.c /app/main.c
 WORKDIR /app
 
