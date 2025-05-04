@@ -36,7 +36,7 @@ pipeline {
             steps {
                 dir('ITE/GCL08/BW414439/sprawozdanie 2') {
                     sh 'docker build --no-cache -t artifact-irssi -f Dockerfile.builddeb .'
-                    sh 'docker run --rm -v .:/out artifact-image'
+                    sh 'docker run --rm -v .:/out artifact-irssi'
                 }
             }
             post {
