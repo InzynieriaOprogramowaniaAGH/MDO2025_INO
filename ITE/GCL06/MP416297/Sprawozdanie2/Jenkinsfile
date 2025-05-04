@@ -71,25 +71,8 @@ pipeline {
                 script {
                     // Tworzenie struktury katalogów dla paczki DEB
                     sh '''
-                        mkdir -p ${DEB_DIR}/usr/local/bin/supertux/build
-                        mkdir -p ${DEB_DIR}/usr/local/bin/supertux/data
-                        mkdir -p ${DEB_DIR}/usr/local/bin/supertux/external
-                        
-                        # Kopiowanie katalogów z woluminu supertux_build do odpowiednich miejsc w paczce DEB
-                        cp -r /supertux_build/supertux/build/* ${DEB_DIR}/usr/local/bin/supertux/build/
-                        cp -r /supertux_build/supertux/data/* ${DEB_DIR}/usr/local/bin/supertux/data/
-                        cp -r /supertux_build/supertux/external/* ${DEB_DIR}/usr/local/bin/supertux/external/
-
-                        # Tworzenie katalogu DEBIAN i pliku kontrolnego
-                        mkdir -p ${DEB_DIR}/DEBIAN
-                        echo "Package: ${PACKAGE_NAME}\nVersion: ${PACKAGE_VERSION}\nArchitecture: all\nMaintainer: Twoje Imię <twoj_email@example.com>\nInstalled-Size: 1024\nDepends: cmake, build-essential, libogg-dev, libvorbis-dev, libopenal-dev, libsdl2-dev, libsdl2-image-dev, libfreetype6-dev, libraqm-dev, libcurl4-openssl-dev, libglew-dev, libharfbuzz-dev, libfribidi-dev, libglm-dev, zlib1g-dev\nSection: utils\nPriority: optional\nDescription: SuperTux - gra platformowa" > ${DEB_DIR}/DEBIAN/control
-
-                        # Tworzenie skryptu postinst, który zainstaluje wymagane zależności
-                        echo "#!/bin/bash\n\napt-get update\napt-get install -y cmake build-essential libogg-dev libvorbis-dev libopenal-dev libsdl2-dev libsdl2-image-dev libfreetype6-dev libraqm-dev libcurl4-openssl-dev libglew-dev libharfbuzz-dev libfribidi-dev libglm-dev zlib1g-dev" > ${DEB_DIR}/DEBIAN/postinst
-                        chmod +x ${DEB_DIR}/DEBIAN/postinst
-
-                        # Tworzenie paczki DEB
-                        dpkg-deb --build ${DEB_DIR}
+                        docker run --rm -v supertux_build:/supertux_build -v ${WORKSPACE}/backup:/backup supertuxbld -c "cp -r /supertux_build/* /backup/"
+                        tar -czf ${WORKSPACE}/backup/supertux_build.tar.gz -C ${WORKSPACE}/backup .
                     '''
                 }
             }
