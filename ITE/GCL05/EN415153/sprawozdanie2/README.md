@@ -275,7 +275,7 @@ pipeline {
         stage('Build Docker Image for build') {
             steps {
                 dir("${DOCKERFILE_PATH}") {
-                    sh 'docker build --no-cache -f Dockerfile.buildjs -t expressjs-build .'
+                    sh 'docker build --no-cache -f Dockerfile.bld -t expressjs-build .'
                 }
             }
         }
@@ -300,7 +300,7 @@ pipeline {
         stage('Build Docker Image for publish') {
             steps {
                 dir("${DOCKERFILE_PATH}") {
-                    sh 'docker build -f Dockerfile.publish -t express-app .'
+                    sh 'docker build -f Dockerfile.dep -t express-app .'
                 }
             }
         }
@@ -316,7 +316,7 @@ pipeline {
         }
         stage('Docker push') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
                     sh 'docker tag express-app $IMAGE'
                     sh 'docker push $IMAGE'
