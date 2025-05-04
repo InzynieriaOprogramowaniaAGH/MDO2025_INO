@@ -56,7 +56,7 @@ pipeline {
                     '''
                     def logs = sh(script: "docker logs main", returnStdout: true).trim()
                     
-                    sh "docker cp main_container:/supertux_build/ ${WORKSPACE}/supertux_build_items/"
+                    sh "docker cp main:/supertux_build/ ${WORKSPACE}/supertux_build_items/"
                     // Wyświetlenie logów w konsoli Jenkins
                     echo "Docker logs: ${logs}"
                     
