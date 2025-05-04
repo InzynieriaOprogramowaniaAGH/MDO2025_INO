@@ -90,7 +90,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Klonowanie repo') { 
+        stage('Klonowanie repozytorium') { 
             steps {
                 git branch: 'AB414799', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
             }
@@ -187,4 +187,116 @@ pipeline {
 
 ## Kompletny pipeline
 
-### Ostatnim krokiem było dołączenie dwóch etapów: `deploy` i `publish`, a także lekko przerobić aktualny pipeline. Po połączeniu wszystkiego powstanie gotowy `Jenkinsfile`.
+### Ostatnim krokiem było dołączenie dwóch etapów: `deploy` i `publish`, a także lekko przerobić aktualny pipeline i pliki `Dockerfile.build`, `Dockerfile.test` i zrobienie `Dockerfile.deploy`. Po połączeniu wszystkiego powstanie gotowy `Jenkinsfile`.
+
+### Jenkinsfile:
+```
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') { 
+            steps {
+                git branch: 'AB414799', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Clear Docker cache') {
+            steps {
+                sh 'docker builder prune -af'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir ("INO/GCL01/AB414799/Sprawozdanie2/Complete_pipeline")
+                {
+                    script {
+                        docker.build('cjson_builder', '-f Dockerfile.build .')
+
+                        sh '''
+                            mkdir -p artefakty
+                            CID=$(docker create cjson_builder)
+                            docker cp $CID:/app/cjson.rpm artefakty/
+                            docker rm $CID
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir ("INO/GCL01/AB414799/Sprawozdanie2/Complete_pipeline")
+                {
+                    script {
+                        docker.build('cjson_tester', '-f Dockerfile.test .')
+
+                        sh """
+                            docker run --rm cjson_tester | tee artefakty/test.log
+                        """
+                    }
+
+                }    
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir ("INO/GCL01/AB414799/Sprawozdanie2/Complete_pipeline")
+                {
+                    script {
+                        sh 'cp artefakty/cjson.rpm .'              
+                        docker.build("cjson_deploy", "-f Dockerfile.deploy .")
+
+                        sh """
+                            docker run --rm cjson_deploy | tee artefakty/deploy.log
+                        """
+                    }      
+                }
+                
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                archiveArtifacts artifacts: 'INO/GCL01/AB414799/Sprawozdanie2/Complete_pipeline/artefakty/*.log', fingerprint: true
+                archiveArtifacts artifacts: 'INO/GCL01/AB414799/Sprawozdanie2/Complete_pipeline/artefakty/*.rpm', fingerprint: true
+            }
+        }
+    }
+}
+```
+
+### Opis etapów pipeline'u:
+
+Clone – klonuje repozytorium Git z odpowiedniego branch'a.
+
+Clear Docker cache – czyści pamięć podręczną Docker Buildera, by uniknąć nieaktualnych buildów.
+
+Build – buduje obraz Docker cjson_builder i wyciąga z niego plik .rpm do katalogu artefakty.
+
+Test – uruchamia testy w kontenerze cjson_tester, zapisując log do test.log.
+
+Deploy – buduje obraz cjson_deploy i uruchamia go, zapisując wynik działania do deploy.log.
+
+Publish – archiwizuje pliki .log i .rpm jako artefakty w Jenkinsie.
+
+### Pipeline zakończony sukcesem
+#### Po pomyślnym wykonaniu wszystkich etapów pipeline'u, Jenkins udostępnia sekcję z opublikowanymi artefaktami, gdzie znajdują się pliki .log z wynikami testów i wdrożenia oraz wygenerowany pakiet .rpm.
+
+![13](screeny/5-13.png)
+
+### Diagram UML przedstawiający etapy, które były realizowane w pipeline.
+
+![14](screeny/5-14.png)
+
+### Weryfikacja instalacji pakietu .rpm
+#### Po zakończeniu działania pipeline'a pobrałem plik `cjson.rpm` na lokalny system i zainstalowałem bibliotekę w celu sprawdzenia poprawności działania.
+
+![14](screeny/5-15.png)
+
+### Wszystkie procesy przebiegły pomyślnie co pokazuje, że program zadziałał.
+
+## Wykorzystanie sztucznej inteligencji
+### Podczas pracy nad całym projektem używałem ChatGPT. Czynności w których był przydatny to zapoznanie się jak poprawnie stworzyć plik Jenkinsfile, a także pomagał w analizie logów bo błędach, co prowadziło do dawania przez niego wskazówek odnośnie poprawek.

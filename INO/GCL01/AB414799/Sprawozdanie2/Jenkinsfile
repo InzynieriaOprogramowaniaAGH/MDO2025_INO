@@ -67,8 +67,8 @@ pipeline {
 
         stage('Publish') {
             steps {
-                archiveartefakty artefakty: 'INO/GCL01/AB414799/Sprawozdanie2/artefakty/*.log', fingerprint: true
-                archiveartefakty artefakty: 'INO/GCL01/AB414799/Sprawozdanie2/artefakty/*.rpm', fingerprint: true
+                archiveArtifacts artifacts: 'INO/GCL01/AB414799/Sprawozdanie2/Complete_pipeline/artefakty/*.log', fingerprint: true
+                archiveArtifacts artifacts: 'INO/GCL01/AB414799/Sprawozdanie2/Complete_pipeline/artefakty/*.rpm', fingerprint: true
             }
         }
     }
