@@ -54,13 +54,10 @@ Błąd. Skryt działa poprawnie, bo godzina była nieparzysta.
 Sukces. Skryt działa poprawnie.<br>
 
 ## 🌵🌵🌵
----
-config:
-  theme: redux
-  layout: dagre
----
+```mermaid
 flowchart TD
- subgraph s1["Node"]
-        n2["Node_modules"]
+  subgraph s1["Node"]
+    n2["Node_modules"]
   end
-    s1 --> n3["Untitled Node"]
+  s1 --> n3["Untitled Node"]
+```
