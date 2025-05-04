@@ -1,0 +1,37 @@
+FROM ubuntu:22.04
+
+WORKDIR /app
+
+# Install compilation tools and ruby
+RUN apt update && \
+    apt install -y git make gcc ruby ruby-dev build-essential rpm
+
+# Install fpm for .rpm packages
+RUN gem install --no-document fpm
+
+# Clone cJSON
+RUN git clone https://github.com/DaveGamble/cJSON.git
+WORKDIR /app/cJSON
+
+# Compile lib
+RUN make
+
+# Prepare file structure for rpm
+RUN mkdir -p /tmp/cjson-install/usr/include/cjson \
+             /tmp/cjson-install/usr/lib && \
+    cp cJSON.h cJSON_Utils.h /tmp/cjson-install/usr/include/cjson && \
+    cp libcjson*.so libcjson*.a /tmp/cjson-install/usr/lib
+
+# Create a directory for final .rpm package
+RUN mkdir -p /app/cJSON/build/output
+
+# Create .rpm package
+RUN fpm -s dir -t rpm \
+    -n cjson \
+    -v 1.0.0 \
+    -C /tmp/cjson-install \
+    -p /app/cJSON/build/output/cjson.rpm .
+
+
+CMD ["/bin/bash"]
+

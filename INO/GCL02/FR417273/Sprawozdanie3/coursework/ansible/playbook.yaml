@@ -1,0 +1,43 @@
+- name: Ping all devices
+  hosts: all
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+- name: Copy inventory to endpoints
+  hosts: Endpoints
+  tasks:
+    - name: Copy inventory.ini
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /tmp/inventory.ini
+
+- name: Secondary Ping
+  hosts: all
+  tasks:
+    - name: Ping after copy
+      ansible.builtin.ping:
+
+- name: Update packages
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+- name: Restart services
+  hosts: all
+  become: yes
+  tasks:
+    - name: Restart SSHD
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+    - name: Restart RNGD
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+      ignore_errors: yes
