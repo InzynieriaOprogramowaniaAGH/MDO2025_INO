@@ -1,12 +1,15 @@
 FROM ubuntu:latest
 
+RUN apt update && apt install -y rpm gcc
+
 COPY cjson.rpm /tmp/cjson.rpm
-RUN apt install -y /tmp/cjson.rpm gcc
+RUN rpm -i /tmp/cjson.rpm
 
 COPY main.c /app/main.c
 WORKDIR /app
 
 RUN gcc main.c -o example -lcjson -I/usr/local/include/cjson -L/usr/local/lib64
+
 ENV LD_LIBRARY_PATH=/usr/local/lib64
 
 CMD ["./example"]
