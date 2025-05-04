@@ -1,0 +1,98 @@
+pipeline {
+    agent any
+    
+    environment{
+    DOCKERHUB_CREDENTIALS=credentials('rb-dhb')
+    }
+    stages {
+        stage('Prune'){
+            steps {
+                sh 'docker builder prune -af'
+            }
+        }
+        stage('Clone') { 
+            steps {
+                git branch 'RB410504', url 'httpsgithub.comInzynieriaOprogramowaniaAGHMDO2025_INO.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir (INOGr01RB410504Sprawozdanie2)
+                {
+                    script {
+                        docker.build('kriabld', '-f Dockerfile.kriabld .')
+                    }
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                dir (INOGr01RB410504Sprawozdanie2)
+                {
+                    script {
+                    def logFile = 'test.log'
+                    
+                    sh docker build -t kriatst -f Dockerfile.kriatst .  ${logFile} 2&1
+                     archiveArtifacts artifacts 'test.log', allowEmptyArchive true
+                    }
+                }
+            }
+        }
+        stage('Deploy'){
+            steps {
+                dir (INOGr01RB410504Sprawozdanie2)
+                {
+                    script {
+                          def buildTag = env.BUILD_NUMBER
+                        def containerName = KriadepVer_${buildTag}
+                        def build = docker.build('radbrankriadeplatest', '-f Dockerfile.kriadep .')
+                        def container = docker.image('radbrankriadeplatest').run(--name ${containerName} -P)
+                        def portOutput = sh(
+                        script docker port ${containerName} 8080,
+                        returnStdout true).trim()
+                        def hostPort = portOutput.split()[-1]
+                        echo Kontener działa pod hostowym portem ${hostPort}
+                        env.HOST_PORT = hostPort
+                    }
+                }
+                }
+        }
+        stage('Check Server Availability') {
+            steps {
+                retry(20){
+                    script {
+                            def serverUrl = httpjenkins-docker${env.HOST_PORT}
+                            def response = sh(script 
+                                curl -s -o devnull -w %{http_code} ${serverUrl}
+                            , returnStdout true).trim()
+                            
+                            writeFile file 'test-conn.log', text response
+                            
+                            if (response == '200') {
+                                echo Server is available (HTTP 200)
+                            } else {
+                                error Server returned error code ${response}
+                            }
+                    }
+                }
+            }
+        }
+        stage('Publish'){
+            steps{
+                script{
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW  docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                    sh 'docker push radbrankriadeplatest'
+                    }
+                }
+            }
+            
+        
+    }
+    post {
+        always {
+            sh 'docker logout'
+            archiveArtifacts artifacts 'test-conn.log', allowEmptyArchive true
+        }
+    }
+}

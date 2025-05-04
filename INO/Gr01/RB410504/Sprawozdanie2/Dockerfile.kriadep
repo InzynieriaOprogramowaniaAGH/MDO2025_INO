@@ -1,0 +1,5 @@
+FROM kriabld
+
+WORKDIR /node-starter-kit
+
+CMD ["yarn", "start"]
