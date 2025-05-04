@@ -1,4 +1,16 @@
+FROM node:22.14.0-slim
+
+# Zainstaluj git
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
+# Sklonuj repozytorium
 RUN git clone https://github.com/devenes/node-js-dummy-test.git /app
+
+# Przejdź do katalogu z aplikacją
 WORKDIR /app
+
+# Zainstaluj zależności
 RUN npm install
+
+# Domyślna komenda (jeśli potrzebujesz)
 CMD ["npm", "start"]
