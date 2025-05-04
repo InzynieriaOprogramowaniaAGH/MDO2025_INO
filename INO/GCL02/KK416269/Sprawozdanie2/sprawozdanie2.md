@@ -2,11 +2,11 @@
 _________________________________________________________________________________________________________________________________________________________
 ## **LAB 5-7 Pipeline & Jenkins** 
 
-Celem niniejszego laboratorium było zapoznanie się z koncepcją pipeline’ów CI/CD w Jenkinsie. W ramach zajęć skonfigurowano środowisko oparte na kontenerach Docker, przygotowano instancję Jenkinsa z pluginami BlueOcean, skonfigurowano procesy build/test/deploy oraz uruchomiono pipeline dla własnej aplikacji (Redis). Efektem końcowym było pełne uruchomienie aplikacji oraz archiwizacja logów i artefaktów z procesu.
+Celem niniejszego laboratorium było zapoznanie się z koncepcją pipeline’ów CI/CD w Jenkinsie. W ramach zajęć skonfigurowano środowisko oparte na kontenerach Docker, przygotowano instancję Jenkinsa z pluginami BlueOcean, skonfigurowano procesy oraz uruchomiono pipeline dla własnej aplikacji (Redis). Efektem końcowym było pełne uruchomienie aplikacji oraz archiwizacja logów i artefaktów z procesu.
 
 
 ### Przygotowanie - Utwórzenie instancji Jenkins 🌵
-- [x] **Zapoznaj się z instrukcją instalacji Jenkinsa (https://www.jenkins.io/doc/book/installing/docker/)**
+- [x] **Zapoznaj się z instrukcją instalacji Jenkinsa**
   - **Uruchom obraz Dockera który eksponuje środowisko zagnieżdżone**
 
   Uruchomiłam środowisko docker:dind, które umożliwia użycie Dockera wewnątrz kontenera:
@@ -148,6 +148,13 @@ Redis jest dostępny na licencji open-source BSD 3-clause, która pozwala na swo
 
 - [x] **Wybrany program buduje się**
 - [x] **Przechodzą dołączone do niego testy**
+
+Testy niestety początkowo nie zawsze przechodziło z powodu limitów czasowych (przed wprwoadzeniem no cache). Dlatego zdecdowałam się na taki krok:
+
+`RUN make test | tee /redis/tests/test-results.log || true`
+
+Fragment `|| true` sprawia, że nawet jeśli make test zwróci kod błędu, instrukcja zwróci 0 i Docker build (a co za tym idzie pipeline) nie zostanie przerwany, na czym najbardzej zależało mi w początkowych etapach tworzenia projektu. (Przy okazji `| tee /redis/tests/test-results.log` przekierowuje cały output zarówno na standardowe wyjście (żeby logi widoczne były w konsoli), jak i do pliku test-results.log.)
+
 - [x] **Zdecydowano, czy jest potrzebny fork własnej kopii repozytorium**
 Nie zdecydowałam się na wykonanie forka repozytorium, ponieważ miałam możliwość pracy bezpośrednio na osobnej gałęzi (mojej KK416269) w repozytorium przedmiotowym.
 
