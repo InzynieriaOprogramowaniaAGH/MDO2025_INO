@@ -1,0 +1,5 @@
+FROM rustscanbld
+
+#WORKDIR RustScan
+
+RUN cargo test --tests --release

@@ -1,0 +1,7 @@
+FROM debian:bullseye-slim
+
+COPY --from=rustscanbld RustScan/target/release/rustscan RustScan/release/rustscan
+
+WORKDIR RustScan/release
+
+RUN ./rustscan -a 127.0.0.1
