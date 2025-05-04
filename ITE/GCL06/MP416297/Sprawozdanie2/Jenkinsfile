@@ -66,13 +66,14 @@ pipeline {
                 
             }
         }
+        /var/jenkins_home/workspace/lab_6_pipeline_supertux/supertux_build_items/
 
         stage('Build DEB Package') {
             steps {
                 script {
                     // Tworzenie struktury katalogów dla paczki DEB
                     sh '''
-                        tar -czf ${WORKSPACE}/supertux_tar_gz/supertux_build.tar.gz -C ${WORKSPACE}/supertux_build_items .
+                        tar -czf ${WORKSPACE}/supertux_build.tar.gz -C ${WORKSPACE}/supertux_build_items .
                     '''
                 }
             }
