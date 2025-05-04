@@ -174,7 +174,7 @@ Projekt wykorzystuje licencję MIT, która pozwala na swobodne wykorzystanie w c
 
   Poniżej znajduje się diagram UML, który przedstawia przepływ procesu CI/CD (z etapami budowania, testowania i wdrażania aplikacji).
 
-  [diagram]
+  ![ss17](ss/Screenshot17.png)
 
   ### Proces build w kontenerze
 
