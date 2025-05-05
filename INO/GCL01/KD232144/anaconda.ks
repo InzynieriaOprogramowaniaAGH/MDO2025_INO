@@ -33,10 +33,10 @@ ignoredisk --only-use=sda
 clearpart --none --initlabel
 # Disk partitioning information
 part /boot/efi --fstype="efi" --ondisk=sda --size=600 --fsoptions="umask=0077,shortname=winnt"
-part pv.240 --fstype="lvmpv" --ondisk=sda --size=128422
+part pv.240 --fstype="lvmpv" --ondisk=sda --size=60002
 part /boot --fstype="xfs" --ondisk=sda --size=1024
 volgroup fedora --pesize=4096 pv.240
-logvol / --fstype="xfs" --size=128420 --name=root --vgname=fedora
+logvol / --fstype="xfs" --size=60000 --name=root --vgname=fedora
 
 # System timezone
 timezone Europe/Warsaw --utc
