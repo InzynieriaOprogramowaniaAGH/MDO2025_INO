@@ -35,7 +35,7 @@ pipeline {
         stage('Build Artifact') {
             steps {
                 dir('ITE/GCL08/BW414439/sprawozdanie 2') {
-                    sh 'docker build --no-cache -t artifact-irssi -f Dockerfile.builddeb .'
+                    sh "docker build --no-cache -t artifact-irssi --build-arg VERSION=${BUILD_NUMBER} -f Dockerfile.builddeb ."
                     sh 'docker run --rm -v .:/out artifact-irssi'
                 }
             }
