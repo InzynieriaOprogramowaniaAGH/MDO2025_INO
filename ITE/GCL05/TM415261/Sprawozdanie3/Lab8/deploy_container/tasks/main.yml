@@ -1,28 +1,49 @@
 ---
+- name: Install required system packages
+  ansible.builtin.dnf:
+    name:
+      - python3-packaging
+      - python3-pip
+      - docker
+      - redis
+    state: present
+    update_cache: yes
+
+- name: Install Python 'requests'
+  ansible.builtin.pip:
+    name: requests
+    executable: pip3
+
+- name: Start and enable Docker service
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
+
 - name: Download Docker image from DockerHub
   ansible.builtin.docker_image:
-    name: tomaszek03/redis-app:latest
+    name: "{{ redis_image }}"
     source: pull
 
 - name: Run Docker container
   ansible.builtin.docker_container:
-    name: redis-app
-    image: tomaszek03/redis-app:latest
+    name: "{{ redis_container_name }}"
+    image: "{{ redis_image }}"
     state: started
     ports:
-      - "6379:6379"
+      - "{{ redis_port }}:{{ redis_port }}"
 
 - name: Wait for the container to be ready
   ansible.builtin.wait_for:
     host: "ansible-target"
-    port: 6379
+    port: "{{ redis_port }}"
     state: started
     delay: 10
     timeout: 60
-    msg: "Redis is not available on port 6379"
+    msg: "Redis is not available on port {{ redis_port }}"
 
 - name: Test connection to container
-  command: redis-cli -h ansible-target -p 6379 ping
+  command: redis-cli -h ansible-target -p {{ redis_port }} ping
   register: redis_ping
 
 - name: Show Redis response
@@ -31,6 +52,6 @@
 
 - name: Stop and remove Docker container
   ansible.builtin.docker_container:
-    name: redis-app
+    name: "{{ redis_container_name }}"
     state: absent
     force_kill: yes

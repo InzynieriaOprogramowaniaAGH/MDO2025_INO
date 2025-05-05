@@ -1,7 +1,28 @@
 ---
-- hosts: all
+- hosts: Endpoints
   become: yes
   tasks:
+    - name: Install required system packages
+      ansible.builtin.dnf:
+        name:
+          - python3-packaging
+          - python3-pip
+          - docker
+          - redis
+        state: present
+        update_cache: yes
+
+    - name: Install Python 'requests'
+      ansible.builtin.pip:
+        name: requests
+        executable: pip3
+
+    - name: Start and enable Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
     - name: Download Docker image from DockerHub
       ansible.builtin.docker_image:
         name: tomaszek03/redis-app:latest
