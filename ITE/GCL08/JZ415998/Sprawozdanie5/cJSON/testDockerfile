@@ -1,3 +1,4 @@
 FROM cjson-build
 WORKDIR /cJSON/build
-CMD ["ctest","--verbose"]
+ENTRYPOINT ["ctest"]
+CMD ["--verbose"]
