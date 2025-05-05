@@ -52,7 +52,7 @@ pipeline {
             steps {
                 dir('ITE/GCL08/BW414439/sprawozdanie 2') {
                     script {
-                        docker.image('ubuntu:latest').inside("-v .:/deb") {
+                        docker.image('ubuntu:latest').inside("--user=root -v ${pwd()}:/deb") {
                             sh '''
                                 apt-get update
 
