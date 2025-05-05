@@ -43,7 +43,7 @@ pipeline {
             post {
                 always {
                     dir('ITE/GCL07/AS416588/Sprawozdanie2') {
-                        archiveArtifacts artifacts: 'irssi-*.flatpak', fingerprint: true
+                        archiveArtifacts artifacts: "irsii-${BUILD_NUMBER}.flatpak", fingerprint: true
                     }
                 }
             }
