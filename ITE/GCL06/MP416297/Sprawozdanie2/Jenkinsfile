@@ -72,7 +72,8 @@ pipeline {
                 script {
                     // Tworzenie struktury katalogów dla paczki DEB
                     sh '''
-                        tar -czf ${WORKSPACE}/supertux_build.tar.gz -C ${WORKSPACE}/supertux_build_items .
+                        tar -czf ${WORKSPACE}/supertux_build.tar.gz -C ${WORKSPACE}/supertux_build_items . &&
+                        ls ${WORKSPACE}/
                     '''
                 }
             }
@@ -82,7 +83,7 @@ pipeline {
             steps {
                 script {
                     // Publikowanie paczki DEB jako artefakt
-                    archiveArtifacts artifacts: "${WORKSPACE}/supertux_build.tar.gz", allowEmptyArchive: false
+                    archiveArtifacts artifacts: "supertux_build.tar.gz", allowEmptyArchive: false
                 }
             }
         }
