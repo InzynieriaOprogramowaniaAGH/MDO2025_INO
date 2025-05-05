@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                     // Zdefiniowanie URL do konkretnego tagu w Docker Hub API
-                    def tagUrl = "https://registry.hub.docker.com/v2/repositories/lukaszsawina/take_note_pipeline/tags/${params.VERSION}"
+                    def tagUrl = "https://hub.docker.com/r/natbal/takenotepipline/tags/${params.VERSION}"
 
                     // Wykonanie zapytania do Docker Hub API
                     def httpResponseCode = sh(script: "curl -s -o /dev/null -w '%{http_code}' ${tagUrl}", returnStdout: true).trim()
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     // Budowa aplikacji z użyciem pliku Dockerfile builder.Dockerfile
-                    docker.build('takenote_build', '-f ITE/GCL4/LS412597/Sprawozdanie3/builder.Dockerfile .')
+                    docker.build('takenote_build', '-f INO/GC01/NB406326/Sprawozdanie2/builder.Dockerfile .')
                 }
             }
         }
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 script {
                     // Testowanie aplikacji z użyciem pliku Dockerfile tester.Dockerfile
-                    docker.build('takenote_test', '-f ITE/GCL4/LS412597/Sprawozdanie3/tester.Dockerfile .')
+                    docker.build('takenote_test', '-f INO/GC01/NB406326/Sprawozdanie2/tester.Dockerfile .')
                 }
             }
         }
@@ -49,7 +49,7 @@ pipeline {
                     // Tworzomy sieć o nazwie deploy
                     sh 'docker network create deploy || true'
                     // Budowanie obrazu Docker
-                    def appImage = docker.build('takenote_deploy', '-f ITE/GCL4/LS412597/Sprawozdanie3/deploy.Dockerfile .')
+                    def appImage = docker.build('takenote_deploy', '-f INO/GC01/NB406326/Sprawozdanie2/deploy.Dockerfile .')
 
                     // Uruchomienie kontenera w tle o nazwie 'app'
                     def container = appImage.run("-d -p 5000:5000 --network=deploy --name app")
@@ -74,15 +74,15 @@ pipeline {
             steps {
                 script {
                         // Logowanie do DockerHub
-                        withCredentials([usernamePassword(credentialsId: 'lukaszsawina_id', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                        withCredentials([usernamePassword(credentialsId: 'natbal_id', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
                         }
-                        sh "docker tag takenote_deploy lukaszsawina/take_note_pipeline:${env.VERSION}"
-                        sh "docker push lukaszsawina/take_note_pipeline:${env.VERSION}"
+                        sh "docker tag takenote_deploy natbal/takenotepipline:${env.VERSION}"
+                        sh "docker push natbal/takenotepipline:${env.VERSION}"
 
                         if (params.LATEST) {
-                            sh "docker tag takenote_deploy lukaszsawina/take_note_pipeline:latest"
-                            sh "docker push lukaszsawina/take_note_pipeline:latest"
+                            sh "docker tag takenote_deploy natbal/takenotepipline:latest"
+                            sh "docker push natbal/takenotepipline:latest"
                         }
 
                 }
