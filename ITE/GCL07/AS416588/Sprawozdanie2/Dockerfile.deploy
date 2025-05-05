@@ -1,0 +1,11 @@
+FROM fedora:latest
+
+RUN dnf install -y flatpak xdg-utils dbus fuse
+
+RUN flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+WORKDIR /app
+
+CMD sh -c "\
+    flatpak install --user /app/irssi-*.flatpak -y && \
+    flatpak run com.example.irssi --version"
