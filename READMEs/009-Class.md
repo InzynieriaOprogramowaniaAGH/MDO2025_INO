@@ -33,6 +33,7 @@ Niniejszy temat jest poświęcony przygotowaniu źródła instalacyjnego systemu
   * Wybierz oprogramowanie na podstawie poprzedniego sprawozdania.
   * Zapoznaj się z [dokumentacją pliku odpowiedzi](https://pykickstart.readthedocs.io/en/latest/kickstart-docs.html)
   * Użyj pliku odpowiedzi do przeprowadzenia [instalacji nienadzorowanej](https://docs.fedoraproject.org/en-US/fedora/f36/install-guide/advanced/Kickstart_Installations/)
+* Zadbaj o automatyczne ponowne uruchomienie na końcu instalacji
 * Zapewnij, by od razu po pierwszym uruchomieniu systemu, oprogramowanie zostało uruchomione (w dowolny sposób)
 
 ## Zakres rozszerzony
