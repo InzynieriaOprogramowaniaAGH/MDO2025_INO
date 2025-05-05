@@ -5,7 +5,10 @@ pipeline {
         stage('Clean') {
             steps {
                 sh 'docker rmi build-irssi test-irssi artifact-irssi || true'
-                cleanWs()
+                sh '''
+                    find . -name "*.deb" -delete || true
+                    find . -name "*.log" -delete || true
+                '''
             }
         }
 
