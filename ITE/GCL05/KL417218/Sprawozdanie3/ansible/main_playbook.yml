@@ -1,0 +1,32 @@
+---
+- name: Main Playbook
+  hosts: Endpoints
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: Copy inventory file to Endpoints
+      ansible.builtin.copy:
+        src: ./inventory.yml
+        dest: /home/ansible/
+        owner: ansible
+
+    - name: Try to copy again
+      ansible.builtin.copy:
+        src: ./inventory.yml
+        dest: /home/ansible/
+        owner: ansible
+
+    - name: Update packages
+      ansible.builtin.package:
+        state: latest
+
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+    - name: Restart rng-tools
+      ansible.builtin.service:
+        name: rng-tools-debian
+        state: restarted
