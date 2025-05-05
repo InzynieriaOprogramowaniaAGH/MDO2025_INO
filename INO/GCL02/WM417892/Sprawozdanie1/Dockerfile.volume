@@ -4,6 +4,8 @@ WORKDIR /app
 
 RUN apt update && apt install -y git build-essential
 
+COPY ./cJSON /app/cJSON
+
 WORKDIR /app/cJSON
 
 CMD ["make", "test"]
