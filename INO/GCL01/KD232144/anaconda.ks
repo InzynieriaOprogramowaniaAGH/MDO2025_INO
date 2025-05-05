@@ -45,3 +45,5 @@ timezone Europe/Warsaw --utc
 rootpw --lock
 
 user --groups=wheel --name=kamilek --password=abc0 --plaintext --gecos="Kamil J. Dudek"
+
+reboot
