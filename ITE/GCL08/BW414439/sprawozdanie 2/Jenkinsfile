@@ -5,6 +5,7 @@ pipeline {
         stage('Clean') {
             steps {
                 sh 'docker rmi build-irssi test-irssi artifact-irssi || true'
+                cleanWs()
             }
         }
 
