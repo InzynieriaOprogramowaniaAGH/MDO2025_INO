@@ -37,12 +37,13 @@ pipeline {
                 dir('ITE/GCL07/AS416588/Sprawozdanie2') {
                     sh 'docker build --no-cache -t artifact -f Dockerfile.flatpak .'
                     sh 'docker run --rm --privileged -v .:/out artifact'
+                    sh "mv irssi.flatpak irsii-${BUILD_NUMBER}.flatpak"
                 }
             }
             post {
                 always {
                     dir('ITE/GCL07/AS416588/Sprawozdanie2') {
-                        archiveArtifacts artifacts: '*.flatpak', fingerprint: true
+                        archiveArtifacts artifacts: 'irssi-*.flatpak', fingerprint: true
                     }
                 }
             }
@@ -51,9 +52,17 @@ pipeline {
         stage('Smoke Test') {
             steps {
                 dir('ITE/GCL07/AS416588/Sprawozdanie2') {
-                    echo "Running deployment using docker run..."
-                    sh 'docker build -t deploy -f Dockerfile.deploy .'
-                    sh 'docker run --rm deploy-image /bin/bash -c "./deploy.sh"'
+                    sh '''
+                        docker run -it --rm \
+                            -v .:/flatpak \
+                            --cap-add=SYS_ADMIN \
+                            --device=/dev/fuse \
+                            --security-opt seccomp=unconfined \
+                            freedesktop-sdk/flatpak bash -c '
+                                flatpak install --user /app/irssi-*.flatpak -y
+                                flatpak run com.example.irssi --version
+                            '
+                    '''
                 }
             }
         }
