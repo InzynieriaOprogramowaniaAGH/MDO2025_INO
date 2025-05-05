@@ -82,7 +82,7 @@ pipeline {
             steps {
                 script {
                     // Publikowanie paczki DEB jako artefakt
-                    archiveArtifacts artifacts: "${WORKSPACE}/supertux_tar_gz/supertux_build.tar.gz", allowEmptyArchive: false
+                    archiveArtifacts artifacts: "${WORKSPACE}/supertux_build.tar.gz", allowEmptyArchive: false
                 }
             }
         }
