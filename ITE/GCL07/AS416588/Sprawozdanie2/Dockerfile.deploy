@@ -2,9 +2,9 @@ FROM fedora:latest
 
 RUN dnf install -y flatpak xdg-utils dbus fuse
 
-RUN flatpak remote-add --if-not-exists --noninteractive flathub https://flathub.org/repo/flathub.flatpakrepo
+RUN flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-RUN flatpak install --noninteractive flathub org.freedesktop.Platform//23.08 -y
+RUN flatpak install --noninteractive -y flathub org.freedesktop.Platform//23.08
 
 WORKDIR /app
 
