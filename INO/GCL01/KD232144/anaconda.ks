@@ -30,7 +30,7 @@ repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo
 # Generated using Blivet version 3.5.0
 ignoredisk --only-use=sda
 # Partition clearing information
-clearpart --none --initlabel
+clearpart --all --initlabel
 # Disk partitioning information
 part /boot/efi --fstype="efi" --ondisk=sda --size=600 --fsoptions="umask=0077,shortname=winnt"
 part pv.240 --fstype="lvmpv" --ondisk=sda --size=60002
