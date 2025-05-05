@@ -6,6 +6,8 @@ RUN flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.
 
 WORKDIR /app
 
+ENV VERSION=1
+
 CMD sh -c "\
-    flatpak install --user /app/irssi-*.flatpak -y && \
+    flatpak install --user /app/irssi-${VERSION}.flatpak -y && \
     flatpak run com.example.irssi --version"

@@ -53,7 +53,7 @@ pipeline {
             steps {
                 dir('ITE/GCL07/AS416588/Sprawozdanie2') {
                     sh "docker build -t flatpak-deploy -f Dockerfile.deploy ."
-                    sh "docker run --rm -v .:/app --cap-add=SYS_ADMIN --device=/dev/fuse --security-opt seccomp=unconfined flatpak-deploy"
+                    sh "docker run --rm -e VERSION=${BUILD_NUMBER} -v .:/app --cap-add=SYS_ADMIN --device=/dev/fuse --security-opt seccomp=unconfined flatpak-deploy"
                 }
             }
         }
