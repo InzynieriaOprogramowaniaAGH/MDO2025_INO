@@ -52,21 +52,16 @@ pipeline {
             steps {
                 dir('ITE/GCL08/BW414439/sprawozdanie 2') {
                     script {
-                        docker.image('ubuntu:latest').inside("--user=root -v ${pwd()}:/deb") {
                             sh '''
-                                apt-get update
+                                docker run --rm --user=root -v ".:/deb" ubuntu:latest bash -c '
+                                    apt-get update
 
-                                # Find the .deb file
-                                DEB_FILE=$(find /deb -name '*.deb' | head -n 1)
+                                    DEB_FILE=$(find /deb -name "*.deb" | head -n 1)
+                                    dpkg -i "$DEB_FILE" || true
+                                    apt-get install -f -y
 
-                                # Install the .deb file using dpkg
-                                dpkg -i "$DEB_FILE" || true  # allow failures for fixing
-
-                                # Fix any missing dependencies
-                                apt-get install -f -y
-
-                                # Verify installation
-                                irssi --version
+                                    irssi --version
+                                '
                             '''
                         }
                     }
