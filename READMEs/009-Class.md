@@ -10,6 +10,9 @@ Niniejszy temat jest poświęcony przygotowaniu źródła instalacyjnego systemu
 * Przeprowadzić instalację systemu, który po uruchomieniu rozpocznie hostowanie naszego programu
 
 ## Zadania do wykonania
+
+🌵 Przeprowadź instalację nienadzorowaną systemu Fedora z pliku odpowiedzi z naszego repozytorium
+
 * Zainstaluj [system Fedora](https://download.fedoraproject.org/pub/fedora/linux/releases/), stosując instalator sieciowy (*netinst*)
 * Pobierz plik odpowiedzi `/root/anaconda-ks.cfg`
 * Plik odpowiedzi może nie zawierać wzmianek na temat potrzebnych repozytoriów. Na przykład, dla systemu Fedora 38:
@@ -17,9 +20,10 @@ Niniejszy temat jest poświęcony przygotowaniu źródła instalacyjnego systemu
   * `repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f38&arch=x86_64`
 * Plik odpowiedzi może zakładać pusty dysk. Zapewnij, że zawsze będzie formatować całość, stosując `clearpart --all`
 * Ustaw *hostname* inny niż domyślny `localhost`
-* Rozszerz plik odpowiedzi o repozytoria i oprogramowanie potrzebne do uruchomienia programu, zbudowanego w ramach projektu. 
+* Rozszerz plik odpowiedzi o repozytoria i oprogramowanie potrzebne do uruchomienia programu, zbudowanego w ramach projektu - naszego *pipeline'u*. 
   * W przypadku kontenera, jest to po prostu Docker.
     * Utwórz w sekcji `%post` mechanizm umożliwiający pobranie i uruchomienie kontenera
+    * Jeżeli efektem pracy pipeline'u nie był kontener, a aplikacja samodzielna - zainstaluj ją
     * Pamiętaj, że **Docker zadziała dopiero na uruchomionym systemie!** - nie da się wdać z interakcji z Dockerem z poziomu instalatora systemu: polecenia `docker run` nie powiodą się na tym etapie. Nie zadziała też `systemctl start`
   * Gdy program pracuje poza kontenerem, potrzebny jest cały łańcuch dependencji oraz sam program.
     * Użyj sekcji `%post`, by pobrać z Jenkinsa zbudowany artefakt
