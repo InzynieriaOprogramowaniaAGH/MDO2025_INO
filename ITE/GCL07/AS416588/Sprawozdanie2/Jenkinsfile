@@ -52,17 +52,8 @@ pipeline {
         stage('Smoke Test') {
             steps {
                 dir('ITE/GCL07/AS416588/Sprawozdanie2') {
-                    sh '''
-                        docker run --rm \
-                            -v .:/flatpak \
-                            --cap-add=SYS_ADMIN \
-                            --device=/dev/fuse \
-                            --security-opt seccomp=unconfined \
-                            freedesktop-sdk/flatpak bash -c '
-                                flatpak install --user /app/irssi-*.flatpak -y
-                                flatpak run com.example.irssi --version
-                            '
-                    '''
+                    sh "docker build -t flatpak-deploy ."
+                    sh "docker run --rm -v .:/app --cap-add=SYS_ADMIN --device=/dev/fuse --security-opt seccomp=unconfined flatpak-deploy"
                 }
             }
         }
