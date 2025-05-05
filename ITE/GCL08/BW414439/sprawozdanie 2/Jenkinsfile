@@ -52,18 +52,17 @@ pipeline {
             steps {
                 dir('ITE/GCL08/BW414439/sprawozdanie 2') {
                     script {
-                            sh '''
-                                docker run --rm --user=root -v ".:/deb" ubuntu:latest bash -c '
-                                    apt-get update
+                        sh '''
+                            docker run --rm --user=root -v ".:/deb" ubuntu:latest bash -c '
+                                apt-get update
 
-                                    DEB_FILE=$(find /deb -name "*.deb" | head -n 1)
-                                    dpkg -i "$DEB_FILE" || true
-                                    apt-get install -f -y
+                                DEB_FILE=$(find /deb -name "*.deb" | head -n 1)
+                                dpkg -i "$DEB_FILE" || true
+                                apt-get install -f -y
 
-                                    irssi --version
-                                '
-                            '''
-                        }
+                                irssi --version
+                            '
+                        '''
                     }
                 }
             }
