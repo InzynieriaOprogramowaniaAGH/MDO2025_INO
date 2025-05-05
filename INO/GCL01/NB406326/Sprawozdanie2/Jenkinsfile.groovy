@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     // Budowa aplikacji z użyciem pliku Dockerfile builder.Dockerfile
-                    docker.build('takenote_build', '-f INO/GC01/NB406326/Sprawozdanie2/builder.Dockerfile .')
+                    docker.build('takenote_build', '-f INO/GCL01/NB406326/Sprawozdanie2/builder.Dockerfile .')
                 }
             }
         }
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 script {
                     // Testowanie aplikacji z użyciem pliku Dockerfile tester.Dockerfile
-                    docker.build('takenote_test', '-f INO/GC01/NB406326/Sprawozdanie2/tester.Dockerfile .')
+                    docker.build('takenote_test', '-f INO/GCL01/NB406326/Sprawozdanie2/tester.Dockerfile .')
                 }
             }
         }
@@ -49,7 +49,7 @@ pipeline {
                     // Tworzomy sieć o nazwie deploy
                     sh 'docker network create deploy || true'
                     // Budowanie obrazu Docker
-                    def appImage = docker.build('takenote_deploy', '-f INO/GC01/NB406326/Sprawozdanie2/deploy.Dockerfile .')
+                    def appImage = docker.build('takenote_deploy', '-f INO/GCL01/NB406326/Sprawozdanie2/deploy.Dockerfile .')
 
                     // Uruchomienie kontenera w tle o nazwie 'app'
                     def container = appImage.run("-d -p 5000:5000 --network=deploy --name app")
