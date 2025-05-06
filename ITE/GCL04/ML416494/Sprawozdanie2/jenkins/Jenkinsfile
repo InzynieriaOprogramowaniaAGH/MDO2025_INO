@@ -39,14 +39,13 @@ pipeline {
                 sh """
                     docker build --no-cache -t ${IMAGE_NAME}:${VERSION} -f ITE/GCL04/ML416494/Sprawozdanie2/jenkins/Dockerfile.deploy .
 
-                    docker network inspect redis-ci-network >/dev/null 2>&1 || docker network create redis-ci-network
-
-                    docker rm -f redis-deploy-test || true
-
-                    docker run -d --name redis-deploy-test --network redis-ci-network ${IMAGE_NAME}:${VERSION}
-
-                    sleep 5
-
+                    docker network inspect network-testing >/dev/null 2>&1 || docker network create network-testing
+                    if [ \$(docker ps -a -q -f name=redis-testing-deploy) ]; then
+                        docker rm -f redis-testing-deploy
+                    fi
+                    docker run -d --name redis-deploy-test --network network-testing ${IMAGE_NAME}:${VERSION}
+                    sleep 10
+                    
                     docker run --rm --network redis-ci-network redis redis-cli -h redis-deploy-test PING | grep PONG
                     docker run --rm --network redis-ci-network redis redis-cli -h redis-deploy-test SET testkey "Hello"
                     docker run --rm --network redis-ci-network redis redis-cli -h redis-deploy-test GET testkey | grep Hello
