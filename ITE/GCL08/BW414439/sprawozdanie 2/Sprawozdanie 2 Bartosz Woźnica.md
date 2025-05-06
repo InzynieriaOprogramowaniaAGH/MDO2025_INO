@@ -431,7 +431,10 @@ pipeline {
 }
 ```
 
-Teraz wszszystkie pliki dodajemy do repozytorium, z któego będzie korzystał na pipeline w Jenkins.
+Teraz wszszystkie pliki dodajemy do zdalnego repozytorium, z któego będzie korzystał nasz pipeline w Jenkins. Tutaj wykorzystamy repozytorium przedmiotowe.
+`$ git add .`
+`$ git commit -am "komentarz"`
+`$ git push`
 
 Tworzymy nowy obiekt typu pipeline w Jenkins
 ![](images2/Pasted%20image%2020250505000646.png)
