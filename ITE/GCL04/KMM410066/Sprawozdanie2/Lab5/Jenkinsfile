@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    stages {
+        
+        // Stage 0: Checkout
+        stage('Checkout') {
+            steps {
+                echo 'Cloning repo'
+                // sh 'docker rmi build'
+                // sh 'docker rmi test'
+                sh 'rm -fr MDO2025_INO'
+                sh 'git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                dir("MDO2025_INO") {
+                    sh 'git checkout KMM410066'
+                }
+            }
+        }
+        
+        // Stage 1: Build
+        stage('Build') {
+            steps {
+                echo 'Building the application...'
+                dir("MDO2025_INO/ITE/GCL04/KMM410066/Sprawozdanie1/Lab3") {
+                    sh 'docker build -t build:latest -f Dockerfile.build .'
+                }
+            }
+        }
+
+        // Stage 2: Test
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                dir("MDO2025_INO/ITE/GCL04/KMM410066/Sprawozdanie1/Lab3") {
+                    sh 'docker build -t test:latest -f Dockerfile.test .'
+                }
+            }
+        }
+
+    }
+}

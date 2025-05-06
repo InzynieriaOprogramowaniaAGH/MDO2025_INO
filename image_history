@@ -1,0 +1,7 @@
+IMAGE                                                                     CREATED          CREATED BY                                                     SIZE      COMMENT
+sha256:c6714fa36da9f1f3ced50631d1af6f32a537efaa156b2710b8dd253d437dfce8   32 minutes ago   CMD ["kagikachi"]                                              0B        buildkit.dockerfile.v0
+<missing>                                                                 32 minutes ago   EXPOSE map[7878/tcp:{}]                                        0B        buildkit.dockerfile.v0
+<missing>                                                                 32 minutes ago   COPY kagikachi /usr/local/bin/ # buildkit                      655kB     buildkit.dockerfile.v0
+<missing>                                                                 3 hours ago      RUN /bin/sh -c apk --no-cache add ca-certificates # buildkit   534kB     buildkit.dockerfile.v0
+<missing>                                                                 2 months ago     CMD ["/bin/sh"]                                                0B        buildkit.dockerfile.v0
+<missing>                                                                 2 months ago     ADD alpine-minirootfs-3.21.3-x86_64.tar.gz / # buildkit        7.83MB    buildkit.dockerfile.v0
