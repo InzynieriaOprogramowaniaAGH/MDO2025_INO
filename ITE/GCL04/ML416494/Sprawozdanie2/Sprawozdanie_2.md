@@ -4,7 +4,7 @@ Celem ćwiczeń jest zapoznanie się z platformą Jenkins oraz stworzenie pełne
 
 # Poznawanie Jenkins
 
-Aby rozpocząć pracę nad własnym pipeline należy zapoznać się z możliwościami platformy Jenkins oraz poprawnie uruchumić ją lokalnie na wirtualce.
+Aby rozpocząć pracę nad własnym pipeline należy zapoznać się z możliwościami platformy Jenkins oraz poprawnie uruchomić ją lokalnie na wirtualce.
 
 ## Utworzenie instancji Jenkins
 
@@ -73,7 +73,7 @@ docker run --name jenkins-blueocean --restart=on-failure --detach \
   myjenkins-blueocean:2.504.1-1
 ```
 
-Tutaj co powinniśmy zostać kiedy spróbujemy się połączyć na port 8080. Jako host musimy urzyć adresu IP naszej maszyny wirtualnej.
+Tutaj co powinniśmy zastać kiedy spróbujemy się połączyć na port 8080. Jako host musimy użyć adresu IP naszej maszyny wirtualnej.
 
 ![image.png](image.png)
 
@@ -258,7 +258,7 @@ Po zapoznaniu się z pipeline oraz samym Jenkins i przetestowaniu czy wszystko d
 
 ## Przygotowanie SCM
 
-Tym razem zamiast wpisywać Jenkinsfile ręcznie skorzystam z SCM. Sam Jenkins file zamieszczę na mojej branchy w repozytorium przedmiotu.
+Tym razem zamiast wpisywać Jenkinsfile ręcznie skorzystam z SCM. Sam Jenkins file zamieszczę na moim branchu w repozytorium przedmiotu.
 
 ![image.png](image%2010.png)
 
@@ -388,7 +388,7 @@ CMD ["--protected-mode", "no"]
 
 ### Pierwsze próby
 
-Po pierwszym uruchomieniu można zauważyć mojest testy nie przeszły więc krok deply nie został wykonany. Stało się tak ponieważ kroki są od siebie zależne.
+Po pierwszym uruchomieniu można zauważyć że moje testy nie przeszły więc krok deploy nie został wykonany. Stało się tak ponieważ kroki są od siebie zależne.
 
 ![image.png](image%2011.png)
 
@@ -402,11 +402,11 @@ Z sieci można wyczytać że problem może być rozwiązany jeśli wyłączony z
 
 ![image.png](image%2012.png)
 
-Spróbujmy więc dać ten approve
+Spróbujmy więc dać ten approve.
 
 ![image.png](image%2013.png)
 
-Testując teraz mój pipeline widać że już wszystko działa
+Testując teraz mój pipeline widać że już wszystko działa.
 
 ![image.png](image%2014.png)
 
