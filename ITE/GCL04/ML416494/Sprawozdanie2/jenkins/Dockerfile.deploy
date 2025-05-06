@@ -1,0 +1,8 @@
+FROM redis-builder
+
+EXPOSE 6379
+COPY --from=redis-builder /app/redis/src/redis-server /usr/local/bin/
+COPY --from=redis-builder /app/redis/src/redis-cli /usr/local/bin/
+
+ENTRYPOINT ["redis-server"]
+CMD ["--protected-mode", "no"]
