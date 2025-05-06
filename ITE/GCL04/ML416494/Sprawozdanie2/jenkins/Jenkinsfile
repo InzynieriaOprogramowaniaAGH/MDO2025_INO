@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "TEST"
+        IMAGE_NAME = "test"
         VERSION = "v1.0.${BUILD_NUMBER}"
     }
 
