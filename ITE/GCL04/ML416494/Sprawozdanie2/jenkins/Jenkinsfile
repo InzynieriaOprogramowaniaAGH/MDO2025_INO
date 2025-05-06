@@ -40,9 +40,7 @@ pipeline {
                     docker build --no-cache -t ${IMAGE_NAME}:${VERSION} -f ITE/GCL04/ML416494/Sprawozdanie2/jenkins/Dockerfile.deploy .
 
                     docker network inspect network-testing >/dev/null 2>&1 || docker network create network-testing
-                    if [ \$(docker ps -a -q -f name=redis-testing-deploy) ]; then
-                        docker rm -f redis-testing-deploy
-                    fi
+                    docker rm -f redis-deploy-test
                     docker run -d --name redis-deploy-test --network network-testing ${IMAGE_NAME}:${VERSION}
                     sleep 10
                     
