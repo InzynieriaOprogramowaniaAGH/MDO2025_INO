@@ -125,7 +125,7 @@ docker run --rm -d --name iperf3-server --network mynet networkstatic/iperf3 -s
 docker run --rm --name iperf3-client --network mynet networkstatic/iperf3 -c iperf3-server
 ```
 
-![image](iperf_container.PNG)
+![image](iperf_containter.PNG)
 
 ```bash
 sudo docker logs iperf3-server
