@@ -54,39 +54,65 @@ pipeline {
                                 cd build &&
                                 ./supertux2 --version"
                     '''
+
                     def logs = sh(script: "docker logs main", returnStdout: true).trim()
-                    
-                    sh "docker cp main:/supertux_build/ ${WORKSPACE}/supertux_build_items/"
-                    // Wyświetlenie logów w konsoli Jenkins
                     echo "Docker logs: ${logs}"
                     
-                    // Usunięcie kontenera po zakończeniu
+
+                    sh "docker cp main:/supertux_build/ ${WORKSPACE}/supertux_build_items/"
+                    // sh '''
+                    //     tar -czf ${WORKSPACE}/supertux_build.tar.gz -C ${WORKSPACE}/supertux_build_items . &&
+                    //     ls ${WORKSPACE}/
+                    // '''
                     sh 'docker rm main'
                 }
                 
             }
         }
 
-        stage('Build DEB Package') {
+        stage('Publish DEB Package') {
             steps {
                 script {
-                    // Tworzenie struktury katalogów dla paczki DEB
-                    sh '''
-                        tar -czf ${WORKSPACE}/supertux_build.tar.gz -C ${WORKSPACE}/supertux_build_items . &&
-                        ls ${WORKSPACE}/
-                    '''
+                    // Tworzymy strukturę katalogów dla paczki DEB
+                    def debDir = "${WORKSPACE}/deb_package"
+                    def debianDir = "${debDir}/DEBIAN"
+                    def usrDir = "${debDir}/usr/local/supertux"
+
+                    // Tworzymy katalogi
+                    sh "mkdir -p ${debianDir}"
+                    sh "mkdir -p ${usrDir}/build"
+                    sh "mkdir -p ${usrDir}/data"
+                    sh "mkdir -p ${usrDir}/external"
+
+                    // Kopiujemy pliki z supertux_build_items do odpowiednich katalogów
+                    sh "cp -r ${WORKSPACE}/supertux_build_items/build/* ${usrDir}/build/"
+                    sh "cp -r ${WORKSPACE}/supertux_build_items/data/* ${usrDir}/data/"
+                    sh "cp -r ${WORKSPACE}/supertux_build_items/external/* ${usrDir}/external/"
+
+                    // Tworzymy plik control z informacjami o paczce
+                    writeFile(file: "${debianDir}/control", text: """
+                        Package: supertux
+                        Version: 1.0.0
+                        Section: utils
+                        Priority: optional
+                        Architecture: amd64
+                        Depends: libogg-dev libvorbis-dev libopenal-dev libsdl2-dev libsdl2-image-dev libfreetype6-dev libraqm-dev libcurl4-openssl-dev libglew-dev libharfbuzz-dev libfribidi-dev libglm-dev zlib1g-dev
+                        Maintainer: Marcin Pieczonka <mpieczonka@student.agh.edu.pl>
+                        Description: SuperTux for DevOps CI/CD
+                        """)
+
+                // Nadajemy uprawnienia wykonywalne dla skryptu postinst
+                sh "chmod +x ${debDir}/postinst"
+
+                // Tworzymy paczkę DEB
+                sh "dpkg-deb --build ${debDir} ${WORKSPACE}/supertux_package.deb"
+
+                // Publikujemy paczkę jako artefakt
+                archiveArtifacts artifacts: 'supertux_package.deb', allowEmptyArchive: false
                 }
             }
         }
 
-        stage('Publish DEB Package') {
-            steps {
-                script {
-                    // Publikowanie paczki DEB jako artefakt
-                    archiveArtifacts artifacts: "supertux_build.tar.gz", allowEmptyArchive: false
-                }
-            }
-        }
         
         // stage('Publish') {
         //     steps {
