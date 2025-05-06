@@ -1,0 +1,5 @@
+FROM docker-irssi-build
+
+WORKDIR /irssi
+
+RUN ninja -C Build test
