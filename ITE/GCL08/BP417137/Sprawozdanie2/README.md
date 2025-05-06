@@ -167,7 +167,7 @@ RUN npm install
 ```sh
 docker build -f Dockerfile.build -t express-build-img .
 ```
-![alt text](build1.png)
+![alt text](lab6/build1.png)
 
 ## Etap TEST
 ### Przygotowujemy dockerfila pod image test
@@ -184,13 +184,13 @@ RUN npm test
 ```sh
 docker build -f Dockerfile.test -t express-test-img .
 ```
-![alt text](test1.png)
+![alt text](lab6/test1.png)
 
 ## Etap DEPLOY
 
 W repozytorium expressa jest wiele róznych przykładów użycia. Ja skorzystałem z przykladu downloads, którego budowa wyglada tak:
 
-![alt text](deploy1.png)
+![alt text](lab6/deploy1.png)
 
 ### Przygotowujemy dockerfila pod image deploy
 
@@ -209,14 +209,14 @@ CMD ["node", "examples/downloads"]
 ```sh
 docker build -f Dockerfile.deploy -t express-deploy-img .
 ```
-![alt text](deploy2.png)
+![alt text](lab6/deploy2.png)
 
 ### Tworzymy nowa sieć
 
 ```sh
 docker network create express
 ```
-![alt text](deploy3.png)
+![alt text](lab6/deploy3.png)
 
 ### Uruchamiamy kontener deploya
 
@@ -224,7 +224,7 @@ docker network create express
 docker run -d --rm --network express --name express-deploy-container -p 3000:3000 express-deploy-img
 ```
 
-![alt text](deploy4.png)
+![alt text](lab6/deploy4.png)
 
 Upewniamy się, że wszystko działa
 
@@ -232,13 +232,13 @@ Upewniamy się, że wszystko działa
 docker logs express-deploy-container
 ```
 
-![alt text](deploy5.png)
+![alt text](lab6/deploy5.png)
 
 Teraz aby sprawdzić co nam przeglądarka pokazuje na porcie 3000, musimy ten port udostępnić. Ja skorzystalem z możliwości udostępnienia portu przez VSC
 
-![alt text](deploy6.png)
+![alt text](lab6/deploy6.png)
 
-![alt text](deploy7.png)
+![alt text](lab6/deploy7.png)
 
 ### Tworzymy kontener z curlem 
 curl jest minimalistyczny i wysyla zapytanie o to co jest na stronie - idealne narzedzie do sprawdzenia dzialania kontenera
@@ -247,7 +247,7 @@ curl jest minimalistyczny i wysyla zapytanie o to co jest na stronie - idealne n
 docker run --rm --network express curlimages/curl curl -s express-deploy-container:3000
 ```
 
-![alt text](deploy8.png)
+![alt text](lab6/deploy8.png)
 
 ## Etap Publish
 bedziemy to publikowac na dockerhuba wiec do tego musimy poczynic pewne przygotowania
@@ -257,25 +257,25 @@ bedziemy to publikowac na dockerhuba wiec do tego musimy poczynic pewne przygoto
 docker build -f Dockerfile.deploy -t bpajda/express-deploy-img:latest .
 ```
 
-![alt text](publish1.png)
+![alt text](lab6/publish1.png)
 
 ### Nastepnie logujemy sie na docker huba
 
-![alt text](publish2.png)
+![alt text](lab6/publish2.png)
 
 ### Pushujemy obraz na dockerhuba
 
 ```sh
 docker push bpajda/express-deploy-img:latest
 ```
-![alt text](publish3.png)
+![alt text](lab6/publish3.png)
 
-![alt text](publish4.png)
+![alt text](lab6/publish4.png)
 
 ### Przygotowanie pipelina
  W pierwszej kolejnosci aby mozna bylo sie logowac do docker huba trzeba dodac na jenkinsie credsy
 
-![alt text](publish5.png)
+![alt text](lab6/publish5.png)
 
 ### Tworzymy pipeline
 
@@ -366,29 +366,29 @@ pipeline {
 ```
 ### etap Build (przeszło)
 
-![alt text](publish6.png)
+![alt text](lab6/publish6.png)
 
 ### etap test (przeszło)
 
-![alt text](publish7.png)
+![alt text](lab6/publish7.png)
 
 ### etap deploy (przeszło)
 
-![alt text](publish8.png)
+![alt text](lab6/publish8.png)
 
 ### etap test2 (przeszło)
 
-![alt text](publish9.png)
+![alt text](lab6/publish9.png)
 
 ### etap publish (przeszło)
 
-![alt text](publish10.png)
+![alt text](lab6/publish10.png)
 
 ### obraz spushowany na dockerhuba
 
-![alt text](publish11.png)
+![alt text](lab6/publish11.png)
 
-### Uzupelnienie skryptu o utworzenie artefaktu oraz zapisanie w formie Jenkinsfila w repo
+### Uzupelnienie skryptu o utworzenie artefaktu oraz zapisanie w formie [Jenkinsfila](lab6/Jenkinsfile)  w repo
 
 ```Dockerfile
 pipeline {
@@ -490,3 +490,10 @@ pipeline {
     }
 }
 ```
+### Zmieniamy w konfiguracji jenkinsfila pipeline script na pipeline script from SCM
+
+![alt text](lab6/publish12.png)
+
+## Udane przejscie pipelinea wraz z artefaktem:
+
+![alt text](lab6/final.png)
