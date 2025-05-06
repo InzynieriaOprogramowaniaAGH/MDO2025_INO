@@ -101,14 +101,12 @@ pipeline {
                         Description: SuperTux for DevOps CI/CD
                         """)
 
-                // Nadajemy uprawnienia wykonywalne dla skryptu postinst
-                sh "chmod +x ${debDir}/postinst"
 
-                // Tworzymy paczkę DEB
-                sh "dpkg-deb --build ${debDir} ${WORKSPACE}/supertux_package.deb"
+                    // Tworzymy paczkę DEB
+                    sh "dpkg-deb --build ${debDir} ${WORKSPACE}/supertux_package.deb"
 
-                // Publikujemy paczkę jako artefakt
-                archiveArtifacts artifacts: 'supertux_package.deb', allowEmptyArchive: false
+                    // Publikujemy paczkę jako artefakt
+                    archiveArtifacts artifacts: 'supertux_package.deb', allowEmptyArchive: false
                 }
             }
         }
