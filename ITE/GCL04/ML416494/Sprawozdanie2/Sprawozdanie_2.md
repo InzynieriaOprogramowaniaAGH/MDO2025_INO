@@ -1,6 +1,6 @@
 # Sprawozdanie 2
 
-Celem ćwiczeń jest zapoznanie się z platformą Jenkins oraz stworzenie pełengo pipeline z wszytkimi krokami jakie można znaleźć w podstawowych rozwiązaniach komercyjnych.
+Celem ćwiczeń jest zapoznanie się z platformą Jenkins oraz stworzenie pełnego pipeline z wszytkimi krokami jakie można znaleźć w podstawowych rozwiązaniach komercyjnych.
 
 # Poznawanie Jenkins
 
