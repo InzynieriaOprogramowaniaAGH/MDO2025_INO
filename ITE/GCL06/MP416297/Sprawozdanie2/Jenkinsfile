@@ -32,6 +32,9 @@ pipeline {
         stage('Test') {
             steps{
                 sh "docker build -t supertuxtest -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.test ."
+                sh "docker run --name tests supertuxtest"
+                sh "docker logs tests > logs_tests_${BUILD_TIMESTAMP}.txt"
+                sh "docker rm tests"
             }
         }
         
@@ -59,8 +62,7 @@ pipeline {
                                 ./supertux2 --version"
                     '''
 
-                    def logs = sh(script: "docker logs main", returnStdout: true).trim()
-                    echo "Docker logs: ${logs}"
+                    sh "docker logs main > logs_deploy_${BUILD_TIMESTAMP}.txt"
                     
 
                     sh "docker cp main:/supertux_build/ ${WORKSPACE}/supertux_build_items/"
@@ -103,7 +105,8 @@ Architecture: amd64
 Depends: libogg-dev, libvorbis-dev, libopenal-dev, libsdl2-dev, libsdl2-image-dev, libfreetype6-dev, libraqm-dev, libcurl4-openssl-dev, libglew-dev, libharfbuzz-dev, libfribidi-dev, libglm-dev, zlib1g-dev
 Maintainer: Marcin Pieczonka <mpieczonka@student.agh.edu.pl>
 Description: SuperTux for DevOps CI/CD
-                        """)
+
+""")
 
 
                     // Tworzymy paczkę DEB
@@ -111,6 +114,8 @@ Description: SuperTux for DevOps CI/CD
 
                     // Publikujemy paczkę jako artefakt
                     archiveArtifacts artifacts: "supertux_package_${BUILD_TIMESTAMP}.deb", allowEmptyArchive: false
+                    archiveArtifacts artifacts: "logs_tests_${BUILD_TIMESTAMP}.txt", allowEmptyArchive: false
+                    archiveArtifacts artifacts: "logs_deploy_${BUILD_TIMESTAMP}.deb", allowEmptyArchive: false
                 }
             }
         }
