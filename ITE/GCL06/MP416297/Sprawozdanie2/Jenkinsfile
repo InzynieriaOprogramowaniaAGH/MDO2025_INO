@@ -97,7 +97,7 @@ pipeline {
 
                     // Tworzymy plik control z informacjami o paczce
                     writeFile(file: "${debianDir}/control", text: """
-Package: supertux_${BUILD_TIMESTAMP}
+Package: supertux-${BUILD_TIMESTAMP}
 Version: 1.0.0
 Section: utils
 Priority: optional
@@ -110,7 +110,7 @@ Description: SuperTux for DevOps CI/CD
 
 
                     // Tworzymy paczkę DEB
-                    sh "dpkg-deb --build ${debDir} supertux${BUILD_TIMESTAMP}.deb"
+                    sh "dpkg-deb --build ${debDir} ${WORKSPACE}/supertux-${BUILD_TIMESTAMP}.deb"
 
                     // Publikujemy paczkę jako artefakt
                     archiveArtifacts artifacts: "supertux${BUILD_TIMESTAMP}.deb", allowEmptyArchive: false
