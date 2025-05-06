@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clean') {
             steps {
-                sh 'docker rmi build-irssi test-irssi artifact-irssi || true'
+                sh 'docker system prune -f'
                 sh '''
                     find . -name "*.deb" -delete || true
                     find . -name "*.log" -delete || true
