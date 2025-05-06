@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        BUILD_TIMESTAMP = sh(script: 'date +%y-%m-%d-%H-%M', returnStdout: true).trim()
+        BUILD_TIMESTAMP = sh(script: 'date +%y%m%d%H%M', returnStdout: true).trim()
     }
 
     stages {
@@ -110,10 +110,10 @@ Description: SuperTux for DevOps CI/CD
 
 
                     // Tworzymy paczkę DEB
-                    sh "dpkg-deb --build ${debDir} ${WORKSPACE}/supertux-package-${BUILD_TIMESTAMP}.deb"
+                    sh "dpkg-deb --build ${debDir} ${WORKSPACE}/supertux${BUILD_TIMESTAMP}.deb"
 
                     // Publikujemy paczkę jako artefakt
-                    archiveArtifacts artifacts: "supertux-package-${BUILD_TIMESTAMP}.deb", allowEmptyArchive: false
+                    archiveArtifacts artifacts: "supertux${BUILD_TIMESTAMP}.deb", allowEmptyArchive: false
                     archiveArtifacts artifacts: "logs_tests_${BUILD_TIMESTAMP}.txt", allowEmptyArchive: false
                     archiveArtifacts artifacts: "logs_deploy_${BUILD_TIMESTAMP}.deb", allowEmptyArchive: false
                 }
