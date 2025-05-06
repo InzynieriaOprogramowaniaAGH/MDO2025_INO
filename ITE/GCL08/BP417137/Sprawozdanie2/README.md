@@ -248,3 +248,119 @@ docker run --rm --network express curlimages/curl curl -s express-deploy-contain
 ```
 
 ![alt text](deploy8.png)
+
+## Etap Publish
+bedziemy to publikowac na dockerhuba wiec do tego musimy poczynic pewne przygotowania
+### Tworzymy obraz pod docker pusha
+
+```sh
+docker build -f Dockerfile.deploy -t bpajda/express-deploy-img:latest .
+```
+
+![alt text](publish1.png)
+
+### Nastepnie logujemy sie na docker huba
+
+![alt text](publish2.png)
+
+### Pushujemy obraz na dockerhuba
+
+```sh
+docker push bpajda/express-deploy-img:latest
+```
+![alt text](publish3.png)
+
+![alt text](publish4.png)
+
+### Przygotowanie pipelina
+ W pierwszej kolejnosci aby mozna bylo sie logowac do docker huba trzeba dodac na jenkinsie credsy
+
+![alt text](publish5.png)
+
+### Tworzymy pipeline
+
+```Dockerfile
+pipeline {
+    agent any
+
+    environment {
+        APP_DIR = 'ITE/GCL08/BP417137/Sprawozdanie2/lab6'
+    }
+
+    stages {
+        stage('Etap Clone') {
+            steps {
+                git branch: 'BP417137', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Etap Clean') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker rmi -f express-build-img || true'
+                    sh 'docker rmi -f express-test-img || true'
+                    sh 'docker rmi -f bpajda/express-deploy-img || true'
+                    sh 'docker builder prune --force --all || true'
+                    sh 'docker network rm express || true'
+                    sh 'docker rm -f express-deploy-container || true'
+                }
+            }
+        }
+
+        stage('Etap Build') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfile.build -t express-build-img .'
+                }
+            }
+        }
+
+        stage('Etap Test') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfile.test -t express-test-img .'
+                }
+            }
+        }
+        
+        stage('Etap Deploy') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfile.deploy -t bpajda/express-deploy-img:latest .'
+                }
+            }
+        }
+
+        stage('Etap Test2') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh '''
+                        docker network create express || true
+                        docker run -d --rm --network express --name express-deploy-container -p 3000:3000 bpajda/express-deploy-img:latest
+                        sleep 5
+                        docker run --rm --network express curlimages/curl curl -s --fail express-deploy-container:3000
+                    '''
+                }
+            }
+        }
+
+        stage('Etap Publish') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )]) {
+                        sh "echo ${DOCKER_PASS} | docker login -u ${DOCKER_USER} --password-stdin"
+                    }
+
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
+                        docker.image("bpajda/express-deploy-img:latest").push()
+                    }
+                }
+            }
+        }
+    }
+}
+```
