@@ -28,7 +28,7 @@ pipeline {
                 dir('ITE/GCL04/ML416494/Sprawozdanie2/jenkins') {
                     script {
                         def redisTestImage = docker.build("redis-test", "-f Dockerfile.test .")
-                        redisTestImage.withRun('--rm')
+                        sh "docker run --rm redis-test"
                     }
                 }
             }
