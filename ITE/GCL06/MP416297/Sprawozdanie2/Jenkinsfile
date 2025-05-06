@@ -96,7 +96,7 @@ Version: 1.0.0
 Section: utils
 Priority: optional
 Architecture: amd64
-Depends: libogg-dev libvorbis-dev libopenal-dev libsdl2-dev libsdl2-image-dev libfreetype6-dev libraqm-dev libcurl4-openssl-dev libglew-dev libharfbuzz-dev libfribidi-dev libglm-dev zlib1g-dev
+Depends: libogg-dev, libvorbis-dev, libopenal-dev, libsdl2-dev, libsdl2-image-dev, libfreetype6-dev, libraqm-dev, libcurl4-openssl-dev, libglew-dev, libharfbuzz-dev, libfribidi-dev, libglm-dev, zlib1g-dev
 Maintainer: Marcin Pieczonka <mpieczonka@student.agh.edu.pl>
 Description: SuperTux for DevOps CI/CD
                         """)
