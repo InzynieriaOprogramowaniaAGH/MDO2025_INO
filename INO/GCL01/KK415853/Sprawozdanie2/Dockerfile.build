@@ -1,0 +1,5 @@
+FROM maven:3.9.2
+WORKDIR /app
+RUN git clone https://github.com/jenkins-docs/simple-java-maven-app.git
+WORKDIR /app/simple-java-maven-app
+RUN mvn clean package
