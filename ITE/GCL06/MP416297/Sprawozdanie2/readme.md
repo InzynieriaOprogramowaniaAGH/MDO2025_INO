@@ -66,13 +66,39 @@ docker run \
   myjenkins-blueocean:2.504.1-1 
 ```
 
+Jak widać kontenery już śmigają jak należy:
+![alt text](image-14.png)
+
 #### Logowanie i konfiguracja
 Aby zalogować się do nowo postawionego Jenkinsa potrzebujemy hasło, które znajduje się w katalogu `/var/jenkins_home/secrets/initialAdminPassword`, i możemy je pozyskać np. przy pomocy poniższej komendy:
 
 ```bash
 docker exec jenkins-blueocean ls /var/jenkins_home/secrets/
 ```
+![alt text](image-10.png)
 
 Następnie zainstalowałem automatycznie proponowane wtyczki i zabrałem się do testowania działania.
 
 ### Przykładowe projekty
+
+Poniższe przykłady są proste więc nie będę ich opisywał, a miały na zadaniu sprawdzenie czy Jenkins działa jak należy i pokazać jak można z niego korzystać.
+
+#### Wyświetlenie uname
+![alt text](image-11.png)
+
+#### Zwracanie błędu przy nieparzystej godzinie
+![alt text](image-12.png)
+
+#### Pobranie obrazu ubuntu
+![alt text](image-13.png)
+
+## Pipeline CI wybranego projektu
+
+### Początkowy pomysł na wykonanie pipeline'u CI
+
+![alt text](<Diagram bez tytułu.drawio.png>)
+
+Początkowy pomysł na wykonanie jest prosty i pewnie będzie miał jakieś zmiany, ale w teorii wydaje się być w porządku (według mnie).
+
+
+### Końcowe wykonanie
