@@ -258,4 +258,4 @@ post {
 
 # Wnioski
 
-Pipeline Jenkinsfile pokrywa się z założonym schemat UML. Ponieważ większa część pracy opanowana jest przez istniejący wcześniej docker-compose, jenkinsfile wyszedł krótki. Jenkins pozwala w kontrolowany sposób prowadzić cały pipeline produkcji skonteneryzowanej aplikacji
+Pipeline Jenkinsfile pokrywa się z założonym schemat UML. Ponieważ większa część pracy opanowana jest przez istniejący wcześniej docker-compose, jenkinsfile wyszedł krótki. Jenkins pozwala w kontrolowany sposób prowadzić cały pipeline produkcji skonteneryzowanej aplikacji.
