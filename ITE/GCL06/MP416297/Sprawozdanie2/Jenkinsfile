@@ -113,7 +113,7 @@ Description: SuperTux for DevOps CI/CD
                     sh "dpkg-deb --build ${debDir} ${WORKSPACE}/supertux-${BUILD_TIMESTAMP}.deb"
 
                     // Publikujemy paczkę jako artefakt
-                    archiveArtifacts artifacts: "supertux${BUILD_TIMESTAMP}.deb", allowEmptyArchive: false
+                    archiveArtifacts artifacts: "supertux-${BUILD_TIMESTAMP}.deb", allowEmptyArchive: false
                     archiveArtifacts artifacts: "logs_tests_${BUILD_TIMESTAMP}.txt", allowEmptyArchive: false
                     archiveArtifacts artifacts: "logs_deploy_${BUILD_TIMESTAMP}.deb", allowEmptyArchive: false
                 }
