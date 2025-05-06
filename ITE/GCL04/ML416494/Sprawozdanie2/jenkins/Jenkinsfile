@@ -60,9 +60,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'pass-dockhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh '''
                         echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                        docker push stundeto/${IMAGE_NAME}:${VERSION}
-                        docker tag stundeto/${IMAGE_NAME}:${VERSION} ${IMAGE_NAME}:latest
-                        docker push stundeto/${IMAGE_NAME}:latest
+                        docker push $DOCKER_USERNAME/${IMAGE_NAME}:${VERSION}
                     '''
                 }
             }
