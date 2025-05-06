@@ -44,13 +44,13 @@ pipeline {
                     docker run -d --name redis-deploy-test --network network-testing ${IMAGE_NAME}:${VERSION}
                     sleep 10
                     
-                    docker run --rm --network redis-ci-network redis redis-cli -h redis-deploy-test PING | grep PONG
-                    docker run --rm --network redis-ci-network redis redis-cli -h redis-deploy-test SET testkey "Hello"
-                    docker run --rm --network redis-ci-network redis redis-cli -h redis-deploy-test GET testkey | grep Hello
+                    docker run --rm --network network-testing redis redis-cli -h redis-deploy-test PING | grep PONG
+                    docker run --rm --network network-testing redis redis-cli -h redis-deploy-test SET testkey "Hello"
+                    docker run --rm --network network-testing redis redis-cli -h redis-deploy-test GET testkey | grep Hello
 
                     docker stop redis-deploy-test
                     docker rm redis-deploy-test
-                    docker network rm redis-ci-network
+                    docker network rm network-testing
                 """
             }
         }
