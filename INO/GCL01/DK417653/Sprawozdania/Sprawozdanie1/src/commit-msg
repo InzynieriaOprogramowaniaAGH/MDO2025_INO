@@ -1,0 +1,14 @@
+#!/bin/bash
+
+
+commit_message=$(cat "$1")
+
+pattern="DK417653"
+
+
+if [[ $commit_message =~ ^$pattern ]]; then
+    exit 0
+else
+    echo "Commit message has to begin with $pattern"
+    exit 1
+fi
