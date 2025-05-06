@@ -1,0 +1,15 @@
+app-id: com.example.irssi
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: irssi
+finish-args:
+  - --share=network
+  - --filesystem=home
+
+modules:
+  - name: irssi
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: ../irssi
