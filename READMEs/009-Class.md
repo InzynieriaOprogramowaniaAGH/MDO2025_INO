@@ -27,6 +27,7 @@ Niniejszy temat jest poświęcony przygotowaniu źródła instalacyjnego systemu
     * Pamiętaj, że **Docker zadziała dopiero na uruchomionym systemie!** - nie da się wdać z interakcji z Dockerem z poziomu instalatora systemu: polecenia `docker run` nie powiodą się na tym etapie. Nie zadziała też `systemctl start`
   * Gdy program pracuje poza kontenerem, potrzebny jest cały łańcuch dependencji oraz sam program.
     * Użyj sekcji `%post`, by pobrać z Jenkinsa zbudowany artefakt
+    * Rozważ stworzenie repozytorium ze swoim programem i dodanie go dyrektywą `repo` oraz zainstalowanie pakietu sekcją `%packages`
     * Jeżeli nie jest to możliwe/wykonalne, użyj dowolnego serwera SFTP/FTP/HTTP aby "zahostować" program - następnie pobierz go z tak hostującego serwera (stosując np. `wget`)
     * Umieść program w ścieżce stosownej dla binariów `/usr/local/bin/`
     * Zadbaj w sekcji `%packages`, by system zainstalował wszystkie dependencje potrzebne do działania programu
