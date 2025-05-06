@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        BUILD_TIMESTAMP = sh(script: 'date +%y_%m_%d_%H_%M', returnStdout: true).trim()
+        BUILD_TIMESTAMP = sh(script: 'date +%y-%m-%d-%H-%M', returnStdout: true).trim()
     }
 
     stages {
