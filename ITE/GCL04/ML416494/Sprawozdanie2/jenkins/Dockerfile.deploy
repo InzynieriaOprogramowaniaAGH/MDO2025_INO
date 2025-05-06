@@ -1,0 +1,5 @@
+FROM redis-builder
+
+EXPOSE 6379
+
+CMD ["redis-server"]
