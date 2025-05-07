@@ -1,0 +1,93 @@
+pipeline {
+    agent any
+
+    environment {
+        WORK_DIR = 'MDO2025_INO/ITE/GCL05/SO417771/Sprawozdanie2/lab6-7'
+        VERSION_TAG = "1.0"
+        NODE_TAG = '23-alpine'
+        BUILD_IMAGE = "node-build:${NODE_TAG}"
+        TEST_IMAGE = "node-test:v${VERSION_TAG}"
+        DEPLOY_IMAGE = "node-deploy:v${VERSION_TAG}"
+    }
+
+    stages {
+        stage('Prepare') {
+            steps {
+                sh '''
+                    rm -rf MDO2025_INO
+                    git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+                    cd MDO2025_INO
+                    git checkout SO417771
+                '''
+            }
+        }
+
+        stage('Logs') {
+            steps {
+                dir(env.WORK_DIR) {
+                    sh 'mkdir -p logs'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir(env.WORK_DIR) {
+                    sh "docker build -t ${BUILD_IMAGE} -f Dockerfile.nodebld . > logs/build.log 2>&1"
+                }
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                dir(env.WORK_DIR) {
+                    sh "docker build -t ${TEST_IMAGE} -f Dockerfile.nodetest . > logs/test.log 2>&1"
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'docker network create my_network || true'
+                dir(env.WORK_DIR) {
+                    sh """
+                        docker build -t ${DEPLOY_IMAGE} -f Dockerfile.nodedeploy .
+                        docker rm -f app || true
+                        docker run -d -p 3000:3000 --name app --network my_network ${DEPLOY_IMAGE}
+                    """
+                }
+            }
+        }
+
+        stage('Test Deployment') {
+            steps {
+                dir(env.WORK_DIR) {
+                    sh '''
+                        docker run --network my_network --rm curlimages/curl curl -v http://app:3000
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir(env.WORK_DIR) {
+                    sh '''
+                        mkdir -p artifacts_${VERSION_TAG}
+                        tar -cvf artifacts_${VERSION_TAG}.tar logs/*.log
+                    '''
+                    archiveArtifacts artifacts: "artifacts_${VERSION_TAG}.tar"
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            sh """
+                docker rmi ${BUILD_IMAGE} ${TEST_IMAGE} ${DEPLOY_IMAGE} || true
+                docker system prune --all --volumes --force || true
+            """
+        }
+    }
+}
