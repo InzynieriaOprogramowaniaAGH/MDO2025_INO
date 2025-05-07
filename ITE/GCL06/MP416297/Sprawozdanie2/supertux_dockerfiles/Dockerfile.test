@@ -1,0 +1,8 @@
+FROM supertuxbld
+
+RUN apt-get install -y libgtest-dev
+RUN cmake -DBUILD_TESTS=ON ..
+RUN make .
+RUN make install
+
+CMD ["./test_supertux2"]

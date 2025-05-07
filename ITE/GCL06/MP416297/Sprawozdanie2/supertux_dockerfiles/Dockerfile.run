@@ -1,0 +1,3 @@
+FROM supertuxbld
+
+CMD ["./supertux2", "--version"]

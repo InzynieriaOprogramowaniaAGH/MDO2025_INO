@@ -1,0 +1,116 @@
+pipeline {
+    agent any
+
+    environment {
+        BUILD_TIMESTAMP = sh(script: 'date +%y%m%d%H%M', returnStdout: true).trim()
+    }
+
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                script {
+                    cleanWs()
+                    sh 'docker system prune -af --volumes'
+                }
+            }
+        }
+        
+        stage('Clone repo') {
+            steps {
+                sh "git clone -b MP416297 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git "
+            }
+        }
+        
+        stage('Build') {
+            steps{
+                sh "docker build -t supertuxbld -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.bld ."
+            }
+        }
+        
+        stage('Test') {
+            steps{
+                sh "docker build -t supertuxtest -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.test ."
+                sh "docker run --name tests supertuxtest"
+                sh "docker logs tests > logs_tests_${BUILD_TIMESTAMP}.txt"
+                sh "docker rm tests"
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                script{
+                    sh "docker volume create supertux_build"
+                    sh '''
+                        docker run --rm -v supertux_build:/supertux_build supertuxbld bash -c "
+                            cd ../../ && 
+                            rm -rf supertux_build/* &&
+                            cp -r supertux/build supertux_build/build
+                            cp -r supertux/data supertux_build/data
+                            cp -r supertux/external supertux_build/external
+                        "
+                    '''
+
+                    sh "docker build -t main_container -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.maincontainer ."
+                    sh '''
+                            docker run --name main -v supertux_build:/supertux_build main_container bash -c "
+                                mkdir supertux &&
+                                cp -r supertux_build/* ./supertux/ &&
+                                cd supertux &&
+                                cd build &&
+                                ./supertux2 --version"
+                    '''
+
+                    sh "docker logs main > logs_deploy_${BUILD_TIMESTAMP}.txt"
+                    sh "docker cp main:/supertux_build/ ${WORKSPACE}/supertux_build_items/"
+                    sh 'docker rm main'
+                }
+                
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                script {
+                    // Tworzymy strukturę katalogów dla paczki DEB
+                    def debDir = "${WORKSPACE}/deb_package"
+                    def debianDir = "${debDir}/DEBIAN"
+                    def usrDir = "${debDir}/usr/local/supertux"
+
+                    // Tworzymy katalogi
+                    sh "mkdir -p ${debianDir}"
+                    sh "mkdir -p ${usrDir}/build"
+                    sh "mkdir -p ${usrDir}/data"
+                    sh "mkdir -p ${usrDir}/external"
+
+                    // Kopiujemy pliki z supertux_build_items do odpowiednich katalogów
+                    sh "cp -r ${WORKSPACE}/supertux_build_items/build/* ${usrDir}/build/"
+                    sh "cp -r ${WORKSPACE}/supertux_build_items/data/* ${usrDir}/data/"
+                    sh "cp -r ${WORKSPACE}/supertux_build_items/external/* ${usrDir}/external/"
+
+                    // Tworzymy plik control z informacjami o paczce
+                    writeFile(file: "${debianDir}/control", text: """
+Package: supertux-${BUILD_TIMESTAMP}
+Version: 1.0.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Depends: libogg-dev, libvorbis-dev, libopenal-dev, libsdl2-dev, libsdl2-image-dev, libfreetype6-dev, libraqm-dev, libcurl4-openssl-dev, libglew-dev, libharfbuzz-dev, libfribidi-dev, libglm-dev, zlib1g-dev
+Maintainer: Marcin Pieczonka <mpieczonka@student.agh.edu.pl>
+Description: SuperTux for DevOps CI/CD
+
+""")
+
+
+                    // Tworzymy paczkę DEB
+                    sh "dpkg-deb --build ${debDir} ${WORKSPACE}/supertux-${BUILD_TIMESTAMP}.deb"
+
+                    // Publikujemy paczkę jako artefakt
+                    archiveArtifacts artifacts: "supertux-${BUILD_TIMESTAMP}.deb", allowEmptyArchive: false
+                    archiveArtifacts artifacts: "logs_tests_${BUILD_TIMESTAMP}.txt", allowEmptyArchive: false
+                    archiveArtifacts artifacts: "logs_deploy_${BUILD_TIMESTAMP}.txt", allowEmptyArchive: false
+                }
+            }
+        }
+    }
+}
+
