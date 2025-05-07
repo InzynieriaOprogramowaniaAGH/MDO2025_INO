@@ -235,7 +235,7 @@ RUN meson test -C Build
 
 <br>
 
-Plik `build_irssi.sh`
+Plik `build.sh`
 
 Plik nicjalizuje strukturę pakietu .deb za pomocą dh_make. Tworzy plik debian/rules, który definiuje jak budować pakiet przy użyciu systemu meson. W efekcie końcowym plik tworzy pakiet .deb oraz kopiuje go do katalogu /out.
 
