@@ -182,7 +182,7 @@ pipeline {
 <br>
 <br>
 
-# Lab 6 - Pipeline: lista kontrolna
+# Lab 6 - Pipeline: lista kontrolna i Lab 7 - Jenkinsfile
 
 <br>
 
@@ -372,6 +372,7 @@ stage('Smoke Test') {
 
 ### Cały pipeline
 
+Plik `Jenkinsfile`
 ```bash
 pipeline {
     agent any
@@ -454,3 +455,19 @@ pipeline {
 	}
 }
 ```
+
+<br>
+
+### Ustawienia projektu pipeline w Jenkins
+W ramach konfiguracji projektu typu pipeline w Jenkinsie, dodano ustawienie umożliwiające pobieranie definicji procesu CI/CD bezpośrednio z systemu kontroli wersji. W tym celu w sekcji „Pipeline” wybrano opcję Pipeline script from SCM.
+
+Tak skonfigurowany projekt Jenkins automatycznie pobiera kod źródłowy z repozytorium, a następnie uruchamia pipeline zgodnie z instrukcjami zawartymi w pliku Jenkinsfile.
+
+![UML](lab_5/project_pipeline.png)
+
+![UML](lab_5/project_pipeline_2.png)
+
+<br>
+
+### Uruchomienie projektu
+
