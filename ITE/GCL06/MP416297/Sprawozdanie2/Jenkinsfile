@@ -18,8 +18,6 @@ pipeline {
         stage('Clone repo') {
             steps {
                 sh "git clone -b MP416297 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git "
-                sh "pwd"
-                sh "ls"
             }
         }
         
@@ -54,7 +52,7 @@ pipeline {
 
                     sh "docker build -t main_container -f ./MDO2025_INO/ITE/GCL06/MP416297/Sprawozdanie2/supertux_dockerfiles/Dockerfile.maincontainer ."
                     sh '''
-                            docker run -d --name main -v supertux_build:/supertux_build main_container bash -c "
+                            docker run --name main -v supertux_build:/supertux_build main_container bash -c "
                                 mkdir supertux &&
                                 cp -r supertux_build/* ./supertux/ &&
                                 cd supertux &&
