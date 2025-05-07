@@ -103,8 +103,6 @@ Początkowy pomysł na wykonanie jest prosty i pewnie będzie miał jakieś zmia
 
 ### Końcowe wykonanie
 
-#### Cały pipeline
-
 #### Przygotowanie przestrzeni roboczej
 Czyścimy wszystkie pliki z poprzednich buildów oraz usuwamy wszystkie nieużywane zasoby dockera wraz z woluminami.
 ```Dockerfile
@@ -138,6 +136,8 @@ stage('Build') {
 }
 ```
 
+W dockerfile'u są instalowane wszystkie zależności zalecone przez właściciela repozytorium użytego oprogramowania oraz git, a następnie przeprowadzany clone i build.
+
 ```Dockerfile
 FROM ubuntu:20.04
 
@@ -169,7 +169,19 @@ RUN make
 ```
 
 #### Test
-W tym etapie najpierw tworzymy nowy kontener testowy na podstawie kontenera z poprzedniego kroku, jednak w tym kontenerze dobudowujemy odpowiednią część testową projektu oraz instalujemy wymaganą do testów bibliotekę.
+W tym etapie najpierw tworzymy nowy obraz oraz kontener testowy na podstawie kontenera z poprzedniego kroku, jednak w tym kontenerze dobudowujemy odpowiednią część testową projektu oraz instalujemy wymaganą do testów bibliotekę.
+
+```Dockerfile
+FROM supertuxbld
+
+RUN apt-get install -y libgtest-dev
+RUN cmake -DBUILD_TESTS=ON ..
+RUN make .
+RUN make install
+
+CMD ["./test_supertux2"]
+```
+
 ```Dockerfile
 stage('Test') {
     steps{
@@ -197,8 +209,11 @@ RUN apt update && apt upgrade
 RUN apt-get update && apt-get install -y libogg-dev libvorbis-dev libopenal-dev libsdl2-dev libsdl2-images/image-dev libfreetype6-dev libraqm-dev libcurl4-openssl-dev libglew-dev libharfbuzz-dev libfribidi-dev libglm-dev zlib1g-dev
 
 ```
+Instaluję tutaj od razu wymagane dependencję. Teoretycznie powinienem założyć, że "użytkownik" nie będzie miał wszystkiego czego trzeba ale zakładam, że ma.
 
-Następnie przydałoby się jakoś przenieść wymagane fragmenty zbudowanego projektu do kontenera bazowego, więc używam do tego tymczasowego kontenera oraz woluminu. Ostatecznie uruchamiam program i zbieram logi do pliku .txt.
+Następnie przydałoby się jakoś przenieść wymagane fragmenty zbudowanego projektu do kontenera bazowego, więc używam do tego tymczasowego kontenera oraz woluminu. 
+
+Ostatecznie uruchamiam program i zbieram logi do pliku .txt.
 
 ```Dockerfile
 stage('Deploy') {

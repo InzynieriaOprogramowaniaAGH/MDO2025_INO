@@ -61,20 +61,14 @@ pipeline {
                     '''
 
                     sh "docker logs main > logs_deploy_${BUILD_TIMESTAMP}.txt"
-                    
-
                     sh "docker cp main:/supertux_build/ ${WORKSPACE}/supertux_build_items/"
-                    // sh '''
-                    //     tar -czf ${WORKSPACE}/supertux_build.tar.gz -C ${WORKSPACE}/supertux_build_items . &&
-                    //     ls ${WORKSPACE}/
-                    // '''
                     sh 'docker rm main'
                 }
                 
             }
         }
 
-        stage('Publish DEB Package') {
+        stage('Publish') {
             steps {
                 script {
                     // Tworzymy strukturę katalogów dla paczki DEB
