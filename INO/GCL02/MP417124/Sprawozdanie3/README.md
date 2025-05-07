@@ -62,6 +62,8 @@ Wskazuje że instalator ma pobrać pakiety z jednego losowo wybranych mirrorów 
 repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=aarch64
 ```
 Repozytorium to zawiera wydane aktualizacje do `Fedory 41`, dzięki temu instaltor od razu korzysta z najnowszych dostępnych pakietów, zamiast tylko tych, które byłu dostępne w momencie wydania obrazu ISO.
+
+Dodatkowo została dodana opcja na końcu pliku `reboot` w celu zadbania o automatyczne ponowne uruchomienia na końcu instalacji.
  
 
 2. **Automatyczna instalacja Fedory z użyciem pliku Kickstart:** 
