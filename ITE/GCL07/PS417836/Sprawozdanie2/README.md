@@ -21,7 +21,7 @@ sudo docker network create jenkins
 sudo docker network ls
 ```
 
-![network](lab_5/network_jenkins.png)
+![network](lab_5_6_7/network_jenkins.png)
 
 <br>
 
@@ -40,7 +40,7 @@ sudo docker run \
 docker:dind \
 --storage-driver overlay2
 ```
-![network](lab_5/DIND.png)
+![network](lab_5_6_7/DIND.png)
 
 <br>
 
@@ -64,7 +64,7 @@ RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
 sudo docker build -f ./Dockerfile.jenkins -t myjenkins .
 ```
 
-![build](lab_5/build_docker_jenkins.png)
+![build](lab_5_6_7/build_docker_jenkins.png)
 
 <br>
 
@@ -86,13 +86,13 @@ sudo docker run \
   myjenkins
 ```
 
-![build](lab_5/docker_run_jenkins.png)
+![build](lab_5_6_7/docker_run_jenkins.png)
 
 <br>
 
 Po utworzeniu i uruchomieniu kontenera skonfigurowanio Jenkinsa w przeglądarce pod adresem: http://127.0.0.1:8080/
 
-![google_jenkins](lab_5/jenkins.png)
+![google_jenkins](lab_5_6_7/jenkins.png)
 
 <br>
 
@@ -124,8 +124,8 @@ docker pull ubuntu
 ```
 <br>
 
-![google_jenkins](lab_5/projects.png)
-![google_jenkins](lab_5/logi_godzina.png)
+![google_jenkins](lab_5_6_7/projects.png)
+![google_jenkins](lab_5_6_7/logi_godzina.png)
 
 <br>
 
@@ -174,9 +174,9 @@ pipeline {
 <br>
 
 
-![pipeline_irssi](lab_5/pipeline_runs.png)
+![pipeline_irssi](lab_5_6_7/pipeline_runs.png)
 
-![pipeline_irssi](lab_5/logi.png)
+![pipeline_irssi](lab_5_6_7/logi.png)
 
 
 <br>
@@ -190,7 +190,7 @@ pipeline {
 
 Obraz diagramu został wygenerowany przez Chat GPT na podstawie podanych kroków pipeline.
 
-![UML](lab_5/UML.png)
+![UML](lab_5_6_7/UML.png)
 
 Pipeline będzie tworzył paczkę .deb, dalatego stworzono nowe pliki Dockera tak, aby używały one Ubuntu zamiast Fedory jak było dotychczas. 
 
@@ -463,11 +463,40 @@ W ramach konfiguracji projektu typu pipeline w Jenkinsie, dodano ustawienie umo�
 
 Tak skonfigurowany projekt Jenkins automatycznie pobiera kod źródłowy z repozytorium, a następnie uruchamia pipeline zgodnie z instrukcjami zawartymi w pliku Jenkinsfile.
 
-![UML](lab_5/project_pipeline.png)
+![UML](lab_5_6_7/project_pipeline.png)
 
-![UML](lab_5/project_pipeline_2.png)
+![UML](lab_5_6_7/project_pipeline_2.png)
 
 <br>
 
 ### Uruchomienie projektu
 
+Pierwsze uruchomienie:
+
+![UML](lab_5_6_7/first.png)
+
+![UML](lab_5_6_7/first_1.png)
+
+<br>
+
+Ponowne uruchomienie w celu sprawdzenia poprawności działania:
+
+![UML](lab_5_6_7/second.png)
+
+<br>
+
+### Odpowiedź na pytania końcowe
+
+1. Czy opublikowany obraz może być pobrany z Rejestru i uruchomiony w Dockerze bez modyfikacji (acz potencjalnie z szeregiem wymaganych parametrów, jak obraz DIND)? Nie chcemy posyłać w świat czegoś, co działa tylko u nas!
+
+Opublikowany obraz Dockera może być pobrany z rejestru i uruchomiony na dowolnej maszynie z zainstalowanym Dockerem, bez konieczności jego modyfikacji, pod warunkiem że zawiera wszystkie niezbędne zależności i nie opiera się na elementach specyficznych dla środowiska lokalnego. Może jednak wymagać określonych parametrów uruchomienia, np. -it dla aplikacji konsolowych lub wolumenów w przypadku zapisu danych.
+
+<br>
+
+---
+
+<br>
+
+2. Czy dołączony do jenkinsowego przejścia artefakt, gdy pobrany, ma szansę zadziałać od razu na maszynie o oczekiwanej konfiguracji docelowej?
+
+Dołączony do Jenkinsa artefakt w postaci pakietu .deb, po pobraniu, może zostać zainstalowany i uruchomiony na każdej maszynie z systemem Debian lub Ubuntu, o ile spełnione są wymagania dotyczące zależności systemowych. W praktyce oznacza to, że użytkownik może zainstalować pakiet przy użyciu dpkg, a ewentualne brakujące biblioteki mogą zostać doinstalowane automatycznie za pomocą apt-get install -f.
