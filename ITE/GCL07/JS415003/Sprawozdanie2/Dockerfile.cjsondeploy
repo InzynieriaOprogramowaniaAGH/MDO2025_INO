@@ -1,0 +1,16 @@
+FROM fedora:42
+
+COPY --from=cjson-build /cjson-build/build/libcjson.so /usr/lib/
+COPY --from=cjson-build /cjson-build/cJSON.h /usr/include/
+
+RUN ldconfig
+
+COPY example.c /app/example.c
+WORKDIR /app
+
+RUN dnf install -y gcc && \
+    gcc -o example example.c -lcjson && \
+    dnf remove -y gcc && \
+    dnf clean all
+
+CMD ["./example"]

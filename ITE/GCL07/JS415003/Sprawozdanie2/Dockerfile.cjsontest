@@ -1,4 +1,4 @@
-FROM cjson-build
+FROM cjson-build:latest
 
 WORKDIR /cjson-build/build
 

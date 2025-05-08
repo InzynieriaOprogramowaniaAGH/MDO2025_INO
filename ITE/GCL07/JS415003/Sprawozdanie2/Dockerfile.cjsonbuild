@@ -13,5 +13,5 @@ WORKDIR /cjson-build
 RUN git clone https://github.com/DaveGamble/cJSON.git .
 
 RUN mkdir build && cd build && \
-    cmake -DENABLE_CJSON_TEST=On .. && \
+    cmake -DENABLE_CJSON_TEST=On -DBUILD_SHARED_AND_STATIC_LIBS=On .. && \
     make -j$(nproc)
