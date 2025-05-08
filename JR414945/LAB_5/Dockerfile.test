@@ -1,3 +1,9 @@
 FROM nodeapp_builder
-WORKDIR node-js-dummy-test
-CMD ["npm" , "test"]
+
+WORKDIR /app
+
+# Ustawiamy środowisko na testowe
+ENV NODE_ENV=test
+
+# Komenda uruchamiająca testy automatycznie
+CMD ["npm", "test"]
