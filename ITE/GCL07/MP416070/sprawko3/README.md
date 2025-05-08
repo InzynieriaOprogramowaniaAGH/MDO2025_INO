@@ -200,7 +200,7 @@ Zawartość plików prezentuje sie następująco :
         state: started
         detach: true
 
-
+```
 ```
 - name: Verify Docker container is running
   hosts: targets
