@@ -411,7 +411,7 @@ Dzięki opcji `reboot` w pliku odpowiedzi, system automatycznie się zrestartowa
 W kolejnym zadaniu plik odpowiedzi należało rozszerzyć o repozytoria i oprogramowanie potrzebne do uruchomienia programu, zbudowanego w ramach projektu `pipeline`.
 
 
-Z racji, że artefaktem z moje projektu był kontener opublikowany na DockerHub potrzebnym oprogramowaniem był Docker. W sekcji `%post` utworzyłem mechanizm umożliwiający pobranie i uruchomienie kontenera.
+Z racji, że artefaktem z mojego projektu był kontener opublikowany na DockerHub potrzebnym oprogramowaniem był Docker. W sekcji `%post` utworzyłem mechanizm umożliwiający pobranie i uruchomienie kontenera.
 
 Kompletny plik odpowiedzi uruchamiający na starcie kontener: [anaconda-ks-2.cfg](./Lab9/anaconda-ks-2.cfg):
 
