@@ -1,4 +1,4 @@
-FROM cjsonbld
+FROM cjson_bld_img
 
 WORKDIR /app/cJSON/build
 CMD ["make", "test"]
