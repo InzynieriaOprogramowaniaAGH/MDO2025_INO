@@ -48,6 +48,7 @@ docker ps
 ```sh
   docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
   ```
+![ss](haslo.png)
 Po uzyskaniu hasła pojawia się strona
 ![ss](wtyczki.png)
 Następnie tworzymy konto i możemy korzystać z Jankinsa
