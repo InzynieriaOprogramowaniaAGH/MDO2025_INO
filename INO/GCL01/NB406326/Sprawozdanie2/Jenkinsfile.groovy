@@ -10,21 +10,23 @@ pipeline {
         stage('Check Version') {
             steps {
                 script {
-                    // Zdefiniowanie URL do konkretnego tagu w Docker Hub API
-                    def tagUrl = "https://hub.docker.com/r/natbal/takenotepipline/tags/${params.VERSION}"
+                    def imageName = "natbal/takenotepipline"
+                    def tag = params.VERSION
+                    def url = "https://hub.docker.com/v2/repositories/${imageName}/tags/${tag}"
 
-                    // Wykonanie zapytania do Docker Hub API
-                    def httpResponseCode = sh(script: "curl -s -o /dev/null -w '%{http_code}' ${tagUrl}", returnStdout: true).trim()
+                    def httpResponseCode = sh(script: "curl -s -o /dev/null -w '%{http_code}' ${url}", returnStdout: true).trim()
 
-                    // Sprawdzenie, czy kod odpowiedzi to 404
-                    if (httpResponseCode == '404') {
-                        echo "Tag ${params.VERSION} does not exist. Proceeding with the pipeline."
+                    if (httpResponseCode == '200') {
+                        error "The version ${tag} already exists on Docker Hub. Please use a different version."
+                    } else if (httpResponseCode == '404') {
+                        echo "Tag ${tag} does not exist. Proceeding with the pipeline."
                     } else {
-                        error "The version ${params.VERSION} is already used. Please specify a different version."
+                        error "Unexpected response from Docker Hub: ${httpResponseCode}"
                     }
                 }
             }
         }
+
         stage('Build') {
             steps {
                 script {
