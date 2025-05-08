@@ -13,7 +13,9 @@ Niniejszy temat jest poświęcony przygotowaniu źródła instalacyjnego systemu
 
 🌵 Przeprowadź instalację nienadzorowaną systemu Fedora z pliku odpowiedzi z naszego repozytorium
 
-* Zainstaluj [system Fedora](https://download.fedoraproject.org/pub/fedora/linux/releases/), stosując instalator sieciowy (*netinst*)
+* Zainstaluj [system Fedora](https://download.fedoraproject.org/pub/fedora/linux/releases/)
+  * zastosuj instalator sieciowy (*Server Netinst*) lub
+  * zastosuj instalator wariantu *Everything* z wbudowanymi pakietami, przyjmujący plik odpowiedzi (dobra opcja dla osób z ograniczeniami transferu internetowego)
 * Pobierz plik odpowiedzi `/root/anaconda-ks.cfg`
 * Plik odpowiedzi może nie zawierać wzmianek na temat potrzebnych repozytoriów. Na przykład, dla systemu Fedora 38:
   * `url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-38&arch=x86_64`
