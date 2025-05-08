@@ -1,0 +1,4 @@
+- hosts: Endpoints
+  become: true
+  roles:
+    - deploy_redis

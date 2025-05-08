@@ -1,0 +1,10 @@
+Orchestrators:
+  hosts:
+    ubsrv:
+      ansible_user: febru
+      ansible_connection: local
+
+Endpoints:
+  hosts:
+    ansible-target:
+      ansible_user: ansible
