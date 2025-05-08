@@ -1,0 +1,6 @@
+#!/bin/bash
+MESSAGE=$(cat $1)
+if [[ ! $MESSAGE =~ ^DR416985 ]]; then
+  echo "ERROR: Commit message must zaczynać się od 'DR416985'"
+  exit 1
+fi
