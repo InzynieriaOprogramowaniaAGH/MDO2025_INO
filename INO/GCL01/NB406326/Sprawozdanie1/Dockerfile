@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.492.3-jdk17
+FROM jenkins/jenkins:2.504.1-jdk21
 USER root
 RUN apt-get update && apt-get install -y lsb-release ca-certificates curl && \
     install -m 0755 -d /etc/apt/keyrings && \
@@ -10,4 +10,4 @@ RUN apt-get update && apt-get install -y lsb-release ca-certificates curl && \
     apt-get update && apt-get install -y docker-ce-cli && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 USER jenkins
-RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
+RUN jenkins-plugin-cli --plugins "blueocean docker-workflow json-path-api"

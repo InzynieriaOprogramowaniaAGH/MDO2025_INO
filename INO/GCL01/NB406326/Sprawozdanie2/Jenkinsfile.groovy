@@ -52,7 +52,7 @@ pipeline {
                     def appImage = docker.build('takenote_deploy', '-f INO/GCL01/NB406326/Sprawozdanie2/deploy.Dockerfile .')
 
                     // Uruchomienie kontenera w tle o nazwie 'app'
-                    def container = appImage.run("-d -p 5000:5000 --network=deploy --name app")
+                    def container = appImage.run("-p 5000:5000 --network=deploy --name app")
 
                     // Sprawdzenie, czy aplikacja działa, wykonując żądanie HTTP
                     sh 'docker run --rm --network=deploy curlimages/curl:latest -L -v  http://app:5000'
