@@ -73,9 +73,9 @@ echo "Godzina parzysta"
 ```
 
 ![](resources/lab5/8.png)
-![](resources/lab5/7.png)
 #### godzina 11 jest nieparzysta więc zadanie zakończyło się niepowodzeniem
-
+![](resources/lab5/7.png)
+#### godzina 16 - powodzenie
 #### Wykonanie polecenia `docker pull ubuntu`
 ![](resources/lab5/9.png)
 
@@ -105,3 +105,6 @@ pipeline {
 
 Trwa pierwszy stage
 ![](resources/lab5/10.png)
+
+Testowy pipeline przeszedł. Pierwsze uruchomienie trwało długo ze względu na pobieranie dependencji z pliku ```Dockerfile.build```. Kolejne uruchomienia byłby znacznie szybsze.
+![](resources/lab5/11.png)
