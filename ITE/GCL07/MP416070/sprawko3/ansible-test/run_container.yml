@@ -1,0 +1,16 @@
+- name: Pull and run Docker container
+  hosts: targets
+  become: true
+  tasks:
+    - name: Pull Docker image
+      community.docker.docker_image:
+        name: bambusscooby/irssi-runtime
+        tag: "11"
+        source: pull
+
+    - name: Run container
+      community.docker.docker_container:
+        name: irssi-container
+        image: bambusscooby/irssi-runtime:11
+        state: started
+        detach: true

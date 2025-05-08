@@ -1,0 +1,12 @@
+- name: Verify Docker container is running
+  hosts: targets
+  become: true
+  tasks:
+    - name: Get container info
+      community.docker.docker_container_info:
+        name: irssi-container
+      register: container_info
+
+    - name: Debug container state
+      ansible.builtin.debug:
+        var: container_info.container.State

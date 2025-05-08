@@ -1,0 +1,31 @@
+- name: Install Docker on Fedora-based system
+  hosts: targets
+  become: true
+  tasks:
+    - name: Install required packages
+      ansible.builtin.dnf:
+        name:
+          - dnf-plugins-core
+          - device-mapper
+          - device-mapper-persistent-data
+          - lvm2
+        state: present
+
+    - name: Add Docker repo
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/fedora/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+
+    - name: Install Docker
+      ansible.builtin.dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: latest
+
+    - name: Enable and start Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true

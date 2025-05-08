@@ -1,0 +1,8 @@
+- name: Update packages on Fedora target
+  hosts: targets
+  become: true
+  tasks:
+    - name: Update all packages
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest

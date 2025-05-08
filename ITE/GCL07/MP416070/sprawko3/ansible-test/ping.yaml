@@ -1,0 +1,6 @@
+- name: Ping test on ansible-target
+  hosts: targets
+  gather_facts: no
+  tasks:
+    - name: Ping the machine
+      ansible.builtin.ping:

@@ -1,0 +1,13 @@
+- name: Stop and remove Docker container
+  hosts: targets
+  become: true
+  tasks:
+    - name: Stop container
+      community.docker.docker_container:
+        name: irssi-container
+        state: stopped
+
+    - name: Remove container
+      community.docker.docker_container:
+        name: irssi-container
+        state: absent
