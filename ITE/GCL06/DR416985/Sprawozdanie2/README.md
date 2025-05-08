@@ -313,12 +313,12 @@ CMD ["npm", "start"]
 
 Uruchomienie Pipeline przy użyciu SCM
 
-![ss1](pip1.png)
+![ss1](pip.png)
 ![ss1](pip2.png)
 
 Aby uruchomić pipeline za pomocą SCM należy stworzyć Jenkinsfile na maszynie, następnie na Jenkinsie stworzyć nowy projekt i wybrać Pipeline a potem Pipeline script from SCM
 
-Niestety nie posiadam screenów na działanie tego ostatniego pipline. Nie wiem czy Pan pamięta ale zgłosiłem się kiedyś do Pana że każdo razowo po zamknięciu Jenkinsa przy nastepnym uruchumieniu działa ona potwornie wolno
-Jakoś udało mi śie rozwiazac wtedy ten problem jednak dziś przy odapleniu jenkinsa było to samo dosłownie po zalogowaniu czekałem koło 10min potem cokowliek kliknąc to jest kolejne 5 więc prędzej rzuciłbym komputerem o scianę niż porobił te ss. Stwierdziłem że postawie Jenkinsa od nowa ale tu też pojawiły się problemy że wyszedł jakiś nowy Jenkins i są jakies problemy z pluginami. Wyjeżdzam jutro rano na Akademickie Mistrzostwa Polski więc nie mam aktualnie ani chęci ani czasu się z tym bawić. Jeśli to sprawozdanie wystarczy na 3.0 to będe więcej niż szczęsliwy jeśli nie prosiłbym o wiadomość zwrotną to postaram się znaleść cczas w przyszłym tygodniu żeby to zrobić porządniej.
+Niestety brakuje tu wielu screenów czego jestem świadomy. Nie wiem czy Pan pamięta ale zgłosiłem się kiedyś do Pana że każdo razowo po zamknięciu Jenkinsa przy nastepnym uruchumieniu działa ona potwornie wolno
+Jakoś udało mi się rozwiazac wtedy ten problem jednak dziś przy odapleniu jenkinsa było to samo dosłownie po zalogowaniu czekałem koło 10min potem cokowliek kliknąc to jest kolejne 5 więc prędzej rzuciłbym komputerem o scianę niż porobił te ss. Stwierdziłem że postawie Jenkinsa od nowa ale tu też pojawiły się problemy że wyszedł jakiś nowy Jenkins i są jakies problemy z pluginami. Wyjeżdzam jutro rano na Akademickie Mistrzostwa Polski więc nie mam aktualnie ani chęci ani czasu się z tym bawić. Jeśli to sprawozdanie wystarczy na 3.0 to będe więcej niż szczęsliwy jeśli nie prosiłbym o wiadomość zwrotną to postaram się znaleść cczas w przyszłym tygodniu żeby to zrobić porządniej. Pozdrawiam
 
 
