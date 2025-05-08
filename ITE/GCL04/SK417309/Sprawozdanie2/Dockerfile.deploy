@@ -1,12 +1,7 @@
-ARG BUILD_TAG
-
-FROM skwasny/myapp:builder-${BUILD_TAG} AS builder
-
-FROM eclipse-temurin:17-jre-jammy
+FROM eclipse-temurin:21-jdk-alpine
 
 WORKDIR /app
 
-COPY --from=builder /workspace/target/*.jar app.jar
+COPY --from=builder /app/target/*.jar app.jar
 
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["sh", "-c", "java -jar app.jar & sleep 10 && curl -f http://localhost:8081/actuator/health || exit 1"]

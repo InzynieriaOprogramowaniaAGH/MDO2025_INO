@@ -1,7 +1,5 @@
-ARG BUILD_TAG
+FROM builder AS tester
 
-FROM skwasny/myapp:builder-${BUILD_TAG} AS tester
-
-WORKDIR /workspace
+WORKDIR /app
 
 RUN mvn test -B

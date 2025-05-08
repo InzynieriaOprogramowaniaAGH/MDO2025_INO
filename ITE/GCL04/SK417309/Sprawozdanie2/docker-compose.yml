@@ -1,38 +1,14 @@
 services:
-  mydb:
+  mysql:
     image: mysql:8.0
+    container_name: mysql
     environment:
-      MYSQL_DATABASE: teacher_management
       MYSQL_ROOT_PASSWORD: root
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
-      interval: 5s
-      timeout: 2s
-      retries: 10
-    networks:
-      - appnet
+      MYSQL_DATABASE: exam_seating_arrangement
     ports:
       - "3306:3306"
-
-  myapp:
-    build:
-      context: .
-      dockerfile: Dockerfile.deploy
-      args:
-        BUILD_TAG: ${BUILD_TAG}
-    image: ${IMAGE_NAME}:prod-${BUILD_TAG}
-    depends_on:
-      mydb:
-        condition: service_healthy
-    environment:
-      SERVER_PORT: 8080
-      SPRING_DATASOURCE_URL: jdbc:mysql://mydb:3306/teacher_management
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-    networks:
-      - appnet
-    ports:
-      - "8080:8080"
-
-networks:
-  appnet:
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
