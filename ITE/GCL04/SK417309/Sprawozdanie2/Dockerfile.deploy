@@ -1,7 +1,16 @@
-FROM eclipse-temurin:21-jdk-alpine
+FROM eclipse-temurin:17-jre-alpine
+
+RUN apk add --no-cache curl
 
 WORKDIR /app
 
-COPY --from=builder /app/target/*.jar app.jar
+COPY app.jar /app/app.jar
 
-ENTRYPOINT ["sh", "-c", "java -jar app.jar & sleep 10 && curl -f http://localhost:8081/actuator/health || exit 1"]
+EXPOSE 8081
+
+CMD ["java", "-jar", "/app/app.jar"]
+
+COPY health-check.sh /app/health-check.sh
+RUN chmod +x /app/health-check.sh
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 CMD /app/health-check.sh

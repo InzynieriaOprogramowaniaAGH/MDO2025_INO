@@ -1,5 +1,9 @@
-FROM builder AS tester
+FROM eclipse-temurin:17-jdk AS test
+
+RUN apt-get update && apt-get install -y git curl
 
 WORKDIR /app
 
-RUN mvn test -B
+RUN git clone https://github.com/sauer515/exam-seat-arrangement.git .
+
+CMD ["./mvnw", "test"]
