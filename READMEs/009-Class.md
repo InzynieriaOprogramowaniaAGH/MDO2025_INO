@@ -24,7 +24,7 @@ Niniejszy temat jest poświęcony przygotowaniu źródła instalacyjnego systemu
   * W przypadku kontenera, jest to po prostu Docker.
     * Utwórz w sekcji `%post` mechanizm umożliwiający pobranie i uruchomienie kontenera
     * Jeżeli efektem pracy pipeline'u nie był kontener, a aplikacja samodzielna - zainstaluj ją
-    * Pamiętaj, że **Docker zadziała dopiero na uruchomionym systemie!** - nie da się wdać z interakcji z Dockerem z poziomu instalatora systemu: polecenia `docker run` nie powiodą się na tym etapie. Nie zadziała też `systemctl start` (ale `systemctl enable` już tak)
+    * Pamiętaj, że **Docker zadziała dopiero na uruchomionym systemie!** - nie da się wdać w interakcję z Dockerem z poziomu instalatora systemu: polecenia `docker run` nie powiodą się na tym etapie. Nie zadziała też `systemctl start` (ale `systemctl enable` już tak)
   * Gdy program pracuje poza kontenerem, potrzebny jest cały łańcuch dependencji oraz sam program.
     * Użyj sekcji `%post`, by pobrać z Jenkinsa zbudowany artefakt
     * Rozważ stworzenie repozytorium ze swoim programem i dodanie go dyrektywą `repo` oraz zainstalowanie pakietu sekcją `%packages`
