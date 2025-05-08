@@ -1,0 +1,1 @@
+![alt text](installed_fedora.png)
