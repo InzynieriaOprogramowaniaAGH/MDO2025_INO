@@ -108,3 +108,159 @@ Trwa pierwszy stage
 
 Testowy pipeline przeszedł. Pierwsze uruchomienie trwało długo ze względu na pobieranie dependencji z pliku ```Dockerfile.build```. Kolejne uruchomienia byłby znacznie szybsze.
 ![](resources/lab5/11.png)
+#### [Logi z konsoli pipeline'u](log/pierwsze_logi.txt)
+
+
+### Testy w pipeline
+Teraz oprócz Dockerfile.build, będzie trzeba skorzystać z Dockerfile.test, wcześniej utworzonego.
+
+
+```sh
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') { 
+            steps {
+                git branch: 'KB415987', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir ("INO/GCL01/KB415987/Sprawozdanie2/resources")
+                {
+                    script {
+                        docker.build('cjson_bld_img', '-f Dockerfile.build .')
+                    }
+                }
+            }
+        }
+
+        stage('Test_Build') {
+            steps {
+                dir ("INO/GCL01/KB415987/Sprawozdanie2/resources")
+                {
+                    script {
+                        docker.build('cjsontest', '-f Dockerfile.cjsontest .')
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir ("INO/GCL01/KB415987/Sprawozdanie2")
+                {
+                    sh "mkdir -p artifacts"
+
+                    sh """
+                        docker run --rm cjsontest | tee artifacts/test_log.log
+                    """
+                }    
+            }
+        }
+
+        stage('Log_Publish') {
+            steps {
+                archiveArtifacts artifacts: 'INO/GCL01/KB415987/Sprawozdanie2/artifacts/test_log.log', fingerprint: true
+            }
+        }
+    }
+}
+```
+![](resources/lab5/12.png)
+![](resources/lab5/13.png)
+
+
+#### [Logi z konsoli pipeline'u](log/drugie_logi.txt)
+
+
+### Jenkinsfile
+
+```sh
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') { 
+            steps {
+                git branch: 'KB415987', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Clear Docker cache') {
+            steps {
+                sh 'docker builder prune -af'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir ("INO/GCL01/KB415987/Sprawozdanie2/jenkinsfile")
+                {
+                    script {
+                        docker.build('cjson_bld_img', '-f Dockerfile.build .')
+
+                        sh '''
+                            mkdir -p artifacts
+                            CID=$(docker create cjson_bld_img)
+                            docker cp $CID:/app/cjson.rpm artifacts/
+                            docker rm $CID
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir ("INO/GCL01/KB415987/Sprawozdanie2/jenkinsfile")
+                {
+                    script {
+                        docker.build('cjsontest', '-f Dockerfile.test .')
+
+                        sh """
+                            docker run --rm cjsontest | tee artifacts/test_log.log
+                        """
+                    }
+
+                }    
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir ("INO/GCL01/KB415987/Sprawozdanie2/jenkinsfile")
+                {
+                    script {
+                        sh 'cp artifacts/cjson.rpm .'              
+                        docker.build("cjson_deploy", "-f Dockerfile.deploy .")
+
+                        sh """
+                            docker run --rm cjson_deploy | tee artifacts/deploy_log.log
+                        """
+                    }      
+                }
+                
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                archiveArtifacts artifacts: 'INO/GCL01/KB415987/Sprawozdanie2/jenkinsfile/artifacts/*.log', fingerprint: true
+                archiveArtifacts artifacts: 'INO/GCL01/KB415987/Sprawozdanie2/jenkinsfile/artifacts/*.rpm', fingerprint: true
+            }
+        }
+    }
+}
+```
+![](resources/lab5/14.png)
+#### [Logi z konsoli pipeline'u](log/trzecie_logi.txt)
+
+
+
+nastepnie skopiowalem cjson.rpm
+![](resources/lab5/15.png)
+oraz sprawdziłem działanie bibloteki.
+![](resources/lab5/16.png)
