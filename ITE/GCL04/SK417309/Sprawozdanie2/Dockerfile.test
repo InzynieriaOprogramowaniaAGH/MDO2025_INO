@@ -6,4 +6,4 @@ WORKDIR /app
 
 RUN git clone https://github.com/sauer515/exam-seat-arrangement.git .
 
-CMD ["./mvnw", "test"]
+CMD ["mvn", "test"]
