@@ -411,7 +411,7 @@ Dzięki opcji `reboot` w pliku odpowiedzi, system automatycznie się zrestartowa
 W kolejnym zadaniu plik odpowiedzi należało rozszerzyć o repozytoria i oprogramowanie potrzebne do uruchomienia programu, zbudowanego w ramach projektu `pipeline`.
 
 
-Z racji, że artefaktem z mojego projektu był kontener opublikowany na DockerHub potrzebnym oprogramowaniem był Docker. W sekcji `%post` utworzyłem mechanizm umożliwiający pobranie i uruchomienie kontenera.
+Z racji, że artefaktem z mojego projektu był kontener opublikowany na DockerHub, potrzebnym oprogramowaniem był Docker. W sekcji `%post` utworzyłem mechanizm umożliwiający pobranie i uruchomienie kontenera.
 
 Kompletny plik odpowiedzi uruchamiający na starcie kontener: [anaconda-ks-2.cfg](./Lab9/anaconda-ks-2.cfg):
 
@@ -489,9 +489,8 @@ systemctl enable redis-container.service
 reboot
 ```
 
-Całość instalacji systemu przebiegła identycznie jak poprzednio - jedyna różnica to zmiana linku do rozszerzonego pliku odpowiedzi. 
+Całość instalacji systemu przebiegła identycznie jak poprzednio - jedyna różnica to zmiana linku na link do rozszerzonego pliku odpowiedzi. 
 
-
-Po uruchomieniu systemu możemy zauważyć działający kontener, z którym możemy wchodzić w interakcję.
+Po uruchomieniu systemu widzimy działający kontener, z którym możemy wchodzić w interakcję.
 ![ss](./Lab9/screenshots/ss7.png)
 ![ss](./Lab9/screenshots/ss8.png)
