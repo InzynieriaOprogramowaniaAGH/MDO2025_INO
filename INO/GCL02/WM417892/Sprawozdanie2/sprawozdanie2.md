@@ -134,13 +134,16 @@ stage('Build Docker image') {
 
 **Zrzuty ekranu:**
 - Lista plików i logi:
+  
   ![1 13_1](https://github.com/user-attachments/assets/5fa8fb2a-e977-4404-9fda-6d478b69abeb)
   ![1 13_2](https://github.com/user-attachments/assets/fc5236f5-7972-4be1-8822-ec36501dfee4)
 
 - Logi Jenkinsa z budowy:
+  
   ![1 13_3](https://github.com/user-attachments/assets/02227524-66b2-4fcd-a858-08639fcd1db4)
 
 - Widok graficzny zakończonego pipeline:
+  
   ![1 13_4](https://github.com/user-attachments/assets/4e4ab1c6-c5b6-4fdf-b466-bd4f6c994ecc)
 
 ---
@@ -169,10 +172,12 @@ docker build -t cj-test -f Dockerfile.test .
 docker run --rm cj-test
 
 **Zrzuty ekranu:**
-- Budowanie i uruchamianie: 
+- Budowanie i uruchamianie:
+  
   ![1 14](https://github.com/user-attachments/assets/4dbac6c5-9ab4-4ac3-993e-641bb5fb9763)
 
 - Wynik testu: `
+  
   ![image](https://github.com/user-attachments/assets/ed5fcdf5-811b-4985-9876-e72917a82f6c)
 
 
