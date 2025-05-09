@@ -1,0 +1,5 @@
+FROM cjson_bld_img
+
+WORKDIR /app/build
+
+CMD ["ctest", "--output-on-failure"]
