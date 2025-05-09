@@ -7,6 +7,8 @@
 
 ---
 
+## Ansible
+
 ### 1. Instalacja zarządcy Ansible
 
 #### Przygotowanie `ansible-target`
@@ -329,3 +331,65 @@ asnible-playbook -i inventory.ini playbook-cjson.yaml
 ![Uruchomienie playbooka cjson](zrzuty8/zrzut_ekranu11.png)
 
 > [Pełne logi z wykonania znajdują się tutaj](ansible_quickstart/playbook-cjson.log)
+
+## Kickstart
+
+### Instalacja systemu fedora 41
+
+DO wykonania tego zadanie nie musiałem instalować fedory od nowa ponieważ korzystem z niej jako na hosta od początku przemiotu
+
+#### Przygotowanie pliku `anaconda-ks.cfg`
+
+Będąc na koncie administratora przeniosłem plik odpowiedzi `/root/anaconda-ks.cfg` do folderu `Sprawozdanie3` aby był dostępny poprzez wykorzystanie githuba. 
+
+Następnie dodałem do niego informacje o potrzebnych repozytoriach:
+- `url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64`
+- `repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64`
+
+Tak przygotowany plik wypchnąłem na githuba.
+
+#### Instalacja feodry z kickstarta
+
+Z racji korzystania VM VirtualBoxa postanowiłem skrócić adres https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/AB416965/INO/GCL01/AB416965/Sprawozdanie3/anaconda-ks.cfg na https://tinyurl.com/aborek wykorzystując tinyurl.
+
+> VM VirtualBox nie pozwala na etapie instalowania systemu na wklejanie/korzystanie ze schowka klienta.
+
+Mając przygotowany link przeszedłem do utworzenia nowej maszyny wirtualnej, podczas wyboru typu instalacji kliknąłem `e` aby przejśc do wiersza poleceń i wpisywania dodatkowych parametrów instalacji.
+
+W nim wpisałem `inst.ks=https://tinyurl.com/aborek` który wstazuje na plik `kickstart`.
+
+![Dodatkowe parametry](zrzuty9/zrzut_ekranu1.png)
+
+Instalacja przeszła dalej do interfejsu graficznego w którym oryginalnie można było zmienić konfigurację np. dodać użytkowników.
+
+Teraz większość pól była nieaktywna, trzeba było chwilę poczekać.
+
+![Ekran wyboru](zrzuty9/zrzut_ekranu2.png)
+
+Po chwili rozpoczęła się właściwa instalacja
+
+![Ekran wyboru](zrzuty9/zrzut_ekranu3.png)
+
+Instalacja przebiegła pomyślnie, należało teraz uruchomić system ponownie.
+
+Narazie `reboot` nie następuje automatycznie.
+
+![Po instalacji](zrzuty9/zrzut_ekranu4.png)
+
+Po restarcie spróbowałem się zalogować, użytkownik i jego hasło było takie jak na oryginalnej fedorze czyli instalacja przeszedła poprawnie.
+
+![Gotowy system](zrzuty9/zrzut_ekranu5.png)
+
+#### Rozszerzenie pliku odpowiedzi o kolejne pola
+
+Dodałem opcję `reboot` do `anaconda-ks.cfg` oraz `network --hostname=fedora.test` w celu ustawienia nazwy hosta.
+
+Aby nie musieć tworzyć nowej maszyny za każdym razem albo czyścić dysku ręcznie dodałem również opcję `clearpart --all --initlabel`, która czyści partycję. Następuje następnie automatyczne partycjonowanie `autopart`
+
+Gotowy zmodyfikowany plik ponownie wypchnąłem na githuba.
+
+Tak jak wcześniej przeszedłem przez instalację, tym razem restart nastąpił automatycznie.
+
+Po zaloowaniu się na konto sprawdziłem nazwę hosta poleceniem `hostname`, nazwa zostałą poprawnie ustawiona na `fedora.test`.
+
+![Ustawiona nazwa hosta](zrzuty9/zrzut_ekranu6.png)
