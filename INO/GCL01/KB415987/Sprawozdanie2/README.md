@@ -80,6 +80,10 @@ echo "Godzina parzysta"
 ![](resources/lab5/9.png)
 
 ### Zadanie: obiekt typu pipeline
+#### Co to właściwie jest pipeline?
+#### **Pipeline** to ciąg kroków, etapów, które umożliwią CI/CD. Może się on składać z etapów pobierania, budowania, testowania oraz instalacji.
+
+Przykładowy krótki pipeline, który klonuje repozytorium przedmiotowe z brancha ```KB415987``` oraz buduje obraz *cjson'a* dla Dockera.
 ```sh
 pipeline {
     agent any
@@ -103,15 +107,16 @@ pipeline {
 }
 ```
 
-Trwa pierwszy stage
+#### Trwa pierwszy stage...
 ![](resources/lab5/10.png)
 
 Testowy pipeline przeszedł. Pierwsze uruchomienie trwało długo ze względu na pobieranie dependencji z pliku ```Dockerfile.build```. Kolejne uruchomienia byłby znacznie szybsze.
+
 ![](resources/lab5/11.png)
 #### [Logi z konsoli pipeline'u](log/pierwsze_logi.txt)
 
 
-### Testy w pipeline
+### Pipeline: build -> test
 Teraz oprócz Dockerfile.build, będzie trzeba skorzystać z Dockerfile.test, wcześniej utworzonego.
 
 
@@ -258,9 +263,34 @@ pipeline {
 ![](resources/lab5/14.png)
 #### [Logi z konsoli pipeline'u](log/trzecie_logi.txt)
 
+### Krótki opis kolejnych kroków:
+
+**Clone** - klonowanie repozytorium przedmiotowego z mojej gałęzi ```KB415987```
+
+**Clear docker cache** - usuwanie cache, czyli pamięć podręczną, Docker Builder.
+
+**Build** - budowanie obrazu aplikacji i utworzenie pliku ```.rpm```
+
+**Test** - testowanie, wraz z logowaniem tych testów
+
+**Deploy** - budowanie obrazu do deploymentu oraz logowanie
+
+**Publish** - zapisanie artefaktów ```.rpm``` i ```.log```
+
+### Diagram UML przedstawiający kolejne etapy pipeline'u:
+
+![](resources/lab5/diagram.png)
 
 
-nastepnie skopiowalem cjson.rpm
+
+### Po udanym przejściu pipeline'u nastepnie skopiowalem cjson.rpm
 ![](resources/lab5/15.png)
-oraz sprawdziłem działanie bibloteki.
+
+### oraz sprawdziłem działanie.
 ![](resources/lab5/16.png)
+
+No i mamy sukces.
+
+
+### Wykorzystanie narzędzi LLM:
+#### Przy pracy nad sprawozdaniem zdarzyło się używać ChatGPT. Pozwoliło to na sprawniejszą pracę z Jenskinsem, otrzymywanie sugestii dotyczących struktury pipeline'ów oraz w celu analizy błędów. Wygenerowane odpowiedzi pozwalały przyspieszyć proces szukania informacji oraz wyznaczały ogólny kierunek przy szukaniu rozwiązań problemów.
