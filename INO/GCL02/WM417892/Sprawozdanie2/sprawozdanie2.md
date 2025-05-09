@@ -85,7 +85,98 @@ Po odpaleniu kontenera Jenkins poprosił o wpisanie hasła z pliku `secrets/init
 ![1 9](https://github.com/user-attachments/assets/c2fc4418-8792-4dd6-baf3-9ad30af0b09b)
 
 
+---
 
+## Zadanie wstępne: obiekt typu pipeline
+
+W ramach tego etapu stworzony został pipeline typu declarative wpisany bezpośrednio w interfejsie Jenkins (bez SCM). Pipeline składa się z trzech głównych etapów: sklonowania repozytorium, zbudowania obrazu Dockera oraz potwierdzenia sukcesu.
+
+---
+
+### 1. Etap: Clone repo
+
+Pierwszym krokiem było sklonowanie repozytorium projektu MDO2025_INO z gałęzi prywatnej WM417892.
+
+**Kod etapu:**
+
+stage('Clone repo') {
+    steps {
+        git branch: 'WM417892', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+    }
+}
+
+**Zrzut ekranu:**  
+![1 12](https://github.com/user-attachments/assets/0e8510a8-32ea-490f-8ba5-fb8838680a78)
 
 
 ---
+
+### 2. Etap: Build Docker image
+
+W tym etapie nastąpiło przejście do katalogu zawierającego plik Dockerfile oraz budowa obrazu z wykorzystaniem polecenia `docker build` przez połączenie TCP z demonem Dockera.
+
+**Kod etapu:**
+
+stage('Build Docker image') {
+    steps {
+        dir('INO/GCL02/WM417892/Sprawozdanie1/moj-obraz') {
+            sh '''
+                echo Listing files:
+                ls -la
+
+                echo Building image...
+                env -u DOCKER_TLS_VERIFY -u DOCKER_CERT_PATH docker -H tcp://docker:2375 build -t wojtek-builder -f Dockerfile .
+            '''
+        }
+    }
+}
+
+**Zrzuty ekranu:**
+- Lista plików i logi:
+  ![1 13_1](https://github.com/user-attachments/assets/5fa8fb2a-e977-4404-9fda-6d478b69abeb)
+  ![1 13_2](https://github.com/user-attachments/assets/fc5236f5-7972-4be1-8822-ec36501dfee4)
+
+- Logi Jenkinsa z budowy:
+  ![1 13_3](https://github.com/user-attachments/assets/02227524-66b2-4fcd-a858-08639fcd1db4)
+
+- Widok graficzny zakończonego pipeline:
+  ![1 13_4](https://github.com/user-attachments/assets/4e4ab1c6-c5b6-4fdf-b466-bd4f6c994ecc)
+
+---
+
+### 3. Etap: Print success
+
+Pipeline kończy się wypisaniem komunikatu o poprawnym zakończeniu budowy obrazu.
+
+**Kod etapu:**
+
+stage('Print success') {
+    steps {
+        echo "Pipeline zakończony sukcesem. Obraz został zbudowany."
+    }
+}
+
+---
+
+### Dodatkowa walidacja - test Dockera
+
+Po zbudowaniu obrazu przetestowano jego działanie lokalnie przy użyciu pliku `Dockerfile.test`, a następnie uruchomiono kontener i test jednostkowy w pytest.
+
+**Komendy użyte lokalnie:**
+
+docker build -t cj-test -f Dockerfile.test .  
+docker run --rm cj-test
+
+**Zrzuty ekranu:**
+- Budowanie i uruchamianie: 
+  ![1 14](https://github.com/user-attachments/assets/4dbac6c5-9ab4-4ac3-993e-641bb5fb9763)
+
+- Wynik testu: `
+  ![image](https://github.com/user-attachments/assets/ed5fcdf5-811b-4985-9876-e72917a82f6c)
+
+
+---
+
+### Wnioski
+
+Cały pipeline zakończył się sukcesem. Repozytorium zostało poprawnie sklonowane z prywatnej gałęzi, obraz Dockera został zbudowany, a testy potwierdziły jego poprawność. Jenkins wykonał cały proces bez błędów, co zostało potwierdzone zarówno logami tekstowymi, jak i widokiem graficznym przebiegu.
