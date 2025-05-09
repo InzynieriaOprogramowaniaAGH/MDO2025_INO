@@ -98,13 +98,13 @@ W ramach tego etapu stworzony został pipeline typu declarative wpisany bezpośr
 Pierwszym krokiem było sklonowanie repozytorium projektu MDO2025_INO z gałęzi prywatnej WM417892.
 
 **Kod etapu:**
-
+```
 stage('Clone repo') {
     steps {
         git branch: 'WM417892', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
     }
 }
-
+```
 **Zrzut ekranu:**  
 ![1 12](https://github.com/user-attachments/assets/0e8510a8-32ea-490f-8ba5-fb8838680a78)
 
@@ -116,12 +116,12 @@ stage('Clone repo') {
 W tym etapie nastąpiło przejście do katalogu zawierającego plik Dockerfile oraz budowa obrazu z wykorzystaniem polecenia `docker build` przez połączenie TCP z demonem Dockera.
 
 **Kod etapu:**
-
+```
 stage('Build Docker image') {
     steps {
         dir('INO/GCL02/WM417892/Sprawozdanie1/moj-obraz') {
             sh '''
-                echo Listing files:
+                echo Listing files: 
                 ls -la
 
                 echo Building image...
@@ -130,6 +130,7 @@ stage('Build Docker image') {
         }
     }
 }
+```
 
 **Zrzuty ekranu:**
 - Lista plików i logi:
@@ -149,13 +150,13 @@ stage('Build Docker image') {
 Pipeline kończy się wypisaniem komunikatu o poprawnym zakończeniu budowy obrazu.
 
 **Kod etapu:**
-
+```
 stage('Print success') {
     steps {
         echo "Pipeline zakończony sukcesem. Obraz został zbudowany."
     }
 }
-
+```
 ---
 
 ### Dodatkowa walidacja - test Dockera
