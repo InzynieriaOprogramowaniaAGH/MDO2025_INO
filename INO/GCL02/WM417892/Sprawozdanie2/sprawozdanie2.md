@@ -186,3 +186,47 @@ docker run --rm cj-test
 ### Wnioski
 
 Cały pipeline zakończył się sukcesem. Repozytorium zostało poprawnie sklonowane z prywatnej gałęzi, obraz Dockera został zbudowany, a testy potwierdziły jego poprawność. Jenkins wykonał cały proces bez błędów, co zostało potwierdzone zarówno logami tekstowymi, jak i widokiem graficznym przebiegu.
+
+
+# Sprawozdanie – Pipeline i proces CI/CD
+
+## Wybrany projekt
+
+W ramach realizacji zadania zdecydowałem się na wykorzystanie projektu **Full Stack FastAPI PostgreSQL**, dostępnego publicznie pod adresem:
+
+[https://github.com/tiangolo/full-stack-fastapi-postgresql](https://github.com/tiangolo/full-stack-fastapi-postgresql)
+
+Projekt ten udostępnia kompletną aplikację webową REST API stworzoną przy użyciu frameworka **FastAPI**, obsługuje bazę danych **PostgreSQL**, a także zawiera system testów jednostkowych napisanych w **Pytest**. Co ważne, projekt oparty jest na środowisku kontenerowym Docker i umożliwia prostą integrację z systemami CI/CD.
+
+---
+
+## Uzasadnienie wyboru
+
+Projekt spełnia wszystkie wymagania stawiane przez instrukcję:
+- Posiada Dockerfile do budowania aplikacji oraz środowisko testowe,
+- Zawiera testy automatyczne, które można uruchamiać w pipeline’ie,
+- Umożliwia zdefiniowanie osobnych kontenerów typu **Builder** i **Tester**,
+- Umożliwia wdrożenie gotowego obrazu jako aplikacji działającej w środowisku runtime (kontener produkcyjny),
+- Jest wystarczająco złożony, by wykazać pełny proces CI/CD, ale na tyle przejrzysty, by skutecznie wdrożyć wymagane etapy w Jenkinsie.
+
+---
+
+## Koncepcja działania pipeline’u
+
+Pipeline zostanie zdefiniowany w pliku **`Jenkinsfile`**, który będzie umieszczony w sforkowanym repozytorium projektu. Proces będzie obejmować następujące etapy:
+
+1. **Collect** – sklonowanie repozytorium oraz checkout do właściwej gałęzi.
+2. **Build** – budowa obrazu Docker na podstawie `Dockerfile`, przy użyciu kontenera typu **Builder**.
+3. **Test** – uruchomienie testów zdefiniowanych w `pytest`, przy użyciu kontenera typu **Tester**; logi zostaną zapisane jako artefakty.
+4. **Deploy** – uruchomienie gotowego obrazu aplikacji w kontenerze runtime, test dostępności aplikacji przez wywołanie endpointu.
+5. **Publish** – opcjonalne zapisanie gotowego obrazu lub paczki `.zip` jako artefaktu do pobrania, ewentualnie wysłanie do rejestru (lokalnego lub zewnętrznego).
+
+---
+
+## Cel
+
+Celem sprawozdania jest nie tylko uruchomienie pipeline’u, ale także jego dokumentacja w postaci diagramów UML oraz analiza zastosowanego podejścia, w tym różnic między środowiskiem buildowym i runtime’owym. W kolejnych sekcjach zostaną zaprezentowane:
+- wymagania środowiskowe,
+- diagram aktywności (etapy CI),
+- diagram wdrożeniowy (relacje między komponentami),
+- szczegóły pliku Jenkinsfile i funkcjonalnych różnic między podejściami.
