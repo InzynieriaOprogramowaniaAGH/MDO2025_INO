@@ -25,6 +25,7 @@ Niniejszy temat jest poświęcony przygotowaniu źródła instalacyjnego systemu
   * Ustaw *hostname* inny niż domyślny `localhost`
 * Użyj pliku odpowiedzi do przeprowadzenia [instalacji nienadzorowanej](https://docs.fedoraproject.org/en-US/fedora/f36/install-guide/advanced/Kickstart_Installations/)
   * 🌵 Uruchom nową maszynę wirtualną z płyty ISO i wskaż instalatorowi przygotowany plik odpowiedzi stosowną dyrektywą
+---
 * Rozszerz plik odpowiedzi o repozytoria i oprogramowanie potrzebne do uruchomienia programu, zbudowanego w ramach projektu - naszego *pipeline'u*. 
   * W przypadku kontenera, jest to po prostu Docker.
     * Utwórz w sekcji `%post` mechanizm umożliwiający pobranie i uruchomienie kontenera
