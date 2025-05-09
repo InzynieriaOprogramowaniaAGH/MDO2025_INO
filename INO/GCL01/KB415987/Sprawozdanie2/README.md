@@ -110,7 +110,7 @@ pipeline {
 #### Trwa pierwszy stage...
 ![](resources/lab5/10.png)
 
-Testowy pipeline przeszedł. Pierwsze uruchomienie trwało długo ze względu na pobieranie dependencji z pliku ```Dockerfile.build```. Kolejne uruchomienia byłby znacznie szybsze.
+Testowy pipeline przeszedł. Pierwsze uruchomienie trwało długo ze względu na pobieranie dependencji z pliku ```Dockerfile.build```. Kolejne uruchomienia były znacznie szybsze.
 
 ![](resources/lab5/11.png)
 #### [Logi z konsoli pipeline'u](log/pierwsze_logi.txt)
@@ -174,14 +174,17 @@ pipeline {
     }
 }
 ```
+### Pipeline przeszedł. Etap `Log_Publish` miał za zadanie zapisać artefakt, plik `.log` który zawiera informacje na temat etapu testowania.
 ![](resources/lab5/12.png)
 ![](resources/lab5/13.png)
 
 
-#### [Logi z konsoli pipeline'u](log/drugie_logi.txt)
+#### [Logi z etapu testowego](log/drugie_logi.txt)
 
 
-### Jenkinsfile
+### Kompletny pipeline - Jenkinsfile
+#### W tym przypadku kolejne etapy jakie należy dodać to `deploy` i `publish`. W tym ostatnim etapie zapisywany jest artefakt `cjson.rpm` oraz logi z etapów testowania i deploymentu.
+
 
 ```sh
 pipeline {
@@ -260,8 +263,9 @@ pipeline {
     }
 }
 ```
+
 ![](resources/lab5/14.png)
-#### [Logi z konsoli pipeline'u](log/trzecie_logi.txt)
+#### [Logi z etapu deploy](log/trzecie_logi.txt)
 
 ### Krótki opis kolejnych kroków:
 
