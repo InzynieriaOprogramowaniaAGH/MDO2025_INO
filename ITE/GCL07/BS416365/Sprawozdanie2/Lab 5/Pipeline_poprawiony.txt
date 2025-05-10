@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Zadanie') {
+            steps {
+                echo 'Czyszczenie i klonowanie repozytorium przedmiotowego'
+                sh '''
+                    rm -rf MDO2025_INO
+                    git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+                '''
+                dir('MDO2025_INO') {
+                    sh '''
+                        git checkout BS416365
+                    '''
+                }
+                dir('MDO2025_INO/ITE/GCL07/BS416365/curl') {
+                    sh '''
+                        echo "Czyszczenie dockerowych śmieci"
+                        docker container prune -f
+                        docker builder prune -f
+                        docker image prune -f
+
+                        echo "Budowanie obrazu curl-build"
+                        docker build -f ./Dockerfile.curlbld -t curl-build .
+
+                        echo "Testowanie wersji curl wewnątrz kontenera"
+                        docker run --rm curl-build bash -c "curl --version"
+                    '''
+                }
+            }
+        }
+    }
+}

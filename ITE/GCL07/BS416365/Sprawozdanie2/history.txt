@@ -1,0 +1,437 @@
+    1  eval "$(ssh-agent -s)"
+    2  ssh-add ~/.ssh/id_ed25519
+    3  cat ~/.ssh/id_ed25519.pub
+    4  ssh-keygen -t ecdsa -b 521 -C bskubel@student.agh.edu.pl
+    5  eval "$(ssh-agent -s)"
+    6  ssh-add ~/.ssh/id_ed25519
+    7  cat ~/.ssh/id_ed25519.pub
+    8  sudo systemctl status sshd
+    9  sudo firewall-cmd --state
+   10  sudo firewall-cmd --zone=public --add-port=22/tcp --permanent
+   11  sudo firewall-cmd --reload
+   12  ip a
+   13  ssh -T git@github.com
+   14  ip a
+   15  sudo systemctl status sshd
+   16  sudo firewall-cmd --state
+   17  sudo firewall-cmd --zone=public --add-port=22/tcp --permanent
+   18  sudo firewall-cmd --reload
+   19  ip a
+   20  ls
+   21  sudo dnf install -y tar
+   22  ip a
+   23  iperf3 -s
+   24  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+   25  dnf install git -y
+   26  sudo dnf install git -y
+   27  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+   28  git checkout BS416365
+   29  cd MDO2025_INO/
+   30  git checkout BS416365
+   31  cd ITE/GCL07/BS416365/
+   32  ls
+   33  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/16677f26ae56c638632c27b79e10a5ca8bfca4c4/ITE/GCL07/BS416365
+   34  sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+   35  sudo dnf install -y dnf-plugins-core
+   36  sudo dnf install -y docker
+   37  sudo systemctl start docker
+   38  sudo systemctl enable docker
+   39  docker --version 
+   40  docker pull hello-world
+   41  docker pull busybox
+   42  docker pull ubuntu
+   43  docker pull fedora
+   44  docker pull mysql
+   45  docker login
+   46  docker pull hello-world
+   47  docker pull busybox
+   48  docker pull ubuntu
+   49  docker pull fedora
+   50  docker pull mysql
+   51  sudo usermod -ag docker devops
+   52  sudo usermod -aG docker devops
+   53  docker pull hello-world
+   54  docker pull busybox
+   55  docker pull ubuntu
+   56  docker pull fedora
+   57  docker pull mysql
+   58  sudo usermod -aG docker BSkubel
+   59  sudo usermod -aG docker $(whoami)
+   60  docker pull hello-world
+   61  newgrp docker
+   62  docker images
+   63  docker pull hello-world
+   64  docker pull busybox
+   65  docker pull ubuntu
+   66  docker pull fedora
+   67  docker pull mysql
+   68  git clone https://github.com/irssi/irssi
+   69  cd irssi/
+   70  meson Build
+   71  sudo dnf install -y meson ninja-build gcc glib2 glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils-* cmake git
+   72  meson Build
+   73  sudo dnf libgcrypt-config
+   74  sudo dnf libgcrypt
+   75  ninja -C Build
+   76  ninja -C Build test
+   77  cd ..
+   78  git clone https://github.com/devenes/node-js-dummy-test.git
+   79  cd node-js-dummy-test/
+   80  sudo install -y nodejs npm
+   81  sudo dnf install -y nodejs npm
+   82  npm install
+   83  npm test
+   84  docker volume create vin
+   85  docker volume create vout
+   86  docker volume ls
+   87  docker run -it -v vin:/mnt/vin -v vout:mnt/vout fedora bash
+   88  cd ..
+   89  docker run -it -v vin:/mnt/vin -v vout:mnt/vout fedora bash
+   90  cd irssi/
+   91  docker volume ls
+   92  docker run -it -v vin:/mnt/vin -v vout:mnt/vout fedora bash
+   93  docker run -it -v vin:/mnt/vin -v vout:/mnt/vout fedora bash
+   94  docker volume create vin2
+   95  docker volume create vout2
+   96  docker run -it -v vin2:/mnt/vin2 -v vout2:/mnt/vout2 ubuntu bash
+   97  docker build -t mountbuild -f Dockerfile.mountbuild .
+   98  docker run -it --name iperf-server -p 5201
+   99  docker run -it --name iperf-server -p 520
+  100  docker run -it --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  101  iperf3 -s
+  102  docker run -it --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  103  docker run -it --rm --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  104  docker ps
+  105  docker -d iperf-server-net
+  106  docker ps
+  107  docker rm iperf-server-net
+  108  docker rm -f iperf-server-net
+  109  docker run -it --rm --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  110  docker ps
+  111  docker run -it --rm --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  112  docker run -it --rm --name iperf3-server -p 5201:5201 networkstatic/iperf3 -s
+  113  docker network create bridged-network
+  114  newgrp docker
+  115  iperf3 -c localhost
+  116  sudo dnf install iperf3
+  117  iperf3 -c localhost
+  118  iperf3 -s
+  119  ip a
+  120  docker logs iperf-server
+  121  docker network create bridged-network
+  122  docker run -d --name iperf-server-net --network bridged-network networkstatic/iperf3 -s
+  123  docker run -it --rm --network bridged-network
+  124  docker run -it --rm --network bridged-network networkstatic/iperf3 -c iperf-server-net
+  125  docker logs iperf-server
+  126  docker network create Jenkins
+  127  docker run -d --privilaged --name Jenkins-DIND --network Jenkins docker:dind
+  128  docker run -d --privileged --name Jenkins-DIND --network Jenkins docker:dind
+  129  docker run -d --name Jenkins --network Jenkins -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts
+  130  docker ps
+  131  history
+  132  cd MDO2025_INO/ITE/GCL07/BS416365/Sprawozdanie1/
+  133  history > history.txt
+  134  docker build -t bld001 -f ./Dockerfile.irssibld .
+  135  cd ..
+  136  cd irssi/
+  137  docker build -t bld001 -f ./Dockerfile.irssibld .
+  138  cd ..
+  139  docker build -t bld001 -f ./Dockerfile.irssibld .
+  140  cd irssi/
+  141  docker build -t bld001 -f ./Dockerfile.irssibld .
+  142  docker build -t bld002 -f ./Dockerfile.test .
+  143  docker run -it bld002 /bin/bash
+  144  history
+  145  docker run -it bld002 /bin/bash
+  146  cd ../MDO2025_INO
+  147  cd ..
+  148   git checkout BS416365 
+  149  git add .
+  150  git commit -m "BS416365: Ostateczne zmiany i Sprawozdanie1"
+  151  git push origin BS416365 
+  152  git commit -m "BS416365: Poprawa błędów i pisowni w Sprawozdaniu1"
+  153  git add .
+  154  git commit -m "BS416365: Poprawa błędów i pisowni w Sprawozdaniu1"
+  155  git push origin BS416365 
+  156  cd MDO2025_INO/
+  157  cd ITE/GCL07/BS416365/
+  158  git clone https://github.com/curl/curl.git
+  159  cd curl
+  160  sudo dnf install -y gcc make autoconf libtool openssl-devel
+  161  ./buildconf
+  162  autoreconf -f1
+  163  autoreconf -fi
+  164  ./configure
+  165  ./configure --with-openssl
+  166  make -j$(nproc)
+  167  sudo dnf install -y libpsl libpsl-devel
+  168  ./configure --with-openssl
+  169  make -j$(nproc)
+  170  make test
+  171  openssl version
+  172  sudo dnf install -y openssl openssl-devel
+  173  make clean
+  174  ./configure --with-openssl
+  175  make -j$(nproc)
+  176  make test
+  177  sudo dnf install -y perl-Memoize
+  178  make test
+  179  cd tests
+  180  ./runtests.pl 1542
+  181  ldd ../src/curl | grep ssl
+  182  file ../src/curl
+  183  objdump -p ../src/curl | grep NEEDED
+  184  history
+  185  ../src/curl -V
+  186  make clean
+  187  ./configure --with-openssl --disable-static --enable-shared
+  188  make -j$(nproc)
+  189  make test
+  190  cd ..
+  191  docker build -t curl-build -f ./Dockerfile.curlbld .
+  192  docker build -t curl-test -f ./Dockerfile.curltest .
+  193  docker run --name jenkins --rm -u root     -d -p 8080:8080 -p 50000:50000     --network jenkins     -v jenkins_data:/var/jenkins_home     -v /var/run/docker.sock:/var/run/docker.sock     jenkins/jenkins:lts
+  194  docker network create jenkins
+  195  docker volume create jenkins_data
+  196  docker volume create jenkins_home
+  197  docker run --name jenkins --rm -u root     -d -p 8080:8080 -p 50000:50000     --network jenkins     -v jenkins_data:/var/jenkins_home     -v /var/run/docker.sock:/var/run/docker.sock     jenkins/jenkins:lts
+  198  cat /var/jenkins_home/secrets/initialAdminPassword
+  199  sudo cat /var/jenkins_home/secrets/initialAdminPassword
+  200  docker logs <nazwa_kontenera_jenkins> | grep "password"
+  201  docker logs jenkins/jenkins:lts | grep "password"
+  202  docker logs jenkins:lts | grep "password"
+  203  docker logs jenkins | grep "password"
+  204  docker run --name blueocean --rm -u root     -d -p 8080:8080 -p 50000:50000     --network jenkins     -v jenkins_home:/var/jenkins_home     -v /var/run/docker.sock:/var/run/docker.sock     jenkinsci/blueocean
+  205  docker logs jenkins | grep "password"
+  206  docker logs jenkins/blueocean | grep "password"
+  207  docker logs jenkinsci/blueocean | grep "password"
+  208  docker logs blueocean | grep "password"
+  209  docker run --name jenkins --rm -u root     -d -p 8080:8080 -p 50000:50000     --network jenkins     -v jenkins_data:/var/jenkins_home     -v /var/run/docker.sock:/var/run/docker.sock     jenkins/jenkins:lts
+  210  docker logs jenkins | grep "password"
+  211  docker build -t myjenkins-blueocean:2.492.3-1 -f Dockerfile.blueocean .
+  212  sudo timedatectl set-ntp true
+  213  docker build -t myjenkins-blueocean:2.492.3-1 -f Dockerfile.blueocean .
+  214  sudo apt-get install ntpdate
+  215  sudo ntpdate pool.ntp.org
+  216  docker build -t myjenkins-blueocean:latest -f Dockerfile.blueocean .
+  217  docker build -t myjenkins-blueocean:2.492.3-1 -Dockerfile.blueocean .
+  218  date
+  219  sudo dnf install ntpdate
+  220  sudo ntpdate pool.ntp.org
+  221  docker build -t myjenkins-blueocean:2.492.3-1 -Dockerfile.blueocean .
+  222  docker ps
+  223  docker build -t myjenkins-blueocean:2.492.3-1 -Dockerfile.blueocean .
+  224  docker images
+  225  docker run -d --name jenkins-blueocean myjenkins-blueocean:2.492.3-1
+  226  git commit -m "BS416365: Lab 5 - na zajęciach"
+  227  git add .
+  228  git commit -m "BS416365: Lab 5 - na zajęciach"
+  229  git push origin BS416365 
+  230  cd ..
+  231  git push origin BS416365 
+  232  git commit -m "BS416365: Lab 5 - na zajęciach"
+  233  git add .
+  234  git commit -m "BS416365: Lab 5 - na zajęciach"
+  235  git push origin BS416365 
+  236  cd MDO2025_INO/ITE/GCL07/BS416365/curl/
+  237  docker run --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro myjenkins
+  238  docker run --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080 --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   jenkinsci/blueocean
+  239  docker run --name jenkins --rm -u root     -d -p 8080:8080 -p 50000:50000     --network jenkins     -v jenkins_data:/var/jenkins_home     -v /var/run/docker.sock:/var/run/docker.sock     jenkins/jenkins:lts
+  240  docker logs jenkins | grep "password"
+  241  docker logs jenkinsci/blueocean | grep "password"
+  242  sudo cat /var/jenkins_home/secrets/initialAdminPassword
+  243  docker ps
+  244  docker logs jenkinsci/blueocean | grep "password"
+  245  docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+  246  docker exec -it jenkins-blueocean ping google.com
+  247  docker logs jenkinsci/blueocean | grep "password"
+  248  docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+  249  docker build -t myjenkins-blueocean:2.440.2-1 -f Dockerfile.blueocean .
+  250  docker exec -it jenkins-blueocean date
+  251  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --publish 8080:8080   --publish 50000:50000   -v /var/run/docker.sock:/var/run/docker.sock   -v jenkins-data:/var/jenkins_home   jenkinsci/blueocean
+  252  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --publish 8080:8080   --publish 50000:50000   -v /var/run/docker.sock:/var/run/docker.sock   -v jenkins-data:/var/jenkins_home   jenkinsci/blueocean
+  253  id -u devops
+  254  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --user 1000   --publish 8080:8080   --publish 50000:50000   -v /var/run/docker.sock:/var/run/docker.sock   -v jenkins-data:/var/jenkins_home   jenkinsci/blueocean
+  255  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --user root   --publish 8080:8080   --publish 50000:50000   -v /var/run/docker.sock:/var/run/docker.sock   -v jenkins-data:/var/jenkins_home   jenkinsci/blueocean
+  256  ls -l /var/run/docker.sock
+  257  docker exec -it jenkins-blueocean bash
+  258  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --user root   --publish 8080:8080   --publish 50000:50000   -v /var/run/docker.sock:/var/run/docker.sock   -v jenkins-data:/var/jenkins_home   --privileged   jenkinsci/blueocean
+  259  cd MDO2025_INO/ITE/GCL07/BS416365/curl/
+  260  curl -v
+  261  curl
+  262  curl --ver
+  263  curl --help
+  264  curl --version
+  265  ip a
+  266  ls
+  267  cd MDO2025_INO/ITE/GCL07/BS416365/
+  268  ls
+  269  cd MDO2025_INO/
+  270  git add .
+  271  git commit -m "BS416365: Lab 5 - Test do pipeline"
+  272  git commit -a -m "BS416365: Lab 5 - Test do pipeline"
+  273  git add ITE/GCL07/BS416365/curl
+  274  git commit -a -m "BS416365: Lab 5 - Test do pipeline"
+  275  git status
+  276  git checkout BS416365 
+  277  git status
+  278  git add .
+  279  git commit -a -m "BS416365: Lab 5 - Test do pipeline"
+  280  cat .gitmodules
+  281  git add ITE/GCL07/BS416365/curl/*
+  282  git add -A
+  283  git commit -a -m "BS416365: Lab 5 - Test do pipeline"
+  284  cd ../../../../..
+  285  git add ITE/GCL07/BS416365/curl
+  286  git commit -m "BS416365: Aktualizacja podmodułu curl"
+  287  git push
+  288  ls
+  289  ls home
+  290  ls home/devops/
+  291  cd home/devops/MDO2025_INO/
+  292  cd ITE/GCL07/BS416365/curl
+  293  git add .
+  294  git commit -m "Aktualizacja curl w podmodułach"
+  295  git push
+  296  cd ..
+  297  git rm --cached ITE/GCL07/BS416365/curl
+  298  git config -f .git/config --remove-section submodule.ITE/GCL07/BS416365/curl
+  299  rm -rf ITE/GCL07/BS416365/curl/.git
+  300  git add ITE/GCL07/BS416365/curl
+  301  git commit -m "BS416365: Usunięcie curl jako podmodułu i dodanie jako zwykłego katalogu"
+  302  git push
+  303  git add .
+  304  git commit -a -m "BS416365: Lab 5 - Test do pipeline"
+  305  git rm --cached ./ITE/GCL07/BS416365/curl/
+  306  cd MDO2025_INO/ITE/GCL07/BS416365/
+  307  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --user root   --publish 8080:8080   --publish 50000:50000   -v /var/run/docker.sock:/var/run/docker.sock   -v jenkins-data:/var/jenkins_home   --privileged   jenkinsci/blueocean
+  308  docker pull jenkins/jenkins:lts
+  309  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --user root   --publish 8080:8080   --publish 50000:50000   -v /var/run/docker.sock:/var/run/docker.sock   -v jenkins-data:/var/jenkins_home   --privileged   jenkinsci/blueocean
+  310  docker build -t my-jenkins-blueocean .
+  311  docker build -t my-jenkins-blueocean -f Dockerbuild.blueocean .
+  312  docker build -t myjenkins-blueocean:lts -f Dockerfile.blueocean .
+  313  cd curl/
+  314  docker build -t myjenkins-blueocean:lts -f Dockerfile.blueocean .
+  315  date
+  316  sudo timedatectl set-ntp true
+  317  docker build -t myjenkins-blueocean:lts -f Dockerfile.blueocean .
+  318  date
+  319  docker run --rm --privileged -it myjenkins-blueocean:lts /bin/bash
+  320  sudo timedatectl set-ntp true
+  321  date
+  322  sudo systemctl status chronyd
+  323  sudo dnf install ntpdate
+  324  sudo ntpdate pool.ntp.org
+  325  date
+  326  docker build -t myjenkins-blueocean:lts -f Dockerfile.blueocean .
+  327  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --user root   --publish 8080:8080   --publish 50000:50000   -v /var/run/docker.sock:/var/run/docker.sock   -v jenkins-data:/var/jenkins_home   --privileged   jenkinsci/blueocean
+  328  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --user root   --publish 8080:8080   --publish 50000:50000   -v /var/run/docker.sock:/var/run/docker.sock   -v jenkins-data:/var/jenkins_home   --privileged   myjenkins-blueocean:lts
+  329  ip a
+  330  git commit -a -m "BS416365: Lab 5 - Test do pipeline"
+  331  git push
+  332  cd ITE/GCL07/BS416365/
+  333  ip a
+  334  git commit -a -m "BS416365: Lab 5 - Pipeline?"
+  335  git push
+  336  git commit -a -m "BS416365: Lab 5 - Pipeline?"
+  337  git push
+  338  git checkout BS416365 
+  339  git commit -a -m "BS416365: Lab 5 - Pipeline?"
+  340  git push
+  341  cd curl/
+  342  docker build -f Dockerfile.curlbld -t curl-build .
+  343  docker build -f Dockerfile.test -t curl-test .
+  344  docker build -f Dockerfile.curltest -t curl-test .
+  345  docker run --rm curl-test
+  346  docker build -f Dockerfile.curlbld -t curl-build .
+  347  docker build -f Dockerfile.curltest -t curl-test .
+  348  docker create --name temp-container curl-build
+  349  docker cp temp-container:/curl/src/curl ./curl
+  350  docker rm temp-container
+  351  docker build -f Dockerfile.deploy -t curl-final .
+  352  docker network create ci
+  353  docker run -dit --network ci --name curl curl-final
+  354  docker run --rm --network ci curlimages/curl curl http://curl --version
+  355  docker build -f Dockerfile.deploy -t curl-final .
+  356  docker build -f Dockerfile.curlbld -t curl-build .
+  357  docker build -f Dockerfile.curltest -t curl-test .
+  358  docker create --name temp-container curl-build
+  359  docker cp temp-container:/curl/src/curl ./curl
+  360  docker rm temp-container
+  361  docker build -f Dockerfile.deploy -t curl-final .
+  362  docker network create ci
+  363  docker run --rm curl-final curl -s --fail http://www.metal.agh.edu.pl || echo "SMOKE TEST FAILED"
+  364  docker tag curl-final bskubel/curl-final
+  365  docker push bskubel/curl-final
+  366  mkdir dist
+  367  cp ./curl ./dist/
+  368  zip -r curl-binary-v1.zip dist/
+  369  git commit -a -m "BS416365: Jenkinsfile?"
+  370  cd ..
+  371  git commit -a -m "BS416365: Jenkinsfile?"
+  372  git add .
+  373  git commit -a -m "BS416365: Jenkinsfile?"
+  374  git push
+  375  git commit -a -m "BS416365: Jenkinsfile? Tym razem bez literówki"
+  376  git add .
+  377* git commit -a -m "BS416365: Jenkinsfile? Tym razem bez literówki"[3~
+  378  git push
+  379  docker build -f Dockerfile.curlbld -t curl-build .
+  380  cd curl/
+  381  docker build -f Dockerfile.curlbld -t curl-build .
+  382  docker build -f Dockerfile.curltest -t curl-test .
+  383  docker create --name temp-container curl-build
+  384  docker cp temp-container:/curl/src/curl ./curl
+  385  docker rm temp-container
+  386  docker build -f Dockerfile.deploy -t curl-final .
+  387  docker network create ci
+  388  docker run --rm curl-final --network ci curl -s --fail http://www.metal.agh.edu.pl || echo "SMOKE TEST FAILED"
+  389  docker network create ci
+  390  docker run --rm --network ci curl-final curl -s --fail http://www.metal.agh.edu.pl || echo "SMOKE TEST FAILED"
+  391  curl tag curl-final bskubel/curl-final
+  392  docker tag curl-final bskubel/curl-final
+  393  docker push bskubel/curl-final
+  394  cp ./curl ./dist/
+  395  zip -r curl-binary-v1.zip dist/
+  396  git add .
+  397  cd ..
+  398  git add .
+  399  git commit -a -m "BS416365: Jenkinsfile? Chyba działa"
+  400  git push
+  401  docker build -f Dockerfile.curltest -t curl-test .
+  402  cd curl/
+  403  docker build -f Dockerfile.curltest -t curl-test .
+  404  git add .
+  405  cd ..
+  406  git add .
+  407  git commit -a -m "BS416365: Jenkinsfile? Tracę już nadzieję"
+  408  git push
+  409  docker build -f Dockerfile.curltest -t curl-test .
+  410  cd curl/
+  411  docker build -f Dockerfile.curltest -t curl-test .
+  412  cd ..
+  413  git add .
+  414  git commit -a -m "BS416365: Jenkinsfile? Naprawa ostatniego błędu?"
+  415  git push
+  416  git add .
+  417  git commit -a -m "BS416365: Jenkinsfile? Naprawa ostatniego błędu?"
+  418  git push
+  419  cd ..
+  420  git add .
+  421  git commit -a -m "BS416365: Jenkinsfile? Naprawa ostatniego błędu?"
+  422  git push
+  423  timedatectl status
+  424  docker run --rm --cap-add=SYS_TIME --privileged fedora date -s "$(date)"
+  425  sudo chronyc -a makestep
+  426  timedatectl status
+  427  git commit -a -m "BS416365: Jenkinsfile? Ten błąd chyba był ze złego czasu systemowego"
+  428  git add .
+  429  git commit -a -m "BS416365: Jenkinsfile? Ten błąd chyba był ze złego czasu systemowego"
+  430  git push
+  431  git add .
+  432  git commit -a -m "BS416365: Jenkinsfile? Naprawione tamto, ale literóka"
+  433  git push
+  434  git add .
+  435  git commit -a -m "BS416365: Jenkinsfile? Naprawione tamto, ale literóka"
+  436  git push
+  437  history > history.txt

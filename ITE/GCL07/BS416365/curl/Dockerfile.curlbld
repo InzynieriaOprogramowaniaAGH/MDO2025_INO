@@ -1,0 +1,11 @@
+FROM fedora:41
+RUN dnf -y update && \
+    dnf -y install gcc make openssl openssl-devel libcurl-devel zlib-devel \
+    autoconf automake libtool git wget perl perl-Memoize perl-Test-Harness && \
+    dnf clean all
+
+RUN git clone https://github.com/curl/curl.git
+WORKDIR /curl
+RUN ./buildconf && ./configure --with-openssl && make && make install
+
+CMD ["/bin/bash"]

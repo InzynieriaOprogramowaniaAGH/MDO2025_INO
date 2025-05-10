@@ -1,0 +1,5 @@
+FROM fedora:41
+COPY --from=curl-build /usr/local/bin/curl /usr/local/bin/curl
+COPY --from=curl-build /usr/local/lib /usr/local/lib
+ENV LD_LIBRARY_PATH=/usr/local/lib
+CMD ["curl", "--version"]
