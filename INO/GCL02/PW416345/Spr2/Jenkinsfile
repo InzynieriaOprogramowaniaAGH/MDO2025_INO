@@ -1,0 +1,85 @@
+    pipeline {
+        agent any
+
+        environment {
+            IMAGE_NAME = "local-node-ci-app"
+            VERSION = "1.0.${BUILD_NUMBER}"
+            DOCKER_NETWORK = "jenkins"
+            DOCKERFILES_DIR = "INO/GCL02/PW416345/Spr2" 
+        }
+
+        stages {
+            stage('Klonowanie repozytorium') {
+                steps {
+                    git branch: 'PW416345', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git' 
+                }
+            }
+
+            stage('Przygotowanie sieci Docker') {
+                steps {
+                    script {
+                        sh "docker network ls | grep -w ${DOCKER_NETWORK} || docker network create ${DOCKER_NETWORK}"
+                    }
+                }
+            }
+
+            stage('Build') {
+                steps {
+                    script {
+                        docker.build("${IMAGE_NAME}-build", "-f ${DOCKERFILES_DIR}/Dockerfile.build .")
+                    }
+                }
+            }
+
+            stage('Test') {
+                steps {
+                    script {
+                        docker.build("${IMAGE_NAME}-test", "-f ${DOCKERFILES_DIR}/Dockerfile.test .")
+                        sh """
+                            docker run --name test-runner ${IMAGE_NAME}-test || true
+                            docker cp test-runner:/app/reports ./reports
+                            docker rm test-runner
+                        """
+                    }
+                }
+            }
+
+            stage('Deploy') {
+                steps {
+                    script {
+                        docker.build("${IMAGE_NAME}:${VERSION}", "-f ${DOCKERFILES_DIR}/Dockerfile.deploy .")
+                    }
+                }
+            }
+
+            stage('Website Test') {
+                steps {
+                    script {
+                        sh """
+                            docker rm -f website-test || true
+                            docker run -d --rm --network ${DOCKER_NETWORK} --name website-test ${IMAGE_NAME}:${VERSION}
+                            sleep 5
+                            docker run --rm --network ${DOCKER_NETWORK} curlimages/curl:latest http://website-test:8000
+                        """
+                    }
+                }
+            }
+            stage('Publish') {
+                steps {
+                    script {
+                        sh 'mkdir -p artifacts'
+                        sh 'cp -r reports/* artifacts/'
+                        archiveArtifacts artifacts: 'artifacts/**'
+                    }
+                }
+            }
+
+        }
+
+        post {
+            always {
+                echo "Sprzątanie kontenera" 
+                sh "docker rm -f website-test || true"
+            }
+        }
+    }

@@ -1,0 +1,7 @@
+FROM node:10
+
+WORKDIR /app
+
+RUN git clone https://github.com/Lissy93/quick-example-of-testing-in-nodejs.git .
+RUN sed -i 's/"command-line-args": "[^"]*"/"command-line-args": "1.0.0"/' package.json
+RUN npm install
