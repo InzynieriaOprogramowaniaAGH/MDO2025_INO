@@ -1,0 +1,16 @@
+#!/bin/sh
+
+
+commit_msg_file="$1"
+required_prefix="AN417592"
+
+
+first_line=$(head -n 1 "$commit_msg_file")
+
+
+if echo "$first_line" | grep -q "^$required_prefix"; then
+  exit 0
+else
+  echo "ERROR: Commit message musi zaczynać się od '$required_prefix'."
+  exit 1
+fi
