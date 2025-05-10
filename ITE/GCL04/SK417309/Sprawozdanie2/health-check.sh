@@ -5,7 +5,7 @@ set -e
 sleep 10
 
 # Send a request to the application's health endpoint and check for 200 status
-RESPONSE=$(curl --silent --write-out "%{http_code}" --output /dev/null http://localhost:8081/api/health || echo "failed")
+RESPONSE=$(curl --silent --write-out "%{http_code}" --output /dev/null curl http://exam-seat-arrangement:8081 || echo "failed")
 
 if [ "$RESPONSE" = "200" ]; then
   echo "Application is healthy"
