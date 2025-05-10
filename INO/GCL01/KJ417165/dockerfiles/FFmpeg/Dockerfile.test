@@ -1,4 +1,5 @@
-FROM ffmpeg-build:latest
+FROM ffmpeg-builder-image
+
 
 WORKDIR /app
 
