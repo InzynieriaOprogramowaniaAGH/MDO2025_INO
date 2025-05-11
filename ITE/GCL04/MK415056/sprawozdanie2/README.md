@@ -84,7 +84,8 @@ Zadanie do wykonania, jeżeli poprawnie działa obiekt *pipeline* i udało się 
 
 Plik Jenkinsfile zawierający finalną strukturę pipeline'e
 
-```pipeline {
+```
+pipeline {
     agent any
     stages {
         stage('Cleaning') {
@@ -152,17 +153,20 @@ Kompletny *pipeline* (wprowadzenie) - do wykonania po ustaleniu kształu kroków
 *  Kontener Jenkins i DIND skonfigurowany według instrukcji dostawcy oprogramowania
 *  Pliki `Dockerfile` wdrażające instancję Jenkinsa załączone w repozytorium przedmiotowym pod ścieżką i na gałęzi według opisu z poleceń README
 *  Zdefiniowany wewnątrz Jenkinsa obiekt projektowy *pipeline*, realizujący następujące kroki:
+  
+![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/21.png)
 
   * Kontener `Builder`, który powinien bazować na obrazie zawierającym dependencje (`Dependencies`), o ile stworzenie takiego kontenera miało uzasadnienie. Obrazem tym może być np. baza pobrana z Docker Hub (jak obraz node lub 
 dotnet) lub obraz stworzony samodzielnie i zarejestrowany/widoczny w DIND (jak np. obraz oparty o Fedorę, doinstalowujący niezbędne zależności, nazwany Dependencies). Jeżeli, jak często w przypadku Node, nie ma różnicy między runtimowym obrazem a obrazem z dependencjami, proszę budować się w oparciu nie o latest, ale o **świadomie wybrany tag z konkretną wersją**
 
-![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/16.png)
+
+![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/red1.png)
 
   * Obraz testujący, w ramach kontenera `Tester`
     * budowany przy użyciu ww. kontenera kod, wykorzystujący w tym celu testy obecne w repozytorium programu
     * Zadbaj o dostępność logów i możliwość wnioskowania jakie testy nie przechodzą
 
-![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/16.png)
+![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/red2.png)
 
   * `Deploy`
     *  Krok uruchamiający aplikację na kontenerze docelowym
@@ -175,7 +179,7 @@ dotnet) lub obraz stworzony samodzielnie i zarejestrowany/widoczny w DIND (jak n
     *  Proszę opisać szczegółowo proces który zostanie opisany jako `Deploy`, ze względu na mnogość podejść
 
 Plik `Dockerfile.deploy` zawiera informacje potrzebne do stworzenia obrarzu przeznaczonego później do publikacji. 
-![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/16.png)
+![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/red3.png)
 Powstały obraz docker będzie zawierał niezbędne elementy potrzebne do odpowiedniego funkcjonowania, aplikację redis i serwer. Ten serwer będzie uruchomiony od razu po zbudowaniu no porcie 6379 z wyłączonym ograniczeniem dostępu (--protected-mode no) . Argument (--no cache) powoduje budowanie nowych wersji obrazu bez opierania się na plikach z pamięci cache, zapewniając gwarancję wprowadzenia najnowszych zmian.
 
   * `Publish`
@@ -189,8 +193,8 @@ Powstały obraz docker będzie zawierał niezbędne elementy potrzebne do odpowi
     * Opcjonalnie, krok `Publish` (w przypadku podania parametru) może dokonywać promocji artefaktu na zewnętrzne *registry*
 
 
-![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/16.png)
 Pomyślne uruchomienie pipeline'u
+![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/22.png)
 
 ![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/16.png)
 Kilka udanych wersji pipeline'u na dockerhubie dowodzi, że nie jest to jednorazowy sukces.
