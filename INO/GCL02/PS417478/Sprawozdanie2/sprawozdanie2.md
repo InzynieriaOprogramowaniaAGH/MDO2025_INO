@@ -236,10 +236,12 @@ Następnie pobrałam archiwum [cjson.rpm](mycjson.rpm) i przeprowadziłam instal
 
 
 Diagram UML - przedstawia uproszcone kolejne kroki realizowane w moim pipeline:
+
 ![zdj25](screenshots2/80.png)
 
 
 Dlaczego w Projekcie wybrałam podejście DIND?
+
 Istnieją dwa główne sposoby uruchamiania Dockera w Jenkinsie:
 
 `1. Docker Outside of Docker (DOoD)` – Jenkins korzysta z Dockera działającego na hoście.
@@ -257,5 +259,7 @@ Wady: większa złożoność, większe zużycie zasobów.
 
 
 Wybrałam DIND, ponieważ zapewnia większe bezpieczeństwo i umożliwia łatwe przenoszenie oraz odtwarzanie środowiska CI/CD na różnych maszynach.
+
+
 --- 
 Do pomocy korzystałam ze sztucznej inteligencji takej jak `Chat GPT`, `DeepSeak`, oraz `Perplexity.ai`, każdorazowo weryfikując informacje w róznych źródłach.
