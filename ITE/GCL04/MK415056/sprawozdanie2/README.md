@@ -39,9 +39,7 @@ Zadanie do wykonania na ćwiczeniach
   * Utwórz projekt, który zwraca błąd, gdy... godzina jest nieparzysta
   * Pobierz w projekcie obraz kontenera `ubuntu` (stosując `docker pull`)
 
-Wydobyte wcześniej z logów kontenera `jenkins-blueocean` hasło jest nam potrzebne aby dostać się do Jenkinsa i rozpocząć instalację:
-![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/8.png)
-
+Instalacja wtyczek do Jenkinsa
 ![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/8.png)
 
 
