@@ -14,7 +14,7 @@ pipeline {
             steps { checkout scm }
         }
 
-        stage('Build') {   //builder image
+        stage('Build Builder Image') {   //builder image
             steps {
                 sh """
                     docker build --target builder \
@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        stage('Build') {    //tester image
+        stage('Build Tester Image') {    //tester image
             steps {
                 sh """
                     docker build \
@@ -47,7 +47,7 @@ pipeline {
             }
         }
 
-        stage('Build') { //runtim image
+        stage('Build Runtime Image') { //runtime image
             steps {
                 sh """
                     docker build --target runtime \
@@ -58,13 +58,13 @@ pipeline {
             }
         }
 
-        stage('test runtime') {
+        stage('Test Runtime') {
             steps {
                 sh "docker run --rm ${RUNTIME_IMG} --version"
             }
         }
 
-        stage('package ') {
+        stage('Package') {
             steps {
                 sh """
                     cid=\$(docker create ${BUILDER_IMG})
@@ -76,7 +76,7 @@ pipeline {
             }
         }
 
-        stage('Publish images') {
+        stage('Publish Images') {
             environment {
                 DOCKERHUB = credentials('dockerhub-credentials') 
             }
