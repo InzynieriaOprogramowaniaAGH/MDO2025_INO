@@ -169,10 +169,10 @@ stage('Prepare') {
 ```
 **Logs**
  
-    - Tworzenie katalogu dla logów.
+- Tworzenie katalogu dla logów.
     
-     - **Kroki**:
-     	1. Tworzenie katalogu `logs` w katalogu projektu.
+- **Kroki**:
+    1. Tworzenie katalogu `logs` w katalogu projektu.
 
 ```groovy
 stage('Logs') {
@@ -184,8 +184,8 @@ stage('Logs') {
 }
 ```
 **Build**
-    
-     - Budowanie obrazu Docker na podstawie pliku node-js-build.Dockerfile
+
+ - Budowanie obrazu Docker na podstawie pliku node-js-build.Dockerfile
 
         ```dockerfile
         FROM node:23-alpine
@@ -197,18 +197,18 @@ stage('Logs') {
         RUN npm install
         ```
 
-     - **Funkcja**: Budowanie środowiska Node.js z zależnościami.
-    
-     - **Szczegóły**:
-        - Bazuje na obrazie `node:23-alpine`.
-        - Instalacja `git` oraz klonowanie repozytorium z aplikacją `node-js-dummy`.
-        - Instalacja zależności Node.js za pomocą `npm install`.
-    
-     - **Kroki**:
+- **Funkcja**: Budowanie środowiska Node.js z zależnościami.
+
+- **Szczegóły**:
+    - Bazuje na obrazie `node:23-alpine`.
+    - Instalacja `git` oraz klonowanie repozytorium z aplikacją `node-js-dummy`.
+    - Instalacja zależności Node.js za pomocą `npm install`.
+
+- **Kroki**:
      	1. Budowanie obrazu Docker o nazwie `node-build:23-alpine`.
      	2. Logowanie wyników procesu budowania do pliku `logs/build.log`.
 
-        
+ 
 ```groovy
 stage('Build') {
             steps {
@@ -220,7 +220,7 @@ stage('Build') {
 ```
 **Tests**
 
-     - Testowanie aplikacji przy użyciu obrazu node-js-test.Dockerfile.
+- Testowanie aplikacji przy użyciu obrazu node-js-test.Dockerfile.
 
         ```dockerfile
         FROM node-build:23-alpine
@@ -229,15 +229,15 @@ stage('Build') {
         RUN npm run test
         ```
 
-      -  **Funkcja**: Uruchamianie testów aplikacji.
+-  **Funkcja**: Uruchamianie testów aplikacji.
 
-      -  **Szczegóły**:
-          - Bazuje na obrazie `node-build:23-alpine`.
-          - Uruchamia testy zdefiniowane w `package.json` przez `npm run test`.
+-  **Szczegóły**:
+     - Bazuje na obrazie `node-build:23-alpine`.
+     - Uruchamia testy zdefiniowane w `package.json` przez `npm run test`.
 
-      - **Kroki**:
-     	1. Budowanie obrazu Docker `node-test:v(WERSJA_BUILD'U))`.
-     	2. Logowanie wyników testów do pliku `logs/test.log`.
+- **Kroki**:
+     1. Budowanie obrazu Docker `node-test:v(WERSJA_BUILD'U))`.
+     2. Logowanie wyników testów do pliku `logs/test.log`.
 
 
 ```groovy
@@ -252,7 +252,7 @@ stage('Tests') {
 
 **Deploy**
 
-     - Uruchamianie aplikacji w kontenerze Docker przy użyciu node-js-deploy.Dockerfile.
+- Uruchamianie aplikacji w kontenerze Docker przy użyciu node-js-deploy.Dockerfile.
 
         ```dockerfile
         FROM node-build:23-alpine
@@ -260,16 +260,17 @@ stage('Tests') {
         WORKDIR /node-js-dummy-test
         CMD ["npm", "start"]
         ```
-      -  **Funkcja**: Uruchamianie aplikacji.
+-  **Funkcja**: Uruchamianie aplikacji.
 
-      -  **Szczegóły**:
-          - Bazuje na obrazie `node-build:23-alpine`.
-          - Uruchamia aplikację zdefiniowaną w `package.json` przez `npm start`.
-      - **Kroki**:
-     	1. Tworzenie sieci Docker `node_js_app_deploy` (z opcją ignorowania błędów, jeśli już istnieje).
-     	2. Budowanie obrazu Docker `node-js-deploy:v(WERSJA_BUILD'U)`.
-     	3. Usuwanie istniejącego kontenera `app` (jeśli występuje).
-     	4. Uruchamianie kontenera `app` z mapowaniem portu 3000 na 3000 oraz przypisaniem do sieci `node_js_app_deploy`.
+-  **Szczegóły**:
+     - Bazuje na obrazie `node-build:23-alpine`.
+     - Uruchamia aplikację zdefiniowaną w `package.json` przez `npm start`.
+
+ - **Kroki**:
+     1. Tworzenie sieci Docker `node_js_app_deploy` (z opcją ignorowania błędów, jeśli już istnieje).
+     2. Budowanie obrazu Docker `node-js-deploy:v(WERSJA_BUILD'U)`.
+     3. Usuwanie istniejącego kontenera `app` (jeśli występuje).
+     4. Uruchamianie kontenera `app` z mapowaniem portu 3000 na 3000 oraz przypisaniem do sieci `node_js_app_deploy`.
 
 ```groovy
 stage('Deploy') {
@@ -288,10 +289,10 @@ stage('Deploy') {
 
 **Test Deployment**
 
-     - Dodatkowy stage mający na celu testowanie uruchomionej aplikacji.
+- Dodatkowy stage mający na celu testowanie uruchomionej aplikacji.
 
-     - **Kroki**:
-     	1. Wykonanie żądania HTTP do aplikacji (w sieci Docker `node_js_app_deploy`) przy użyciu narzędzia `curl`.
+- **Kroki**:
+     1. Wykonanie żądania HTTP do aplikacji (w sieci Docker `node_js_app_deploy`) przy użyciu narzędzia `curl`.
 
 ```groovy
 stage('Test Deployment') {
@@ -309,12 +310,12 @@ stage('Test Deployment') {
 
 **Publish**
 
-     - Archiwizacja logów jako artefakt.
+- Archiwizacja logów jako artefakt.
 
-     - **Kroki**:
-     	1. Tworzenie katalogu `artifacts_(WERSJA_BUILD'U)`.
-     	2. Archiwizacja logów do pliku `artifacts_(WERSJA_BUILD'U).tar`.
-     	3. Publikacja artefaktu.
+- **Kroki**:
+     1. Tworzenie katalogu `artifacts_(WERSJA_BUILD'U)`.
+     2. Archiwizacja logów do pliku `artifacts_(WERSJA_BUILD'U).tar`.
+     3. Publikacja artefaktu.
 
 ```groovy
 stage('Publish') {
@@ -332,11 +333,11 @@ stage('Publish') {
 
 **Post-actions**
 
-     - Czyszczenie środowiska Docker.
+- Czyszczenie środowiska Docker.
 
-     - **Kroki**:
-     	1. Usunięcie obrazów Docker używanych w pipeline.
-     	2. Przeprowadzenie pełnego czyszczenia środowiska Docker (usunięcie wszystkich kontenerów, sieci, wolumenów itd.).
+- **Kroki**:
+     1. Usunięcie obrazów Docker używanych w pipeline.
+     2. Przeprowadzenie pełnego czyszczenia środowiska Docker (usunięcie wszystkich kontenerów, sieci, wolumenów itd.).
 
 ```groovy
 post {
@@ -365,131 +366,131 @@ Artefakty, tworzone przy budowie obrazów, są gotowe do pobrania od razu po wyk
 
 build.log
 
-'''ssh
-#0 building with "default" instance using docker driver
+	'''ssh
+	#0 building with "default" instance using docker driver
 
-#1 [internal] load build definition from node-js-build.Dockerfile
-#1 transferring dockerfile: 269B done
-#1 DONE 0.1s
+	#1 [internal] load build definition from node-js-build.Dockerfile
+	#1 transferring dockerfile: 269B done
+	#1 DONE 0.1s
 
-#2 [internal] load metadata for docker.io/library/node:23-alpine
-#2 DONE 1.5s
+	#2 [internal] load metadata for docker.io/library/node:23-alpine
+	#2 DONE 1.5s
 
-#3 [internal] load .dockerignore
-#3 transferring context: 2B done
-#3 DONE 0.1s
+	#3 [internal] load .dockerignore
+	#3 transferring context: 2B done
+	#3 DONE 0.1s
 
-#4 [1/5] FROM docker.io/library/node:23-alpine@sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc
-#4 resolve docker.io/library/node:23-alpine@sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc 0.0s done
-#4 sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc 6.41kB / 6.41kB done
-#4 sha256:0d468be7d2997dd2f6a3cda45e121a6b5140eb7ba3eba299a215030dbb0fb1ca 1.72kB / 1.72kB done
-#4 sha256:2b99bc550caad6f10cf0fd4ad72f86a14cc9818a05a66cc72d1997a4e8ee5c77 6.18kB / 6.18kB done
-#4 DONE 0.2s
+	#4 [1/5] FROM docker.io/library/node:23-alpine@sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc
+	#4 resolve docker.io/library/node:23-alpine@sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc 0.0s done
+	#4 sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc 6.41kB / 6.41kB done
+	#4 sha256:0d468be7d2997dd2f6a3cda45e121a6b5140eb7ba3eba299a215030dbb0fb1ca 1.72kB / 1.72kB done
+	#4 sha256:2b99bc550caad6f10cf0fd4ad72f86a14cc9818a05a66cc72d1997a4e8ee5c77 6.18kB / 6.18kB done
+	#4 DONE 0.2s
 
-#5 [2/5] RUN apk add --no-cache git
-#5 0.227 fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86_64/APKINDEX.tar.gz
-#5 0.613 fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/community/x86_64/APKINDEX.tar.gz
-#5 1.239 (1/12) Installing brotli-libs (1.1.0-r2)
-#5 1.292 (2/12) Installing c-ares (1.34.5-r0)
-#5 1.328 (3/12) Installing libunistring (1.2-r0)
-#5 1.378 (4/12) Installing libidn2 (2.3.7-r0)
-#5 1.415 (5/12) Installing nghttp2-libs (1.64.0-r0)
-#5 1.452 (6/12) Installing libpsl (0.21.5-r3)
-#5 1.490 (7/12) Installing zstd-libs (1.5.6-r2)
-#5 1.536 (8/12) Installing libcurl (8.12.1-r1)
-#5 1.618 (9/12) Installing libexpat (2.7.0-r0)
-#5 1.661 (10/12) Installing pcre2 (10.43-r0)
-#5 1.735 (11/12) Installing git (2.47.2-r0)
-#5 2.350 (12/12) Installing git-init-template (2.47.2-r0)
-#5 2.387 Executing busybox-1.37.0-r12.trigger
-#5 2.402 OK: 21 MiB in 29 packages
-#5 DONE 2.6s
+	#5 [2/5] RUN apk add --no-cache git
+	#5 0.227 fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86_64/APKINDEX.tar.gz
+	#5 0.613 fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/community/x86_64/APKINDEX.tar.gz
+	#5 1.239 (1/12) Installing brotli-libs (1.1.0-r2)
+	#5 1.292 (2/12) Installing c-ares (1.34.5-r0)
+	#5 1.328 (3/12) Installing libunistring (1.2-r0)
+	#5 1.378 (4/12) Installing libidn2 (2.3.7-r0)
+	#5 1.415 (5/12) Installing nghttp2-libs (1.64.0-r0)
+	#5 1.452 (6/12) Installing libpsl (0.21.5-r3)
+	#5 1.490 (7/12) Installing zstd-libs (1.5.6-r2)
+	#5 1.536 (8/12) Installing libcurl (8.12.1-r1)
+	#5 1.618 (9/12) Installing libexpat (2.7.0-r0)
+	#5 1.661 (10/12) Installing pcre2 (10.43-r0)
+	#5 1.735 (11/12) Installing git (2.47.2-r0)
+	#5 2.350 (12/12) Installing git-init-template (2.47.2-r0)
+	#5 2.387 Executing busybox-1.37.0-r12.trigger
+	#5 2.402 OK: 21 MiB in 29 packages
+	#5 DONE 2.6s
 
-#6 [3/5] RUN git clone https://github.com/devenes/node-js-dummy-test
-#6 0.338 Cloning into 'node-js-dummy-test'...
-#6 DONE 1.1s
+	#6 [3/5] RUN git clone https://github.com/devenes/node-js-dummy-test
+	#6 0.338 Cloning into 'node-js-dummy-test'...
+	#6 DONE 1.1s
 
-#7 [4/5] WORKDIR /node-js-dummy-test
-#7 DONE 0.1s
+	#7 [4/5] WORKDIR /node-js-dummy-test
+	#7 DONE 0.1s
 
-#8 [5/5] RUN npm install
-#8 10.01 
-#8 10.01 added 354 packages, and audited 355 packages in 10s
-#8 10.01 
-#8 10.01 37 packages are looking for funding
-#8 10.01   run `npm fund` for details
-#8 10.04 
-#8 10.04 17 vulnerabilities (3 low, 3 moderate, 9 high, 2 critical)
-#8 10.04 
-#8 10.04 To address issues that do not require attention, run:
-#8 10.04   npm audit fix
-#8 10.04 
-#8 10.04 To address all issues (including breaking changes), run:
-#8 10.04   npm audit fix --force
-#8 10.04 
-#8 10.04 Run `npm audit` for details.
-#8 10.04 npm notice
-#8 10.04 npm notice New major version of npm available! 10.9.2 -> 11.3.0
-#8 10.04 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.3.0
-#8 10.04 npm notice To update run: npm install -g npm@11.3.0
-#8 10.04 npm notice
-#8 DONE 10.6s
+	#8 [5/5] RUN npm install
+	#8 10.01 
+	#8 10.01 added 354 packages, and audited 355 packages in 10s
+	#8 10.01 
+	#8 10.01 37 packages are looking for funding
+	#8 10.01   run `npm fund` for details
+	#8 10.04 
+	#8 10.04 17 vulnerabilities (3 low, 3 moderate, 9 high, 2 critical)
+	#8 10.04 
+	#8 10.04 To address issues that do not require attention, run:
+	#8 10.04   npm audit fix
+	#8 10.04 
+	#8 10.04 To address all issues (including breaking changes), run:
+	#8 10.04   npm audit fix --force
+	#8 10.04 
+	#8 10.04 Run `npm audit` for details.
+	#8 10.04 npm notice
+	#8 10.04 npm notice New major version of npm available! 10.9.2 -> 11.3.0
+	#8 10.04 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.3.0
+	#8 10.04 npm notice To update run: npm install -g npm@11.3.0
+	#8 10.04 npm notice
+	#8 DONE 10.6s
 
-#9 exporting to image
-#9 exporting layers
-#9 exporting layers 1.4s done
-#9 writing image sha256:4ba9bad0e4aa339afbdbda172b091492ec36c1b8e6e0469abad479c90936926c
-#9 writing image sha256:4ba9bad0e4aa339afbdbda172b091492ec36c1b8e6e0469abad479c90936926c done
-#9 naming to docker.io/library/node-build:23-alpine done
-#9 DONE 1.4s
-'''
+	#9 exporting to image
+	#9 exporting layers
+	#9 exporting layers 1.4s done
+	#9 writing image sha256:4ba9bad0e4aa339afbdbda172b091492ec36c1b8e6e0469abad479c90936926c
+	#9 writing image sha256:4ba9bad0e4aa339afbdbda172b091492ec36c1b8e6e0469abad479c90936926c done
+	#9 naming to docker.io/library/node-build:23-alpine done	
+	#9 DONE 1.4s
+	'''
 
 test.log
 
-'''ssh
-#0 building with "default" instance using docker driver
+	'''ssh
+	#0 building with "default" instance using docker driver
 
-#1 [internal] load build definition from node-js-test.Dockerfile
-#1 transferring dockerfile: 185B done
-#1 DONE 0.0s
+	#1 [internal] load build definition from node-js-test.Dockerfile
+	#1 transferring dockerfile: 185B done
+	#1 DONE 0.0s
 
-#2 [internal] load metadata for docker.io/library/node-build:23-alpine
-#2 DONE 0.0s
+	#2 [internal] load metadata for docker.io/library/node-build:23-alpine
+	#2 DONE 0.0s
 
-#3 [internal] load .dockerignore
-#3 transferring context: 2B done
-#3 DONE 0.0s
+	#3 [internal] load .dockerignore
+	#3 transferring context: 2B done
+	#3 DONE 0.0s
+	
+	#4 [1/3] FROM docker.io/library/node-build:23-alpine
+	#4 DONE 0.1s
 
-#4 [1/3] FROM docker.io/library/node-build:23-alpine
-#4 DONE 0.1s
+	#5 [2/3] WORKDIR /node-js-dummy-test
+	#5 DONE 0.0s
 
-#5 [2/3] WORKDIR /node-js-dummy-test
-#5 DONE 0.0s
+	#6 [3/3] RUN npm run test
+	#6 0.445 
+	#6 0.445 > dummy-nodejs-todo@0.1.1 test
+	#6 0.445 > jest src/index.test.js
+	#6 0.445 
+	#6 2.309 PASS src/index.test.js
+	#6 2.310   GET /
+	#6 2.311     ✓ should return 200 OK (34 ms)
+	#6 2.311 
+	#6 2.317 Test Suites: 1 passed, 1 total
+	#6 2.317 Tests:       1 passed, 1 total
+	#6 2.317 Snapshots:   0 total
+	#6 2.317 Time:        0.896 s
+	#6 2.317 Ran all test suites matching /src\/index.test.js/i.
+	#6 DONE 2.5s
 
-#6 [3/3] RUN npm run test
-#6 0.445 
-#6 0.445 > dummy-nodejs-todo@0.1.1 test
-#6 0.445 > jest src/index.test.js
-#6 0.445 
-#6 2.309 PASS src/index.test.js
-#6 2.310   GET /
-#6 2.311     ✓ should return 200 OK (34 ms)
-#6 2.311 
-#6 2.317 Test Suites: 1 passed, 1 total
-#6 2.317 Tests:       1 passed, 1 total
-#6 2.317 Snapshots:   0 total
-#6 2.317 Time:        0.896 s
-#6 2.317 Ran all test suites matching /src\/index.test.js/i.
-#6 DONE 2.5s
+	#7 exporting to image
+	#7 exporting layers 0.1s done
+	#7 writing image sha256:59a4ec6af4358362c508ebe086b3916a1fcca881e163f181ee0b2aab00e1b1c0
+	#7 writing image sha256:59a4ec6af4358362c508ebe086b3916a1fcca881e163f181ee0b2aab00e1b1c0 done
+	#7 naming to docker.io/library/node-test:v4 done
+	#7 DONE 0.1s
 
-#7 exporting to image
-#7 exporting layers 0.1s done
-#7 writing image sha256:59a4ec6af4358362c508ebe086b3916a1fcca881e163f181ee0b2aab00e1b1c0
-#7 writing image sha256:59a4ec6af4358362c508ebe086b3916a1fcca881e163f181ee0b2aab00e1b1c0 done
-#7 naming to docker.io/library/node-test:v4 done
-#7 DONE 0.1s
-
-'''
+	'''
 
 ### Potwierdzenie działania aplikacji ###
 Działanie aplikacji potwierdza wynik stage'u `Test Deployment` w którym, treść `HTML'a` aplikacji jest wypisywana w konsoli za pomocą polecenia `curl`.
