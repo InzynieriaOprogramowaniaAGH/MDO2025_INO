@@ -3,7 +3,7 @@
 #include <cjson/cJSON.h>
 
 int main(void) {
-    const char *json_string = "{\"name\": \"Adam\", \"programing language\": \"C\"}";
+    const char *json_string = "{\"comment\": \"OK\"}";
 
     cJSON *root = cJSON_Parse(json_string);
     if (!root) {

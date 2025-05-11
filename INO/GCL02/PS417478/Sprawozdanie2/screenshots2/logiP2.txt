@@ -1123,7 +1123,7 @@ Running in /var/jenkins_home/workspace/cJSON/INO/GCL02/PS417478/Sprawozdanie2/pi
 [Pipeline] sh
 + docker run --rm cjson-deploy-image
 + tee ../artifacts/cjson_deploy.log
-Name: Adam
+Komentarz: OK
 [Pipeline] }
 [Pipeline] // script
 [Pipeline] }
