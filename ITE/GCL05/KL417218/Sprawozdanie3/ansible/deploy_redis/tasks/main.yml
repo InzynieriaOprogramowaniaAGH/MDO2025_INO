@@ -1,0 +1,20 @@
+---
+- name: Ensure Docker is installed
+  ansible.builtin.package:
+    name: docker.io
+    state: present
+
+- name: Start Docker
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Create container
+  community.docker.docker_container:
+    name: redis_container
+    image: ubuntu:latest
+    state: started
+    command: sleep infinity
+    tty: yes
+# Dokończyć konfigurację Redis w kontenerze
