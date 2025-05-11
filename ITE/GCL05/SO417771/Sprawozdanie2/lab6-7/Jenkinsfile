@@ -33,7 +33,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir(env.WORK_DIR) {
-                    sh "docker build -t ${BUILD_IMAGE} -f Dockerfile.nodebld . > logs/build.log 2>&1"
+                    sh "docker build -t ${BUILD_IMAGE} -f Dockerfile.nodebld . > logs/build.log 2>&1 || (cat logs/build.log && false)"
                 }
             }
         }
@@ -41,7 +41,7 @@ pipeline {
         stage('Tests') {
             steps {
                 dir(env.WORK_DIR) {
-                    sh "docker build -t ${TEST_IMAGE} -f Dockerfile.nodetest . > logs/test.log 2>&1"
+                    sh "docker build -t ${TEST_IMAGE} -f Dockerfile.nodetest . > logs/test.log 2>&1 || (cat logs/test.log && false)"
                 }
             }
         }
