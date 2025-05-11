@@ -5,9 +5,9 @@ pipeline {
         WORK_DIR = 'MDO2025_INO/ITE/GCL05/SO417771/Sprawozdanie2/lab6-7'
         VERSION_TAG = "1.0"
         NODE_TAG = '23-alpine'
-        BUILD_IMAGE = "node-build:${NODE_TAG}"
-        TEST_IMAGE = "node-test:v${VERSION_TAG}"
-        DEPLOY_IMAGE = "node-deploy:v${VERSION_TAG}"
+        BUILD_IMAGE = "nodebld:${NODE_TAG}"
+        TEST_IMAGE = "nodetest:v${VERSION_TAG}"
+        DEPLOY_IMAGE = "nodedeploy:v${VERSION_TAG}"
     }
 
     stages {
