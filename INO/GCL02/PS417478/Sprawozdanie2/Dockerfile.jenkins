@@ -1,4 +1,5 @@
 FROM jenkins/jenkins:lts-jdk17 
+#Wybór obrazu bazowego
 
 USER root
 
@@ -16,7 +17,7 @@ RUN apt-get update && \
     apt-get install -y docker-ce-cli docker-compose-plugin && \
     rm -rf /var/lib/apt/lists/*
 
-# pluginy
+# Instalacja pluginów Jenkinsa
 RUN jenkins-plugin-cli --plugins \
     docker-workflow \
     blueocean \

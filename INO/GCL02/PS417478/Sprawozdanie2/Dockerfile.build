@@ -1,4 +1,4 @@
-FROM fedora:42
+FROM fedora:41
 
 RUN dnf update -y && dnf install -y git cmake gcc gcc-c++ make
 
