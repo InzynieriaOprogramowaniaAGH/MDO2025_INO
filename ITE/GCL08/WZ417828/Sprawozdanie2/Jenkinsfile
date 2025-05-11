@@ -46,10 +46,7 @@ pipeline {
             steps {
                 script {
             docker.build("${DOCKER_IMAGE_RPM}", 
-                "-f ${REPO_PATH}/Dockerfile.rpm --build-arg PACKAGE_NAME=${RPM_PACKAGE_NAME} " +
-                "--build-arg PACKAGE_VERSION=${RPM_PACKAGE_VERSION} " +
-                "--build-arg PACKAGE_RELEASE=${RPM_PACKAGE_RELEASE} " +
-                "--build-arg ARCH=${RPM_ARCH} .")
+                "-f ${REPO_PATH}/Dockerfile.rpm ${REPO_PATH}")
 
             sh "mkdir -p rpm_artifacts"
             sh "docker run --rm -v \$PWD/rpm_artifacts:/out ${DOCKER_IMAGE_RPM} bash -c 'cp /root/rpmbuild/RPMS/${RPM_ARCH}/*.rpm /out/'"
