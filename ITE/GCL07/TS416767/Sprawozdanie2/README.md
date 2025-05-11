@@ -110,7 +110,7 @@
             stage('Budowanie obrazu Docker') {
                 steps {
                     script {
-                        sh "docker build -t $IMAGE_NAME -f ./ITE/GCL06/MD415045/lab5/node-build.Dockerfile ."
+                        sh "docker build -t $IMAGE_NAME -f ./ITE/GCL07/MTS416767/node-js-build.Dockerfile ."
                     }
                 }
             }
@@ -147,9 +147,9 @@ environment {
 ### Stages ###
 **Prepare**
 
-     Klonowanie repozytorium Git oraz przełączenie na konkretną gałąź.
+     - Klonowanie repozytorium Git oraz przełączenie na konkretną gałąź.
 
-     **Kroki**:
+     - **Kroki**:
      	1. Usunięcie katalogu `MDO2025_INO` ( o ile istnieje).
      	2. Klonowanie repozytorium z `https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git`.
      	3. Przełączanie się na gałąź `TS416767`.
@@ -169,9 +169,9 @@ stage('Prepare') {
 ```
 **Logs**
  
-    Tworzenie katalogu dla logów.
+    - Tworzenie katalogu dla logów.
     
-     **Kroki**:
+     - **Kroki**:
      	1. Tworzenie katalogu `logs` w katalogu projektu.
 
 ```groovy
@@ -185,7 +185,7 @@ stage('Logs') {
 ```
 **Build**
     
-     Budowanie obrazu Docker na podstawie pliku node-js-build.Dockerfile
+     - Budowanie obrazu Docker na podstawie pliku node-js-build.Dockerfile
 
         ```dockerfile
         FROM node:23-alpine
@@ -197,14 +197,14 @@ stage('Logs') {
         RUN npm install
         ```
 
-     **Funkcja**: Budowanie środowiska Node.js z zależnościami.
+     - **Funkcja**: Budowanie środowiska Node.js z zależnościami.
     
-     **Szczegóły**:
+     - **Szczegóły**:
         - Bazuje na obrazie `node:23-alpine`.
         - Instalacja `git` oraz klonowanie repozytorium z aplikacją `node-js-dummy`.
         - Instalacja zależności Node.js za pomocą `npm install`.
     
-     **Kroki**:
+     - **Kroki**:
      	1. Budowanie obrazu Docker o nazwie `node-build:23-alpine`.
      	2. Logowanie wyników procesu budowania do pliku `logs/build.log`.
 
@@ -220,7 +220,7 @@ stage('Build') {
 ```
 **Tests**
 
-     Testowanie aplikacji przy użyciu obrazu node-js-test.Dockerfile.
+     - Testowanie aplikacji przy użyciu obrazu node-js-test.Dockerfile.
 
         ```dockerfile
         FROM node-build:23-alpine
@@ -229,13 +229,13 @@ stage('Build') {
         RUN npm run test
         ```
 
-         **Funkcja**: Uruchamianie testów aplikacji.
+      -  **Funkcja**: Uruchamianie testów aplikacji.
 
-         **Szczegóły**:
+      -  **Szczegóły**:
           - Bazuje na obrazie `node-build:23-alpine`.
           - Uruchamia testy zdefiniowane w `package.json` przez `npm run test`.
 
-     **Kroki**:
+      - **Kroki**:
      	1. Budowanie obrazu Docker `node-test:v(WERSJA_BUILD'U))`.
      	2. Logowanie wyników testów do pliku `logs/test.log`.
 
@@ -252,7 +252,7 @@ stage('Tests') {
 
 **Deploy**
 
-     Uruchamianie aplikacji w kontenerze Docker przy użyciu node-js-deploy.Dockerfile.
+     - Uruchamianie aplikacji w kontenerze Docker przy użyciu node-js-deploy.Dockerfile.
 
         ```dockerfile
         FROM node-build:23-alpine
@@ -260,12 +260,12 @@ stage('Tests') {
         WORKDIR /node-js-dummy-test
         CMD ["npm", "start"]
         ```
-         **Funkcja**: Uruchamianie aplikacji.
+      -  **Funkcja**: Uruchamianie aplikacji.
 
-         **Szczegóły**:
+      -  **Szczegóły**:
           - Bazuje na obrazie `node-build:23-alpine`.
           - Uruchamia aplikację zdefiniowaną w `package.json` przez `npm start`.
-     **Kroki**:
+      - **Kroki**:
      	1. Tworzenie sieci Docker `node_js_app_deploy` (z opcją ignorowania błędów, jeśli już istnieje).
      	2. Budowanie obrazu Docker `node-js-deploy:v(WERSJA_BUILD'U)`.
      	3. Usuwanie istniejącego kontenera `app` (jeśli występuje).
@@ -288,9 +288,9 @@ stage('Deploy') {
 
 **Test Deployment**
 
-     Dodatkowy stage mający na celu testowanie uruchomionej aplikacji.
+     - Dodatkowy stage mający na celu testowanie uruchomionej aplikacji.
 
-     **Kroki**:
+     - **Kroki**:
      	1. Wykonanie żądania HTTP do aplikacji (w sieci Docker `node_js_app_deploy`) przy użyciu narzędzia `curl`.
 
 ```groovy
@@ -309,9 +309,9 @@ stage('Test Deployment') {
 
 **Publish**
 
-     Archiwizacja logów jako artefakt.
+     - Archiwizacja logów jako artefakt.
 
-     **Kroki**:
+     - **Kroki**:
      	1. Tworzenie katalogu `artifacts_(WERSJA_BUILD'U)`.
      	2. Archiwizacja logów do pliku `artifacts_(WERSJA_BUILD'U).tar`.
      	3. Publikacja artefaktu.
@@ -332,9 +332,9 @@ stage('Publish') {
 
 **Post-actions**
 
-     Czyszczenie środowiska Docker.
+     - Czyszczenie środowiska Docker.
 
-     **Kroki**:
+     - **Kroki**:
      	1. Usunięcie obrazów Docker używanych w pipeline.
      	2. Przeprowadzenie pełnego czyszczenia środowiska Docker (usunięcie wszystkich kontenerów, sieci, wolumenów itd.).
 
@@ -365,7 +365,7 @@ Artefakty, tworzone przy budowie obrazów, są gotowe do pobrania od razu po wyk
 
 build.log
 
-'''bash
+'''ssh
 #0 building with "default" instance using docker driver
 
 #1 [internal] load build definition from node-js-build.Dockerfile
@@ -445,7 +445,8 @@ build.log
 '''
 
 test.log
-'''bash
+
+'''ssh
 #0 building with "default" instance using docker driver
 
 #1 [internal] load build definition from node-js-test.Dockerfile
