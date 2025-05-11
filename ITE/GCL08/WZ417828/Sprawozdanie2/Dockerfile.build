@@ -1,7 +1,6 @@
 FROM gcc:12 AS cjson-build
 
 WORKDIR /app
-#COPY cJSON /app/cJSON
 RUN git clone https://github.com/DaveGamble/cJSON
 WORKDIR /app/cJSON
 RUN make all

@@ -1,0 +1,17 @@
+FROM fedora:latest
+
+ARG PACKAGE_NAME=libcjson
+ARG PACKAGE_VERSION=1.7.18
+ARG PACKAGE_RELEASE=1
+ARG ARCH=x86_64
+
+RUN dnf install -y rpm-build gcc make
+
+ENV RPMBUILD=/root/rpmbuild
+RUN mkdir -p ${RPMBUILD}/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+
+COPY --from=cjson-build /app/cJSON/libcjson.so* /root/rpmbuild/SOURCES/
+COPY --from=cjson-build /app/cJSON/cJSON.h /root/rpmbuild/SOURCES/
+COPY libcjson.spec /root/rpmbuild/SPECS/
+
+RUN rpmbuild -bb --target=${ARCH} ${RPMBUILD}/SPECS/libcjson.spec
