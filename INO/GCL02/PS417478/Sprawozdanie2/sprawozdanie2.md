@@ -118,6 +118,7 @@ pipeline {
 ```
 ![zdj20](screenshots2/72.png)
 ![zdj21](screenshots2/73.png)
+
 Całe logi z projektu 4 znajdują się w pliku [logi4](screenshots2/logi4.txt)
 
 
@@ -204,11 +205,13 @@ Po uruchomieniu - wyniki:
 ![zdj21](screenshots2/75.png)
 ![zdj22](screenshots2/76.png)
 [cjson_test.log](screenshots2/cjson_test.log)
+
 [logi z konsoli1](screenshots2/logiP1.txt)
 
 Pliki po ponownym uruchomieniu:
 ![zdj23](screenshots2/77.png)
 [cjson_test2.log](screenshots2/cjson_test2.log)
+
 [logi z konsoli2](screenshots2/logiP1.txt)
 
 Następnie
