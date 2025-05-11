@@ -48,7 +48,8 @@ Kod zawiera:
 2) Budowanie obrazu dockera `Dockerfile.build`,
 3) Budowanie obrazu testowego `Dockerfile.test`,
 4) Uruchomienie testów
-5) zapis logów w testów w plik `test.log`
+5) publikacja logów z testów
+
 Pliki Dockerfile, skopiowałam z poprzednich zajęc, natomiast poleceniem `fingerprint` pozwalam Jenkinsowi śledzić między różnymi etapami, przepływ danego pliku.
 ```bash
 pipeline {
