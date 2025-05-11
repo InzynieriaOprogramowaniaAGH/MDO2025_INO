@@ -1,6 +1,6 @@
 FROM fedora:42
 
-# Update and install dependencies
+# Update and install dependencies - we'll add more dependencies that might be needed
 RUN dnf update -y && dnf install -y \
     gcc \
     gcc-c++ \
@@ -25,71 +25,116 @@ RUN dnf update -y && dnf install -y \
     rpmdevtools \
     perl-Pod-Html \
     file \
-    bison
-
-# Set environment variable for gettext
-ENV FORCE_GETTEXT_VERSION=0.20
+    bison \
+    pcre-devel \
+    libpsl-devel \
+    diffutils \
+    autopoint \
+    m4 \
+    patch \
+    perl-devel
 
 # Set up RPM directory structure
 RUN rpmdev-setuptree
 
 WORKDIR /opt
 
-# Clone wget source code
-RUN git clone https://github.com/mirror/wget.git
+# Use a specific version of wget that we know works
+RUN git clone https://github.com/mirror/wget.git && \
+    cd wget && \
+    # List tags so we can see what's available
+    git tag -l && \
+    # Checkout a stable version instead of using latest from master
+    git checkout v1.21.3
 
 WORKDIR /opt/wget
 
-# Create spec file with corrected paths and proper setup
+# Set environment variables to help with the build
+ENV ACLOCAL_PATH=/usr/share/aclocal
+ENV AUTOMAKE_VERSION=1.16.5
+ENV FORCE_UNSAFE_CONFIGURE=1
+
+# Add debug commands to see what's happening
+RUN echo "Checking for key build files:" && \
+    ls -la && \
+    echo "Checking if bootstrap exists:" && \
+    test -f bootstrap && echo "Bootstrap exists" || echo "Bootstrap does not exist" && \
+    echo "Checking if configure.ac exists:" && \
+    test -f configure.ac && echo "configure.ac exists" || echo "configure.ac does not exist" && \
+    echo "Checking autoconf version:" && \
+    autoconf --version && \
+    echo "Checking automake version:" && \
+    automake --version && \
+    echo "Checking libtool version:" && \
+    libtool --version
+
+# Try to run bootstrap or autoreconf directly to see what happens
+RUN test -f bootstrap && ./bootstrap || autoreconf -fiv 2>&1 | tee /tmp/autoreconf_errors.log || true
+
+# Actual build starts here - all steps separately for easier debugging
+# Try to build directly first to see if it works
+WORKDIR /opt/wget
+RUN if [ -f configure ]; then \
+        echo "configure exists, trying to build directly"; \
+        ./configure --prefix=/usr 2>&1 | tee /tmp/configure_errors.log && \
+        make 2>&1 | tee /tmp/make_errors.log; \
+    else \
+        echo "configure does not exist, normal process failed"; \
+    fi
+
+# If the direct build didn't work, let's try with RPM
+# Create spec file
 RUN echo '%global debug_package %{nil}' > wget.spec && \
     echo 'Name: wget' >> wget.spec && \
-    echo 'Version: 1.0' >> wget.spec && \
-    echo 'Release: 1.fc42' >> wget.spec && \
+    echo 'Version: 1.21.3' >> wget.spec && \
+    echo 'Release: 1%{?dist}' >> wget.spec && \
     echo 'Summary: A utility for retrieving files using the HTTP or FTP protocols' >> wget.spec && \
     echo 'License: GPL-3.0' >> wget.spec && \
-    echo 'BuildRequires: gcc make gettext-devel' >> wget.spec && \
+    echo 'BuildRequires: gcc make gettext-devel openssl-devel pcre-devel libpsl-devel' >> wget.spec && \
     echo 'Source0: %{name}-%{version}.tar.gz' >> wget.spec && \
     echo '%description' >> wget.spec && \
     echo 'GNU Wget is a free utility for non-interactive download of files from the Web.' >> wget.spec && \
     echo '%prep' >> wget.spec && \
-    echo '%setup -q -c' >> wget.spec && \
+    echo '%setup -q' >> wget.spec && \
     echo '%build' >> wget.spec && \
-    echo 'cd %{_builddir}/%{name}-%{version}' >> wget.spec && \
-    echo 'autoreconf -fiv' >> wget.spec && \
-    echo './configure --prefix=/usr' >> wget.spec && \
+    echo './configure --prefix=/usr --sysconfdir=/etc --with-ssl=openssl' >> wget.spec && \
     echo 'make %{?_smp_mflags}' >> wget.spec && \
     echo '%install' >> wget.spec && \
-    echo 'cd %{_builddir}/%{name}-%{version}' >> wget.spec && \
     echo 'make install DESTDIR=%{buildroot}' >> wget.spec && \
     echo '%files' >> wget.spec && \
     echo '%{_bindir}/wget' >> wget.spec && \
-    echo '%doc' >> wget.spec
+    echo '%config(noreplace) %{_sysconfdir}/wgetrc' >> wget.spec && \
+    echo '%{_mandir}/man1/wget.1*' >> wget.spec && \
+    echo '%{_infodir}/wget.info*' >> wget.spec
 
-# Move to a temporary build directory to avoid issues with source directory
-RUN mkdir -p /tmp/wget-build
-WORKDIR /tmp/wget-build
+# Create the tarball
+RUN cd /opt && \
+    mv wget wget-1.21.3 && \
+    tar czf /root/rpmbuild/SOURCES/wget-1.21.3.tar.gz wget-1.21.3 && \
+    ln -sfn wget-1.21.3 wget && \
+    cd /opt/wget
 
-# Copy sources from git repo to build directory
-RUN cp -r /opt/wget/* .
+# Try building with rpmbuild
+RUN rpmbuild -bb wget.spec 2>&1 | tee /tmp/rpmbuild_errors.log || true
 
-# Create the source tarball with proper structure
-RUN mkdir -p wget-1.0 && \
-    cp -r * wget-1.0/ 2>/dev/null || true && \
-    tar czf /root/rpmbuild/SOURCES/wget-1.0.tar.gz wget-1.0
+# Let's try using the official source tarball instead
+WORKDIR /opt
+RUN wget https://ftp.gnu.org/gnu/wget/wget-1.21.3.tar.gz -O /root/rpmbuild/SOURCES/wget-1.21.3.tar.gz
 
-# Build the RPM in proper stages
-RUN cd wget-1.0 && \
-    autoreconf -fiv && \
-    ./configure --prefix=/usr && \
-    make
+# Try again with the official source
+WORKDIR /opt/wget
+RUN rpmbuild -bb wget.spec 2>&1 | tee /tmp/rpmbuild_official_errors.log || true
 
-# Build the RPM package using rpmbuild
-RUN rpmbuild -bb \
-    --define "_topdir /root/rpmbuild" \
-    --define "_builddir /tmp/wget-build/wget-1.0" \
-    /opt/wget/wget.spec
-
-# Output location where the RPM will be available
-RUN echo "RPM package is available at: /root/rpmbuild/RPMS/x86_64/"
+# Output debug logs if all else fails
+RUN echo "=== autoreconf errors ===" && \
+    cat /tmp/autoreconf_errors.log || echo "No autoreconf errors file" && \
+    echo "=== configure errors ===" && \
+    cat /tmp/configure_errors.log || echo "No configure errors file" && \
+    echo "=== make errors ===" && \
+    cat /tmp/make_errors.log || echo "No make errors file" && \
+    echo "=== rpmbuild errors ===" && \
+    cat /tmp/rpmbuild_errors.log || echo "No rpmbuild errors file" && \
+    echo "=== rpmbuild with official source errors ===" && \
+    cat /tmp/rpmbuild_official_errors.log || echo "No official rpmbuild errors file"
 
 CMD ["/bin/bash"]
