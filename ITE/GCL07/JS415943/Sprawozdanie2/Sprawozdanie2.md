@@ -319,5 +319,42 @@ stage('Publish') {
 ```
 Stworzenie pliku zip zawierającego aplikacje, zarchiwizowanie go w Jenkinsie, zalogowanie do DockerHub oraz wypchnięcie obrazu
 
+![](/ITE/GCL07/JS415943/Sprawozdanie2/Lab6/Screenshots/1.2wynikpipe.png)
+
 ### Ostateczny diagram UML
 ![](/ITE/GCL07/JS415943/Sprawozdanie2/Lab6/Screenshots/UML.png)
+
+## Laboratorium 7: Jenkinsfile: Lista kontrolna
+
+-  Jenkinsfile dostarczany z SCM
+
+![](/ITE/GCL07/JS415943/Sprawozdanie2/Lab7/1.0SCM.png)
+
+- Zawsze najnowszy kod
+ 
+![](/ITE/GCL07/JS415943/Sprawozdanie2/Lab7/2.0niecache.png)
+
+- Proces publikacji artefaktu
+
+Artefakt ZIP zawiera minimalną wersję aplikacji (node_modules, src, views, package.json). Jest tworzony w kontenerze debianowym i zapisywany jako artefakt Jenkinsa.
+Obraz kontenera deploy jest pushowany do DockerHub pod tagiem `tygrysiatkomale/node-deploy:vX`, co umożliwia jego uruchomienie na dowolnej maszynie:
+
+```bash
+docker pull tygrysiatkomale/node-deploy:v3
+docker run -p 3000:3000 tygrysiatkomale/node-deploy:v3
+```
+
+![](/ITE/GCL07/JS415943/Sprawozdanie2/Lab7/3.0dockertygrysiatko.png)
+![](/ITE/GCL07/JS415943/Sprawozdanie2/Lab7/3.1app.png)
+
+### "Definition of done"
+
+- Opublikowany obraz tygrysiatkomale/node-deploy:vX może zostać pobrany i uruchomiony na dowolnej maszynie z Dockerem. Obraz zawiera wszystkie niezbędne pliki (`node_modules`, `src`, `views`, `package.json`) oraz ma zdefiniowany poprawny entrypoint (`npm start`), co umożliwia jego natychmiastowe uruchomienie bez dodatkowej konfiguracji.
+
+- Pipeline generuje także artefakt ZIP zawierający `node_modules`, `src`, `views`, `package.json`. Jest on archiwizowany w Jenkinsie jako wynik builda. Po pobraniu może zostać pobrany oraz uruchomiony lokalnie za pomocą Node.js:
+```bash
+npm install
+npm start
+```
+
+![](/ITE/GCL07/JS415943/Sprawozdanie2/Lab7/4.0artefakt.png)
