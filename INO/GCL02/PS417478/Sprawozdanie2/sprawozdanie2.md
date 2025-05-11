@@ -235,7 +235,7 @@ Następnie pobrałam archiwum [cjson.rpm](mycjson.rpm) i przeprowadziłam instal
 ![zdj24](screenshots2/78.png)
 
 
-Diagram UML - przedstawia uproszcone kolejne kroki realizowane w moim pipeline:
+Diagram UML - przedstawia uproszczone kolejne kroki realizowane w moim pipeline:
 
 ![zdj25](screenshots2/80.png)
 
