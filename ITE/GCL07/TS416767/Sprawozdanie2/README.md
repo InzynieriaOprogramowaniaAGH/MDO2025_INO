@@ -146,8 +146,10 @@ environment {
 
 ### Stages ###
 **Prepare**
-    - Klonowanie repozytorium Git oraz przełączenie na konkretną gałąź.
-    - **Kroki**:
+
+     Klonowanie repozytorium Git oraz przełączenie na konkretną gałąź.
+
+     **Kroki**:
      	1. Usunięcie katalogu `MDO2025_INO` ( o ile istnieje).
      	2. Klonowanie repozytorium z `https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git`.
      	3. Przełączanie się na gałąź `TS416767`.
@@ -166,8 +168,10 @@ stage('Prepare') {
 }
 ```
 **Logs**
-    - Tworzenie katalogu dla logów.
-    - **Kroki**:
+ 
+    Tworzenie katalogu dla logów.
+    
+     **Kroki**:
      	1. Tworzenie katalogu `logs` w katalogu projektu.
 
 ```groovy
@@ -180,7 +184,8 @@ stage('Logs') {
 }
 ```
 **Build**
-    - Budowanie obrazu Docker na podstawie pliku node-js-build.Dockerfile
+    
+     Budowanie obrazu Docker na podstawie pliku node-js-build.Dockerfile
 
         ```dockerfile
         FROM node:23-alpine
@@ -192,13 +197,14 @@ stage('Logs') {
         RUN npm install
         ```
 
-    - **Funkcja**: Budowanie środowiska Node.js z zależnościami.
-    - **Szczegóły**:
+     **Funkcja**: Budowanie środowiska Node.js z zależnościami.
+    
+     **Szczegóły**:
         - Bazuje na obrazie `node:23-alpine`.
         - Instalacja `git` oraz klonowanie repozytorium z aplikacją `node-js-dummy`.
         - Instalacja zależności Node.js za pomocą `npm install`.
     
-    - **Kroki**:
+     **Kroki**:
      	1. Budowanie obrazu Docker o nazwie `node-build:23-alpine`.
      	2. Logowanie wyników procesu budowania do pliku `logs/build.log`.
 
@@ -213,7 +219,8 @@ stage('Build') {
 }
 ```
 **Tests**
-    - Testowanie aplikacji przy użyciu obrazu node-js-test.Dockerfile.
+
+     Testowanie aplikacji przy użyciu obrazu node-js-test.Dockerfile.
 
         ```dockerfile
         FROM node-build:23-alpine
@@ -222,11 +229,13 @@ stage('Build') {
         RUN npm run test
         ```
 
-        - **Funkcja**: Uruchamianie testów aplikacji.
-        - **Szczegóły**:
+         **Funkcja**: Uruchamianie testów aplikacji.
+
+         **Szczegóły**:
           - Bazuje na obrazie `node-build:23-alpine`.
           - Uruchamia testy zdefiniowane w `package.json` przez `npm run test`.
-    - **Kroki**:
+
+     **Kroki**:
      	1. Budowanie obrazu Docker `node-test:v(WERSJA_BUILD'U))`.
      	2. Logowanie wyników testów do pliku `logs/test.log`.
 
@@ -242,7 +251,8 @@ stage('Tests') {
 ```
 
 **Deploy**
-    - Uruchamianie aplikacji w kontenerze Docker przy użyciu node-js-deploy.Dockerfile.
+
+     Uruchamianie aplikacji w kontenerze Docker przy użyciu node-js-deploy.Dockerfile.
 
         ```dockerfile
         FROM node-build:23-alpine
@@ -250,11 +260,12 @@ stage('Tests') {
         WORKDIR /node-js-dummy-test
         CMD ["npm", "start"]
         ```
-        - **Funkcja**: Uruchamianie aplikacji.
-        - **Szczegóły**:
+         **Funkcja**: Uruchamianie aplikacji.
+
+         **Szczegóły**:
           - Bazuje na obrazie `node-build:23-alpine`.
           - Uruchamia aplikację zdefiniowaną w `package.json` przez `npm start`.
-    - **Kroki**:
+     **Kroki**:
      	1. Tworzenie sieci Docker `node_js_app_deploy` (z opcją ignorowania błędów, jeśli już istnieje).
      	2. Budowanie obrazu Docker `node-js-deploy:v(WERSJA_BUILD'U)`.
      	3. Usuwanie istniejącego kontenera `app` (jeśli występuje).
@@ -276,8 +287,10 @@ stage('Deploy') {
 ```
 
 **Test Deployment**
-    - Dodatkowy stage mający na celu testowanie uruchomionej aplikacji.
-    - **Kroki**:
+
+     Dodatkowy stage mający na celu testowanie uruchomionej aplikacji.
+
+     **Kroki**:
      	1. Wykonanie żądania HTTP do aplikacji (w sieci Docker `node_js_app_deploy`) przy użyciu narzędzia `curl`.
 
 ```groovy
@@ -295,8 +308,10 @@ stage('Test Deployment') {
 
 
 **Publish**
-    - Archiwizacja logów jako artefakt.
-    - **Kroki**:
+
+     Archiwizacja logów jako artefakt.
+
+     **Kroki**:
      	1. Tworzenie katalogu `artifacts_(WERSJA_BUILD'U)`.
      	2. Archiwizacja logów do pliku `artifacts_(WERSJA_BUILD'U).tar`.
      	3. Publikacja artefaktu.
@@ -316,8 +331,10 @@ stage('Publish') {
 ```
 
 **Post-actions**
-    - Czyszczenie środowiska Docker.
-    - **Kroki**:
+
+     Czyszczenie środowiska Docker.
+
+     **Kroki**:
      	1. Usunięcie obrazów Docker używanych w pipeline.
      	2. Przeprowadzenie pełnego czyszczenia środowiska Docker (usunięcie wszystkich kontenerów, sieci, wolumenów itd.).
 
