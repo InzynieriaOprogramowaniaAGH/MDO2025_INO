@@ -87,7 +87,7 @@ Zadanie polegało na utworzeniu kompletego piplinu z krokami ```build``` i ```te
 Z pomocą prowadzącego utworzyłem forkflow pipeline'u.<br>
 ![s1](../Sprawozdanie2/Sprawozdanie5_img/s5_19.png)
 
-Z jakiegoś powodu podcza wykonywania pipeline'u nie pobierał mi się obraz ```gcc:12```. Z informacji, które udało mi się znaleźć może wynikać, że potrzebne jest uwieżytelnianie DockerHub. <br>
+Z jakiegoś powodu podczas wykonywania pipeline'u nie pobierał mi się obraz ```gcc:12```. Z informacji, które udało mi się znaleźć może wynikać, że potrzebne jest uwieżytelnianie DockerHub. <br>
 ![s1](../Sprawozdanie2/Sprawozdanie5_img/s5_20.png)<br>
 Rozwiązałem ten problem korzystając z ```$ docker pull gcc:12``` na kontenerze z uruchomionym Jenkinsem.
 
@@ -111,7 +111,7 @@ Zbudowanie obrazu kontenera na podstawie pliku ```Dockerfile.rpm```, którego za
 Początkowo chciałem żeby plik libcjson.spec był tworzony dynamicznie za pomocą Dockerfile. Po wielu próbach i przy pomocy ChatGPT niestety nie udało mi się zaimplementować takiego rozwiązania. Postanowiłem więc utworzyć plik "na sztywno". <br>
 
 
-Poprosiłem AI by wygenerował mi ```libcjson.spec``` oraz zmodyfikował krok 'Publish', tak żeby paczka tworzyła się bezproblemowo.<br>
+Poprosiłem AI by wygenerował mi ```libcjson.spec``` oraz zmodyfikował krok 'Publish', tak żeby utworzyć paczkę RPM.<br>
 **Zapytanie**: "Wygeneruj plik libcjson.spec potrzbny do utworzenia paczki RPM oraz zmodyfikuj pipeline, tak by możliwe było bezproblemowe utworzenie paczki .rpm". Oraz załączyłem treść potrzebnych plików.
 W odpowiedzi dostałem plik .spec z zawartymi komentarzami, krótki opis jego dzialania i podpowiedzi dotyczących zmian w pipelinie.<br>
 **Weryfikacja**: Plik .spec porównałem z przykładami dostępnymi w internecie (np. https://docs.redhat.com/fr/documentation/red_hat_enterprise_linux/9/html/packaging_and_distributing_software/an-example-spec-file-for-cello_packaging-software#an-example-spec-file-for-cello_packaging-software), a treść pipline'u za pomocą testowego uruchomienia w Jenkinsie.<br>
