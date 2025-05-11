@@ -13,7 +13,7 @@ Następnie pobrałam i uruchomiłam kontenery docker dind i jenkinsa i sprawdzi�
 ![zdj4](screenshots2/55.png)
 ![zdj5](screenshots2/56.png)
 
-Po wejsciu na stroję Jenkinsa za pomocą IP: http://192.168.116.7:8080/. Uzyskałam hasło, które wprowadziłam na stronie poleceniem:
+Po wejsciu na stroję Jenkinsa za pomocą IP: `http://192.168.116.7:8080/`. Uzyskałam hasło, które wprowadziłam na stronie poleceniem:
 ```bash
 docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 ```
@@ -110,3 +110,7 @@ Całe logi z projektu 4 znajdują się w pliku [logi4](screenshots2/logi4.txt)
 
 Następnym zadaniem było utworzyć pełny pipeline z etapami: Clone, Clear Docker Cache, build, test, deploy, oraz publish za pomocą kontenera. 
 Do tego stworzyłam plik Jenkinsfile, który wygląda nastepując
+
+
+
+![zdj20](screenshots2/74.png)
