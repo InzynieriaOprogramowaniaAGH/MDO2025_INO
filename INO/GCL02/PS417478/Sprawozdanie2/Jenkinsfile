@@ -18,12 +18,12 @@ pipeline {
             steps {
                 dir("INO/GCL02/PS417478/Sprawozdanie2/pipeline") {
                     script {
-                        docker.build('cjson-build', '-f Dockerfile.build .')
+                        docker.build('cjson-builder-image', '-f Dockerfile.build .')
 
                         sh '''
                             mkdir -p ../artifacts
-                            CID=$(docker create cjson-build)
-                            docker cp $CID:/app/cjson.rpm ../artifacts/
+                            CID=$(docker create cjson-builder-image)
+                            docker cp $CID:/app/mycjson.rpm ../artifacts/
                             docker rm $CID
                         '''
                     }
@@ -35,10 +35,10 @@ pipeline {
             steps {
                 dir("INO/GCL02/PS417478/Sprawozdanie2/pipeline") {
                     script {
-                        docker.build('cjson-test', '-f Dockerfile.test .')
+                        docker.build('cjson-test-image', '-f Dockerfile.test .')
 
                         sh """
-                            docker run --rm cjson-test | tee ../artifacts/cjson_test.log
+                            docker run --rm cjson-test-image | tee ../artifacts/cjson_test.log
                         """
                     }
                 }    
@@ -49,11 +49,11 @@ pipeline {
             steps {
                 dir("INO/GCL02/PS417478/Sprawozdanie2/pipeline") {
                     script {
-                        sh 'cp ../artifacts/cjson.rpm .'
-                        docker.build("cjson-deploy", "-f Dockerfile.deploy .")
+                        sh 'cp ../artifacts/mycjson.rpm .'
+                        docker.build("cjson-deploy-image", "-f Dockerfile.deploy .")
 
                         sh """
-                            docker run --rm cjson-deploy | tee ../artifacts/cjson_deploy.log
+                            docker run --rm cjson-deploy-image | tee ../artifacts/cjson_deploy.log
                         """
                     }      
                 }
