@@ -110,7 +110,7 @@
             stage('Budowanie obrazu Docker') {
                 steps {
                     script {
-                        sh "docker build -t $IMAGE_NAME -f ./ITE/GCL07/MTS416767/node-js-build.Dockerfile ."
+                        sh "docker build -t $IMAGE_NAME -f ./ITE/GCL07/TS416767/node-js-build.Dockerfile ."
                     }
                 }
             }
@@ -147,12 +147,12 @@ environment {
 ### Stages ###
 **Prepare**
 
-     - Klonowanie repozytorium Git oraz przełączenie na konkretną gałąź.
+- Klonowanie repozytorium Git oraz przełączenie na konkretną gałąź.
 
-     - **Kroki**:
-     	1. Usunięcie katalogu `MDO2025_INO` ( o ile istnieje).
-     	2. Klonowanie repozytorium z `https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git`.
-     	3. Przełączanie się na gałąź `TS416767`.
+- **Kroki**:
+    1. Usunięcie katalogu `MDO2025_INO` ( o ile istnieje).
+    2. Klonowanie repozytorium z `https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git`.
+    3. Przełączanie się na gałąź `TS416767`.
 
 
 ```groovy
