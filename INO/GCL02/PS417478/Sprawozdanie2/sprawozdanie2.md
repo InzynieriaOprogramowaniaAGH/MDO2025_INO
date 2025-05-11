@@ -16,7 +16,7 @@ Następnie pobrałam i uruchomiłam kontenery docker dind i jenkinsa i sprawdzi�
 ![zdj4](screenshots2/55.png)
 ![zdj5](screenshots2/56.png)
 
-Po wejsciu na stroję Jenkinsa za pomocą IP: `http://192.168.116.7:8080/`. Uzyskałam hasło, które wprowadziłam na stronie poleceniem:
+Po wejsciu na stroję Jenkinsa za pomocą IP: `http://192.168.0.116:8080/`. Uzyskałam hasło, które wprowadziłam na stronie poleceniem:
 ```bash
 docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 ```
