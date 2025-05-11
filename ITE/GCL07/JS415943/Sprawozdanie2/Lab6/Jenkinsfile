@@ -1,0 +1,104 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_BUILD = 'node-build'
+        IMAGE_TEST = 'node-test'
+        IMAGE_DEPLOY = 'node-deploy'
+        DOCKERHUB_REPO = 'tygrysiatkomale/node-deploy'
+        ZIP_BASE = 'app'
+        VERSION = "v${BUILD_NUMBER}"
+        IMAGE_TAG = "tygrysiatkomale/node-deploy:v${BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'JS415943', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+            }
+        }
+
+        stage('Clean') {
+            steps {
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    sh '''
+                        docker container ls -a -q | xargs -r docker rm -f
+                        docker volume ls -q | xargs -r docker volume rm -f
+                        docker network ls -q --filter type=custom | xargs -r docker network rm -f
+                        docker builder prune --all --force
+                        docker images -q | sort -u | grep -vE '^(node:22\\.10|node:22\\.10-slim)$' | xargs -r docker rmi -f
+                    '''
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    sh 'docker build -f Dockerfile.build -t $IMAGE_BUILD .'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    sh 'docker build -f Dockerfile.test -t $IMAGE_TEST .'
+                    sh 'docker run --rm $IMAGE_TEST > test-${VERSION}.log'
+                    archiveArtifacts artifacts: "test-${VERSION}.log", onlyIfSuccessful: true
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    sh '''
+                        docker create --name temp-build-container $IMAGE_BUILD
+                        docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+                        docker cp temp-build-container:/node-js-dummy-test/package.json .
+                        docker cp temp-build-container:/node-js-dummy-test/src ./src
+                        docker cp temp-build-container:/node-js-dummy-test/views ./views
+                        docker rm temp-build-container
+                        docker build -f Dockerfile.deploy -t $IMAGE_DEPLOY:$VERSION .
+                    '''
+                }
+            }
+        }
+
+        stage('SmokeTest') {
+            steps {
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    sh '''
+                        docker network create ci || true
+                        docker run -dit --network ci --name deploy -p 3000:3000 $IMAGE_DEPLOY:$VERSION
+                        sleep 5
+                        docker run --rm --network ci curlimages/curl curl http://deploy:3000
+                        docker stop deploy
+                        docker rm deploy
+                        docker network rm ci
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                            docker run --rm -v $PWD:/app -w /app debian bash -c "apt-get update && apt-get install -y zip && zip -r ${ZIP_BASE}-${VERSION}.zip node_modules/ src/ views/ package.json"
+                        '''
+                        archiveArtifacts artifacts: "${ZIP_BASE}-${VERSION}.zip", onlyIfSuccessful: true
+
+                        sh '''
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker tag $IMAGE_DEPLOY:$VERSION $IMAGE_TAG
+                            docker push $IMAGE_TAG
+                        '''
+                    }
+                }
+            }
+        }
+    }
+}
