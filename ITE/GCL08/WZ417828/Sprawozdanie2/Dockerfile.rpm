@@ -4,7 +4,6 @@ ARG PACKAGE_NAME=libcjson
 ARG PACKAGE_VERSION=1.7.18
 ARG PACKAGE_RELEASE=1
 ARG ARCH=x86_64
-ARG REPO_PATH=ITE/GCL08/WZ417828/Sprawozdanie2
 
 RUN dnf install -y rpm-build gcc make
 
@@ -15,4 +14,4 @@ COPY --from=cjson-build /app/cJSON/libcjson.so* /root/rpmbuild/SOURCES/
 COPY --from=cjson-build /app/cJSON/cJSON.h /root/rpmbuild/SOURCES/
 COPY libcjson.spec /root/rpmbuild/SPECS/
 
-RUN rpmbuild -bb --target=${ARCH} ${REPO_PATH}/libcjson.spec
+RUN rpmbuild -bb --target=${ARCH} ${RPMBUILD}/SPECS/libcjson.spec
