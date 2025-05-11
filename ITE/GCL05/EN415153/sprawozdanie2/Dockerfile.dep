@@ -1,0 +1,7 @@
+FROM node:18-slim
+
+COPY --from=expressjs-build /tmp/foo /app
+
+WORKDIR /app
+
+CMD ["npm", "start"]
