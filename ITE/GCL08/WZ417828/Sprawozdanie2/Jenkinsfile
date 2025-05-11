@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
             docker.build("${DOCKER_IMAGE_RPM}", 
-                "-f Dockerfile.rpm --build-arg PACKAGE_NAME=${RPM_PACKAGE_NAME} " +
+                "-f ${REPO_PATH}/Dockerfile.rpm --build-arg PACKAGE_NAME=${RPM_PACKAGE_NAME} " +
                 "--build-arg PACKAGE_VERSION=${RPM_PACKAGE_VERSION} " +
                 "--build-arg PACKAGE_RELEASE=${RPM_PACKAGE_RELEASE} " +
                 "--build-arg ARCH=${RPM_ARCH} .")
