@@ -172,7 +172,7 @@ Repozytorium node-js-dummy-test to prosty projekt oparty na Node.js, zaprojektow
 
 ## Diagram UML
 
-![Opis obrazka](lab6-7/lab6-7.1.png)
+![Opis obrazka](lab6-7/lab6-7.1.jpg)
 
 ## Pełny pipeline
 
@@ -392,11 +392,11 @@ Wszystko przebiegło pomyślnie.
 
 ***build.log***
 
-Zawartość pliku znajduje się w [plik.txt](lab6-7/build.log).
+Zawartość pliku znajduje się w [build.log](lab6-7/build.log).
 
 ***test.log***
 
-Zawartość pliku znajduje się w [plik.txt](lab6-7/test.log).
+Zawartość pliku znajduje się w [test.log](lab6-7/test.log).
 
 ## Podsumowanie
 
