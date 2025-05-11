@@ -368,7 +368,7 @@ Teraz większość pól była nieaktywna, trzeba było chwilę poczekać.
 
 Po chwili rozpoczęła się właściwa instalacja
 
-![Ekran wyboru](zrzuty9/zrzut_ekranu3.png)
+![Instalacja](zrzuty9/zrzut_ekranu3.png)
 
 Instalacja przebiegła pomyślnie, należało teraz uruchomić system ponownie.
 
@@ -393,3 +393,105 @@ Tak jak wcześniej przeszedłem przez instalację, tym razem restart nastąpił 
 Po zaloowaniu się na konto sprawdziłem nazwę hosta poleceniem `hostname`, nazwa zostałą poprawnie ustawiona na `fedora.test`.
 
 ![Ustawiona nazwa hosta](zrzuty9/zrzut_ekranu6.png)
+
+### Instalacja biblioteki `cjson` w wykorzystaniem pliku odpowiedzi
+
+#### Przygotowanie `cjson.rpm`
+
+Najpierw zmieniłem nazwę pliku `cjson.rpm` na `mycjson.rpm` a uniknąć konliktu nazw i ewentulnego pobrania "złej" biblioteki `cjson`.
+
+#### Utworzenie repozytorium hppd
+
+W celu utworzenia repozytorium dla mojej biblioteki `mycjson.rpm` postanowiłem wykorzystać serwer Apache, do tego pobrałem i zainstalowałem httpd i createrpo poleceniem:
+
+```bash
+sudo dnf install -y httpd createrepo
+```
+
+![Instalacja httpd i createrepo](zrzuty9/zrzut_ekranu7.png)
+
+Następnie utworzyłem folder `/var/www/html/myrepo` i skopiowałem do niego `mycjson.rpm`.
+
+Repozytorium utworzyłem za pomocą `createrpo .`.
+
+![Utworzenie repozytorium](zrzuty9/zrzut_ekranu8.png)
+
+Aby połączenie nie było blokowane wyłączyłem firewalla dla http za pomocą polecenia:
+
+```bash
+sudo firewall-cmd --permanent -add-service=http
+sudo firewall-cmd --reload
+```
+
+![Wyłączenie firewalla](zrzuty9/zrzut_ekranu9.png)
+
+Ostatnim krokiem było zmodyfikowanie konfiguracji Apache w pliku `/etc/httpd/conf/httpd.conf`, aby linkowanie wewnątrz folderu było poprawne.
+
+![Naprawa linkowania](zrzuty9/zrzut_ekranu10.png)
+
+Po tych krokach repozytorium było dostępne pod adresem `http://192.168.56.101/myrepo`;
+
+![Gotowe repozytorium](zrzuty9/zrzut_ekranu11.png)
+
+#### Modyfikacja kickstarta
+
+W pliku `anaconda-ks.cfg` wskazałem na nowo utworzone repozytorium: `repo --name=myrepo --baseurl=http://192.168.56.101/myrepo/`.
+
+Odpowiednio zmodyfikowałem sekcję `@packages`:
+
+```
+%packages
+@^custom-environment
+mycjson
+gcc
+glibc
+curl
+%end
+```
+
+Utworzyłem rówież sekcję `@post` ktora kompiluje program i uruchamia go w momencie instalacji.
+
+```
+%post
+mkdir -p /opt/example
+
+chown aborek:aborek /opt/example
+
+# Pobierz plik main.c z repozytorium
+curl -o /opt/example/main.c https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/AB416965/INO/GCL01/AB416965/Sprawozdanie2/pipeline/main.c
+
+# Stwórz skrypt uruchamiający program po zalogowaniu (dla trybu tekstowego)
+cat << 'EOF' > /etc/profile.d/run_example.sh
+#!/bin/bash
+if [ ! -f /opt/example/.compiled ]; then
+    echo "Kompiluję program z main.c" >> /opt/example/autostart.log
+    gcc /opt/example/main.c -o /opt/example/example -lcjson -I/usr/local/include/cjson -L/usr/local/lib64
+    if [ -f /opt/example/example ]; then
+        echo "Uruchamiam program:" >> /opt/example/autostart.log
+        LD_LIBRARY_PATH=/usr/local/lib64 /opt/example/example >> /opt/example/autostart.log 2>&1
+    else
+        echo "Kompilacja nie powiodła się" >> /opt/example/autostart.log
+    fi
+    touch /opt/example/.compiled
+fi
+EOF
+
+chmod +x /etc/profile.d/run_example.sh
+%end
+```
+
+#### Logowanie po instalacji
+
+Po udanej instalacji systemu, zalogowałem się na moje konto. Aby sprawdzić czy biblioteka została zainstalowana poprawnie a program się skompilował sprawdziłem logi.
+
+Sprawdziłem plik `/opt/example/autostart.log`, którego komunikaty wykazały że program skompilował a następnie uruchomił się prawidłowo.
+
+![Logi uruchomienia](zrzuty9/zrzut_ekranu12.png)
+
+Następnie wykorzystałem polecenie: `rpm -ql mycjson` do sprawdzenia ścieżek zainstalowanych bibliotek.
+
+![Lokalizacja plików zainstalowanej biblioteki](zrzuty9/zrzut_ekranu13.png)
+
+Ostatecznie spróbowałem uruchomić skompilowany już program, co zakończyło się sukcesem.
+
+![Uruchomienie programu](zrzuty9/zrzut_ekranu14.png)
