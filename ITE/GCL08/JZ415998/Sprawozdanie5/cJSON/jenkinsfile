@@ -1,0 +1,102 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_BUILD = 'cjson-build'
+        IMAGE_TEST = 'cjson-test'
+        IMAGE_DEPLOY = 'cjson-deploy'
+        DOCKERHUB_REPO = 'zboro02/cjson-deploy' 
+        ZIP_BASE = 'cjson'
+        VERSION = "v${BUILD_NUMBER}"
+        IMAGE_TAG = "zboro02/cjson-deploy:v${BUILD_NUMBER}" 
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'JZ415998v2', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+                sh 'pwd'
+                sh 'ls -la'
+
+            }
+        }
+
+        stage('Clean') {
+            steps {
+                dir('ITE/GCL08/JZ415998/Sprawozdanie5/cJSON') {
+                    sh '''
+                        docker container ls -a -q | xargs -r docker rm -f
+                        docker volume ls -q | xargs -r docker volume rm -f
+                        docker network ls -q --filter type=custom | xargs -r docker network rm -f
+                        docker builder prune --all --force
+                        docker images -q | sort -u | grep -vE '^(gcc:14|alpine:latest)$' | xargs -r docker rmi -f
+                    '''
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('ITE/GCL08/JZ415998/Sprawozdanie5/cJSON') {
+                    sh 'docker build -f buildDockerfile -t $IMAGE_BUILD .'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('ITE/GCL08/JZ415998/Sprawozdanie5/cJSON') {
+                    sh 'docker build -f testDockerfile -t $IMAGE_TEST .'
+                    sh 'docker run --rm $IMAGE_TEST > test-${VERSION}.log'
+                    archiveArtifacts artifacts: "test-${VERSION}.log", onlyIfSuccessful: true
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('ITE/GCL08/JZ415998/Sprawozdanie5/cJSON') {
+                    sh '''
+                        docker create --name kontener-tymczas $IMAGE_BUILD
+                        docker cp kontener-tymczas:/cJSON/cJSON.c ./cJSON.c
+                        docker cp kontener-tymczas:/cJSON/cJSON.h ./cJSON.h
+                        docker rm kontener-tymczas
+                        docker build -f deployDockerfile -t $IMAGE_DEPLOY:$VERSION .
+                    '''
+                }
+            }
+        }
+
+        stage('SmokeTest') {
+            steps {
+                dir('ITE/GCL08/JZ415998/Sprawozdanie5/cJSON') {
+                    sh '''
+                        docker network create fajnasiec || true
+                        docker run -dit --network fajnasiec --name deploy $IMAGE_DEPLOY:$VERSION
+                        sleep 3
+                        docker run --rm --network fajnasiec -v $PWD:/apka -w /apka gcc:14 bash -c "gcc -o apka plik.c cJSON.c && ./apka"
+                        docker stop deploy
+                        docker rm deploy
+                        docker network rm fajnasiec
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir('ITE/GCL08/JZ415998/Sprawozdanie5/cJSON') {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                            docker run --rm -v $(pwd):/apka -w /apka alpine sh -c "apk add --no-cache zip && zip -r ${ZIP_BASE}-${VERSION}.zip cJSON.c cJSON.h"
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker tag $IMAGE_DEPLOY:$VERSION $IMAGE_TAG
+                            docker push $IMAGE_TAG
+                        '''
+                        archiveArtifacts artifacts: "${ZIP_BASE}-${VERSION}.zip", onlyIfSuccessful: true
+                    }
+                }
+            }
+        }
+    }
+}
