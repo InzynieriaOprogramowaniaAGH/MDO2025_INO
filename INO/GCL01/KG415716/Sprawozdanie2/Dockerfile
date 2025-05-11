@@ -1,10 +1,19 @@
-FROM jenkins/jenkins:2.492.2-jdk17
-USER root
-RUN apt-get update && apt-get install -y lsb-release ca-certificates curl && \
-    install -m 0755 -d /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
-    chmod a+r /etc/apt/keyrings/docker.asc && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
-    https://download.docker.com/linux/debian $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" \
-    | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
-    apt-get update && apt-get install -y docker-ce
+FROM debian:bullseye AS builder
+
+RUN apt-get update && apt-get install -y \
+    git build-essential meson ninja-build \
+    libglib2.0-dev libssl-dev libncurses5-dev perl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
+RUN git clone https://github.com/irssi/irssi.git
+RUN meson setup /src/builddir /src/irssi -Dprefix=/usr && \
+    ninja -C /src/builddir && \
+    ninja -C /src/builddir install
+FROM debian:bullseye AS runtime
+COPY --from=builder /usr /usr
+RUN apt-get update && apt-get install -y \
+    libncurses5 libssl1.1 \
+    && rm -rf /var/lib/apt/lists/*
+
+ENTRYPOINT ["irssi"]
