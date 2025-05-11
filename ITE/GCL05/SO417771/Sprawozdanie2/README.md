@@ -6,23 +6,23 @@
 
 1. Wykonano polecenie do utworzenia dedykowanej sieci Docker o nazwie jenkins. Następnie wykonano polecenie pobrania obrazu docker:dind. 
 
-![Opis obrazka](lab4/lab4.18.png)
+![Opis obrazka](../Sprawozdanie1/lab4/lab4.18.png)
 
 2. Uruchomiono kontener Docker z obrazem docker:dind:
 
-![Opis obrazka](lab4/lab4.19.png)
+![Opis obrazka](../Sprawozdanie1/lab4/lab4.19.png)
 
 3. Zbudowano obraz na podstawie pliku Dockerfile.jenkins: `docker build -t myjenkins-blueocean:2.492.3-1 -f Dockerfile.jenkins .`
 
-![Opis obrazka](lab4/lab4.20.png)
+![Opis obrazka](../Sprawozdanie1/lab4/lab4.20.png)
 
 4. Uruchomiono kontener myjenkins-blueocean:2.492.3-1 z ustawieniami:
 
-![Opis obrazka](lab4/lab4.21.png)
+![Opis obrazka](../Sprawozdanie1/lab4/lab4.21.png)
 
 5. Na liście widoczne są dwa kontenery:
 
-![Opis obrazka](lab4/lab4.22.png)
+![Opis obrazka](../Sprawozdanie1/lab4/lab4.22.png)
 
 ***Dockerfile.jenkins***
 ```sh
@@ -43,9 +43,9 @@ RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
 
 6. Uruchomiono jenkins w przeglądarce, a naastępnie utworzono konta admina
 
-![Opis obrazka](lab4/lab4.23.png)
+![Opis obrazka](../Sprawozdanie1/lab4/lab4.23.png)
 
-![Opis obrazka](lab4/lab4.24.png)
+![Opis obrazka](../Sprawozdanie1/lab4/lab4.24.png)
 
 ---
 
@@ -398,6 +398,6 @@ Zawartość pliku znajduje się w [plik.txt](lab6-7/build.log).
 
 Zawartość pliku znajduje się w [plik.txt](lab6-7/test.log).
 
-**Podsumowanie**
+## Podsumowanie
 
 Pipeline jest dobrze zaplanowany i wykonuje pełny cykl CI/CD: od klonowania repo, przez budowanie i testowanie obrazów Docker, aż po wdrożenie, testowanie aplikacji, publikację logów i czyszczenie środowiska. Wszystko odbywa się w sposób zautomatyzowany, z wykorzystaniem standardowych narzędzi takich jak Docker i Git.
