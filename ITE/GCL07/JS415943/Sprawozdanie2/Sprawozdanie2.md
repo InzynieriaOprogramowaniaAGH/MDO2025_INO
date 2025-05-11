@@ -191,3 +191,133 @@ COPY src/ ./src/
 COPY views/ ./views/
 CMD ["npm", "start"]
 ```
+Polecenia do budowania kontenerów:
+
+```bash
+docker build -f ./Dockerfile.build -t node-build .
+docker build -f ./Dockerfile.test -t node-test .
+docker create --name temp-build-container node-build
+```
+
+### Etapy pipeline:
+
+- `Clone`
+```groovy
+stage('Clone') {
+            steps {
+                git branch: 'JS415943', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+            }
+        }
+```
+Pobranie projektu z brancha
+
+- `Clean`
+```groovy
+stage('Clean') {
+            steps {
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    sh '''
+                        docker container ls -a -q | xargs -r docker rm -f
+                        docker volume ls -q | xargs -r docker volume rm -f
+                        docker network ls -q --filter type=custom | xargs -r docker network rm -f
+                        docker builder prune --all --force
+                        docker images -q | sort -u | grep -vE '^(node:22\\.10|node:22\\.10-slim)$' | xargs -r docker rmi -f
+                    '''
+                }
+            }
+        }
+```
+Usunięcię zbędnych kontenerów, wolumenów, sieci i obrazów w celu wyczyszczenia środowiska przed kolejnym buildem
+
+- `Build`
+```groovy
+stage('Build') {
+            steps {
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    sh 'docker build -f Dockerfile.build -t $IMAGE_BUILD .'
+                }
+            }
+        }
+```
+Zbudowanie obrazu `node-build` zawierającego zależności i źródło aplikacji
+
+- `Test`
+```groovy
+stage('Test') {
+            steps {
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    sh 'docker build -f Dockerfile.test -t $IMAGE_TEST .'
+                    sh 'docker run --rm $IMAGE_TEST > test-${VERSION}.log'
+                    archiveArtifacts artifacts: "test-${VERSION}.log", onlyIfSuccessful: true
+                }
+            }
+        }
+```
+Zbudowanie obrazu testowego `node-test` bazującego na build, uruchomienie testów poprzez `npm test` oraz zapisanie logów jako artefakt w `.log`
+
+- `Deploy`
+```groovy
+stage('Deploy') {
+            steps {
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    sh '''
+                        docker create --name temp-build-container $IMAGE_BUILD
+                        docker cp temp-build-container:/node-js-dummy-test/node_modules ./node_modules
+                        docker cp temp-build-container:/node-js-dummy-test/package.json .
+                        docker cp temp-build-container:/node-js-dummy-test/src ./src
+                        docker cp temp-build-container:/node-js-dummy-test/views ./views
+                        docker rm temp-build-container
+                        docker build -f Dockerfile.deploy -t $IMAGE_DEPLOY:$VERSION .
+                    '''
+                }
+            }
+        }
+```
+Stworzenie nowego odchudzonego kontenera `node-deploy` poprzez skopiowanie tylko niezbędnych plików (bez .git, dev-tools itd.)
+
+- `SmokeTest`
+```groovy
+stage('SmokeTest') {
+            steps {
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    sh '''
+                        docker network create ci || true
+                        docker run -dit --network ci --name deploy -p 3000:3000 $IMAGE_DEPLOY:$VERSION
+                        sleep 5
+                        docker run --rm --network ci curlimages/curl curl http://deploy:3000
+                        docker stop deploy
+                        docker rm deploy
+                        docker network rm ci
+                    '''
+                }
+            }
+        }
+```
+
+Uruchomienie aplikacji poprzez kontener `node-deploy` w sieci ci, sprawdzenie odpowiedzi aplikacji poprzez curl na porcie 3000, zamknięcie kontenera i usunięcie sieci
+
+- `Publish`
+```groovy
+stage('Publish') {
+            steps {
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                            docker run --rm -v $PWD:/app -w /app debian bash -c "apt-get update && apt-get install -y zip && zip -r ${ZIP_BASE}-${VERSION}.zip node_modules/ src/ views/ package.json"
+                        '''
+                        archiveArtifacts artifacts: "${ZIP_BASE}-${VERSION}.zip", onlyIfSuccessful: true
+
+                        sh '''
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker tag $IMAGE_DEPLOY:$VERSION $IMAGE_TAG
+                            docker push $IMAGE_TAG
+                        '''
+                    }
+                }
+            }
+        }
+```
+Stworzenie pliku zip zawierającego aplikacje, zarchiwizowanie go w Jenkinsie, zalogowanie do DockerHub oraz wypchnięcie obrazu
+
+### Ostateczny diagram UML
+![](/ITE/GCL07/JS415943/Sprawozdanie2/Lab6/Screenshots/UML.png)
