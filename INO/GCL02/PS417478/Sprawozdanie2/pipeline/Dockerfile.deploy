@@ -1,7 +1,7 @@
 FROM fedora:41
 
-COPY mycjson.rpm /tmp/mycjson.rpm
-RUN dnf install -y /tmp/mycjson.rpm gcc
+COPY cjson.rpm /tmp/cjson.rpm
+RUN dnf install -y /tmp/cjson.rpm gcc
 
 COPY main.c /app/main.c
 WORKDIR /app
