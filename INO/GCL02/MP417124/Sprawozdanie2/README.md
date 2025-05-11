@@ -30,13 +30,32 @@ W ramach pierwszych prób stworzyłam kilka prostych projektów:
 - Komenda `uname` pozwoliła sprawdzić, czy Jenkins wykonuje poprawnie skrypty powłoki.  
   ![Zrzut ekranu 7 – uname]()
 
+  ``` bash
+       uname -a
+  ```
+
+
 - Napisałam skrypt, który sprawdza, czy bieżąca godzina jest parzysta. Mimo że to zadanie miało charakter czysto testowy, świetnie obrazuje, jak Jenkins może służyć do uruchamiania warunkowych zadań.  
   ![Zrzut ekranu 8 – Sprawdzenie godziny]()
+
+    ``` bash
+  #!/bin/bash
+  HOUR=$(date +%H)
+  echo "Aktualna godzina: $HOUR"
+  if [ $((10#$HOUR % 2)) -eq 0 ]; then
+    echo "Godzina jest parzysta"
+  else
+    echo "Godzina jest nieparzysta"
+  fi
+  ```
 
 - Utworzyłam job pobierający obraz systemu Ubuntu z Dockera, co potwierdziło poprawność konfiguracji integracji Jenkinsa z Dockerem.  
   ![Zrzut ekranu 9 – docker pull ubuntu]()
 
-Każdy z projektów zakończył się sukcesem, co dało mi dużą satysfakcję, szczególnie że początkowo miałam wątpliwości co do konfiguracji kontenerów i poprawnego montowania woluminów.
+  ```bash
+    #!/bin/bash
+    docker pull ubuntu
+  ```
 
 ---
 
@@ -44,11 +63,11 @@ Każdy z projektów zakończył się sukcesem, co dało mi dużą satysfakcję, 
 
 W dalszej części laboratorium skonfigurowałam pełnoprawny pipeline w Jenkinsie. Pipeline został podzielony na trzy etapy:
 
-1. **Klonowanie repozytorium** z GitHuba na wskazanej gałęzi `MP417124`.
+1. **Klonowanie repozytorium** z GitHuba na własną gałąź `MP417124`.
 2. **Budowa obrazu Dockera** z pliku `Dockerfile.build`, znajdującego się w strukturze katalogów repozytorium.
 3. **Wyświetlenie komunikatu końcowego** o poprawnym przebiegu procesu.
 
-```groovy
+``` bash
 pipeline {
     agent any
 
@@ -77,5 +96,68 @@ pipeline {
         }
     }
 }
+
+```
+
+Zmodyfikowano wcześniej utworzony Pipeline, tak aby budował rownież kontener testowy. Kontener testowy zostaje uruchomiony a logi będące wynikami jego działania zostają zapisane w postaci artefaktu.
+
+``` bash
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                git branch: 'MP417124', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir ("INO/GCL02/MP417124/docker_build") {
+                    script {
+                        docker.build('cj-build', '-f Dockerfile.build .')
+                    }   
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                dir("INO/GCL02/MP417124/docker_build") {
+                    script {
+                        docker.build('cj-test', '-f Dockerfile.test .')
+                        sh """
+                            container_id=\$(docker run -d test-image)
+                            mkdir -p logs
+                            docker cp \${container_id}:/app/cJSON/logs/test_results.log logs/test_results.log
+                            docker rm \${container_id}
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'INO/GCL02/MP417124/docker_build/test_results.log', allowEmptyArchive: true
+        }
+    }
+}
+```
+
+Na bazie wcześniejszych etapów, stworzono kompletny pipeline CI/CD, który realizował wszystkie kroki związane z budowaniem, testowaniem oraz wdrażaniem aplikacji. Zdecydowano się na wykorzystanie pakietu .rpm jako artefaktu końcowego, który następnie można było zainstalować na systemie Linux.
+
+W pipeline’ie zastosowano wersjonowanie artefaktów i obrazów Docker zgodnie z Semantic Versioning, co pozwalało na łatwą identyfikację wersji artefaktów generowanych w trakcie kolejnych uruchomień pipeline’u.
+
+Diagram pipeline’u
+
+Wszystkie etapy pipeline’u zostały zorganizowane w pięciu głównych fazach:
+1. Clone: Klonowanie repozytorium.
+2. Build: Budowanie obrazu Docker z aplikacją.
+3. Test: Uruchamianie testów na zbudowanym obrazie.
+4. Deploy: Instalowanie pakietu .rpm i uruchamianie testów na systemie.
+5. Print: Potwierdzenie zakończenia procesu.
 
 
