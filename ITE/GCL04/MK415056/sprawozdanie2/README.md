@@ -46,7 +46,7 @@ Projekt, który wyświetla uname
 ![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/12.png)
 Projekt, który zwraca błąd, gdy... godzina jest nieparzysta
 ![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/13.png)
-![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/14s.png)
+![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/8559056936cbfd65977658e08c5c4705cdb037ca/ITE/GCL04/MK415056/sprawozdanie2/scr/14s.png)
 ![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/14f.png)
 Projek pobierający obraz kontenera ubuntu (stosując docker pull)
 ![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/15.png)
@@ -166,7 +166,7 @@ dotnet) lub obraz stworzony samodzielnie i zarejestrowany/widoczny w DIND (jak n
     * budowany przy użyciu ww. kontenera kod, wykorzystujący w tym celu testy obecne w repozytorium programu
     * Zadbaj o dostępność logów i możliwość wnioskowania jakie testy nie przechodzą
 
-![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/73a334c8d3cf72b39a4ae6cac7d982cff1cef671/ITE/GCL04/MK415056/sprawozdanie2/scr/red3.png)
+![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/73a334c8d3cf72b39a4ae6cac7d982cff1cef671/ITE/GCL04/MK415056/sprawozdanie2/scr/red2.png)
 
   * `Deploy`
     *  Krok uruchamiający aplikację na kontenerze docelowym
