@@ -1,5 +1,6 @@
 FROM fedora:42
 
+# Update and install dependencies
 RUN dnf update -y && dnf install -y \
     gcc \
     gcc-c++ \
@@ -22,25 +23,28 @@ RUN dnf update -y && dnf install -y \
     rpm-build \
     libtool \
     rpmdevtools \
-    perl-Pod-Html
+    perl-Pod-Html \
+    file \
+    bison
 
-# Ustaw zmienną środowiskową dla gettext
+# Set environment variable for gettext
 ENV FORCE_GETTEXT_VERSION=0.20
 
-# Przygotuj strukturę katalogów dla RPM
+# Set up RPM directory structure
 RUN rpmdev-setuptree
 
 WORKDIR /opt
 
+# Clone wget source code
 RUN git clone https://github.com/mirror/wget.git
 
 WORKDIR /opt/wget
 
-# Utwórz plik spec dla RPM
+# Create spec file with corrected paths and proper setup
 RUN echo '%global debug_package %{nil}' > wget.spec && \
     echo 'Name: wget' >> wget.spec && \
     echo 'Version: 1.0' >> wget.spec && \
-    echo 'Release: 1.fc38' >> wget.spec && \
+    echo 'Release: 1.fc42' >> wget.spec && \
     echo 'Summary: A utility for retrieving files using the HTTP or FTP protocols' >> wget.spec && \
     echo 'License: GPL-3.0' >> wget.spec && \
     echo 'BuildRequires: gcc make gettext-devel' >> wget.spec && \
@@ -48,27 +52,44 @@ RUN echo '%global debug_package %{nil}' > wget.spec && \
     echo '%description' >> wget.spec && \
     echo 'GNU Wget is a free utility for non-interactive download of files from the Web.' >> wget.spec && \
     echo '%prep' >> wget.spec && \
-    echo 'cd %{_builddir}' >> wget.spec && \
+    echo '%setup -q -c' >> wget.spec && \
     echo '%build' >> wget.spec && \
+    echo 'cd %{_builddir}/%{name}-%{version}' >> wget.spec && \
     echo 'autoreconf -fiv' >> wget.spec && \
     echo './configure --prefix=/usr' >> wget.spec && \
     echo 'make %{?_smp_mflags}' >> wget.spec && \
     echo '%install' >> wget.spec && \
+    echo 'cd %{_builddir}/%{name}-%{version}' >> wget.spec && \
     echo 'make install DESTDIR=%{buildroot}' >> wget.spec && \
     echo '%files' >> wget.spec && \
-    echo '%{_bindir}/wget' >> wget.spec
+    echo '%{_bindir}/wget' >> wget.spec && \
+    echo '%doc' >> wget.spec
 
-# Przygotuj źródła
-RUN tar czf /root/rpmbuild/SOURCES/wget-1.0.tar.gz .
+# Move to a temporary build directory to avoid issues with source directory
+RUN mkdir -p /tmp/wget-build
+WORKDIR /tmp/wget-build
 
-# Kompilacja i budowanie RPM
-RUN autoreconf -fiv && \
+# Copy sources from git repo to build directory
+RUN cp -r /opt/wget/* .
+
+# Create the source tarball with proper structure
+RUN mkdir -p wget-1.0 && \
+    cp -r * wget-1.0/ 2>/dev/null || true && \
+    tar czf /root/rpmbuild/SOURCES/wget-1.0.tar.gz wget-1.0
+
+# Build the RPM in proper stages
+RUN cd wget-1.0 && \
+    autoreconf -fiv && \
     ./configure --prefix=/usr && \
-    make && \
-    make install DESTDIR=/root/rpmbuild/BUILDROOT/wget-1.0-1.fc38.x86_64 && \
-    rpmbuild -bb \
+    make
+
+# Build the RPM package using rpmbuild
+RUN rpmbuild -bb \
     --define "_topdir /root/rpmbuild" \
-    --define "_builddir $(pwd)" \
-    wget.spec
+    --define "_builddir /tmp/wget-build/wget-1.0" \
+    /opt/wget/wget.spec
+
+# Output location where the RPM will be available
+RUN echo "RPM package is available at: /root/rpmbuild/RPMS/x86_64/"
 
 CMD ["/bin/bash"]
