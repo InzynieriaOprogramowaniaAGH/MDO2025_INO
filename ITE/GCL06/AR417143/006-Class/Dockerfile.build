@@ -26,6 +26,9 @@ RUN dnf update -y && dnf install -y \
 # Ustaw zmienną środowiskową dla gettext
 ENV FORCE_GETTEXT_VERSION=0.20
 
+# Przygotuj strukturę katalogów dla RPM
+RUN rpmdev-setuptree
+
 WORKDIR /opt
 
 RUN git clone https://github.com/mirror/wget.git
@@ -42,6 +45,14 @@ RUN echo '%global debug_package %{nil}' > wget.spec && \
     echo 'BuildRequires: gcc make' >> wget.spec && \
     echo '%description' >> wget.spec && \
     echo 'GNU Wget is a free utility for non-interactive download of files from the Web.' >> wget.spec && \
+    echo '%prep' >> wget.spec && \
+    echo '%setup -q -c' >> wget.spec && \
+    echo '%build' >> wget.spec && \
+    echo 'autoreconf -fiv' >> wget.spec && \
+    echo './configure --prefix=/usr/local' >> wget.spec && \
+    echo 'make' >> wget.spec && \
+    echo '%install' >> wget.spec && \
+    echo 'make install DESTDIR=%{buildroot}' >> wget.spec && \
     echo '%files' >> wget.spec && \
     echo '/usr/local/bin/wget' >> wget.spec
 
@@ -49,10 +60,11 @@ RUN echo '%global debug_package %{nil}' > wget.spec && \
 RUN autoreconf -fiv && \
     ./configure --prefix=/usr/local && \
     make && \
-    make install DESTDIR=$(pwd)/rpm-build-root && \
-    rpmbuild --build-in-place -bb \
+    make install DESTDIR=/root/rpmbuild/BUILDROOT/wget-1.0-1.fc38.x86_64 && \
+    rpmbuild -bb \
     --define "_rpmdir /opt/wget" \
-    --define "_buildrootdir $(pwd)/rpm-build-root" \
+    --define "_builddir $(pwd)" \
+    --define "_buildrootdir /root/rpmbuild/BUILDROOT" \
     wget.spec
 
 CMD ["/bin/bash"]
