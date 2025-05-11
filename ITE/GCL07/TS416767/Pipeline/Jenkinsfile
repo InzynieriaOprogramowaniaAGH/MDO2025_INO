@@ -1,0 +1,93 @@
+pipeline {
+    agent any
+
+    environment {
+        DIR = 'MDO2025_INO/ITE/GCL07/TS416767/Pipeline'
+        BUILD = "node-build:23-alpine"
+        TEST = "node-test:v${BUILD_NUMBER}"
+        DEPLOY = "node-deploy:v${BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Prepare') {
+            steps {
+                sh '''
+                    rm -rf MDO2025_INO
+                    git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+                    cd MDO2025_INO
+                    git checkout TS416767
+                '''
+            }
+        }
+
+        stage('Logs') {
+            steps {
+                dir(env.DIR) {
+                    sh 'mkdir -p logs'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir(env.DIR) {
+                    sh "docker build -t ${BUILD} -f node-js-build.Dockerfile . > logs/build.log 2>&1"
+                }
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                dir(env.DIR) {
+                    sh "docker build -t ${TEST} -f node-js-test.Dockerfile . > logs/test.log 2>&1"
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'docker network create node_js_app_deploy || true'
+                dir(env.DIR) {
+                    sh """
+                        docker build -t ${DEPLOY} -f node-js-deploy.Dockerfile .
+                        docker rm -f app || true
+                        docker run -d -p 3000:3000 --name app --network node_js_app_deploy ${DEPLOY}
+                    """
+                }
+            }
+        }
+
+        stage('Test Deployment') {
+            steps {
+                dir(env.DIR) {
+                    sh '''
+                        echo "Testing app from inside Docker network..."
+                        docker run --network node_js_app_deploy --rm curlimages/curl curl -v http://app:3000
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir(env.DIR) {
+                    sh '''
+                        mkdir -p artifacts_${BUILD_NUMBER}
+                        tar -cvf artifacts_${BUILD_NUMBER}.tar logs/*.log
+                    '''
+                    archiveArtifacts artifacts: "artifacts_${BUILD_NUMBER}.tar"
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning up...'
+            sh """
+                docker rmi ${BUILD} ${TEST} ${DEPLOY} || true
+                docker system prune --all --volumes --force || true
+            """
+        }
+    }
+}
