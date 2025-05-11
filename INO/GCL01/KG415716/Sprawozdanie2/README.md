@@ -99,7 +99,7 @@ Następnie zaimplementowałam pipeline, który automatycznie pobiera kod źród�
 }
 ```
 
-![alt text](image-9.png)
+![alt text](screeny/image-9.png)
 
 ##### Jenkinsfile z SCM
 W pierwszym kroku tworzone pipeline dla aplikacji Irssi. Utworzyłam dwa pliki Dockerfile: jeden do budowy obrazu i drugi do testów.
@@ -219,7 +219,7 @@ Publish to etap, w którym pipeline przesyła gotowe obrazy na Docker Hub. Obraz
 
 
 
-![alt text](image-10.png)
+![alt text](screeny/image-10.png)
 
 #### WNIOSKI:
 Pipeline buduje, testuje i wdraża aplikację Irssi, zapewniając powtarzalność procesów i dostępność artefaktów, takich jak obrazy Docker i archiwum .tar.gz. Pipeline pozwala w pełni wykonać proces od pobrania kodu aż po publikację gotowego produktu. Dzięki temu nie trzeba wykonywać żadnych kroków ręcznie, bo zrobią się same. Oszczędza to czas i minimalizuje ryzyko błędów. Automatyczne budowanie, testowanie i publikacja obrazów Docker pokazują, jak dużą rolę w wytwarzania oprogramowania odgrywa CI/CD, ponieważ oferują szybkośc i łatwość wdrażania.
