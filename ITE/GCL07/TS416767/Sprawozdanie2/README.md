@@ -366,7 +366,6 @@ Artefakty, tworzone przy budowie obrazów, są gotowe do pobrania od razu po wyk
 
 build.log
 
-	'''ssh
 	#0 building with "default" instance using docker driver
 
 	#1 [internal] load build definition from node-js-build.Dockerfile
@@ -443,11 +442,11 @@ build.log
 	#9 writing image sha256:4ba9bad0e4aa339afbdbda172b091492ec36c1b8e6e0469abad479c90936926c done
 	#9 naming to docker.io/library/node-build:23-alpine done	
 	#9 DONE 1.4s
-	'''
+	
 
 test.log
 
-	'''ssh
+	
 	#0 building with "default" instance using docker driver
 
 	#1 [internal] load build definition from node-js-test.Dockerfile
@@ -490,7 +489,7 @@ test.log
 	#7 naming to docker.io/library/node-test:v4 done
 	#7 DONE 0.1s
 
-	'''
+
 
 ### Potwierdzenie działania aplikacji ###
 Działanie aplikacji potwierdza wynik stage'u `Test Deployment` w którym, treść `HTML'a` aplikacji jest wypisywana w konsoli za pomocą polecenia `curl`.
