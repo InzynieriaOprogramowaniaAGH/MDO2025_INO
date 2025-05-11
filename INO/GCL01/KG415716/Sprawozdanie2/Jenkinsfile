@@ -1,0 +1,101 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_DIR    = 'KG415716/Sprawozdanie2'
+        BUILDER_IMG   = "irssi-builder:${BUILD_NUMBER}"
+        TESTER_IMG    = "irssi-tester:${BUILD_NUMBER}"   
+        RUNTIME_IMG   = "irssi-runtime:${BUILD_NUMBER}"
+        TAR_NAME      = "irssi-${BUILD_NUMBER}.tar.gz"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps { checkout scm }
+        }
+
+        stage('Build') {   //builder image
+            steps {
+                sh """
+                    docker build --target builder \
+                        -t ${BUILDER_IMG} \
+                        -f ${DOCKER_DIR}/Dockerfile \
+                        ${DOCKER_DIR}
+                """
+            }
+        }
+
+        stage('Build') {    //tester image
+            steps {
+                sh """
+                    docker build \
+                        -f ${DOCKER_DIR}/Dockerfile.test \
+                        --build-arg BASE=${BUILDER_IMG} \
+                        -t ${TESTER_IMG} \
+                        ${DOCKER_DIR}
+                """
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh """
+                    docker run --rm ${TESTER_IMG} \
+                        /bin/bash -c "meson test -C /app/builddir --print-errorlogs --logbase junit" \
+                        | tee test.log
+                """
+            }
+        }
+
+        stage('Build') { //runtim image
+            steps {
+                sh """
+                    docker build --target runtime \
+                        -t ${RUNTIME_IMG} \
+                        -f ${DOCKER_DIR}/Dockerfile \
+                        ${DOCKER_DIR}
+                """
+            }
+        }
+
+        stage('test runtime') {
+            steps {
+                sh "docker run --rm ${RUNTIME_IMG} --version"
+            }
+        }
+
+        stage('package ') {
+            steps {
+                sh """
+                    cid=\$(docker create ${BUILDER_IMG})
+                    mkdir -p .out
+                    docker cp \${cid}:/usr .out/
+                    docker rm \${cid}
+                    tar -czf ${TAR_NAME} -C .out usr
+                """
+            }
+        }
+
+        stage('Publish images') {
+            environment {
+                DOCKERHUB = credentials('dockerhub-credentials') 
+            }
+            steps {
+                script {
+                    docker.withRegistry('', 'dockerhub-credentials') {
+                        docker.image("${BUILDER_IMG}").push()
+                        docker.image("${RUNTIME_IMG}").push()
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: '**/test.log', allowEmptyArchive: true
+            junit testResults: '**/builddir/meson-logs/*.xml', allowEmptyResults: true
+            archiveArtifacts artifacts: "${TAR_NAME}", allowEmptyArchive: false
+        }
+    }
+}
