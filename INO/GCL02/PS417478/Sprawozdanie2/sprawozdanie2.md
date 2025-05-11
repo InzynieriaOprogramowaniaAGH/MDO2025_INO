@@ -122,6 +122,93 @@ Całe logi z projektu 4 znajdują się w pliku [logi4](screenshots2/logi4.txt)
 
 
 Następnym zadaniem było utworzyć pełny pipeline z etapami: Clone, Clear Docker Cache, build, test, deploy, oraz publish za pomocą kontenera. 
-Do tego stworzyłam plik Jenkinsfile, który wygląda nastepując
+Do tego stworzyłam plik Jenkinsfile, który wygląda nastepująco:
+[Jenkinsfile](Jenkinsfile)
+```bash
+pipeline {
+    agent any
 
+    stages {
+        stage('Clone') { 
+            steps {
+                git branch: 'PS417478', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Clear Docker cache') {
+            steps {
+                sh 'docker builder prune -af'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir("INO/GCL02/PS417478/Sprawozdanie2/pipeline") {
+                    script {
+                        docker.build('cjson-build', '-f Dockerfile.build .')
+
+                        sh '''
+                            mkdir -p ../artifacts
+                            CID=$(docker create cjson-build)
+                            docker cp $CID:/app/cjson.rpm ../artifacts/
+                            docker rm $CID
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir("INO/GCL02/PS417478/Sprawozdanie2/pipeline") {
+                    script {
+                        docker.build('cjson-test', '-f Dockerfile.test .')
+
+                        sh """
+                            docker run --rm cjson-test | tee ../artifacts/cjson_test.log
+                        """
+                    }
+                }    
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir("INO/GCL02/PS417478/Sprawozdanie2/pipeline") {
+                    script {
+                        sh 'cp ../artifacts/cjson.rpm .'
+                        docker.build("cjson-deploy", "-f Dockerfile.deploy .")
+
+                        sh """
+                            docker run --rm cjson-deploy | tee ../artifacts/cjson_deploy.log
+                        """
+                    }      
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                archiveArtifacts artifacts: 'INO/GCL02/PS417478/Sprawozdanie2/artifacts/*.log', fingerprint: true
+                archiveArtifacts artifacts: 'INO/GCL02/PS417478/Sprawozdanie2/artifacts/*.rpm', fingerprint: true
+            }
+        }
+    }
+}
+```
+
+Utworzyłam nowy `pipeline` z opcją `pipeline script from SCM`, w SCM `git`, oraz odpowiednio repository URL, mój Branch, oraz ścieżkę do mojego Jenkinsfile:
 ![zdj20](screenshots2/74.png)
+
+Po uruchomieniu - wyniki:
+![zdj21](screenshots2/75.png)
+![zdj22](screenshots2/76.png)
+[cjson_test.log](screenshots2/cjson_test.log)
+[logi z konsoli1](screenshots2/logiP1.txt)
+
+Pliki po ponownym uruchomieniu:
+![zdj23](screenshots2/77.png)
+[cjson_test2.log](screenshots2/cjson_test2.log)
+[logi z konsoli2](screenshots2/logiP1.txt)
+
+Następnie
