@@ -13,7 +13,7 @@ pipeline {
     }
 
     stages {
-        stage('Git clone repo'){
+        stage('Clone'){
             steps{
                 git branch: 'WZ417828', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
             }
