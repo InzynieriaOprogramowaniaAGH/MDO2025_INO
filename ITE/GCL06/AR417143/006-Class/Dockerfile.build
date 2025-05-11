@@ -20,7 +20,8 @@ RUN dnf update -y && dnf install -y \
     autoconf-archive \
     ca-certificates \
     rpm-build \
-    libtool
+    libtool \
+    rpmdevtools
 
 # Ustaw zmienną środowiskową dla gettext
 ENV FORCE_GETTEXT_VERSION=0.20
@@ -31,14 +32,27 @@ RUN git clone https://github.com/mirror/wget.git
 
 WORKDIR /opt/wget
 
-# Dodaj krok aktualizacji gettext przed bootstrapem
+# Utwórz plik spec dla RPM
+RUN echo '%global debug_package %{nil}' > wget.spec && \
+    echo 'Name: wget' >> wget.spec && \
+    echo 'Version: 1.0' >> wget.spec && \
+    echo 'Release: 1.fc38' >> wget.spec && \
+    echo 'Summary: A utility for retrieving files using the HTTP or FTP protocols' >> wget.spec && \
+    echo 'License: GPL-3.0' >> wget.spec && \
+    echo 'BuildRequires: gcc make' >> wget.spec && \
+    echo '%description' >> wget.spec && \
+    echo 'GNU Wget is a free utility for non-interactive download of files from the Web.' >> wget.spec && \
+    echo '%files' >> wget.spec && \
+    echo '/usr/local/bin/wget' >> wget.spec
+
+# Kompilacja i budowanie RPM
 RUN autoreconf -fiv && \
-    ./configure && \
+    ./configure --prefix=/usr/local && \
     make && \
+    make install DESTDIR=$(pwd)/rpm-build-root && \
     rpmbuild --build-in-place -bb \
     --define "_rpmdir /opt/wget" \
-    --define "version 1.0" \
-    --define "release 1.fc38" \
+    --define "_buildrootdir $(pwd)/rpm-build-root" \
     wget.spec
 
 CMD ["/bin/bash"]
