@@ -1,7 +1,8 @@
 # Sprawozdanie 2 
 ## Lab 5-7
 ### 1.  Instalacja Jenkins
-Utworzyłam plik dockerfile.jenkins:
+Utworzyłam plik `dockerfile.jenkins`:
+
 Wtyczki: Docker-workflow – integracja Dockera z potokami Jenkinsa. Blueocean – interfejs użytkownika dla Jenkinsa. Pipeline-utility-steps – dodatkowe funkcje dla potoków. Aby umożliwić Jenkinsowi komunikację z Dockerem, w kontenerze zainstalowałam narzędzia Docker CLI. Ze względów bezpieczeństwa po instalacji narzędzi zmieniłam użytkownika z root na jenkins.
 ![zdj0](screenshots2/51.png)
 ![zdj1](screenshots2/50.png)
@@ -49,7 +50,6 @@ logi:
 Następnie utworzyłam nowy projekt 3 poprzez wyranie opcji `pipeline` i wprowadziłam kod, który pobiera w projekcie obraz kontenera ubuntu (stosując docker pull):
 ![zdj17](screenshots2/71.png)
 ![zdj18](screenshots2/70.png)
-![zdj19](screenshots2/69.png)
 Całe logi z projektu 3 znajdują się w pliku [logi3](screenshots2/logi3.txt)
 
 
@@ -197,6 +197,19 @@ pipeline {
     }
 }
 ```
+Plik ten:
+`Clone` - pobiera z mojego brancha repozytorium pliki potrzebne do budowy pipeline-a,
+
+`Clear Docker cache` - czyści pamięć podręczną tak aby każdy kolejny build wykonywany był na "nowym" środowisku,
+
+`Build` - buduje obraz dockera [dockerfile.build](pipeline/Dockerfile.build), oraz pakiet .rpm - artefakt,
+
+`Test` - buduje obraz dockera [dockerfile.test](pipeline/Dockerfile.test), uruchamia test biblioteki cJSON i zapisuje jego wyniki do pliku cjson_test.log,
+
+`Deploy` - buduje obraz dockera [dockerfile.deploy](pipeline/Dockerfile.deploy), uruchamia program testujący biblioteke [main.c](pipeline/main.c) i wynik zapisuje w pliku cjson_deploy.log,
+
+`Publish` - archiwuzuje utworzone artefakty, które są dostępne do pobrania z interfejsu Jenkinsa.
+
 
 Utworzyłam nowy `pipeline` z opcją `pipeline script from SCM`, w SCM `git`, oraz odpowiednio repository URL, mój Branch, oraz ścieżkę do mojego Jenkinsfile:
 ![zdj20](screenshots2/74.png)
@@ -221,5 +234,28 @@ Pliki po ponownym uruchomieniu:
 Następnie pobrałam archiwum [cjson.rpm](mycjson.rpm) i przeprowadziłam instalacje biblioteki:
 ![zdj24](screenshots2/78.png)
 
+
+Diagram UML - przedstawia uproszcone kolejne kroki realizowane w moim pipeline:
+![zdj25](screenshots2/80.png)
+
+
+Dlaczego w Projekcie wybrałam podejście DIND?
+Istnieją dwa główne sposoby uruchamiania Dockera w Jenkinsie:
+
+`1. Docker Outside of Docker (DOoD)` – Jenkins korzysta z Dockera działającego na hoście.
+
+Zalety: prosta konfiguracja, niskie zużycie zasobów.
+
+Wady: słaba izolacja, ryzyko ingerencji w system hosta, mniejsza przenośność pipeline’u.
+
+
+`2. Docker-in-Docker (DIND)` – Jenkins łączy się z własnym kontenerem z demonem Dockera.
+
+Zalety: dobra izolacja, lepsze bezpieczeństwo, łatwe przenoszenie środowiska, możliwość uruchamiania wielu buildów niezależnie.
+
+Wady: większa złożoność, większe zużycie zasobów.
+
+
+Wybrałam DIND, ponieważ zapewnia większe bezpieczeństwo i umożliwia łatwe przenoszenie oraz odtwarzanie środowiska CI/CD na różnych maszynach.
 --- 
 Do pomocy korzystałam ze sztucznej inteligencji takej jak `Chat GPT`, `DeepSeak`, oraz `Perplexity.ai`, każdorazowo weryfikując informacje w róznych źródłach.
