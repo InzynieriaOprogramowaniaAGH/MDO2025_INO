@@ -18,7 +18,7 @@ pipeline {
             steps {
                 dir("INO/GCL02/PS417478/Sprawozdanie2/pipeline") {
                     script {
-                        docker.build('cjson-builder-image', '-f Dockerfile.build1 .')
+                        docker.build('cjson-builder-image', '-f Dockerfile.build .')
 
                         sh '''
                             mkdir -p artifacts
