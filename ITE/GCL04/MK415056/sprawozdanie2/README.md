@@ -26,9 +26,10 @@ Dostosowanie oficjalnego obrazu Jenkinsa poprzez utworzenie customowego pliku `D
 Zbudowanie obrazu
 ![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/4.png)
 
-Dzięki poniższej komendzie możemy uzyskać dostęp do logów utworzonego kontenera `jenkins-blueocean`, co jest dla nas konieczne, żebyśmy mogli odblokować Jenkinsa:
+Uruchomienie obrazu
 ![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/5.png)
 
+Odczytanie automatycznie wygenerowanego hasła:
 ![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/6.png)
 
 ### Zadanie wstępne: uruchomienie
