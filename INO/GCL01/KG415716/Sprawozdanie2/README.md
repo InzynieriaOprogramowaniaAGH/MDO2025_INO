@@ -3,28 +3,28 @@
 Na początku zweryfikowałam działanie kontenerów, które służą do budowania i testowania aplikacji. Zapoznałam się również z dokumentacją dotyczącą instalacji Jenkinsa. Rozpoczęłam od utworzenia sieci dla Jenkinsa, co pozwala na poprawną komunikację między kontenerami. W tym celu użyłam  polecenia:
 
 `docker network create jenkins`
-![alt text](<Zrzut ekranu 2025-05-11 175719.png>)
+![alt text](screeny/Zrzut_ekranu_2025-05-11_175719.png)
 
 Następnie uruchomiłam kontener Docker-in-Docker, czyli kontener, w którym działa Docker, co jest pomocne w pracy z Jenkinsem. W tym celu utworzylam obraz:
 
-![alt text](<Zrzut ekranu 2025-05-11 175917.png>)
+![alt text](screeny/Zrzut_ekranu_2025-05-11_175917.png)
 
 
 Po uruchomieniu konetnera, pojawił się jego identyfikator , co świadczy, że zadziałał on poprawnie w tle.
 W kolejnym kroku to przygotowałam własnegu obraz Jenkinsa z Blue Ocean. Stworzyłam plik Dockerfile, który zawierał wszystkie potrzebne pluginy.
 Jenkins BlueOcean różni się od zwykłego Jenkinsa ładniejszym i prostszym w obsłudze interfejsem. Ułatwia to zarządzanie pipeline'ami i lepszą integrację z GitHubem.
 
-![alt text](<Zrzut ekranu 2025-05-11 181429.png>)
+![alt text](screeny/Zrzut_ekranu_2025-05-11_181429.png)
 Obraz zbudowałam za pomocą tego polecenia:
 
 `docker build -t myjenkins-blueocean:2.492.3-1 .`
 
-![alt text](<Zrzut ekranu 2025-05-11 181102-1.png>)
+![alt text](screeny/Zrzut_ekranu_2025-05-11_181102-1.png)
 
 
 Za pomocą adresu ip, połączyłam się z Jenkinsem i go odpowiednio zkonfigurowałam.
 
-![alt text](<Zrzut ekranu 2025-04-28 191805-1.png>)
+![alt text](screeny/Zrzut_ekranu_2025-04-28_191805-1.png)
 
 ### Projekt 1 – wyświetlanie informacji o systemie
 
@@ -36,10 +36,10 @@ W konfiguracji projektu wybrałam opcję Utwórz powłokę i dodałam komendę:
 
 Po zapisaniu konfiguracji i uruchomieniu zadania, Jenkins poprawnie wykonał polecenie.
 
-![alt text](<Zrzut ekranu 2025-04-28 192112-1.png>)
-![alt text](<Zrzut ekranu 2025-04-28 192309-1.png>)
-![alt text](<Zrzut ekranu 2025-04-28 192433-1.png>)
-![alt text](<Zrzut ekranu 2025-04-28 192515-1.png>)
+![alt text](screeny/Zrzut_ekranu_2025-04-28_192112-1.png)
+![alt text](screeny/Zrzut_ekranu_2025-04-28_192309-1.png)
+![alt text](screeny/Zrzut_ekranu_2025-04-28_192433-1.png)
+![alt text](screeny/Zrzut_ekranu_2025-04-28_192515-1.png)
 
 ### Projekt 2 – wykrywanie nieparzystej godziny
 Kolejny projekt miał na celu przetestowanie działania skryptu, który zwraca błąd, jeśli aktualna godzina systemowa jest nieparzysta. Chciałam sprawdzić, jak Jenkins reaguje na zakończenie zadania, gdy godzina jest parzysta i nie parzysta.
@@ -56,13 +56,13 @@ fi
 ```
 Skrypt pobiera aktualną godzinę, sprawdza, czy godzina jest podzielna przez 2 ,jeśli nie jest, kończy się komunikatem i błędem, a jeśli jest kończy się powodzeniem.
 
-Parzysta godzina:
-![alt text](<Zrzut ekranu 2025-04-28 200027-1.png>)
-Nieparzysta godzina:
-![alt text](<Zrzut ekranu 2025-04-28 193238-1.png>)
+###### Parzysta godzina:
+![alt text](screeny/Zrzut_ekranu_2025-04-28_200027-1.png)
+###### Nieparzysta godzina:
+![alt text](screeny/Zrzut_ekranu_2025-04-28_193238-1.png)
 
 Kolejno przeszłam do pobierania w projekcie obraz kontenera ubuntu stosując docker pull:
-![alt text](<Zrzut ekranu 2025-04-28 201139-1.png>)
+![alt text](screeny/Zrzut_ekranu_2025-04-28_201139-1.png)
 
 
 ##### Pipeline
@@ -106,8 +106,8 @@ W pierwszym kroku tworzone pipeline dla aplikacji Irssi. Utworzyłam dwa pliki D
 
 Utworzyłam nowy porjket, wybrałam opcje `Pipeline script from SCM`. Podałam odpowiedni adres do repozytorium i ścieżkę do pliku Jenkinsfile.
 
-![alt text](<Zrzut ekranu 2025-05-11 220855.png>)
-![alt text](<Zrzut ekranu 2025-05-11 221133.png>)
+![alt text](screeny/Zrzut_ekranu 2025-05-11_220855.png)
+![alt text](screeny/Zrzut_ekranu 2025-05-11_221133.png)
 ##### Dockerfile i Dockerfile.test:
 
 Dockerfile tworzy obraz aplikacji Irssi, instaluje wszystkie wymagane zależności, uruchamia aplikację i tworząc obraz z minimalnym zestawem plików.
