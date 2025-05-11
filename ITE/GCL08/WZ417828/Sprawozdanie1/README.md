@@ -1,5 +1,5 @@
 # Sprawozdanie 1
-#### Wojciech Zacharski ITE gr. 10
+#### Wojciech Zacharski ITE gr. 8
 <br>
 
 ## Laboratorium nr 1

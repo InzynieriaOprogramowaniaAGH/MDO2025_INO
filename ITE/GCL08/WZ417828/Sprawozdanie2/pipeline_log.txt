@@ -1,17 +1,308 @@
-FROM fedora:latest
+Started by user JenkinsAdmin
 
-ARG PACKAGE_NAME=libcjson
-ARG PACKAGE_VERSION=1.7.18
-ARG PACKAGE_RELEASE=1
-ARG ARCH=x86_64
+Obtained ITE/GCL08/WZ417828/Sprawozdanie2/Jenkinsfile from git https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins
+ in /var/jenkins_home/workspace/Jenkinsfile
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/Jenkinsfile/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
 
-RUN dnf install -y rpm-build gcc make
+ > git rev-parse refs/remotes/origin/WZ417828^{commit} # timeout=10
+Checking out Revision 3336f037e9367edcdde7e3d4bdf02c1abfe0f2cc (refs/remotes/origin/WZ417828)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 3336f037e9367edcdde7e3d4bdf02c1abfe0f2cc # timeout=10
+Commit message: "WZ417828 jenkinsfile update"
+ > git rev-list --no-walk 90400e16c02577787f7dc306ce582ffb9baf4657 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Clone)
+[Pipeline] git
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/Jenkinsfile/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/WZ417828^{commit} # timeout=10
+Checking out Revision 3336f037e9367edcdde7e3d4bdf02c1abfe0f2cc (refs/remotes/origin/WZ417828)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 3336f037e9367edcdde7e3d4bdf02c1abfe0f2cc # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D WZ417828 # timeout=10
+ > git checkout -b WZ417828 3336f037e9367edcdde7e3d4bdf02c1abfe0f2cc # timeout=10
+Commit message: "WZ417828 jenkinsfile update"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
 
-ENV RPMBUILD=/root/rpmbuild
-RUN mkdir -p ${RPMBUILD}/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
++ docker build -t cjson-build -f ITE/GCL08/WZ417828/Sprawozdanie2/Dockerfile.build .
+#0 building with "default" instance using docker driver
 
-COPY libcjson.so.1.7.18 /root/rpmbuild/SOURCES/
-COPY cJSON.h /root/rpmbuild/SOURCES/
-COPY libcjson.spec /root/rpmbuild/SPECS/
+#1 [internal] load build definition from Dockerfile.build
+#1 transferring dockerfile: 226B done
+#1 DONE 0.0s
 
-RUN rpmbuild -bb --target=${ARCH} ${RPMBUILD}/SPECS/libcjson.spec
+#2 [internal] load metadata for docker.io/library/gcc:12
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/5] FROM docker.io/library/gcc:12
+#4 DONE 0.0s
+
+#5 [4/5] WORKDIR /app/cJSON
+#5 CACHED
+
+#6 [3/5] RUN git clone https://github.com/DaveGamble/cJSON
+#6 CACHED
+
+#7 [2/5] WORKDIR /app
+#7 CACHED
+
+#8 [5/5] RUN make all
+#8 CACHED
+
+#9 exporting to image
+#9 exporting layers done
+#9 writing image sha256:9b2bdfe581cd89a179e73b00865c54cedf862990fe237aa8891a7b0114b6673a done
+#9 naming to docker.io/library/cjson-build done
+#9 DONE 0.0s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] script
+[Pipeline] {
+
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t cjson-test -f ITE/GCL08/WZ417828/Sprawozdanie2/Dockerfile.test .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.test
+#1 transferring dockerfile: 456B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/cjson-build:latest
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/gcc:12
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [cjson-test 1/8] FROM docker.io/library/gcc:12
+#5 DONE 0.0s
+
+#6 FROM docker.io/library/cjson-build:latest
+#6 DONE 0.0s
+
+#7 [cjson-test 3/8] RUN git clone https://github.com/DaveGamble/cJSON
+#7 CACHED
+
+#8 [cjson-test 7/8] WORKDIR /app/cJSON
+#8 CACHED
+
+#9 [cjson-test 4/8] COPY --from=cjson-build /app/cJSON/libcjson.so.1.7.18 /usr/lib/libcjson.so.1.7.18
+#9 CACHED
+
+#10 [cjson-test 6/8] RUN ln -s /usr/lib/libcjson.so.1 /usr/lib/libcjson.so
+#10 CACHED
+
+#11 [cjson-test 5/8] RUN ln -s /usr/lib/libcjson.so.1.7.18 /usr/lib/libcjson.so.1
+#11 CACHED
+
+#12 [cjson-test 2/8] WORKDIR /app
+#12 CACHED
+
+#13 [cjson-test 8/8] RUN gcc -o test test.c -lcjson
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 writing image sha256:61516c22a67fd37d0d6bdf359ccced7dbe98b991a71a0e0d0d5196c6da0684d9 done
+#14 naming to docker.io/library/cjson-test done
+#14 DONE 0.0s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Run Test)
+[Pipeline] script
+
+[Pipeline] {
+[Pipeline] sh
++ docker run --rm cjson-test
+Version: 1.7.18
+{
+	"name":	"Jack (\"Bee\") Nimble",
+	"format":	{
+		"type":	"rect",
+		"width":	1920,
+		"height":	1080,
+		"interlace":	false,
+		"frame rate":	24
+	}
+}
+["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+[[0, -1, 0], [1, 0, 0], [0, 0, 1]]
+{
+	"Image":	{
+		"Width":	800,
+		"Height":	600,
+		"Title":	"View from 15th Floor",
+		"Thumbnail":	{
+			"Url":	"http:/*www.example.com/image/481989943",
+			"Height":	125,
+			"Width":	"100"
+		},
+		"IDs":	[116, 943, 234, 38793]
+	}
+}
+[{
+		"precision":	"zip",
+		"Latitude":	37.7668,
+		"Longitude":	-122.3959,
+		"Address":	"",
+		"City":	"SAN FRANCISCO",
+		"State":	"CA",
+		"Zip":	"94107",
+		"Country":	"US"
+	}, {
+		"precision":	"zip",
+		"Latitude":	37.371991,
+		"Longitude":	-122.026,
+		"Address":	"",
+		"City":	"SUNNYVALE",
+		"State":	"CA",
+		"Zip":	"94085",
+		"Country":	"US"
+	}]
+{
+	"number":	null
+}
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Publish)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t cjson-rpm -f ITE/GCL08/WZ417828/Sprawozdanie2/Dockerfile.rpm ITE/GCL08/WZ417828/Sprawozdanie2
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.rpm
+#1 transferring dockerfile: 588B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/fedora:latest
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/cjson-build:latest
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [stage-0 1/7] FROM docker.io/library/fedora:latest
+#5 DONE 0.0s
+
+#6 FROM docker.io/library/cjson-build:latest
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 95B done
+#7 DONE 0.0s
+
+#8 [stage-0 2/7] RUN dnf install -y rpm-build gcc make
+#8 CACHED
+
+#9 [stage-0 4/7] COPY --from=cjson-build /app/cJSON/libcjson.so* /root/rpmbuild/SOURCES/
+#9 CACHED
+
+#10 [stage-0 5/7] COPY --from=cjson-build /app/cJSON/cJSON.h /root/rpmbuild/SOURCES/
+#10 CACHED
+
+#11 [stage-0 6/7] COPY libcjson.spec /root/rpmbuild/SPECS/
+#11 CACHED
+
+#12 [stage-0 3/7] RUN mkdir -p /root/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+#12 CACHED
+
+#13 [stage-0 7/7] RUN rpmbuild -bb --target=x86_64 /root/rpmbuild/SPECS/libcjson.spec
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 writing image sha256:52fd6854b66b4ed32dee1a84e1202cf917b2f82a76ce337b7054c63ba8d034dd done
+#14 naming to docker.io/library/cjson-rpm done
+#14 DONE 0.0s
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] sh
+
++ mkdir -p rpm_artifacts
+[Pipeline] sh
++ docker run --rm -v /var/jenkins_home/workspace/Jenkinsfile/rpm_artifacts:/out cjson-rpm bash -c cp /root/rpmbuild/RPMS/x86_64/*.rpm /out/
+[Pipeline] archiveArtifacts
+Archiving artifacts
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
