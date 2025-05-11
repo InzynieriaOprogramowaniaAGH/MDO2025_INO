@@ -1,0 +1,6 @@
+FROM fedora:42
+
+COPY --from=wget-jenkins-build /opt/wget/src/wget /usr/local/bin/wget
+
+# Test wget by downloading a simple file
+CMD ["sh", "-c", "wget --version && wget -O index.html https://www.example.com && cat index.html | grep -i 'example domain'"]

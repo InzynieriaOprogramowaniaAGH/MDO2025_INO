@@ -1,0 +1,12 @@
+FROM fedora:42
+
+
+WORKDIR /opt
+
+COPY wget.deb /opt/wget.deb
+
+RUN apt update && apt install -y ca-certificates && \
+    dpkg -i /opt/wget.deb || apt-get install -f -y && \
+    rm -f /opt/wget.deb
+
+CMD ["wget", "--version"]
