@@ -1,0 +1,107 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.rustscantest
+#1 transferring dockerfile: 179B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/rustscanbld:latest
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.1s
+
+#4 [1/2] FROM docker.io/library/rustscanbld:latest
+#4 CACHED
+
+#5 [2/2] RUN cargo test --tests --release
+#5 0.497     Finished `release` profile [optimized] target(s) in 0.27s
+#5 0.505      Running unittests src/lib.rs (target/release/deps/rustscan-7f83e15873e5592d)
+#5 0.507 
+#5 0.507 running 50 tests
+#5 0.508 test address::tests::parse_addresses_with_address_exclusions ... ok
+#5 0.508 test address::tests::parse_addresses_with_cidr_exclusions ... ok
+#5 0.508 test address::tests::parse_correct_addresses ... ok
+#5 0.508 test address::tests::parse_addresses_with_incorrect_address_exclusions ... ok
+#5 0.509 test address::tests::parse_duplicate_cidrs ... ok
+#5 0.510 test address::tests::parse_empty_hosts_file ... ok
+#5 0.550 test address::tests::parse_correct_host_addresses ... ok
+#5 0.551 test address::tests::parse_naughty_host_file ... ok
+#5 0.608 test address::tests::resolver_args_google_dns ... ok
+#5 0.614 test address::tests::parse_correct_and_incorrect_addresses ... ok
+#5 0.714 test benchmark::benchmark ... ok
+#5 0.714 test input::tests::opts_merge_optional_arguments ... ok
+#5 0.714 test input::tests::opts_merge_required_arguments ... ok
+#5 0.715 test input::tests::opts_no_merge_when_config_is_ignored ... ok
+#5 0.715 test input::tests::parse_trailing_command::case_0 ... ok
+#5 0.715 test input::tests::parse_trailing_command::case_1 ... ok
+#5 0.715 test input::tests::parse_trailing_command::case_2 ... ok
+#5 0.715 test input::tests::parse_trailing_command::case_3 ... ok
+#5 0.716 test input::tests::parse_trailing_command::case_4 ... ok
+#5 0.716 test input::tests::verify_cli ... ok
+#5 0.718 test port_strategy::range_iterator::tests::range_iterator_iterates_through_the_entire_range ... ok
+#5 0.718 test port_strategy::tests::random_strategy_with_ports ... ok
+#5 0.718 test port_strategy::tests::random_strategy_with_range ... ok
+#5 0.718 test port_strategy::tests::serial_strategy_with_ports ... ok
+#5 0.718 test port_strategy::tests::serial_strategy_with_range ... ok
+#5 0.718 test scanner::socket_iterator::tests::goes_through_every_ip_port_combination ... ok
+#5 0.740 test address::tests::parse_hosts_file_and_incorrect_hosts ... ok
+#5 0.764 test address::tests::resolver_default_cloudflare ... ok
+#5 0.800 test address::tests::parse_incorrect_addresses ... ok
+#5 0.800 test scanner::tests::ipv6_scanner_runs ... ok
+#5 0.847 test scanner::tests::quad_zero_scanner_runs ... ok
+#5 0.847 test scanner::tests::scanner_runs ... ok
+#5 0.905 test scanner::tests::udp_ipv6_runs ... ok
+#5 0.947 test scanner::tests::udp_quad_zero_scanner_runs ... ok
+#5 0.987 test scanner::tests::udp_scan_runs ... ok
+#5 0.988 test scripts::tests::find_and_parse_scripts ... ok
+#5 0.988 test scripts::tests::find_invalid_folder - should panic ... ok
+#5 0.988 test scripts::tests::open_nonexisting_script_file - should panic ... ok
+#5 0.990 test scripts::tests::open_script_file_invalid_call_format - should panic ... ok
+#5 0.990 test scripts::tests::open_script_file_invalid_headers - should panic ... ok
+#5 0.990 test scripts::tests::open_script_file_missing_call_format - should panic ... ok
+#5 0.991 test scripts::tests::parse_txt_script ... ok
+#5 0.994 test scripts::tests::run_bash_script ... ok
+#5 0.998 test scripts::tests::run_perl_script ... ok
+#5 1.010 test scripts::tests::run_python_script ... ok
+#5 1.010 test scripts::tests::test_custom_directory_config ... ok
+#5 1.010 test scripts::tests::test_default_directory_fallback ... ok
+#5 1.222 test scanner::tests::google_dns_runs ... ok
+#5 1.449 test scanner::tests::udp_google_dns_runs ... ok
+#5 2.804 test scanner::tests::infer_ulimit_lowering_no_panic ... ok
+#5 2.804 
+#5 2.804 test result: ok. 50 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.30s
+#5 2.804 
+#5 2.806      Running unittests src/main.rs (target/release/deps/rustscan-7eaa28b8ec16ff4d)
+#5 2.807 
+#5 2.807 running 6 tests
+#5 2.808 test tests::batch_size_equals_ulimit_lowered ... ok
+#5 2.808 test tests::batch_size_adjusted_2000 ... ok
+#5 2.808 test tests::batch_size_lowered_average_size ... ok
+#5 2.808 test tests::batch_size_lowered ... ok
+#5 2.808 test tests::test_high_ulimit_no_greppable_mode ... ok
+#5 2.808 test tests::test_print_opening_no_panic ... ok
+#5 2.808 
+#5 2.808 test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+#5 2.808 
+#5 2.809      Running tests/timelimits.rs (target/release/deps/timelimits-bfd2c0db92de35b9)
+#5 2.811 
+#5 2.811 running 8 tests
+#5 2.811 test timelimits::scan_example_com ... ignored
+#5 2.811 test timelimits::scan_google_com ... ignored
+#5 2.811 test timelimits::scan_localhost ... ignored
+#5 2.811 test timelimits::scan_rustscan_cmnatic_co_uk ... ignored
+#5 2.811 test timelimits::udp_scan_example_com ... ignored
+#5 2.811 test timelimits::udp_scan_google_com ... ignored
+#5 2.811 test timelimits::udp_scan_localhost ... ignored
+#5 2.811 test timelimits::udp_scan_rustscan_cmnatic_co_uk ... ignored
+#5 2.811 
+#5 2.811 test result: ok. 0 passed; 0 failed; 8 ignored; 0 measured; 0 filtered out; finished in 0.00s
+#5 2.811 
+#5 DONE 2.9s
+
+#6 exporting to image
+#6 exporting layers 0.1s done
+#6 writing image sha256:c42abf7e368aa3a8f07246c06daa7158fd83693e6879aa9ba1b7785591e32beb done
+#6 naming to docker.io/library/rustscantest done
+#6 DONE 0.1s

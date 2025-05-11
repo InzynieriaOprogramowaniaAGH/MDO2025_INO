@@ -1,0 +1,7 @@
+FROM rust:bullseye
+
+RUN git clone https://github.com/bee-san/RustScan.git
+
+WORKDIR RustScan
+
+RUN cargo build --tests --release
