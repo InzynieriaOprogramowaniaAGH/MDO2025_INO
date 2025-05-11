@@ -1,0 +1,102 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_BUILD = 'node_builder'
+        IMAGE_TEST = 'node_test'
+        IMAGE_DEPLOY = 'node_deploy'
+        DOCKERHUB_REPO = 'kstarzec/node_deploy'
+        ZIP_BASE = 'app'
+        VERSION = "v${BUILD_NUMBER}"
+        IMAGE_TAG = "kstarzec/node_deploy:v${BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'KS415019', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+            }
+        }
+
+        stage('Cleaning') {
+            steps {
+                dir('ITE/GCL07/KS415019/Sprawozdanie2') {
+                    sh '''
+                        docker container ls -a -q | xargs -r docker rm -f
+                        docker volume ls -q | xargs -r docker volume rm -f
+                        docker network ls -q --filter type=custom | xargs -r docker network rm -f
+                        docker builder prune --all --force
+                        docker images -q | sort -u | grep -vE '^(node:22\\.10|node:22\\.10-slim)$' | xargs -r docker rmi -f
+                    '''
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('ITE/GCL07/KS415019/Sprawozdanie2') {
+                    sh 'docker build -f Dockerfile.nodebuild -t $IMAGE_BUILD .'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('ITE/GCL07/KS415019/Sprawozdanie2') {
+                    sh 'docker build -f Dockerfile.nodetest -t $IMAGE_TEST .'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('ITE/GCL07/KS415019/Sprawozdanie2') {
+                    sh '''
+                        docker create --name temp_builder $IMAGE_BUILD
+                        docker cp temp_builder:/node-js-dummy-test/node_modules ./node_modules
+                        docker cp temp_builder:/node-js-dummy-test/package.json .
+                        docker cp temp_builder:/node-js-dummy-test/src ./src
+                        docker cp temp_builder:/node-js-dummy-test/views ./views
+                        docker rm temp_builder
+                        docker build -f Dockerfile.nodedeploy -t $IMAGE_DEPLOY:$VERSION .
+                    '''
+                }
+            }
+        }
+
+        stage('SmokeTest') {
+            steps {
+                dir('ITE/GCL07/KS415019/Sprawozdanie2') {
+                    sh '''
+                        docker network create ci || true
+                        docker run -dit --network ci --name deploy -p 3000:3000 $IMAGE_DEPLOY:$VERSION
+                        sleep 5
+                        docker run --rm --network ci curlimages/curl curl http://deploy:3000
+                        docker stop deploy
+                        docker rm deploy
+                        docker network rm ci
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir('ITE/GCL07/KS415019/Sprawozdanie2') {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials2', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                            docker run --rm -v $PWD:/app -w /app debian bash -c "apt-get update && apt-get install -y zip && zip -r ${ZIP_BASE}-${VERSION}.zip node_modules/ src/ views/ package.json"
+                        '''
+                        archiveArtifacts artifacts: "${ZIP_BASE}-${VERSION}.zip", onlyIfSuccessful: true
+
+                        sh '''
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker tag $IMAGE_DEPLOY:$VERSION $IMAGE_TAG
+                            docker push $IMAGE_TAG
+                        '''
+                    }
+                }
+            }
+        }
+    }
+}
