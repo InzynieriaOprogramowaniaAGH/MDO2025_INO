@@ -196,12 +196,7 @@ Powstały obraz docker będzie zawierał niezbędne elementy potrzebne do odpowi
 Pomyślne uruchomienie pipeline'u
 ![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/22.png)
 
-![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/16.png)
-Kilka udanych wersji pipeline'u na dockerhubie dowodzi, że nie jest to jednorazowy sukces.
+Pobranie obrazu i uruchomienie na jego podstawie kontenera zawierającego w sobie program Redis.
 
-Połączenie między Jenkinsem i dockerhubem jest możliwe dzięki ustawieniu globalnych Credential'i w agencie Jenkinsa. Ustawione Credentials zawierają dane logowania do dockerhuba i to takie połączenie pozwala publikować obraz kontenera zawierającego nasz program.
-
-
-
-![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/6f342a6f34b987730cfe540c07da3b76a35ad4ef/ITE/GCL04/MK415056/sprawozdanie2/scr/16.png)
-Pobranie obrazu i uruchomienie na jego podstawie kontenera zawierającego w sobie program Redis. 
+![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/30d82d04c7029a8fbb46585b0ca349568e38a62d/ITE/GCL04/MK415056/sprawozdanie2/scr/l1.png)
+![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/30d82d04c7029a8fbb46585b0ca349568e38a62d/ITE/GCL04/MK415056/sprawozdanie2/scr/l2.png)
