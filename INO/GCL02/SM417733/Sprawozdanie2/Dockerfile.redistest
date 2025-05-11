@@ -1,0 +1,7 @@
+FROM redis-build
+
+RUN dnf install -y tcl which
+
+WORKDIR /redis
+
+RUN make test | tee /redis/tests/test-results.log || true
