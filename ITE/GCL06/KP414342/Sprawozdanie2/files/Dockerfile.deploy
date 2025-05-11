@@ -1,0 +1,14 @@
+FROM fedora:41 as runtime
+
+RUN dnf -y update && \
+    dnf -y install readline && \
+    dnf clean all
+
+FROM sqlite_builder:latest as builder
+
+FROM runtime
+
+COPY --from=builder /sqlite/sqlite3 /usr/local/bin/
+
+ENTRYPOINT ["/usr/local/bin/sqlite3"]
+CMD []
