@@ -218,4 +218,8 @@ Pliki po ponownym uruchomieniu:
 
 [logi z konsoli2](screenshots2/logiP1.txt)
 
-Następnie
+Następnie pobrałam archiwum [cjson.rpm](mycjson.rpm) i przeprowadziłam instalacje biblioteki:
+![zdj24](screenshots2/78.png)
+
+--- 
+Do pomocy korzystałam ze sztucznej inteligencji takej jak `Chat GPT`, `DeepSeak`, oraz `Perplexity.ai`, każdorazowo weryfikując informacje w róznych źródłach.
