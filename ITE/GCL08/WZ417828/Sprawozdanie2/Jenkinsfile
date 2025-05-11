@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+
+    environment {
+        REPO_PATH = 'ITE/GCL08/WZ417828/Sprawozdanie2'
+        DOCKER_IMAGE_BUILD = 'cjson-build'
+        DOCKER_IMAGE_TEST = 'cjson-test'
+        DOCKER_IMAGE_RPM = 'cjson-rpm'
+        RPM_PACKAGE_NAME = 'libcjson'
+        RPM_PACKAGE_VERSION = '1.7.18' 
+        RPM_PACKAGE_RELEASE = '1'
+        RPM_ARCH = 'x86_64' 
+    }
+
+    stages {
+        stage('Git clone repo'){
+            steps{
+                git branch: 'WZ417828', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE_BUILD}", "-f ${REPO_PATH}/Dockerfile.build .")
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE_TEST}", "-f ${REPO_PATH}/Dockerfile.test .")
+                }
+            }
+        }
+
+        stage('Run Test') {
+            steps {
+                script {
+                   sh "docker run --rm ${DOCKER_IMAGE_TEST}"
+                }
+            }
+        }
+        stage('Publish') {
+            steps {
+                script {
+            docker.build("${DOCKER_IMAGE_RPM}", 
+                "-f Dockerfile.rpm --build-arg PACKAGE_NAME=${RPM_PACKAGE_NAME} " +
+                "--build-arg PACKAGE_VERSION=${RPM_PACKAGE_VERSION} " +
+                "--build-arg PACKAGE_RELEASE=${RPM_PACKAGE_RELEASE} " +
+                "--build-arg ARCH=${RPM_ARCH} .")
+
+            sh "mkdir -p rpm_artifacts"
+            sh "docker run --rm -v \$PWD/rpm_artifacts:/out ${DOCKER_IMAGE_RPM} bash -c 'cp /root/rpmbuild/RPMS/${RPM_ARCH}/*.rpm /out/'"
+
+            archiveArtifacts "rpm_artifacts/${RPM_PACKAGE_NAME}-${RPM_PACKAGE_VERSION}-${RPM_PACKAGE_RELEASE}.${RPM_ARCH}.rpm"
+                }
+            }
+        }
+    }
+}
