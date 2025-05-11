@@ -204,13 +204,17 @@ Utworzyłam nowy `pipeline` z opcją `pipeline script from SCM`, w SCM `git`, or
 Po uruchomieniu - wyniki:
 ![zdj21](screenshots2/75.png)
 ![zdj22](screenshots2/76.png)
-[cjson_test.log](screenshots2/cjson_test.log)
+[cjson_test.log](screenshots2/cjson_test.log.txt)
+
+[cjson_deploy.log](screenshots2/cjson_deploy.log.txt)
 
 [logi z konsoli1](screenshots2/logiP1.txt)
 
 Pliki po ponownym uruchomieniu:
 ![zdj23](screenshots2/77.png)
-[cjson_test2.log](screenshots2/cjson_test2.log)
+[cjson_test2.log](screenshots2/cjson_test2.log.log)
+
+[cjson_deploy2.log](screenshots2/cjson_deploy2.log)
 
 [logi z konsoli2](screenshots2/logiP1.txt)
 
