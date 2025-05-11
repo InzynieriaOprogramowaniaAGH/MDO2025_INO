@@ -1,0 +1,5 @@
+FROM fedora1
+
+WORKDIR /irssi
+
+CMD ["ninja", "-C", "Build", "test"]

@@ -1,0 +1,8 @@
+#!/bin/sh
+FILE=$1
+MSG=$(cat "$FILE")
+
+if [[ ! $MSG =~ ^DR415825 ]]; then
+    echo "ERROR: Invalid commit message. It has to begin with 'DR415825'."
+    exit 1
+fi
