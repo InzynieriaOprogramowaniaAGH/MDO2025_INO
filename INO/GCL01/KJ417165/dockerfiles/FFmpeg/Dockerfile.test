@@ -1,0 +1,9 @@
+FROM jrottenberg/ffmpeg:4.4-alpine
+
+COPY input.mp4 /input.mp4
+COPY run_test.sh /run_test.sh
+RUN chmod +x /run_test.sh
+
+WORKDIR /
+
+CMD ["/run_test.sh"]

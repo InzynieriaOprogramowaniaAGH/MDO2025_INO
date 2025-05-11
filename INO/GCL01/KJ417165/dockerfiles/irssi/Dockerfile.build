@@ -1,0 +1,16 @@
+FROM fedora:latest
+
+# Instalacja wymaganych pakietów
+RUN dnf update -y && dnf install -y git meson ninja-build gcc glib2-devel openssl-devel ncurses-devel perl
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
+
+# Klonowanie repozytorium
+RUN git clone https://github.com/irssi/irssi.git /app
+
+# Budowanie projektu
+RUN meson setup builddir && \
+    meson compile -C builddir
+
+CMD ["bash"]
