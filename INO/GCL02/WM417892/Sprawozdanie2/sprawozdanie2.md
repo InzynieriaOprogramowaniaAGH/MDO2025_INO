@@ -231,17 +231,6 @@ Celem sprawozdania jest nie tylko zbudowanie i uruchomienie funkcjonalnego pipel
 
 ![image](https://github.com/user-attachments/assets/3eecb463-e084-4851-91ad-5d1483e5b894)
 
-## Diagram wdrożeniowy
-
-Opis komponentów:
-
-Host Jenkins: Maszyna, na której działa Jenkins z zainstalowanym Dockerem.
-
-Sieć Docker ci-net: Wirtualna sieć Docker, umożliwiająca komunikację między kontenerami.
-
-ci-mongo: Kontener z bazą danych MongoDB, dostępny pod nazwą ci-mongo w sieci ci-net.
-
-Aplikacja Node.js: Kontener z aplikacją Node.js, który łączy się z bazą danych MongoDB w celu wykonania testów.
 
 🧾 Opis procesu CI
 
