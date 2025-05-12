@@ -24,28 +24,28 @@ pipeline {
         stage('Check') {
             steps {
                 sh "ls -la ${DOCKER_CONTEXT}"
-                sh "cat ${DOCKERFILE_PATH}"
+                sh "cat ${DOCKERFILE_BUILD_PATH}"
             }
         }
 
         stage('Build Docker image') {
             steps {
-                sh "docker build --no-cache -t ${DOCKER_IMAGE} -f ${DOCKERFILE_PATH} ${DOCKER_CONTEXT}"
+                sh "docker build --no-cache -t ${DOCKER_IMAGE} -f ${DOCKERFILE_BUILD_PATH} ${DOCKER_CONTEXT}"
             }
         }
 
         stage('Deploy and Test wget') {
             steps {
-                echo 'Buduję deploy-image do testu wget'
-                sh "docker build --no-cache -t ${DEPLOY_IMAGE} -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile_deploy ITE/GCL06/JR414539/Sprawozdanie2"
-                echo 'Odpalam kontener i testuję wget'
+                echo 'Build deploy-image'
+                sh "docker build --no-cache -t ${DEPLOY_IMAGE} -f ${DOCKERFILE_DEPLOY_PATH} ${DOCKER_CONTEXT}"
+                echo 'Run container'
                 sh "docker run --rm ${DEPLOY_IMAGE}"
             }
         }
         
         stage('Build wget .rpm package') {
            steps {
-                echo 'Buduję paczkę wget.rpm'
+                echo 'Build wget.rpm'
                 sh 'docker create --name wget-builder ${DOCKER_IMAGE}'
                 sh 'docker cp wget-builder:/opt/wget/wget-1.0-1.fc38.x86_64.rpm wget.rpm'
                 sh 'docker rm wget-builder'
@@ -55,20 +55,20 @@ pipeline {
         
         stage('Test wget') {
            steps {
-                echo 'Buduję obraz tester-a'
-                sh "docker build --no-cache -t ${TEST_IMAGE} -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile.test ITE/GCL06/JR414539/Sprawozdanie2"
-                echo 'Odpalam testy wget'
+                echo 'Build test image'
+                sh "docker build --no-cache -t ${TEST_IMAGE} -f ${DOCKERFILE_TEST_PATH} ${DOCKER_CONTEXT}"
+                echo 'Run wget tests'
                 sh "docker run --rm ${TEST_IMAGE}"
             }
         }
         
         stage('Publish Runtime Image') {
            steps {
-                echo 'Kopiuję wget.rpm do katalogu Sprawozdanie2'
-                sh 'cp wget.rpm ITE/GCL06/JR414539/Sprawozdanie2/'
-                echo 'Buduję runtime image z wget'
-                sh 'docker build --no-cache -t wget-runtime-fedora -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile.runtime ITE/GCL06/JR414539/Sprawozdanie2'
-                echo 'Odpalam kontener runtime z wget'
+                echo 'Copy wget.rpm'
+                sh 'cp wget.rpm ${DOCKER_CONTEXT}'
+                echo 'Build runtime image'
+                sh 'docker build --no-cache -t wget-runtime-fedora -f ${DOCKERFILE_RUNTIME_PATH} ${DOCKER_CONTEXT}'
+                echo 'Run wget runtime container'
                 sh 'docker run --rm wget-runtime-fedora'
             }
         }

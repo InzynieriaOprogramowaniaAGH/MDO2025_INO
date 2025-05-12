@@ -1,5 +1,2 @@
-FROM wget-jenkins-build
-
-WORKDIR /opt/wget
-
-CMD ["make", "check"]
+FROM irssibld
+RUN ninja -C Build test

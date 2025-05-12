@@ -1,6 +1,8 @@
-FROM fedora:42
+FROM irssibld as builder
 
-COPY --from=wget-jenkins-build /opt/wget/src/wget /usr/local/bin/wget
-
-# Test wget by downloading a simple file
-CMD ["sh", "-c", "wget --version && wget -O index.html https://www.example.com && cat index.html | grep -i 'example domain'"]
+FROM fedora
+RUN microdnf install -y glib2 openssl-libs ncurses perl && \
+    microdnf clean all
+WORKDIR /irssi
+COPY --from=builder /irssi/Build/src/fe-text/irssi /usr/local/bin/irssi
+CMD ["irssi"]

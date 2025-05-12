@@ -1,46 +1,7 @@
 FROM fedora:42
 
-RUN dnf update -y && dnf install -y \
-    gcc \
-    gcc-c++ \
-    make \
-    autoconf \
-    automake \
-    gettext \
-    texinfo \
-    flex \
-    gperf \
-    libtool \
-    openssl-devel \
-    gnutls-devel \
-    zlib-devel \
-    pkgconf-pkg-config \
-    git \
-    wget \
-    autoconf-archive \
-    ca-certificates \
-    checkinstall \
-    which \
-    file \
-    findutils \
-    shadow-utils \
-    tar
-
-WORKDIR /opt
-
-RUN git clone https://github.com/mirror/wget.git
-
-WORKDIR /opt/wget
-
-RUN ./bootstrap && ./configure && make && \
-    checkinstall --install=no \
-                 --pkgname=wget \
-                 --pkgversion=1.0 \
-                 --pkgarch=x86_64 \
-                 --pkgrelease=1 \
-                 --maintainer="AR417143@student.agh.edu.pl" \
-                 --fstrans=no \
-                 --pakdir=/opt/wget \
-                 -y
-
-CMD ["/bin/bash"]
+RUN dnf -y install git meson gcc glib2-devel openssl-devel ncurses-devel perl-ExtUtils-Embed
+RUN git clone http://github.com/irssi/irssi.git
+WORKDIR /irssi
+RUN meson Build
+RUN ninja -C Build
