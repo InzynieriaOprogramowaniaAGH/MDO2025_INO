@@ -31,7 +31,7 @@ W ramach pierwszych prób stworzyłam kilka prostych projektów:
   ![Zrzut ekranu 7 – uname]()
 
   ``` bash
-       uname -a
+  uname -a
   ```
 
 
@@ -53,8 +53,8 @@ W ramach pierwszych prób stworzyłam kilka prostych projektów:
   ![Zrzut ekranu 9 – docker pull ubuntu]()
 
   ```bash
-    #!/bin/bash
-    docker pull ubuntu
+  #!/bin/bash
+  docker pull ubuntu
   ```
 
 ---
