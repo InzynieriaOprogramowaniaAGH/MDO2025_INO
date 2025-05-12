@@ -1,80 +1,46 @@
 FROM fedora:42
 
-# Update and install dependencies
 RUN dnf update -y && dnf install -y \
     gcc \
     gcc-c++ \
     make \
     autoconf \
     automake \
-    gettext-devel \
+    gettext \
     texinfo \
     flex \
     gperf \
-    gettext \
+    libtool \
     openssl-devel \
     gnutls-devel \
     zlib-devel \
-    pkgconfig \
+    pkgconf-pkg-config \
     git \
     wget \
     autoconf-archive \
     ca-certificates \
-    rpm-build \
-    libtool \
-    rpmdevtools \
-    perl-Pod-Html \
-    pcre-devel \
-    libpsl-devel
-
-# Set up RPM directory structure
-RUN rpmdev-setuptree
+    checkinstall \
+    which \
+    file \
+    findutils \
+    shadow-utils \
+    tar
 
 WORKDIR /opt
 
-# Download stable wget source
-RUN wget https://ftp.gnu.org/gnu/wget/wget-1.21.3.tar.gz -O /root/rpmbuild/SOURCES/wget-1.21.3.tar.gz
+RUN git clone https://github.com/mirror/wget.git
 
-# Create spec file 
-WORKDIR /opt/wget
-RUN mkdir -p /opt/wget
 WORKDIR /opt/wget
 
-RUN echo '%global debug_package %{nil}' > wget.spec && \
-    echo 'Name: wget' >> wget.spec && \
-    echo 'Version: 1.0' >> wget.spec && \
-    echo 'Release: 1.fc38' >> wget.spec && \
-    echo 'Summary: A utility for retrieving files using the HTTP or FTP protocols' >> wget.spec && \
-    echo 'License: GPL-3.0' >> wget.spec && \
-    echo 'BuildRequires: gcc make gettext-devel' >> wget.spec && \
-    echo 'Source0: wget-1.21.3.tar.gz' >> wget.spec && \
-    echo '%description' >> wget.spec && \
-    echo 'GNU Wget is a free utility for non-interactive download of files from the Web.' >> wget.spec && \
-    echo '%prep' >> wget.spec && \
-    echo '%setup -q -n wget-1.21.3' >> wget.spec && \
-    echo '%build' >> wget.spec && \
-    echo './configure --prefix=/usr' >> wget.spec && \
-    echo 'make %{?_smp_mflags}' >> wget.spec && \
-    echo '%install' >> wget.spec && \
-    echo 'make install DESTDIR=%{buildroot}' >> wget.spec && \
-    echo '%files' >> wget.spec && \
-    echo '%{_bindir}/wget' >> wget.spec && \
-    echo '%{_mandir}/man1/wget.1*' >> wget.spec && \
-    echo '%{_infodir}/wget.info*' >> wget.spec
-
-# Build the RPM
-RUN rpmbuild -bb wget.spec
-
-# Copy the built RPM to the expected location
-RUN mkdir -p /opt/wget && \
-    find /root/rpmbuild/RPMS -name "wget-*.rpm" -exec cp {} /opt/wget/wget-1.0-1.fc38.x86_64.rpm \; && \
-    # Make sure the rpm file exists at the expected location
-    ls -la /opt/wget/ && \
-    # Also place it at the original location for compatibility
-    cp /opt/wget/wget-1.0-1.fc38.x86_64.rpm / && \
-    echo "RPM package built successfully and placed at /opt/wget/wget-1.0-1.fc38.x86_64.rpm"
-
-# Test wget to verify it works
-RUN wget -O - http://example.com > /dev/null && echo "wget test successful"
+RUN ./bootstrap && ./configure && make && \
+    checkinstall --install=no \
+                 --pkgname=wget \
+                 --pkgversion=1.0 \
+                 --pkgarch=x86_64 \
+                 --pkgrelease=1 \
+                 --maintainer="AR417143@student.agh.edu.pl" \
+                 --fstrans=no \
+                 --pakdir=/opt/wget \
+                 -y
 
 CMD ["/bin/bash"]
