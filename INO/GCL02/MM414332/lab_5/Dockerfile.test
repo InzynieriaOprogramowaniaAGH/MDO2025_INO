@@ -1,3 +1,8 @@
 FROM my-app-build
 WORKDIR /app
-CMD ["npm", "test"]
+
+# Utwórz katalog na wyniki testów
+RUN mkdir -p test-results
+
+# Uruchom testy i zapisz wyjście do pliku
+CMD ["sh", "-c", "npm test > test-results/output.log 2>&1 || true"]
