@@ -227,6 +227,40 @@ Celem sprawozdania jest nie tylko zbudowanie i uruchomienie funkcjonalnego pipel
 - diagram wdrożeniowy (relacje między komponentami),
 - szczegółowy plik `Jenkinsfile` oraz omówienie różnic między podejściami builder/runtime.
 
+## Diagram aktywności
+
+![image](https://github.com/user-attachments/assets/3eecb463-e084-4851-91ad-5d1483e5b894)
+
+## Diagram wdrożeniowy
+
+Opis komponentów:
+
+Host Jenkins: Maszyna, na której działa Jenkins z zainstalowanym Dockerem.
+
+Sieć Docker ci-net: Wirtualna sieć Docker, umożliwiająca komunikację między kontenerami.
+
+ci-mongo: Kontener z bazą danych MongoDB, dostępny pod nazwą ci-mongo w sieci ci-net.
+
+Aplikacja Node.js: Kontener z aplikacją Node.js, który łączy się z bazą danych MongoDB w celu wykonania testów.
+
+🧾 Opis procesu CI
+
+Tworzenie sieci Docker: Pipeline rozpoczyna się od utworzenia sieci Docker ci-net, która umożliwia komunikację między kontenerami aplikacji i bazy danych.
+
+Budowanie obrazu aplikacji: Z pliku Dockerfile.app tworzony jest obraz aplikacji o nazwie ts-node-starter:ci-${BUILD_NUMBER}.
+
+Uruchamianie kontenera MongoDB: Kontener z bazą danych MongoDB (ci-mongo) jest uruchamiany w sieci ci-net.
+
+Uruchamianie testów aplikacji: Aplikacja jest uruchamiana w kontenerze, łącząc się z bazą danych MongoDB, a następnie wykonywane są testy.
+
+Sprzątanie kontenera MongoDB: Po zakończeniu testów kontener ci-mongo jest usuwany.
+
+Wyciąganie i archiwizacja katalogu dist/: Z obrazu aplikacji wyciągany jest katalog dist/, który następnie jest archiwizowany.
+
+Tworzenie i archiwizacja plików ts-node-starter.tar oraz dist.zip: Obraz aplikacji jest zapisywany do pliku ts-node-starter.tar, a katalog dist/ jest kompresowany do pliku dist.zip. Oba pliki są archiwizowane jako artefakty.
+
+Czyszczenie środowiska: Na końcu pipeline'u usuwane są pozostałości, takie jak kontener ci-mongo i sieć ci-net.
+
 ## Wymagania wstępne środowiska
 
 Poniższe zrzuty ekranu przedstawiają przygotowanie środowiska lokalnego oraz potwierdzenie dostępności wymaganych narzędzi niezbędnych do realizacji pipeline'u CI/CD.
