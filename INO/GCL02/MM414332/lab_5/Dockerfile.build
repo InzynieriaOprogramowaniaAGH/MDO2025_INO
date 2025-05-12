@@ -1,7 +1,17 @@
 FROM node:18 AS builder
 WORKDIR /app
-RUN git clone https://github.com/jsynowiec/node-typescript-boilerplate.git .
+
+# Klonujemy repo
+RUN git clone https://github.com/jsynowiec/node-typescript-boilerplate.git
+
+# Tworzymy katalog i plik do builda
 WORKDIR /app/node-typescript-boilerplate
+RUN echo "console.log('Hello from CI');" > src/index.ts
+
+# Instalacja + build
 RUN npm install
 RUN npm run build
-RUN tar -czf xz.tar.gz dist
+
+# Pakujemy dist (jeśli istnieje)
+RUN tar -czf /app/xz.tar.gz dist
+
