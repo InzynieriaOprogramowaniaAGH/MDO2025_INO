@@ -9,9 +9,9 @@ pipeline {
         DOCKERFILE_DEPLOY_PATH = 'ITE/GCL06/AR417143/006-Class/Dockerfile.deploy'
         DOCKERFILE_RUNTIME_PATH = 'ITE/GCL06/AR417143/006-Class/Dockerfile.runtime'
         DOCKER_CONTEXT = 'ITE/GCL06/AR417143/006-Class'
-        DOCKER_IMAGE = 'wget-jenkins-build-fedora'
-        DEPLOY_IMAGE = 'wget-deploy-test-fedora'
-        TEST_IMAGE = 'wget-tester-fedora'
+        DOCKER_IMAGE = 'irssibld'
+        DEPLOY_IMAGE = 'irssidep'
+        TEST_IMAGE = 'irssitest'
     }
 
     stages {
@@ -30,51 +30,37 @@ pipeline {
 
         stage('Build Docker image') {
             steps {
-                sh "docker build --no-cache -t ${DOCKER_IMAGE} -f ${DOCKERFILE_BUILD_PATH} ${DOCKER_CONTEXT}"
+                sh "docker build --no-cache -t ${DOCKER_IMAGE} -f ${DOCKERFILE_BUILD_PATH} ."
             }
         }
 
-        stage('Deploy and Test wget') {
+        stage('Test irssi') {
             steps {
-                echo 'Build deploy-image'
-                sh "docker build --no-cache -t ${DEPLOY_IMAGE} -f ${DOCKERFILE_DEPLOY_PATH} ${DOCKER_CONTEXT}"
-                echo 'Run container'
-                sh "docker run --rm ${DEPLOY_IMAGE}"
+                sh "docker build --no-cache -t ${TEST_IMAGE} -f ${DOCKERFILE_TEST_PATH} ."
             }
         }
         
-        stage('Build wget .rpm package') {
+        stage('Deploy') {
            steps {
-                echo 'Build wget.rpm'
-                sh 'docker create --name wget-builder ${DOCKER_IMAGE}'
-                sh 'docker cp wget-builder:/opt/wget/wget-1.0-1.fc38.x86_64.rpm wget.rpm'
-                sh 'docker rm wget-builder'
-                archiveArtifacts artifacts: 'wget.rpm', fingerprint: true
+                sh "docker build --no-cache -t ${DEPLOY_IMAGE} -f ${DOCKERFILE_DEPLOY_PATH} ."   
+                sh "docker run -dit irssidep"
             }
         }
         
-        stage('Test wget') {
-           steps {
-                echo 'Build test image'
-                sh "docker build --no-cache -t ${TEST_IMAGE} -f ${DOCKERFILE_TEST_PATH} ${DOCKER_CONTEXT}"
-                echo 'Run wget tests'
-                sh "docker run --rm ${TEST_IMAGE}"
-            }
-        }
         
         stage('Publish Runtime Image') {
            steps {
-                echo 'Copy wget.rpm'
-                sh 'cp wget.rpm ${DOCKER_CONTEXT}'
-                echo 'Build runtime image'
-                sh 'docker build --no-cache -t wget-runtime-fedora -f ${DOCKERFILE_RUNTIME_PATH} ${DOCKER_CONTEXT}'
-                echo 'Run wget runtime container'
-                sh 'docker run --rm wget-runtime-fedora'
+                sh 'docker cp $(docker ps -q --filter ancestor=irssidep | head -n 1):/usr/local/bin/irssi ${WORKSPACE}/irssi'
+                sh 'ls -la ${WORKSPACE}/irssi'
+                archiveArtifacts artifacts: 'irssi/irssi', allowEmptyArchive: false, fingerprint: true   
             }
         }
     }
 
     post {
+        always {
+                    sh 'docker ps -q --filter ancestor=irssidep | xargs docker stop | xargs docker rm'
+        }
         success {
             echo 'Succes.'
         }
