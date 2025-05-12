@@ -1,7 +1,12 @@
+# Dockerfile.runtime
 FROM node:18-slim
 WORKDIR /app
 
-# Skopiuj tylko potrzebne pliki z builda
-COPY --from=my-app-build /app/node-typescript-boilerplate/build ./build
+# Skopiuj artefakt builda (stworzony wcześniej w pipeline)
+COPY artifacts/xz-*.tar.gz xz.tar.gz
 
+# Rozpakuj i przygotuj runtime
+RUN mkdir build && tar -xzf xz.tar.gz -C build
+
+# Ustaw komendę startową
 CMD ["node", "build/index.js"]
