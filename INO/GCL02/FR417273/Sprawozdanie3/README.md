@@ -295,7 +295,7 @@
     # System timezone
     timezone Europe/Warsaw --utc
     
-    # Root password
+    # Users
     rootpw --allow-ssh abc
     user --password=abc --plaintext --groups=wheel --name=filip-rak --gecos="Filip Rak"
     
