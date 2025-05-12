@@ -334,63 +334,80 @@ asnible-playbook -i inventory.ini playbook-cjson.yaml
 
 ## Kickstart
 
-### Instalacja systemu fedora 41
+### Instalacja systemu Fedora 41
 
-DO wykonania tego zadanie nie musiałem instalować fedory od nowa ponieważ korzystem z niej jako na hosta od początku przemiotu
+Do wykonania tego zadania nie musiałem ponownie instalować Fedory, ponieważ korzystałem z niej jako systemu głównego (hosta) od początku trwania przedmiotu.
 
 #### Przygotowanie pliku `anaconda-ks.cfg`
 
-Będąc na koncie administratora przeniosłem plik odpowiedzi `/root/anaconda-ks.cfg` do folderu `Sprawozdanie3` aby był dostępny poprzez wykorzystanie githuba. 
+Będąc zalogowanym jako administrator, skopiowałem plik odpowiedzi znajdujący się w systemie pod ścieżką `/root/anaconda-ks.cfg` do folderu `Sprawozdanie3`, aby mógł być łatwo udostępniony za pomocą GitHuba.
 
-Następnie dodałem do niego informacje o potrzebnych repozytoriach:
-- `url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64`
-- `repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64`
+Następnie zmodyfikowałem plik, dodając informacje o repozytoriach:
 
-Tak przygotowany plik wypchnąłem na githuba.
+```kickstart
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+```
+
+Tak przygotowany plik został wypchnięty na GitHuba.
 
 #### Instalacja feodry z kickstarta
 
-Z racji korzystania VM VirtualBoxa postanowiłem skrócić adres https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/AB416965/INO/GCL01/AB416965/Sprawozdanie3/anaconda-ks.cfg na https://tinyurl.com/aborek wykorzystując tinyurl.
+Z racji korzystania z maszyn wirtualnych VirtualBox postanowiłem skrócić długi adres URL do pliku Kickstart z GitHuba za pomocą serwisu [TinyURL](https://tinyurl.com).
 
-> VM VirtualBox nie pozwala na etapie instalowania systemu na wklejanie/korzystanie ze schowka klienta.
+Ostateczny link:
+```arduino
+https://tinyurl.com/aborek
+```
 
-Mając przygotowany link przeszedłem do utworzenia nowej maszyny wirtualnej, podczas wyboru typu instalacji kliknąłem `e` aby przejśc do wiersza poleceń i wpisywania dodatkowych parametrów instalacji.
+> **Uwaga**: VirtualBox nie pozwala na wklejanie linków na etapie instalatora — stąd konieczność użycia skracacza.
 
-W nim wpisałem `inst.ks=https://tinyurl.com/aborek` który wstazuje na plik `kickstart`.
+Podczas tworzenia nowej maszyny wirtualnej, w menu startowym instalatora kliknąłem `e`, aby wejść do trybu edycji poleceń GRUB i dopisałem dodatkowy parametr instalacyjny:
+
+```ini
+inst.ks=https://tinyurl.com/aborek
+```
 
 ![Dodatkowe parametry](zrzuty9/zrzut_ekranu1.png)
 
-Instalacja przeszła dalej do interfejsu graficznego w którym oryginalnie można było zmienić konfigurację np. dodać użytkowników.
-
-Teraz większość pól była nieaktywna, trzeba było chwilę poczekać.
+Instalator uruchomił się dalej z interfejsem graficznym — jednak większość pól była wygaszona (nieedytowalna), ponieważ wartości zostały już określone w pliku `kickstart`.
 
 ![Ekran wyboru](zrzuty9/zrzut_ekranu2.png)
 
-Po chwili rozpoczęła się właściwa instalacja
+Po chwili rozpoczęła się właściwa instalacja:
 
 ![Instalacja](zrzuty9/zrzut_ekranu3.png)
 
-Instalacja przebiegła pomyślnie, należało teraz uruchomić system ponownie.
-
-Narazie `reboot` nie następuje automatycznie.
+Instalacja przebiegła pomyślnie. Po jej zakończeniu należało ponownie uruchomić system (`reboot` nie był jeszcze automatyczny):
 
 ![Po instalacji](zrzuty9/zrzut_ekranu4.png)
 
-Po restarcie spróbowałem się zalogować, użytkownik i jego hasło było takie jak na oryginalnej fedorze czyli instalacja przeszedła poprawnie.
+Po restarcie zalogowałem się do systemu — dane logowania były takie same jak na oryginalnej Fedorze, co potwierdza, że instalacja przebiegła poprawnie:
 
 ![Gotowy system](zrzuty9/zrzut_ekranu5.png)
 
-#### Rozszerzenie pliku odpowiedzi o kolejne pola
+#### Rozszerzenie pliku odpowiedzi o dodatkowe opcje
 
-Dodałem opcję `reboot` do `anaconda-ks.cfg` oraz `network --hostname=fedora.test` w celu ustawienia nazwy hosta.
+W kolejnym kroku rozszerzyłem `anaconda-ks.cfg`, dodając:
 
-Aby nie musieć tworzyć nowej maszyny za każdym razem albo czyścić dysku ręcznie dodałem również opcję `clearpart --all --initlabel`, która czyści partycję. Następuje następnie automatyczne partycjonowanie `autopart`
+- `reboot` — aby system automatycznie uruchomił się ponownie po instalacji,
+- `network --hostname=fedora.test` — aby nadać maszynie nazwę hosta,
+- `clearpart --all --initlabel` — aby usunąć wszystkie partycje przed instalacją,
+- `autopart` — aby automatycznie utworzyć nowe partycje.
 
-Gotowy zmodyfikowany plik ponownie wypchnąłem na githuba.
+Zaktualizowany plik ponownie wypchnąłem na GitHuba. Proces instalacji przeprowadziłem jeszcze raz, tym razem reboot wykonał się automatycznie.
 
-Tak jak wcześniej przeszedłem przez instalację, tym razem restart nastąpił automatycznie.
+Po zalogowaniu się do systemu sprawdziłem nazwę hosta:
 
-Po zaloowaniu się na konto sprawdziłem nazwę hosta poleceniem `hostname`, nazwa zostałą poprawnie ustawiona na `fedora.test`.
+```bash
+hostname
+```
+
+Wynik:
+
+```
+feodra.test
+```
 
 ![Ustawiona nazwa hosta](zrzuty9/zrzut_ekranu6.png)
 
@@ -398,11 +415,11 @@ Po zaloowaniu się na konto sprawdziłem nazwę hosta poleceniem `hostname`, naz
 
 #### Przygotowanie `cjson.rpm`
 
-Najpierw zmieniłem nazwę pliku `cjson.rpm` na `mycjson.rpm` a uniknąć konliktu nazw i ewentulnego pobrania "złej" biblioteki `cjson`.
+Na potrzeby testów zmieniłem nazwę pliku `cjson.rpm` na `mycjson.rpm`, aby uniknąć konfliktu nazw i ryzyka przypadkowego pobrania innej wersji biblioteki.
 
-#### Utworzenie repozytorium hppd
+#### Utworzenie repozytorium HTTP
 
-W celu utworzenia repozytorium dla mojej biblioteki `mycjson.rpm` postanowiłem wykorzystać serwer Apache, do tego pobrałem i zainstalowałem httpd i createrpo poleceniem:
+W celu udostępnienia biblioteki w formie repozytorium YUM, zainstalowałem serwer Apache oraz narzędzie `createrepo` poleceniem:
 
 ```bash
 sudo dnf install -y httpd createrepo
@@ -410,13 +427,18 @@ sudo dnf install -y httpd createrepo
 
 ![Instalacja httpd i createrepo](zrzuty9/zrzut_ekranu7.png)
 
-Następnie utworzyłem folder `/var/www/html/myrepo` i skopiowałem do niego `mycjson.rpm`.
+Następnie utworzyłem katalog:
 
-Repozytorium utworzyłem za pomocą `createrpo .`.
+```bash
+sudo mkdir -p /var/www/html/myrepo
+sudo cp mycjson.rpm /var/www/html/myrepo/
+cd /var/www/html/myrepo
+createrepo .
+```
 
 ![Utworzenie repozytorium](zrzuty9/zrzut_ekranu8.png)
 
-Aby połączenie nie było blokowane wyłączyłem firewalla dla http za pomocą polecenia:
+Aby umożliwić dostęp HTTP, dodałem reguły do firewalla:
 
 ```bash
 sudo firewall-cmd --permanent -add-service=http
@@ -425,21 +447,29 @@ sudo firewall-cmd --reload
 
 ![Wyłączenie firewalla](zrzuty9/zrzut_ekranu9.png)
 
-Ostatnim krokiem było zmodyfikowanie konfiguracji Apache w pliku `/etc/httpd/conf/httpd.conf`, aby linkowanie wewnątrz folderu było poprawne.
+Następnie w pliku `/etc/httpd/conf/httpd.conf` zmodyfikowałem konfigurację serwera Apache, aby umożliwić poprawne linkowanie zawartości repozytorium.
 
 ![Naprawa linkowania](zrzuty9/zrzut_ekranu10.png)
 
-Po tych krokach repozytorium było dostępne pod adresem `http://192.168.56.101/myrepo`;
+Po tych krokach repozytorium było dostępne pod adresem:
+
+```arduino
+http://192.168.56.101/myrepo/
+```
 
 ![Gotowe repozytorium](zrzuty9/zrzut_ekranu11.png)
 
-#### Modyfikacja kickstarta
+#### Modyfikacja pliku Kickstart
 
-W pliku `anaconda-ks.cfg` wskazałem na nowo utworzone repozytorium: `repo --name=myrepo --baseurl=http://192.168.56.101/myrepo/`.
+W pliku anaconda-ks.cfg dodałem własne repozytorium:
 
-Odpowiednio zmodyfikowałem sekcję `@packages`:
-
+```kickstart
+repo --name=myrepo --baseurl=http://192.168.56.101/myrepo/
 ```
+
+W sekcji %packages wskazałem pakiety do zainstalowania:
+
+```kickstart
 %packages
 @^custom-environment
 mycjson
@@ -449,7 +479,7 @@ curl
 %end
 ```
 
-Utworzyłem rówież sekcję `@post` ktora kompiluje program i uruchamia go w momencie instalacji.
+Dodatkowo utworzyłem sekcję `%post`, która odpowiadała za kompilację i uruchomienie programu po zakończeniu instalacji:
 
 ```
 %post
@@ -457,10 +487,10 @@ mkdir -p /opt/example
 
 chown aborek:aborek /opt/example
 
-# Pobierz plik main.c z repozytorium
+# Pobierz plik main.c z GitHuba
 curl -o /opt/example/main.c https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/AB416965/INO/GCL01/AB416965/Sprawozdanie2/pipeline/main.c
 
-# Stwórz skrypt uruchamiający program po zalogowaniu (dla trybu tekstowego)
+# Skrypt uruchamiany po zalogowaniu (tekstowo)
 cat << 'EOF' > /etc/profile.d/run_example.sh
 #!/bin/bash
 if [ ! -f /opt/example/.compiled ]; then
@@ -480,18 +510,28 @@ chmod +x /etc/profile.d/run_example.sh
 %end
 ```
 
-#### Logowanie po instalacji
+#### Weryfikacja po instalacji
 
-Po udanej instalacji systemu, zalogowałem się na moje konto. Aby sprawdzić czy biblioteka została zainstalowana poprawnie a program się skompilował sprawdziłem logi.
+Po zakończeniu instalacji zalogowałem się na swoje konto i sprawdziłem log działania skryptu:
 
-Sprawdziłem plik `/opt/example/autostart.log`, którego komunikaty wykazały że program skompilował a następnie uruchomił się prawidłowo.
+```bash
+cat /opt/example/autostart.log
+```
 
 ![Logi uruchomienia](zrzuty9/zrzut_ekranu12.png)
 
-Następnie wykorzystałem polecenie: `rpm -ql mycjson` do sprawdzenia ścieżek zainstalowanych bibliotek.
+Następnie zweryfikowałem ścieżki plików zainstalowanych przez pakiet:
+
+```bash
+rpm -ql mycjson
+```
 
 ![Lokalizacja plików zainstalowanej biblioteki](zrzuty9/zrzut_ekranu13.png)
 
-Ostatecznie spróbowałem uruchomić skompilowany już program, co zakończyło się sukcesem.
+Ostatecznie uruchomiłem program ręcznie:
+
+```bash
+LD_LIBRARY_PATH=/usr/local/lib64 /opt/example/example
+```
 
 ![Uruchomienie programu](zrzuty9/zrzut_ekranu14.png)
