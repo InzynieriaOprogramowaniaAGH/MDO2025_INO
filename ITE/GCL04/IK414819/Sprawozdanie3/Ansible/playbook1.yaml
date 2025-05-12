@@ -1,4 +1,5 @@
-- name: Test ping i kopiowanie pliku inwentaryzacji
+- name: Test ping, kopiowanie, aktualizacja paczek i resetowanie usług
+  become: true
   hosts: Endpoints
  
   tasks:
@@ -11,4 +12,20 @@
         dest: ~/inventory.ini
         mode: '0644'
 
-   
+    - name: Zaktualizuj pakiety (Fedora/DNF)
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Zrestartuj usługę sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+    - name: Zrestartuj usługę rngd
+      ansible.builtin.service:
+        name: rngd
+        state: restarted  
+      when: ansible_facts.services['rngd.service'] is defined
+      # dodałem to żeby sprawdzić , skip jesli nie istnieje
