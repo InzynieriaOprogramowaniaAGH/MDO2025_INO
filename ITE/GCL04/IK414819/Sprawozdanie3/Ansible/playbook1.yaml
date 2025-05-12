@@ -1,0 +1,14 @@
+- name: Test ping i kopiowanie pliku inwentaryzacji
+  hosts: Endpoints
+ 
+  tasks:
+    - name: Pingowanie maszyn przed kopiowaniem pliku
+      ansible.builtin.ping:
+
+    - name: Skopiuj plik inwentaryzacji na Endpoints
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: ~/inventory.ini
+        mode: '0644'
+
+   
