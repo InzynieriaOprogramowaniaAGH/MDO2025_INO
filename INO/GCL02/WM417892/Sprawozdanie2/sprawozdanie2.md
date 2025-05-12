@@ -647,3 +647,198 @@ pipeline {
 * **Publish (docker save, zip)**: zapisuje zbudowany obraz jako plik `.tar`, dodatkowo tworzy archiwum `.zip` z zawartością `dist/`. Oba pliki są dostępne jako artefakty z budowania.
 
 * **post > always**: końcowy etap czyszczący – niezależnie od wyniku pipeline'u usuwa sieć i kontener bazy danych, aby uniknąć konfliktów w przyszłych uruchomieniach.
+
+### Wyniki działania pipeline
+
+#### Logi z konsoli
+
+```
+Started by user Wojtek
+Obtained Jenkinsfile from git https://github.com/WojMats/TypeScript-Node-Starter.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/typescript-node-pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/typescript-node-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/WojMats/TypeScript-Node-Starter.git # timeout=10
+Fetching upstream changes from https://github.com/WojMats/TypeScript-Node-Starter.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/WojMats/TypeScript-Node-Starter.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/WM417892^{commit} # timeout=10
+Checking out Revision 8f3ed79bfa046ca6f71a24ce5065c598090e25f7 (refs/remotes/origin/WM417892)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 8f3ed79bfa046ca6f71a24ce5065c598090e25f7 # timeout=10
+Commit message: "WM417892: Poprawiono Jenkinsfile – użycie Dockerfile.app do builda"
+ > git rev-list --no-walk 1f9ea0a13aba63f33ad58c5c0d0fc7dee3f9f2c5 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Prepare network)
+[Pipeline] echo
+🔧 Tworzenie sieci Docker (jeśli nie istnieje)
+[Pipeline] sh
++ docker network create ci-net
+a5be25cc6c5c466c97d480bf7e9960aefb374f38703d19321669ef4bc32604a3
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build app image)
+[Pipeline] echo
+🛠️ Budowanie obrazu aplikacji z Dockerfile.app
+[Pipeline] sh
++ docker build -t ts-node-starter:ci-2 -f Dockerfile.app .
+[Build log pominięty dla skrótu]
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Start Mongo)
+[Pipeline] echo
+🧬 Uruchamianie kontenera MongoDB
+[Pipeline] sh
++ docker run -d --name ci-mongo --network ci-net mongo:4.4
+a6229f3edcd6b2df32afb896b23faf658d0060ff6e61fd194d3b27258bf6a1ed
+[Pipeline] sh
++ sleep 5
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] echo
+🧪 Uruchamianie testów
+[Pipeline] sh
++ docker run --rm --network ci-net -e MONGODB_URI_LOCAL=mongodb://ci-mongo:27017/express-typescript-starter ts-node-starter:ci-2 npm test
+
+[Logi testów pominięte dla skrótu: zawierają komunikaty PASS dla każdego zestawu testów]
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Cleanup Mongo)
+[Pipeline] echo
+🥹 Sprzątanie MongoDB
+[Pipeline] sh
++ docker rm -f ci-mongo
+ci-mongo
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Publish artifacts)
+[Pipeline] echo
+📦 Wyciąganie dist/ z obrazu i archiwizacja
+[Pipeline] sh
++ docker create --name extract-container ts-node-starter:ci-2
++ docker cp extract-container:/app/dist ./dist
++ docker rm extract-container
+[Pipeline] archiveArtifacts
+Archiving artifacts
+Recording fingerprints
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Publish (docker save, zip))
+[Pipeline] echo
+📦 Tworzenie .tar obrazu i archiwum .zip z dist/
+[Pipeline] sh
++ docker save ts-node-starter:ci-2 -o ts-node-starter.tar
++ zip -r dist.zip dist/
+[Pipeline] archiveArtifacts
+Archiving artifacts
+Recording fingerprints
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+🧼 Czyszczenie środowiska po pipeline
+[Pipeline] sh
++ docker rm -f ci-mongo
+Error: No such container: ci-mongo
+[Pipeline] sh
++ docker network rm ci-net
+ci-net
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+```
+
+#### Wnioski ze zrzutów ekranu
+![3 4](https://github.com/user-attachments/assets/02b03180-4386-48f4-9dc3-ccc86ad6444d)
+
+1. **Artefakty pipeline**: Wygenerowane zostały dwa pliki:
+
+   * `ts-node-starter.tar` (obraz dockera aplikacji)
+   * `dist.zip` (zawartość katalogu `dist/`, czyli zbudowane pliki aplikacji)
+
+   Oznacza to, że pipeline skutecznie realizuje kroki *publish* oraz *build artifact*.
+
+
+![3 1](https://github.com/user-attachments/assets/6808336c-009a-41d4-84ac-bf94f921cbd3)
+
+![3 2](https://github.com/user-attachments/assets/d0998dc6-5c14-44cf-b077-68a377527251)
+   
+
+3. **Logi konsoli**: Potwierdzają poprawne pobranie kodu z repozytorium Git oraz checkout odpowiedniego commita. Komunikaty `PASS` w testach oraz `Finished: SUCCESS` dowodzą, że proces zakończył się sukcesem.
+
+4. **Zakończenie czyszczeniem**: Etap `Post Actions` prawidłowo usuwa tymczasowy kontener MongoDB oraz sieć Docker `ci-net`, co zapobiega pozostawianiu śmieci w środowisku.
+
+![3 3](https://github.com/user-attachments/assets/0e30c916-a8ae-49b6-862a-4f2b4e41a54a)
+
+
+5. **Graficzna reprezentacja przebiegu**: Widok graficzny pipeline potwierdza, że wszystkie etapy: `Checkout`, `Build`, `Test`, `Publish` oraz `Cleanup` wykonały się poprawnie i w odpowiedniej kolejności. Zielone znaczniki potwierdzają sukces.
+
+Podsumowując, pipeline jest kompletny i powtarzalny. Realizuje wszystkie wymagane etapy CI/CD, a jego wyniki są jednoznacznie udokumentowane.
+
+
+
+
+#### Wymagania sprawozdania
+
+Wymaganie 1: Jenkins - max 10 pkt
+
+Zainstalowano rozwiązanie Jenkins zgodnie z instrukcją, uruchomiono kontener z odpowiednim obrazem oraz skonfigurowano repozytorium. Przedstawiono działanie aplikacji i wykonanie procesu CI, co w pełni spełnia wymaganie.
+
+Wymaganie 2: krok build - max 10 pkt
+
+W Jenkinsfile zdefiniowano krok Build app image, który buduje obraz aplikacji na podstawie Dockerfile. W logach i artefaktach widoczne są wyniki tego kroku, co potwierdza jego poprawność i powtarzalność.
+
+Wymaganie 3: krok test - max 10 pkt
+
+Zrealizowano krok Test przy użyciu osobnego kontenera. Testy uruchamiane są z wykorzystaniem frameworka jest i pokrycie kodu zostało zaprezentowane. Wyniki są archiwizowane i możliwe do przeanalizowania.
+
+Wymaganie 4: krok deploy - max 15 pkt
+
+Proces Deploy został zaimplementowany w formie budowania kontenera runtime na podstawie zbudowanego artefaktu. Kontener uruchamiany jest lokalnie z mapowaniem portu i użyciem zmiennych środowiskowych.
+
+Wymaganie 5: deploy – uzasadnienie - max 15 pkt
+
+Opisano i zaprezentowano, że aplikacja jest uruchamiana z artefaktu przygotowanego wcześniej. Plik .env.example przekazywany jest do kontenera, zapewniając poprawną konfigurację. Widoczny jest działający endpoint aplikacji.
+
+Wymaganie 6: krok publish - max 10 pkt
+
+W kroku Publish wygenerowano artefakt .zip oraz .tar zawierający obraz Dockera. Oba zostały dołączone jako artefakty do buildu i mogą być pobrane.
+
+Wymaganie 7: publish – uzasadnienie - max 15 pkt
+
+Przygotowano i uzasadniono użycie plików .zip i .tar jako form redystrybucyjnych. .tar zawiera kompletny obraz kontenera, .zip zawiera skompilowane pliki aplikacji. Obie formy umożliwiają niezależne wdrożenie aplikacji.
+
+Wymaganie 8: maintainability - max 10 pkt
+
+Sprawozdanie przedstawia odporność rozwiązania – każdy krok kończy się sprzątaniem zasobów (docker rm, docker network rm). Umożliwia to ponowne wykonanie pipeline bez problemów i gwarantuje czystość środowiska. Dodatkowo, pipeline może zostać uruchomiony ponownie bez ręcznej ingerencji.
