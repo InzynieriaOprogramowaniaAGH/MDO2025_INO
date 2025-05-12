@@ -1,0 +1,9 @@
+# Obraz tester bazuje na obrazie buildera (z kodem i zależnościami)
+FROM ts-node-starter:builder
+WORKDIR /app
+
+# kopiujemy projekt
+COPY . .
+
+# uruchamiamy testy
+CMD ["npm", "test"]

@@ -1,0 +1,14 @@
+# Dockerfile.runtime
+
+FROM node:18-alpine
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install --only=production
+
+COPY dist         ./dist
+COPY views        ./views
+COPY dist/public  ./public
+COPY .env.example .env
+
+CMD ["node", "dist/server.js"]

@@ -1,0 +1,28 @@
+services:
+  mongo:
+    image: mongo:4.4
+    networks:
+      - ci-net
+
+  tester:
+    image: ts-node-starter:tester
+    depends_on:
+      - mongo
+    environment:
+      # połączenie do MongoDB (wewnątrz sieci Docker Compose)
+      MONGODB_URI_LOCAL: mongodb://mongo:27017/express-typescript-starter
+      # sekret dla sesji wymagany przez aplikację
+      SESSION_SECRET: testsecret123
+      # Facebook OAuth (dummy values, by strategia się nie wywaliła)
+      FACEBOOK_ID: fb-test-id
+      FACEBOOK_SECRET: fb-test-secret
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: npm test
+    networks:
+      - ci-net
+
+networks:
+  ci-net:
+    driver: bridge
