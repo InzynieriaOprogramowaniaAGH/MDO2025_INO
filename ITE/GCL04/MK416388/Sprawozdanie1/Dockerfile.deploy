@@ -1,4 +1,4 @@
-FROM nodebld:23-alpine
+FROM my_node_build:23-alpine
 
 WORKDIR /node-js-dummy-test
 
