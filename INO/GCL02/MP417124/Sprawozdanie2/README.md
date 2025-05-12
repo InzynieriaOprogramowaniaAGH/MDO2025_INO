@@ -8,18 +8,23 @@ Na początku zajęć przystąpiłam do utworzenia instancji Jenkinsa według ins
 Najpierw zaczełam od utworzenia nowej sieci dockera **Jenkins** poprzez komendę `docker network create jenkins`.
 Następnie utworzyłam kontener docker-in-docker (dind), kt
 
-![Zrzut ekranu 1 – Uruchomienie kontenera dind i sieci]()
+![Zrzut ekranu 1 – Uruchomienie kontenera dind i sieci](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie2/Screenshots/Screenshot%202025-05-02%20at%205.14.38%E2%80%AFPM.png)
+
 
 Następnie stworzyłam spersonalizowany obraz Dockera na bazie oficjalnego obrazu Jenkinsa, rozszerzając go o obsługę Docker CLI oraz instalując potrzebne pluginy: `blueocean` i `docker-workflow`. Dzięki temu możliwe było wykorzystanie interfejsu Blue Ocean do wizualizacji pipeline’ów, co w znacznym stopniu poprawia przejrzystość i komfort pracy.
 
-![Zrzut ekranu 2 – Budowanie obrazu Jenkins]()
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie2/Screenshots/Screenshot%202025-05-02%20at%205.17.59%E2%80%AFPM.png)
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie2/Screenshots/Screenshot%202025-05-02%20at%205.23.42%E2%80%AFPM.png)
+
 
 Całość środowiska została uruchomiona i podłączona do wspólnej sieci Dockera, a interfejs Jenkinsa był dostępny przez przeglądarkę lokalnie. Proces pozyskania hasła oraz instalacji pluginów przebiegł bez zakłóceń.
 
-![Zrzut ekranu 3 – Kontener jenkins-blueocean]()  
-![Zrzut ekranu 4 – Strona logowania]()  
-![Zrzut ekranu 5 – Hasło jednorazowe]()  
-![Zrzut ekranu 6 – Instalacja pluginów]()
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie2/Screenshots/Screenshot%202025-05-02%20at%205.30.54%E2%80%AFPM.png)
+
+
+Udało się uzyskać hasło:
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie2/Screenshots/Screenshot%202025-05-02%20at%205.31.31%E2%80%AFPM.png)
 
 ---
 
@@ -28,15 +33,14 @@ Całość środowiska została uruchomiona i podłączona do wspólnej sieci Doc
 W ramach pierwszych prób stworzyłam kilka prostych projektów:
 
 - Komenda `uname` pozwoliła sprawdzić, czy Jenkins wykonuje poprawnie skrypty powłoki.  
-  ![Zrzut ekranu 7 – uname]()
+  ![Zrzut ekranu 7 – uname](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie2/Screenshots/Screenshot%202025-05-02%20at%205.49.51%E2%80%AFPM.png)
 
   ``` bash
   uname -a
   ```
-
-
+  
 - Napisałam skrypt, który sprawdza, czy bieżąca godzina jest parzysta. Mimo że to zadanie miało charakter czysto testowy, świetnie obrazuje, jak Jenkins może służyć do uruchamiania warunkowych zadań.  
-  ![Zrzut ekranu 8 – Sprawdzenie godziny]()
+  ![Zrzut ekranu 8 – Sprawdzenie godziny](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie2/Screenshots/Screenshot%202025-05-02%20at%205.53.48%E2%80%AFPM.png)
 
     ``` bash
   #!/bin/bash
@@ -50,7 +54,7 @@ W ramach pierwszych prób stworzyłam kilka prostych projektów:
   ```
 
 - Utworzyłam job pobierający obraz systemu Ubuntu z Dockera, co potwierdziło poprawność konfiguracji integracji Jenkinsa z Dockerem.  
-  ![Zrzut ekranu 9 – docker pull ubuntu]()
+  ![Zrzut ekranu 9 – docker pull ubuntu](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie2/Screenshots/Screenshot%202025-05-02%20at%205.55.23%E2%80%AFPM.png)
 
   ```bash
   #!/bin/bash
@@ -98,6 +102,8 @@ pipeline {
 }
 
 ```
+
+ ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie2/Screenshots/Screenshot%202025-05-02%20at%207.36.40%E2%80%AFPM.png)
 
 Zmodyfikowano wcześniej utworzony Pipeline, tak aby budował rownież kontener testowy:
 
@@ -151,54 +157,93 @@ pipeline {
 
 Aby uruchomić pipeline w środowisku Jenkins, wymagane były następujące zasoby i konfiguracja:
 
-- **Jenkins z wtyczkami do Docker i Git**:
-  - Jenkins musi być zainstalowany i skonfigurowany, aby obsługiwał zadania z użyciem Docker.
-  - **Wtyczki**:
-    - Docker Pipeline
-    - Git plugin
+- **System operacyjny hosta:** Linux z obsługą Dockera 
+- **Docker Engine:** minimum wersja 20.10 — pipeline intensywnie wykorzystuje budowanie i uruchamianie kontenerów
+- **Jenkins lub inny system CI/CD:** skonfigurowany agent z dostępem do Dockera 
+- **Uprawnienia:** użytkownik uruchamiający pipeline musi mieć prawo do wykonywania poleceń Docker (`docker build`, `docker cp`, `docker exec` itd.)
 
-- **Kontenery Docker**:
-  - Dwa obrazy: `builder` i `tester` (w oparciu o Dockerfile) muszą być dostępne w środowisku.
-  - Obraz Docker z wbudowanymi zależnościami (`Dependencies`) powinien zostać stworzony lub pobrany z publicznych repozytoriów (np. obrazy oparte na Ubuntu lub Fedora).
 
-- **Repozytorium kodu źródłowego**:
-  - Kod źródłowy aplikacji musi znajdować się w repozytorium Git (w tym przypadku repozytorium znajduje się na GitHubie).
+## 2. Diagram aktywności - proces CI
 
-- **Pliki Dockerfile**:
-  - Pliki Dockerfile muszą być dostępne i dostosowane do różnych etapów pipeline: `build`, `test`, `deploy`, `publish`.
+Diagram aktywności przedstawiający kolejne etapy procesu CI (Clone, Build, Test, Deploy, Report) jest następujący:
 
-## 	2. Diagram aktywności - proces CI
-Diagram aktywności przedstawiający kolejne etapy procesu CI (Collect, Build, Test, Report) jest następujący:
-
-``` bash
-+----------------+      +----------------+      +----------------+      +----------------+
-| Collect Sources| ---> | Build Docker   | ---> | Run Tests      | ---> | Report Results |
-| (Git Clone)    |      | (Create Image) |      | (Docker Test)  |      | (Log Archival) |
-+----------------+      +----------------+      +----------------+      +----------------+
+```bash
++-------------------+      +----------------------------+      +---------------------+      +-------------------+      +---------------------+
+| Clone Repo        | ---> | Build Docker Image (cJSON)  | ---> | Run Tests            | ---> | Deploy Package     | ---> | Report Results      |
+| (git clone)       |      | (Create Build Image)        |      | (Run Test Container) |      | (Install RPM)      |      | (Archive Artifacts) |
++-------------------+      +----------------------------+      +---------------------+      +-------------------+      +---------------------+
 
 ```
 
 Opis etapów:
-1. Collect: Źródła aplikacji są zbierane z repozytorium Git za pomocą komendy git clone w Jenkinsie.
-2. Build: Kontener jest tworzony na podstawie Dockerfile, w tym etapie jest instalowane oprogramowanie i zależności.
-3. Test: Kontener jest uruchamiany, a testy są przeprowadzane. Wyniki testów są zapisywane w logach.
-4. Report: Archiwizowanie wyników (artefaktów oraz logów) w celu dalszej analizy.
+
+
+**1. Clone Repo (Collect):**
+- W tym etapie źródła aplikacji są pobierane z repozytorium Git za pomocą komendy `git clone`. Repozytorium zawiera kod źródłowy projektu `cJSON` oraz wszystkie niezbędne pliki konfiguracyjne.
+- Repozytorium jest klonowane w określonym branchu (`MP417124`), a dane są przekazywane do kolejnego etapu pipeline’a.
+
+**2. Build Docker Image (Build):**
+- Na podstawie pliku `Dockerfile.build`, kontener jest budowany. W tym etapie instalowane są wszystkie zależności wymagane do skompilowania projektu `cJSON` oraz stworzenia paczki `.rpm` z biblioteką.
+- Zawiera to takie kroki jak: instalacja wymaganych narzędzi, sklonowanie repozytorium `cJSON`, kompilacja i budowanie paczki RPM.
+- Rezultatem tego etapu jest plik `.rpm`, który będzie użyty w dalszych krokach.
+
+**3. Run Tests (Test):**
+- Kontener testowy jest tworzony na podstawie pliku `Dockerfile.test`. Testy są uruchamiane w tym kontenerze, który sprawdza poprawność działania kompilacji i funkcji w projekcie `cJSON`.
+- Testy są uruchamiane na pliku `deploy.c`, który wykorzystuje bibliotekę `cJSON` do generowania danych JSON. Wyniki testów są zapisywane do pliku logów.
+- Logi testów są przekazywane do następnego etapu.
+
+**4. Deploy Package (Deploy):**
+- W tym etapie tworzony jest kontener na podstawie pliku `Dockerfile.deploy`. Następnie paczka `.rpm` jest instalowana w tym kontenerze.
+- Kontener wykonuje instalację pakietu, kompiluje kod źródłowy (plik `deploy.c`) oraz uruchamia testy w środowisku zainstalowanej biblioteki `cJSON`.
+- Po zainstalowaniu pakietu i uruchomieniu testów kontener jest usuwany.
+
+**5. Report Results (Report):**
+- Po zakończeniu wszystkich etapów, wyniki są archiwizowane w celu dalszej analizy. Zawiera to:
+  - Artefakty (np. paczka RPM),
+  - Logi z testów.
+- Archiwizowanie wyników umożliwia późniejszą weryfikację oraz diagnozowanie ewentualnych problemów w przypadku niepowodzenia któregoś z testów.
 
 ## 	3. Diagram wdrożeniowy - proces CD
 Diagram wdrożeniowy przedstawiający proces deploy i publish aplikacji, uwzględniający interakcje między komponentami i artefaktami, wygląda następująco:
 
 ```bash
-+----------------+       +------------------+       +--------------------+       +------------------+
-| Docker Image   | ----> | Deploy Image     | ----> | Install RPM Package | ----> | Run Application  |
-| (Build)        |       | (Target Container)|       | (Target System)     |       | (Verify Output)  |
-+----------------+       +------------------+       +--------------------+       +------------------+
++-----------------------------------------------------------+
+|                        Jenkins CI/CD                      |
+|-----------------------------------------------------------|
+| - Uruchamia pipeline                                      |
+| - Buduje obrazy Docker: build, test, deploy               |
+| - Kopiuje artefakty i pliki (cjson.rpm, deploy.c)         |
+| - Tworzy i uruchamia kontener cj-deploy                   |
+| - Archiwizuje artefakty (.rpm, logi)                      |
++------------------------+----------------------------------+
+                         |
+                         v
+         +------------------------------------------+
+         |          Docker container: cj-deploy     |
+         |------------------------------------------|
+         | - Bazowy obraz: Fedora 41                |
+         | - Odbiera:                               |
+         |     • cjson-1.0.0.rpm                    |
+         |     • deploy.c                           |
+         | - Działania:                             |
+         |     • Instalacja paczki RPM              |
+         |     • Kompilacja deploy.c (gcc)          |
+         |     • Uruchomienie deploy_test           |
+         |     • Walidacja działania biblioteki     |
+         +----------------------+-------------------+
+                                  |
+                                  v
+          +-----------------------------------------+
+          |      Host Jenkins – System plików       |
+          |-----------------------------------------|
+          | artifacts/                              |
+          |   • cjson-1.0.0.rpm                     |
+          | logs/                                   |
+          |   • test_results-1.0.0.log              |
+          |                                         |
+          | -> Archiwizacja przez `archiveArtifacts`|
+          +-----------------------------------------+
 ```
-
-Opis etapów:
-1. Docker Image: Na początku budujemy obraz Dockera zawierający wszystkie zależności.
-2. Deploy Image: Obraz Dockera jest wdrażany na docelowym systemie (np. kontenerze).
-3. Install RPM Package: Instalacja paczki RPM z aplikacją na systemie docelowym.
-4. Run Application: Uruchomienie aplikacji na docelowym systemie i weryfikacja wyników.
 
 ## 4. Zdefiniowanie pipeline’u Jenkins
 
@@ -221,22 +266,18 @@ Pipeline Jenkins został zdefiniowany za pomocą pliku `Jenkinsfile`, który aut
 
 ---
 
-## 5. Zasady dotyczące budowy kontenerów, testów i publikacji
+## 5. Krok `Deploy` i `Publish`
 
-1. **Kontener Builder**:
-   - Obraz powinien zawierać wszystkie zależności niezbędne do zbudowania aplikacji. Może to obejmować narzędzia takie jak `make`, `gcc`, `fpm`, oraz zależności systemowe. Dzięki temu budowa aplikacji jest możliwa w odizolowanym środowisku.
+W omawianym pipeline'ie kroki `Deploy` i `Publish` odgrywają istotną rolę w zapewnieniu poprawności i jakości zbudowanego artefaktu w postaci paczki RPM. Celem tych etapów jest nie tylko potwierdzenie, że paczka została zbudowana poprawnie, ale również zweryfikowanie jej działania w środowisku zbliżonym do docelowego oraz jej archiwizacja do późniejszego użytku lub publikacji.
 
-2. **Kontener Tester**:
-   - Kontener musi mieć zainstalowane odpowiednie narzędzia do uruchamiania testów (np. `gcc`, `make` oraz inne zależności w zależności od typu testów).
-   - Testy są uruchamiane w ramach kontenera i ich wyniki są zapisywane w logach.
+Etap `Deploy` realizowany jest poprzez budowę osobnego obrazu Dockera na podstawie systemu Fedora 41, w którym następnie instalowana jest paczka RPM z biblioteką `cJSON`. Do obrazu kopiowany jest również plik `deploy.c` — prosty program testowy, który wykorzystuje funkcje udostępniane przez bibliotekę `cJSON`. W ramach tego etapu wykonywane są następujące czynności: budowa obrazu Dockera (`cj-deploy`), utworzenie i uruchomienie kontenera, instalacja paczki RPM, kompilacja programu testowego i jego uruchomienie. Jeżeli którakolwiek z tych operacji zakończy się błędem — na przykład z powodu brakujących plików nagłówkowych, błędów w instalacji czy niekompatybilności zależności — pipeline zostaje przerwany. Dzięki temu etap `Deploy` pełni funkcję testu wdrożeniowego, sprawdzającego, czy artefakt działa w odizolowanym środowisku w taki sposób, jak był zaprojektowany.
 
-3. **Kontener Deploy**:
-   - Obraz deploy powinien zawierać minimalną konfigurację (np. Fedora), która umożliwia instalację paczki RPM i uruchomienie aplikacji.
-   - Po zainstalowaniu aplikacji, jest ona uruchamiana i sprawdzana, czy działa zgodnie z oczekiwaniami.
+Z kolei funkcję `Publish` pełni w tym przypadku sekcja `post`, która automatycznie archiwizuje zbudowane artefakty: paczkę `cjson-1.0.0.rpm` oraz logi z testów jednostkowych. Dzięki temu możliwa jest trwała rejestracja wyników danego uruchomienia pipeline’a, a także ich ewentualna publikacja w repozytorium artefaktów, dalsze testowanie integracyjne lub przekazanie zespołowi wdrożeniowemu. Choć w tym pipeline'ie nie wykorzystano osobnego narzędzia typu Artifactory czy Nexus, mechanizm `archiveArtifacts` pełni analogiczną rolę na poziomie lokalnym lub w systemie CI/CD takim jak Jenkins.
 
-4. **Publikacja Artefaktów**:
-   - Artefakty, takie jak paczki RPM, są archiwizowane w wyniku pipeline’u, dzięki czemu mogą być pobrane później.
-   - W przypadku potrzeby, artefakty mogą być również publikowane w zewnętrznych rejestrach (np. Docker Hub).
+Zaprojektowanie tych dwóch kroków w ten sposób ma uzasadnienie praktyczne i zgodne jest z dobrymi praktykami DevOps. `Deploy` zapewnia test środowiskowy — paczka jest instalowana i wykorzystywana dokładnie tak, jak zrobiłby to użytkownik końcowy. Pozwala to wykryć błędy wynikające z niekompletnej paczki (brak plików `.h`, `.so`, itp.) czy niepoprawnego działania funkcji biblioteki. `Publish`, nawet jeśli ograniczony do archiwizacji lokalnej, zapewnia trwałość wyników i ich dostępność po zakończeniu pipeline’a. 
+
+W przypadku użytego repozytorium (`https://github.com/DaveGamble/cJSON.git`) oraz wykorzystania narzędzi takich jak `fpm`, `rpm` i `gcc`, takie podejście pozwala na pełne przetestowanie i zweryfikowanie poprawności paczki RPM przed przekazaniem jej dalej, np. do systemu produkcyjnego, środowiska testów integracyjnych lub jako zależności w innym projekcie.
+
 
 ---
 
@@ -248,10 +289,6 @@ Pipeline Jenkins został zdefiniowany za pomocą pliku `Jenkinsfile`, który aut
 
 2. **Dystrybucja jako obraz Docker**:
    - Aplikacja może być dystrybuowana jako obraz Docker. To rozwiązanie ma sens, ponieważ pozwala na łatwą replikację środowiska, w którym aplikacja będzie działała, bez konieczności instalowania jej na każdym systemie.
-   - Obraz Docker powinien zawierać tylko niezbędne zależności oraz artefakty buildowe. Sklonowanie repozytorium oraz logi buildowe mogą być również przechowywane w kontenerze, ale nie powinny być częścią finalnego obrazu.
-
-3. **Różnica między obrazem `node` a `node-slim`**:
-   - Obraz `node` zawiera pełną wersję Node.js wraz ze wszystkimi zależnościami, podczas gdy obraz `node-slim` jest wersją odchudzoną, która nie zawiera wielu zbędnych pakietów, co może zaoszczędzić miejsce i przyspieszyć czas ładowania.
 
 ---
 
