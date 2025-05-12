@@ -147,17 +147,96 @@ pipeline {
 }
 ```
 
-Na bazie wcześniejszych etapów, stworzono kompletny pipeline CI/CD, który realizował wszystkie kroki związane z budowaniem, testowaniem oraz wdrażaniem aplikacji. Zdecydowano się na wykorzystanie pakietu .rpm jako artefaktu końcowego, który następnie można było zainstalować na systemie Linux.
+W wyniku działania tego etapu logi testów są zapisywane do katalogu logs, a artefakt z wynikami testów jest archiwizowany w systemie Jenkins. W następnym etapie kontener jest budowany na podstawie pliku Dockerfile.deploy i jest uruchamiany w celu weryfikacji pakietu .rpm poprzez jego instalację i kompilację programu testowego. Działania w tym etapie obejmują:
 
-W pipeline’ie zastosowano wersjonowanie artefaktów i obrazów Docker zgodnie z Semantic Versioning, co pozwalało na łatwą identyfikację wersji artefaktów generowanych w trakcie kolejnych uruchomień pipeline’u.
+  1.	Instalację pakietu .rpm.
+  2.	Kompilację kodu testowego, który korzysta z biblioteki cJSON.
+  3.	Uruchomienie skompilowanego programu w kontenerze.
 
-Diagram pipeline’u
+Kod pipeline’u dla etapu Deploy:
 
-Wszystkie etapy pipeline’u zostały zorganizowane w pięciu głównych fazach:
-1. Clone: Klonowanie repozytorium.
-2. Build: Budowanie obrazu Docker z aplikacją.
-3. Test: Uruchamianie testów na zbudowanym obrazie.
-4. Deploy: Instalowanie pakietu .rpm i uruchamianie testów na systemie.
-5. Print: Potwierdzenie zakończenia procesu.
+``` bash
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                git branch: 'MP417124', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir("INO/GCL02/MP417124/docker_build") {
+                    script {
+                        docker.build('cj-build', '-f Dockerfile.build .')
+                    }   
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                dir("INO/GCL02/MP417124/docker_build") {
+                    script {
+                        docker.build('cj-test', '-f Dockerfile.test .')
+                        sh """
+                            container_id=\$(docker run -d cj-test)
+                            mkdir -p logs
+                            docker cp \${container_id}:/app/cJSON/logs/test_results.log logs/test_results.log
+                            docker rm \${container_id}
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                dir("INO/GCL02/MP417124/docker_build") {
+                    script {
+                        docker.build('cj-deploy', '-f Dockerfile.deploy .')
+                        def deployContainer = sh(script: "docker create cj-deploy", returnStdout: true).trim()
+
+                        sh "docker cp artifacts/cjson-${VERSION}.rpm ${deployContainer}:/tmp/cjson.rpm"
+                        sh "docker cp deploy.c ${deployContainer}:/app/deploy.c"
+                        sh "docker start ${deployContainer}"
+                        sh "docker exec ${deployContainer} dnf install -y /tmp/cjson.rpm"
+                        sh "docker exec ${deployContainer} gcc /app/deploy.c -lcjson -o /tmp/deploy_test"
+                        sh "docker exec ${deployContainer} /tmp/deploy_test"
+                        sh "docker rm -f ${deployContainer}"
+                    }
+                }
+            }
+        }
+    }
+}
+```
+Po zakończeniu kroku Deploy potwierdzane jest, że zbudowany i zainstalowany pakiet .rpm działa poprawnie.
+
+## Zastosowanie Deploy - uzasadnienie
+
+Wybór kontenera do wdrożenia aplikacji, czyli kroku Deploy, wynika z potrzeby weryfikacji, czy zbudowany pakiet .rpm poprawnie integruje się z systemem Linux. Instalacja pakietu odbywa się w kontenerze z systemem Fedora, co zapewnia środowisko oparte na popularnym systemie do testów.
+
+Dodatkowo, proces wdrożenia pozwala na integrację pakietu z aplikacjami przy użyciu kompilacji testowego programu deploy.c. Celem było zapewnienie, że biblioteka cJSON działa zgodnie z oczekiwaniami po jej zainstalowaniu.
+
+## Krok Publish
+
+W kolejnym etapie dodano proces publikacji wyników w postaci artefaktów. Krok Publish w Jenkinsie jest odpowiedzialny za archiwizowanie wygenerowanych artefaktów, takich jak pliki wyników testów oraz pakiety .rpm. Dzięki temu możliwe jest przechowywanie wyników i łatwiejsze ich udostępnienie innym członkom zespołu lub systemom.
+
+Kod pipeline’u dla etapu Publish:\
+``` bash
+post {
+    always {
+        archiveArtifacts artifacts: 'INO/GCL02/MP417124/docker_build/artifacts/cjson-${VERSION}.rpm', allowEmptyArchive: true
+        archiveArtifacts artifacts: 'INO/GCL02/MP417124/docker_build/logs/test_results.log', allowEmptyArchive: true
+    }
+}
+```
+
+Proces publikacji wyników ma kluczowe znaczenie w CI/CD, ponieważ umożliwia zbieranie artefaktów z różnych etapów pipeline’u. Dzięki archiwizowaniu wyników testów oraz pakietów .rpm, zapewniamy możliwość ich weryfikacji, a także udostępnianie wyników zainteresowanym stronom. Wartość tego kroku polega na uproszczeniu dostępu do wyników oraz zapewnieniu ciągłości pracy nad projektem.
+
+Z punktu widzenia utrzymania, pipeline CI/CD został zaprojektowany w taki sposób, aby każdy etap był modularny i łatwy do modyfikacji. Zastosowanie kontenerów Docker zapewnia, że środowisko testowe jest izolowane, co umożliwia łatwiejsze identyfikowanie problemów i zapewnia stabilność całego procesu. Ponadto, wersjonowanie obrazów Docker oraz artefaktów pozwala na pełną identyfikację pochodzenia każdego elementu, co ułatwia zarządzanie wersjami i aktualizacjami.
 
 
