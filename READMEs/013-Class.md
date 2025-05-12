@@ -11,4 +11,4 @@
   - Utwórz własną akcję reagującą na zmianę w `ino_dev`
   - Zweryfikuj, że wybrany program buduje się wewnątrz Akcji po zacommitowaniu zmiany do gałęzi
   - Jeżeli build jest zbyt duży, zmodyfikuj akcję aby wykonywała inną czynność, związaną najlepiej z *code quality*
- 
+  - Jeżeli to możliwe, załącz zbudowany artefakt za pomocą [dedykowanej akcji](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow)
