@@ -11,13 +11,17 @@ RUN dnf update -y && dnf install -y \
     rpm-build \
     rpmdevtools \
     wget \
-    git
+    git \
+    autoconf \
+    automake \
+    libtool \
+    texinfo
 
 # Set up RPM directory structure
 RUN rpmdev-setuptree
 
 # Create spec file
-WORKDIR /root
+WORKDIR /root/rpmbuild/SPECS
 RUN echo '%global debug_package %{nil}' > wget.spec && \
     echo 'Name: wget' >> wget.spec && \
     echo 'Version: 1.0' >> wget.spec && \
@@ -45,8 +49,8 @@ RUN echo '%global debug_package %{nil}' > wget.spec && \
 WORKDIR /root/rpmbuild/SOURCES
 RUN wget https://ftp.gnu.org/gnu/wget/wget-1.21.3.tar.gz -O wget-1.0.tar.gz
 
-# Build the RPM
-RUN rpmbuild -bb /root/wget.spec
+# Build the RPM (zmieniona ścieżka do pliku spec)
+RUN rpmbuild -bb /root/rpmbuild/SPECS/wget.spec
 
 # Verify the RPM was created and copy to /opt/wget for easier access in Jenkins
 RUN mkdir -p /opt/wget && \
