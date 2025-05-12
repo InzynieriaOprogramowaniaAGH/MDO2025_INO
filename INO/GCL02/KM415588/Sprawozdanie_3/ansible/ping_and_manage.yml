@@ -1,0 +1,33 @@
+---
+- name: Zarządzanie maszynami końcowymi
+  hosts: endpoints
+  gather_facts: false
+  become: true #uzyskiwanie uprawnień root
+  tasks:
+
+    - name: Ping test
+      ansible.builtin.ping:
+
+    - name: Skopiuj inventory.ini na hosta
+      copy:
+        src: inventory.ini
+        dest: /home/{{ ansible_user }}/inventory.ini
+        mode: '0644'
+
+    - name: Aktualizuj pakiety systemowe
+      package:
+        name: "*"
+        state: latest
+      ignore_errors: yes
+
+    - name: Restart sshd
+      service:
+        name: sshd
+        state: restarted
+      ignore_errors: yes
+
+    - name: Restart rngd
+      service:
+        name: rngd
+        state: restarted
+      ignore_errors: yes
