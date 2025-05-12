@@ -27,5 +27,5 @@
       ansible.builtin.service:
         name: rngd
         state: restarted  
+        # sprawdzamy czy usługa istnieje , skip jesli nie istnieje
       when: ansible_facts.services['rngd.service'] is defined
-      # dodałem to żeby sprawdzić , skip jesli nie istnieje
