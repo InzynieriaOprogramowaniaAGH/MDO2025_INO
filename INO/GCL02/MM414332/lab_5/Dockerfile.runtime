@@ -1,0 +1,7 @@
+FROM node:18-slim
+WORKDIR /app
+
+# Skopiuj tylko potrzebne pliki z builda
+COPY --from=my-app-build /app/node-typescript-boilerplate/build ./build
+
+CMD ["node", "build/index.js"]
