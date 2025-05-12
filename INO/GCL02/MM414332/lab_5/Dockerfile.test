@@ -1,0 +1,3 @@
+FROM my-app-build
+WORKDIR /app
+CMD ["npm", "test"]
