@@ -1,13 +1,5 @@
 FROM node:18 AS builder
-
 WORKDIR /app
-
-# Zamiast klonowania repo – pipeline już klonuje i przekazuje kontekst, więc kopiujemy
-COPY . .
-
+RUN git clone https://github.com/jsynowiec/node-typescript-boilerplate.git .
 RUN npm install
 RUN npm run build
-
-# Bezpieczne pakowanie katalogu dist (jeśli istnieje)
-RUN if [ -d dist ]; then tar -czf xz.tar.gz dist/; else echo "No dist folder, skipping tar"; fi
-
