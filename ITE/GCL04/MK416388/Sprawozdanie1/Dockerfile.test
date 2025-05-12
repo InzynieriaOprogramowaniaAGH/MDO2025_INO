@@ -1,3 +1,5 @@
-FROM my_node_build
+FROM nodebld:23-alpine
 
-CMD ["npm", "run", "test"]
+WORKDIR /node-js-dummy-test
+
+RUN npm run test

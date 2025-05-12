@@ -1,11 +1,5 @@
-FROM node:alpine
+FROM nodebld:23-alpine
 
-WORKDIR /app
-
-COPY . /app
-
-RUN npm install
-
-EXPOSE 3000
+WORKDIR /node-js-dummy-test
 
 CMD ["npm", "start"]
