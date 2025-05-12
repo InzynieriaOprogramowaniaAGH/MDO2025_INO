@@ -310,3 +310,16 @@
     # Reboot the system
     reboot
   ```
+
+- Wykorzystano serwis [tinyurl.com](https://tinyurl.com) w celu skrócenia adresu pliku `anaconda-ks.cfg` znajdującego się w repozytorium przedmiotu.
+- W trakcie instalacji systemu fedora na nowej maszynie wirtualnej, klikając klawisz `e`, przeszliśmy do linii poleceń kernela.
+- Wewnątrz skryptu dodaliśmy parametr startowy jądra `inst.ks=tinyurl.com/34uj22hp`. Wykorzystując wcześniej wygenerowany [adres](https://tinyurl.com/34uj22hp).
+    - *Zrzut ekranu z modyfikacji parametrów*
+ 
+      ![Zrzut ekranu GRUB](media/m15_GRUB.png)
+  
+- Klikając kombinacje klawiszy `ctrl` + `x`, przeszliśmy do instalacji systemu, która była zautomatyzowana poprzez realizacje konfiguracji z pliku.
+- Po zakończeniu instalacji i ponownym uruchomieniu systemu zweryfikowano obecność pakietu oraz plików, instalowanej podczas instalacji systemu, biblioteki `cJSON`.
+  - *Weryfikacja obecności pakietu*:
+ 
+    ![Zrzut ekranu weryfikacji obecności pakietu](media/m16_verify.png)
