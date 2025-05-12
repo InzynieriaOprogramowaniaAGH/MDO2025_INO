@@ -1,6 +1,7 @@
 FROM fedora:latest
 
 RUN dnf install --assumeyes make
+RUN dnf install --assumeyes diff
 RUN dnf install --assumeyes gcc
 RUN dnf install --assumeyes readline-devel
 RUN dnf install --assumeyes git

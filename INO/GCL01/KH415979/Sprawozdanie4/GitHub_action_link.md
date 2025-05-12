@@ -1,0 +1,1 @@
+Akcja: https://github.com/KHan-9/tiny-c-interpreter_do/blob/master/.github/workflows/c-cpp.yml
