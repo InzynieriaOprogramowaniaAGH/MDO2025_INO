@@ -4,6 +4,6 @@ WORKDIR /app/CSOM
 
 COPY . .
 
-RUN mkdir -p logs
+RUN pip install -r requirements.txt
 
-CMD ["sh", "-c", "echo 'Test start' > logs/test_results.log && echo 'All tests passed!' >> logs/test_results.log"]
+CMD ["sh", "-c", "mkdir -p logs && pytest > logs/test_results.log || true && cat logs/test_results.log"]
