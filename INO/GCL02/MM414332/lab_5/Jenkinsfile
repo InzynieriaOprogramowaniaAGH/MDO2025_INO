@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                sh 'rm -rf app && git clone https://github.com/jsynowiec/node-typescript-boilerplate.git app'
+            }
+        }
+
+        stage('Build image') {
+            steps {
+                dir('app') {
+                    script {
+                        docker.build('my-app-build', '-f Dockerfile.build .')
+                    }
+                }
+            }
+        }
+
+        stage('Test image') {
+            steps {
+                dir('app') {
+                    script {
+                        docker.build('my-app-test', '-f Dockerfile.test .')
+                        def cid = sh(script: "docker create my-app-test", returnStdout: true).trim()
+                        sh "docker start -a ${cid}"
+                        sh "docker rm ${cid}"
+                    }
+                }
+            }
+        }
+    }
+}
