@@ -1,4 +1,4 @@
-# Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
+# Zajęcia08::Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
 
 Prace rozpoczęto od utworzenia drugiej maszyny wirtualnej, wyposażonej w ten sam system operacyjny i tę samą wersję co "główna" maszyna — Ubuntu Server 24.04.2.
 Podczas instalacji nadano maszynie hostname **ansible-target** oraz utworzono w systemie użytkownika **ansible**.
@@ -136,6 +136,24 @@ Aby uniknąć problemu z orchestrator, przetestowano połączenie wyłącznie z 
 ![obraz](KM/success.png)
 
 Ansible skutecznie połączył się z maszynami z grupy Endpoints, co potwierdza prawidłową konfigurację środowiska.
+
+# Zajęcia09::Kickstart
+Pracę rozpoczęto od pobrania instalatora sieciowego netinst Fedory i zainstalowania maszyny na VirtualBox
+1. przełączono na konto roota oraz sprawdzono jego zawartość
+```
+sudo su
+ls -l /root
+```
+![obraz](KM/1.png)
+
+Można zauważyć, że instalator zostawia plik odpowiedzi ```anaconda-ks.cfg``` 
+Plik zawiera odpowiedzi na wszystkie pytania na które aktywnie wybierano w trakcie instalowania. Tworzymy maszyne wzorcową i zamiast powtarzania tych samych kroków, bierzemy gotowy plik odpowiedzi i używamy na dziesiątkach innych maszyn
+
+Plik został dodany do repozytorium, delikatnie go zmodyfikowano i dodano
+```
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-38&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f38&arch=x86_64
+``` 
 
 
 
