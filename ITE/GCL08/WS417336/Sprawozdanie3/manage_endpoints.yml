@@ -1,0 +1,53 @@
+---
+- name: Ping all machines
+  hosts: all
+  tasks:
+    - name: Ping the target machine
+      ansible.builtin.ping:
+
+- name: Copy inventory file to target machines
+  hosts: Endpoints
+  tasks:
+    - name: Copy the inventory file
+      ansible.builtin.copy:
+        src: /home/wstarzyk/git3/MDO2025_INO/ITE/GCL08/WS417336/Sprawozdanie3/inventory.ini
+        dest: /tmp/inventory.ini
+
+- name: Ping the target machines again
+  hosts: Endpoints
+  tasks:
+    - name: Ping the target machine again
+      ansible.builtin.ping:
+
+- name: Update packages on target machines
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Update all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+- name: Restart services on target machines
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Restart sshd service
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+    - name: Restart rngd service
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+
+- name: Wait for SSH to become available on a machine
+  hosts: unreachable_endpoints
+  tasks:
+    - name: Wait for SSH port to become available
+      ansible.builtin.wait_for:
+        host: "{{Endpoints}}"
+        port: 22
+        delay: 60
+        timeout: 600
