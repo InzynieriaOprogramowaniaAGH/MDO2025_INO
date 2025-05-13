@@ -323,3 +323,99 @@
   - *Weryfikacja obecności pakietu*:
  
     ![Zrzut ekranu weryfikacji obecności pakietu](media/m16_verify.png)
+
+- Aby móc dalej zautomatyzować proces stawiania maszyny wirtualnej, w oprogramowaniu `VirtualBox`, koniecznnym było zmodyfikowanie obrazu `.iso` instalatora systemu, ze względu na to, że automatyczne wprowadzanie adresu do parametrów startowych, podczas instalacji, jest w tym oprogramowaniu praktycznie niemożliwe.
+- W związku z tym podjęto następujące kroki aby zautomatyzować proces tworzenia maszyny z plikiem kickstart.
+    - Rozpakowano obraz `.iso` i zmodyfikowano plik `boot/grub2/grub.cfg`.
+        - Manulanie wprowadzono parametr `inst.ks=https://tinyurl.com/34uj22hp` do opcji `Install Fedora 41`.
+        - Pozbyto się innych opcji instalacji / użytku.
+        - Ustawiono domyślną opcje jako `set default="0"`.
+        - Ustawiono `set timeout=0`, aby instalacja rozpoczynała się od razu.
+        - Zmieniono label na "Fedora-KS"
+        - *Zawarość pliku*:
+          ```
+            set default="0"
+            
+            function load_video {
+              insmod all_video
+            }
+            
+            load_video
+            set gfxpayload=keep
+            insmod gzio
+            insmod part_gpt
+            insmod ext2
+            insmod chain
+            
+            set timeout=0
+            ### END /etc/grub.d/00_header ###
+            
+            search --no-floppy --set=root -l 'Fedora-KS'
+            
+            ### BEGIN /etc/grub.d/10_linux ###
+            menuentry 'Install Fedora 41' --class fedora --class gnu-linux --class gnu --class os {
+            	linux /images/pxeboot/vmlinuz inst.stage2=hd:LABEL=Fedora-E-dvd-x86_64-41 inst.ks=https://tinyurl.com/34uj22hp quiet
+            	initrd /images/pxeboot/initrd.img
+            }
+          ```
+    - Utworzono folder współdzielony pomiędzy maszyną wirtualną Fedora (cracker) a hostem Windows 10.
+    - Pozowlono w ten sposób systemowi Fedora na no ponowne utworzenie bootowalnego `.iso` ze zmodyfikowanym konfigiem `gtub.cfg`.
+        - Potrzebnym było zapotrzenie się w oprogramowanie `xorriso`, uzyskane przez `sudo dnf install xorriso`.
+        - Następnie wykorzystując polecenie: `xorriso -as mkisofs -o ~/Fedora-Kickstart.iso -J -R -V "FedoraKS" .` utworzono nowy obraz `.iso`.
+        - Następnie zauważono, że mozna było tak właściwie utworzyć obraz od razu w katalogu współdzielonym pomiędzy systemami, następnie przeniesiono do tego katalogu obraz.
+        - *Zrzut ekranu z budowania obrazu na systemie Fedora*:
+     
+          ![Zrzut ekranu z pracy na systemie Fedora](media/m17_build-iso.png)
+
+    - Następnie na hoście (Windows) napisano skrypt instalacyjny (Powershell Script), którego zadaniem było utworzenie maszyny z nowo utworzonego obrazu:
+      ```
+        # Vars
+        $vmName     = "fedora-auto"
+        $isoPath    = "D:\System ISOs\kickstart\burned\Fedora-Kickstart.iso"
+        $diskFolder = "C:\Users\Filip\VirtualBox VMs\$vmName"
+        $diskPath   = "$diskFolder\$vmName.vdi"
+        $VBoxManage = "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"
+        $memory     = 2048
+        $cpus       = 1
+        
+        # Create VM
+        & $VBoxManage createvm --name $vmName --ostype Fedora_64 --register
+        
+        # Config VM
+        & $VBoxManage modifyvm $vmName --memory $memory --cpus $cpus --boot1 dvd --firmware efi
+        
+        # Create Disk
+        New-Item -ItemType Directory -Path $diskFolder -Force | Out-Null
+        & $VBoxManage createhd --filename "$diskPath" --size 2000
+        
+        # Add controllers
+        & $VBoxManage storagectl $vmName --name "SATA Controller" --add sata --controller IntelAhci
+        & $VBoxManage storageattach $vmName --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium "$diskPath"
+        
+        & $VBoxManage storagectl $vmName --name "IDE Controller" --add ide
+        & $VBoxManage storageattach $vmName --storagectl "IDE Controller" --port 0 --device 0 --type dvddrive --medium "$isoPath"
+        
+        # Start VM
+        & $VBoxManage startvm $vmName --type gui
+      ```
+      - Skrypt uruchomiono prawym przyciskiem myszy, opcją `run with powershell`.
+      - *Zrzut ekranu uruchomienia skryptu*:
+
+        ![Zrzut ekranu z uruchomienia skryptu](media/m18_run.png)
+
+      - Po uruchomieniu skrypt wykonał następujące czynności:
+          - Utworzył nową maszynę.
+          - Sonfigurował podstawowe ustawienia: CPU, pamięc itd.
+          - Utworzył dysk do zapisu danych.
+          - Utworzył kontolery `IDE` oraz `SATA` i prydzielił im plik `.iso` oraz `.vdi`.
+          - Następnie uruchomił maszynę.
+
+       - W okienku `Oracle VirtualBox Manager` w międzyczasie pojawiło się nowe wejście, reprezentujące utworzoną maszynę.
+         - *Zrzut ekranu z okienka*:
+        
+           ![Zrzut ekranu z okienka](media/m19_effect.png)
+
+       - Bootloader następnie przeszedł do automatycznego wykonywania wskazanego pliku kickstart.
+         - *Zrzut ekranu instalacji*:
+           
+          ![Zrzut ekranu instalacji](media/m20_install.png)
