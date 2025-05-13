@@ -29,7 +29,7 @@
   
 ### Zdalne wywoływanie procedur
 Za pomocą [*playbooka*](https://docs.ansible.com/ansible/latest/getting_started/get_started_playbook.html) Ansible:
-  * Wyślij żądanie `ping` do wszystkich maszyn
+  * 🌵 Wyślij żądanie `ping` do wszystkich maszyn
   * Skopiuj plik inwentaryzacji na maszyny/ę `Endpoints`
   * Ponów operację, porównaj różnice w wyjściu
   * Zaktualizuj pakiety w systemie
