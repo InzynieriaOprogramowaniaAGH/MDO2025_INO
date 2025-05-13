@@ -32,7 +32,7 @@ Za pomocą [*playbooka*](https://docs.ansible.com/ansible/latest/getting_started
   * 🌵 Wyślij żądanie `ping` do wszystkich maszyn
   * Skopiuj plik inwentaryzacji na maszyny/ę `Endpoints`
   * Ponów operację, porównaj różnice w wyjściu
-  * Zaktualizuj pakiety w systemie
+  * Zaktualizuj pakiety w systemie (⚠️ [uwaga!](https://github.com/ansible/ansible/issues/84634) )
   * Zrestartuj usługi `sshd` i `rngd`
   * Przeprowadź operacje względem maszyny z wyłączonym serwerem SSH, odpiętą kartą sieciową
   
