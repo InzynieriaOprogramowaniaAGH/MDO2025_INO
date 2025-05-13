@@ -34,7 +34,7 @@ fi
 W celu weryfikacji projekt uruchomiłem o godzinie nieparzystej:
 ![alt text](lab5/3.png)
 Oraz o godzinie parzystej:
-# PLACEHOLDER
+![alt text](lab5/10.png)
 
 ### Pobierz kontener ubuntu
 Projekt został stworzony tak jak poprzednie dwa, jednak tym razem w kroku "Uruchom powłokę" znajduje się:
@@ -90,7 +90,7 @@ W celu weryfikacji pipeline należy uruchomić wielokrotnie, żeby się upewnić
 
 Jak można zauważyć, pierwsze uruchomienie nie wpłynęło na drugie, więc skrypt został napisany poprawnie.
 
-### Pipeline - Express.js (Build->Test->Deploy->Publish)
+### Pipeline - Docker: Express.js (Build->Test->Deploy->Publish)
 #### Build
 Na tym etapie stworzyłem dockerfile, który buduje obraz express.js
 ```Docker
@@ -145,3 +145,91 @@ Zbudowałem obraz deploy i oznaczyłem jego wersję jako latest
 Po zalogowaniu się do dockera za pomocą `docker login` zpushowałem obraz na dockerhub
 ![alt text](lab67/11.png)
 ![alt text](lab67/12.png)
+### Pipeline - Jenkins
+Aby jenkins mógł modyfikować mojego dockerhuba wprowadziłem do niego swoje dane logowania
+![alt text](lab67/13.png)
+Do zautomatyzowania powyższego procesu stworzyłem następujący pipeline:
+```
+pipeline {
+    agent any
+
+    environment {
+        APP_DIR = 'ITE/GCL08/KW414502/Sprawozdanie2/lab67'
+        LOGIN_CREDS = credentials('dockercreds')
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'KW414502', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Clean up docker') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker kill express-js'
+                    sh 'docker rmi -f express-js-build || true'
+                    sh 'docker rmi -f express-js-test || true'
+                    sh 'docker rmi -f frostyfire1/express-js-deploy:latest || true'
+                    sh 'docker builder prune --force --all || true'
+                    sh 'docker network rm express-js -f || true'
+                    sh 'docker rm -f express-js-deploy || true'
+                }
+            }
+        }
+
+        stage('Build express-js container') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfile.express -t express-js-build .'
+                }
+            }
+        }
+
+        stage('Build and run test container') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfile.expressTest -t express-js-test .'
+                }
+            }
+        }
+        
+        stage('Build deployable container') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfile.expressDeploy -t frostyfire1/express-js-deploy:latest .'
+                }
+            }
+        }
+
+        stage('Smoke Test deployable container before publishing') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh '''
+                        docker network create express-js || true
+                        docker run -d --rm --network express-js --name express-js -p 3000:3000 frostyfire1/express-js-deploy:latest
+                        docker run --rm --network express-js curlimages/curl curl -s --max-time 5 express-js:3000
+                    '''
+                }
+            }
+        }
+
+        stage('Publish Container') {
+            steps {
+                script {
+                    sh "echo ${LOGIN_CREDS_PSW} | docker login -u ${LOGIN_CREDS_USR} --password-stdin"
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockercreds') {
+                        docker.image("frostyfire1/express-js-deploy:latest").push()
+                    }
+                }
+            }
+        }
+    }
+}
+```
+Komendy, przy których jest dopisane `|| true` mogą wyjść z błędem, jednak nie powinno to mieć wpływu na działalnośc pipeline'u.
+#### Pipeline run #1
+![alt text](lab67/14.png)
+#### Pipeline run #2
+![alt text](lab67/15.png)
