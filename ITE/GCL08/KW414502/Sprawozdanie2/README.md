@@ -90,5 +90,58 @@ W celu weryfikacji pipeline należy uruchomić wielokrotnie, żeby się upewnić
 
 Jak można zauważyć, pierwsze uruchomienie nie wpłynęło na drugie, więc skrypt został napisany poprawnie.
 
+### Pipeline - Express.js (Build->Test->Deploy->Publish)
+#### Build
+Na tym etapie stworzyłem dockerfile, który buduje obraz express.js
+```Docker
+FROM node:20
+WORKDIR /app
+RUN git clone https://github.com/expressjs/express.git
+WORKDIR /app/express
+RUN npm install
+```
+Obraz zbudowałem poprzez `docker build -f Dockerfile.express -t express-js-build .`
+![alt text](lab67/1.png)
+#### Test
+Na podstawie obrazu stworzonego w poprzednim kroku stworzyłem dockerfile odpowiedzialny za uruchamianie testów
+```Docker
+FROM express-build-img
 
+WORKDIR /app/express
 
+RUN npm test
+```
+Zbudowanie obrazu: `docker build -f Dockerfile.expressTest -t express-js-test .`
+![alt text](lab67/2.png)
+#### Deploy
+Na podstawie obrazu express-js-build stworzyłem dockerfile, który będzie wypuszczony na sieć. Repozytorium expressjs posiada wiele przykładów, więc zdecydowałem się na examples/static-files. W celu zmniejszenia rozmiaru obrazu wykorzystałem wersję slim nodejs
+```Dockerfile
+FROM node:20-slim
+
+COPY --from=express-build-img /app/express /app
+
+WORKDIR /app
+
+CMD ["node", "examples/static-files"]
+```
+Tworzenie obrazu: `docker build -f Dockerfile.expressDeploy -t express-js-deploy .`
+![alt text](lab67/3.png)
+
+### Sprawdzenie poprawności działania
+W tym celu stworzyłem nową sieć
+![alt text](lab67/4.png)
+Uruchomiłem w niej finalny kontener
+![alt text](lab67/5.png)
+Sprawdziłem logi, żeby zweryfikować, że kontener działa
+![alt text](lab67/6.png)
+Ponieważ przykład to API na stronie znajduje się tylko:
+![alt text](lab67/7.png)
+Więc żeby zweryfikować, czy API działa poprawnie wykorzystałem aplikację postman
+![alt text](lab67/8.png)
+![alt text](lab67/9.png)
+#### Publish
+Zbudowałem obraz deploy i oznaczyłem jego wersję jako latest
+![alt text](lab67/10.png)
+Po zalogowaniu się do dockera za pomocą `docker login` zpushowałem obraz na dockerhub
+![alt text](lab67/11.png)
+![alt text](lab67/12.png)

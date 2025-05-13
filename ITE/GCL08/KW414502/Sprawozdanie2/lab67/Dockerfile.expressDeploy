@@ -1,0 +1,7 @@
+FROM node:20-slim
+
+COPY --from=express-js-build /app/express /app
+
+WORKDIR /app
+
+CMD ["node", "examples/static-files"]
