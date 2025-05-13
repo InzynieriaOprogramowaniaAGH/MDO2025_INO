@@ -1,0 +1,1 @@
+sudo cp /root/anaconda-ks.cfg . // Kopiowanie tego pliku anakonda
