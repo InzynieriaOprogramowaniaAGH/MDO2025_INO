@@ -1,0 +1,9 @@
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
+
+WORKDIR /app
+
+COPY --from=build /src/OceanBattle.WebAPI/OceanBattle.WebAPI/bin/Release/net7.0/publish/ .
+
+EXPOSE 80
+
+ENTRYPOINT ["dotnet", "OceanBattle.WebAPI.dll"]
