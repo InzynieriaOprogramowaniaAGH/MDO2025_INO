@@ -1,4 +1,4 @@
-Sprawozdanie 2
+[Jenkinsfile.txt](https://github.com/user-attachments/files/20228248/Jenkinsfile.txt)Sprawozdanie 2
 --------------
 Pracę zacząłem od przygotowania pliku docker-compose.yml, który tworzy wszystkie potrzebne kontenery, sieci, podpina woluminy i umożliwia pracę na dockerze z Jenkinsa:
 
@@ -32,9 +32,79 @@ W tym miejscu pojawiły się probilemy z dostępem do certyfikatów dockera i Je
 ![image](https://github.com/user-attachments/assets/096e05ff-b31e-4177-baca-b13c7b41ba2f)
 ![image](https://github.com/user-attachments/assets/e0631297-a8be-43d4-9200-281695464676)
 
+--------------------
+PROJEKT GŁÓWNY - PIPELINE
+--------------------
+
+Utowrzyłem projekt typu Pipeline w Jenkinsie i napisałem Jenkinsfile, który wykonuje wszystkie kroki CI (Preparation, Build, Test, Deploy, Publish)
+
+[Jenkinsfile.txt](https://github.com/user-attachments/files/20228254/Jenkinsfile.txt)
+
+--------------------
+ROZBICIE KROKÓW
+
+Collect:
+- Czyści folder roboczy
+- Klonuje repo aplikacji
+- Klonuje moją gałąź na której są pliki Dockerfile.test i Dockerfile.build
+![image](https://github.com/user-attachments/assets/af15504c-43da-4f55-81e3-f617ca7c8c11)
+
+Build:
+- Tworzy obraz aplikacji na podstawie Dockerfile.build
+![image](https://github.com/user-attachments/assets/2c34f96f-3aab-4c7d-9dbf-a0154316600f)
+
+Test: 
+- Tworzy obraz testowy na podstawie obrazu zbudowanego w kroku "Build"
+- Uruchamia kontener testowy i przeprowadza testy
+![image](https://github.com/user-attachments/assets/02c0ad4c-d786-443b-8517-5d44c8e56fed)
+![image](https://github.com/user-attachments/assets/4b1f21bb-feaf-45b1-9589-910f53192398)
+
+Deploy:
+- Tworzy tymczasową sieć, przez którą kontener z obrazem aplikacji i kontener nodeapp_test_helper będą się porozumiewać
+- Tworzy tymczaswoy kontener nodeapp_test_helper
+- Uruchamia powłokę w kontenerze nodeapp_test_helper i sprawdza dostępność aplikacji
+![image](https://github.com/user-attachments/assets/9167fc90-d3b5-4431-a01d-bbed1c775aad)
+![image](https://github.com/user-attachments/assets/d5003808-6b23-4fb6-86f1-59d1aa7376b9)
+
+Publish:
+- Przesyła lokalne commity na zdalne repozytorium
+- Aktualizuje historię zdalnego repozytorium
+- Synchronizuje zmiany między lokalnym a zdalnym repozytorium
+- Może tworzyć nowy branch na zdalnym repozytorium
+![image](https://github.com/user-attachments/assets/5de7784a-b0bb-4723-85e1-8d6eeb7c574e)
+![image](https://github.com/user-attachments/assets/bf441004-f0be-4093-b827-66a4432b87ed)
+![image](https://github.com/user-attachments/assets/53344da7-12bf-4a80-9f4f-9eb7d2fef071)
 
 
+Diagram aktywności
+------------------------
+![image](https://github.com/user-attachments/assets/32328b27-127b-4fee-b89a-3d2c8b0bc2c5)
 
+Diagram wzdrożeniowy
+-----------------------
+![image](https://github.com/user-attachments/assets/c4e7b6b9-f9eb-4589-9f3f-763f6a1b306a)
+
+DEFINITION OF DONE
+-------------------
+Po wypchnięciu obrazu na DockerHub:
+- zrobiłem pulla obrazu na maszynę wirtualną
+- stworzyłem kontner na podstawie tego obrazu
+- stworzyłem sieć
+- stworzyłem kontener pomocniczy z którego wykonałem zapytanie do kontenera z aplikacją
+![image](https://github.com/user-attachments/assets/7bea71b8-d9cf-45fc-a22b-893ec05000ca)
+
+
+ANSIBLE
+---------
+1. Utworzyłem maszynę na podstawie obrazu fedora server (taki sam jak maszyna)
+2. Ustawiłem hostname ansible-target
+![image](https://github.com/user-attachments/assets/5b1fed46-da67-4f8d-a528-d8d6427e85bf)
+3. Zainstalowałem potrzebne programy
+4. Na głównej maszynie zainstalowałem ansible
+5. Wygenerowałem klucz ssh
+6. Przeprowadziłem ich wymianę
+
+![image](https://github.com/user-attachments/assets/d587ef57-e8ac-40da-a2f5-2850ab1f064e)
 
 
 
