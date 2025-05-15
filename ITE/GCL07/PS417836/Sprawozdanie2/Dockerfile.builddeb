@@ -1,0 +1,18 @@
+FROM build-irssi:latest
+
+ARG VERSION="1"
+
+RUN apt-get update && \
+    apt-get install -y dh-make debhelper devscripts
+
+WORKDIR /build
+
+RUN mv /build/irssi /build/irssi-${VERSION}.0.0
+
+WORKDIR /build/irssi-${VERSION}.0.0
+
+COPY build.sh .
+
+RUN chmod +x build.sh
+
+CMD ["./build.sh"]

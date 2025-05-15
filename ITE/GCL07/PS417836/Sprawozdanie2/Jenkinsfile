@@ -1,0 +1,80 @@
+pipeline {
+    agent any
+    
+	stages {
+		stage('Clean') {
+        	steps {
+               sh 'docker system prune -f'
+               sh '''
+                  find . -name "*.deb" -delete || true
+                  find . -name "*.log" -delete || true
+               '''
+        	}
+        }
+	  
+		stage('Build') {
+        	steps {
+        		dir('ITE/GCL07/PS417836/Sprawozdanie2') {
+        			sh 'docker build --no-cache -t build-irssi -f Dockerfile.irssibuild .'
+        		}
+        	}
+        }
+	
+		stage('Test') {
+        	steps {
+        		dir('ITE/GCL07/PS417836/Sprawozdanie2') {
+        			sh 'docker build --no-cache --progress=plain -t test-irssi -f Dockerfile.test . 2>&1 | tee test-output.log'
+        			sh "mv test-output.log test-logs-${BUILD_NUMBER}.log"
+        		}
+        	}
+        	post {
+        		always {
+        			dir('ITE/GCL07/PS417836/Sprawozdanie2') {
+        				archiveArtifacts artifacts: "test-logs-${BUILD_NUMBER}.log", fingerprint: true
+        			}
+        		}
+        	}
+        }
+	
+		stage('Build Artifact') {
+        	steps {
+        		dir('ITE/GCL07/PS417836/Sprawozdanie2') {
+        			sh "docker build --no-cache -t artifact-irssi --build-arg VERSION=${BUILD_NUMBER} -f Dockerfile.builddeb ."
+        			sh 'docker run --rm -v .:/out artifact-irssi'
+        		}
+        	}
+        	post {
+        		always {
+        			dir('ITE/GCL07/PS417836/Sprawozdanie2') {
+        				archiveArtifacts artifacts: '*.deb', fingerprint: true
+        			}
+        		}
+        	}
+        }
+	
+		stage('Smoke Test') {
+        		steps {
+        			dir('ITE/GCL07/PS417836/Sprawozdanie2') {
+        				script {
+        					sh '''
+        						docker run --rm --user=root -v ".:/deb" ubuntu:latest bash -c '
+        						apt-get update
+          
+        						DEB_FILE=$(find /deb -name "*.deb" | head -n 1)
+        						dpkg -i "$DEB_FILE" || true
+        						apt-get install -f -y
+          
+        						irssi --version
+        					'
+        				'''
+        			}
+        		}
+        	}
+        }
+	}
+    post {
+        always {
+			echo "Pipeline complete with status: ${currentBuild.currentResult}"
+		}
+	}
+}

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+MSG_FILE=$1
+COMMIT_MSG=$(cat "$MSG_FILE")
+
+PATTERN="^PS417836"
+
+if ! [[ "$COMMIT_MSG" =~ $PATTERN ]]; then
+    echo "ERROR: Commit message musi zaczynać się od 'PS417836'"
+    exit 1
+fi
+
+exit 0 

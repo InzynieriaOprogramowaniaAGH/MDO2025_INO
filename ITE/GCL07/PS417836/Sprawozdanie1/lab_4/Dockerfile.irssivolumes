@@ -1,0 +1,5 @@
+FROM fedora:latest
+
+RUN dnf -y install meson ninja gcc glib2-devel openssl-devel utf8proc-devel ncurses-devel perl-ExtUtil*
+
+
