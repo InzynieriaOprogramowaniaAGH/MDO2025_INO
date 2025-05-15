@@ -1,7 +1,7 @@
 # Sprawozdanie 3
 ## Meg Paskowski
 ## Grupa: 2
-## Zajecia 8-12
+## Zajecia 8-11
 ### Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible (lab 8)
 
 Będziemy potrzebować drugiej maszyny wirtualnej. Dla oszczędności zasobów, musi być jak najmniejsza i jak najlżejsza.
@@ -254,6 +254,126 @@ Podczas wykonywania playbooka Ansible napotkano problem z połączeniem do maszy
 
 #### Zarządzanie stworzonym artefaktem
 Moim artefaktem w projekcie z poprzednich zajęć by kontener.
+W celu zautomatyzowania procesu użyłam playbooka Ansible oraz struktury ról, utworzonej za pomocą `ansible-galaxy`.
+[role](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html)
+
+
+Uworzyłam nową role `cjson-role`:
+
+```bash
+ansible-galaxy init cjson-role
+```
+
+![CJSON-role](IMG/cjson-role.png)
+
+Po utworzeniu roli skopiowałam pliki `cjson.rpm` i `main.c` oraz edytowałam plik `main.yaml` tak, aby:
+- przesyłał artefakty na `ansible-target`,
+- instaluje Dockera oraz jego zależności,
+- uruchamia kontener,
+- instaluje biblioteki z pliku `.rpm`
+- kompuluje program,
+- uruchamia program i pobiera wynik.
+
+Zawartość pliku `main.yaml`. Plik znajduje w folderze `cjson/tasks` w stworzonej roli `cjson-role`.
+
+```yaml
+---
+# tasks file for cjson-role
+- name: Create artifacts directory
+  become: yes
+  file:
+    path: /home/ansible/cjson
+    state: directory
+    owner: ansible
+    group: ansible
+    mode: '0755'
+
+- name: Copy artifacts to target
+  copy:
+    src: "{{ item }}"
+    dest: /home/ansible/cjson/
+    mode: '0644'
+  loop:
+    - files/cjson.rpm
+    - files/main.c
+
+- name: Install python3-requests
+  ansible.builtin.dnf:
+    name: python3-requests
+    state: present
+
+- name: Install Docker
+  become: yes
+  dnf:
+    name: docker
+    state: present
+  
+- name: Ensure Docker is started
+  become: yes
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Add ansible to docker group
+  user:
+    name: ansible
+    groups: docker
+    append: true
+
+- name: Start fedora container
+  community.docker.docker_container:
+    name: cjson
+    image: fedora:41
+    state: started
+    command: sleep infinity
+    volumes:
+      - /home/ansible/cjson:/tmp:z
+
+- name: Install gcc, cjson and tools
+  community.docker.docker_container_exec:
+    container: cjson
+    command: dnf install -y gcc make /tmp/cjson.rpm
+
+- name: Compile source file
+  community.docker.docker_container_exec:
+    container: cjson
+    command: gcc -o /tmp/example /tmp/main.c -lcjson
+
+- name: Run program
+  community.docker.docker_container_exec:
+    container: cjson
+    command: bash -c "LD_LIBRARY_PATH=/usr/local/lib64 /tmp/example"
+  register: result
+
+- name: Print the result of the program
+  debug:
+    var: result.stdout
+```
+
+Uruchomienie roli przez playbook-cjson.yaml.
+
+Zawartość pliku `playbook-cjson.yaml`:
+
+```yaml
+- name: Deploy CJSON
+  hosts: ansible-target
+  become: true
+  roles:
+    - cjson-role
+```
+
+Uruchomienie:
+
+```bash
+ansible-playbook /home/mpaskowski/MDO2025_INO/INO/GCL02/MP417574/Sprawozdanie3/ansible_playbooks/playbook-cjson.yaml -i /home/mpaskowski/MDO2025_INO/INO/GCL02/MP417574/Sprawozdanie3/ansible_1/inventory.ini --ask-become-pass
+```
+
+![wynik_1](IMG/result_1.png)
+
+
+Inny sposób - za pomocą playbooka Ansible.
+
 
 Zbudowałam playbooka Ansible, który:
 1. Buduje i uruchomia kontener sekcji `Deploy` z poprzednich zajęć.
@@ -320,10 +440,22 @@ ansible-playbook project.yml -i /home/mpaskowski/MDO2025_INO/INO/GCL02/MP417574/
 
 ![result](IMG/project_result.png)
 
-W sprawozdaniu przedstawiono sposób wykorzystania Ansible do zdalnego zarządzania systemami operacyjnymi. Wykonane działania obejmowały przygotowanie środowiska, konfigurację dostępu między maszynami, stworzenie pliku inwentaryzacji oraz realizację wybranych operacji administracyjnych za pomocą playbooków.
+Przedstawiono sposób wykorzystania Ansible do zdalnego zarządzania systemami operacyjnymi. Wykonane działania obejmowały przygotowanie środowiska, konfigurację dostępu między maszynami, stworzenie pliku inwentaryzacji oraz realizację wybranych operacji administracyjnych za pomocą playbooków.
 
 Zadanie pokazało, że Ansible pozwala na centralne sterowanie wieloma systemami jednocześnie, bez konieczności ręcznego logowania się na każdą maszynę. Dzięki temu możliwe było wykonanie operacji takich jak aktualizacja pakietów, kopiowanie plików czy zarządzanie kontenerami. 
 
-### 
+### Pliki odpowiedzi dla wdrożeń nienadzorowanych - Kickstart
+Do wykonania zadania skorzystałam z pliku systemu Fedora 41 z poprzenic zajęć. Jako administrator skopiowałam plik pod scieżką `/root/anaconda-ks.cfg` do folderu `Sprawozdanie3`.
+
+Następnie zmodyfikowałam plik `anaconda-ks.cfg` dodając informację o repozytoriach oraz zmieniająć nazwę użytkownika.
+
+Dodane roepozytoria:
+
+```conf
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+```
+
+Plik po dokonanych zmian został przesłany na Githuba.
 
 
