@@ -34,16 +34,16 @@
 </div>
 
 - Konfiguracja jenkinsa:
- - Wybranie sugerowanej instalacji wtyczek
+    - Wybranie sugerowanej instalacji wtyczek
 
- <div align="center"> 
-    <img src="screens5/1.jpg">
- </div>
+    <div align="center"> 
+        <img src="screens5/1.jpg">
+    </div>
 
-- Instalacja wtyczek
+    - Instalacja wtyczek
 
- <div align="center"> 
-    <img src="screens5/1.jpg">
- </div>
+    <div align="center"> 
+        <img src="screens5/1.jpg">
+    </div>
 
 - 
