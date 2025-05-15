@@ -37,13 +37,13 @@
     - Wybranie sugerowanej instalacji wtyczek
 
     <div align="center"> 
-        <img src="screens5/1.jpg">
+        <img src="screens5/6.jpg">
     </div>
 
     - Instalacja wtyczek
 
     <div align="center"> 
-        <img src="screens5/1.jpg">
+        <img src="screens5/7.jpg">
     </div>
 
 - 
