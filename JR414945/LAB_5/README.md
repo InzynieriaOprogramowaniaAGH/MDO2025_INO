@@ -1,55 +1,10 @@
 Sprawozdanie 2
 --------------
 Pracę zacząłem od przygotowania pliku docker-compose.yml, który tworzy wszystkie potrzebne kontenery, sieci, podpina woluminy i umożliwia pracę na dockerze z Jenkinsa:
-version: '3.8'
 
-services:
-  docker:
-    image: docker:dind
-    container_name: jenkins-docker
-    privileged: true
-    restart: always
-    environment:
-      DOCKER_TLS_CERTDIR: /certs
-    networks:
-      jenkins:
-        aliases:
-          - docker
-    volumes:
-      - jenkins-docker-certs:/certs/client
-      - jenkins-data:/var/jenkins_home
-    ports:
-        - "2376:2376"
-
-  jenkins:
-    image: jenkins-with-docker
-    container_name: jenkins-blueocean
-    restart: always
-    depends_on:
-      - docker
-    networks:
-      - jenkins
-    environment:
-      DOCKER_HOST: tcp://docker:2376
-      DOCKER_CERT_PATH: /certs/client
-      DOCKER_TLS_VERIFY: "1"
-    ports:
-      - "8080:8080"
-      - "50000:50000"
-      - "3000:3000"
-      - "3001:3001"
-    volumes:
-      - jenkins-data:/var/jenkins_home
-      - jenkins-docker-certs:/certs/client:ro
-volumes:
-  jenkins-data:
-  jenkins-docker-certs:
-
-networks:
-  jenkins:
+[docker-compose.yml.txt](https://github.com/user-attachments/files/20228186/docker-compose.yml.txt)
 
 Ten krok znacznie zwiększył wygodę pracy, ze względu na brak potrzeby wpisywanai wszystkiego od nowa przy restarcie maszyny. 
-
 
 Następnym krokiem było zalogowanie się do jenkinsa na wcześniej utworzone konto. Z jenkinsem łączyłem się przez podanie swojego adresu ip i portu (8080), na którym Jenkins operuje
 ![image](https://github.com/user-attachments/assets/1d32d936-e840-4c04-ad8b-6687bdcb4feb)
@@ -61,6 +16,7 @@ Aplikacja, którą wybrałem to nodejs-dummy. Jest to prosta webowa aplikacja, n
 
 
 PROJEKTY TESTOWE
+
 --------------------
 
 1. Projekt do wyświetlania uname 
