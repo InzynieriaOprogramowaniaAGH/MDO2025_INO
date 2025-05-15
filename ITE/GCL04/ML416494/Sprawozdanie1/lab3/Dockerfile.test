@@ -1,0 +1,2 @@
+FROM sds_build
+CMD ["./sds-test"]

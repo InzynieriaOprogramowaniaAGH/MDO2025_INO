@@ -1,0 +1,9 @@
+#!/bin/bash
+
+MESSAGE=$(cat $1) 
+
+if ! [[ $MESSAGE == ML416494* ]]; then
+  echo "$MESSAGE"
+  echo "Wrong commit message, aborting" 
+  exit 1
+fi
