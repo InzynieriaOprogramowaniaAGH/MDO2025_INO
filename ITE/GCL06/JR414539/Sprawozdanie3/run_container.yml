@@ -1,0 +1,33 @@
+- name: Build and run container with wget.deb
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Copy Dockerfile and wget.deb to target
+      ansible.builtin.copy:
+        src: "Dockerfile"
+        dest: /opt/docker/Dockerfile
+        mode: '0644'
+      with_items:
+        - ../wget.deb
+        - Dockerfile
+
+    - name: Install Docker SDK for Python
+      ansible.builtin.pip:
+        name: docker
+        executable: pip3
+
+    - name: Build docker image
+      community.docker.docker_image:
+        name: custom_wget
+        tag: latest
+        build:
+          path: /opt/docker
+          source: build
+
+    - name: Run wget container
+      community.docker.docker_container:
+        name: wget_test
+        image: custom_wget:latest
+        state: started
+        recreate: true
+        pull: false
