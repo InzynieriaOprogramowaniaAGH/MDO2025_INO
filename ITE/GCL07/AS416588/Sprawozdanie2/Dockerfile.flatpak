@@ -1,0 +1,19 @@
+FROM build
+
+RUN dnf -y install flatpak-builder flatpak
+
+WORKDIR /build/flatpak
+
+ENV FLATPAK_BUILDER_DISABLE_ROFILES=1
+
+RUN flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+RUN flatpak install --noninteractive -y flathub org.freedesktop.Sdk//23.08 org.freedesktop.Platform//23.08
+
+COPY com.example.irssi.yaml .
+
+COPY build.sh .
+
+RUN chmod +x ./build.sh
+
+CMD ["./build.sh"]
