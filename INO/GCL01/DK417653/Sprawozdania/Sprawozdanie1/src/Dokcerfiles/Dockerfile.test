@@ -1,0 +1,7 @@
+FROM hello_build
+
+RUN ./nix/run_firsttime_setup_dev.sh && \
+    ./nix/run_firsttime_setup_prd.sh  && \
+    ./nix/run_standalone_py_script.sh 
+
+CMD  ./nix/run_tests_and_coverage.sh
