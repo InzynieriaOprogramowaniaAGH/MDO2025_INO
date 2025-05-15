@@ -1,0 +1,11 @@
+FROM supertuxbld
+
+RUN apt-get update && apt-get install -y zip
+
+WORKDIR /supertux
+
+VOLUME /supertux_build
+
+RUN ./build/supertux2 --version
+
+# RUN cp build/supertux2 /supertux_build/
