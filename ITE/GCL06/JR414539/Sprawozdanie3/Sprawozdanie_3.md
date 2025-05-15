@@ -62,7 +62,8 @@ Połączenie ssh przebiegło pomyślnie
 
 Dokonałem inwentaryzacji systemów:
   - Ustaliłem przewidywalne nazwy komputerów (maszyn wirtualnych) stosując hostnamectl(pokazałem wcześniej).
-  - Wprowadziłem nazwy DNS dla maszyn wirtualnych, edytując /etc/hosts - tak, aby możliwe było wywoływanie komputerów za pomocą nazw, a nie tylko adresów IP. Plik /etc/hosts:
+  - Wprowadziłem nazwy DNS dla maszyn wirtualnych, edytując /etc/hosts - tak, aby możliwe było wywoływanie komputerów za pomocą nazw, a nie tylko adresów IP.
+  - Plik /etc/hosts:
     
 ![Zrzut ekranu – 6 - ](zrzuty_ekranu_sprawozdanie_3/6.png)
 
@@ -120,10 +121,69 @@ Ale najpierw zauważyłem, że nie mam usługi rngd na maszynie ansible-target. 
 
 ![Zrzut ekranu – 16 - ](zrzuty_ekranu_sprawozdanie_3/16.png)
 
+Plik inventory.ini:
+
+```bash
+[Orchestrators]
+kuba123 ansible_host=kuba123 ansible_user=kuba123 ansible_ssh_private_key_file=~/.ssh/id_ansible
+
+[Endpoints]
+ansible-target ansible_host=ansible-target ansible_user=ansible ansible_ssh_private_key_file=~/.ssh/id_ansible
+```
+
 Plik ping.yml
 
-![Zrzut ekranu – 17 - ](zrzuty_ekranu_sprawozdanie_3/17.png)
-![Zrzut ekranu – 18 - ](zrzuty_ekranu_sprawozdanie_3/18.png)
+```bash
+- name: Ping all endpoints
+  hosts: Endpoints
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+- name: Update all packages
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Apt update
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: dist
+
+- name: Restart services
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: ssh
+        state: restarted
+
+    - name: Restart rng-tools-debian
+      ansible.builtin.service:
+        name: rng-tools-debian
+        state: restarted
+
+- name: Copy inventory to endpoint
+  hosts: Endpoints
+  become: yes
+  tasks:
+
+- name: Ensure /home/ansible directory exists
+  ansible.builtin.file:
+    path: /home/ansible
+    state: directory
+    owner: ansible
+    group: ansible
+    mode: '0755'
+
+- name: Copy inventory
+  ansible.builtin.copy:
+    src: ./inventory.ini
+    dest: /home/ansible/inventory.ini
+    owner: ansible
+    group: ansible
+    mode: '0644'
+```
 
 Efekt po wykonaniu komendy:
 
@@ -157,11 +217,51 @@ wget --no-check-certificate "LINK DO DYSKU" -O wget.deb
   - Stworzyłem kontener run_container.yml oraz Dockerfile przeznaczony do uruchomienia aplikacji
   - run_container.yml:
 
-![Zrzut ekranu – 25 - ](zrzuty_ekranu_sprawozdanie_3/25.png)
+```bash
+- name: Build and run container with wget.deb
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Copy Dockerfile and wget.deb to target
+      ansible.builtin.copy:
+        src: "Dockerfile"
+        dest: /opt/docker/Dockerfile
+        mode: '0644'
+      with_items:
+        - ../wget.deb
+        - Dockerfile
+
+    - name: Install Docker SDK for Python
+      ansible.builtin.pip:
+        name: docker
+        executable: pip3
+
+    - name: Build docker image
+      community.docker.docker_image:
+        name: custom_wget
+        tag: latest
+        build:
+          path: /opt/docker
+          source: build
+
+    - name: Run wget container
+      community.docker.docker_container:
+        name: wget_test
+        image: custom_wget:latest
+        state: started
+        recreate: true
+        pull: false
+```
 
   - Dockerfile:
 
-![Zrzut ekranu – 26 - ](zrzuty_ekranu_sprawozdanie_3/26.png)
+```bash
+FROM ubuntu:22.04
+RUN apt-get update && apt-get install -y gdebi-core
+COPY wget.deb /tmp/wget.deb
+RUN gdebi -n /tmp/wget.deb || apt-get install -f -y
+CMD ["wget", "--version"]
+```
     
 Niestety nie udało mi się do końca uruchomić tej aplikajci. Próbowałem na różne sposoby, z błedu wynika że po prostu nie zdajduje pliku wget.deb. Jednak run_container.yml, Dockerfile i wget.deb są w tym samym katalogu, więc nie ma to sensu. Pomyślałem, że może ten wget.deb jest jakiś stary, ale nawet jak pobrałem nową wersję wgeta to i tak był ten błąd. Ostatniego taska nie może zrobić: 
 
