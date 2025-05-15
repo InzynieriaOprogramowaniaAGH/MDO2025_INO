@@ -207,7 +207,7 @@ Na hoście Windows uzyskałem dostęp do pliku przez:
 http://192.168.56.1:8000/anaconda-ks.cfg
 ```
 
-![Zrzut ekranu – 34 - ](zrzuty_ekranu_sprawozdanie_3/34.png)
+![Zrzut ekranu – 38 - ](zrzuty_ekranu_sprawozdanie_3/38.png)
 
 ## **Modyfikacja pliku Kickstart**
 
