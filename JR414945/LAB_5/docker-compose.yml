@@ -33,6 +33,8 @@ services:
     ports:
       - "8080:8080"
       - "50000:50000"
+      - "3000:3000"
+      - "3001:3001"
     volumes:
       - jenkins-data:/var/jenkins_home
       - jenkins-docker-certs:/certs/client:ro
