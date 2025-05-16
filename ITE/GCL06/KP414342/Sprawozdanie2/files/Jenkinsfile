@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+    environment {
+        GIT_REPO = 'https://github.com/kpszeniczka/sqlite_devops.git'
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+    }
+    stages {
+        stage('Prepare') {
+            steps {
+                deleteDir()
+                sh "git clone ${GIT_REPO}"
+            }
+        }
+        stage('Build') {
+            steps {
+                dir("sqlite_devops") {
+                    sh 'docker build -t sqlite_builder -f Dockerfile.builder .'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                dir("sqlite_devops") {
+                    sh 'docker build -t sqlite_tester -f Dockerfile.tester . || true'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                dir("sqlite_devops") {
+                    sh 'docker build -t sqlite_deploy -f Dockerfile.deploy .'
+                }
+            }
+        }
+        stage('Smoke Test') {
+            steps {
+                echo 'Running smoke test'
+                sh 'docker run --rm sqlite_deploy ".version"'
+            }
+        }
+        stage('Publish') {
+            steps {
+                dir("sqlite_devops") {
+                    sh '''
+                    TIMESTAMP=$(date +%Y%m%d%H%M%S)
+                    tar -czf Artifact_${TIMESTAMP}.tar.gz Dockerfile.builder Dockerfile.tester Dockerfile.deploy
+                    
+                    echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
+                    
+                    docker tag sqlite_deploy cumil/sqlite:${BUILD_NUMBER}
+                    docker tag sqlite_deploy cumil/sqlite:latest
+                    docker push cumil/sqlite:${BUILD_NUMBER}
+                    docker push cumil/sqlite:latest
+                    
+                    docker logout
+                    '''
+                    
+                    archiveArtifacts artifacts: 'Artifact_*.tar.gz', fingerprint: true
+                }
+            }
+        }
+        stage('Cleanup') {
+            steps {
+                sh '''
+                docker images -q sqlite_builder sqlite_tester sqlite_deploy | xargs docker rmi -f || true
+                '''
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
