@@ -1,0 +1,31 @@
+
+- name: Endpoint management
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Ping request
+      ping:
+
+    - name: Coping inventory file
+      copy:
+        src: /home/jakub/MDO2025_INO/ITE/GCL08/JT416081/Sprawozdanie_3/Ansible/inventory/hosts.yaml
+        dest: /tmp/hosts.yaml
+        owner: ansible
+        group: ansible
+        mode: "0644"
+
+    - name: Package update
+      dnf:
+        name: "*"
+        state: latest
+        update_only: yes
+
+    - name: Restart ssh
+      service:
+        name: sshd
+        state: restarted
+     
+    - name: Restart RNG
+      service:
+        name: rngd
+        state: restarted

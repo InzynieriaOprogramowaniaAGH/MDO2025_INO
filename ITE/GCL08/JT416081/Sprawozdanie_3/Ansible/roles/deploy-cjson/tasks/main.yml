@@ -1,0 +1,41 @@
+---
+# tasks file for deploy-cjson
+- name: "Add Docker CE repository"
+  get_url:
+    url: https://download.docker.com/linux/fedora/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo 
+
+- name: "Install Docker (Docker CE)"
+  dnf:
+    name: docker-ce
+    state: present
+
+- name: "Start and enable Docker service"
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: "Pull application container image (custom image from Docker Hub)"
+  docker_image:
+    name: "{{ dockerhub_image }}"
+    source: pull
+
+- name: "Run your application container"
+  docker_container:
+    name: "{{ container_name }}"
+    image: "{{ dockerhub_image }}"
+    state: started
+
+- name: "Check if container is running"
+  command: docker ps
+  register: container_list
+
+- name: "Display running containers"
+  debug:
+    var: container_list.stdout_lines
+
+- name: "Stop and remove the application container"
+  docker_container:
+    name: "{{ container_name }}"
+    state: absent

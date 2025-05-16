@@ -1,0 +1,4 @@
+---
+# vars file for deploy-cjson
+dockerhub_image: jaktyl/cjson-deploy
+container_name: cjson_app
