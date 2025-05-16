@@ -1,0 +1,16 @@
+FROM eclipse-temurin:17-jre-alpine
+
+RUN apk add --no-cache curl
+
+WORKDIR /app
+
+COPY app.jar /app/app.jar
+
+EXPOSE 8081
+
+CMD ["java", "-jar", "/app/app.jar"]
+
+COPY health-check.sh /app/health-check.sh
+RUN chmod +x /app/health-check.sh
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 CMD /app/health-check.sh

@@ -1,0 +1,130 @@
+pipeline {
+    agent any
+    
+    parameters {
+        booleanParam(name: 'PUBLISH', defaultValue: false, description: 'Push built image to Docker Hub')
+        string(name: 'VERSION', defaultValue: '1.0', description: 'Enter the version number')
+    }
+
+    environment {
+        APP_NAME = 'exam-seat-arrangement'
+        BRANCH_NAME = 'SK417309'
+        REPO_URL = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+        APP_REPO = 'https://github.com/sauer515/exam-seat-arrangement.git'
+        DOCKER_CONTEXT ='ITE/GCL04/SK417309/Sprawozdanie2'
+        DOCKER_HUB_USERNAME = 'sauer88'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                cleanWs()
+                
+                sh "git clone --single-branch --branch ${BRANCH_NAME} ${REPO_URL} ."
+                
+                sh 'ls -la'
+                sh 'pwd'
+                
+                sh """
+                    cd ${DOCKER_CONTEXT}
+                    touch test-logs-${params.VERSION}.txt
+                """
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                dir(env.DOCKER_CONTEXT) {
+                    //sh 'docker rm build-container'
+                    
+                    sh 'ls -la'
+                    
+                    sh "docker build -t ${APP_NAME}:build-${params.VERSION} -f Dockerfile.build . "
+                    
+                    sh "docker create --name build-container ${APP_NAME}:build-${params.VERSION}"
+                    
+                    sh 'docker exec build-container ls -la /app/target/ || true'
+                    
+                    sh 'docker cp build-container:/app/target/exam-seating-arrangement-0.0.1-SNAPSHOT.jar app.jar'
+                    
+                    // Verify the JAR exists
+                    sh 'ls -la app.jar'
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                dir(env.DOCKER_CONTEXT) {
+                    // Run tests in a container
+                    sh "docker build --build-arg BUILD_IMAGE=${APP_NAME}:build-${params.VERSION} -t ${APP_NAME}:test-${params.VERSION} -f Dockerfile.test . "
+                    sh "docker run --name test-container ${APP_NAME}:test-${params.VERSION}"
+                    
+                    // Get the logs from test container
+                    sh "docker logs test-container > test-logs-${params.VERSION}.txt"
+                    
+                    // Archive test logs as artifacts
+                    archiveArtifacts artifacts: "test-logs-${params.VERSION}.txt", allowEmptyArchive: true
+                    
+                    // Clean up container
+                    sh 'docker rm test-container'
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                dir(env.DOCKER_CONTEXT) {
+                    writeFile file: 'health-check.sh', text: readFile('health-check.sh')
+                    sh 'chmod +x health-check.sh'
+                    
+                    sh "docker build -t ${APP_NAME}:deploy-${params.VERSION} -f Dockerfile.deploy ."
+                    
+                    // Set up the MySQL database container
+                    sh 'docker network create app-network || true'
+                    sh 'docker run -d --name mysql --network app-network -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=exam_seating_arrangement mysql:8.0'
+                    
+                    sh 'sleep 30'
+                    
+                    // Run the application container
+                    sh "docker run -d --name ${APP_NAME} --network app-network -p 8081:8081 -e SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/exam_seating_arrangement -e SPRING_DATASOURCE_USERNAME=root -e SPRING_DATASOURCE_PASSWORD=password ${APP_NAME}:deploy-${params.VERSION}"
+                    
+                    sh 'sleep 60'
+                    
+                    sh 'docker exec ${APP_NAME} curl --fail http:/localhost:8081/api/building || (docker logs ${APP_NAME} && exit 1)'
+                    
+                    echo "Deployment successful"
+                }
+            }
+        }
+        
+        stage('Publish') {
+            when { expression { params.PUBLISH } }
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker_hub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        sh 'echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin'
+                
+                        sh "docker tag ${APP_NAME}:deploy-${params.VERSION} $DOCKER_HUB_USERNAME/${APP_NAME}:latest"
+                        sh "docker push $DOCKER_HUB_USERNAME/${APP_NAME}:latest"
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Clean up containers
+            sh 'docker rm -f ${APP_NAME} mysql || true'
+            sh 'docker rm build-container'
+            sh 'docker network rm app-network || true'
+            
+            // Clean up images
+            sh "docker rmi ${APP_NAME}:build-${params.VERSION} ${APP_NAME}:test-${params.VERSION} ${APP_NAME}:deploy-${params.VERSION} ${DOCKER_HUB_USERNAME}/${APP_NAME}:latest || true"
+            
+            // Clean workspace
+            cleanWs()
+        }
+    }
+}

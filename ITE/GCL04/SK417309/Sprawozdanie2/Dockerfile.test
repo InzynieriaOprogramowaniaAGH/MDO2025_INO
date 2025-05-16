@@ -1,0 +1,7 @@
+ARG BUILD_IMAGE="exam-seat-arrangement:build-1.0"
+
+FROM ${BUILD_IMAGE} AS tester
+
+WORKDIR /app
+
+CMD ["mvn", "test"]

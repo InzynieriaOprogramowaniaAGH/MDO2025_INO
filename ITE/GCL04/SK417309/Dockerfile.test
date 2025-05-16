@@ -1,0 +1,5 @@
+FROM myapp-build AS test
+
+WORKDIR /app
+
+CMD ["mvn", "test"]
