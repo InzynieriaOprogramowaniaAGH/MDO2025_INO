@@ -1,0 +1,9 @@
+#!/bin/bash
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(head -n 1 "$COMMIT_MSG_FILE")
+
+if [[ ! "$COMMIT_MSG" =~ ^TS416767 ]]; then
+    echo "ERROR: Każdy commit MUSI zaczynać się od 'TS416767'!!!"
+    exit 1
+fi
+exit 0
