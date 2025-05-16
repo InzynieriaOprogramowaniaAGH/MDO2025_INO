@@ -70,19 +70,22 @@ W dalszej części wysłałem ping do wszystkich maszyn w sposób inline:
 
 1. Playbook wysyłający żądanie ping do wszystkich maszyn
 
+```
+---
 - name: Endpoint management
   hosts: Endpoints, Orchestrators
   become: true
   tasks:
     - name: Ping request
       ping:
+```
 
 ![alt text](image14.png)
 
 2. Playbook kopiujacy plik inventory na maszynę ansible-target
 
-
-
+```
+---
 - name: Endpoint management
   hosts: Endpoints
   become: true
@@ -94,6 +97,7 @@ W dalszej części wysłałem ping do wszystkich maszyn w sposób inline:
         owner: ansible
         group: ansible
         mode: "0644"
+```
 
 ![alt text](image15.png)
 
@@ -101,7 +105,8 @@ Jak widać przy drugim puszczeniu tego samego playbook task "Coping inventory fi
 
 3. Playbook aktualizujący pakiety
 
-
+```
+---
 - name: Endpoint management
   hosts: Endpoints
   become: true
@@ -113,9 +118,12 @@ Jak widać przy drugim puszczeniu tego samego playbook task "Coping inventory fi
         update_only: yes
 
 ![alt text](image16.png)
+```
 
 4. Playbook restartujący usługi sshd oraz rngd
 
+```
+---
 - name: Endpoint management
   hosts: Endpoints
   become: true
@@ -129,6 +137,7 @@ Jak widać przy drugim puszczeniu tego samego playbook task "Coping inventory fi
       service:
         name: rngd
         state: restarted
+```
 
 ![alt text](image17.png)
 
@@ -142,7 +151,7 @@ Próba oczywiście zakończona niepowedzeniem, ze wzgledu na fakt, iż Ansible �
 
 **Playbook z artefkatem**
 
-ansible galaxy:
+Pracę rozpoczołem od wygenerowania struktury roli za pomocą ansible-galaxy:
 
-![alt text](image33.png)
+![alt text](image20.png)
 
