@@ -1,4 +1,4 @@
-# Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
+# Zajęcia08::Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
 
 Prace rozpoczęto od utworzenia drugiej maszyny wirtualnej, wyposażonej w ten sam system operacyjny i tę samą wersję co "główna" maszyna — Ubuntu Server 24.04.2.
 Podczas instalacji nadano maszynie hostname **ansible-target** oraz utworzono w systemie użytkownika **ansible**.
@@ -136,6 +136,56 @@ Aby uniknąć problemu z orchestrator, przetestowano połączenie wyłącznie z 
 ![obraz](KM/success.png)
 
 Ansible skutecznie połączył się z maszynami z grupy Endpoints, co potwierdza prawidłową konfigurację środowiska.
+
+# Zajęcia09::Kickstart
+
+## Automatyzacja instalacji Fedory z wykorzystaniem Kickstart
+### 1. Pobranie i przygotowanie środowiska
+Pracę rozpoczęto od pobrania instalatora sieciowego Fedora NetInstall i zainstalowania maszyny wirtualnej na VirtualBox.
+### 2. Sprawdzenie pliku odpowiedzi Anaconda
+Po zakończeniu instalacji przełączono się na konto roota i sprawdzono zawartość katalogu domowego roota:
+```
+sudo su
+ls -l /root
+```
+![obraz](KM/kickstart/1.png)
+
+Można zauważyć, że instalator Anaconda automatycznie generuje plik odpowiedzi ```anaconda-ks.cfg```.
+Plik ten zawiera wszystkie odpowiedzi na pytania, które były udzielane ręcznie podczas procesu instalacji.
+Dzięki temu można go wykorzystać do stworzenia maszyny wzorcowej i przyspieszenia wdrażania systemu na wielu maszynach bez konieczności każdorazowego przechodzenia przez cały proces instalacji.
+
+### 3. Modyfikacja pliku KickStart 
+Plik został dodany do repozytorium, delikatnie go zmodyfikowano:
+- dodano konfigurację źródeł repozytoriów:
+```
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-38&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f38&arch=x86_64
+``` 
+- zapewniono, że zawsze będzie formatować całość
+```
+clearpart --all
+```
+- ustawiono hostname na inny niż domyślny ```localhost```
+```
+network --hostname=kickstart.local
+```
+### 4. Automatyczna instalacja z użyciem Kickstart 
+Następnie stworzono nową maszynę wirtualną, korzystając z wcześniej pobranego obrazu ISO Fedora Server.
+
+Zamiast standardowego rozpoczęcia instalacji:
+
+1. Na ekranie wyboru GRUB naciśnięto klawisz ```e``` w celu edycji parametrów rozruchu.
+2. Dodano na końcu linii zaczynającej się od linux parametr:
+```
+inst.ks=https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/KM417392/ITE/GCL05/KM417392/Sprawozdanie3/kickstart/anaconda-ks.cfg
+```
+![obraz](KM/kickstart/2.png)
+3. Następnie naciśnięto kombinację klawiszy ```Ctrl``` + ```X```, co uruchomiło instalator z podanym plikiem odpowiedzi.
+
+Instalator automatycznie rozpoczął instalację zgodnie z przepisami zawartymi w pliku Kickstart.
+![obraz](KM/kickstart/4.png)
+![obraz](KM/kickstart/3.png)
+
 
 
 
