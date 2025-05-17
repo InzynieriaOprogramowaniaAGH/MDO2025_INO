@@ -1,0 +1,55 @@
+---
+- name: Validate npm package name
+  ansible.builtin.fail:
+    msg: "npm_package_name must be specified"
+  when: npm_package_name == ""
+
+- name: Ensure Node.js is installed
+  ansible.builtin.package:
+    name: nodejs
+    state: present
+
+- name: Ensure npm is installed
+  ansible.builtin.package:
+    name: npm
+    state: present
+
+- name: Create npm global directory if needed
+  ansible.builtin.file:
+    path: "/usr/lib/node_modules"
+    state: directory
+    mode: '0755'
+  when: npm_global
+
+- name: Install npm package
+  ansible.builtin.npm:
+    name: "{{ npm_package_name }}"
+    global: "{{ npm_global }}"
+    registry: "{{ npm_registry }}"
+    version: "{{ npm_version }}"
+    executable: /usr/bin/npm
+    production: yes
+  register: npm_install
+  retries: 3
+  delay: 10
+  until: npm_install is success
+
+- name: Fix permissions for global install
+  ansible.builtin.file:
+    path: "/usr/lib/node_modules/{{ npm_package_name.split('/')[-1] }}"
+    owner: "{{ npm_user }}"
+    group: "{{ npm_user }}"
+    recurse: yes
+  when:
+    - npm_global
+    - npm_install is changed
+
+- name: Verify installation
+  ansible.builtin.command: |
+    npm list {{ '--global' if npm_global else '' }} --depth=0
+  register: npm_list
+  changed_when: false
+
+- name: Show installed packages
+  ansible.builtin.debug:
+    msg: "{{ npm_list.stdout_lines }}"

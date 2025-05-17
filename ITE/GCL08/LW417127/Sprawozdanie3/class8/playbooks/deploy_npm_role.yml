@@ -1,0 +1,13 @@
+---
+- name: Deploy npm package using role
+  hosts: endpoints
+  become: yes
+  vars:
+    npm_user: "{{ 'lwrobel' if inventory_hostname == 'ansible-main' else 'ansible' }}"
+  
+  roles:
+    - role: ../roles/npm_deployer
+      vars:
+        npm_package_name: "devops_lukasz_wrobel"
+        npm_global: true
+        npm_version: "latest"
