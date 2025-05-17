@@ -1,0 +1,12 @@
+FROM node:latest
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
+
+# Klonowanie repozytorium
+RUN git clone https://github.com/devenes/node-js-dummy-test.git /app
+
+# Instalacja zależności
+RUN npm install
+
+CMD ["bash"]

@@ -1,0 +1,6 @@
+FROM irssi-build:latest
+
+WORKDIR /app
+
+# Uruchomienie testów
+CMD ["meson", "test", "-C", "builddir"]

@@ -1,0 +1,73 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Klonowanie repozytorium') {
+            steps {
+                git branch: 'KJ417165', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Budowanie obrazu buildera') {
+            steps {
+                dir ("INO/GCL01/KJ417165/dockerfiles/FFmpeg") {
+                    script {
+                        docker.build('ffmpeg-builder-image', '-f Dockerfile.build .')
+                    }
+                }
+            }
+        }
+
+        stage('Budowanie obrazu testowego') {
+            steps {
+                dir ("INO/GCL01/KJ417165/dockerfiles/FFmpeg") {
+                    script {
+                        docker.build('ffmpeg-test-image', '-f Dockerfile.test .')
+                    }
+                }
+            }
+        }
+
+        stage('Testy') {
+            steps {
+                dir ("INO/GCL01/KJ417165") {
+                    sh "mkdir -p artifacts"
+                    sh """
+                        docker run --rm \
+                          -v \$PWD/INO/GCL01/KJ417165/dockerfiles/FFmpeg/input.mp4:/input.mp4 \
+                          ffmpeg-test-image | tee artifacts/test.log
+                    """
+                }
+            }
+        }
+
+        stage('Publikacja logów') {
+            steps {
+                archiveArtifacts artifacts: 'INO/GCL01/KJ417165/artifacts/test.log', fingerprint: true
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir ("INO/GCL01/KJ417165") {
+                    sh "mkdir -p artifacts"
+                    sh """
+                        docker run --rm \
+                          -v \$PWD/INO/GCL01/KJ417165/dockerfiles/FFmpeg/input.mp4:/input.mp4 \
+                          -v \$PWD/INO/GCL01/KJ417165/artifacts:/output \
+                          ffmpeg-builder-image \
+                          ffmpeg -i /input.mp4 /output/output.avi
+                    """
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir ("INO/GCL01/KJ417165") {
+                    archiveArtifacts artifacts: 'artifacts/output.avi', fingerprint: true
+                }
+            }
+        }
+    }
+}
