@@ -248,8 +248,9 @@ pipeline {
     }
   }
 }
-
 ```
+
+- Output konsoli:
 
 ```console output
 Started by user mati
