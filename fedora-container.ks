@@ -13,7 +13,7 @@ timezone Europe/Warsaw --isUtc
 
 #  ↘ *Brak dyrektywy `network` – instalator użyje DHCP/domysłu*
 
-rootpw --iscrypted $6$yOh.UsW50eCtYKAB$i6ARU32pmOxI.tS01W99uOvpT9sOlR0.9JPbo/vXsvh5bQDigGHw1bt9aEC5.eCj0O22JTg0/N6o.SIjzVLYf/   ### ZMIEŃ MNIE (hash hasła „maciej”)
+rootpw --iscrypted $6$yOh.UsW50eCtYKAB$i6ARU32pmOxI.tS01W99uOvpT9sOlR0.9JPbo/vXsvh5bQDigGHw1bt9aEC5.eCj0O22JTg0/N6o.SIjzVLYf/
 
 # ---------------------------------------------------------------------------
 #  PARTYCJONOWANIE
