@@ -120,3 +120,219 @@ Jako projekt do stworzenia pipeline wybranu [node-js-dummy](https://github.com/d
 Diagram UML całego procesu:
 
 ![](/Sprawozdanie2/ss/diagram.png)
+
+Jenkins script projektu: 
+```
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "node-js-dummy"
+        PATH_PREFIX = "MDO2025_INO/ITE/GCL06/MZ417749/Sprawozdanie2"
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                echo 'Klonoowanie repozytorium...'
+                sh '''
+                    rm -rf MDO2025_INO
+                    git clone -b MZ417749 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+                '''
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                echo 'Budowanie obrazu build...'
+                sh "docker build -t ${IMAGE_NAME}:build -f ${PATH_PREFIX}/Dockerfile.build ${PATH_PREFIX}"
+            }
+        }
+
+        stage('Test Image') {
+            steps {
+                echo 'Budowanie obrazu testowego i uruchamianie testów...'
+                sh "docker build -t ${IMAGE_NAME}:test -f ${PATH_PREFIX}/Dockerfile.test ${PATH_PREFIX}"
+                sh "docker run --rm ${IMAGE_NAME}:test npm test"
+            }
+        }
+
+        stage('Build Deploy Image') {
+            steps {
+                echo 'Budowanie obrazu do deploy...'
+                sh "docker build -t ${IMAGE_NAME}:deploy -f ${PATH_PREFIX}/Dockerfile.deploy ${PATH_PREFIX}"
+            }
+        }
+
+        stage('Deploy Application') {
+            steps {
+                echo 'Tworzenie sieci i uruchamianie kontenera deploy...'
+                sh '''
+                    docker network create ci || true
+                    docker run -d --rm --network ci --name deploy -p 3000:3000 ${IMAGE_NAME}:deploy
+                '''
+            }
+        }
+
+        stage('Smoke Test Deploy') {
+            steps {
+                echo 'Sprawdzanie, czy aplikacja działa na porcie 3000...'
+                sh '''
+                    sleep 5
+                    docker run --rm --network ci curlimages/curl curl -s deploy:3000 || echo "Curl failed"
+                '''
+            }
+        }
+
+        stage('Archive Artifact') {
+            steps {
+                echo 'Tworzenie archiwum ZIP z kodem aplikacji...'
+                    sh '''
+                        cd ${PATH_PREFIX}/node-js-dummy-test
+                        tar -czf ${WORKSPACE}/node-js-dummy-test.tar.gz .
+                    '''
+                archiveArtifacts artifacts: 'node-js-dummy-test.tar.gz', fingerprint: true
+            }
+        }
+
+        stage('List Docker Images') {
+            steps {
+                sh 'docker images'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Sprzątanie: zatrzymywanie kontenera i usuwanie sieci...'
+            sh '''
+                docker stop deploy || true
+                docker network rm ci || true
+            '''
+        }
+    }
+}
+```
+
+### Klonowanie repozytorium
+
+Etap klonowania zdalnego repozytorium Git, ograniczony do jednej gałęzi (MZ417749). Przed klonowaniem usuwana jest lokalna kopia katalogu MDO2025_INO, aby uniknąć konfliktów. Repozytorium zawiera kod źródłowy aplikacji oraz pliki Dockerfile potrzebne do dalszych etapów.
+
+```
+        stage('Clone Repository') {
+            steps {
+                echo 'Klonoowanie repozytorium...'
+                sh '''
+                    rm -rf MDO2025_INO
+                    git clone -b MZ417749 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+                '''
+            }
+        }
+```
+
+![](/Sprawozdanie2/ss/ss13.png)
+
+### Budowanie Image
+
+Etap budowania obrazu Docker, który kompiluje aplikację w specjalnie przygotowanym środowisku na podstawie pliku Dockerfile.build. W tym kroku tworzony jest tymczasowy obraz node-js-dummy:build.
+
+```
+        stage('Build Image') {
+            steps {
+                echo 'Budowanie obrazu build...'
+                sh "docker build -t ${IMAGE_NAME}:build -f ${PATH_PREFIX}/Dockerfile.build ${PATH_PREFIX}"
+            }
+        }
+```
+![](/Sprawozdanie2/ss/ss14.png)
+
+### Test Image
+
+Etap tworzenia obrazu testowego, uruchamiania testów jednostkowych i weryfikacji działania aplikacji. Budowany jest obraz na podstawie Dockerfile.test, po czym testy są uruchamiane wewnątrz kontenera za pomocą polecenia npm test. Błąd na tym etapie oznacza nieprawidłowe działanie aplikacji.
+
+```
+        stage('Test Image') {
+            steps {
+                echo 'Budowanie obrazu testowego i uruchamianie testów...'
+                sh "docker build -t ${IMAGE_NAME}:test -f ${PATH_PREFIX}/Dockerfile.test ${PATH_PREFIX}"
+                sh "docker run --rm ${IMAGE_NAME}:test npm test"
+            }
+        }
+```
+![](/Sprawozdanie2/ss/ss15.png)
+![](/Sprawozdanie2/ss/ss16.png)
+
+### Build Deploy Image
+
+Etap budowania końcowego obrazu aplikacji przeznaczonego do uruchomienia (deploju). Obraz powstaje z wykorzystaniem Dockerfile.deploy, a jego rezultatem jest gotowy kontener node-js-dummy:deploy.
+
+```
+        stage('Build Deploy Image') {
+            steps {
+                echo 'Budowanie obrazu do deploy...'
+                sh "docker build -t ${IMAGE_NAME}:deploy -f ${PATH_PREFIX}/Dockerfile.deploy ${PATH_PREFIX}"
+            }
+        }
+```
+
+![](/Sprawozdanie2/ss/ss17.png)
+
+###  Deploy Application
+
+Etap wdrożenia aplikacji. Tworzona jest wewnętrzna sieć Docker (ci), a następnie uruchamiany jest kontener z aplikacją, dostępny na porcie 3000. Kontener działa w trybie odłączonym i może być testowany przez kolejne etapy.
+
+```
+        stage('Deploy Application') {
+            steps {
+                echo 'Tworzenie sieci i uruchamianie kontenera deploy...'
+                sh '''
+                    docker network create ci || true
+                    docker run -d --rm --network ci --name deploy -p 3000:3000 ${IMAGE_NAME}:deploy
+                '''
+            }
+        }
+```
+
+![](/Sprawozdanie2/ss/ss18.png)
+
+### Smoke Test Deploy
+Etap sprawdzający podstawowe działanie aplikacji po wdrożeniu. Używany jest tymczasowy kontener z obrazem curl, który wysyła zapytanie HTTP do aplikacji przez wewnętrzną sieć Docker. Odpowiedź HTML świadczy o poprawnym uruchomieniu aplikacji.
+
+```
+        stage('Smoke Test Deploy') {
+            steps {
+                echo 'Sprawdzanie, czy aplikacja działa na porcie 3000...'
+                sh '''
+                    sleep 5
+                    docker run --rm --network ci curlimages/curl curl -s deploy:3000 || echo "Curl failed"
+                '''
+            }
+        }
+```
+
+![](/Sprawozdanie2/ss/ss19.png)
+
+### Archive Artifact
+
+Etap tworzenia archiwum z kodem źródłowym aplikacji. Katalog node-js-dummy-test jest pakowany do pliku tar.gz, który zapisywany jest w głównym katalogu WORKSPACE. Plik ten jest następnie archiwizowany przez Jenkinsa jako artefakt buildu, do pobrania.
+
+Format .tar został wybrany ponieważ jego obsługa jest wbudowana w większość systemów i narzędzi CI/CD, co czyni go wygodnym wyborem w automatycznych pipeline'ach.
+
+```
+        stage('Archive Artifact') {
+            steps {
+                echo 'Tworzenie archiwum ZIP z kodem aplikacji...'
+                    sh '''
+                        cd ${PATH_PREFIX}/node-js-dummy-test
+                        tar -czf ${WORKSPACE}/node-js-dummy-test.tar.gz .
+                    '''
+                archiveArtifacts artifacts: 'node-js-dummy-test.tar.gz', fingerprint: true
+            }
+        }
+```        
+
+![](/Sprawozdanie2/ss/ss20.png)
+
+Pipline został uruchomiony 2 razy żeby upewnić się że działa poprwanie.
+
+![](/Sprawozdanie2/ss/ss21.png)
