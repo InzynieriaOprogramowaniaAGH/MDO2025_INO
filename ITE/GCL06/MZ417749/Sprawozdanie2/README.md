@@ -336,8 +336,4 @@ Format .tar został wybrany ponieważ jego obsługa jest wbudowana w większoś�
 
 Pipline został uruchomiony 2 razy żeby upewnić się że działa poprwanie.
 
-<<<<<<< HEAD
 ![](../Sprawozdanie2/ss/ss21.png)
-=======
-![](Sprawozdanie2/ss/ss21.png)
->>>>>>> refs/remotes/origin/MZ417749
