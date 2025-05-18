@@ -9,7 +9,7 @@ Zaczynamy od stworzenia kontenera z jenkinsem, następnie uruchomiamy go z dind.
 docker network create jenkins
 ```
 
-![](/Sprawozdanie1/lab4_ss/ss26.png)
+![](../Sprawozdanie1/lab4_ss/ss26.png)
 ```
 
 FROM jenkins/jenkins:2.492.2-jdk17
@@ -28,7 +28,7 @@ RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
 
 ```
 
-![](/Sprawozdanie1/lab4_ss/ss29.png)
+![](../Sprawozdanie1/lab4_ss/ss29.png)
 
 Kolejno uruchamiamy kontenery.
 
@@ -48,30 +48,30 @@ sudo docker run
 myjenkins-blueocean
 ```
 
-![](/Sprawozdanie2/ss/ss1.png)
+![](../Sprawozdanie2/ss/ss1.png)
 
 Efekt działąjącego jenkinsa przez http, następnie zaainstalowano wtyczki.
 
-![](/Sprawozdanie1/lab4_ss/ss31.png)
+![](../Sprawozdanie1/lab4_ss/ss31.png)
 
 ### Stworzenie pipeline wyświetlający uname 
 
 Po wejściu w zakładkę Daskboard tworzymy pierwszy projekt i konfigurujemy w zakładce Configure dodając Build Steps z funkcją execute shell. Pierwsze polecenie ma za zadanie pokazać podstawowe informacje o systemie.
 
-![](/Sprawozdanie2/ss/ss2.png)
-![](/Sprawozdanie2/ss/ss3.png)
+![](../Sprawozdanie2/ss/ss2.png)
+![](../Sprawozdanie2/ss/ss3.png)
 
 ### Stworzenie pipeline sprawdzającego godzine
 
 Program informuje nas czy godzina jest parzysta lub nieparzysta.
 
-![](/Sprawozdanie2/ss/ss4.png)
-![](/Sprawozdanie2/ss/ss5.png)
+![](../Sprawozdanie2/ss/ss4.png)
+![](../Sprawozdanie2/ss/ss5.png)
 
 ### Stworzenie pipeline pobierający obraz kontenera ubuntu
 
-![](/Sprawozdanie2/ss/ss6.png)
-![](/Sprawozdanie2/ss/ss7.png)
+![](../Sprawozdanie2/ss/ss6.png)
+![](../Sprawozdanie2/ss/ss7.png)
 
 ### Stworzenie pipeline klonującego nasze repozytorium (MDO2025_INO)
 
@@ -104,14 +104,14 @@ pipeline {
 }
 ```
 
-![](/Sprawozdanie2/ss/ss8.png)
-![](/Sprawozdanie2/ss/ss9.png)
-![](/Sprawozdanie2/ss/ss10.png)
-![](/Sprawozdanie2/ss/ss11.png)
+![](../Sprawozdanie2/ss/ss8.png)
+![](../Sprawozdanie2/ss/ss9.png)
+![](../Sprawozdanie2/ss/ss10.png)
+![](../Sprawozdanie2/ss/ss11.png)
 
 Build wykonał się 2 razy bez problemu
 
-![](/Sprawozdanie2/ss/ss12.png)
+![](../Sprawozdanie2/ss/ss12.png)
 
 ## 2. Stworzenie pipeline projektu
 
@@ -119,7 +119,7 @@ Jako projekt do stworzenia pipeline wybranu [node-js-dummy](https://github.com/d
 
 Diagram UML całego procesu:
 
-![](/Sprawozdanie2/ss/diagram.png)
+![](../Sprawozdanie2/ss/diagram.png)
 
 Jenkins script projektu: 
 ```
@@ -230,7 +230,7 @@ Etap klonowania zdalnego repozytorium Git, ograniczony do jednej gałęzi (MZ417
         }
 ```
 
-![](/Sprawozdanie2/ss/ss13.png)
+![](../Sprawozdanie2/ss/ss13.png)
 
 ### Budowanie Image
 
@@ -244,7 +244,7 @@ Etap budowania obrazu Docker, który kompiluje aplikację w specjalnie przygotow
             }
         }
 ```
-![](/Sprawozdanie2/ss/ss14.png)
+![](../Sprawozdanie2/ss/ss14.png)
 
 ### Test Image
 
@@ -259,8 +259,8 @@ Etap tworzenia obrazu testowego, uruchamiania testów jednostkowych i weryfikacj
             }
         }
 ```
-![](/Sprawozdanie2/ss/ss15.png)
-![](/Sprawozdanie2/ss/ss16.png)
+![](../Sprawozdanie2/ss/ss15.png)
+![](../Sprawozdanie2/ss/ss16.png)
 
 ### Build Deploy Image
 
@@ -275,7 +275,7 @@ Etap budowania końcowego obrazu aplikacji przeznaczonego do uruchomienia (deplo
         }
 ```
 
-![](/Sprawozdanie2/ss/ss17.png)
+![](../Sprawozdanie2/ss/ss17.png)
 
 ###  Deploy Application
 
@@ -293,7 +293,7 @@ Etap wdrożenia aplikacji. Tworzona jest wewnętrzna sieć Docker (ci), a nastę
         }
 ```
 
-![](/Sprawozdanie2/ss/ss18.png)
+![](../Sprawozdanie2/ss/ss18.png)
 
 ### Smoke Test Deploy
 Etap sprawdzający podstawowe działanie aplikacji po wdrożeniu. Używany jest tymczasowy kontener z obrazem curl, który wysyła zapytanie HTTP do aplikacji przez wewnętrzną sieć Docker. Odpowiedź HTML świadczy o poprawnym uruchomieniu aplikacji.
@@ -310,7 +310,7 @@ Etap sprawdzający podstawowe działanie aplikacji po wdrożeniu. Używany jest 
         }
 ```
 
-![](/Sprawozdanie2/ss/ss19.png)
+![](../Sprawozdanie2/ss/ss19.png)
 
 ### Archive Artifact
 
@@ -331,8 +331,8 @@ Format .tar został wybrany ponieważ jego obsługa jest wbudowana w większoś�
         }
 ```        
 
-![](/Sprawozdanie2/ss/ss20.png)
+![](../Sprawozdanie2/ss/ss20.png)
 
 Pipline został uruchomiony 2 razy żeby upewnić się że działa poprwanie.
 
-![](Sprawozdanie2/ss/ss21.png)
+![](../Sprawozdanie2/ss/ss21.png)
