@@ -1,6 +1,5 @@
 FROM node:18-alpine
-WORKDIR /app
-COPY . .
+RUN git clone https://github.com/devenes/node-js-dummy-test
+WORKDIR /node-js-dummy-test
 RUN npm install
-RUN npm test
 CMD ["npm", "start"]

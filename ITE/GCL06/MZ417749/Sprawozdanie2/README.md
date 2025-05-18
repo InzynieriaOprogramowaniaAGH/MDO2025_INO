@@ -75,3 +75,31 @@ Program informuje nas czy godzina jest parzysta lub nieparzysta.
 
 ### Stworzenie pipeline klonującego nasze repozytorium (MDO2025_INO)
 
+```
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'MZ417749', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build Dockerfile') {
+            steps {
+                sh 'docker build -t my-builder-image -f ITE/GCL06/MZ417749/Sprawozdanie2/Dockerfile.nodeBuild ITE/GCL06/MZ417749/Sprawozdanie2'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'OK'
+        }
+        failure {
+            echo 'ERROR'
+        }
+    }
+}
+```
