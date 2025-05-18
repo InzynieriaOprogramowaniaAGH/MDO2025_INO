@@ -9,7 +9,7 @@ Zaczynamy od stworzenia kontenera z jenkinsem, następnie uruchomiamy go z dind.
 docker network create jenkins
 ```
 
-![](/Sprawozdanie1/lab4_ss/ss26.png)
+![**!\[\]\[image1\]**](/Sprawozdanie1/lab4_ss/ss26.png)
 ```
 
 FROM jenkins/jenkins:2.492.2-jdk17
