@@ -1,0 +1,7 @@
+FROM node:18
+
+COPY node-js-dummy-test/ .
+
+WORKDIR /node-js-dummy-test
+
+RUN npm install

@@ -1,0 +1,21 @@
+{
+  "name": "dummy-nodejs-todo",
+  "version": "0.1.1",
+  "description": "A simple to do server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest src/index.test.js"
+  },
+  "author": "Devenes",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.0",
+    "ejs": "^2.5.7",
+    "express": "^4.15.4",
+    "supertest": "^6.2.3"
+  },
+  "devDependencies": {
+    "jest": "^28.0.2"
+  }
+}

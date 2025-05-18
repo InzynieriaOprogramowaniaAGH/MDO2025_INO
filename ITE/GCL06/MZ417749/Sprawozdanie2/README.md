@@ -103,3 +103,20 @@ pipeline {
     }
 }
 ```
+
+![](/Sprawozdanie2/ss/ss8.png)
+![](/Sprawozdanie2/ss/ss9.png)
+![](/Sprawozdanie2/ss/ss10.png)
+![](/Sprawozdanie2/ss/ss11.png)
+
+Build wykonał się 2 razy bez problemu
+
+![](/Sprawozdanie2/ss/ss12.png)
+
+## 2. Stworzenie pipeline projektu
+
+Jako projekt do stworzenia pipeline wybranu [node-js-dummy](https://github.com/devenes/node-js-dummy-test/tree/master). Został wybrany ze względu na prostote i mały rozmiar i znajome środowisko Node.js.
+
+Diagram UML całego procesu:
+
+![](/Sprawozdanie2/ss/diagram.png)
