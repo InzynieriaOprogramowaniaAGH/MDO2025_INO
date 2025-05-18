@@ -204,7 +204,7 @@ pipeline {
 }
 ```
 
-- Output konsoli
+- Output konsoli, gdy godzina jest nieparzysta:
 
 ```console output
 Started by user mati
@@ -228,6 +228,34 @@ Aktualna godzina w strefie Europe/Warsaw: 13
 [Pipeline] End of Pipeline
 ERROR: Godzina 13 jest nieparzysta – build przerwany.
 Finished: FAILURE
+```
+
+- Output konsoli, gdy godzina jest parzysta:
+
+```console output
+Started by user mati
+
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins
+ in /var/jenkins_home/workspace/uneven_hour
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Check Hour Parity)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+Aktualna godzina w strefie Europe/Warsaw: 14
+[Pipeline] echo
+Godzina 14 jest parzysta – OK.
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
 ```
 
 #### Utworzenie projektu, w którym pobierany jest obraz kontenera `ubuntu`
