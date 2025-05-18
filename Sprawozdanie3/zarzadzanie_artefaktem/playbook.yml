@@ -1,0 +1,5 @@
+- name: Zarządzanie artefaktem
+  hosts: Endpoints
+  become: true
+  roles:
+    - manage_artifact
