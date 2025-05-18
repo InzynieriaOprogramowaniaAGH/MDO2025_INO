@@ -1,7 +1,14 @@
+
 FROM node:18
 
-COPY node-js-dummy-test/ .
+WORKDIR /app
 
-WORKDIR /node-js-dummy-test
+COPY package*.json ./
 
 RUN npm install
+
+COPY . .
+
+RUN npm run build || echo "Brak kroku build, pomijam"
+
+CMD ["node"]
