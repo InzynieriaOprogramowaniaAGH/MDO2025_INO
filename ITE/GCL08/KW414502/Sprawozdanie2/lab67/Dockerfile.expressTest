@@ -1,0 +1,5 @@
+FROM express-js-build
+
+WORKDIR /app/express
+
+RUN npm test
