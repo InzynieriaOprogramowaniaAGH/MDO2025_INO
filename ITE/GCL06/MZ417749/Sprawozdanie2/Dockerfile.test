@@ -2,4 +2,8 @@ FROM node:18
 
 WORKDIR /app
 
+COPY node-js-dummy-test/ .
+
+RUN npm install 
+
 CMD ["npm", "test"]
