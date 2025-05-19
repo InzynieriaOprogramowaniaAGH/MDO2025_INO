@@ -335,10 +335,14 @@ Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje s
     <img src="screens5/22.jpg">
 </div>
 
+<div align="center"> 
+    <img src="screens5/23.jpg">
+</div>
+
 #### Uruchomienie pipeline'a
 
 <div align="center"> 
-    <img src="screens5/23.jpg">
+    <img src="screens5/24.jpg">
 </div>
 
 >[Console logs](console_logs/redis_pipeline/logs.log)
