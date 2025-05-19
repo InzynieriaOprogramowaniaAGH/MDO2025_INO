@@ -35,8 +35,10 @@
 ### Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
  * Zapisz [wdrożenie](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) jako plik YML
  * Przeprowadź próbne wdrożenie przykładowego *deploymentu* `nginx`
- * Wykonaj ```kubectl apply``` na pliku
- * Upewnij się, że posiadasz wdrożenie z poprzednich zajęć zapisane jako plik
- * Wzbogać swój obraz o 4 repliki
- * Rozpocznij wdrożenie za pomocą ```kubectl apply```
- * Zbadaj stan za pomocą ```kubectl rollout status```
+   * Wykonaj ```kubectl apply``` na pliku
+   * Upewnij się, że posiadasz wdrożenie z poprzednich zajęć zapisane jako plik
+   * Wzbogać swój obraz o 4 repliki
+   * Rozpocznij wdrożenie za pomocą ```kubectl apply```
+   * Zbadaj stan za pomocą ```kubectl rollout status```
+ * Wyeksponuj wdrożenie jako serwis
+ * Przekieruj port do serwisu (tak, jak powyżej)  
