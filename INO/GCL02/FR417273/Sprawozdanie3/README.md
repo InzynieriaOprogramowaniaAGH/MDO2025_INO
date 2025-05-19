@@ -483,3 +483,50 @@ Przydzielone zasoby spełniają minimalne wymagania oprogramowania. Nie odnotowa
     - **ReplicaSet**: zapewnia określoną liczbę identycznych replik poda.
     - **Namespace**: Logicznie dzieli podział zasobów w klastrze.
     - **Node**: fizyczna lub wirtualna maszyna w klastrze, która uruchamia Pody.
+ 
+#### Analiza posiadanego kontenera
+Ze względu na to, że ówczensy projekt to biblioteka `cJSON`, zdecydowano się, na potrzeby zadania, na zmianę projektu na prostą stronę internetową w `nginx`.
+
+- Utworzono prosty plik `index.html`
+    ```
+    <!DOCTYPE html>
+    <html>
+      <head><title>417273: nginx</title></head>
+      <body>
+        <h1>Windows->VM->minikube->nginx-custom</h1>
+      </body>
+    </html>
+    ```
+- Utworzono prosty plik `Dockerfile`, który kopiuje plik `index.html` do katalogu uzywanego przez `nginx`.
+    ```
+    FROM nginx:latest
+    COPY index.html /usr/share/nginx/html/index.html
+    ```
+
+- Zbudowano obraz jako `nginx-custom`, poleceniem: `docker build -t nginx-custom .`.
+    - *Zrzut ekranu budowania*:
+
+      ![Zrzut ekranu budowania](media/m30_build.png)
+
+- Obraz dodano do minikube poleceniem: `minikube image load nginx-custom`.
+
+#### Uruchamianie oprogramowania
+- Uruchomiono obraz poleceniem: `minikubctl run nginx-custom-pod --image=nginx-custom --port=80 --image-pull-policy=Never`.
+  ` *Zrzut ekranu uruchamiania*:
+
+  ![Zrzut ekranu uruchamiania](media/m31_run.png)
+  *Zrzut ekranu w dashbordzie*:
+
+  ![Zrzut ekranu w dashboardzie](media/m32_dash.png)
+- Przekierowano port aplikacji, z portu 80 na port 8081, poleceniem: `minikubctl port-forward pod/nginx-custom-pod 8081:80`.
+  *Zrzut ekranu przekierowania*:
+
+  ![Zrzut ekranu przekierowania](media/m33_forward.png)
+- Zrobiono tunel z maszyny wirtualnej na hosta poleceniem: `ssh -L 8083:127.0.0.1:8081 filip-rak@192.168.1.102`, przekierowując z portu 8081 na 8083.
+  - *Zrzut ekranu przekierowania*:
+  
+  ![Zrzut ekranu przekierowania](media/m34_further.png)
+- Udało się otworzyć witrynę `nginx` pod adresem `127.0.0.1` na porcie `8083`.
+  *Zrzut ekranu witryny*:
+
+  ![Zrzut ekranu witryny](media/m35_8083.png)
