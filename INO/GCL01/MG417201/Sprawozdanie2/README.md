@@ -285,9 +285,37 @@ pipeline {
 
 >[Console logs](console_logs/redis_build/3.log)
 
+Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje się tak dzięki systemom cache'owania jenkinsa, który:
+* Zapisuje do pamięci cache warstwy Dockera:
+  Podczas docker build każda instrukcja z Dockerfile (COPY, RUN, itp.) tworzy nową warstwę. Jeśli zawartość tej warstwy (ani żadna z wcześniejszych) nie uległa zmianie, Docker po prostu ją „odbiera” z cache’a i nie wykonuje jej na nowo. W praktyce oznacza to, że przy drobnych zmianach w kodzie większość kroków builda – np. instalacja zależności – zostaje pominięta, co bardzo przyspiesza kolejny build.
+
+* Utrzymuje workspace na agencie
+  Domyślnie Jenkins nie czyści katalogu roboczego między kolejnymi buildami (chyba że jawnie włączymy opcję „Wipe out workspace”). Dzięki temu wszystkie pliki pobrane w poprzedniej iteracji – np. zależności, skompilowane artefakty czy wyniki testów – są wciąż dostępne i nie trzeba ich pobierać/ponownie generować od zera.
+
+ * Cache'uje wtyczki i narzędzia
+  Jenkins oraz używane kontenery mogą dodatkowo cache’ować biblioteki, pluginy i paczki systemowe pomiędzy buildami. Dzięki temu kolejne uruchomienia pipeline’u omijają ich ponowną instalację.
 
 ### Opis celu
 
+#### Wymagania wstępne środowiska
+
+* Software: Jenkins, Docker, Git, narzędzia testowe (np. pytest)
+
+* Hardware: maszyna hostująca Jenkins
+
+* Uprawnienia: dostęp do repo, Docker socket, sieć do rejestru obrazów
+
+#### Diagram aktywności
+
+<div align="center"> 
+    <img src="screens5/20.jpg">
+</div>
+
+#### Diagram wdrożeniowy
+
+<div align="center"> 
+    <img src="screens5/21.jpg">
+</div>
 
 ### Pipeline: składnia
 
