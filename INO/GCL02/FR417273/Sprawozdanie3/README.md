@@ -515,7 +515,7 @@ Ze względu na to, że ówczensy projekt to biblioteka `cJSON`, zdecydowano się
   ` *Zrzut ekranu uruchamiania*:
 
   ![Zrzut ekranu uruchamiania](media/m31_run.png)
-  *Zrzut ekranu w dashbordzie*:
+  *Zrzut ekranu w dashboardzie*:
 
   ![Zrzut ekranu w dashboardzie](media/m32_dash.png)
 - Przekierowano port aplikacji, z portu 80 na port 8081, poleceniem: `minikubctl port-forward pod/nginx-custom-pod 8081:80`.
@@ -527,6 +527,59 @@ Ze względu na to, że ówczensy projekt to biblioteka `cJSON`, zdecydowano się
   
   ![Zrzut ekranu przekierowania](media/m34_further.png)
 - Udało się otworzyć witrynę `nginx` pod adresem `127.0.0.1` na porcie `8083`.
-  *Zrzut ekranu witryny*:
+  - *Zrzut ekranu witryny*:
 
   ![Zrzut ekranu witryny](media/m35_8083.png)
+
+#### Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
+
+- Przygotowano plik wdrożenia `nginx-deploy.yaml`:
+    ```
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nginx-custom-deployment
+      labels:
+        app: nginx-custom
+    spec:
+      replicas: 4
+      selector:
+        matchLabels:
+          app: nginx-custom
+      template:
+        metadata:
+          labels:
+            app: nginx-custom
+        spec:
+          containers:
+          - name: nginx-custom
+            image: nginx-custom
+            ports:
+            - containerPort: 80
+            imagePullPolicy: Never
+    ```
+- Następnie wdrożono plik poleceniem: `minikubctl apply -f nginx-deploy.yaml`.
+- Zweryfikowano stan rollout'u poleceniem: `minikubctl rollout status deployment/nginx-custom-deployment`.
+  - *Zrzut ekranu z wdrażania i weryfikacji rollout'u*:
+
+  ![Zrzut ekranu z wdrażania i weryfikacji rollout'u](media/m36_apply.png)
+- Wyeksponowano wzdrożenie jako serwis, poleceniem: `minikubctl expose deployment nginx-custom-deployment --type=ClusterIP --port=80 --name=nginx-custom-service`.
+  - *Zrzut ekranu wydruku*:
+
+  ![Zrzut ekranu wydruku](media/m37_expose.png)
+- Poleceniem `minikubctl port-forward service/nginx-custom-service 8085:80` przekierowano port serwisu na `8085`.
+  - *Zrzut ekranu z przekierowania*:
+
+    ![Zrzut ekranu przekierowania](media/m38_forward.png)
+- Następnie utworzono tunel z maszyny wirtualnej na hosta, poleceniem: `ssh -L 8085:127.0.0.1:8085 filip-rak@192.168.1.102` na porcie `8085`.
+  - *Zrzut ekranu z tworzenia tunelu*:
+
+    ![Zrzut ekranu z tworzenia tunelu](media/m39_tunnel.png)
+- Następnie w przeglądarce zweryfikowano dostęp do serwisu pod adresem `127.0.0.1` na porcie `8085`.
+  - *Zrzut ekranu z przeglądarki*:
+
+  ![Zrzut ekranu z przeglądarki](media/m40_service.png)
+  - *Zrzut ekranu z panelu dashboard*:
+
+  ![Zrzut ekranu z panelu dashboard](media/m41_dash.png)
+      
