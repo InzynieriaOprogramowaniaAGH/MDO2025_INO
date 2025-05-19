@@ -1,0 +1,22 @@
+pipeline {
+  agent {
+    docker {
+      image 'docker:20.10-dind'
+      args  '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+    }
+  }
+
+  stages {
+    stage('Checkout') { steps { checkout scm } }
+    stage('Build image') {
+      steps {
+        sh 'docker build -t redis_build -f Dockerfile.build.redis .'
+      }
+    }
+    stage('Run tests') {
+      steps {
+        sh 'docker build -t redis_test -f Dockerfile.test.redis .'
+      }
+    }
+  }
+}
