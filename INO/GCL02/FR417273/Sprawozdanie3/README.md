@@ -463,3 +463,23 @@ W poniższej tabeli umieszczono wymagania **Minikube** porównane z zasobami udo
 | **VM Manager**            | VirtualBox, Docker, KVM itd.         | VirtualBox z KVM Paravirtualization|
 
 Przydzielone zasoby spełniają minimalne wymagania oprogramowania. Nie odnotowano żadnych problemów, które mogłyby wynikać z niadekwatnej konfiguracji.
+
+- Uruchomiono Dashboard poprzez polecenie: `minikube dashboard`.
+  - *Zrzut erkanu uruchomienia*:
+
+  ![Zrzut ekranu uruchomienia](media/m27_dashboard.png)
+- Uzyskany adres skopiowano. Następnie, na hoście maszyny, wykorzystując polecenie: `ssh -L 8082:127.0.0.1:34907 filip-rak@192.168.1.102` przekierowano port na `8082`.
+  - *Zrzut ekranu przekierowania*:
+ 
+  ![Zrzut ekranu przekierowania](media/m28_forward.png)
+- Następnie, na hoście, odwiedzono dashboard pod przekierowanym portem.
+  - *Zrzut ekranu z przeglądarki*:
+
+ ![Zrzut ekranu z przeglądarki](media/m29_browser.png)
+- Zapoznano się z [koncepcjami](https://kubernetes.io/docs/concepts/) wprowadzanymi przez Kubernetes. Wybrane pozycje:
+    - **Pod**: najmniejsza jednostka zawierająca jeden lub więcej kontenerów.
+    - **Deployment**: obiekt zarządzający automatycznym tworzeniem i aktualizowaniem replik podów. Ułatwia wdrażanie aplikacji, aktualizacje bez przestojów, rollback i skalowanie.
+    - **Service**: definiuje sposób komunikacji z aplikacjami działającymi w podach. Umożliwia stabilny dostęp do aplikacji niezależnie od zmian w konkretnych podach.
+    - **ReplicaSet**: zapewnia określoną liczbę identycznych replik poda.
+    - **Namespace**: Logicznie dzieli podział zasobów w klastrze.
+    - **Node**: fizyczna lub wirtualna maszyna w klastrze, która uruchamia Pody.
