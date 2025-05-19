@@ -535,3 +535,9 @@ LD_LIBRARY_PATH=/usr/local/lib64 /opt/example/example
 ```
 
 ![Uruchomienie programu](zrzuty9/zrzut_ekranu14.png)
+
+## Wdrażanie na zarządzalne kontenery: Kubernetes
+
+Działający dashboard:
+
+![Dashboard działa](zrzuty10/temp_name.png)
