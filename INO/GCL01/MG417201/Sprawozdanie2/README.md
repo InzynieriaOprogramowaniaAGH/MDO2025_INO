@@ -319,5 +319,30 @@ Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje s
 
 ### Pipeline: składnia
 
+#### Utworzenie pliku Jenkinsfile
+
+>[Treść pliku Jenkinsfile](../lab3/dockerfiles/Jenkinsfile)
+
+>[Treść pliku Dockerfile.build.redis](../lab3/dockerfiles/Dockerfile.build.redis)
+
+>[Treść pliku Dockerfile.test.redis](../lab3/dockerfiles/Dockerfile.test.redis)
+
+#### Utworzenie nowego pipeline'a
+
+- Proces tworzenia:
+
+<div align="center"> 
+    <img src="screens5/22.jpg">
+</div>
+
+#### Uruchomienie pipeline'a
+
+<div align="center"> 
+    <img src="screens5/23.jpg">
+</div>
+
+>[Console logs](console_logs/redis_pipeline/logs.log)
+
+
 
 ### Kompletny pipeline: wymagane składniki

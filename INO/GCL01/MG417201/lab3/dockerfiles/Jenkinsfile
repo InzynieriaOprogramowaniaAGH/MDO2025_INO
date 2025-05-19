@@ -7,15 +7,26 @@ pipeline {
   }
 
   stages {
-    stage('Checkout') { steps { checkout scm } }
-    stage('Build image') {
+    stage('Checkout') {
       steps {
-        sh 'docker build -t redis_build -f Dockerfile.build.redis .'
+        checkout scm
       }
     }
+
+    stage('Build image') {
+      steps {
+        // zmieniamy katalog roboczy na ten, w którym są Twoje Dockerfile’e
+        dir('INO/GCL01/MG417201/lab3/dockerfiles') {
+          sh 'docker build -t redis_build -f Dockerfile.build.redis .'
+        }
+      }
+    }
+
     stage('Run tests') {
       steps {
-        sh 'docker build -t redis_test -f Dockerfile.test.redis .'
+        dir('INO/GCL01/MG417201/lab3/dockerfiles') {
+          sh 'docker build -t redis_test -f Dockerfile.test.redis .'
+        }
       }
     }
   }
