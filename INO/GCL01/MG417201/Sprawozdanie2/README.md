@@ -155,7 +155,7 @@ pipeline {
 
 - Output konsoli
 
-![Console logs](INO/GCL01/MG417201/Sprawozdanie2/console_logs/uname/logs.log)
+![Console logs](console_logs/uname/logs.log)
 
 #### Utworzenie projektu zwracającego błąd, gdy godzina jest nieparzysta
 
@@ -185,11 +185,11 @@ pipeline {
 
 - Output konsoli, gdy godzina jest nieparzysta:
 
-![Console logs](INO/GCL01/MG417201/Sprawozdanie2/console_logs/uneven_hour/uneven_logs.log)
+![Console logs](console_logs/uneven_hour/uneven_logs.log)
 
 - Output konsoli, gdy godzina jest parzysta:
 
-![Console logs](INO/GCL01/MG417201/Sprawozdanie2/console_logs/uneven_hour/even_logs.log)
+![Console logs](console_logs/uneven_hour/even_logs.log)
 
 #### Utworzenie projektu, w którym pobierany jest obraz kontenera `ubuntu`
 
@@ -213,7 +213,7 @@ pipeline {
 
 - Output konsoli:
 
-![Console logs](INO/GCL01/MG417201/Sprawozdanie2/console_logs/ubuntu_pull/logs.log)
+![Console logs](console_logs/ubuntu_pull/logs.log)
 
 
 ### Zadanie wstępne: obiekt typu pipeline
@@ -267,7 +267,7 @@ pipeline {
     <img src="screens5/17.jpg">
 </div>
 
-![Console logs](INO/GCL01/MG417201/Sprawozdanie2/console_logs/redis_build/1.log)
+![Console logs](console_logs/redis_build/1.log)
 
 - Drugie uruchomienie pipeline'u (obie części pipeline'u zakończone sukcesem)
 
@@ -275,7 +275,7 @@ pipeline {
     <img src="screens5/18.jpg">
 </div>
 
-![Console logs](INO/GCL01/MG417201/Sprawozdanie2/console_logs/redis_build/2.log)
+![Console logs](console_logs/redis_build/2.log)
 
 - Trzecie uruchomienie pipeline'u (obie części pipeline'u zakończone sukcesem)
 
@@ -283,7 +283,7 @@ pipeline {
     <img src="screens5/19.jpg">
 </div>
 
-![Console logs](INO/GCL01/MG417201/Sprawozdanie2/console_logs/redis_build/3.log)
+![Console logs](console_logs/redis_build/3.log)
 
 
 ### Opis celu
