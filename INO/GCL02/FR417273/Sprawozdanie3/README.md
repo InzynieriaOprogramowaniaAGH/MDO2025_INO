@@ -1,11 +1,11 @@
-# Sprawozdanie z laboratoriów: Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
+# Sprawozdanie z laboratoriów: 8 - 11
 - Przedmiot: DevOps
 - Kierunek: Inżynieria Obliczeniowa
 - Autor: Filip Rak
 - Data: 29/04/2025
 
 ## Przebieg Ćwiczeń
-### Instalacja zarządcy Ansible
+### Zajęcia 8: Instalacja zarządcy Ansible
 - Utworzono nową maszynę wirtualną oparta na tym samym systemie co host - `Fedora 41`.
 - Na nowej maszynie pobrano oprogramowanie `tar` oraz `sshd`, poleceniem `sudo dnf install tar sshd`.
     - *Zrzut ekranu instalacji*:
@@ -19,7 +19,7 @@
   - *Zrzut ekranu instalacji*:
 
     ![Zrzut ekranu instalacji](media/m3_ansible.png)
-### Inwentaryzacja
+#### Inwentaryzacja
 - Na maszynie głównej, w pliku `/etc/hosts` zmapowano adresy `IP` obu maszyn do nazw `cracker` dla maszyny głównej i `cookie` dla nowej maszyny.
   - *Zrzut ekranu zawartości pliku i wywołania polecenia ping*:
 
@@ -45,7 +45,7 @@
   - *Zrzut ekranu ping*:
 
     ![Zrzut ekranu ping](media/m7_ping.png)
-### Zdalne wywoływanie procedur
+#### Zdalne wywoływanie procedur
 - Utworzono playbook `playbook.yaml`, którego zadaniem jest:
     - Wysłanie żadania `ping` do wszystkich maszyn.
     - Kopia pliku `inventory.ini` na maszyny `Endpoints`.
@@ -119,7 +119,7 @@
     - *Uzyskany wynik*:
 
       ![Uzyskany wynik](media/m9_bookplay.png)
-### Zarządzanie stworzonym artefaktem
+#### Zarządzanie stworzonym artefaktem
 - Utworzono nową role poleceniem `ansible-galaxy init cjson`:
   - *Zrzut ekranu struktury katalogów*:
 
@@ -228,7 +228,7 @@
 
     ![poprawna kompilacja](media/m11_finally.png)
     
-### Pliki odpowiedzi dla wdrożeń nienadzorowanych
+### Zajęcia 9: Pliki odpowiedzi dla wdrożeń nienadzorowanych
 - Z systemu fedora będącego hostem skopiowano plik `anaconda-ks.cfg` znajdującego się w katalogu `root/`.
 - Plik ten został zapisany na gałęzi `FR417273` w repozytorium przedmiotu.
 - W celu umożliwienia automatycznej instalacji biblioteki `cJSON` poprzez wykorzystanie pliku kikstart wykonano następujące kroki.
@@ -413,9 +413,53 @@
        - W okienku `Oracle VirtualBox Manager` w międzyczasie pojawiło się nowe wejście, reprezentujące utworzoną maszynę.
          - *Zrzut ekranu z okienka*:
         
-           ![Zrzut ekranu z okienka](media/m19_effect.png)
+         ![Zrzut ekranu z okienka](media/m19_effect.png)
 
        - Bootloader następnie przeszedł do automatycznego wykonywania wskazanego pliku kickstart.
          - *Zrzut ekranu instalacji*:
            
           ![Zrzut ekranu instalacji](media/m20_install.png)
+### Zajęcia 10: Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+#### Instalacja Klasatra Kubernetes:
+- Znaleziono implementacje stosu k8s, **minikube** pod [adresem](https://minikube.sigs.k8s.io/docs/start/) wskazanym w instrukcji.
+- Pakiet **RPM** pobrano na systemie **Fedora** poleceniem: `curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm`.
+- Nastepnie zainstalowano pakiet poleceniem: `sudo rpm -Uvh minikube-latest.x86_64.rpm`.
+  - *Zrzut ekranu instalacji*:
+
+  ![Zrzut ekranu instlacji](media/m21_install.png)
+
+- Wykazano poziom bezpieczeństwa instalacji:
+  - Kubernetes z Minikube ma domyślnie włączoną kontrolę dostępu. Potwierdzono to poleceniem: `minikube kubectl -- get clusterrolebindings`.
+    - *Fragment wydruku*:
+      
+    ![Fragment wydruku](media/m22_cluster.png)
+
+  - Kubernetes domyślnie wykorzystuje przestrzenie nazw do separacji zasobów. Możemy je zobaczyć poleceniem: `minikube kubectl -- get namespaces`.
+    - *Wydruk*:
+
+    ![Wydruk](media/m23_namespaces.png)
+
+  - Komunikacja między komponentami klastra odbywa się za pomocą certyfikatów TLS. Można to potwierdzić, przeglądając certyfikaty w systemie Minikube. Wykorzystano polecenia `minikube ssh` oraz `ls /var/lib/minikube/certs/`
+    - *Wydruk*:
+
+    ![Wydruk](media/m24_ssh.png)
+- Zainstalowano pakiet `kubectl` oraz utworzono alias `minikubectl`.
+  - *Zrzut ekranu instalacji*:
+
+  ![Zrzut ekranu instalacji](media/m25_kubectl.png)
+- Uruchomiono **Kubernetes** poleceniami: `minikube start` i `minikubctl get nodes`.
+- *Zrzut ekranu uruchomienia*:
+
+![Zrzut ekranu uruchomienia](media/m26_start.png)
+
+##### Porównanie wymagań Minikube z konfiguracją maszyny wirtualnej
+W poniższej tabeli umieszczono wymagania **Minikube** porównane z zasobami udostępnionymi maszynie wirtualnej
+| **Parametr**              | **Wymagania**                        | **Konfiguracja VM**                |
+|---------------------------|--------------------------------------|------------------------------------|
+| **CPU**                   | 2 CPU lub więcej                     | 4 CPU                              |
+| **RAM**                   | 2 GB wolnej pamięci                  | 6144 MB (6 GB)                     |
+| **Miejsce na dysku**      | 20 GB wolnej przestrzeni             | 40 GB                              |
+| **Połączenie internetowe**| Wymagane                             | Dostępne                           |
+| **VM Manager**            | VirtualBox, Docker, KVM itd.         | VirtualBox z KVM Paravirtualization|
+
+Przydzielone zasoby spełniają minimalne wymagania oprogramowania. Nie odnotowano żadnych problemów, które mogłyby wynikać z niadekwatnej konfiguracji.
