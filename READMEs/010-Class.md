@@ -26,7 +26,7 @@
 ### Uruchamianie oprogramowania
  * Uruchom kontener ze swoją aplikacją na stosie k8s
  * Kontener uruchomiony w minikubie zostanie automatycznie "ubrany" w *pod*.
- * ```minikube kubectl run -- <nazwa-wdrożenia> --image=<obraz-docker> --port=<wyprowadzany port> --labels app=<nazwa-wdrożenia>```
+ * ```minikube kubectl run -- <nazwa-jednopodowego-wdrożenia> --image=<obraz-docker> --port=<wyprowadzany port> --labels app=<nazwa-jednopodowego-wdrożenia>```
  * Przedstaw że *pod* działa (via Dashboard oraz `kubectl`)
  * Wyprowadź port celem dotarcia do eksponowanej funkcjonalności
  * ```kubectl port-forward pod/<nazwa-wdrożenia> <LO_PORT>:<PODMAIN_CNTNR_PORT> ```
