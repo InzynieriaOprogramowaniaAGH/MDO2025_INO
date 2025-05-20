@@ -34,7 +34,7 @@
  
 ### Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
  * Zapisz [wdrożenie](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) jako plik YML
- * Przeprowadź próbne wdrożenie przykładowego *deploymentu* `nginx`
+ * Przeprowadź próbne wdrożenie przykładowego *deploymentu* (może być `nginx`)
    * Wykonaj ```kubectl apply``` na pliku
    * Upewnij się, że posiadasz wdrożenie zapisane jako plik
    * Wzbogać swój obraz o 4 repliki
