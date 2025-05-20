@@ -273,4 +273,4 @@ i -> wskazanie pliku inventory
 
 Wynik działania playbooka:
 
-![alt text](image21.png>)
+![alt text](image21.png)
