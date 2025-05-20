@@ -460,20 +460,22 @@ Plik po dokonanych zmian został przesłany na Githuba. Następnie skopiowałam 
 
 Podczas instalcji nowej maszyny, w menu statorym instalatora kliknełam `e`, aby wejść do trybu edycji poleceń GRUB. Edytowałam parametry instalacyjne.
 
-![Instalacja](Lab9/instalacja.png)
+![Instalacja](IMG/Lab9/instalacja.png)
 
 Zapisuje zmiany `Crtl-X`.
 
 Instalator uruchomiony w trybie graficznym:
 
-![Instalacja2](Lab9/instalacja2.png)
+![Instalacja2](IMG/Lab9/instalacja2.png)
 
 Wszytkie informacje po poprawnym odczytaniu pliku powinny się automatycznie załadować.
 Po chwili instalator przeszedł dalej.
 
-![Instalacja3](Lab9/instalacja3.png)
+![Instalacja3](IMG/Lab9/instalacja3.png)
 
 Po zakończeniu należało ponownie urucomić system oraz odpiąć plik `iso`.
+
+![Instalacja4](IMG/Lab9/instalacja4.png)
 
 #### Rozszerzenie pliku odpowiedzi o dodatkowe opcje
 
@@ -533,5 +535,108 @@ reboot
 
 Wynik sprawdzenie nazwy hosta po ponownej instalacji.
 
+![Hostname](IMG/Lab9/hostname.png)
+
+#### Instalacja biblioteki cjson w wykorzystaniem pliku odpowiedzi
+
+W celu udustępnienia biblioteki w formie repozytorium YUM, pobrałam serwer `Apache` i narzędzie `createrepo `.
+
+```bash
+sudo dnf install -y httpd createrepo
+```
+
+Następnie utworzyłam katalog `/var/www/html/myrepo`.
+
+```bash
+sudo mkdir -p /var/www/html/myrepo
+sudo cp cjson.rpm /var/www/html/myrepo/
+cd /var/www/html/myrepo
+createrepo .
+```
+
+Dodanie regu do Firewalla:
+
+```bash
+sudo firewall-cmd --permanent -add-service=http
+sudo firewall-cmd --reload
+```
+
+Modyfikcja pliku `/etc/httpd/conf/httpd.conf` (serwera Apache) tak, aby umożliwuć poprawne linkowanie zawartości repozytorium.
+
+![File](IMG/Lab9/editfile.png)
+
+Sprawdzenie z przeglądarki, czy dziala:
+
+![Resut-www](IMG/Lab9/myrepo.png)
+
+Edycja pliku `anaconda-ks.cfg`:
+
+```
 
 
+```
+
+Dodane zostalo moje ropozytorum:
+
+```
+repo --name=myrepo --baseurl=http://192.168.0.7/myrepo/
+```
+
+Oraz w sekcji `%packages` pakiety do instalacji.
+
+```
+%packages
+@^server-product-environment
+cjson
+gcc
+glibc
+curl
+%end
+```
+
+Utworzylam rowniez sekcje `%post`, która odpowiadała za kompilację i uruchomienie programu po zakończeniu instalacji.
+
+```
+%post
+mkdir -p /opt/example
+chown kickstart:kickstart /opt/example
+
+# Pobierz plik main.c z GitHuba lub lokalnego serwera 
+curl -o /opt/example/main.c https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/MP417574/INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles_p/main.c
+
+cat << 'EOF' > /etc/profile.d/run_example.sh
+#!/bin/bash
+if [ ! -f /opt/example/.compiled ]; then
+    echo "Kompilacja programu..." >> /opt/example/autostart.log
+    gcc /opt/example/main.c -o /opt/example/example -lcjson -I/usr/local/include/cjson -L/usr/local/lib64
+    if [ -f /opt/example/example ]; then
+        echo "Uruchomienie programu..." >> /opt/example/autostart.log
+        LD_LIBRARY_PATH=/usr/local/lib64 /opt/example/example >> /opt/example/autostart.log 2>&1
+    else
+        echo "Niestety kompilacja się nie powiodła :<" >> /opt/example/autostart.log
+    fi
+    touch /opt/example/.compiled
+fi
+EOF
+
+chmod +x /etc/profile.d/run_example.sh
+%end
+```
+
+Sprawdzenie log działania skryptu.
+
+```bash
+cat /opt/example/autostart.log
+```
+
+Weryfikacja scieźki plików zainstalowanyc przez pakiet.
+
+```bash
+rpm -ql cjson
+```
+
+Uruchomienie programu
+
+```bash
+LD_LIBRARY_PATH=/usr/local/lib64 /opt/example/example
+```
