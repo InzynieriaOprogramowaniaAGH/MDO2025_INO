@@ -37,7 +37,7 @@
  * Przeprowadź próbne wdrożenie przykładowego *deploymentu* (może być `nginx`)
    * Wykonaj ```kubectl apply``` na pliku
    * Upewnij się, że posiadasz wdrożenie zapisane jako plik
-   * Wzbogać swój obraz o 4 repliki
+   * Wzbogać swój *deployment* o 4 repliki
    * Rozpocznij wdrożenie za pomocą ```kubectl apply```
    * Zbadaj stan za pomocą ```kubectl rollout status```
  * Wyeksponuj wdrożenie jako serwis
