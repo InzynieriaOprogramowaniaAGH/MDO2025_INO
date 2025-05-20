@@ -80,6 +80,8 @@ inst.ks=https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_IN
 
 Po wprowadzeniu zmian zatwierdziłam je, naciskając kombinację klawiszy `Ctrl` + `X`, co spowodowało powrót do ekranu startowego i rozpoczęcie instalacji z wykorzystaniem wskazanego pliku Kickstart. Dzięki temu instalacja przebiegła w sposób automatyczny, zgodnie z zawartą w pliku konfiguracją.
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-06%20at%207.40.16%E2%80%AFPM.png)
+
 
 ## Zadanie 10: Wdrażanie na zarządzalne kontenery: Kubernetes (1)
 
@@ -95,6 +97,7 @@ Następnie zainstalowałam Minikube przy użyciu menedżera pakietów RPM:
 sudo rpm -Uvh minikube-latest.aarch64.rpm
 ```
 Dzięki temu Minikube zostało poprawnie zainstalowane w moim systemie:
+![7.22.34](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.22.34%E2%80%AFPM.png)
 
 2. **Konfiguracja środowiska i uruchomienie klastra:**
 
@@ -106,15 +109,16 @@ Następnie rozpoczęłam pracę z Minikube, uruchamiając lokalny klaster Kubern
 ```
 minikube start
 ```
-
+![7.24.25](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.24.25%E2%80%AFPM.png)
 Uruchomienie klastra przebiegło pomyślnie, co potwierdziło działanie podstawowych komponentów Kubernetes.
 
-Aby ułatwić korzystanie z narzędzia kubectl w kontekście Minikube, dodałam alias do pliku ~/.bashrc:
+Aby ułatwić korzystanie z narzędzia kubectl w kontekście Minikube, dodałam alias do pliku `~/.bashrc`:
 
 ```
 echo 'alias kubectl="minikube kubectl --"' >> ~/.bashrc
 source ~/.bashrc
 ```
+![7.25.16](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.25.16%E2%80%AFPM.png)
 
 Dzięki temu wszystkie polecenia kubectl automatycznie korzystają z kontekstu klastra Minikube, co upraszcza zarządzanie zasobami Kubernetes. 
 
@@ -132,6 +136,8 @@ Widoczne były wszystkie kluczowe komponenty systemowe, działające bez problem
 minikube addons enable metrics-server
 ```
 
+![7.25.51](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.25.51%E2%80%AFPM.png)
+
 4. **Uruchomienie interfejsu Kubernetes Dashboard:**
 
 Aby ułatwić zarządzanie klastrem oraz podgląd stanu wdrożonych aplikacji, uruchomiłam graficzny dashboard Minikube:
@@ -139,6 +145,8 @@ Aby ułatwić zarządzanie klastrem oraz podgląd stanu wdrożonych aplikacji, u
 ```
 minikube dashboard &
 ```
+
+![7.26.16](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.26.16%E2%80%AFPM.png)
 Dzięki uruchomieniu go w tle nie blokowałam terminala i mogłam jednocześnie wykonywać dalsze polecenia. Dashboard otworzył się w przeglądarce pod lokalnym adresem, umożliwiając wygodne zarządzanie zasobami Kubernetes.
 
 link:  `http://127.0.0.1:32955/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/#/workloads?namespace=default`.
@@ -151,12 +159,16 @@ Kolejnym krokiem było uruchomienie prostej aplikacji – serwera nginx – jako
 ```
 minikube kubectl -- run mojpod --image=nginx --port=80 --labels app=mojpod
 ```
+![7.36.02](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.36.02%E2%80%AFPM.png)
+
 Sprawdziłam, czy pod działa poprawnie, za pomocą:
 ```
 kubectl get pods
 ```
 oraz w zakładce `Workloads` > `Pods` w Dashboardzie. Wszystko wskazywało na prawidłowe działanie.
-
+![7.36.46](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.36.46%E2%80%AFPM.png)
+![7.32.25](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.32.25%E2%80%AFPM.png)
+![7.38.08](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.38.08%E2%80%AFPM.png)
 
 6. **Uzyskanie dostępu do aplikacji:**
 
@@ -164,8 +176,12 @@ Aby uzyskać dostęp do serwera nginx działającego w podzie, wyprowadziłam po
 ```
 kubectl port-forward pod/mojpod 8080:80
 ```
+![7.39.45](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.39.45%E2%80%AFPM.png)
 
 Po wpisaniu w przeglądarce adresu: `http://localhost:8080` pojawiła się strona powitalna nginx, co potwierdziło, że połączenie z pod-em działa poprawnie.
+
+![7.42.17](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.42.17%E2%80%AFPM.png)
+![7.42.44](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.42.44%E2%80%AFPM.png)
 
 7. **Tworzenie i wdrożenie Deploymentu z pliku YAML:**
 
@@ -196,6 +212,8 @@ spec:
 
 Deployment ten definiuje cztery repliki aplikacji nginx, zapewniając tym samym wysoką dostępność i skalowalność. Wdrożyłam go komendą `kubectl apply -f nginx-deployment.yaml` i sprawdziłam status wdrożenia `kubectl rollout status deployment/moj-nginx`. Wszystkie repliki uruchomiły się poprawnie i były dostępne.
 
+![8.08.45](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.08.45%E2%80%AFPM.png)
+![8.12.04](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.12.04%E2%80%AFPM.png)
 
 8. **Eksponowanie Deploymentu jako usługi:**
 
@@ -205,6 +223,11 @@ Aby umożliwić dostęp do aplikacji spoza klastra, wyeksponowałam Deployment j
 kubectl expose deployment moj-nginx --type=NodePort --port=80
 ```
 
+
 Następnie sprawdziłam, jaki port został przypisany na węźle klastra poprzez `kubectl get svc moj-nginx` i na podstawie przydzielonego portu `NodePort` (z zakresu 30000-32767) wyprowadziłam port lokalny na port serwisu `kubectl port-forward svc/moj-nginx 8080:80`. Po otwarciu w przeglądarce adresu `http://localhost:8080` mogłam korzystać z aplikacji działającej w Kubernetes.
 
+![8.15.42](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.15.42%E2%80%AFPM.png)
+![8.18.42](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.18.42%E2%80%AFPM.png)
+![8.19.24](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.19.24%E2%80%AFPM.png)
+![8.23.44](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.23.44%E2%80%AFPM.png)
 
