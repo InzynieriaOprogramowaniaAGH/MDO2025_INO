@@ -498,4 +498,122 @@ Po uruchomieniu systemu widzimy działający kontener, z którym możemy wchodzi
 
 ## Wdrażanie na zarządzalne kontenery: Kubernetes
 
-### Tu będzie sprawko z Kubernetes
+### Instalacja klastra Kubernetes
+Pierwszym zadaniem było zainstalowanie implementacji stosu `k8s` na maszynie wirtualnej. W naszym przypadku jest to `minikube`, czyli lekkie, lokalne środowisko do uruchamiania klastra Kubernetes na jednej maszynie.
+
+Instalacja `minikube` w postaci paczki `RPM` dla architektury `x86-64`odbyła się poleceniami:
+![ss](./Lab10/screenshots/ss2.png)
+
+Instalator pobrany został z oficjalnego, certyfikowanego źródła dystrybucji, co minimalizuje ryzyko użycia złośliwego oprogramowania.
+
+Dodatkowo zainstalowałem narzędzie `conntrack`. Jest to narzędzie użytkowe i biblioteka jądra Linuksa do śledzenia stanu połączeń sieciowych, używane przez Kubernetes do kontrolowania routingu i przekierowywania pakietów między `podami` i `service'ami`.
+![ss](./Lab10/screenshots/ss1.png)
+
+Następnie zaopatrzyłem się w polecenie `kubectl` w wariancie `minikube` za pomocą aliasu:
+``` bash
+alias kubectl="minikube kubectl --"
+```
+
+Po zainstalowaniu wymaganych zależności, uruchomiłem Kubernetes:
+![ss](./Lab10/screenshots/ss4.png)
+
+Operacja zakończyła się sukcesem:
+![ss](./Lab10/screenshots/ss5.png)
+
+Rekomendowane zasoby dla `minicube` to co najmniej 2 rdzenie procesora, 2GB wolnej pamięci oraz 20GB wolnej przestrzeni na dysku. Moja maszyna wirtualna spełniała te wymagania, lecz w celu zwiększenia wydajności (mimo wystarczających zasobów maszyna wirtualna dosyć wolno działała) dołożyłem trochę pamięci RAM, co rozwiązało problem.
+
+Następnie uruchomiłem graficzny interfejs użytkownika dla klastra Kubernetes (Dashboard). Pozwala ono łatwo przeglądać i zarządzać zasobami k8s.
+
+Dashboard uruchomiłem poleceniem:
+![ss](./Lab10/screenshots/ss6.png)
+
+Następnie po automatycznym przekierowaniu portu w VS Code wyświetliłem go w oknie domyślnej przeglądarki:
+![ss](./Lab10/screenshots/ss7.png)
+
+<br>
+
+### Analiza posiadanego kontenera
+Z racji, iż efektem mojego `pipeline`'u był obraz zawierający oprogramowanie `Redis` opublikowany na DockerHubie, mogłem go użyć podczas tych laboratoriów. Upewniłem się tylko, że kontener pracuje po uruchomieniu (a nie natychmiast kończy pracę).
+![ss](./Lab10/screenshots/ss8.png)
+
+<br>
+
+### Uruchamianie oprogramowania
+Celem zadania było uruchomienie kontenera z aplikacją (w moim przypadku `Redisa` z projektu `pipeline`) na stosie k8s.
+![ss](./Lab10/screenshots/ss9.png)
+
+w wyniku tego polecenia utworzony został `pod`, czyli podstawowa jednostka uruchomieniowa (najprostszy, najmniejszy element, który można wdrożyć i zarządzać nim w klastrze)
+
+Działanie poda można było zauważyć na powyższym zrzucie ekranu po wykonaniu polecenia:
+``` bash
+kubectl get pods
+```
+oraz poprzez Dashboard:
+![ss](./Lab10/screenshots/ss10.png)
+
+Następnie przekierowałem port, aby móc połączyć się z kontenerem:
+![ss](./Lab10/screenshots/ss11.png)
+
+W drugim terminalu spróbowałem nawiązać połączenie - najprotszym sposobem, czyli poleceniem `ping` za pomocą `redis-cli`:
+![ss](./Lab10/screenshots/ss12.png)
+
+Uzyskałem odpowiedź `PONG`, co oznacza, że próba nawiązania połączenia zakończyła się sukcesem.
+
+<br>
+
+### Przekucie wdrożenia manualnego w plik wdrożenia
+Celem tego zadania było zapisanie wdrożenia wybranej aplikacji w pliku wdrożenia (pliku YML).
+
+Pracę rozpocząłem od utworzenia pliku wdrożenia: [redis-deployment.yaml](./Lab10/redis-deployment.yaml)
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-app
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: redis-app
+  template:
+    metadata:
+      labels:
+        app: redis-app
+    spec:
+      containers:
+        - name: redis-container
+          image: tomaszek03/redis-app
+          ports:
+            - containerPort: 6379
+```
+
+Następnie przy pomocy pliku utworzyłem nowy deployment:
+![ss](./Lab10/screenshots/ss13.png)
+
+Deployment zawiera 4 repliki. Wiele replik zwiększa odporność aplikacji — w przypadku awarii jednej z nich, aplikacja pozostaje dostępna dzięki pozostałym. Dodatkowymi zaletami replik są skalowalność oraz równoważenie obciążenia (load balancing). W sytuacji wzmożonego ruchu lub większej liczby użytkowników można zwiększyć liczbę replik, aby rozproszyć obciążenie i zapewnić płynne działanie systemu. Ruch użytkowników jest kierowany do różnych podów, co zmniejsza ryzyko przeciążenia pojedynczej instancji aplikacji.
+
+Sprawdziłem stan wdrożenia poniższym poleceniem:
+![ss](./Lab10/screenshots/ss14.png)
+
+Informacja `deployment redis-app successfully rolled out` oznacza, że deployment Redis-a zakończył się sukcesem.
+
+Aby aplikacja działała z zewnątrz, należało wyeksponować port:
+![ss](./Lab10/screenshots/ss15.png)
+
+Użyte polecenie tworzy zasób typu `Service` i eksponuje port `6379` kontenera. Ustawiłem typ NodePort, co umożliwia dostęp do aplikacji spoza klastra Kubernetes.
+
+Następnie, tak jak poprzednio, przekierowałem port do serwisu:
+![ss](./Lab10/screenshots/ss16.png)
+
+Efekt poprawności działania ponownie zweryfikowałem wykonując `ping` w oddzielnym terminalu:
+![ss](./Lab10/screenshots/ss17.png)
+
+Utworzony deployment można rownież monitorować za pomocą Dashboardu:
+![ss](./Lab10/screenshots/ss20.png)
+
+* utworzone wdrożenia
+![ss](./Lab10/screenshots/ss18.png)
+
+* utworzone pody:
+![ss](./Lab10/screenshots/ss19.png)
+
