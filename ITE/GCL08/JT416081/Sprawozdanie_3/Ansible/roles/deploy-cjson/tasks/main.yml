@@ -16,6 +16,19 @@
     state: started
     enabled: true
 
+- name: "Install Python3 pip and libraries required by Ansible docker modules"
+  dnf:
+    name:
+      - python3-pip
+    state: present
+
+- name: "Install required Python modules"
+  pip:
+    name:
+      - packaging
+      - docker
+      - requests
+
 - name: "Pull application container image (custom image from Docker Hub)"
   docker_image:
     name: "{{ dockerhub_image }}"
@@ -28,14 +41,14 @@
     state: started
 
 - name: "Check if container is running"
-  command: docker ps
+  command: docker ps -a
   register: container_list
 
 - name: "Display running containers"
   debug:
     var: container_list.stdout_lines
 
-- name: "Stop and remove the application container"
+- name: "Stop and remove the aplication cointainer"
   docker_container:
     name: "{{ container_name }}"
     state: absent

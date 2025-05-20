@@ -116,9 +116,9 @@ Jak widać przy drugim puszczeniu tego samego playbook task "Coping inventory fi
         name: "*"
         state: latest
         update_only: yes
+```
 
 ![alt text](image16.png)
-```
 
 4. Playbook restartujący usługi sshd oraz rngd
 
@@ -155,3 +155,122 @@ Pracę rozpoczołem od wygenerowania struktury roli za pomocą ansible-galaxy:
 
 ![alt text](image20.png)
 
+Przygotowany plik roles/deploy-cjson/tasks/main.yaml:
+
+```
+---
+# tasks file for deploy-cjson
+- name: "Add Docker CE repository"
+  get_url:
+    url: https://download.docker.com/linux/fedora/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo 
+
+- name: "Install Docker (Docker CE)"
+  dnf:
+    name: docker-ce
+    state: present
+
+- name: "Start and enable Docker service"
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: "Install Python3 pip and libraries required by Ansible docker modules"
+  dnf:
+    name:
+      - python3-pip
+    state: present
+
+- name: "Install required Python modules"
+  pip:
+    name:
+      - packaging
+      - docker
+      - requests
+
+- name: "Pull application container image (custom image from Docker Hub)"
+  docker_image:
+    name: "{{ dockerhub_image }}"
+    source: pull
+
+- name: "Run your application container"
+  docker_container:
+    name: "{{ container_name }}"
+    image: "{{ dockerhub_image }}"
+    state: started
+
+- name: "Check if container is running"
+  command: docker ps -a
+  register: container_list
+
+- name: "Display running containers"
+  debug:
+    var: container_list.stdout_lines
+
+- name: "Stop and remove the aplication cointainer"
+  docker_container:
+    name: "{{ container_name }}"
+    state: absent
+```
+
+Krótki opis poszczególnych tasków:
+
+1. "Add Docker CE repository"
+Dodaje repozytorium Dockera CE do systemu (dla Fedory), aby umożliwić instalację najnowszej wersji Dockera z oficjalnego źródła.
+
+2. "Install Docker (Docker CE)"
+Instaluje pakiet docker-ce za pomocą menedżera pakietów DNF.
+
+3. "Start and enable Docker service"
+Zapewnia, że usługa Docker jest uruchomiona i będzie uruchamiana automatycznie przy starcie systemu.
+
+4. "Install Python3 pip and libraries required by Ansible docker modules"
+Instaluje python3-pip, który jest potrzebny do instalacji bibliotek Python wymaganych przez moduły Dockera w Ansible (docker, requests, itd.).
+
+5. "Install required Python modules"
+Instaluje biblioteki Python (docker, requests, opcjonalnie packaging) za pomocą pip. Te biblioteki są niezbędne do dalszych operacji na kontenerach z poziomu Ansible.
+
+6. "Pull application container image"
+Pobiera wskazany obraz kontenera z Docker Hub, zdefiniowany w zmiennej {{ dockerhub_image }}.
+
+7. "Run your application container"
+Tworzy i uruchamia kontener na podstawie pobranego obrazu. Nazwa kontenera i obraz są zdefiniowane przez zmienne ({{ container_name }} i {{ dockerhub_image }}).
+
+8. "Check if container is running"
+Wykonuje polecenie docker ps, aby sprawdzić listę uruchomionych kontenerów. Wynik zapisywany jest do zmiennej container_list.
+
+9. "Display running containers"
+Wypisuje na ekranie zawartość zmiennej container_list.stdout_lines, czyli listę działających kontenerów.
+
+Plik roles/deploy-cjson/vars/main.yaml:
+
+```
+---
+# vars file for deploy-cjson
+dockerhub_image: jaktyl/cjson-deploy
+container_name: cjson_app
+```
+
+Przygotowany playbook deploy-cjson.yaml:
+
+```
+---
+- name: Deploy cjson 
+  hosts: Endpoints
+  become: true
+  roles:
+    - deploy-cjson
+```
+
+Sposób uruchamiania playbooka (z poziomu folderu Ansible):
+
+```
+ansible-playbook -i inventory/hosts.yaml deploy-cjson.yaml
+
+i -> wskazanie pliku inventory
+```
+
+Wynik działania playbooka:
+
+![alt text](image21.png>)
