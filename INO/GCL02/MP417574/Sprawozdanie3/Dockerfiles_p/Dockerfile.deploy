@@ -1,0 +1,20 @@
+FROM fedora:41
+
+# 1) skopiuj z hosta wygenerowany RPM
+COPY cjson.rpm /tmp/cjson.rpm
+
+# 2) zainstaluj bibliotekę i gcc
+RUN dnf install -y /tmp/cjson.rpm gcc
+
+# 3) skopiuj źródło
+WORKDIR /app
+COPY main.c .
+
+# 4) skompiluj, wskazując linkerowi katalog z .so
+RUN gcc main.c -o example \
+    -I/usr/include      \
+    -L/usr/lib64        \
+    -lcjson
+
+# 5) domyślne uruchomienie
+CMD ["./example"]
