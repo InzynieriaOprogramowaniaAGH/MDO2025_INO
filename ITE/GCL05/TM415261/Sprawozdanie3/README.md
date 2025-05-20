@@ -391,7 +391,7 @@ Podczas pierwszego uruchomienia instalatora Fedory 41, zamiast wybierać opcję 
 W celu wskazania zdalnego pliku odpowiedzi, dodałem na końcu linii zaczynającej się od `linux` parametr `inst.ks=[adres URL do pliku Kickstart]`. Aby adres prowadził bezpośrednio do zawartości pliku (a nie do strony przeglądarki), należy w repozytorium GitHub kliknąć "Raw", a dopiero potem skopiować link. W rezultacie link powinien prowadzić do takiej strony:
 ![ss](./Lab9/screenshots/ss4.png)
 
-Ze względu na długość adresu URL, skróciłem go za pomocą narzędzia `TinyURL`. Efektem była czytelna i zwięzła forma linku, którą następnie dołączyłem do parametrów instalacji.
+Ze względu na długość adresu URL, skróciłem go za pomocą narzędzia `TinyURL`. Efektem była czytelna i zwięzła forma linku, którą następnie dołączyłem do parametrów instalacji (https://tinyurl.com/2e4j7u9y).
 
 Modyfikacja parametrów jądra wyglądała jak na poniższym zrzucie:
 ![ss](./Lab9/screenshots/ss3.png)
@@ -488,8 +488,14 @@ systemctl enable redis-container.service
 reboot
 ```
 
-Całość instalacji systemu przebiegła identycznie jak poprzednio - jedyna różnica to zmiana linku na link do rozszerzonego pliku odpowiedzi. 
+Całość instalacji systemu przebiegła identycznie jak poprzednio - jedyna różnica to zmiana linku na link do rozszerzonego pliku odpowiedzi (https://tinyurl.com/4u3wwmkr).
 
 Po uruchomieniu systemu widzimy działający kontener, z którym możemy wchodzić w interakcję.
 ![ss](./Lab9/screenshots/ss7.png)
 ![ss](./Lab9/screenshots/ss8.png)
+
+<br>
+
+## Wdrażanie na zarządzalne kontenery: Kubernetes
+
+### Tu będzie sprawko z Kubernetes
