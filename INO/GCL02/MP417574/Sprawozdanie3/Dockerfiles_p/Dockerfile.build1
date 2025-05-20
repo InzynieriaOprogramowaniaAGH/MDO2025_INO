@@ -21,8 +21,8 @@ RUN mkdir -p /tmp/install/usr/lib64 \
     && cp build/libcjson.so* /tmp/install/usr/lib64/ \
     && cp cJSON.h        /tmp/install/usr/include/cjson/
 
-# 5) Użyj FPM, żeby z całego /tmp/install/usr zbudować RPM, w którym
-#    ścieżki są dokładnie /usr/lib64/... i /usr/include/cjson/...
+# 5) Użyj FPM, żeby z całego /tmp/install/usr zbudować RPM.
+#    dokładnie ścieżki: /usr/lib64/... i /usr/include/cjson/...
 RUN cd /tmp/install \
     && fpm -s dir -t rpm \
          -n cjson \
