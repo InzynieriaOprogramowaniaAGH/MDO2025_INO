@@ -4,12 +4,12 @@
 
 ## Zadania do wykonania
 ### Instalacja klastra Kubernetes
- * Zaopatrz się w implementację stosu k8s: [minikube](https://minikube.sigs.k8s.io/docs/start/)
+ * 🌵 Zaopatrz się w implementację stosu k8s: [minikube](https://minikube.sigs.k8s.io/docs/start/)
  * Przeprowadź instalację, wykaż poziom bezpieczeństwa instalacji
  * Zaopatrz się w polecenie `kubectl` w wariancie minikube, może być alias `minikubctl`, jeżeli masz już "prawdziwy" `kubectl`
  * Uruchom Kubernetes, pokaż działający kontener/worker
  * Zmityguj problemy wynikające z wymagań sprzętowych lub odnieś się do nich (względem dokumentacji)
- * Uruchom Dashboard, otwórz w przeglądarce, przedstaw łączność
+ * 🌵 Uruchom Dashboard, otwórz w przeglądarce, przedstaw łączność
  * Zapoznaj się z koncepcjami funkcji wyprowadzanych przez Kubernetesa (*pod*, *deployment* itp)
  
 ### Analiza posiadanego kontenera
@@ -24,7 +24,7 @@
    * Wykaż, że wybrana aplikacja pracuje jako kontener
    
 ### Uruchamianie oprogramowania
- * Uruchom kontener ze swoją aplikacją na stosie k8s
+ * 🌵 Uruchom kontener ze swoją/wybraną aplikacją na stosie k8s
  * Kontener uruchomiony w minikubie zostanie automatycznie "ubrany" w *pod*.
  * ```minikube kubectl run -- <nazwa-jednopodowego-wdrożenia> --image=<obraz-docker> --port=<wyprowadzany port> --labels app=<nazwa-jednopodowego-wdrożenia>```
  * Przedstaw że *pod* działa (via Dashboard oraz `kubectl`)
