@@ -83,92 +83,96 @@ Po wprowadzeniu zmian zatwierdziłam je, naciskając kombinację klawiszy `Ctrl`
 
 ## Zadanie 10: Wdrażanie na zarządzalne kontenery: Kubernetes (1)
 
-Zaczełam od instalacji 
+1. **Instalacja i uruchomienie Minikube:**
 
-uzylam mpalewicz@devops:~$ minikube dashboard & zeby dzialalo w tle i nie zajmowalo terminala
+Proces rozpoczęłam od pobrania i zainstalowania narzędzia Minikube, które pozwala na uruchomienie lokalnego klastra Kubernetes na moim systemie Fedora działającym na architekturze aarch64. Najpierw pobrałam odpowiedni instalator za pomocą polecenia:
 
-
-Pobrałam instalator Minikube dla architektury aarch64 za pomocą komendy:
-
+``` 
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.aarch64.rpm
-
-Następnie zainstalowałam go poleceniem:
-
+```
+Następnie zainstalowałam Minikube przy użyciu menedżera pakietów RPM:
+``` 
 sudo rpm -Uvh minikube-latest.aarch64.rpm
+```
+Dzięki temu Minikube zostało poprawnie zainstalowane w moim systemie:
 
-Dzięki temu Minikube został poprawnie zainstalowany na moim systemie Fedora.
+2. **Konfiguracja środowiska i uruchomienie klastra:**
 
-
-Uruchomiłam usługę Dockera poleceniem:
-
+Po instalacji uruchomiłam usługę Docker, która jest wykorzystywana jako sterownik kontenerowy przez Minikube:
+```
 sudo systemctl start docker
-
-a potem odpaliłam Minikube, żeby uruchomić klaster Kubernetes, używając:
-
+```
+Następnie rozpoczęłam pracę z Minikube, uruchamiając lokalny klaster Kubernetes:
+```
 minikube start
+```
 
-Dzięki temu Minikube zaczęło działać z wykorzystaniem Dockera jako sterownika.
+Uruchomienie klastra przebiegło pomyślnie, co potwierdziło działanie podstawowych komponentów Kubernetes.
 
+Aby ułatwić korzystanie z narzędzia kubectl w kontekście Minikube, dodałam alias do pliku ~/.bashrc:
 
-Dodałam alias do pliku .bashrc, dzięki czemu polecenie kubectl automatycznie używa minikube kubectl --, wpisując:
-
+```
 echo 'alias kubectl="minikube kubectl --"' >> ~/.bashrc
-
-Następnie załadowałam zmiany poleceniem:
-
 source ~/.bashrc
+```
 
-i sprawdziłam działające podsy Kubernetes za pomocą:
+Dzięki temu wszystkie polecenia kubectl automatycznie korzystają z kontekstu klastra Minikube, co upraszcza zarządzanie zasobami Kubernetes. 
 
+
+3. **Weryfikacja działania klastra:**
+
+Sprawdziłam działanie podstawowych komponentów i status podów systemowych komendą:
+
+```
 kubectl get po -A
+```
+Widoczne były wszystkie kluczowe komponenty systemowe, działające bez problemów, co potwierdziło, że klaster jest gotowy do wdrożeń. Włączyłam również przydatny dodatek metrics-server w Minikube, który pozwala na zbieranie i monitorowanie metryk zasobów klastra:
 
-W ten sposób zweryfikowałam, że wszystkie kluczowe komponenty klastra Minikube działają poprawnie.
-
-
-
-Włączyłam dodatek metrics-server w Minikube, wpisując:
-
+```
 minikube addons enable metrics-server
+```
 
-Dzięki temu klaster będzie mógł zbierać i udostępniać metryki zasobów, takich jak użycie CPU i pamięci, co jest przydatne do monitorowania i skalowania aplikacji.
+4. **Uruchomienie interfejsu Kubernetes Dashboard:**
 
-Uruchomiłam dashboard Minikube w tle, wpisując:
+Aby ułatwić zarządzanie klastrem oraz podgląd stanu wdrożonych aplikacji, uruchomiłam graficzny dashboard Minikube:
 
+```
 minikube dashboard &
+```
+Dzięki uruchomieniu go w tle nie blokowałam terminala i mogłam jednocześnie wykonywać dalsze polecenia. Dashboard otworzył się w przeglądarce pod lokalnym adresem, umożliwiając wygodne zarządzanie zasobami Kubernetes.
 
-Dzięki temu interfejs webowy Minikube otworzył się i działał w tle, pozwalając mi na wygodne zarządzanie klastrem przez przeglądarkę, a jednocześnie mogłam dalej korzystać z terminala.
-
-
-
-Sprawdzilam dzialaje wezly (workery)
-poporzez kubectl get nodes.
-
- Uruchomiłam Dashboard, otwórz w przeglądarce, przedstaw łączność, link:
-
- http://127.0.0.1:32955/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/#/workloads?namespace=default
-
- uruchomilam konetener jako Pod 
- minikube kubectl -- run mojpod --image=nginx --port=80 --labels app=mojpod
-
- Pod dziala cop sprawdzilam poprzez terminal komenda kubectl get pods oraz popzrze dashboarc
-
- Wyprowadź port celem dotarcia do eksponowanej funkcjonalności poprzez komenda:
- kubectl port-forward pod/mojpod 8080:80
-
- Otworzylam przegladarke i wpisalam http://localhost:8080
-
- co pokazalo mi sie ekran powitalnuy ngix:
-
- oraz w zakladce Workloads > Pods :
+link:  `http://127.0.0.1:32955/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/#/workloads?namespace=default`.
 
 
+5. **Uruchomienie przykładowego kontenera jako Pod:**
+
+Kolejnym krokiem było uruchomienie prostej aplikacji – serwera nginx – jako pojedynczego poda w klastrze:
+
+```
+minikube kubectl -- run mojpod --image=nginx --port=80 --labels app=mojpod
+```
+Sprawdziłam, czy pod działa poprawnie, za pomocą:
+```
+kubectl get pods
+```
+oraz w zakładce `Workloads` > `Pods` w Dashboardzie. Wszystko wskazywało na prawidłowe działanie.
 
 
+6. **Uzyskanie dostępu do aplikacji:**
+
+Aby uzyskać dostęp do serwera nginx działającego w podzie, wyprowadziłam port lokalny na port kontenera:
+```
+kubectl port-forward pod/mojpod 8080:80
+```
+
+Po wpisaniu w przeglądarce adresu: `http://localhost:8080` pojawiła się strona powitalna nginx, co potwierdziło, że połączenie z pod-em działa poprawnie.
+
+7. **Tworzenie i wdrożenie Deploymentu z pliku YAML:**
+
+Aby przejść od pojedynczego poda do bardziej produkcyjnego wdrożenia z replikami, przygotowałam plik `nginx-deployment.yaml` z definicją Deploymentu:
 
 
- 1. Zapisz wdrożenie jako plik YAML
-
-Utwórz plik o nazwie np. nginx-deployment.yaml z taką zawartością:
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -188,27 +192,19 @@ spec:
         image: nginx
         ports:
         - containerPort: 80
+```
 
-2. Przeprowadź próbne wdrożenie
-kubectl apply -f nginx-deployment.yaml
-
-3. Sprawdź status wdrożenia
+Deployment ten definiuje cztery repliki aplikacji nginx, zapewniając tym samym wysoką dostępność i skalowalność. Wdrożyłam go komendą `kubectl apply -f nginx-deployment.yaml` i sprawdziłam status wdrożenia `kubectl rollout status deployment/moj-nginx`. Wszystkie repliki uruchomiły się poprawnie i były dostępne.
 
 
-kubectl rollout status deployment/moj-nginx
+8. **Eksponowanie Deploymentu jako usługi:**
 
- 
+Aby umożliwić dostęp do aplikacji spoza klastra, wyeksponowałam Deployment jako serwis typu NodePort:
 
+```
+kubectl expose deployment moj-nginx --type=NodePort --port=80
+```
 
- Wyeksponuj deployment jako serwis typu ClusterIP lub NodePort (np. NodePort, żeby mieć dostęp spoza klastra):
- kubectl expose deployment moj-nginx --type=NodePort --port=80
+Następnie sprawdziłam, jaki port został przypisany na węźle klastra poprzez `kubectl get svc moj-nginx` i na podstawie przydzielonego portu `NodePort` (z zakresu 30000-32767) wyprowadziłam port lokalny na port serwisu `kubectl port-forward svc/moj-nginx 8080:80`. Po otwarciu w przeglądarce adresu `http://localhost:8080` mogłam korzystać z aplikacji działającej w Kubernetes.
 
- 
-  Sprawdź, jaki port NodePort został przydzielony (np. coś z zakresu 30000-32767):
-  kubectl get svc moj-nginx
-
-3. Przekieruj port lokalnie do tego serwisu:
-  kubectl port-forward svc/moj-nginx 8080:80
-
-Teraz Twoja aplikacja jest dostępna na http://localhost:8080
 
