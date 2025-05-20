@@ -80,3 +80,86 @@ inst.ks=https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_IN
 
 Po wprowadzeniu zmian zatwierdziłam je, naciskając kombinację klawiszy `Ctrl` + `X`, co spowodowało powrót do ekranu startowego i rozpoczęcie instalacji z wykorzystaniem wskazanego pliku Kickstart. Dzięki temu instalacja przebiegła w sposób automatyczny, zgodnie z zawartą w pliku konfiguracją.
 
+
+## Zadanie 10: Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+
+Zaczełam od instalacji 
+
+uzylam mpalewicz@devops:~$ minikube dashboard & zeby dzialalo w tle i nie zajmowalo terminala
+
+
+Pobrałam instalator Minikube dla architektury aarch64 za pomocą komendy:
+
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.aarch64.rpm
+
+Następnie zainstalowałam go poleceniem:
+
+sudo rpm -Uvh minikube-latest.aarch64.rpm
+
+Dzięki temu Minikube został poprawnie zainstalowany na moim systemie Fedora.
+
+
+Uruchomiłam usługę Dockera poleceniem:
+
+sudo systemctl start docker
+
+a potem odpaliłam Minikube, żeby uruchomić klaster Kubernetes, używając:
+
+minikube start
+
+Dzięki temu Minikube zaczęło działać z wykorzystaniem Dockera jako sterownika.
+
+
+Dodałam alias do pliku .bashrc, dzięki czemu polecenie kubectl automatycznie używa minikube kubectl --, wpisując:
+
+echo 'alias kubectl="minikube kubectl --"' >> ~/.bashrc
+
+Następnie załadowałam zmiany poleceniem:
+
+source ~/.bashrc
+
+i sprawdziłam działające podsy Kubernetes za pomocą:
+
+kubectl get po -A
+
+W ten sposób zweryfikowałam, że wszystkie kluczowe komponenty klastra Minikube działają poprawnie.
+
+
+
+Włączyłam dodatek metrics-server w Minikube, wpisując:
+
+minikube addons enable metrics-server
+
+Dzięki temu klaster będzie mógł zbierać i udostępniać metryki zasobów, takich jak użycie CPU i pamięci, co jest przydatne do monitorowania i skalowania aplikacji.
+
+Uruchomiłam dashboard Minikube w tle, wpisując:
+
+minikube dashboard &
+
+Dzięki temu interfejs webowy Minikube otworzył się i działał w tle, pozwalając mi na wygodne zarządzanie klastrem przez przeglądarkę, a jednocześnie mogłam dalej korzystać z terminala.
+
+
+
+Sprawdzilam dzialaje wezly (workery)
+poporzez kubectl get nodes.
+
+ Uruchomiłam Dashboard, otwórz w przeglądarce, przedstaw łączność, link:
+
+ http://127.0.0.1:32955/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/#/workloads?namespace=default
+
+ uruchomilam konetener jako Pod 
+ minikube kubectl -- run mojpod --image=nginx --port=80 --labels app=mojpod
+
+ Pod dziala cop sprawdzilam poprzez terminal komenda kubectl get pods oraz popzrze dashboarc
+
+ Wyprowadź port celem dotarcia do eksponowanej funkcjonalności poprzez komenda:
+ kubectl port-forward pod/mojpod 8080:80
+
+ Otworzylam przegladarke i wpisalam http://localhost:8080
+
+ co pokazalo mi sie ekran powitalnuy ngix:
+
+ oraz w zakladce Workloads > Pods :
+
+ 
+
