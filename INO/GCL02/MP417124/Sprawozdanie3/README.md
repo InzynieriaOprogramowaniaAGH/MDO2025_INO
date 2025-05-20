@@ -161,5 +161,54 @@ poporzez kubectl get nodes.
 
  oraz w zakladce Workloads > Pods :
 
+
+
+
+
+
+ 1. Zapisz wdrożenie jako plik YAML
+
+Utwórz plik o nazwie np. nginx-deployment.yaml z taką zawartością:
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moj-nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: moj-nginx
+  template:
+    metadata:
+      labels:
+        app: moj-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
+2. Przeprowadź próbne wdrożenie
+kubectl apply -f nginx-deployment.yaml
+
+3. Sprawdź status wdrożenia
+
+
+kubectl rollout status deployment/moj-nginx
+
  
+
+
+ Wyeksponuj deployment jako serwis typu ClusterIP lub NodePort (np. NodePort, żeby mieć dostęp spoza klastra):
+ kubectl expose deployment moj-nginx --type=NodePort --port=80
+
+ 
+  Sprawdź, jaki port NodePort został przydzielony (np. coś z zakresu 30000-32767):
+  kubectl get svc moj-nginx
+
+3. Przekieruj port lokalnie do tego serwisu:
+  kubectl port-forward svc/moj-nginx 8080:80
+
+Teraz Twoja aplikacja jest dostępna na http://localhost:8080
 
