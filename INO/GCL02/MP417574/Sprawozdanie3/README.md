@@ -569,12 +569,7 @@ Sprawdzenie z przeglądarki, czy dziala:
 
 ![Resut-www](IMG/Lab9/myrepo.png)
 
-Edycja pliku `anaconda-ks.cfg`:
-
-```
-
-
-```
+Edycja pliku `anaconda-ks.cfg`.
 
 Dodane zostalo moje ropozytorum:
 
@@ -601,8 +596,8 @@ Utworzylam rowniez sekcje `%post`, która odpowiadała za kompilację i uruchomi
 mkdir -p /opt/example
 chown kickstart:kickstart /opt/example
 
-# Pobierz plik main.c z GitHuba lub lokalnego serwera 
-curl -o /opt/example/main.c https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/MP417574/INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles_p/main.c
+# Download the main.c file from GitHub or local server
+curl -o /opt/example/main.c https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/MP417574/INO/GCL02/MP417574/Sprawozdanie3/Dockerfiles_p/main.c
 
 cat << 'EOF' > /etc/profile.d/run_example.sh
 #!/bin/bash
@@ -629,14 +624,19 @@ Sprawdzenie log działania skryptu.
 cat /opt/example/autostart.log
 ```
 
-Weryfikacja scieźki plików zainstalowanyc przez pakiet.
+Weryfikacja scieźki plików zainstalowanych przez pakiet.
 
 ```bash
 rpm -ql cjson
 ```
 
-Uruchomienie programu
+Uruchomienie programu - ręcznie
 
 ```bash
 LD_LIBRARY_PATH=/usr/local/lib64 /opt/example/example
 ```
+
+### 
+
+
+### 
