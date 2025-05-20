@@ -34,3 +34,5 @@ timezone Europe/Warsaw --utc
 # Root password
 rootpw --iscrypted --allow-ssh $y$j9T$Pn5OIqlK3DDm0LYXfIuqbSAF$IfAFKMGeIBtuxRf3.bHdSaTb9vGO2olpI2mSL3EOy.8
 user --groups=wheel --name=azakrecka --password=$y$j9T$Jl7PoImDsug.iY7YqcZg33BK$pd.7W7IGljtNjo5ImnqcvKsUYotHJo0xlE5.DybtL30 --iscrypted --gecos="Aleksandra Zakrecka"
+
+reboot
