@@ -8,7 +8,7 @@ keyboard --vckeymap=pl --xlayouts='pl'
 lang pl_PL.UTF-8
 
 # Network information
-network  --bootproto=dhcp --device=enp0s3 --ipv6=auto --activate
+network  --bootproto=dhcp --device=enp0s3 --ipv6=auto --activate --hostname=fedora-server
 
 %packages
 @^server-product-environment
