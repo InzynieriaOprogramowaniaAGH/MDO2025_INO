@@ -193,8 +193,80 @@ Instalator automatycznie rozpoczął instalację zgodnie z przepisami zawartymi 
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
 sudo dpkg -i minikube_latest_amd64.deb
 ```
+## Uruchomienie Kubernates
+```
+minikube start
+```
+![obraz](KM/kuber/1.png)
+### Uruchomienie Dashboard
+```
+minikube dashboard
+```
+![obraz](KM/kuber/2.png)
 
+*Polecane w VS, z powodu automatycznego przekierowywania portów*
 
+![obraz](KM/kuber/3.png)
+
+### Zaopatrzenie w polecenie ```kubectl```  w wariancie minikube
+```
+alias kubectl="minikube kubectl --"
+```
+![obraz](KM/kuber/4.png)
+
+## Analiza posiadanego kontenera
+### Projekt Deploy to cloud
+
+**Wymagania:**
+- pracuje w tle (nie kończy się od razu),
+- udostępnia funkcjonalność przez sieć,
+- może być wdrożona jako serwis.
+
+Obraz ```kasiam23/mruby``` został zbudowany w ramach pipeline'u jako kontener zawierający interpreter języka mruby oraz predefiniowany skrypt (script.rb). Chociaż obraz poprawnie wykonuje swoje zadanie (uruchamia skrypt i zwraca wynik), to nie spełnia wymagań zadania „Deploy do chmury”, ponieważ:
+
+- Kontener z mruby uruchamia skrypt i natychmiast kończy działanie. W Kubernetes prowadzi to do
+  a) Podu o statusie ```Completed``` zamiast ```Running```
+  b) Braku możliwości trwałego udostępniania aplikacji jako serwisu
+
+- Aplikacja nie udostępnia funkcjonalności przez sieć
+  a) Obraz kasiam23/mruby nie otwiera żadnego portu ani nie oferuje interfejsu HTTP/API, który można by wystawić jako usługę (Service) w Kubernetes.
+  b) Nie można użyć kubectl port-forward
+  c) kubectl expose nie ma zastosowania
+  d) Brak możliwości komunikacji z aplikacją po HTTP
+---
+  ## Test - deploy i analiza własnego obrazu - ```kasiam23/mruby```
+  1. Etap 1 - przygotowanie skryptu ```script.rb```
+     ```
+     puts "Hello world
+     ```
+  Skrypt został zamieniony na ConfigMap, aby mógł zostać zamontowany do kontenera jako plik:
+  ```
+  kubectl create configmap mruby-script --from-file=script.rb
+  ```
+   ![obraz](KM/kuber/11.png)
+  
+  2. Etap 2 - uruchomienie Poda z własnym obrazem
+     Stworzono plik mruby-pod.yaml, który definiował pojedynczy Pod uruchamiający kontener kasiam23/mruby:latest i wykonujący skrypt script.rb:
+
+  ![obraz](KM/kuber/10.png)
+
+Zastosowano go komendą: 
+  ```
+  kubectl apply -f mruby-pod.yaml
+  ```
+![obraz](KM/kuber/9.png)
+  3. Etap 3 - Weryfikacja
+     Po uruchomieniu Poda:
+     ```
+     kubectl get pods
+     ```
+  ![obraz](KM/kuber/7.png)
+     Logi z Poda:
+     ```
+     kubectl logs kasiam-app
+     ```
+  ![obraz](KM/kuber/8.png)
+---
 
 
 
