@@ -187,5 +187,16 @@ Instalator automatycznie rozpoczął instalację zgodnie z przepisami zawartymi 
 ![obraz](KM/kickstart/3.png)
 
 
+# Zajęcia10::Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+## Instalacja klastra Kubernetes
+```
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+sudo dpkg -i minikube_latest_amd64.deb
+```
+
+
+
+
+
 
 
