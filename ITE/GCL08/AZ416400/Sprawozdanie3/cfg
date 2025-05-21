@@ -49,7 +49,7 @@ Description=Redis In-Memory Data Store
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/redis-server
+ExecStart=/usr/local/bin/redis-server
 Restart=always
 User=root
 Group=root
