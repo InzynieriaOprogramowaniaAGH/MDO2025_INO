@@ -10,7 +10,7 @@
   tasks:
     - name: Copy the inventory file
       ansible.builtin.copy:
-        src: /home/wstarzyk/git3/MDO2025_INO/ITE/GCL08/WS417336/Sprawozdanie3/inventory.ini
+        src: /home/wstarzyk/git4/MDO2025_INO/ITE/GCL08/WS417336/Sprawozdanie3/inventory.ini
         dest: /tmp/inventory.ini
 
 - name: Ping the target machines again
