@@ -276,6 +276,9 @@ Zastosowano go komendą:
 ---
 
 
+```
+minikube kubectl -- run kasia-nginx-run --image=kasiam23/custom-nginx --port=80 --labels app=kasia-nginx --image-pull-policy=Never
+```
 
 
 
