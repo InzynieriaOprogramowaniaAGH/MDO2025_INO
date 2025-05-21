@@ -42,7 +42,26 @@ redis-20250427203018-1.fc42.x86_64
 %end
 
 %post --log=/root/post-install.log
-systemctl enable redis || true
+
+cat <<EOF > /etc/systemd/system/redis.service
+[Unit]
+Description=Redis In-Memory Data Store
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/redis-server
+Restart=always
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reexec
+systemctl daemon-reload
+systemctl enable redis
+
 %end
 
 reboot
