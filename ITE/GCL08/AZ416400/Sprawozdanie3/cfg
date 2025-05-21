@@ -21,7 +21,7 @@ firstboot --enable
 # Repos
 url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
 repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
-repo --name=custom-redis --baseurl=http://192.168.52.127/repo/redis/ --enabled
+repo --name=custom-redis --baseurl=http://192.168.52.127/repo/redis/
 
 # Generated using Blivet version 3.11.0
 ignoredisk --only-use=sda
