@@ -225,13 +225,19 @@ alias kubectl="minikube kubectl --"
 Obraz ```kasiam23/mruby``` został zbudowany w ramach pipeline'u jako kontener zawierający interpreter języka mruby oraz predefiniowany skrypt (script.rb). Chociaż obraz poprawnie wykonuje swoje zadanie (uruchamia skrypt i zwraca wynik), to nie spełnia wymagań zadania „Deploy do chmury”, ponieważ:
 
 - Kontener z mruby uruchamia skrypt i natychmiast kończy działanie. W Kubernetes prowadzi to do
+
   a) Podu o statusie ```Completed``` zamiast ```Running```
+
   b) Braku możliwości trwałego udostępniania aplikacji jako serwisu
 
 - Aplikacja nie udostępnia funkcjonalności przez sieć
+
   a) Obraz kasiam23/mruby nie otwiera żadnego portu ani nie oferuje interfejsu HTTP/API, który można by wystawić jako usługę (Service) w Kubernetes.
+
   b) Nie można użyć kubectl port-forward
+
   c) kubectl expose nie ma zastosowania
+
   d) Brak możliwości komunikacji z aplikacją po HTTP
 ---
   ## Test - deploy i analiza własnego obrazu - ```kasiam23/mruby```
@@ -266,6 +272,7 @@ Zastosowano go komendą:
      kubectl logs kasiam-app
      ```
   ![obraz](KM/kuber/8.png)
+
 ---
 
 
