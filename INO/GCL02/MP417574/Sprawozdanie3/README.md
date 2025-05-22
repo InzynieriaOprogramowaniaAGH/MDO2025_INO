@@ -755,6 +755,242 @@ Automatyczna instalacja:
 ### Wdrażanie na zarządzalne kontenery
 #### Instalacja Kubernetes 
 
+Wymagania sprzętowe:
+- Min. 2 CPU, 2 GiB RAM (ale lepiej 4 CPU/4 GiB)
+- Włączona w BIOS/UEFI wirtualizacja (Intel VT-x / AMD-V)
+- Zainstalowany hypervisor: VirtualBox, KVM2 (libvirt), Docker
+
+Instalacja Minikube:
+
+```bash
+# Pobranie RPM
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
+# Instalacja
+sudo rpm -Uvh minikube-latest.x86_64.rpm
+#Uruchomienie z 2GiB
+minikube start --driver=docker --cpus=2 --memory=2048
+```
+
+![Minikube](IMG/Lab10/1.png)
+
+Poziom bezpieczeństwa instalacji `minikube kubectl -- get clusterrolebindings`.
+
+![clusterrolebindings](IMG/Lab10/2.png)
+
+Domyślne przestrzenie nazwy do separacji zasobów w Kubernetes `minikube kubectl -- get namespaces`.
+
+![Namespaces](IMG/Lab10/3.png)
+
+Wszystkie komponenty klastra komunikują się zabezpieczonym protokołem TLS – co można zweryfikować, logując się do Minikube. (`minikube ssh` -> `ls /var/lib/minikube/certs/`).
+
+![SSH](IMG/Lab10/4.png)
+
+Zainstalowałam pakietu `kubectl` i stworzyłam alias `minikubectl`.
+
+```bash
+sudo dnf install -y kubectl
+
+echo "alias minikubectl='minikube kubectl'" >> ~/.bashrc
+#Załadowanie zmian
+source ~/.bashrc
+```
+
+Uruchomiłam Kubernetesa
+
+```bash
+minikube start
+
+minikubctl --get nodes
+```
+
+![start](IMG/Lab10/5.png)
+
+![nodes](IMG/Lab10/6.png)
+
+Uruchomiłam Dashboard oraz skopiowałam usyskany adres IP oraz wykonałam przekierowanie na port 8087.
+
+```bash
+minikube dashboard
+
+ssh -L 8087:/127.0.0.1:43031 mpaskowski@192.168.0.7
+```
+
+W przeglądarce na Windows: `http://127.0.0.1:43031/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/`.
+
+![nodes](IMG/Lab10/7.png)
+
+![nodes](IMG/Lab10/8.png)
+
+Rezultat:
+![nodes](IMG/Lab10/9.png)
+
+Z uwagi na korzystanie z biblioteki `cJSON` na poprzednic zajeciach, skorzystałam teraz z prostej aplikacji `app.py` w jezyku python.
+
+```py
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "<h1>Hello, Kubernetes! 🌱</h1>"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+```
+
+Dockerfile dla `app.py`:
+
+```Dockerfile
+# Gotowy obraz Pythona
+FROM python:3.11-slim
+
+# Katalog roboczy
+WORKDIR /app
+
+# Pliki z hosta do obrazu
+COPY requirements.txt .
+COPY app.py .
+
+# Zależności
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Port
+EXPOSE 5000
+
+# Domyślna komenda
+CMD ["python", "app.py"]
+```
+
+Zbudowałam lokalnie obraz i załadowałam do Minikube.
+
+```bash
+docker build -t flask-hello .
+minikube image load flask-hello
+```
+
+![app](IMG/Lab10/10.png)
+
+Uruchomiłam kontener w Kubernecie jako Pod:
+
+```bash
+minikube kubectl -- run flask-hello-pod \
+  --image=flask-hello \
+  --port=5000 \
+  --image-pull-policy=Never
+```
+
+![img](IMG/Lab10/11.png)
+
+Zwerifikowałam stan Poda: `minikube kubectl -- get pods`.
+
+![pod](IMG/Lab10/12.png)
+
+Następnie wystawiłam Pod jako Serice na porcie 5000:
+
+```bash
+minikube kubectl -- expose pod flask-hello-pod \
+  --name=flask-hello-svc \
+  --port=5000 \
+  --target-port=5000 \
+  --type=ClusterIP
+
+  #Sprawdzenie
+  minikube kubectl -- get svc
+```
+
+![pod2](IMG/Lab10/13.png)
+
+Wynik w przegladarce:
+
+![pod3](IMG/Lab10/14.png)
+
+Przekierowalam port na 5080 VM
+
+```bash
+minikube kubectl -- port-forward pod/flask-hello-pod 5080:5000
+```
+
+![podrt2](IMG/Lab10/15.png)
+
+Na oscie uruchomilam tunel SSH:
+
+```bash
+ssh -N -L 5084:127.0.0.1:5080 mpaskowski@192.168.0.7
+```
+
+Sprawdzenie poprawnosci dzialania:
+
+![web1](IMG/Lab10/16.png)
+
+Weryfikacja dostępu do aplikacji:
+
+![web2](IMG/Lab10/17.png)
+
+Następnie przeszlam do kroku Deploy i utworzylam plik `flask-deploy.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-hello-deployment
+  labels:
+    app: flask-hello
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: flask-hello
+  template:
+    metadata:
+      labels:
+        app: flask-hello
+    spec:
+      containers:
+      - name: flask-hello
+        image: flask-hello
+        ports:
+        - containerPort: 5000
+        imagePullPolicy: Never
+```
+
+I zastosowalam wdrążenia `minikube kubectl -- apply -f flask-deploy.yaml`.
+Sprawdzilam rollout `minikube kubectl -- rollout status deployment/flask-hello-deployment`
+
+![deployment](IMG/Lab10/18.png)
+
+Wystawialm Deploy jako Service:
+
+```bash
+minikube kubectl -- expose deployment flask-hello-deployment \
+  --type=ClusterIP \
+  --port=5000 \
+  --name=flask-hello-svc-deploy
+```
+
+![deploy2](IMG/Lab10/19.png)
+
+Uruchomienie i przekierowanie portu:
+
+```bash
+minikube kubectl -- port-forward service/flask-hello-svc-deploy 5081:5000
+```
+
+![deploy3](IMG/Lab10/20.png)
+
+Sprawdzenie:
+```bash
+curl http://127.0.0.1:5081/
+```
+![test](IMG/Lab10/21.png)
+
+Tunel SSH do hosta `ssh -N -L 5085:127.0.0.1:5081 mpaskowski@192.168.0.7`.
+
+Wynik:
+
+![result_deploy1](IMG/Lab10/22.png)
+
+Weryfikacja w Dashboard:
+
+![result_deploy2](IMG/Lab10/23.png)
 
 
-### 
