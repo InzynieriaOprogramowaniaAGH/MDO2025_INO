@@ -97,6 +97,15 @@ Po wypchnięciu obrazu na DockerHub:
 - stworzyłem kontener pomocniczy z którego wykonałem zapytanie do kontenera z aplikacją, stworzonego na podstawie obrazu z DockerHub
 ![image](https://github.com/user-attachments/assets/7bea71b8-d9cf-45fc-a22b-893ec05000ca)
 
+Proces wersjonowania
+------------------
+Używam wersjonowania opartego na:
+
+build-${env.BUILD_NUMBER} – unikalny numer builda w Jenkinsie
+commit-${GIT_COMMIT} – skrót commita z Git (źródło pochodzenia)
+latest – zawsze wskazuje na najnowszy build
+
+Dodatkowo, tag commit-${GIT_COMMIT} umożliwia zidentyfikowanie pochodzenia obrazu z konkretnym commitem git.
 
 ANSIBLE
 ---------
