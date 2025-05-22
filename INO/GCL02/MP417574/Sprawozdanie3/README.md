@@ -904,7 +904,7 @@ Wynik w przegladarce:
 
 ![pod3](IMG/Lab10/14.png)
 
-Przekierowalam port na 5080 VM
+Przekierowałam port na 5080 VM:
 
 ```bash
 minikube kubectl -- port-forward pod/flask-hello-pod 5080:5000
@@ -912,13 +912,13 @@ minikube kubectl -- port-forward pod/flask-hello-pod 5080:5000
 
 ![podrt2](IMG/Lab10/15.png)
 
-Na oscie uruchomilam tunel SSH:
+Na hoście uruchomiłam tunel SSH:
 
 ```bash
 ssh -N -L 5084:127.0.0.1:5080 mpaskowski@192.168.0.7
 ```
 
-Sprawdzenie poprawnosci dzialania:
+Sprawdzenie poprawnosci działania:
 
 ![web1](IMG/Lab10/16.png)
 
@@ -926,7 +926,7 @@ Weryfikacja dostępu do aplikacji:
 
 ![web2](IMG/Lab10/17.png)
 
-Następnie przeszlam do kroku Deploy i utworzylam plik `flask-deploy.yaml`:
+Następnie przeszłam do kroku Deploy i utworzyłam plik `flask-deploy.yaml`:
 
 ```yaml
 apiVersion: apps/v1
@@ -953,12 +953,12 @@ spec:
         imagePullPolicy: Never
 ```
 
-I zastosowalam wdrążenia `minikube kubectl -- apply -f flask-deploy.yaml`.
+I zastosowałam wdrążenia `minikube kubectl -- apply -f flask-deploy.yaml`.
 Sprawdzilam rollout `minikube kubectl -- rollout status deployment/flask-hello-deployment`
 
 ![deployment](IMG/Lab10/18.png)
 
-Wystawialm Deploy jako Service:
+Wystawiłam Deploy jako Service:
 
 ```bash
 minikube kubectl -- expose deployment flask-hello-deployment \
