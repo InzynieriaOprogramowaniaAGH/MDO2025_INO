@@ -642,32 +642,119 @@ user --groups=wheel --name=kickstart --password=$y$j9T$eKgdXsLTmrSEuSPjMoYgokYv$
 
 reboot
 ```
+
+Zmiany wprowadzone do pliku:
+- Potrzebne pakiety `%packages` między innymi pakiet `cJSON`,
+- Repozytorium `cjson`,
+- W sekcji `%post` zweryfikowano obecność artefaktu.
+
 Sprawdzenie, czy wszytko przebiegło pomyśłnie:
 
-![Resut-www](IMG/Lab9/add_repo_cjson.png)
+![Resut](IMG/Lab9/add_repo_cjson.png)
 
+W celu zautomatyzowania procesu można utworzyć bootowalny `.iso`.
+Aby tego dokonać należy zmodyfikować obraz instalatora systemu.
 
-Utworzylam rowniez sekcje `%post`, która odpowiadała za kompilację i uruchomienie programu po zakończeniu instalacji.
+Na sam poczatek utworzylam katalog wspoldzielony miedzy Fedora a systemem Windows.
 
-Sprawdzenie log działania skryptu.
-
-```bash
-cat /opt/example/autostart.log
-```
-
-Weryfikacja scieźki plików zainstalowanych przez pakiet.
+Rozpakowanie `.iso`:
 
 ```bash
-rpm -ql cjson
+sudo dnf install -y xorriso
+
+mkdir ~/iso-raw  
+cd ~/iso-raw  
+xorriso -osirrox on -indev /ścieżka/do/Fedora-41.iso -extract / .  
 ```
 
-Uruchomienie programu - ręcznie
+Edycja pliku `boot/grub2/grub.cfg`:
+
+```
+  set default="0"
+  
+  function load_video {
+    insmod all_video
+  }
+  
+  load_video
+  set gfxpayload=keep
+  insmod gzio
+  insmod part_gpt
+  insmod ext2
+  insmod chain
+  
+  set timeout=0
+  ### END /etc/grub.d/00_header ###
+  
+  search --no-floppy --set=root -l 'Fedora-E-dvd-x86_64-41'
+  
+  ### BEGIN /etc/grub.d/10_linux ###
+  menuentry 'Install Fedora 41' --class fedora --class gnu-linux --class gnu --class os {
+  	linux /images/pxeboot/vmlinuz inst.stage2=hd:LABEL=Fedora-E-dvd-x86_64-41 inst.ks=https://tinyurl.com/3ehberxn quiet
+  	initrd /images/pxeboot/initrd.img
+  }
+```
+
+Zawartość pliku: 
+- dodanie plik konfiguracji poprzez adres `inst.ks=https://tinyurl.com/3ehberxn`,
+- Domyślna opcja - `set default="0"`,
+- Aby instalacja rozpoczeła się od razu `set timeout=0`,
+- Zmiana etykiety na `Fedora-KickStart`
+
+Uruchomienie w katalogu `~/iso-raw`:
+
+```bah
+cd ~/iso-raw
+xorriso -as mkisofs \
+  -o /media/sf_ShareISO/Fedora-Kickstart.iso \
+  -J -R -V "Fedora-Kickstart" \
+  .
+```
+
+![Instal_Resut](IMG/Lab9/instal.png)
+
+![Instal_Resut_2](IMG/Lab9/fedoraiso.png)
+
+Skryp Powershell Script na systemie Windows - utworzenie maszyny z nowo utworzonego obrazu.
 
 ```bash
-LD_LIBRARY_PATH=/usr/local/lib64 /opt/example/example
+  $vmName     = "Fedora-instalation"
+  $isoPath    = "C:\Users\Meg Paskowski\Desktop\ShareISO\Fedora-Kickstart.iso"
+  $diskFolder = "C:\Users\Meg Paskowski\VirtualBox VMs\$vmName"
+  $diskPath   = "$diskFolder\$vmName.vdi"
+  $VBoxManage = "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"
+  $memory     = 3048
+  $cpus       = 2
+  
+  & $VBoxManage createvm --name $vmName --ostype Fedora_64 --register
+  
+  & $VBoxManage modifyvm $vmName --memory $memory --cpus $cpus --boot1 dvd --firmware efi
+  
+  New-Item -ItemType Directory -Path $diskFolder -Force | Out-Null
+  & $VBoxManage createhd --filename "$diskPath" --size 2048
+  
+  & $VBoxManage storagectl $vmName --name "SATA Controller" --add sata --controller IntelAhci
+  & $VBoxManage storageattach $vmName --storagectl "SATA Controller" --port 0 --device 0 --type hdd --medium "$diskPath"
+  
+  & $VBoxManage storagectl $vmName --name "IDE Controller" --add ide
+  & $VBoxManage storageattach $vmName --storagectl "IDE Controller" --port 0 --device 0 --type dvddrive --medium "$isoPath"
+  
+  & $VBoxManage startvm $vmName --type gui
 ```
 
-### 
+Odpalenie skrypu:
+
+![Skrypt](IMG/Lab9/skrypt.png)
+
+Skrypt utworzył maszyne o podanej nazwie, dysk, kontrolery, podtsawowe ustawienie CPU, pamięci i uruchomił maszynę.
+
+Automatyczna instalacja:
+
+![Instal_final](IMG/Lab9/Instalacja_100.png)
+
+### Wdrażanie na zarządzalne kontenery
+#### Instalacja Kubernetes 
+
 
 
 ### 
