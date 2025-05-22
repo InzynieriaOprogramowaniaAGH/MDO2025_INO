@@ -1,0 +1,32 @@
+- name: Ping test
+  hosts: all
+  tasks:
+    - name: Ping machine
+      ansible.builtin.ping:
+
+
+- name: Endpoint tasks
+  hosts: Endpoints
+  tasks:
+    - name: Copy inventory
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /home/ansible/inventory.ini
+
+    - name: Update all packages
+      become: true
+      become_method: sudo
+      # become_user: ansible
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+    - name: Restart rngd
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
