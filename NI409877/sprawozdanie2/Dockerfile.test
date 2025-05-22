@@ -1,0 +1,6 @@
+ARG BASE
+FROM ${BASE}
+
+WORKDIR /app
+
+CMD ["meson", "test", "-C", "builddir", "--print-errorlogs", "--logbase", "junit"]
