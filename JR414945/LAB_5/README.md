@@ -13,6 +13,8 @@ Pomimo, że zainstalowałem wtyczkę blueocean, która była dedykowana do tego 
 ![image](https://github.com/user-attachments/assets/08be8afa-acea-4095-a09f-b2993f48b657)
 
 Aplikacja, którą wybrałem to nodejs-dummy. Jest to prosta webowa aplikacja, na której można dodawać zadania "TO-DO".
+Licencja to Apache 2.0, która umożliwia mi swobodne korzystanie z kodu na potrzeby zajęć.
+Fork repozytorium nie był potrzebny.
 
 
 PROJEKTY TESTOWE
@@ -63,8 +65,10 @@ Deploy:
 - Tworzy tymczasową sieć, przez którą kontener z obrazem aplikacji i kontener nodeapp_test_helper będą się porozumiewać
 - Tworzy tymczaswoy kontener nodeapp_test_helper
 - Uruchamia powłokę w kontenerze nodeapp_test_helper i sprawdza dostępność aplikacji
+Kontener deploy jest tym samym kontenerm co build, ponieważ w trakcie budowania nie tworzą się żadne artefakty. Jedyną rzeczą potrzebną do deployu jest zbudowany obraz.
 ![image](https://github.com/user-attachments/assets/9167fc90-d3b5-4431-a01d-bbed1c775aad)
 ![image](https://github.com/user-attachments/assets/d5003808-6b23-4fb6-86f1-59d1aa7376b9)
+
 
 Publish:
 - Przesyła lokalne commity na zdalne repozytorium
@@ -90,7 +94,7 @@ Po wypchnięciu obrazu na DockerHub:
 - zrobiłem pulla obrazu na maszynę wirtualną
 - stworzyłem kontner na podstawie tego obrazu
 - stworzyłem sieć
-- stworzyłem kontener pomocniczy z którego wykonałem zapytanie do kontenera z aplikacją
+- stworzyłem kontener pomocniczy z którego wykonałem zapytanie do kontenera z aplikacją, stworzonego na podstawie obrazu z DockerHub
 ![image](https://github.com/user-attachments/assets/7bea71b8-d9cf-45fc-a22b-893ec05000ca)
 
 
