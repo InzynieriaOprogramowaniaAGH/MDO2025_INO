@@ -538,6 +538,89 @@ LD_LIBRARY_PATH=/usr/local/lib64 /opt/example/example
 
 ## Wdrażanie na zarządzalne kontenery: Kubernetes
 
-Działający dashboard:
+### Instalacja klastra Kubernetesa
 
-![Dashboard działa](zrzuty10/temp_name.png)
+#### Instalacja minikube
+
+Instalacja Minikube została przeprowadzona zgodnie z oficjalną dokumentacją, dostępną pod adresem: [minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download).
+
+Wybrałem wersję dla architektury x86-64 systemu Linux, w formacie `.rpm`.
+
+Instalacja nie wymagała zmian systemowych poza dodaniem ścieżki do zmiennych środowiskowych.\
+Nie zaobserwałem modyfikacji polityk bezpieczeństwa systemu, reguł firewalla ani nieautoryzowanej aktywności sieciowej po stronie instalatora.
+
+![Pobranie i instalacja minikube](zrzuty10/zrzut_ekranu1.png)
+
+#### Instalacja kubectl
+
+Podążając za oficjalną instrukcją Minikube, przeszedłem do dokumentacji Kubernetes dotyczącej instalacji `kubectl`: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+Zdecydowałem się na instalację binarną, rozpoczynając od pobrania pliku poleceniem:
+
+```bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+```
+
+![Pobranie kubectl](zrzuty10/zrzut_ekranu2.png)
+
+Następnie pobrałem plik kontrolny do weryfikacji integralności binarki i sprawdziłem jej poprawność:
+
+![Pobranie pliku kontrolnego dla kubectl i sprawdzenie poprawności](zrzuty10/zrzut_ekranu3.png)
+
+Po pozytywnej weryfikacji, zainstalowałem `kubectl` poleceniem:
+
+```bash
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
+
+![Instalacja kubectl](zrzuty10/zrzut_ekranu4.png)
+
+#### Uruchomienie minikube
+
+Do uruchomienia klastra Kubernetes wykorzystałem polecenie:
+
+```
+minikube start
+```
+
+![Uruchomienie minikube](zrzuty10/zrzut_ekranu5.png)
+
+Minikube uruchomił się w kontenerze Docker:
+
+![Minikube w kontenerze](zrzuty10/zrzut_ekranu6.png)
+
+#### Wymagania sprzętowe i ich spełnienie
+
+Zgodnie z dokumentacją Minikube, minimalne wymagania to:
+
+```
+2 CPUs or more
+2GB of free memory
+20GB of free disk space
+Internet connection
+Container or virtual machine manager, such as: Docker, QEMU, Hyperkit, Hyper-V, KVM, Parallels, Podman, VirtualBox, or VMware Fusion/Workstation
+```
+
+Mój system spełnia wszystkie powyższe wymagania.\
+Minikube działa w środowisku Docker, który posłużył jako driver kontenerowy.\
+Nie było konieczności zmiany ustawień BIOS ani wprowadzania modyfikacji sprzętowych.
+
+#### Uruchomienie dashboarda
+
+Do uruchomienia dashboarda wykorzystałem polecenie:
+
+```bash
+minikube dashboard
+```
+
+W terminalu pojawił się adres URL, który następnie wkleiłem do przeglądarki, aby uzyskać dostęp do panelu.
+
+![Uruchomienie dashboarda](zrzuty10/zrzut_ekranu7.png)
+
+![Dashboard w przeglądarce](zrzuty10/zrzut_ekranu8.png)
+
+#### Podstawowe obiekty Kubernetes
+
+- **Pod** – najmniejsza jednostka wykonawcza w Kubernetesie. Uruchamia jeden lub więcej kontenerów, które współdzielą sieć i system plików.
+- **Deployment** – obiekt zarządzający tworzeniem i utrzymywaniem replik podów. Pozwala na aktualizacje, rollbacki oraz skalowanie aplikacji.
+- **Service** – abstrahuje dostęp do podów, zapewniając stabilny adres IP i nazwę DNS. Umożliwia komunikację wewnętrzną i zewnętrzną w klastrze.
