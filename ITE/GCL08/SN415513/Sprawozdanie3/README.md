@@ -100,12 +100,69 @@ ansible-target ansible_user=ansible
 ### 
 ![](9.png)
   
-### Zarządzanie stworzonym artefaktem
-Za pomocą [*playbooka*](https://docs.ansible.com/ansible/latest/getting_started/get_started_playbook.html) Ansible:
+## Zarządzanie stworzonym artefaktem
+ 
+Plik deploy_deb.yml definiujący instrukcje:
+```
+---
+- name: Deploy binary in Docker container
+  hosts: Endpoints
+  become: yes
+  vars:
+    binary_file: "mypkg/usr/local/bin/weechat"
+    deb_file: "weechat.deb"
+    dest_dir: "/opt/weechat"        
+    image_name: "ubuntu:22.04"
+    container_name: "weechat_container"
 
-* Jeżeli artefaktem z Twojego *pipeline'u* był plik binarny (lub ich zestaw):
-  * Wyślij plik aplikacji na zdalną maszynę
-  * Stwórz kontener przeznaczony do uruchomienia aplikacji (zaopatrzony w zależności)
-  * Umieść/udostępnij plik w kontenerze, uruchom w nim aplikację
-  * Zweryfikuj poprawne uruchomienie (a nie tylko wykonanie *playbooka*)
+  tasks:
+    - name: Ensure Docker is installed
+      become: true
+      command: dnf install -y docker
+      args:
+        creates: /usr/bin/docker
 
+    - name: Start Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create directory on target host
+      ansible.builtin.file:
+        path: "{{ dest_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copy binary to target host
+      ansible.builtin.copy:
+        src: "{{ binary_file }}"
+        dest: "{{ dest_dir }}/weechat"
+        mode: '0755'
+
+    - name: Copy .deb file to target host
+      ansible.builtin.copy:
+        src: "{{ deb_file }}"
+        dest: "{{ dest_dir }}/weechat.deb"
+        mode: '0644'
+
+    - name: Run container with mounted binary and install dependencies
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}"
+        state: started
+        volumes:
+          - "{{ dest_dir }}:/weechat"
+        command: >
+          bash -c "apt update && apt install -y /weechat/weechat.deb && /weechat/weechat"
+        command: sleep infinity
+        tty: true
+        detach: true
+```
+
+### Pomyśle wykonanie wszystkich kroków:
+![](10.png)
+
+### Weryfikacja poprawności załączenia voluminu na kontener i działania aplikacji
+![](11.png)
+![](12.png)
