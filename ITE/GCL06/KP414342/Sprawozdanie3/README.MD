@@ -49,7 +49,7 @@ spec:
         - containerPort: 80
 ```
 
-![alt text](image-10.png)
+![alt text](image-13.png)
 
 ![alt text](image-11.png)
 
