@@ -25,14 +25,16 @@ za proces budowania projektu oraz tworzenia pakietu RPM.
 
 5.	**Stworzenie nowego workflowu:**
 
-Napisałam nowy workflow, który:
-	- uruchamia się automatycznie po pushu, pull requestcie lub ręcznie (workflow_dispatch) na gałęzi `ino_dev`,
-	- używa kontenera `fedora:41`, aby umożliwić tworzenie paczek `.rpm`,
-	- instaluje wszystkie niezbędne zależności (`cmake`, `gcc`, `ruby`, `fpm`, itd.),
-	- pobiera kod źródłowy biblioteki `cJSON` z GitHuba,
-	- buduje projekt przy pomocy `cmake` i `make`,
-	- tworzy pakiet `.rpm` przy użyciu `fpm,`
-	- dołącza pakiet jako artefakt GitHub Actions, aby można go było pobrać po zakończeniu działania workflowu.
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie4/Screenshots/Screenshot%202025-05-12%20at%206.22.29%E2%80%AFPM.png)
+
+Pierwotnie workflow nie działał poprawnie natomiast po odpowiednich zmianach napisałam workflow, który:
+- uruchamia się automatycznie po pushu, pull requestcie lub ręcznie (workflow_dispatch) na gałęzi `ino_dev`,
+- używa kontenera `fedora:41`, aby umożliwić tworzenie paczek `.rpm`,
+- instaluje wszystkie niezbędne zależności (`cmake`, `gcc`, `ruby`, `fpm`, itd.),
+- pobiera kod źródłowy biblioteki `cJSON` z GitHuba,
+- buduje projekt przy pomocy `cmake` i `make`,
+- tworzy pakiet `.rpm` przy użyciu `fpm,`
+- dołącza pakiet jako artefakt GitHub Actions, aby można go było pobrać po zakończeniu działania workflowu.
 
 Kod wyglądał następująco:
 
