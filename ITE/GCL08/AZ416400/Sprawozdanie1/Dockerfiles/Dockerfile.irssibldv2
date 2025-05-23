@@ -1,0 +1,2 @@
+FROM irssibld:latest
+RUN ninja -C Build test

@@ -1,0 +1,29 @@
+ARG IMAGE_TAG=latest
+FROM redisbld:${IMAGE_TAG} AS builder
+FROM fedora:latest
+
+
+ARG REDIS_VERSION=7.2.0
+ENV REDIS_VERSION=${REDIS_VERSION}
+
+RUN dnf -y update && \
+    dnf -y install rpm-build rpmdevtools which && \
+    dnf clean all
+
+RUN rpmdev-setuptree
+
+COPY --from=builder /redis/src/redis-server /root/redis-server
+COPY --from=builder /redis/src/redis-cli /root/redis-cli
+COPY redis.spec /root/rpmbuild/SPECS/redis.spec
+
+RUN mkdir /root/redis-${REDIS_VERSION} && \
+    mv /root/redis-server /root/redis-${REDIS_VERSION}/redis-server && \
+    mv /root/redis-cli /root/redis-${REDIS_VERSION}/redis-cli && \
+    cd /root && tar czvf redis-${REDIS_VERSION}.tar.gz redis-${REDIS_VERSION} && \
+    cp redis-${REDIS_VERSION}.tar.gz /root/rpmbuild/SOURCES/
+
+RUN sed -i "s/__REDIS_VERSION__/${REDIS_VERSION}/g" /root/rpmbuild/SPECS/redis.spec
+RUN rpmbuild -ba /root/rpmbuild/SPECS/redis.spec
+
+CMD ["sh", "-c", "mkdir -p /output && cp /root/rpmbuild/RPMS/x86_64/*.rpm /output/"]
+

@@ -1,0 +1,18 @@
+services:
+  redisbld:
+    build:
+      context: .
+      dockerfile: Dockerfile.redisbld
+    image: redisbld
+    container_name: redisbld
+    restart: "no"
+
+  redistest:
+    build:
+      context: .
+      dockerfile: Dockerfile.redistest
+    image: redistest
+    container_name: redistest
+    depends_on:
+      - redisbld
+    restart: "no"
