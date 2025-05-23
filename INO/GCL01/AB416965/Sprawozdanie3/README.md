@@ -624,3 +624,128 @@ W terminalu pojawił się adres URL, który następnie wkleiłem do przeglądark
 - **Pod** – najmniejsza jednostka wykonawcza w Kubernetesie. Uruchamia jeden lub więcej kontenerów, które współdzielą sieć i system plików.
 - **Deployment** – obiekt zarządzający tworzeniem i utrzymywaniem replik podów. Pozwala na aktualizacje, rollbacki oraz skalowanie aplikacji.
 - **Service** – abstrahuje dostęp do podów, zapewniając stabilny adres IP i nazwę DNS. Umożliwia komunikację wewnętrzną i zewnętrzną w klastrze.
+
+## Analiza posiadanego kontenera
+
+### Przygotowanie kontenera
+
+W poprzednich zadaniach pracowałem z biblioteką `cJSON`, którą budowałem i pakowałem do archiwum. Efektem końcowym był artefakt w formacie `.rpm`.
+Na potrzeby tego zadania zdecydowałem się wykorzystać aplikację NGINX z drobną modyfikacją własnej konfiguracji.
+
+W tym celu utworzyłem katalog `my-nginx`, w którym umieściłem plik `nginx.conf` oraz `Dockerfile`.
+
+Plik `Dockerfile` bazuje na oficjalnym obrazie `nginx:alpine` i podmienia domyślną konfigurację serwera na moją własną.
+
+Plik `nginx.conf`:
+
+```yaml
+events {}
+
+http {
+    server {
+        listen 80;
+        location / {
+            return 200 'Hello from my custom NGINX config!\n';
+        }
+    }
+}
+```
+
+Plik `Dockerfile`:
+
+```Dockerfile
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+```
+
+![Zbudowanie własnego NGINX-a](zrzuty10/zrzut_ekranu9.png)
+
+Następnie zbudowałem obraz i uruchomiłem go lokalnie z przekierowaniem portu 8080, aby sprawdzić poprawność działania:
+
+```bash
+docker run -d -p 8080:80 --name test-nginx my-nginx-custom
+```
+
+![Uruchomienie kontenera z NGINX-em](zrzuty10/zrzut_ekranu10.png)
+
+Działanie konfiguracji potwierdziłem poleceniem:
+
+```bash
+curl localhost:8080
+```
+
+![Test konfiguracji poprzez curl](zrzuty10/zrzut_ekranu11.png)
+
+### Umieszczenie obrazu na Docker Hubie
+
+Po pomyślnym teście lokalnym przystąpiłem do przygotowania obrazu do wdrożenia w środowisku Kubernetes.\
+Aby móc z niego skorzystać w klastrze, opublikowałem go w publicznym rejestrze Docker Hub.
+
+W pierwszym kroku nadałem mu odpowiedni tag (`frigzer/my-nginx-custom`) z użyciem polecenia `docker tag`:
+
+```bash
+docker tag my-nginx-custom frigzer/my-nginx/custom
+```
+
+Następnie przesłałem obraz do Docker Hub za pomocą polecenia `docker push`:
+
+```bash
+docker push frigzer/my-nginx-custom
+```
+
+![Umieszczenie obrazu na Docker Hubie](zrzuty10/zrzut_ekranu12.png)
+
+Na koniec potwierdziłem obecność obrazu w moim repozytorium, logując się na Docker Hub przez przeglądarkę:
+
+![Potwierdzenie publikacji obrazu](zrzuty10/zrzut_ekranu13.png)
+
+Dzięki tak przygotowanemu i opublikowanemu obrazowi mogłem przejść do jego wdrożenia w klastrze Kubernetes.
+
+## Uruchamianie oprogramowania
+
+### Deployment aplikacji w klastrze Kubernetes
+
+Na podstawie oficjalnej dokumentacji Minikube przygotowałem wdrożenie własnej aplikacji (NGINX z niestandardową konfiguracją) do klastra Kubernetes.
+W tym celu użyłem polecenia:
+
+```bash
+kubectl create deployment my-nginx-deploy --image=frigzer/my-nginex-custom
+```
+
+Następnie utworzyłem obiekt `Service` typu `LoadBalancer`, który umożliwia zewnętrzny dostęp do aplikacji na porcie 80:
+
+```bash
+kubectl expose deployment my-nginx-deploy --type=LoadBalancer --port=80
+```
+
+![Umieszczenie kontenera na klastrze](zrzuty10/zrzut_ekranu14.png)
+
+W panelu Dashboard Kubernetes pojawił się odpowiedni Deployment. (Na liście widoczny jest również oryginalny NGINX, używany wcześniej do testów lokalnych.)
+
+![Deployment widoczny w dashboardzie](zrzuty10/zrzut_ekranu15.png)
+
+Sprawdzenie działania poda:
+
+```bash
+kubectl get pods
+```
+
+![Sprawdzenie działania poda](zrzuty10/zrzut_ekranu18.png)
+
+### Przekierowanie portu
+
+Aby umożliwić dostęp do aplikacji z poziomu hosta, przekierowałem lokalny port 8080 na port 80 w Podzie:
+
+```bash
+kubectl port-forward pod/my-nginx-deploy-8f58cfc94-vxfnt 8080:80
+```
+
+![Komenda przekierowania i widoczna obsługa połączeń](zrzuty10/zrzut_ekranu16.png)
+
+Po wpisaniu `http://localhost:8080` w przeglądarce pojawia się mój własny komunikat serwowany przez aplikację – `"Hello from my custom NGINX config!"`.
+
+> Nie jest to kontener lokalny – wcześniej usunąłem lokalną wersję po przesłaniu obrazu do Docker Hub.\
+> Aplikacja działa w pełni w środowisku Kubernetes.
+
+![Mój NGINX widoczny w przeglądarce](zrzuty10/zrzut_ekranu17.png)
+
