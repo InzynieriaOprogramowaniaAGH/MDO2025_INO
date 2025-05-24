@@ -247,4 +247,234 @@ Natomiast przy użyciu 'make clean' uruchamia playbook usuwający kontener.
 
 ![alt text](screeny/make3.png)
 
-![alt text](screeny/make4.png)
+![alt text](screeny/make4.png)\
+
+pozdrawiam
+
+# Pliki odpowiedzi dla wdrożeń nienadzorowanych
+
+## Cel zadania
+Utworzyć źródło instalacji nienadzorowanej dla systemu operacyjnego hostującego nasze oprogramowanie
+Przeprowadzić instalację systemu, który po uruchomieniu rozpocznie hostowanie naszego programu
+
+W pierwszym kroku zainstalowano system Fedora Server, a następnie po 'czystej' instalacji pobrano plik odpowiedzi z lokalizacji '/root/anaconda-ks.cfg`, który następnie zmodyfikowano o :
+
+### Wzmiankę o repo oraz skąd je pobrać:
+```
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-38&arch=x86_64
+
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f38&arch=x86_64
+```
+
+### Zapewnienie że plik odpowiedzi formatuje dysk 
+
+```
+clearpart --all
+```
+
+### Ustawienie hostaname na inny niż domyślny
+
+Całościowy plik odpowiedzi po modyfikacji wygląda następująco:
+
+```
+# Keyboard layouts
+keyboard --vckeymap=pl --xlayouts='pl'
+
+# System language
+lang pl_PL.UTF-8
+
+# Instalation source (Fedora 38 mirrors)
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-38&arch=x86_64
+# Updates repository
+repo --name=updates --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f38&arch=x86_64
+
+# Network information
+network --bootproto=dhcp --ipv6=auto --activate --hostname=harambe.localdomain
+
+
+# Partitioning
+ignoredisk --only-use=sda
+clearpart --all --initlabel        
+autopart                           
+
+# System timezone
+timezone Europe/Warsaw --utc
+
+# Run the Setup Agent on first boot
+firstboot --enable
+
+# Root password (zaszyfrowany)
+rootpw --iscrypted --allow-ssh $y$j9T$k3bQKxtopLwWyUKwD0BDo46H$QhGDBD...
+# Użytkownik zwykły
+user --groups=wheel --name=user --gecos="user"
+
+%packages
+@^server-product-environment
+%end
+
+```
+
+Następnie na podstawie utworzonego pliku odpowiedzi utworzono pomocniczy obraz .iso za pomocą komedy:
+```
+genisoimage -output ks.iso -volid KS -joliet -rock ks.cfg
+```
+
+Oraz w VirtualBoxie dodano ten pomocniczy plik .iso
+
+![alt text](screeny/dodanie2Iso.png)
+
+Następnie uruchomiono maszynę wirtualną, w menu instalacyjnym należy wybrać „Install Fedora Server 38…” i nacisnąć klawisz "e" to przeniesie nas do edycji wpisu GRUB-a. Należy zmodyfikować ten wpis - w linijce zaczynającej się  od linux albo linuxefi na końcu lini należy dodać:
+
+```
+inst.ks=hd:sr1:/ks.cfg
+```
+lub podobny wpis zależnie od tego jak zamotowaliśmy nasze pomocnicze .iso.
+
+![alt text](screeny/install1.png)
+
+Po wykonaniu tych kroków i rozpoczęciu instlacji przez Ctrl + X, instalacja przebiega automatycznie bez konieczności dalszej ingerencji ze strony administratora - bardzo przyjemne i wygodne swoją drogą.
+
+### Dodanie do pliku odpowiedzi repozytoria i oprogramowanie potrzebne do uruchomienia programu, zbudowanego w ramach projektu - naszego pipeline'u.
+
+Rozbudowujemy plik odpowiedzi, aby mieć w pełni nienadzorowaną instalację Fedory z Dockerem i automatycznym startem utworzonego w ramach pipeline'u obrazu. Dokonujemy modyfikacji pliku odpowiedzi, plik wygląda następująco :
+
+```
+# ---------------------------------------------------------------------------
+# Fedora 38 Server – Kickstart z Docker CE i autostartem kontenera
+# ---------------------------------------------------------------------------
+keyboard --vckeymap=pl --xlayouts='pl'
+lang pl_PL.UTF-8
+
+
+url  --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-38&arch=x86_64
+repo --name=updates --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f38&arch=x86_64
+
+
+repo --name=docker-ce --baseurl=https://download.docker.com/linux/fedora/38/x86_64/stable
+
+network --bootproto=dhcp --ipv6=auto --activate --hostname=harambe.localdomain
+
+
+ignoredisk --only-use=sda
+clearpart --all --initlabel
+autopart
+
+timezone Europe/Warsaw --utc
+
+
+rootpw  --iscrypted --allow-ssh $y$j9T$k3bQKxtopLwWyUKwD0BDo46H$QhGDBDB0PK1l...
+user    --groups=wheel --name=user --gecos="user"
+
+# 1. Pakiety (Dockera + zależności dorzucamy tutaj)
+%packages
+@^server-product-environment
+dnf-plugins-core
+device-mapper
+device-mapper-persistent-data
+lvm2
+docker-ce
+docker-ce-cli
+containerd.io
+%end
+
+# 2. Konfiguracje po zainstalowaniu plików 
+%post --log=/root/ks-post.log --interpreter=/usr/bin/bash --erroronfail
+
+cat >/etc/yum.repos.d/docker-ce.repo <<'EOF'
+[docker-ce-stable]
+name=Docker CE Stable - $basearch
+baseurl=https://download.docker.com/linux/fedora/$releasever/$basearch/stable
+enabled=1
+gpgcheck=1
+gpgkey=https://download.docker.com/linux/fedora/gpg
+EOF
+
+# ---  Instalacja / aktualizacja Dockera ---------------
+dnf -y install docker-ce docker-ce-cli containerd.io
+
+# ---  Włączenie usługi ----------------------
+systemctl enable --now docker.service
+
+# ---  Skrypt first-boot --------------------------------
+cat >/usr/local/bin/setup-container.sh <<'EOSH'
+#!/usr/bin/env bash
+set -euo pipefail
+
+/usr/bin/docker pull bambusscooby/irssi-runtime:11
+/usr/bin/docker run -d --name irssi-container --restart=unless-stopped bambusscooby/irssi-runtime:11
+
+systemctl disable firstboot-container.service
+EOSH
+chmod +x /usr/local/bin/setup-container.sh
+restorecon -v /usr/local/bin/setup-container.sh  # SELinux
+
+# ---  Jednostka systemd one-shot -------------------
+cat >/etc/systemd/system/firstboot-container.service <<'EOUNIT'
+[Unit]
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/setup-container.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOUNIT
+
+systemctl enable firstboot-container.service
+
+%end
+
+reboot
+```
+
+W drugiej wersji pliku kickstartowego w pierwszej kolejności ustawiamy klawiature, język, czas, sieć, partycje i tworzymy użytkowników. Następnie instalujemy paczki na podstawie podanego wcześniej źródla pakietów bazowach (url, repo) oraz z repozytorium Dockera - konieczne do uruchomienia aplikacja z pipeline'u. 
+
+Sekcja %post zawiera polecenia powłoki (bash), które zostaną wykonane zaraz po zakończeniu instalacji pakietów, ale jeszcze przed pierwszym uruchomieniem systemu.
+
+Można tam: kopiować pliki, pisać własne skrypty, instalować dodatkowe rzeczy, przygotować konfigurację systemu. W tym przypadku :
+dodajemy plik repozytorium Docker CE - tworzymy plik .repo, który mówi systemowi, gdzie znaleźć i jak pobierać pakiety Dockera z internetu. Dzięki temu dnf wie, skąd ściągać Dockera. Po tym upewnimy się, że Docker jest aktualny:
+
+```
+dnf -y update docker-ce docker-ce-cli containerd.io 
+```
+Przez systemctl zapewniamy włączenia Dockera przy każdym starcie systemu:
+```
+systemctl enable docker
+```
+Po uruchomieniu systemu Docker uruchomi się automatycznie. Tworzymy skrypt który uruchomi się tylko przy pierwszym starcie systemu, skrypt poczeka aż Docker się uruchomi => pobierze kontener z DockerHub => uruchamia go z odpowiednimi parametrami => dezaktywuje się aby więcej się nie uruchamiać.
+```
+cat >/usr/local/bin/setup-container.sh <<'EOSH'
+...
+EOSH
+chmod +x /usr/local/bin/setup-container.sh
+```
+
+Skrypt tworzy jednostkę systemową (service) 
+```
+cat >/etc/systemd/system/firstboot-container.service <<'EOUNIT'
+...
+EOUNIT
+```
+w systemd (czyli systemie, który zarządza uruchamianiem wszystkiego po starcie systemu). Ta jednostka uruchomi skrypt raz, przy pierwszym starcie systemu. Skrypt włącza tę jednostkę:
+```
+systemctl enable firstboot-container.service
+```
+tak aby wystartowała automatycznie przy pierwszym starcie systemu.
+
+Czyli idąc krok po kroku:
+
+1. System startuje
+2. Docker się uruchamia
+3. firstboot-container.service widzi, że Docker już działa
+4. firstboot-container.service uruchamia skrypt który:
+  1. Pobiera obraz kontenera z DockerHub
+  2. uruchamia go w tle
+  3. dezaktywuje jednostkę systemd, żeby więcej nie uruchamiała się przy starcie.
+
+Sekcja %post to kluczowy element dla pliku kickstartowego przy automatyzacji instalacji aplikacji z pipeline'u.
+
+# Wdrażanie na zarządzalne kontenery: Kubernetes (1)
