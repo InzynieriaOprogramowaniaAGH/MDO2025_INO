@@ -70,8 +70,17 @@ StandardError=journal
 [Install]
 WantedBy=multi-user.target
 EOF
+cat <<'EOF' >> /home/kmazur/.bash_profile
 
-# Włącz usługę po starcie
+echo ""
+echo ">>> Uruchamiam chalk-pipe (example.js):"
+echo "----------------------------------------"
+node /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js
+echo ">>> Zakończono działanie example.js"
+echo ""
+EOF
+
+chown kmazur:kmazur /home/kmazur/.bash_profile
 systemctl enable chalk-pipe.service
 
 echo ">>> Instalacja zakończona."
