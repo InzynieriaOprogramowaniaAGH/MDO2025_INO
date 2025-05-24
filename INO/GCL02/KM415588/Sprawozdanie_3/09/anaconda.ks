@@ -59,11 +59,13 @@ Description=Start chalk-pipe example.js
 After=network.target
 
 [Service]
+Type=oneshot
 ExecStart=/usr/bin/node /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js
-WorkingDirectory=/usr/local/bin/chalk-pipe/lib/chalk-pipe/
-Restart=always
+WorkingDirectory=/usr/local/bin/chalk-pipe/lib/chalk-pipe
+RemainAfterExit=yes
 StandardOutput=journal
 StandardError=journal
+
 
 [Install]
 WantedBy=multi-user.target
