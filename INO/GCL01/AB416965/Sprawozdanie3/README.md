@@ -625,9 +625,9 @@ W terminalu pojawił się adres URL, który następnie wkleiłem do przeglądark
 - **Deployment** – obiekt zarządzający tworzeniem i utrzymywaniem replik podów. Pozwala na aktualizacje, rollbacki oraz skalowanie aplikacji.
 - **Service** – abstrahuje dostęp do podów, zapewniając stabilny adres IP i nazwę DNS. Umożliwia komunikację wewnętrzną i zewnętrzną w klastrze.
 
-## Analiza posiadanego kontenera
+### Analiza posiadanego kontenera
 
-### Przygotowanie kontenera
+#### Przygotowanie kontenera
 
 W poprzednich zadaniach pracowałem z biblioteką `cJSON`, którą budowałem i pakowałem do archiwum. Efektem końcowym był artefakt w formacie `.rpm`.
 Na potrzeby tego zadania zdecydowałem się wykorzystać aplikację NGINX z drobną modyfikacją własnej konfiguracji.
@@ -676,7 +676,7 @@ curl localhost:8080
 
 ![Test konfiguracji poprzez curl](zrzuty10/zrzut_ekranu11.png)
 
-### Umieszczenie obrazu na Docker Hubie
+#### Umieszczenie obrazu na Docker Hubie
 
 Po pomyślnym teście lokalnym przystąpiłem do przygotowania obrazu do wdrożenia w środowisku Kubernetes.\
 Aby móc z niego skorzystać w klastrze, opublikowałem go w publicznym rejestrze Docker Hub.
@@ -701,9 +701,9 @@ Na koniec potwierdziłem obecność obrazu w moim repozytorium, logując się na
 
 Dzięki tak przygotowanemu i opublikowanemu obrazowi mogłem przejść do jego wdrożenia w klastrze Kubernetes.
 
-## Uruchamianie oprogramowania
+### Uruchamianie oprogramowania
 
-### Deployment aplikacji w klastrze Kubernetes
+#### Deployment aplikacji w klastrze Kubernetes
 
 Na podstawie oficjalnej dokumentacji Minikube przygotowałem wdrożenie własnej aplikacji (NGINX z niestandardową konfiguracją) do klastra Kubernetes.
 W tym celu użyłem polecenia:
@@ -732,7 +732,7 @@ kubectl get pods
 
 ![Sprawdzenie działania poda](zrzuty10/zrzut_ekranu18.png)
 
-### Przekierowanie portu
+#### Przekierowanie portu
 
 Aby umożliwić dostęp do aplikacji z poziomu hosta, przekierowałem lokalny port 8080 na port 80 w Podzie:
 
@@ -749,3 +749,106 @@ Po wpisaniu `http://localhost:8080` w przeglądarce pojawia się mój własny ko
 
 ![Mój NGINX widoczny w przeglądarce](zrzuty10/zrzut_ekranu17.png)
 
+### Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
+
+#### Wdrożenie Deploymentu
+
+Korzystając z oficjalnej dokumentacji dotyczącej [Deploymentów w Kubernetesie](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) utworzyłem plik `nginx-deployment.yaml`, który zawiera konfigurację dla aplikacji NGINX.
+
+Plik `nginx-deployment.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+```
+
+Do uruchomienia konfiguracji użyłem polecenia `kubectl apply`, które umożliwia deklaratywne wdrażanie lub aktualizowanie zasobów w klastrze Kubernetes:
+
+```bash
+kubectl apply -f nginx-deployment.yaml
+```
+
+Następnie sprawdziłem stan wdrożenia komendą:
+
+```bash
+kubectl apply -f deployment/nginx-deployment
+```
+
+![Przygotowanie wdrożenia deploymentu](zrzuty10/zrzut_ekranu19.png)
+
+W Dashboardzie Kubernetes potwierdziłem, że Deployment został poprawnie utworzony i że widoczna jest pełna liczba replik:
+
+![Potwierdzenie deploymentu w dashboardzie](zrzuty10/zrzut_ekranu20.png)
+
+#### Wdrożenie service
+
+Analogicznie do wcześniejszych etapów, utworzyłem plik `nginx-service.yaml`, który definiuje obiekt `Service` typu `LoadBalancer`, eksponujący aplikację na porcie 80. Zastosowano etykiety zgodne z Deploymentem (`app: nginx`), aby poprawnie powiązać usługę z uruchomionymi podami.
+
+Plik `nginx-service.yaml`:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+```
+
+Polecenie użyte do wdrożenia:
+
+```bash
+kubectl apply -f nginx-service.yaml
+```
+
+![Wdrożenie service](zrzuty10/zrzut_ekranu21.png)
+
+Po wdrożeniu sprawdziłem obecność i konfigurację usługi w Dashboardzie:
+
+![Widoczne service w dashboardzie](zrzuty10/zrzut_ekranu22.png)
+
+#### Przekierowanie portu i test aplikacji
+
+Aby umożliwić dostęp do aplikacji z przeglądarki, wykonałem przekierowanie portu lokalnego 8080 do portu 80 w usłudze:
+
+```bash
+kubectl port-forward service/nginx-service 8080:80
+```
+
+![Przekierowanie portu](zrzuty10/zrzut_ekranu23.png)
+
+Po wpisaniu `localhost:8080` w przeglądarce, otrzymałem stronę domyślną serwera NGINX, co potwierdza, że aplikacja działa prawidłowo w klastrze Kubernetes:
+
+![Localhost:8080 w przeglądarce](zrzuty10/zrzut_ekranu24.png)
+
+#### Podsumowanie
+
+W ramach tego etapu wdrożenie aplikacji zostało w pełni opisane za pomocą plików YAML i uruchomione w sposób deklaratywny z wykorzystaniem `kubectl apply`.\
+Dzięki temu możliwe jest łatwe powtórzenie, modyfikowanie i wersjonowanie konfiguracji — co jest kluczowym aspektem pracy z Kubernetesem i zgodne z podejściem „Infrastructure as Code”.
