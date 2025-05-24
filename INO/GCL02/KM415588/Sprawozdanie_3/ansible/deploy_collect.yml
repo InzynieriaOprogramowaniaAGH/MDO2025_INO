@@ -3,7 +3,7 @@
   hosts: endpoints
   become: true
   vars:
-    artifact_url: "http://192.168.0.139:8080/job/Done_Pipe_Chalk/21/artifact/INO/GCL02/KM415588/Sprawozdanie_2/artifact_result.tar.gz"
+    artifact_url: "http://192.168.0.139:8080/job/Done_Pipe_Chalk/lastSuccessfulBuild/artifact/INO/GCL02/KM415588/Sprawozdanie_2/artifact_result.tar.gz"
     deploy_dir: /home/{{ ansible_user }}/artifact/chalk-pipe
 
   tasks:
@@ -18,8 +18,6 @@
         url: "{{ artifact_url }}"
         dest: "/tmp/artifact_result.tar.gz"
         mode: '0644'
-        url_username: "KmazuR-afk"
-        url_password: "KawasakiZXR400!"
 
     - name: Rozpakuj artefakt
       unarchive:
@@ -27,13 +25,27 @@
         dest: "{{ deploy_dir }}"
         remote_src: yes
 
-    - name: Uruchom aplikację (przykładowy plik node.js, dostosuj jeśli potrzeba)
-      shell: "node {{ deploy_dir }}/lib/example.js > /tmp/app_output.log 2>&1 &"
+    - name: Uruchom aplikację (przykładowy plik example.js)
+      shell: "node {{ deploy_dir }}/lib/chalk-pipe/example.js > /tmp/app_output.log 2>&1 &"
       args:
         chdir: "{{ deploy_dir }}"
       async: 15
       poll: 0
 
+    - name: Poczekaj chwilę na wygenerowanie logu
+      wait_for:
+        path: /tmp/app_output.log
+        state: present
+        timeout: 10
+
+    - name: Odczytaj log działania aplikacji
+      shell: cat /tmp/app_output.log
+      register: app_output
+      changed_when: false
+
+    - name: Wyświetl wynik działania aplikacji
+      debug:
+        var: app_output.stdout_lines
     - name: Wyświetl zawartość katalogu
       command: ls -l {{ deploy_dir }}
       register: ls_output

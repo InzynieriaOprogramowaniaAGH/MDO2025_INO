@@ -10,7 +10,10 @@ lang pl_PL.UTF-8
 
 %packages
 @^custom-environment
-
+wget
+tar
+nodejs
+npm
 %end
 
 # Run the Setup Agent on first boot
@@ -32,5 +35,47 @@ timezone Europe/Warsaw --utc
 # Root password
 rootpw --iscrypted $y$j9T$D/mD9mTlViOdMffZYKfWmAxA$H.FZzHKGrLqqbG116VQ59Ui48i7gKwsrCprV8L9DzF9
 user --groups=wheel --name=kmazur --password=$y$j9T$ig8mzamRlSafku6bcoOJDbYc$VKfk57IziXfdvbkVOga5auS4bPL2BeZlbHryzFTJAm3 --iscrypted --gecos="Kacper Mazur"
+
+
+%post --log=/var/log/ks-post.log
+echo ">>> Rozpoczynam pobieranie artefaktu z Jenkinsa..."
+
+# Katalog docelowy
+mkdir -p /usr/local/bin/chalk-pipe
+
+# Pobierz artefakt (ostatni build)
+wget -O /tmp/artifact_result.tar.gz "http://192.168.0.139:8080/job/Done_Pipe_Chalk/lastSuccessfulBuild/artifact/INO/GCL02/KM415588/Sprawozdanie_2/artifact_result.tar.gz"
+
+# Rozpakuj do katalogu
+tar -xzf /tmp/artifact_result.tar.gz -C /usr/local/bin/chalk-pipe
+
+# Prawa wykonania
+chmod +x /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js
+
+# Utwórz plik jednostki systemd
+cat <<EOF > /etc/systemd/system/chalk-pipe.service
+[Unit]
+Description=Start chalk-pipe example.js
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js
+WorkingDirectory=/usr/local/bin/chalk-pipe/lib/chalk-pipe/
+Restart=always
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Włącz usługę po starcie
+systemctl enable chalk-pipe.service
+
+echo ">>> Instalacja zakończona."
+%end
+
+reboot
+
 
 reboot
