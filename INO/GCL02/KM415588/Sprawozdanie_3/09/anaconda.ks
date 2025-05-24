@@ -76,6 +76,3 @@ echo ">>> Instalacja zakończona."
 %end
 
 reboot
-
-
-reboot
