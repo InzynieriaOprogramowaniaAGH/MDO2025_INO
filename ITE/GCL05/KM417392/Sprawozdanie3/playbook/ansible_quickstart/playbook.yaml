@@ -1,0 +1,25 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Ping machines
+      ansible.builtin.ping:
+
+    - name: Copy inventory file
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /tmp/inventory.ini
+
+    - name: Update all packages
+      ansible.builtin.apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Restart ssh and rng-tools if present
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: restarted
+      loop:
+        - ssh
+        - rng-tools-debian
+      
