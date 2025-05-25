@@ -168,7 +168,7 @@ Widzimy różnice między oboma wywołaniami — za pierwszym razem wystąpiły 
 
 Spróbujmy jeszcze przeprowadzić komunikacje z niedostępną maszyną - zasymulować to możemy na kilka sposobów:
 
-- wyłączenie usługi ssh i restart:
+- wyłączenie usługi ssh:
 ```bash
 systemctl stop sshd
 ```  
@@ -338,4 +338,93 @@ text #dopisek uruchamiający terminal
 reboot #komenda resetu po instalacji
 ```
 
-Przez `...` rozumiem już znajdujązy się tam kod do którego dopisuję tylko te dwie linijki. Po ponownym uruchomieniu instalacji nie uruchomi się okno graficzne, a po zainstalowaniu systemu wykona się automtyczne ponowne uruchomienie.  
+Przez `...` rozumiem już znajdujązy się tam kod do którego dopisuję tylko te dwie linijki. Po ponownym uruchomieniu instalacji nie uruchomi się okno graficzne, a po zainstalowaniu systemu wykona się automtyczne ponowne uruchomienie. Kolejnym zadaniem jest dostanie się do artefaktu pipeline-u i uruchomienie aplikacji - w tym celu posłużymy się sekcją `%post`. Dodatkowo musimy zadbać aby aplikacja uruchamiała się w dowolny sposób po uruchomieniu systemu. Najpierw skupmy się jakie pakiety są konieczne w przypadku mojego pipeline-u:
+
+- tar - do rozpakowania artefaktu
+- wget - do pobrania artefaktu
+- nodejs - do uruchomienia przykładowego programu example.js
+
+Dołączamy je w sekcji `%packages` - prezentować się będzie ona następująco:
+
+```cfg
+%packages
+@^custom-environment
+wget
+tar
+nodejs
+%end
+```
+
+Dalej w sekcji `%post` musimy napisać logike koniecznego działania. Po kolei musimy wykonać następujące czynności:
+
+- utworzenie folderu w ścieżce `/usr/local/bin/`, do którego rozpakujemy nasz artefakt
+- pobranie artefaktu przy użyciu `wget`
+- rozpakowanie artefaktu i nadanie odpowiednich praw użytkownikom
+- zapewnienie uruchomienie w dowolny sposób usługi - po analizie stwierdziłem, iż stworzę mojego ezmaple.js serwis, który będzie się raz uruchamiał przy uruchomieniu, ale nie będzie nic robił (możemy zbadać czy podziałało poleceniem `systemctl status`) ale dodatkowo wpiszę do pliku `.bash_profile` aby przy zalogowaniu się do systemu wypisywało się w programie działanie example.js.
+
+Majac plan działania możemy przystąpić do pisania sekcji `%post`:
+
+```cfg
+%post --log=/var/log/ks-post.log
+set -x
+exec > /dev/tty3 2>&1
+echo ">>> Rozpoczynam pobieranie artefaktu z Jenkinsa..."
+# Katalog docelowy
+mkdir -p /usr/local/bin/chalk-pipe
+# Pobierz artefakt (ostatni build)
+wget -O /tmp/artifact_result.tar.gz "http://192.168.0.139:8080/job/Done_Pipe_Chalk/lastSuccessfulBuild/artifact/INO/GCL02/KM415588/Sprawozdanie_2/artifact_result.tar.gz"
+# Rozpakuj do katalogu
+tar -xzf /tmp/artifact_result.tar.gz -C /usr/local/bin/chalk-pipe
+# Prawa wykonania
+chmod +x /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js
+# Utwórz plik jednostki systemd
+cat <<EOF > /etc/systemd/system/chalk-pipe.service
+[Unit]
+Description=Start chalk-pipe example.js
+After=network.target
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/node /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js
+WorkingDirectory=/usr/local/bin/chalk-pipe/lib/chalk-pipe
+RemainAfterExit=yes
+StandardOutput=journal
+StandardError=journal
+[Install]
+WantedBy=multi-user.target
+EOF
+# Dodaj uruchamianie przy logowaniu użytkownika
+cat <<'EOF' >> /home/kmazur/.bash_profile
+echo ""
+echo ">>> Uruchamiam chalk-pipe (example.js):"
+echo "----------------------------------------"
+node /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js
+echo ">>> Zakończono działanie example.js"
+echo ""
+EOF
+# Ustaw właściciela pliku .bash_profile
+chown kmazur:kmazur /home/kmazur/.bash_profile
+# Włącz usługę przy starcie systemu
+systemctl enable chalk-pipe.service
+echo ">>> Instalacja zakończona."
+%end
+```
+
+Analizując każdą z sekcji:
+
+| **Kod YAML / Bash** | **Opis działania** |
+|----------------------|--------------------|
+| `%post --log=/var/log/ks-post.log` | Rozpoczyna sekcję postinstalacyjną. Wszystkie polecenia w tym bloku będą logowane do `/var/log/ks-post.log`. |
+| `set -x` | Włącza śledzenie każdej komendy wykonywanej w `%post`, co ułatwia debugowanie i analizę w logach. |
+| `exec > /dev/tty3 2>&1` | Przekierowuje standardowe wyjście i błędy z `%post` na konsolę `tty3`, dzięki czemu postęp instalacji jest widoczny „na żywo” podczas instalacji tekstowej. |
+| `mkdir -p /usr/local/bin/chalk-pipe` | Tworzy katalog, do którego zostanie rozpakowany artefakt z Jenkinsa. `-p` zapobiega błędowi, jeśli katalog już istnieje. |
+| `wget -O /tmp/artifact_result.tar.gz ...` | Pobiera plik `.tar.gz` z ostatniego udanego buildu Jenkinsa do katalogu tymczasowego. |
+| `tar -xzf /tmp/artifact_result.tar.gz -C /usr/local/bin/chalk-pipe` | Rozpakowuje zawartość archiwum do katalogu `/usr/local/bin/chalk-pipe`. Flagi `-xzf` oznaczają: wypakuj (`x`), z pliku gzip (`z`), z nazwą pliku (`f`). |
+| `chmod +x /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js` | Nadaje plikowi `example.js` prawo do uruchamiania (execute). |
+| `cat <<EOF > /etc/systemd/system/chalk-pipe.service`<br>(...) | Tworzy plik jednostki systemd, który pozwoli uruchomić aplikację jako usługę. `Type=oneshot` oznacza, że aplikacja wykona się raz i zakończy. |
+| `WorkingDirectory=...` | Określa katalog roboczy, w którym uruchomiona zostanie aplikacja. |
+| `RemainAfterExit=yes` | Usługa będzie widoczna jako „active (exited)” po zakończeniu działania, nie jako zakończona. |
+| `systemctl enable chalk-pipe.service` | Rejestruje usługę `chalk-pipe.service` do automatycznego uruchamiania przy starcie systemu. |
+| `cat <<'EOF' >> /home/kmazur/.bash_profile`<br>(...) | Dodaje do `.bash_profile` użytkownika `kmazur` kod, który uruchamia aplikację przy każdym logowaniu (i wypisuje jej wynik do konsoli). |
+| `chown kmazur:kmazur /home/kmazur/.bash_profile` | Upewnia się, że plik `.bash_profile` należy do użytkownika `kmazur`, by nie było problemów z jego uruchamianiem. |
+| `echo ">>> Instalacja zakończona."` | Komunikat końcowy – pojawi się w logach i w konsoli jako potwierdzenie zakończenia działania `%post`. |
+| `%end` | Zamyka sekcję `%post` – obowiązkowy koniec bloku w Kickstarcie. |
