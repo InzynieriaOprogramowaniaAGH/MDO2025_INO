@@ -21,7 +21,7 @@ pipeline {
       steps {
         dir('INO/GCL01/MG417201/redis-ci-cd') {
           sh 'docker build -t redis_test:1.0 -f Dockerfile.test.redis .'
-          
+
           sh '''
             mkdir -p logs
             docker run --rm redis_test:1.0 > logs/test.log 2>&1
@@ -35,9 +35,9 @@ pipeline {
 
     stage('Deploy') {
       steps {
-        script {
-             sh 'docker build -t redis_runtime:1.0 -f Dockerfile.runtime .'
-             sh 'docker run -d --name redis-runtime redis_runtime:1.0'
+        dir('INO/GCL01/MG417201/redis-ci-cd') {
+          sh 'docker build -t redis_runtime:1.0 -f Dockerfile.runtime .'
+          sh 'docker run -d --name redis-runtime redis_runtime:1.0'
         }
       }
     }
