@@ -1,4 +1,3 @@
----
 - name: Zarządzanie maszynami końcowymi
   hosts: endpoints
   gather_facts: false
