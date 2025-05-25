@@ -499,3 +499,35 @@ user --groups=wheel --name=kickstart --password=$y$j9T$mCl6BCUxsWaW16WGxUxp8ukI$
 
 reboot
   ```
+
+# **Wdrażanie na zarządzalne kontenery: Kubernetes (1)** 
+
+## **Instalacja klastra Kubernetes**
+
+Proces rozpocząłem od pobrania i instalacji narzędzia Minikube, które umożliwia uruchomienie lokalnego klastra Kubernetes na moim systemie Ubuntu w architekturze amd64. Do pobrania instalatora wykorzystałem polecenie:
+
+```bash
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+```
+
+a następnie zainstalowałem pakiet za pomocą:
+
+```bash
+sudo dpkg -i minikube_latest_amd64.deb
+```
+
+![Zrzut ekranu – 40 - ](zrzuty_ekranu_sprawozdanie_3/40.png)
+
+Po instalacji Minikube konieczne było uruchomienie usługi Docker, która pełni funkcję backendu kontenerowego dla klastra. W tym celu skorzystałem z komendy:
+
+```bash
+sudo systemctl start docker
+```
+
+Gdy Docker był już aktywny, przystąpiłem do inicjalizacji klastra Kubernetes lokalnie, korzystając z polecenia:
+
+```bash
+minikube start
+```
+
+![Zrzut ekranu – 41 - ](zrzuty_ekranu_sprawozdanie_3/41.png)
