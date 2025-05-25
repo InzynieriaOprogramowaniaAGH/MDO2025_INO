@@ -1,8 +1,6 @@
 # Sprawozdanie2
 
-## Laboratorium 5
-
-### Utworzenie instancji Jenkins
+## Utworzenie instancji Jenkins
 - Utworzenie sieci dla Jenkinsa
 
 <div align="center"> 
@@ -111,9 +109,9 @@
     tar czf "/backup/jenkins_home-$TIMESTAMP.tar.gz" -C /volume .
     ```
 
-### Zadanie wstępne: uruchomienie
+## Zadanie wstępne: uruchomienie
 
-#### Utworzenie projektu wyświetlającego uname
+### Utworzenie projektu wyświetlającego uname
 
 - Utworzenie nowego projektu
 
@@ -157,7 +155,7 @@ pipeline {
 
 >[Console logs](console_logs/uname/logs.log)
 
-#### Utworzenie projektu zwracającego błąd, gdy godzina jest nieparzysta
+### Utworzenie projektu zwracającego błąd, gdy godzina jest nieparzysta
 
 - Aby utworzyć ten projekt należy powtórzyć wszystkie kroki z powyższego pipeline'u ze zmienioną treścią pipeline script:
 
@@ -191,7 +189,7 @@ pipeline {
 
 >[Console logs](console_logs/uneven_hour/even_logs.log)
 
-#### Utworzenie projektu, w którym pobierany jest obraz kontenera `ubuntu`
+### Utworzenie projektu, w którym pobierany jest obraz kontenera `ubuntu`
 
 - Aby utworzyć ten projekt należy powtórzyć wszystkie kroki z pierwszego pipeline'u ze zmienioną treścią pipeline script:
 
@@ -216,7 +214,7 @@ pipeline {
 >[Console logs](console_logs/ubuntu_pull/logs.log)
 
 
-### Zadanie wstępne: obiekt typu pipeline
+## Zadanie wstępne: obiekt typu pipeline
 
 - Z racji korzystania z redisa oraz ograniczonych zasobów sprzętowych mojego komputera byłem zmuszony do zmniejszenia kampanii testowej oprogramowania. W tym celu zmodyfikowałem następująco plik `Dockerfile.test.redis`:
 
@@ -295,9 +293,9 @@ Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje s
  * Cache'uje wtyczki i narzędzia
   Jenkins oraz używane kontenery mogą dodatkowo cache’ować biblioteki, pluginy i paczki systemowe pomiędzy buildami. Dzięki temu kolejne uruchomienia pipeline’u omijają ich ponowną instalację.
 
-### Opis celu
+## Opis celu
 
-#### Wymagania wstępne środowiska
+### Wymagania wstępne środowiska
 
 * Software: Jenkins, Docker, Git, narzędzia testowe (np. pytest)
 
@@ -305,21 +303,21 @@ Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje s
 
 * Uprawnienia: dostęp do repo, Docker socket, sieć do rejestru obrazów
 
-#### Diagram aktywności
+### Diagram aktywności
 
 <div align="center"> 
     <img src="screens5/20.jpg">
 </div>
 
-#### Diagram wdrożeniowy
+### Diagram wdrożeniowy
 
 <div align="center"> 
     <img src="screens5/21.jpg">
 </div>
 
-### Pipeline: składnia
+## Pipeline: składnia
 
-#### Utworzenie pliku Jenkinsfile
+### Utworzenie pliku Jenkinsfile
 
 >[Treść pliku Jenkinsfile](../lab3/dockerfiles/Jenkinsfile)
 
@@ -327,7 +325,7 @@ Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje s
 
 >[Treść pliku Dockerfile.test.redis](../lab3/dockerfiles/Dockerfile.test.redis)
 
-#### Utworzenie nowego pipeline'a
+### Utworzenie nowego pipeline'a
 
 - Proces tworzenia:
 
@@ -339,7 +337,7 @@ Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje s
     <img src="screens5/23.jpg">
 </div>
 
-#### Uruchomienie pipeline'a
+### Uruchomienie pipeline'a
 
 <div align="center"> 
     <img src="screens5/24.jpg">
@@ -349,4 +347,5 @@ Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje s
 
 
 
-### Kompletny pipeline: wymagane składniki
+## Kompletny pipeline
+

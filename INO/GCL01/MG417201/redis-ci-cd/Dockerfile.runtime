@@ -1,0 +1,22 @@
+FROM redis_build:1.0 AS builder
+
+FROM ubuntu:20.04-slim
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /data \
+ && useradd --no-create-home --shell /usr/sbin/nologin redis
+
+COPY --from=builder /redis/src/redis-server /usr/local/bin/redis-server
+COPY --from=builder /redis/src/redis-cli    /usr/local/bin/redis-cli
+COPY --from=builder /redis/redis.conf        /etc/redis/redis.conf
+
+RUN chown -R redis:redis /data
+
+USER redis
+
+EXPOSE 6379
+
+CMD ["redis-server", "/etc/redis/redis.conf", "--dir", "/data"]

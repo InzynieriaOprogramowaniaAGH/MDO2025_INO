@@ -1,0 +1,58 @@
+pipeline {
+  agent {
+    docker {                       
+      image 'docker:20.10-dind'
+      args  '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+    }
+  }
+  parameters {
+    booleanParam(name: 'PUBLISH', defaultValue: false, description: 'Push artifact/image?')
+  }
+  stages {
+    stage('Checkout') { steps { checkout scm } }                 
+    stage('Build') {
+      steps {
+        dir('INO/GCL01/MG417201/redis-ci-cd') {
+          sh 'docker build -t redis_build:1.0 -f Dockerfile.build.redis .' 
+        }
+      }
+    }
+    stage('Test') {
+      steps {
+        dir('INO/GCL01/MG417201/redis-ci-cd') {
+          sh 'docker build -t redis_test:1.0 -f Dockerfile.test.redis .'
+        }
+      }
+      post { always { archiveArtifacts artifacts: '*.log', fingerprint: true } }
+    }
+    stage('Deploy') {
+      steps {
+        script {
+             sh 'docker build -t redis_runtime:1.0 -f Dockerfile.runtime .'
+             sh 'docker run -d --name redis-runtime redis_runtime:1.0'
+        }
+      }
+    }
+    stage('Publish') {
+      when { expression { params.PUBLISH } }
+      steps {
+        script {
+          sh '''
+            docker create --name tmp redis_runtime:1.0
+            docker cp tmp:/usr/local/bin ./redis-binaries
+            docker rm tmp
+          '''
+
+          sh 'apk add --no-cache zip'
+
+          sh 'zip -j redis-1.0.zip redis-binaries/*'
+
+          archiveArtifacts artifacts: 'redis-1.0.zip', fingerprint: true
+        }
+      }
+    }
+  }
+  post {
+    success { echo 'Pipeline zakończony – artefakt gotowy do pobrania.' }
+  }
+}
