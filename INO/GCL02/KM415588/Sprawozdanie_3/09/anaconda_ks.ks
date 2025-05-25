@@ -39,25 +39,19 @@ user --groups=wheel --name=kmazur --password=$y$j9T$ig8mzamRlSafku6bcoOJDbYc$VKf
 
 %post --log=/var/log/ks-post.log
 echo ">>> Rozpoczynam pobieranie artefaktu z Jenkinsa..."
-
 # Katalog docelowy
 mkdir -p /usr/local/bin/chalk-pipe
-
 # Pobierz artefakt (ostatni build)
 wget -O /tmp/artifact_result.tar.gz "http://192.168.0.139:8080/job/Done_Pipe_Chalk/lastSuccessfulBuild/artifact/INO/GCL02/KM415588/Sprawozdanie_2/artifact_result.tar.gz"
-
 # Rozpakuj do katalogu
 tar -xzf /tmp/artifact_result.tar.gz -C /usr/local/bin/chalk-pipe
-
 # Prawa wykonania
 chmod +x /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js
-
 # Utwórz plik jednostki systemd
 cat <<EOF > /etc/systemd/system/chalk-pipe.service
 [Unit]
 Description=Start chalk-pipe example.js
 After=network.target
-
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/node /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js
@@ -65,13 +59,10 @@ WorkingDirectory=/usr/local/bin/chalk-pipe/lib/chalk-pipe
 RemainAfterExit=yes
 StandardOutput=journal
 StandardError=journal
-
-
 [Install]
 WantedBy=multi-user.target
 EOF
 cat <<'EOF' >> /home/kmazur/.bash_profile
-
 echo ""
 echo ">>> Uruchamiam chalk-pipe (example.js):"
 echo "----------------------------------------"
@@ -79,10 +70,8 @@ node /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js
 echo ">>> Zakończono działanie example.js"
 echo ""
 EOF
-
 chown kmazur:kmazur /home/kmazur/.bash_profile
 systemctl enable chalk-pipe.service
-
 echo ">>> Instalacja zakończona."
 %end
 

@@ -366,8 +366,6 @@ Majac plan działania możemy przystąpić do pisania sekcji `%post`:
 
 ```cfg
 %post --log=/var/log/ks-post.log
-set -x
-exec > /dev/tty3 2>&1
 echo ">>> Rozpoczynam pobieranie artefaktu z Jenkinsa..."
 # Katalog docelowy
 mkdir -p /usr/local/bin/chalk-pipe
@@ -392,7 +390,6 @@ StandardError=journal
 [Install]
 WantedBy=multi-user.target
 EOF
-# Dodaj uruchamianie przy logowaniu użytkownika
 cat <<'EOF' >> /home/kmazur/.bash_profile
 echo ""
 echo ">>> Uruchamiam chalk-pipe (example.js):"
@@ -401,9 +398,7 @@ node /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js
 echo ">>> Zakończono działanie example.js"
 echo ""
 EOF
-# Ustaw właściciela pliku .bash_profile
 chown kmazur:kmazur /home/kmazur/.bash_profile
-# Włącz usługę przy starcie systemu
 systemctl enable chalk-pipe.service
 echo ">>> Instalacja zakończona."
 %end
@@ -411,20 +406,32 @@ echo ">>> Instalacja zakończona."
 
 Analizując każdą z sekcji:
 
-| **Kod YAML / Bash** | **Opis działania** |
-|----------------------|--------------------|
-| `%post --log=/var/log/ks-post.log` | Rozpoczyna sekcję postinstalacyjną. Wszystkie polecenia w tym bloku będą logowane do `/var/log/ks-post.log`. |
-| `set -x` | Włącza śledzenie każdej komendy wykonywanej w `%post`, co ułatwia debugowanie i analizę w logach. |
-| `exec > /dev/tty3 2>&1` | Przekierowuje standardowe wyjście i błędy z `%post` na konsolę `tty3`, dzięki czemu postęp instalacji jest widoczny „na żywo” podczas instalacji tekstowej. |
-| `mkdir -p /usr/local/bin/chalk-pipe` | Tworzy katalog, do którego zostanie rozpakowany artefakt z Jenkinsa. `-p` zapobiega błędowi, jeśli katalog już istnieje. |
-| `wget -O /tmp/artifact_result.tar.gz ...` | Pobiera plik `.tar.gz` z ostatniego udanego buildu Jenkinsa do katalogu tymczasowego. |
-| `tar -xzf /tmp/artifact_result.tar.gz -C /usr/local/bin/chalk-pipe` | Rozpakowuje zawartość archiwum do katalogu `/usr/local/bin/chalk-pipe`. Flagi `-xzf` oznaczają: wypakuj (`x`), z pliku gzip (`z`), z nazwą pliku (`f`). |
-| `chmod +x /usr/local/bin/chalk-pipe/lib/chalk-pipe/example.js` | Nadaje plikowi `example.js` prawo do uruchamiania (execute). |
-| `cat <<EOF > /etc/systemd/system/chalk-pipe.service`<br>(...) | Tworzy plik jednostki systemd, który pozwoli uruchomić aplikację jako usługę. `Type=oneshot` oznacza, że aplikacja wykona się raz i zakończy. |
-| `WorkingDirectory=...` | Określa katalog roboczy, w którym uruchomiona zostanie aplikacja. |
-| `RemainAfterExit=yes` | Usługa będzie widoczna jako „active (exited)” po zakończeniu działania, nie jako zakończona. |
-| `systemctl enable chalk-pipe.service` | Rejestruje usługę `chalk-pipe.service` do automatycznego uruchamiania przy starcie systemu. |
-| `cat <<'EOF' >> /home/kmazur/.bash_profile`<br>(...) | Dodaje do `.bash_profile` użytkownika `kmazur` kod, który uruchamia aplikację przy każdym logowaniu (i wypisuje jej wynik do konsoli). |
-| `chown kmazur:kmazur /home/kmazur/.bash_profile` | Upewnia się, że plik `.bash_profile` należy do użytkownika `kmazur`, by nie było problemów z jego uruchamianiem. |
-| `echo ">>> Instalacja zakończona."` | Komunikat końcowy – pojawi się w logach i w konsoli jako potwierdzenie zakończenia działania `%post`. |
-| `%end` | Zamyka sekcję `%post` – obowiązkowy koniec bloku w Kickstarcie. |
+| **Kod (skrót)** | **Opis działania** |
+|------------------|--------------------|
+| `%post --log=/var/log/ks-post.log` | Rozpoczyna sekcję postinstalacyjną. Wszystkie wyjścia i błędy z tego bloku zostaną zapisane do logu `/var/log/ks-post.log`. |
+| `echo ">>> Rozpoczynam pobieranie artefaktu z Jenkinsa..."` | Komunikat informacyjny – sygnalizuje rozpoczęcie pobierania aplikacji. |
+| `mkdir -p /usr/local/bin/chalk-pipe` | Tworzy katalog docelowy, do którego zostanie rozpakowany artefakt. Flaga `-p` sprawia, że nie wystąpi błąd, jeśli katalog już istnieje. |
+| `wget -O /tmp/artifact_result.tar.gz "http://..."` | Pobiera artefakt `.tar.gz` z ostatniego udanego buildu Jenkinsa i zapisuje go tymczasowo jako `/tmp/artifact_result.tar.gz`. |
+| `tar -xzf /tmp/artifact_result.tar.gz -C /usr/local/bin/chalk-pipe` | Rozpakowuje archiwum `.tar.gz` do katalogu `/usr/local/bin/chalk-pipe`. Flagi `xzf` oznaczają: wypakuj, gzip, plik. |
+| `chmod +x ...example.js` | Nadaje plikowi `example.js` prawo do uruchamiania (execute), aby Node.js mógł go wykonać. |
+| `cat <<EOF > /etc/systemd/system/chalk-pipe.service`<br>(...) | Tworzy plik jednostki systemd do uruchamiania aplikacji `example.js` jako usługi. Usługa będzie typu `oneshot`, czyli wykona się jednorazowo i zakończy. |
+| `WorkingDirectory=...` | Określa katalog roboczy dla procesu – ma znaczenie dla względnych ścieżek wewnątrz aplikacji. |
+| `RemainAfterExit=yes` | Pozwala, by usługa pozostała w stanie „active (exited)” po zakończeniu działania – nie jest oznaczana jako „dead”. |
+| `cat <<'EOF' >> /home/kmazur/.bash_profile`<br>(...) | Dodaje do `.bash_profile` użytkownika `kmazur` kod, który automatycznie uruchamia aplikację po zalogowaniu (i wypisuje jej wynik na ekran). |
+| `chown kmazur:kmazur /home/kmazur/.bash_profile` | Zapewnia, że użytkownik `kmazur` ma pełne prawa do pliku `.bash_profile`, aby mógł go wykonać po zalogowaniu. |
+| `systemctl enable chalk-pipe.service` | Rejestruje usługę `chalk-pipe` do automatycznego uruchomienia przy starcie systemu. |
+| `echo ">>> Instalacja zakończona."` | Końcowy komunikat potwierdzający zakończenie działania `%post`. |
+| `%end` | Kończy sekcję `%post` – obowiązkowa składnia w pliku Kickstart. |
+
+Po zakończonej instalacji i zrebootowaniu systemu loguje się na użytkownika kmazur i otrzymuje następujący wydruk:
+
+![wydruk](./09/img/po_log.png)
+
+Po wpisaniu komendy `systemctl status chalk-pipe.service` otrzymuje:
+
+![service](./09/img/drug_status.png)
+
+Przechodząc do folderu `/usr/local/bin/chalk-pipe...` i wykonaniu `node example.js` otrzymuje:
+
+![wydruk2](./09/img/recznie.png)
+
