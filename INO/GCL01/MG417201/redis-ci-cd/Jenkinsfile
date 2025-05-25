@@ -21,10 +21,14 @@ pipeline {
       steps {
         dir('INO/GCL01/MG417201/redis-ci-cd') {
           sh 'docker build -t redis_test:1.0 -f Dockerfile.test.redis .'
+          sh 'docker run --rm redis_test:1.0 > logs/test.log 2>&1'
         }
       }
-      post { always { archiveArtifacts artifacts: '*.log', fingerprint: true } }
+      post {
+        always { archiveArtifacts artifacts: 'INO/GCL01/MG417201/redis-ci-cd/logs/*.log', fingerprint: true}
+      }
     }
+
     stage('Deploy') {
       steps {
         script {

@@ -349,3 +349,4 @@ Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje s
 
 ## Kompletny pipeline
 
+Tworząc kompletny pipeline korzystałem z tych samych plików Dockerfile do buildu oraz testowania oprogramowania, co w poprzednim pipeline. Dodałem nowy plik Dockerfile.runtime
