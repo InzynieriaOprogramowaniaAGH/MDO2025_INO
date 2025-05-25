@@ -351,6 +351,24 @@ Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje s
 
 >Tworząc kompletny pipeline korzystałem z tych samych plików Dockerfile do buildu oraz testowania oprogramowania, co w poprzednim pipeline. Dodałem nowy plik [Dockerfile.runtime](../redis-ci-cd/Dockerfile.runtime), który służy do zbudowania lekkiego, produkcyjnego obrazu redisa, zawierającego tylko to, co jest absolutnie niezbędne do jego uruchomienia, w odróżnieniu od obrazu buildowego, który ma wszystkie narzędzia kompilacyjne.
 
+### Wymagania środowiskowe procesu CI/CD:
+
+- Host Jenkins:
+
+  - System Fedora z Dockerem
+
+  - Zsynchronizowany zegar NTP, by apt update w kontenerach działało poprawnie
+
+  - Docker socket udostępniony kontenerom Jenkinsa
+
+- Jenkins:
+
+  - Zainstalowane wtyczki: Docker Pipeline, Git, Blue Ocean
+
+  - Agent skonfigurowany jako DIND (docker:20.10-dind + --privileged)
+
+- Repozytorium Git z Jenkinsfile i wszystkimi Dockerfile w ścieżce INO/GCL01/MG417201/redis-ci-cd
+
 ### Utworzenie Pipeline'a
 
 <div align="center"> 
@@ -387,4 +405,26 @@ Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje s
     <img src="screens5/30.jpg">
 </div>
 
+<div align="center"> 
+    <img src="screens5/31.jpg">
+</div>
+
 >[Console logs](../redis-ci-cd/output/logs.log)
+
+#### Deploy
+
+- W stage'u Deploy utworzony został nowy obraz runtime `redis_runtime:1.0` oraz kontener o tej samej nazwie. Wybrałem dystrybucję jako Docker Image, ponieważ obraz ten zawiera tylko finalne binarki i plik konfiguracyjny – nie zawiera źródeł, narzędzi deweloperskich ani logów. Zapewnia to minimalny rozmiar i większe bezpieczeństwo poprzez zmniejszoną powierzchnię ataku, a także jasną separacęa build i runtime: build w obrazie redis_build, runtime w redis_runtime.
+
+<div align="center"> 
+    <img src="screens5/32.jpg">
+</div>
+
+#### Publish
+
+- W ramach Publish zostało stworzone archiwum [redis-1.0.zip](../redis-ci-cd/output/redis-1.0.zip). Wypakowane pliki binarne `redis-cli` oraz `redis-server` znajdują się w [katalogu](../redis-ci-cd/output/binaries_unzipped/). Wybrałem format ZIP zawierający wyłącznie skompilowane binarki (redis-server, redis-cli), ponieważ jest to lekki format, powszechnie rozumiany na różnych platformach, nie wymagający instalatora systemowego. Umożliwia uruchomienie redisa bez Dockera - wystarczy rozpakować i odpalić binarkę.
+
+### Smoke-tests
+
+<div align="center"> 
+    <img src="screens5/33.jpg">
+</div>

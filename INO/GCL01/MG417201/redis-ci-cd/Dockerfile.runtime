@@ -1,6 +1,6 @@
 FROM redis_build:1.0 AS builder
 
-FROM ubuntu:20.04
+FROM ubuntu:latest
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates \
