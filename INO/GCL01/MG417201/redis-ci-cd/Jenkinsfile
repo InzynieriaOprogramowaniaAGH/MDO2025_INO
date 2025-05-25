@@ -21,7 +21,11 @@ pipeline {
       steps {
         dir('INO/GCL01/MG417201/redis-ci-cd') {
           sh 'docker build -t redis_test:1.0 -f Dockerfile.test.redis .'
-          sh 'docker run --rm redis_test:1.0 > logs/test.log 2>&1'
+          
+          sh '''
+            mkdir -p logs
+            docker run --rm redis_test:1.0 > logs/test.log 2>&1
+          '''
         }
       }
       post {
