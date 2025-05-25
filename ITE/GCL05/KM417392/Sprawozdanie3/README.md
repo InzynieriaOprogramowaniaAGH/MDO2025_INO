@@ -15,17 +15,20 @@ a) Połączenie za pomocą adresu IP
 ```
 ssh-keygen
 ```
+
 2. Skopiowanie klucza publicznego na maszynę ```ansible-target```
 ```
 ssh-copy-id ansible@IP_address
 ```
 ![obraz](KM/zajecia8/1.png)
+
 3. Połączenie przez SSH bez hasła
 ```
 ssh ansible@IP_address
 ```
 ![obraz](KM/zajecia8/2.png)
 <a name="połączenie-z-użyciem-nazwy-hosta"></a>
+
 b) Połączenie z użyciem nazwy hosta
 
 1. Edycja pliku ```/etc/hosts```
