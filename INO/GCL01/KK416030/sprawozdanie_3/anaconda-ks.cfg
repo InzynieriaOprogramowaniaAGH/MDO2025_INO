@@ -26,4 +26,4 @@ timezone Europe/Warsaw --utc
 
 # Root password
 rootpw --iscrypted --allow-ssh $y$j9T$0BSruj//SiUG3IsrLZxhAm6u$bcoBHKVd0cSAq1gvcCAZZqj0X5X0axUbdk4vfU7Ua91
-user --groups=wheel --name=kaleta --password=root --plaintext  --gecos="kaleta"
+user --groups=wheel --name=kaletka --password=root --plaintext  --gecos="kaletka"
