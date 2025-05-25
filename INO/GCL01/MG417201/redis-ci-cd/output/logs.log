@@ -1,0 +1,406 @@
+Started by user mati
+
+Obtained INO/GCL01/MG417201/redis-ci-cd/Jenkinsfile from git https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins
+ in /var/jenkins_home/workspace/redis-ci-cd-pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: git
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/redis-ci-cd-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/MG417201^{commit} # timeout=10
+Checking out Revision 12caa075db09a3a6e472df002f0cbc70df98b0d7 (refs/remotes/origin/MG417201)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 12caa075db09a3a6e472df002f0cbc70df98b0d7 # timeout=10
+Commit message: "MG417201: report modification"
+ > git rev-list --no-walk 5af24c2bbbc1e2152ed9d2f807b30d6ad38b2912 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker inspect -f . docker:20.10-dind
+.
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] withDockerContainer
+Jenkins seems to be running inside container 1e8a41a9dde20b8e56044c54e51b6c2bd743609409106dbdfc3881b48d8f954a
+$ docker run -t -d -u 0:0 --privileged -v /var/run/docker.sock:/var/run/docker.sock -w /var/jenkins_home/workspace/redis-ci-cd-pipeline --volumes-from 1e8a41a9dde20b8e56044c54e51b6c2bd743609409106dbdfc3881b48d8f954a -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** docker:20.10-dind cat
+$ docker top f7ee287637afda65d797edc6dec1a2c56fa9331d501d078d610437c79148d88c -eo pid,comm
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] checkout
+The recommended git tool is: git
+No credentials specified
+Warning: JENKINS-30600: special launcher org.jenkinsci.plugins.docker.workflow.WithContainerStep$Decorator$1@b405701; decorates hudson.Launcher$LocalLauncher@2a38df51 will be ignored (a typical symptom is the Git executable not being run inside a designated container)
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/redis-ci-cd-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/MG417201^{commit} # timeout=10
+Checking out Revision 12caa075db09a3a6e472df002f0cbc70df98b0d7 (refs/remotes/origin/MG417201)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 12caa075db09a3a6e472df002f0cbc70df98b0d7 # timeout=10
+Commit message: "MG417201: report modification"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/redis-ci-cd-pipeline/INO/GCL01/MG417201/redis-ci-cd
+[Pipeline] {
+[Pipeline] sh
++ docker build -t redis_build:1.0 -f Dockerfile.build.redis .
+#1 [internal] load build definition from Dockerfile.build.redis
+#1 sha256:bcde4e22626a82461fc7590ecfdeecc49b5c2f91a2d8e458aa236ae1f1f286ea
+#1 transferring dockerfile: 290B 0.0s done
+#1 DONE 0.7s
+
+#3 [internal] load metadata for docker.io/library/ubuntu:latest
+#3 sha256:0ea2d3a5bc7b93ef916ceeff90f587f343b4d52df26c632a199e326f7a620686
+#3 DONE 0.0s
+
+#2 [internal] load .dockerignore
+#2 sha256:29423c39fe02bb786168adb003a20a1d13762451e107ffcdab5ded65f10d795f
+#2 transferring context: 0.0s
+#2 transferring context: 2B 0.0s done
+#2 DONE 0.6s
+
+#8 [1/5] FROM docker.io/library/ubuntu:latest
+#8 sha256:493c534c8c7c53763e5e72fbefd3b115364c9b79ffe34b8a34192b4eacec7dfd
+#8 DONE 0.0s
+
+#7 [2/5] RUN apt update && apt install -y     build-essential tcl git
+#7 sha256:7f6707f3d8c33d1bdb23bbaf1fdca90791afe3a9cff24289923fdec34d4e64eb
+#7 CACHED
+
+#6 [3/5] RUN git clone https://github.com/redis/redis.git
+#6 sha256:a1b9ea35c9995ead68ae7b0a880116fcb81f81f8ebfd78610c1ff20220db0c4e
+#6 CACHED
+
+#5 [4/5] WORKDIR /redis
+#5 sha256:245052f39e62576eaaef28829565cd79e49ca853f0bc8819c2dd283ef8fcf6a7
+#5 CACHED
+
+#4 [5/5] RUN make
+#4 sha256:f95f42aed95ed57f314ee953136146373cf9394e6e3844e11919ab49e628ba6c
+#4 CACHED
+
+#9 exporting to image
+#9 sha256:5dcffbca0629f68511206ae8c64ad88082ef98bc78b97ffe08dada4c17ab1fb6
+#9 exporting layers done
+#9 writing image sha256:936186acb738a2ce97ae4010d9a80ee72cc36d9ffcd494ada15727582dca6e09
+#9 writing image sha256:936186acb738a2ce97ae4010d9a80ee72cc36d9ffcd494ada15727582dca6e09 0.0s done
+#9 naming to docker.io/library/redis_build:1.0 0.1s done
+#9 DONE 0.2s
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/redis-ci-cd-pipeline/INO/GCL01/MG417201/redis-ci-cd
+[Pipeline] {
+[Pipeline] sh
++ docker build -t redis_test:1.0 -f Dockerfile.test.redis .
+#1 [internal] load build definition from Dockerfile.test.redis
+#1 sha256:6b12fa94d244c6c0fcebd5daf6d7932a85588f84740fa51244ecbedb17c6ca4f
+#1 transferring dockerfile: 107B 0.0s
+#1 transferring dockerfile: 317B 0.0s done
+#1 DONE 0.4s
+
+#3 [internal] load metadata for docker.io/library/redis_build:latest
+#3 sha256:435984f68ea390be79aeac3941f0fb8e3952cc2074146218a4ad8908c2b0d86d
+#3 DONE 0.0s
+
+#2 [internal] load .dockerignore
+#2 sha256:3738fab6b61162c4017d552effd8f70a151178549e0cebe576d7ecb1474db537
+#2 transferring context: 2B 0.0s done
+#2 DONE 0.3s
+
+#6 [1/3] FROM docker.io/library/redis_build:latest
+#6 sha256:d4b1eb48481ab9eb8ba2bcd0827c5b2204766e422e6af260ba100c2defc995d5
+#6 DONE 0.0s
+
+#5 [2/3] WORKDIR /redis
+#5 sha256:70342f1d408e675166254280f6aa8aac3bfa6169ceed13ead52773255091d09f
+#5 CACHED
+
+#4 [3/3] RUN ./runtest --single unit/type/string --single unit/type/list   --tags "-slow -needs:save -needs:repl -external:skip -latency-monitor -needs:latency"
+#4 sha256:d0f4bd4a01ac18c296190ec89fd91012abee74d63e840f0a057267f9d8ad0b7a
+#4 CACHED
+
+#7 exporting to image
+#7 sha256:002d3d69df9d92f20c728b5a2440d5d7c8dfafd3f82375ea857588cff574a076
+#7 exporting layers done
+#7 writing image sha256:dbe15d116ca56cc8fb9619c302cdf94d54b87817f4ce28dd7c5efb6fff2b3df7 0.0s done
+#7 naming to docker.io/library/redis_test:1.0 0.1s done
+#7 DONE 0.2s
+[Pipeline] sh
++ mkdir -p logs
++ docker run --rm redis_test:1.0
+[Pipeline] }
+[Pipeline] // dir
+Post stage
+[Pipeline] archiveArtifacts
+Archiving artifacts
+Recording fingerprints
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/redis-ci-cd-pipeline/INO/GCL01/MG417201/redis-ci-cd
+[Pipeline] {
+[Pipeline] sh
++ docker build -t redis_runtime:1.0 -f Dockerfile.runtime .
+#1 [internal] load build definition from Dockerfile.runtime
+#1 sha256:9bfe8405be71df9e242b4c6f35249be8e832e3145402d6f59f26d64f4db2929f
+#1 transferring dockerfile:
+#1 transferring dockerfile: 696B 0.2s done
+#1 DONE 0.8s
+
+#3 [internal] load metadata for docker.io/library/redis_build:1.0
+#3 sha256:8c0534f2c38e8d3de379abc0b40b486342fac5ec55f664c15e53e8d8ee0a60c3
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:20.04
+#2 sha256:2a29e3e90428749457c4f6a055c1176ec7b6df394125351d791538d1efb3f2af
+#2 DONE 2.2s
+
+#4 [internal] load .dockerignore
+#4 sha256:50d9c13e22a2dc9f80bec8bb6b4648c6330c744447103f692ccc2d1b35bf8c9e
+#4 transferring context:
+#4 transferring context: 2B 0.0s done
+#4 DONE 0.5s
+
+#9 [builder 1/1] FROM docker.io/library/redis_build:1.0
+#9 sha256:d42f30b235f29f406ec32bdd260d459bbadd59fdff06f4f2a89f24b96bc60f06
+#9 DONE 0.0s
+
+#12 [stage-1 1/7] FROM docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214
+#12 sha256:8fd708ec6f169c66a7060db80d6066d152fb1e1ba8fb54925d915d19f03eb5a0
+#12 resolve docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214
+#12 resolve docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214 1.0s done
+#12 ...
+
+#9 [builder 1/1] FROM docker.io/library/redis_build:1.0
+#9 sha256:d42f30b235f29f406ec32bdd260d459bbadd59fdff06f4f2a89f24b96bc60f06
+#9 CACHED
+
+#12 [stage-1 1/7] FROM docker.io/library/ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214
+#12 sha256:8fd708ec6f169c66a7060db80d6066d152fb1e1ba8fb54925d915d19f03eb5a0
+#12 sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214 6.69kB / 6.69kB done
+#12 sha256:c664f8f86ed5a386b0a340d981b8f81714e21a8b9c73f658c4bea56aa179d54a 424B / 424B done
+#12 sha256:b7bab04fd9aa0c771e5720bf0cc7cbf993fd6946645983d9096126e5af45d713 2.30kB / 2.30kB done
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 0B / 27.51MB 0.5s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 2.10MB / 27.51MB 1.3s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 4.19MB / 27.51MB 1.8s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 6.29MB / 27.51MB 2.1s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 8.39MB / 27.51MB 2.3s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 11.53MB / 27.51MB 2.7s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 13.63MB / 27.51MB 3.1s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 15.73MB / 27.51MB 3.4s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 17.83MB / 27.51MB 3.7s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 19.51MB / 27.51MB 4.0s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 20.97MB / 27.51MB 4.2s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 23.07MB / 27.51MB 4.8s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 25.17MB / 27.51MB 5.1s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 27.51MB / 27.51MB 5.4s
+#12 sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 27.51MB / 27.51MB 5.8s done
+#12 extracting sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 0.0s
+#12 extracting sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 5.1s
+#12 extracting sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 10.3s
+#12 extracting sha256:13b7e930469f6d3575a320709035c6acf6f5485a76abcf03d1b92a64c09c2476 15.5s done
+#12 DONE 24.2s
+
+#11 [stage-1 2/7] RUN apt-get update  && apt-get install -y --no-install-recommends ca-certificates  && rm -rf /var/lib/apt/lists/*
+#11 sha256:790b4e8a25a7e9825beb05ef329496d4688b167c3d2e41381372375125a2ffe4
+#11 8.534 Get:1 http://security.ubuntu.com/ubuntu focal-security InRelease [128 kB]
+#11 8.581 Get:2 http://archive.ubuntu.com/ubuntu focal InRelease [265 kB]
+#11 9.168 Get:3 http://archive.ubuntu.com/ubuntu focal-updates InRelease [128 kB]
+#11 9.370 Get:4 http://archive.ubuntu.com/ubuntu focal-backports InRelease [128 kB]
+#11 10.09 Get:5 http://security.ubuntu.com/ubuntu focal-security/multiverse amd64 Packages [33.1 kB]
+#11 10.26 Get:6 http://security.ubuntu.com/ubuntu focal-security/universe amd64 Packages [1308 kB]
+#11 10.63 Get:7 http://security.ubuntu.com/ubuntu focal-security/main amd64 Packages [4421 kB]
+#11 12.07 Get:8 http://security.ubuntu.com/ubuntu focal-security/restricted amd64 Packages [4782 kB]
+#11 12.23 Get:9 http://archive.ubuntu.com/ubuntu focal/restricted amd64 Packages [33.4 kB]
+#11 12.43 Get:10 http://archive.ubuntu.com/ubuntu focal/main amd64 Packages [1275 kB]
+#11 12.70 Get:11 http://archive.ubuntu.com/ubuntu focal/universe amd64 Packages [11.3 MB]
+#11 19.03 Get:12 http://archive.ubuntu.com/ubuntu focal/multiverse amd64 Packages [177 kB]
+#11 19.21 Get:13 http://archive.ubuntu.com/ubuntu focal-updates/multiverse amd64 Packages [36.8 kB]
+#11 19.30 Get:14 http://archive.ubuntu.com/ubuntu focal-updates/universe amd64 Packages [1599 kB]
+#11 21.68 Get:15 http://archive.ubuntu.com/ubuntu focal-updates/restricted amd64 Packages [4979 kB]
+#11 26.26 Get:16 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 Packages [4910 kB]
+#11 26.99 Get:17 http://archive.ubuntu.com/ubuntu focal-backports/main amd64 Packages [55.2 kB]
+#11 27.01 Get:18 http://archive.ubuntu.com/ubuntu focal-backports/universe amd64 Packages [28.6 kB]
+#11 33.34 Fetched 35.6 MB in 25s (1410 kB/s)
+#11 33.34 Reading package lists...
+#11 44.58 Reading package lists...
+#11 56.40 Building dependency tree...
+#11 57.77 Reading state information...
+#11 60.07 The following additional packages will be installed:
+#11 60.07   libssl1.1 openssl
+#11 60.94 The following NEW packages will be installed:
+#11 60.96   ca-certificates libssl1.1 openssl
+#11 61.40 0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+#11 61.40 Need to get 2104 kB of archives.
+#11 61.40 After this operation, 5827 kB of additional disk space will be used.
+#11 61.40 Get:1 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 libssl1.1 amd64 1.1.1f-1ubuntu2.24 [1323 kB]
+#11 62.26 Get:2 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 openssl amd64 1.1.1f-1ubuntu2.24 [621 kB]
+#11 62.34 Get:3 http://archive.ubuntu.com/ubuntu focal-updates/main amd64 ca-certificates all 20240203~20.04.1 [159 kB]
+#11 67.36 debconf: delaying package configuration, since apt-utils is not installed
+#11 67.67 Fetched 2104 kB in 2s (989 kB/s)
+#11 68.02 Selecting previously unselected package libssl1.1:amd64.
+#11 68.02 (Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 4124 files and directories currently installed.)
+#11 68.04 Preparing to unpack .../libssl1.1_1.1.1f-1ubuntu2.24_amd64.deb ...
+#11 68.32 Unpacking libssl1.1:amd64 (1.1.1f-1ubuntu2.24) ...
+#11 69.81 Selecting previously unselected package openssl.
+#11 69.82 Preparing to unpack .../openssl_1.1.1f-1ubuntu2.24_amd64.deb ...
+#11 69.88 Unpacking openssl (1.1.1f-1ubuntu2.24) ...
+#11 70.94 Selecting previously unselected package ca-certificates.
+#11 70.94 Preparing to unpack .../ca-certificates_20240203~20.04.1_all.deb ...
+#11 70.97 Unpacking ca-certificates (20240203~20.04.1) ...
+#11 71.56 Setting up libssl1.1:amd64 (1.1.1f-1ubuntu2.24) ...
+#11 72.04 debconf: unable to initialize frontend: Dialog
+#11 72.04 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#11 72.04 debconf: falling back to frontend: Readline
+#11 72.05 debconf: unable to initialize frontend: Readline
+#11 72.05 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC contains: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.30.0 /usr/local/share/perl/5.30.0 /usr/lib/x86_64-linux-gnu/perl5/5.30 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl/5.30 /usr/share/perl/5.30 /usr/local/lib/site_perl /usr/lib/x86_64-linux-gnu/perl-base) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 7.)
+#11 72.05 debconf: falling back to frontend: Teletype
+#11 72.36 Setting up openssl (1.1.1f-1ubuntu2.24) ...
+#11 72.49 Setting up ca-certificates (20240203~20.04.1) ...
+#11 73.08 debconf: unable to initialize frontend: Dialog
+#11 73.08 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#11 73.08 debconf: falling back to frontend: Readline
+#11 73.08 debconf: unable to initialize frontend: Readline
+#11 73.17 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC contains: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.30.0 /usr/local/share/perl/5.30.0 /usr/lib/x86_64-linux-gnu/perl5/5.30 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl/5.30 /usr/share/perl/5.30 /usr/local/lib/site_perl /usr/lib/x86_64-linux-gnu/perl-base) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 7.)
+#11 73.17 debconf: falling back to frontend: Teletype
+#11 80.94 Updating certificates in /etc/ssl/certs...
+#11 86.61 146 added, 0 removed; done.
+#11 86.76 Processing triggers for libc-bin (2.31-0ubuntu9.17) ...
+#11 86.87 Processing triggers for ca-certificates (20240203~20.04.1) ...
+#11 86.91 Updating certificates in /etc/ssl/certs...
+#11 89.94 0 added, 0 removed; done.
+#11 89.94 Running hooks in /etc/ca-certificates/update.d...
+#11 89.95 done.
+#11 DONE 90.8s
+
+#10 [stage-1 3/7] RUN mkdir -p /data  && useradd --no-create-home --shell /usr/sbin/nologin redis
+#10 sha256:a2ca701edfd0d48b7c302929872680290a4ab85808b04162dd669484c8f93eae
+#10 DONE 2.0s
+
+#8 [stage-1 4/7] COPY --from=builder /redis/src/redis-server /usr/local/bin/redis-server
+#8 sha256:094c256937d18d9769f148378a83bca6886ec20935cb20983bdbf3f9836c3967
+#8 DONE 0.9s
+
+#7 [stage-1 5/7] COPY --from=builder /redis/src/redis-cli    /usr/local/bin/redis-cli
+#7 sha256:a0532aac4009c0d2da046bd8a6d79fc01bea672fd469fd7bbeaa1c279d1eb01b
+#7 DONE 0.8s
+
+#6 [stage-1 6/7] COPY --from=builder /redis/redis.conf        /etc/redis/redis.conf
+#6 sha256:2b62f72078daf8cbf5bd53418decc2cf4fb6d59309f4c29ffc95fbe96b95f4d5
+#6 DONE 0.9s
+
+#5 [stage-1 7/7] RUN chown -R redis:redis /data
+#5 sha256:d680807fe8d8bad8d4889ffd0af17c2cf8730d3b23b32110b644f30704ae3a94
+#5 DONE 2.0s
+
+#13 exporting to image
+#13 sha256:3f0625f0756f529156eba0b89e432d9b319a9ba91c5b86ad668aa2fee19b4663
+#13 exporting layers
+#13 exporting layers 1.2s done
+#13 writing image sha256:ee5a8f85624a2481d6fb20a65d526c51b844d564e3ab17d76e0cd713e616dc90 0.0s done
+#13 naming to docker.io/library/redis_runtime:1.0 0.0s done
+#13 DONE 1.3s
+[Pipeline] sh
++ docker run -d --name redis-runtime redis_runtime:1.0
+2ad39b7d366154b50c1d128e33dd7e9186a2c08bba2e5578fb104a9c60c40fb3
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Publish)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ docker create --name tmp redis_runtime:1.0
+33620cbcbc221aaf31b6b9b4a719eb729f504392a7150abcff4c1128474dc31d
++ docker cp tmp:/usr/local/bin ./redis-binaries
++ docker rm tmp
+tmp
+[Pipeline] sh
++ apk add --no-cache zip
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.18/main/x86_64/APKINDEX.tar.gz
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.18/community/x86_64/APKINDEX.tar.gz
+(1/2) Installing unzip (6.0-r14)
+(2/2) Installing zip (3.0-r12)
+Executing busybox-1.36.0-r9.trigger
+OK: 32 MiB in 58 packages
+[Pipeline] sh
++ zip -j redis-1.0.zip redis-binaries/redis-cli redis-binaries/redis-server
+  adding: redis-cli (deflated 63%)
+  adding: redis-server (deflated 59%)
+[Pipeline] archiveArtifacts
+Archiving artifacts
+Recording fingerprints
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+Pipeline zakończony – artefakt gotowy do pobrania.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+$ docker stop --time=1 f7ee287637afda65d797edc6dec1a2c56fa9331d501d078d610437c79148d88c
+$ docker rm -f --volumes f7ee287637afda65d797edc6dec1a2c56fa9331d501d078d610437c79148d88c
+[Pipeline] // withDockerContainer
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

@@ -349,4 +349,42 @@ Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje s
 
 ## Kompletny pipeline
 
-Tworząc kompletny pipeline korzystałem z tych samych plików Dockerfile do buildu oraz testowania oprogramowania, co w poprzednim pipeline. Dodałem nowy plik [Dockerfile.runtime](../redis-ci-cd/Dockerfile.runtime).
+>Tworząc kompletny pipeline korzystałem z tych samych plików Dockerfile do buildu oraz testowania oprogramowania, co w poprzednim pipeline. Dodałem nowy plik [Dockerfile.runtime](../redis-ci-cd/Dockerfile.runtime), który służy do zbudowania lekkiego, produkcyjnego obrazu redisa, zawierającego tylko to, co jest absolutnie niezbędne do jego uruchomienia, w odróżnieniu od obrazu buildowego, który ma wszystkie narzędzia kompilacyjne.
+
+### Utworzenie Pipeline'a
+
+<div align="center"> 
+    <img src="screens5/25.jpg">
+</div>
+
+<div align="center"> 
+    <img src="screens5/26.jpg">
+</div>
+
+>[Jenkinsfile](../redis-ci-cd/Jenkinsfile)
+
+### Diagramy UML
+
+- Activity diagram
+
+<div align="center"> 
+    <img src="screens5/27.jpg">
+</div>
+
+- Deployment diagram
+
+<div align="center"> 
+    <img src="screens5/28.jpg">
+</div>
+
+### Uruchomienie pipeline'a
+
+<div align="center"> 
+    <img src="screens5/29.jpg">
+</div>
+
+<div align="center"> 
+    <img src="screens5/30.jpg">
+</div>
+
+>[Console logs](../redis-ci-cd/output/logs.log)
