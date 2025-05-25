@@ -321,7 +321,7 @@ Pochylmy się najpierw nad każdą z sekcji:
 | `rootpw --iscrypted ...`                     | Hasło root w postaci zaszyfrowanej (`--iscrypted`).                                                                                                                 |
 | `user --groups=wheel --name=kmazur ...`      | Tworzy użytkownika `kmazur`, dodaje go do grupy `wheel` (czyli umożliwia `sudo`), ustawia jego hasło (również zaszyfrowane) oraz pełną nazwę użytkownika (`gecos`). |
 
-Możemy teraz po przesłaniu tego plika na repo i zapisaniu linku do pliku raw, możemy uruchomić instalacje, a kiedy włącza nam się ekran GRUB klikamy klawisz r i dopisujemy `inst.ks=link_do_pliku_raw` - przykładowo:
+Możemy teraz po przesłaniu tego plika na repo i zapisaniu linku do pliku raw, możemy uruchomić instalacje, a kiedy włącza nam się ekran GRUB klikamy klawisz e i dopisujemy `inst.ks=link_do_pliku_raw` - przykładowo:
 
 ![grub](./09/img/GRUB.png)
 

@@ -38,7 +38,7 @@ user --groups=wheel --name=kmazur --password=$y$j9T$ig8mzamRlSafku6bcoOJDbYc$VKf
 
 %post --log=/var/log/ks-post.log
 set -x
-exec > /dev/tty3 2>&1
+exec > /dev/tt1 2>&1
 echo ">>> Rozpoczynam pobieranie artefaktu z Jenkinsa..."
 # Katalog docelowy
 mkdir -p /usr/local/bin/chalk-pipe
