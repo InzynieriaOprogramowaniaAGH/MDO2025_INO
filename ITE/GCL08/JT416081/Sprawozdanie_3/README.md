@@ -1,5 +1,15 @@
 Jakub Tyliński, Grupa 8, 416081
 
+**Kickstart**
+
+![alt text](image22.png)
+
+![alt text](image23.png)
+
+![alt text](image24.png)
+
+![alt text](image25.png)
+
 **Ansible**
 
 Zajęcia poświecone narzędziu jakim jest Ansible rozpoczołem od przygotowania drugiej VM na tym samym obrazie co moja maszyna główna. Aby obie VM-ki się widziały dodałem kartę sieciową - sieć NAT z utworzoną wcześniej siecią NAT z zakresem IP 10.2.0.X/24. W celu uniknięcią problemów na na nowej VM-ce zmieniłem przypisany adres automatycznie adres IP. W przeciwnym wypadku dwie VM-ki w tej samej sieci miały by dokładnie ten sam adres - 10.2.0.15!
@@ -274,3 +284,113 @@ i -> wskazanie pliku inventory
 Wynik działania playbooka:
 
 ![alt text](image21.png)
+
+**Kubernetes**
+
+Instalacja klastra Kubernetes
+
+Proces instalacji zgodnie z oficjalną dokumentacją minikube rozpoczołem do pobrania najnowszej wersji pliku binarnego za pomocą:
+
+```
+curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
+```
+
+W dalszej części wykonałem komendę: 
+
+```
+sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+```
+
+Komenda ta instaluje minikube jako globalną komendę minikube oraz czyści plik tymczasowy
+
+Następnie za pomocą komendy "minikube start" uruchamiłem lokalny klaster Kubernetes:
+
+![alt text](image26.png)
+
+![alt text](image27.png)
+
+Dalej ustawiłem alias powłoki, który sprawia, że od teraz za każdym razem gdy tylko wykonam komendę "kubectl..."  faktycznie zostanie wykonana komenda "minikube kubectl..."
+
+![alt text](image28.png)
+
+Na samym końcu uruchomiłem dashboard i przetestowałem łączność:
+
+![alt text](image29.png)
+
+![alt text](image30.png)
+
+Zapoznaj się z koncepcjami funkcji wyprowadzanych przez Kubernetesa (pod, deployment itp)!
+
+Analiza posiadanego kontenera
+
+W tej części nieużyłem wcześniej przygotowanego obrazu "cjson-deploy" ze względu fakt, że biblioteka ta służy do parsowania JSON-a, a nie jest to aplikacja webowa – sama w sobie nie dostarcza interfejsu HTTP, więc nie będzie bezpośrednio nadawała się jako serwis do uruchomienia w Kubernetesie
+
+Zdecydowałem się z skorzystać z obrazu NGINXa z zmodyfikowaną zawartością pliku HTML. W celu stworzenia obrazu z nową konfiguracją przygotowałem własny plik:
+
+Dockerfile:
+
+```
+FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/index.html
+```
+
+index.html:
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jakubowy NGINX</title>
+</head>
+<body>
+    <h1>Hello from Jakubowy NGINX! </h1>
+</body>
+</html>
+```
+
+Budowanie własnego obrazu:
+
+![alt text](image31.png)
+
+Lokalne przetestowanie, czy kontener działa prawidłowo:
+
+![alt text](image32.png)
+
+![alt text](image33.png)
+
+Deploy aplikacji do Minikube
+
+![alt text](image34.png)
+
+![alt text](image35.png)
+
+![alt text](image36.png)
+
+![alt text](image37.png)
+
+YAMLE
+
+![alt text](image38.png)
+
+Skopiowanie zawartości deploymentu do pliku oraz usunięcie go:
+
+![alt text](image39.png)
+
+![alt text](image40.png)
+
+Sprawdzenie statusu wdrożenia:
+
+![alt text](image41.png)
+
+Sprawdzenie, czy posiadam cztery działające repliki po ręcznej modyfikacji pliku deployment.yaml:
+
+![alt text](image42.png)
+
+![alt text](image43.png)
+
+![alt text](image44.png)
+
+![alt text](image45.png)
+
+![alt text](image46.png)

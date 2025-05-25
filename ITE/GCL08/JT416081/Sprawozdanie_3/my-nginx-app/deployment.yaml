@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: "2025-05-25T19:33:04Z"
+  generation: 1
+  labels:
+    app: my-nginx-app
+  name: my-nginx-app
+  namespace: default
+  resourceVersion: "17616"
+  uid: 86ebb97b-5d60-44ae-88dd-e9913d6846f4
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 4
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: my-nginx-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: my-nginx-app
+    spec:
+      containers:
+      - image: jaktyl/my-nginx-app:latest
+        imagePullPolicy: Always
+        name: my-nginx-app
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2025-05-25T19:34:14Z"
+    lastUpdateTime: "2025-05-25T19:34:14Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2025-05-25T19:33:08Z"
+    lastUpdateTime: "2025-05-25T19:34:14Z"
+    message: ReplicaSet "my-nginx-app-7f757fd4b9" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
