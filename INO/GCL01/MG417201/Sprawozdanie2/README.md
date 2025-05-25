@@ -419,12 +419,14 @@ Można zauważyć, że czasy kolejnych buildów są znacząco krótsze. Dzieje s
     <img src="screens5/32.jpg">
 </div>
 
+<div align="center"> 
+    <img src="screens5/33.jpg">
+</div>
+
 #### Publish
 
 - W ramach Publish zostało stworzone archiwum [redis-1.0.zip](../redis-ci-cd/output/redis-1.0.zip). Wypakowane pliki binarne `redis-cli` oraz `redis-server` znajdują się w [katalogu](../redis-ci-cd/output/binaries_unzipped/). Wybrałem format ZIP zawierający wyłącznie skompilowane binarki (redis-server, redis-cli), ponieważ jest to lekki format, powszechnie rozumiany na różnych platformach, nie wymagający instalatora systemowego. Umożliwia uruchomienie redisa bez Dockera - wystarczy rozpakować i odpalić binarkę.
 
-### Smoke-tests
-
 <div align="center"> 
-    <img src="screens5/33.jpg">
+    <img src="screens5/34.jpg">
 </div>
