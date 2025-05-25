@@ -1,4 +1,3 @@
----
 - name: Deploy aplikacji z artefaktu .tar.gz z Jenkinsa
   hosts: endpoints
   become: true
@@ -46,6 +45,7 @@
     - name: Wyświetl wynik działania aplikacji
       debug:
         var: app_output.stdout_lines
+
     - name: Wyświetl zawartość katalogu
       command: ls -l {{ deploy_dir }}
       register: ls_output
