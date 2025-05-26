@@ -46,6 +46,11 @@ clearpart --all --initlabel
 
 Polecenie to wymusza usunięcie wszystkich istniejących partycji na wskazanym dysku oraz nadpisanie tablicy partycji (np. GPT lub MBR). 
 
+```
+network --bootproto=dhcp --hostname=fedora-test-host
+
+```
+
 ---
 
 
