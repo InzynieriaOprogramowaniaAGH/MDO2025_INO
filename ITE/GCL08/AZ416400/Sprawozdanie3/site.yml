@@ -1,0 +1,5 @@
+- name: Setup Redis in a container
+  hosts: Endpoints
+  become: yes
+  roles:
+    - redis_container_setup

@@ -1,0 +1,32 @@
+- name: Copy Redis RPM package to /tmp
+  ansible.builtin.copy:
+    src: redis-20250427203018-1.fc42.x86_64.rpm
+    dest: /tmp/redis.rpm
+
+- name: Ensure Podman is installed
+  ansible.builtin.dnf:
+    name: podman
+    state: present
+
+- name: Start Fedora container in background
+  ansible.builtin.command: >
+    podman run -d --name redis_test -v /tmp/redis.rpm:/tmp/redis.rpm:Z fedora:42 sleep infinity
+  args:
+    creates: /var/lib/containers/storage/overlay-containers
+
+- name: Install Redis inside the container
+  ansible.builtin.command: >
+    podman exec redis_test dnf install -y /tmp/redis.rpm
+
+- name: Start Redis server inside the container
+  ansible.builtin.command: >
+    podman exec -d redis_test redis-server
+
+- name: Check Redis response
+  ansible.builtin.command: >
+    podman exec redis_test redis-cli ping
+  register: redis_ping
+
+- name: Show Redis response
+  ansible.builtin.debug:
+    msg: "Redis responded with: {{ redis_ping.stdout }}"
