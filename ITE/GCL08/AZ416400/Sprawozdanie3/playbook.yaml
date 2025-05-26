@@ -1,0 +1,39 @@
+- name: 1. Ping all hosts
+  hosts: Endpoints
+  gather_facts: no
+  tasks:
+    - name: Ping test
+      ansible.builtin.ping:
+
+- name: 2. Copy inventory to endpoints
+  hosts: Endpoints
+  gather_facts: no
+  tasks:
+    - name: Copy inventory.ini to /tmp
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /tmp/inventory.ini
+
+- name: 3. Update system packages
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Update all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+- name: 4. Restart services
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+    - name: Restart rngd
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+        enabled: true
