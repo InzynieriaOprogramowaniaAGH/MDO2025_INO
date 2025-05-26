@@ -10,14 +10,6 @@ lang pl_PL.UTF-8
 # Network information
 network  --bootproto=dhcp --device=enp0s3 --ipv6=auto --activate
 
-%packages
-@^custom-environment
-
-%end
-
-# Run the Setup Agent on first boot
-firstboot --enable
-
 # Repos
 url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
 repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
@@ -34,3 +26,56 @@ timezone Europe/Warsaw --utc
 #Root password
 rootpw --lock
 user --groups=wheel --name=owiatrowska --password=$y$j9T$iqumCc0TgyHLXBRSV6UgyA7B$WpEDkvm5hs41NGicPAwO7CeZtOfZZsqWsCU7X5hwNk5 --iscrypted --gecos="Oliwia Wiatrowska"
+
+%packages
+@^custom-environment
+docker
+wget
+tar
+curl
+%end
+
+# Run the Setup Agent on first boot
+firstboot --enable
+
+# post-install confg
+%post --log=/root/ks-post.log
+
+# run docker
+systemctl enable docker
+
+# download docker image from Jenkins
+wget -O /root/next-deploy.tar http://192.168.18.97:8080/job/Boilerplate/lastSuccessfulBuild/artifact/next-deploy-20250425-11.tar
+
+# load the Docker image
+docker load -i /root/next-deploy.tar
+
+# write env variables to .env file
+cat > /root/app.env << EOF
+NEXTAUTH_SECRET=LfKOOb9SXtIvngnXWBo9D7WjzJraPbpAxtmzZiT98SU=
+EOF
+
+# create a systemd unit file to start the container
+cat > /etc/systemd/system/next-app.service << 'EOF'
+[Unit]
+Description=Next.js App Container
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/docker run --rm --name next-app --env-file /root/app.env -p 3000:3000 next-deploy:20250425-11
+ExecStartPost=/usr/bin/rm -f /root/app.env
+ExecStop=/usr/bin/docker stop next-app
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# enable the app service
+systemctl enable next-app
+
+%end
+
+# automatically reboot the system after installation
+reboot
