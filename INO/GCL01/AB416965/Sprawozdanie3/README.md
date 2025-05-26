@@ -852,3 +852,9 @@ Po wpisaniu `localhost:8080` w przeglądarce, otrzymałem stronę domyślną ser
 
 W ramach tego etapu wdrożenie aplikacji zostało w pełni opisane za pomocą plików YAML i uruchomione w sposób deklaratywny z wykorzystaniem `kubectl apply`.\
 Dzięki temu możliwe jest łatwe powtórzenie, modyfikowanie i wersjonowanie konfiguracji — co jest kluczowym aspektem pracy z Kubernetesem i zgodne z podejściem „Infrastructure as Code”.
+
+### Przekucie wdrożenia manualnego w plik wdrożenia (część dalsza)
+
+3 Deploymenty dla 3 różnych wersji:
+
+![3 Deploymenty](zrzuty11/zrzut_ekranu2.png)
