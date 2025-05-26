@@ -23,6 +23,11 @@ sudo chown amelia:amelia /home/amelia/fedora-auto.ks
 ```
 W celu dalszej edycji, skopiowano plik instalacyjny `anaconda-ks.cfg` z katalogu `/root` do katalogu domowego użytkownika `amelia` jako `fedora-auto.ks`. Następnie zmieniono właściciela pliku, aby użytkownik `amelia` mógł go modyfikować bez użycia uprawnień administratora.
 
+```
+url --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+
+```
 ---
 
 
