@@ -9,6 +9,13 @@
 sudo dnf -y install tar openssh-server
 ```
 
+```
+systemctl status sshd
+systemctl enable sshd
+ip a
+
+```
+
 ---
 
 # Zajęcia 09 - Pliki odpowiedzi dla wdrożeń nienadzorowanych
