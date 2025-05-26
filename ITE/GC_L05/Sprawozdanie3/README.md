@@ -28,6 +28,17 @@ url --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arc
 repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
 
 ```
+#### Zapewnienie formatowania całego dysku – clearpart --all
+
+Aby zapewnić, że instalacja systemu zawsze rozpocznie się na czystym dysku, zmodyfikowano sekcję partycjonowania w pliku Kickstart. Zamiast opcji --none, użyto polecenia:
+
+```
+clearpart --all --initlabel
+
+```
+
+Polecenie to wymusza usunięcie wszystkich istniejących partycji na wskazanym dysku oraz nadpisanie tablicy partycji (np. GPT lub MBR). 
+
 ---
 
 
