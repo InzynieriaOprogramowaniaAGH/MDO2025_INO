@@ -8,9 +8,22 @@ Celem zadania było przygotowanie źródła instalacji nienadzorowanej systemu F
 
 ---
 
+### Modyfikacja pliku kickstart
 
+Po ręcznej instalacji systemu Fedora plik odpowiedzi instalatora (/root/anaconda-ks.cfg) został skopiowany i zmodyfikowany tak, aby umożliwić w pełni zautomatyzowaną instalację systemu, który po uruchomieniu jest gotowy do hostowania aplikacji.
 
+#### Skopiowanie pliku anaconda-ks.cfg
 
+Po zalogowaniu się do systemu, wykonałam polecenia:
+
+```
+sudo cp /root/anaconda-ks.cfg /home/amelia/fedora-auto.ks
+sudo chown amelia:amelia /home/amelia/fedora-auto.ks
+
+```
+W celu dalszej edycji, skopiowano plik instalacyjny `anaconda-ks.cfg` z katalogu `/root` do katalogu domowego użytkownika `amelia` jako `fedora-auto.ks`. Następnie zmieniono właściciela pliku, aby użytkownik `amelia` mógł go modyfikować bez użycia uprawnień administratora.
+
+---
 
 
 ## Github Actions
