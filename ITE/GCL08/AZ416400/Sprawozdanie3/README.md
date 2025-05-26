@@ -6,6 +6,8 @@
 
 ![img](./img/image45.png)
 
+![alt text](./img/1.png)
+
 ![img](./img/image11.png)
 
 ## Kuminikacja między maszynami poprzez SSH
@@ -24,6 +26,11 @@
 
 ![img](./img/image14.png)
 
+![alt text](./img/2.png) 
+
+![alt text](./img/3.png) 
+
+![alt text](./img/4.png)
 
 # Zajęcia 09
 
