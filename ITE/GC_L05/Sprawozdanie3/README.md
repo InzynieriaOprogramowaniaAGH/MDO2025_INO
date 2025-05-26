@@ -1,3 +1,16 @@
+# Zajęcia 08 - Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
+
+## Instalacja zarządcy Ansible
+
+
+
+
+```
+sudo dnf -y install tar openssh-server
+```
+
+---
+
 # Zajęcia 09 - Pliki odpowiedzi dla wdrożeń nienadzorowanych
 
 ---
