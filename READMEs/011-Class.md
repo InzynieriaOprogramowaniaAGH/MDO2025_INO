@@ -15,7 +15,7 @@
  * Przygotuj kolejną wersję obrazu, którego uruchomienie kończy się błędem
   
 ### Zmiany w deploymencie
- * Aktualizuj plik YAML z wdrożeniem i przeprowadzaj je ponownie po zastosowaniu następujących zmian:
+ * 🌵 Aktualizuj plik YAML z wdrożeniem i przeprowadzaj je ponownie po zastosowaniu następujących zmian:
    * zwiększenie replik np. do 8
    * zmniejszenie liczby replik do 1
    * zmniejszenie liczby replik do 0
