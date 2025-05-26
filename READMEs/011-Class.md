@@ -22,6 +22,7 @@
    * ponowne przeskalowanie w górę do 4 replik (co najmniej)
    * Zastosowanie nowej wersji obrazu
    * Zastosowanie starszej wersji obrazu
+   * Zastosowanie "wadliwego" obrazu
  * Przywracaj poprzednie wersje wdrożeń za pomocą poleceń
    * ```kubectl rollout history```
    * ```kubectl rollout undo```
