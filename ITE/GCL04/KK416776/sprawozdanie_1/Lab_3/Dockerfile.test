@@ -1,0 +1,5 @@
+FROM opencv-builder
+
+WORKDIR /root/opencv/build/bin
+
+RUn ./opencv_test_core
