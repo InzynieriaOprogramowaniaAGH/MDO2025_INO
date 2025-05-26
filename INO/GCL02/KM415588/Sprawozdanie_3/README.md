@@ -435,3 +435,70 @@ Przechodząc do folderu `/usr/local/bin/chalk-pipe...` i wykonaniu `node example
 
 ![wydruk2](./09/img/recznie.png)
 
+## Laboratorium 10 - Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+
+### 1️⃣ Pobranie i przygotowanie minikube
+Na początku zajęć pobieramy `minikube`:
+
+```bash
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+```
+
+Dalej dodałem alias do pliku `~./bashrc` aby ułatwić korzystanie z kubectl:
+
+```bash
+echo 'alias kubectl="minikube kubectl --"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Następnie wywołuje:
+
+```bash
+minikube start
+```
+
+Jeśli wyskakuje error, iż nie może dostać się do dockera należy dodać użytkownika do grupy docker jeśli wcześniej nie było to zrobione:
+
+```bash
+#najpierw spradźmy czy jest
+groups $USER_NAME
+#jeśli nie ma go w grupie dockerowej to:
+sudo usermod -aG docker $USER_NAME
+#dla zrestartowania i wprowadzenia zmian można otworzyć nowe okno terminala bądź
+newgrp docker
+```
+
+Następnie uruchamiamy jeszcze raz minikube i powinniśmy otrzymać:
+
+![mini_start](./kubernetes/img/minkube_start.png)
+
+Dalej przetestujmy działanie aliasu kubectl:
+
+```bash
+kubectl get po -A
+```
+
+Jeśli zwróci poniższy error:
+
+![err](./kubernetes/img/error_kubectl.png)
+
+Musimy ustawić kontekst kubectl na minikube poleceniem:
+
+```bash
+kubectl config use-context minikube
+```
+
+Przetestujmy jeszcze raz i powinniśmy dostać:
+
+![suc_kub](./kubernetes/img/suc_kubectl.png)
+
+Przejdźmy teraz do minikube dashboard poleceniem:
+
+```bash
+minikube dashboard
+```
+
+Jeśli nie przeniesie nas bezpośrednio należy wprowadzić link w error - przykładowo w moim wypadku `http://127.0.0.1:35743/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/` wyświetli nam się następująca strona:
+
+![kube_dash_start](./kubernetes/img/kub_disp.png)
