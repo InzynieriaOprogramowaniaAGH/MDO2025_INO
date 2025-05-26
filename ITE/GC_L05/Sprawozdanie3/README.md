@@ -1,3 +1,18 @@
+# Zajęcia 09 - Pliki odpowiedzi dla wdrożeń nienadzorowanych
+
+---
+
+###  Cel zadania
+
+Celem zadania było przygotowanie źródła instalacji nienadzorowanej systemu Fedora w środowisku maszyn wirtualnych lub serwerów fizycznych. Instalacja ta miała automatycznie przygotować system operacyjny hostujący oprogramowanie – działające poza kontenerem. 
+
+---
+
+
+
+
+
+
 ## Github Actions
 
 ---
