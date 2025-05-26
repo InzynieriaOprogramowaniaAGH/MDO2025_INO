@@ -46,10 +46,15 @@ clearpart --all --initlabel
 
 Polecenie to wymusza usunięcie wszystkich istniejących partycji na wskazanym dysku oraz nadpisanie tablicy partycji (np. GPT lub MBR). 
 
+#### Ustawienie niestandardowej nazwy hosta
+
+Do pliku odpowiedzi kickstart dodano polecenie:
+
 ```
 network --bootproto=dhcp --hostname=fedora-test-host
 
 ```
+Dzięki temu system po zakończonej instalacji automatycznie otrzymuje nazwę fedora-test-host, co ułatwia jego identyfikację w sieci oraz w środowiskach wirtualnych.
 
 ---
 
