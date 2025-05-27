@@ -17,6 +17,8 @@ Nazwa hosta została ustawiona już podczas instalacji systemu.
 ### 🌵 Utworzenie użytkownika `ansible`
 Użytkownik `ansible` został stworzony w instalatorze i ma przyznane uprawnienia sudo.
 
+
+
 ### 🌵 Wykonanie migawki maszyny
 Zrobiono migawkę w VirtualBoxie, co pozwala wrócić do stanu początkowego w razie problemów.
 
