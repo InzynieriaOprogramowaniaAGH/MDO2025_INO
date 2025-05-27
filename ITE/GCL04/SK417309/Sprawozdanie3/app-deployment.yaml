@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exam-seat-arrangement
+  labels:
+    app: exam-seat-arrangement
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: exam-seat-arrangement
+  template:
+    metadata:
+      labels:
+        app: exam-seat-arrangement
+    spec:
+      containers:
+      - name: exam-seat-arrangement
+        image: sauer88/exam-seat-arrangement
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mysql://mysql:3306/examseatdb
+        - name: SPRING_DATASOURCE_USERNAME
+          value: root
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: rootpassword
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: exam-seat-arrangement
+spec:
+  selector:
+    app: exam-seat-arrangement
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30080
+  type: NodePort
