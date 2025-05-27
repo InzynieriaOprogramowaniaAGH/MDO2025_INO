@@ -36,7 +36,8 @@ pipeline {
         stage('Publish Dockerfile') {
             steps {
                 dir('ITE/GCL08/WS417336/Sprawozdanie2') {
-                    sh 'docker build --no-cache -f Dockerfiles/Dockerfile.expresspublish -t express-app .'
+                    // Tutaj budujemy obraz z tagiem express-app:latest
+                    sh 'docker build --no-cache -f Dockerfiles/Dockerfile.expresspublish -t express-app:latest .'
                 }
             }
         }
@@ -53,8 +54,7 @@ pipeline {
         stage('Run app') {
             steps {
                 dir('ITE/GCL08/WS417336/Sprawozdanie2') {
-                    sh 'docker network create ci'
-                    sh 'docker tag express-app express-app:latest || true'
+                    sh 'docker network create ci || true'
                     sh 'docker run --rm -d --network ci --name app -p 3000:3000 express-app:latest'
                     sh 'docker run --rm --network ci fedora curl -s app:3000'
                 }
@@ -65,11 +65,12 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials2', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     script {
-                        def baseImage = DOCKER_IMAGE.split(":")[0]
-                        def versionedTag = "${baseImage}:${VERSION_NUMBER}"
+                        def baseImage = DOCKER_IMAGE.split(":")[0] // "zbogenza/express-app"
+                        def versionedTag = "${baseImage}:${VERSION_NUMBER}" // "zbogenza/express-app:v1"
                         sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-                        sh "docker tag express-app ${versionedTag}"
+                        sh "docker tag express-app:latest ${versionedTag}"
                         sh "docker push ${versionedTag}"
+                        sh "docker tag express-app:latest ${DOCKER_IMAGE}"
                         sh "docker push ${DOCKER_IMAGE}"
                     }
                 }
