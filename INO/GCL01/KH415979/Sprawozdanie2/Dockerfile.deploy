@@ -1,0 +1,5 @@
+FROM fedora:41
+
+COPY picoc_dir/picoc mnt/
+WORKDIR /../mnt/
+CMD ./picoc -i
