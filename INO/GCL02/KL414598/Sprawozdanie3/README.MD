@@ -14,7 +14,7 @@ Zainstalowano `tar` i `openssh-server`, aby umożliwić obsługę archiwów i do
 ### 🌵 Nadanie hostname `ansible-target`
 Nazwa hosta została ustawiona już podczas instalacji systemu ale jeszcze się upewniłem.
 
-![Opis](ss/1.png)
+![Opis](ss/1.jpg)
 
 
 ### 🌵 Wykonanie migawki maszyny
