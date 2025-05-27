@@ -119,6 +119,7 @@ Utworzono `ping.yml`:
       ansible.builtin.ping:
 ```
 ![Opis](ss/12.png)
+
 ![Opis](ss/13.png)
 
 
@@ -134,6 +135,7 @@ Utworzono `ping.yml`:
 ```
 
 ![Opis](ss/14.png)
+
 ![Opis](ss/15.png)
 
 ### 🌵 Porównanie wyników
