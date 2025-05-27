@@ -313,3 +313,250 @@ systemctl enable run-my-app-container.service
 ![](18.png)
 
 
+# Kubernetes
+
+## Instalacje minikube
+![](19.png)
+
+## Uruchomienie klastra
+![](20.png)
+![](20_5.png)
+
+## Zaopatrzenie sie w polecenie kubectl
+![](21.png)
+![](22.png)
+
+## Dashboard
+![](23.png)
+
+## Zpullowanie kontenera z poprzednich zajęć
+![](24.png)
+
+## Utworzenie pod-a
+![](25.png)
+
+## Status poda
+![](26.png)
+![](26_5.png)
+
+## Zhostowanie czegokoliwek na port 3000 w kontenerze
+![](26_6.png)
+
+## Port forwarding kontenera
+![](27.png)
+
+## Działa
+![](28.png)
+ 
+## Stworzenie deploymentu
+![](29.png)
+![](30.png)
+
+## Forwarding, sprawdzenie dzialania
+![](31.png)
+![](32.png)
+
+## Skalowanie 
+![](33.png)
+![](34.png)
+
+## yaml
+```
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: weechat
+  namespace: default
+  uid: 569dcc86-e57c-4712-91d1-ef534bc0c9df
+  resourceVersion: '4316'
+  generation: 2
+  creationTimestamp: '2025-05-27T10:15:59Z'
+  labels:
+    app: weechat
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+  managedFields:
+    - manager: dashboard
+      operation: Update
+      apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:spec:
+          f:replicas: {}
+      subresource: scale
+    - manager: kubectl-create
+      operation: Update
+      apiVersion: apps/v1
+      time: '2025-05-27T10:15:59Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:labels:
+            .: {}
+            f:app: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:labels:
+                .: {}
+                f:app: {}
+            f:spec:
+              f:containers:
+                k:{"name":"weechat"}:
+                  .: {}
+                  f:image: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:resources: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+    - manager: kube-controller-manager
+      operation: Update
+      apiVersion: apps/v1
+      time: '2025-05-27T10:21:05Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      subresource: status
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: weechat
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: weechat
+    spec:
+      containers:
+        - name: weechat
+          image: docker.io/szymonnowaq/weechat
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+status:
+  observedGeneration: 2
+  replicas: 4
+  updatedReplicas: 4
+  readyReplicas: 4
+  availableReplicas: 4
+  conditions:
+    - type: Progressing
+      status: 'True'
+      lastUpdateTime: '2025-05-27T10:16:06Z'
+      lastTransitionTime: '2025-05-27T10:15:59Z'
+      reason: NewReplicaSetAvailable
+      message: ReplicaSet "weechat-6ff99d47db" has successfully progressed.
+    - type: Available
+      status: 'True'
+      lastUpdateTime: '2025-05-27T10:21:02Z'
+      lastTransitionTime: '2025-05-27T10:21:02Z'
+      reason: MinimumReplicasAvailable
+      message: Deployment has minimum availability.
+
+```
+## Apply
+![](35.png)
+
+## Rollout
+![](36.png)
+
+
+# Zajęcia 11
+
+# Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+
+## Zadania do wykonania
+
+### Przygotowanie nowego obrazu
+ * Zarejestruj nową wersję swojego obrazu `Deploy` (w Docker Hub lub lokalnie+przeniesienie)
+ * Upewnij się, że dostępne są dwie co najmniej wersje obrazu z wybranym programem
+ * Jeżeli potrzebny jest "gotowiec" z powodu problemów z `Deploy`, można użyć np `httpd`, ale powinien to być **własny** kontener: zmodyfikowany względem oryginału i opublikowany na własnym koncie Docker Hub.
+ * Będzie to wymagać 
+   * przejścia przez *pipeline* dwukrotnie, lub
+   * ręcznego zbudowania dwóch wersji, lub
+   * przepakowania wybranego obrazu samodzielnie np przez ```commit```
+ * Przygotuj kolejną wersję obrazu, którego uruchomienie kończy się błędem
+  
+### Zmiany w deploymencie
+ * 🌵 Aktualizuj plik YAML z wdrożeniem i przeprowadzaj je ponownie po zastosowaniu następujących zmian:
+   * zwiększenie replik np. do 8
+   * zmniejszenie liczby replik do 1
+   * zmniejszenie liczby replik do 0
+   * ponowne przeskalowanie w górę do 4 replik (co najmniej)
+   * Zastosowanie nowej wersji obrazu
+   * Zastosowanie starszej wersji obrazu
+   * Zastosowanie "wadliwego" obrazu
+ * Przywracaj poprzednie wersje wdrożeń za pomocą poleceń
+   * ```kubectl rollout history```
+   * ```kubectl rollout undo```
+
+### Kontrola wdrożenia
+ * Zidentyfikuj historię wdrożenia i zapisane w niej problemy, skoreluj je z wykonywanymi czynnościami
+ * Napisz skrypt weryfikujący, czy wdrożenie "zdążyło" się wdrożyć (60 sekund)
+ * Zakres rozszerzony: Ujmij skrypt w pipeline Jenkins (o ile `minikube` jest dostępny z zewnątrz)
+ 
+### Strategie wdrożenia
+ * Przygotuj wersje [wdrożeń](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) stosujące następujące strategie wdrożeń
+   * Recreate
+   * Rolling Update (z parametrami `maxUnavailable` > 1, `maxSurge` > 20%)
+   * Canary Deployment workload
+ * Zaobserwuj i opisz różnice
+ * Uzyj etykiet
+ * Dla wdrożeń z wieloma replikami, używaj [serwisów](https://kubernetes.io/docs/concepts/services-networking/service/)
+ 
