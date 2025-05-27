@@ -8,6 +8,7 @@ RUN express /tmp/foo
 
 WORKDIR /tmp/foo
 
-RUN echo "app.get('/version', (req, res) => res.send('New endpoint!'));" >> app.js
+RUN echo "\napp.get('/version', (req, res) => res.send('New Version!'));" >> /tmp/foo/app.js \
+ && cat /tmp/foo/app.js
 
 RUN npm install
