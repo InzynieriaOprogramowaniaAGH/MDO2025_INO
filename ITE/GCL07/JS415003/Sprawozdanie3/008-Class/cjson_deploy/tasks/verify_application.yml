@@ -1,43 +1,34 @@
----
 - name: Run cJSON application container
   docker_container:
     name: cjson-app-test
     image: "cjson-app:{{ cjson_version }}"
     state: started
     detach: no
-    auto_remove: yes
+    auto_remove: no  # pozwala później sprawdzić status i logi
   register: app_output
 
+- name: Get container info after run
+  docker_container_info:
+    name: cjson-app-test
+  register: container_info
+
 - name: Display application output
+  command: docker logs cjson-app-test
+  register: app_logs
+
+- name: Show logs
   debug:
-    msg: "Application output: {{ app_output.ansible_facts.docker_container.Output }}"
+    msg: "{{ app_logs.stdout_lines }}"
 
 - name: Verify application ran successfully
   assert:
     that:
-      - app_output.ansible_facts.docker_container.State.ExitCode == 0
+      - container_info.container.State.ExitCode == 0
     fail_msg: "cJSON application failed to run properly"
     success_msg: "cJSON application executed successfully"
 
-- name: Test Docker connectivity
+- name: Clean up test container
   docker_container:
-    name: connectivity-test
-    image: "cjson-app:{{ cjson_version }}"
-    command: ["echo", "Docker connectivity verified"]
-    state: started
-    detach: no
-    auto_remove: yes
-  register: connectivity_test
-
-- name: Display connectivity test result
-  debug:
-    msg: "Connectivity test: {{ connectivity_test.ansible_facts.docker_container.Output }}"
-
-- name: Clean up test containers
-  docker_container:
-    name: "{{ item }}"
+    name: cjson-app-test
     state: absent
-  loop:
-    - cjson-app-test
-    - connectivity-test
   ignore_errors: yes
