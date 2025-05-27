@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: express-app
-          image: zbogenza/express-app:latest
+          image: zbogenza/express-app:v2
           ports:
             - containerPort: 3000

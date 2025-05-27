@@ -10,4 +10,4 @@ WORKDIR /tmp/foo
 
 RUN npm install
 
-RUN echo "\napp.get('/version', (req, res) => res.send('Version v${VERSION_NUMBER}'));" >> /tmp/foo/app.js
+RUN echo "app.get('/version', (req, res) => res.send('New Version!'));" >> /tmp/foo/app.js
