@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = 'zbogenza/express-app:latest'
-        VERSION_NUMBER = 'v1'
+        VERSION_NUMBER = 'v2'
     }   
     stages {
         stage('Clone Repository') {
