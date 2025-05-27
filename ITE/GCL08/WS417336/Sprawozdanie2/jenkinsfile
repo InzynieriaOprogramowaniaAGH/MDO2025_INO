@@ -1,25 +1,13 @@
 pipeline {
     agent any
     environment {
-        DOCKER_REPO = 'zbogenza/express-app'
-    }
+        DOCKER_IMAGE = 'zbogenza/express-app:latest'
+        VERSION_NUMBER = 'v1'
+    }   
     stages {
         stage('Clone Repository') {
             steps {
                 git branch: 'WS417336', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
-            }
-        }
-
-        stage('Determine Next Version') {
-            steps {
-                script {
-                    def tags = sh(script: "curl -s https://registry.hub.docker.com/v2/repositories/${DOCKER_REPO}/tags | jq -r '.results[].name' | grep -E '^v[0-9]+' || true", returnStdout: true).trim().split("\n")
-                    def maxVersion = tags.collect { it.replaceAll(/[^\d]/, '').toInteger() }.max() ?: 0
-                    def nextVersion = maxVersion + 1
-                    env.IMAGE_TAG = "v${nextVersion}"
-                    env.DOCKER_IMAGE = "${DOCKER_REPO}:${env.IMAGE_TAG}"
-                    echo "Next image version: ${env.IMAGE_TAG}"
-                }
             }
         }
 
@@ -29,7 +17,7 @@ pipeline {
                     sh 'docker rmi -f express-build || true'
                     sh 'docker rmi -f express-app || true'
                     sh 'docker rmi -f express-test || true'
-                    sh 'docker builder prune --force --all || true'
+                    sh 'docker builder prune --force --all'
                     sh 'docker stop app || true'
                     sh 'docker rm app || true'
                     sh 'docker network inspect ci >/dev/null 2>&1 && docker network rm ci || true'
@@ -75,9 +63,14 @@ pipeline {
         stage('Docker Login and Push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials2', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-                    sh 'docker tag express-app $DOCKER_IMAGE'
-                    sh 'docker push $DOCKER_IMAGE'
+                    script {
+                        def baseImage = DOCKER_IMAGE.split(":")[0]
+                        def versionedTag = "${baseImage}:${VERSION_NUMBER}"
+                        sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                        sh "docker tag express-app ${versionedTag}"
+                        sh "docker push ${versionedTag}"
+                        sh "docker push ${DOCKER_IMAGE}" // Push latest
+                    }
                 }
             }
         }
