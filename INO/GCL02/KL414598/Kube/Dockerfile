@@ -1,8 +1,5 @@
-FROM debian:bullseye
-
-WORKDIR /app
-
-COPY xz/ ./
+# Dockerfile.build
+FROM ubuntu:22.04
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
@@ -17,19 +14,13 @@ RUN apt-get update \
       pkg-config \
       ca-certificates \
  && rm -rf /var/lib/apt/lists/*
+WORKDIR /src
+
+
+COPY xz/ ./
 
 RUN ./autogen.sh \
  && ./configure \
  && make -j"$(nproc)" \
  && make dist \
  && mv xz-*.tar.gz xz.tar.gz
-
-RUN tar xzf xz.tar.gz \
- && cd xz-* \
- && ./configure \
- && make -j"$(nproc)" check || true \
- && cd /app \
- && mkdir -p logs \
- \
-
- && find xz-*/tests -name '*.log' -exec cp {} logs/ \;

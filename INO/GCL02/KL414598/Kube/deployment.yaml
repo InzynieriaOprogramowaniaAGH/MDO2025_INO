@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xz-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: xz
+  template:
+    metadata:
+      labels:
+        app: xz
+    spec:
+      containers:
+      - name: xz-container
+        image: iogougou/xz:3.0
+        ports:
+        - containerPort: 80 
