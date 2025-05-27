@@ -17,7 +17,8 @@ Nazwa hosta została ustawiona już podczas instalacji systemu.
 ### 🌵 Utworzenie użytkownika `ansible`
 Użytkownik `ansible` został stworzony w instalatorze i ma przyznane uprawnienia sudo.
 
-https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KL414598/INO/GCL02/KL414598/Sprawozdanie3/ss/1.jpg
+https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/commit/27c9358ee28e5110374fb8a191858cabddb286d4#diff-f224caf14f91d9c293d9cbdcc0c98bef98026e8da7adfb649d8fb8243c05204f
+
 
 
 ### 🌵 Wykonanie migawki maszyny
