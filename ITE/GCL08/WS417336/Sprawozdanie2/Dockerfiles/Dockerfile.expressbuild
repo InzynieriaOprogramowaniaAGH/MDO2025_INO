@@ -9,3 +9,5 @@ RUN express /tmp/foo
 WORKDIR /tmp/foo
 
 RUN npm install
+
+RUN echo "\napp.get('/version', (req, res) => res.send('Version v2'));" >> /tmp/foo/app.js

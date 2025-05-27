@@ -36,7 +36,6 @@ pipeline {
         stage('Publish Dockerfile') {
             steps {
                 dir('ITE/GCL08/WS417336/Sprawozdanie2') {
-                    // Tutaj budujemy obraz z tagiem express-app:latest
                     sh 'docker build --no-cache -f Dockerfiles/Dockerfile.expresspublish -t express-app:latest .'
                 }
             }
@@ -65,8 +64,8 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials2', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     script {
-                        def baseImage = DOCKER_IMAGE.split(":")[0] // "zbogenza/express-app"
-                        def versionedTag = "${baseImage}:${VERSION_NUMBER}" // "zbogenza/express-app:v1"
+                        def baseImage = DOCKER_IMAGE.split(":")[0]
+                        def versionedTag = "${baseImage}:${VERSION_NUMBER}"
                         sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
                         sh "docker tag express-app:latest ${versionedTag}"
                         sh "docker push ${versionedTag}"
