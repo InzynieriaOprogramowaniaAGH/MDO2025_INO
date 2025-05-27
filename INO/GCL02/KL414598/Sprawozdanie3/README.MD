@@ -14,6 +14,8 @@ Zainstalowano `tar` i `openssh-server`, aby umożliwić obsługę archiwów i do
 ### 🌵 Nadanie hostname `ansible-target`
 Nazwa hosta została ustawiona już podczas instalacji systemu.
 
+![Opis](img/ss/1.jpg)
+
 ### 🌵 Utworzenie użytkownika `ansible`
 Użytkownik `ansible` został stworzony w instalatorze i ma przyznane uprawnienia sudo.
 
