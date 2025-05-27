@@ -755,33 +755,39 @@ Automatyczna instalacja:
 ### Wdrażanie na zarządzalne kontenery
 #### Instalacja Kubernetes 
 
-Wymagania sprzętowe:
-- Min. 2 CPU, 2 GiB RAM (ale lepiej 4 CPU/4 GiB)
-- Włączona w BIOS/UEFI wirtualizacja (Intel VT-x / AMD-V)
-- Zainstalowany hypervisor: VirtualBox, KVM2 (libvirt), Docker
+Sprzęt i wirtualizacja:
+
+- **CPU / RAM**: minimalnie 2 CPU i 2 GiB RAM (zalecane 4 CPU i 4 GiB),
+- **Wirtualizacja**: włączona w BIOS/UEFI (Intel VT-x lub AMD-V),
+- **Hypervisor**: zainstalowany VirtualBox, KVM2 (libvirt) lub Docker.
+
+Dzięki temu maszyna (fizyczna lub wirtualna) będzie w stanie uruchomić klaster Kubernetes lokalnie, bez konieczności dostępu do zewnętrznego środowiska chmurowego.
 
 Instalacja Minikube:
 
 ```bash
 # Pobranie RPM
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
-# Instalacja
+# Instalacja za pomocą RPM
 sudo rpm -Uvh minikube-latest.x86_64.rpm
-#Uruchomienie z 2GiB
+#Uruchomienie klastra z 2 CPU i 2 GiB RAM (driver: Docker)
 minikube start --driver=docker --cpus=2 --memory=2048
 ```
 
+- `minikube start`: inicjuje lokalny klaster Kubernetes w ramach wskazanego drivera (tutaj Docker).
+- Parametry `--cpus` i `--memory` gwarantują wystarczające zasoby.
+
 ![Minikube](IMG/Lab10/1.png)
 
-Poziom bezpieczeństwa instalacji `minikube kubectl -- get clusterrolebindings`.
+Poziom bezpieczeństwa instalacji: `minikube kubectl -- get clusterrolebindings`. Pokazuje, jakie uprawnienia klastra (role) są przypisane do których użytkowników czy serwisów.
 
 ![clusterrolebindings](IMG/Lab10/2.png)
 
-Domyślne przestrzenie nazwy do separacji zasobów w Kubernetes `minikube kubectl -- get namespaces`.
+Domyślne przestrzenie nazwy do separacji zasobów w Kubernetes (np. default, kube-system, kube-public), które pozwalają na logiczną separację zasobów `minikube kubectl -- get namespaces`.
 
 ![Namespaces](IMG/Lab10/3.png)
 
-Wszystkie komponenty klastra komunikują się zabezpieczonym protokołem TLS – co można zweryfikować, logując się do Minikube. (`minikube ssh` -> `ls /var/lib/minikube/certs/`).
+Wszystkie komponenty klastra komunikują się po bezpiecznym kanale TLS. Można to zweryfikować przez zalogowanie się do maszyny Minikube: (`minikube ssh` -> `ls /var/lib/minikube/certs/`). W katalogu certs znajdują się certyfikaty API‐servera, Kubelet, itp.
 
 ![SSH](IMG/Lab10/4.png)
 
@@ -790,14 +796,19 @@ Zainstalowałam pakietu `kubectl` i stworzyłam alias `minikubectl`.
 ```bash
 sudo dnf install -y kubectl
 
+#Utworzenie aliasu
 echo "alias minikubectl='minikube kubectl'" >> ~/.bashrc
+
 #Załadowanie zmian
 source ~/.bashrc
 ```
 
+Dzięki temu zamiast pisać za każdym razem minikube kubectl możemy uzywać prostszego minikubectl.
+
 Uruchomiłam Kubernetesa
 
 ```bash
+#Otwiera webowy interfejs do monitorowania klastra.
 minikube start
 
 minikubctl --get nodes
@@ -826,6 +837,8 @@ Rezultat:
 
 Z uwagi na korzystanie z biblioteki `cJSON` na poprzednic zajeciach, skorzystałam teraz z prostej aplikacji `app.py` w jezyku python.
 
+Kod aplikacji:
+
 ```py
 from flask import Flask
 app = Flask(__name__)
@@ -837,6 +850,8 @@ def hello():
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
 ```
+
+Flask nasłuchuje na wszystkich interfejsach (0.0.0.0) na porcie 5000.
 
 Dockerfile dla `app.py`:
 
@@ -860,13 +875,16 @@ EXPOSE 5000
 # Domyślna komenda
 CMD ["python", "app.py"]
 ```
+Powyższy kod pliku `Dockerfile` buduje lekki obraz na bazie `python:3.11-slim`, kopiuje kod i instaluje zależności.
 
-Zbudowałam lokalnie obraz i załadowałam do Minikube.
+Następnie budowałam lokalnie obraz i załadowałam do Minikube.
 
 ```bash
 docker build -t flask-hello .
 minikube image load flask-hello
 ```
+
+- `minikube image load` importuje obraz bezpośrednio do lokalnego rejestru Minikube.
 
 ![app](IMG/Lab10/10.png)
 
@@ -926,7 +944,7 @@ Weryfikacja dostępu do aplikacji:
 
 ![web2](IMG/Lab10/17.png)
 
-Następnie przeszłam do kroku Deploy i utworzyłam plik `flask-deploy.yaml`:
+Następnie przeszłam do kroku Deploy i utworzyłam plik `flask-deploy.yaml` z czterema równoległymi instancjami aplikacji (`replicas: 4`).
 
 ```yaml
 apiVersion: apps/v1
@@ -954,7 +972,7 @@ spec:
 ```
 
 I zastosowałam wdrążenia `minikube kubectl -- apply -f flask-deploy.yaml`.
-Sprawdzilam rollout `minikube kubectl -- rollout status deployment/flask-hello-deployment`
+Sprawdzilam rollout `minikube kubectl -- rollout status deployment/flask-hello-deployment`. Deployment przechodzi przez kolejne etapy aż do `Available`.
 
 ![deployment](IMG/Lab10/18.png)
 
@@ -1004,7 +1022,7 @@ Przeslanie na Docker Hub `docker push icharne2/flask-hello:v1`
 
 ![app.py2](IMG/Lab11/lab11_2.png)
 
-Podobne kroki wykonuje z wersja 2 i zlą wersją programu.
+Podobne kroki wykonuje z wersja 2 i zlą wersją programu (sztucznie uszkodzona, generuje CrashLoopBackOff).
 
 Zawartość `app.py`:
 
@@ -1109,7 +1127,7 @@ minikube kubectl -- port-forward service/flask-hello-svc 5080:5000
 ```
 
 
-Skalowanie replik - wykonane komendy:
+Skalowanie replik - pozwala na dynamiczne dostosowanie liczby instancji pod obciążenie. Wykonane komendy:
 
 ```bash
 # do 8 replik
@@ -1162,7 +1180,11 @@ minikube kubectl -- get pods -l app=flask-hello
 ![4repliki_2](IMG/Lab11/lab11_4repliki2.png)
 ![4repliki_2](IMG/Lab11/lab11_4repliki2_2.png)
 
-Aktualizacja obrazu:
+Aktualizacja obrazu (Rolling Update):
+- zastępuje stopniowo stare repliki nowymi, zapewniając ciągłość działania.
+- W przypadku wersji bad, nowe Pody nie przechodzą do stanu Ready → stara wersja pozostaje aktywna.
+
+Wykonane komendy:
 1. Przełączenie na wersje 2:
 
 ```bash
@@ -1309,8 +1331,6 @@ minikube kubectl -- get pods -l app=flask-hello
 ```
 
 `Recreate`: przy tej strategii starych Pódów nie zastępuje się stopniowo — wszystkie są najpierw usuwane, a dopiero potem tworzone nowe repliki. Podczas przełączenia na obraz `bad` wszystkie 4 Pody zniknęły, a dopiero potem wpadły w `CrashLoopBackOff`. Nie było zachowania części starej wersji, co może prowadzić do całkowitej niedostępności aplikacji w czasie wdrożenia.
-
-
 
 ![Recreate](IMG/Lab11/Recreate.png)
 
@@ -1459,7 +1479,7 @@ minikube kubectl -- get svc flask-hello-svc-canary
 
 ![Weryfikacja](IMG/Lab11/weryfikacja_punktc.png)
 
-Oraz wykonalam przekierowanie portu:
+Oraz wykonałam przekierowanie portu:
 
 ```bash
 # – główny:
@@ -1472,3 +1492,18 @@ minikube kubectl -- port-forward service/flask-hello-svc-canary 8090:5000
 ![Weryfikacja](IMG/Lab11/v1.png)
 
 ![Weryfikacja](IMG/Lab11/v2.png)
+
+Utworzyłam dwa oddzielne `Deploymenty` z etykietami `role=main` (3 repliki v1) i `role=canary` (1 replika v2), oraz odpowiednie usługi (`flask-hello-svc-main` i `flask-hello-svc-canary`). `Canary` działał na osobnym porcie `8090`, dzięki port-forwardingowi mogliśmy równolegle testować nową wersję (v2) na jednej replice, bez żadnego wpływu na stabilny ruch produkcyjny na porcie `5081` (v1) `main`.
+
+Etykieta `role` pozwoliła precyzyjnie wyodrębnić dwa typy Deploymentów, a dzięki osobnym Service’om mogłam skierować ruch do głównego i canary niezależnie. To rozwiązanie zapewnia bezpieczne testy nowej wersji, a w razie wykrycia problemów – szybki rollback bez przerywania działania produkcji.
+
+
+Podsumowanie:
+| Strategia         | Zasada działania                                                                                                                                      | Ryzyko przerwy w działaniu                          |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| **Recreate**      | Usunięcie wszystkich starych Podów przed tworzeniem nowych.                                                                                           | Wysokie – aplikacja nie dostępna podczas wdrożenia. |
+| **RollingUpdate** | Domyślnie `maxUnavailable:1`, `maxSurge:1` – stopniowa wymiana pojedynczych Podów. Można dostosować `maxUnavailable` i `maxSurge` na szybszą wymianę. | Niskie – ciągłość zachowana.                        |
+| **Canary**        | Równoległe utworzenie małej grupy nowych Podów (np. 1 replika) obok stabilnej głównej floty (np. 3 repliki). Umożliwia testy na części ruchu.         | Minimalne – nowe wersje testowane na małej próbce.  |
+
+
+#### Wykorzystanie AI do wykonania zadań
