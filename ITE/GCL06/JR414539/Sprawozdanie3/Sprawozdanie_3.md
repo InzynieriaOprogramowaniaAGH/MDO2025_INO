@@ -531,3 +531,196 @@ minikube start
 ```
 
 ![Zrzut ekranu – 41 - ](zrzuty_ekranu_sprawozdanie_3/41.png)
+
+Następnie utworzyłem alias do kubectl, który korzysta bezpośrednio z wersji dostarczanej przez Minikube. Dzięki temu mogłem wydawać polecenia kubectl bez konieczności instalowania go osobno.
+
+```bash
+alias kubectl="minikube kubectl --"
+```
+
+![Zrzut ekranu – 42 - ](zrzuty_ekranu_sprawozdanie_3/42.png)
+
+Używając komendy:
+
+```bash
+minikube kubectl -- get po -A
+```
+
+sprawdziłem czy klaster działa poprawnie. Później wpisałem pierwszy raz polecenie:
+
+```bash
+minikube dashboard
+```
+które uruchomiło graficzny interfejs Kubernetes Dashboard, co umożliwiło wizualne zarządzanie klastrem i podgląd zasobów (pody, deploymenty, serwisy itp.).
+
+![Zrzut ekranu – 43 - ](zrzuty_ekranu_sprawozdanie_3/43.png)
+
+## **Analiza posiadanego kontenera oraz Uruchamianie oprogramowania**
+
+Uruchomiłem pojedynczy pod z obrazem nginx, aby przetestować wdrożenie prostego kontenera bez użycia pliku YAML:
+
+```bash
+minikube kubectl -- run podnginx --image=nginx --port=80 --labels app=podnginx
+```
+
+Na tym screenie jeszcze widać, że sprawdziłem czy wdrożenie aplikacji zakończyło się sukcesem i wszystkie repliki zostały uruchomione poprawnie co jest późiejszym krokiem za pomocą polecenia:
+
+```bash
+kubectl rollout status deployment/moja-aplikacja
+```
+
+Sprawdziłem także czy pody działają poprawnie:
+
+```bash
+kubectl get pods
+```
+
+Aby połączyć się z aplikacją przez przeglądarkę na localhost:8083, użyłem poniższej komendy:
+
+```bash
+kubectl port-forward podnginx 8083:80
+```
+
+![Zrzut ekranu – 44 - ](zrzuty_ekranu_sprawozdanie_3/44.png)
+
+![Zrzut ekranu – 45 - ](zrzuty_ekranu_sprawozdanie_3/45.png)
+
+![Zrzut ekranu – 46 - ](zrzuty_ekranu_sprawozdanie_3/46.png)
+
+![Zrzut ekranu – 47 - ](zrzuty_ekranu_sprawozdanie_3/47.png)
+
+## **Przekucie wdrożenia manualnego w plik wdrożenia**
+
+W celu przejścia z jednorazowego uruchomienia poda do bardziej zaawansowanego i skalowalnego wdrożenia, stworzyłem plik deployment.yaml, zawierający konfigurację obiektu typu Deployment z określoną liczbą replik:
+
+- deployment.yaml:
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moja-aplikacja
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: moja-aplikacja
+  template:
+    metadata:
+      labels:
+        app: moja-aplikacja
+    spec:
+      containers:
+      - name: moja-aplikacja
+        image: moja-aplikacja
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moja-aplikacja
+spec:
+  type: NodePort
+  selector:
+    app: moja-aplikacja
+  ports:
+    - port: 80
+      targetPort: 80
+
+```
+
+Plik deployment.yaml definiuje zasoby Kubernetes niezbędne do uruchomienia aplikacji jako skalowalnego wdrożenia. Składa się z dwóch części:
+
+- Deployment o nazwie moja-aplikacja uruchamia 4 repliki kontenera zbudowanego lokalnie (imagePullPolicy: Never). Każdy kontener nasłuchuje na porcie 80.
+
+- Service typu NodePort eksponuje aplikację na zewnątrz klastra, umożliwiając dostęp do niej poprzez przypisany port węzła. Serwis kieruje ruch do podów oznaczonych etykietą app: moja-aplikacja.
+
+Ponadto mam jeszcze Dockerfile'a oraz index.html:
+
+- Dockerfile:
+
+```bash
+# Dockerfile
+FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/index.html
+```
+
+Dockerfile służy do zbudowania własnego obrazu kontenera na bazie nginx, w którym została podmieniona domyślna strona startowa na moją własną — index.html.
+
+- index.html:
+
+```bash
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Moja strona na Nginx w Kubernetesie</title>
+</head>
+<body>
+  <h1>Witaj z kontenera nginx!</h1>
+  <h2>To prosty serwer HTML oparty o NGINX, dzialajacy w kontenerze K8s </h2> 
+</body>
+</html>
+```
+
+Index.html to prosta strona internetowa, która pełni rolę widocznej funkcjonalności aplikacji – jest serwowana przez nginx i pozwala potwierdzić, że kontener działa prawidłowo oraz że dostęp przez sieć działa zgodnie z założeniem.
+
+Następnie użyłem polecenia:
+
+```bash
+eval $(minikube docker-env)
+```
+
+aby przełączyć Dockera na środowisko wewnątrz Minikube, dzięki czemu zbudowany obraz był widoczny dla klastra Kubernetes. 
+
+Później zbudowałem obraz Dockera naszej aplikacji na podstawie Dockerfile'a, który później został użyty w wdrożeniu.
+
+```bash
+docker build -t moja-aplikacja .
+```
+
+Na samym końcu wykonałem wdrożenie oraz port-forward do serwisu tym razem:
+
+```bash
+kubectl apply -f deployment.yaml
+```
+
+```bash
+kubectl port-forward service/moja-aplikacja 8082:80
+```
+
+![Zrzut ekranu – 48 - ](zrzuty_ekranu_sprawozdanie_3/48.png)
+
+![Zrzut ekranu – 49 - ](zrzuty_ekranu_sprawozdanie_3/49.png)
+
+![Zrzut ekranu – 50 - ](zrzuty_ekranu_sprawozdanie_3/50.png)
+
+![Zrzut ekranu – 46 - ](zrzuty_ekranu_sprawozdanie_3/46.png)
+
+![Zrzut ekranu – 52 - ](zrzuty_ekranu_sprawozdanie_3/52.png)
+
+Na koniec mogę jeszcze pokazać wcześniejsze wdrożenie jakie zrobiłem z hello-minikube:
+
+```bash
+sudo snap install kubectl --classic
+```
+
+```bash
+kubectl create deployment hello-minikube --image=kicbase/echo-server:1.0
+```
+
+```bash
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+```
+
+```bash
+kubectl get services hello-minikube
+```
+
+```bash
+minikube service hello-minikube
+```
+
+![Zrzut ekranu – 51 - ](zrzuty_ekranu_sprawozdanie_3/51.png)
