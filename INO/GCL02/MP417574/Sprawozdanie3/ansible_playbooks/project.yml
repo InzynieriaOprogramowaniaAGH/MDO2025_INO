@@ -1,0 +1,47 @@
+---
+- name: Zbudowanie, uruchomienie, weryfikacja i usunięcie kontenera
+  hosts: all
+  become: yes
+  vars_files:
+    - /home/mpaskowski/MDO2025_INO/INO/GCL02/MP417574/Sprawozdanie3/ansible_playbooks/vars.yml
+  tasks:
+
+    # Krok 1: Zalogowanie do Docker Hub
+    - name: Zaloguj się do Docker Hub
+      docker_login:
+        registry: "docker.io"
+        username: "icharne2"
+        password: "{{ docker_password }}"  # Przechowuj hasło w zmiennej
+
+    # Krok 2: Pobierz obraz z Docker Hub
+    - name: Pobierz obraz z Docker Hub
+      docker_image:
+        name: "icharne2/cjson-deploy"
+        source: pull
+
+    # Krok 3: Zbudowanie i uruchomienie kontenera
+    - name: Zbuduj kontener Docker z aplikacją
+      docker_container:
+        name: "cjson-deploy"
+        image: "icharne2/cjson-deploy"
+        state: started
+        restart_policy: no  # Zapobiegamy automatycznemu restartowi kontenera
+        command: "sh -c './example && sleep 9999'"  # Uruchamiamy aplikację 'example' i zatrzymujemy kontener na kilka godzin
+
+    # Krok 4: Weryfikacja, czy aplikacja działa
+    - name: Sprawdzenie, czy aplikacja działa
+      command: "docker exec cjson-deploy /bin/bash -c './example'"
+      register: result
+      failed_when: result.rc != 0  # Jeśli aplikacja zakończy się błędem, playbook się nie powiedzie
+
+    # Krok 5: Zatrzymanie kontenera
+    - name: Zatrzymanie kontenera cjson-deploy
+      docker_container:
+        name: "cjson-deploy"
+        state: stopped
+
+    # Krok 6: Usunięcie kontenera
+    - name: Usunięcie kontenera cjson-deploy
+      docker_container:
+        name: "cjson-deploy"
+        state: absent

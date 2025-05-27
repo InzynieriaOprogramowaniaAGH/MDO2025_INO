@@ -1,0 +1,34 @@
+# Dockerfile.build1
+
+FROM fedora:41
+
+# 1) Narzędzia do builda i FPM
+RUN dnf install -y git cmake gcc make ruby ruby-devel rpm-build rubygems \
+    && gem install --no-document fpm
+
+WORKDIR /app
+# 2) Pobierz źródła cJSON
+RUN git clone https://github.com/DaveGamble/cJSON.git .
+
+# 3) Zbuduj cJSON
+RUN mkdir build && cd build \
+    && cmake -DCMAKE_INSTALL_PREFIX=/usr .. \
+    && make
+
+# 4) Przygotuj ścieżki tak, by pod /tmp/install było drzewo usr/{lib64,include/cjson}
+RUN mkdir -p /tmp/install/usr/lib64 \
+         /tmp/install/usr/include/cjson \
+    && cp build/libcjson.so* /tmp/install/usr/lib64/ \
+    && cp cJSON.h        /tmp/install/usr/include/cjson/
+
+# 5) Użyj FPM, żeby z całego /tmp/install/usr zbudować RPM.
+#    dokładnie ścieżki: /usr/lib64/... i /usr/include/cjson/...
+RUN cd /tmp/install \
+    && fpm -s dir -t rpm \
+         -n cjson \
+         -v 1.7.15 \
+         --prefix=/ \
+         usr
+
+# 6) Kiedy odpalisz kontener z -v "$PWD:/out", skopiuj wygenerowany RPM
+CMD ["sh","-c","cp /tmp/install/cjson-1.7.15-1.*.rpm /out/cjson.rpm"]

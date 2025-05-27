@@ -1,0 +1,14 @@
+---
+- name: Zrestartuj usługi sshd i rngd
+  hosts: all
+  become: yes  
+  tasks:
+    - name: Zrestartuj usługę sshd
+      ansible.builtin.systemd:
+        name: sshd
+        state: restarted
+
+    - name: Zrestartuj usługę rngd
+      ansible.builtin.systemd:
+        name: rngd
+        state: restarted

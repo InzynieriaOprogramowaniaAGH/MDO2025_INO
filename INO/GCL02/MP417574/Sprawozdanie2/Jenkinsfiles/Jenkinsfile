@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') { 
+            steps {
+                git branch: 'MP417574', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Clear Docker cache') {
+            steps {
+                sh 'docker builder prune -af'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir("INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles_p") {
+                    script {
+                        docker.build('cjson-build', '-f Dockerfile.build1 .')
+
+                        sh '''
+                            mkdir -p ../artifacts
+                            CID=$(docker create cjson-build)
+                            docker cp $CID:/app/cjson.rpm ../artifacts/
+                            docker rm $CID
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir("INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles_p") {
+                    script {
+                        docker.build('cjson-test', '-f Dockerfile.test .')
+
+                        sh """
+                            docker run --rm cjson-test | tee ../artifacts/cjson_test.log
+                        """
+                    }
+                }    
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir("INO/GCL02/MP417574/Sprawozdanie2/Dockerfiles_p") {
+                    script {
+                        sh 'cp ../artifacts/cjson.rpm .'
+                        docker.build("cjson-deploy", "-f Dockerfile.deploy .")
+
+                        sh """
+                            docker run --rm cjson-deploy | tee ../artifacts/cjson_deploy.log
+                        """
+                    }      
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                archiveArtifacts artifacts: 'INO/GCL02/MP417574/Sprawozdanie2/artifacts/*.log', fingerprint: true
+                archiveArtifacts artifacts: 'INO/GCL02/MP417574/Sprawozdanie2/artifacts/*.rpm', fingerprint: true
+            }
+        }
+    }
+}

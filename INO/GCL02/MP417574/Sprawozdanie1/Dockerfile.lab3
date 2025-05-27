@@ -1,0 +1,10 @@
+FROM fedora:latest
+
+# Instalacja pakietów
+RUN dnf install -y git meson gcc glib2-devel ninja-build openssl utf8proc ncurses-devel perl perl-ExtUtils-Embed
+
+# Klonowanie i budowa
+RUN git clone https://github.com/irssi/irssi
+WORKDIR /irssi
+RUN meson Build
+RUN ninja -C Build
