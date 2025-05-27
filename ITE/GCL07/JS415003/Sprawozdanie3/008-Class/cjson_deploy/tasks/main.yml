@@ -1,2 +1,9 @@
 ---
-# tasks file for cjson_deploy
+- name: Include Docker installation tasks
+  include_tasks: install_docker.yml
+
+- name: Include artifact deployment tasks  
+  include_tasks: deploy_artifact.yml
+
+- name: Include application verification tasks
+  include_tasks: verify_application.yml

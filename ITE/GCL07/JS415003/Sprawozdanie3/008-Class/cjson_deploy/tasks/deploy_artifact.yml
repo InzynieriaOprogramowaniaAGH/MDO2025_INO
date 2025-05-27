@@ -1,0 +1,38 @@
+---
+- name: Copy cJSON artifact to target machine
+  copy:
+    src: "{{ package_name }}.tar.gz"
+    dest: "{{ artifact_path }}"
+    mode: '0644'
+
+- name: Create working directory
+  file:
+    path: /opt/cjson-deploy
+    state: directory
+    mode: '0755'
+
+- name: Extract cJSON package
+  unarchive:
+    src: "{{ artifact_path }}"
+    dest: /opt/cjson-deploy
+    remote_src: yes
+
+- name: Create Dockerfile for cJSON application
+  template:
+    src: Dockerfile.j2
+    dest: /opt/cjson-deploy/Dockerfile
+    mode: '0644'
+
+- name: Create example application
+  template:
+    src: example.c.j2
+    dest: /opt/cjson-deploy/example.c
+    mode: '0644'
+
+- name: Build Docker image for cJSON application
+  docker_image:
+    name: "cjson-app"
+    tag: "{{ cjson_version }}"
+    build:
+      path: /opt/cjson-deploy
+    source: build

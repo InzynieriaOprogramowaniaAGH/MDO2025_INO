@@ -1,0 +1,11 @@
+---
+- name: Deploy cJSON library using Docker
+  hosts: endpoints
+  become: yes
+  vars:
+    cjson_version: "v1"  # Zmień na BUILD_NUMBER z Jenkins
+    package_name: "cjson-package-{{ cjson_version }}"
+    artifact_path: "/tmp/{{ package_name }}.tar.gz"
+    
+  roles:
+    - cjson_deploy
