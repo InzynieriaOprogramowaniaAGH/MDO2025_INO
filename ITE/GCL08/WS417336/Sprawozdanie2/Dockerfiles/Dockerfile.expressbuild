@@ -8,7 +8,7 @@ RUN express /tmp/foo
 
 WORKDIR /tmp/foo
 
-RUN sed -i "/module\.exports = app;/i app.get('/version', (req, res) => res.send('New Version!'));" /app/app.js \
- && cat /tmp/foo/app.js
+RUN sed -i '/block content/a\  p Version 2!' views/index.jade \
+ && cat views/index.jade
 
 RUN npm install
