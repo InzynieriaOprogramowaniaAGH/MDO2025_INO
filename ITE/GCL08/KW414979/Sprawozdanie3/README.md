@@ -285,3 +285,296 @@ Widok z `Dashboard`:
 ![](3_3_14.png)
 
 ![](3_3_15.png)
+
+### Testowanie środowiska
+
+Rozpocząłem od zwiększenia liczby replik z uprzednich 4 do 8 - można to zrobić edytując plik YAML bądź wykorzystując komendę:
+
+    kubectl scale deployment custom-nginx-deployment --replicas=8
+
+![](3_4_1.png)
+
+![](3_4_2.png)
+
+Analogicznie zmieniono ilość replik do 1:
+
+![](3_4_3.png)
+
+następnie do 0:
+
+![](3_4_4.png)
+
+potem na powrót do 4:
+
+![](3_4_5.png)
+
+Dalej zmieniłem plik `nginx.conf` w celu utworzenia 2 działającej wersji:
+
+    server {
+        listen 8081;
+        location / {
+             return 200 '[NGINX v2 działa!]';
+             add_header Content-Type text/plain;
+            }
+    }
+
+Zbudowałem nowy obraz `custom-nginx:v2`:
+
+    docker build -t custom-nginx:v2 -f Dockerfile.kub .
+
+![](3_4_6.png)
+
+Załadowałem ten obraz do środowiska minikube:
+    
+    minikube image load custom-nginx:v2
+
+Analogicznie postępowałem dla stworzenia niedziałającej wersji - z pliku `nginx.conf` usunąłem średnik w lini return, oraz zmieniłem tekst dla rozróżnienia:
+
+    return 200 '[BROKEN NGINX]'
+
+Zbudowałem obraz `custom-nginx:broken` i załądowałem do środowiska minikube:
+
+    docker build -t custom-nginx:broken -f Dockerfile.kub .
+    minikube image load custom-nginx:broken
+
+Następnie sprawdziłem czy na pewno w środowisku minicube funkcjonują 3 różne obrazy:
+
+![](3_4_7.png)
+
+Zaktualizowałem deployment o nową wersję obrazu `custom-nginx:v2`:
+
+    kubectl set image deployment custom-nginx-deployment custom-nginx=custom-nginx:v2
+
+![](3_4_8.png)
+
+co sowodowało o zmianach które możemy zaobserwować w `Dashboard`:
+
+![](3_4_9.png)
+
+oraz:
+
+![](3_4_10.png)
+
+Podobnie spróbowałem zmienić obraz na niedziałający `custom-nginx:broken`:
+
+    kubectl set image deployment custom-nginx-deployment custom-nginx=custom-nginx:broken
+
+![](3_4_11.png)
+
+w `Dahboard` obserwujemy, że deployment przestałdziałać:
+
+![](3_4_12.png)
+
+Sprawdziłem historię zmian:
+
+    kubectl rollout history deployment custom-nginx-deployment
+
+![](3_4_13.png)
+
+a następnie szczegóły wersji:
+
+    kubectl rollout history deployment custom-nginx-deployment --revision=5
+
+![](3_4_14.png)
+
+przywróciłem poprzednią wersję - można to uczynić cofając do poprzedniej wersji:
+
+    kubectl rollout undo deployment custom-nginx-deployment
+
+lub do konkretnej wersji:
+
+    kubectl rollout undo deployment custom-nginx-deployment --to-revision=4
+
+![](3_4_15.png)
+
+Napisałem skrypt bash `verify-deployment.sh` który weryfikuje, czy wdrożenie się powiodło w ciągu 60 sekund:
+
+    #!/bin/bash
+
+    DEPLOYMENT="custom-nginx-deployment"
+    TIMEOUT=60
+
+    echo "Sprawdzanie statusu wdrożenia: $DEPLOYMENT (timeout ${TIMEOUT}s)..."
+
+    for ((i=1; i<=$TIMEOUT; i++)); do
+        READY=$(minikube kubectl -- get deployment $DEPLOYMENT -o       jsonpath='{.status.readyReplicas}' 2>/dev/null)
+        DESIRED=$(minikube kubectl -- get deployment $DEPLOYMENT -o     jsonpath='{.spec.replicas}' 2>/dev/null)
+
+        echo "Sekunda $i: READY='$READY', DESIRED='$DESIRED'"
+
+        if [[ "$READY" == "$DESIRED" && -n "$READY" ]]; then
+            echo "Wdrożenie zakończone sukcesem po $i sekundach"
+            exit 0
+        fi
+
+        sleep 1
+    done
+
+    echo "Timeout - wdrożenie nie zakończone po ${TIMEOUT}s"
+    exit 1
+
+Nadałem uprawnienia skryptowi:
+
+    chmod +x verify-deployment.sh
+
+następnie testowałem jego działanie zmieniając `yaml` i wywołując skrypt:
+
+    ./verify-deployment.sh
+
+Dla niedziałającego wdrożenia:
+
+![](3_4_16.png)
+
+Dla działającego wdrożenia:
+
+![](3_4_17.png)
+
+Testowałem rózne strategie wdrożeń. Najpierw w pliku `custom_nginx-deployment.yml` ustwiłem strategię na `Recreate`:
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: custom-nginx-deployment
+    spec:
+      replicas: 4
+      strategy:
+        type: Recreate
+      selector:
+        matchLabels:
+          app: custom-nginx
+      template:
+        metadata:
+          labels:
+            app: custom-nginx
+        spec:
+          containers:
+            - name: custom-nginx
+              image: custom-nginx
+              imagePullPolicy: IfNotPresent
+              ports:
+                - containerPort: 8081
+
+I wdrożyłem komendą:
+
+    kubectl apply -f custom-nginx-deployment.yml
+
+To spowodowało że podczas wdrażania nowej wersji aplikacji wszystkie stare pod’y były najpierw wyłączane, a dopiero potem tworzone były nowe pod’y z nową wersją. W skrócie: przerwa w działaniu aplikacji jest nieunikniona.
+
+Zalety:
+
+✅ Prosta implementacja.\
+✅ Dobra dla aplikacji, które nie wymagają działania równoległych wersji.\
+✅ Można uniknąć komplikacji związanych z równoczesnym działaniem różnych wersji.
+
+Wady:
+
+❌ Przerwa w dostępności aplikacji — podczas aktualizacji aplikacja może być niedostępna.\
+❌ Nieodpowiednia dla aplikacji wymagających wysokiej dostępności.
+
+Dalej wdrożyłem `Rolling Update` (z parametrami `maxUnavailable > 1`, `maxSurge > 20%`). Zmieniłem plik `custom_nginx-deployment.yml` w sekcji strategy:
+
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 1
+        maxSurge: 25%
+
+Wdrożyłęm analogiczną komendą jak poprzedno:
+
+    kubectl apply -f custom-nginx-deployment.yml
+
+![](3_4_19.png)
+
+W tej strategii nowa wersja aplikacji jest wdrażana stopniowo, zastępując stare pod’y kolejnymi nowymi.
+
+Parametry:
+-maxUnavailable — ile podów może być niedostępnych podczas aktualizacji (np. 1, 25%).
+-maxSurge — ile nowych podów ponad docelową liczbę może być uruchomionych tymczasowo (np. 1, 20%).
+-Kubernetes dba o to, by cały czas działała minimalna liczba podów.
+
+Zalety:
+
+✅ Brak przerwy w działaniu — aplikacja jest dostępna podczas całej aktualizacji.\
+✅ Pozwala kontrolować szybkość wdrożenia przez maxUnavailable i maxSurge.\
+✅ Bezpieczniejsza dla aplikacji produkcyjnych.
+
+Wady:
+
+❌ Może wymagać więcej zasobów (podczas maxSurge działa więcej podów niż zwykle).\
+❌ Niektóre zmiany mogą powodować błędy przy jednoczesnym działaniu starej i nowej wersji (np. jeśli aplikacja nie jest kompatybilna z równoczesnym działaniem dwóch wersji).
+
+Teraz przyjąłem strategię `Canary Deployment workload`, utworzyłem dwa pliki `.yml`:
+
+`custom-ngnx-stable.yml`:
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: custom-nginx-stable
+    spec:
+      replicas: 4
+      selector:
+        matchLabels:
+          app: custom-nginx
+          version: stable
+      template:
+        metadata:
+          labels:
+            app: custom-nginx
+            version: stable
+        spec:
+          containers:
+            - name: custom-nginx
+              image: custom-nginx
+              imagePullPolicy: IfNotPresent
+              ports:
+                - containerPort: 8081
+
+`custom-ngnx-canary.yml`:
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: custom-nginx-canary
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: custom-nginx
+          version: canary
+      template:
+        metadata:
+          labels:
+            app: custom-nginx
+            version: canary
+        spec:
+          containers:
+            - name: custom-nginx
+              image: custom-nginx:v2
+              imagePullPolicy: IfNotPresent
+              ports:
+                - containerPort: 8081
+
+następnie wdrożyłem używając `Service`:
+
+    kubectl apply -f custom-nginx-stable.yml
+    kubectl apply -f custom-nginx-canary.yml
+    kubectl apply -f custom-nginx-service.yml
+
+Nz zdjęciu widać Pod'y z różnymi etykietami:
+
+![](3_4_20.png)
+
+Wdrażana w tej strategii jest nowa wersja aplikacji tylko na niewielkiej części podów (np. 1-2 pods). Reszta ruchu jest obsługiwana przez starą wersję. Pozwala testować nową wersję w warunkach produkcyjnych na ograniczonym ruchu. Po potwierdzeniu stabilności, nowa wersja jest stopniowo rozszerzana (np. przez zwiększenie liczby podów).
+
+Zalety:
+
+✅ Minimalizuje ryzyko awarii produkcji.\
+✅ Pozwala na testy na żywo i szybkie wycofanie, jeśli nowa wersja powoduje problemy.\
+✅ Umożliwia testowanie nowych funkcji na małej grupie użytkowników.
+
+Wady:
+
+❌ Większa złożoność konfiguracji (np. wymaga zarządzania ruchem i etykietami).\
+❌ Może wymagać dodatkowych narzędzi (np. service mesh typu Istio, Linkerd do routingu ruchu).\
+❌ Zarządzanie dwoma wersjami może wymagać więcej zasobów.

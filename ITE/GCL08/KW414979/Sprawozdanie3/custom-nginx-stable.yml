@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: custom-nginx-deployment
+  name: custom-nginx-stable
 spec:
   replicas: 4
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app: custom-nginx
+      version: stable
   template:
     metadata:
       labels:
         app: custom-nginx
+        version: stable
     spec:
       containers:
         - name: custom-nginx
