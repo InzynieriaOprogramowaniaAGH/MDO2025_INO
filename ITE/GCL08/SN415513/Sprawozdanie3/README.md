@@ -580,7 +580,7 @@ while true; do
     elapsed=$((now - start_time))
 
     if [ $elapsed -ge $TIMEOUT ]; then
-        echo "❌ Timeout: rollout nie zakończył się w ciągu $TIMEOUT sekund"
+        echo "Timeout: rollout nie zakończył się w ciągu $TIMEOUT sekund"
         kubectl get pods -l app=$DEPLOYMENT_NAME
         exit 2
     fi
