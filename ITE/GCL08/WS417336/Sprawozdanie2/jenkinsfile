@@ -5,12 +5,6 @@ pipeline {
         VERSION_NUMBER = 'v2'
     }   
     stages {
-        stage('Clean Workspace') {
-            steps {
-                deleteDir()
-            }
-        }
-
         stage('Clone Repository') {
             steps {
                 git branch: 'WS417336', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
