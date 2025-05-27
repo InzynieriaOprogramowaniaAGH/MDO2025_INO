@@ -1,10 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-hello-deployment
+  name: flask-hello-deployment-rolling
 spec:
   replicas: 4
-
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2        # do 2 dodatkowych Podów poza 4
+      maxUnavailable: 2  # do 2 starych jednocześnie może być niedostępnych
   selector:
     matchLabels:
       app: flask-hello

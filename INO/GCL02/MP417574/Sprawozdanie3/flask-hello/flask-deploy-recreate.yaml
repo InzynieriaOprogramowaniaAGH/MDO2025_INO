@@ -1,10 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-hello-deployment
+  name: flask-hello-deployment-recreate
 spec:
   replicas: 4
-
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: flask-hello

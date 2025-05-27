@@ -993,4 +993,482 @@ Weryfikacja w Dashboard:
 
 ![result_deploy2](IMG/Lab10/23.png)
 
+### Wdrażanie na zarządzalne kontenery: Kubernetes (2)
 
+
+Budowanie obrazu docker: `docker build -t icharne2/flask-hello:v1 .`
+
+![app.py](IMG/Lab11/lab11_1.png)
+
+Przeslanie na Docker Hub `docker push icharne2/flask-hello:v1`
+
+![app.py2](IMG/Lab11/lab11_2.png)
+
+Podobne kroki wykonuje z wersja 2 i zlą wersją programu.
+
+Zawartość `app.py`:
+
+1. Dla wersji drugiej -poprawnej:
+
+```py
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "<h1>Hello, Kubernetes version 2! 🚀</h1>"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+
+```
+
+2. Dla wersji zlej - bad:
+
+```py
+# app.py – wersja "bad" pod CrashLoopBackOff
+from flask import Flask
+import sys
+
+raise RuntimeError("Intentional startup error for testing rollback")
+
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "<h1>To nie powinno się uruchomić!</h1>"
+
+if __name__ == "__main__":
+    # Nigdy tu nie dojdziemy, bo wyjątek odpaliliśmy wyżej
+    app.run(host="0.0.0.0", port=5000)
+
+```
+
+Potwierdzenie umieszczenia na `Docker Hub`:
+
+![Docker_Hub](IMG/Lab11/lab11_3.png)
+
+Plik `YAML` wdrążeniowy (`flask-deploy.yaml`).
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-hello-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: flask-hello
+  template:
+    metadata:
+      labels:
+        app: flask-hello
+    spec:
+      containers:
+      - name: flask-hello
+        image: icharne2/flask-hello:v1
+        ports:
+        - containerPort: 5000
+        imagePullPolicy: Always
+```
+
+Domyślna strategia `RollingUpdate` ma parametry:
+
+```yaml
+maxUnavailable: 1
+maxSurge:       1
+```
+
+Co oznacza, że `Kubernetes` -> Tworzy jedną nową replikę czeka aż będzie Ready dopiero wtedy usuwa jedną starą. 
+
+Wdrazenie:
+
+```bash
+#Wdrążenie
+minikube kubectl -- apply -f flask-deploy.yaml
+minikube kubectl -- rollout status deployment/flask-hello-deployment
+#Sprawdzenie pod
+minikube kubectl -- get pods -l app=flask-hello
+```
+
+Sprawdzenie w `Dashboard`:
+![Dashboard2](IMG/Lab11/lab11_4.png)
+
+Wstawianie Deployment jako Service:
+
+```bash
+minikube kubectl -- expose deployment flask-hello-deployment \
+  --name=flask-hello-svc --type=ClusterIP --port=5000 --target-port=5000
+```
+
+Przekierowanie portu:
+
+```bash
+minikube kubectl -- port-forward service/flask-hello-svc 5080:5000
+```
+
+
+Skalowanie replik - wykonane komendy:
+
+```bash
+# do 8 replik
+minikube kubectl -- scale deployment flask-hello-deployment --replicas=8
+minikube kubectl -- get pods -l app=flask-hello
+
+#Sprawdzenie
+minikube kubectl -- rollout status deployment/flask-hello-deployment
+deployment "flask-hello-deployment" successfully rolled out
+```
+
+![8replik](IMG/Lab11/lab11_8replik.png)
+![8replik](IMG/Lab11/lab11_8replik2.png)
+
+```bash
+# do 1 repliki
+minikube kubectl -- scale deployment flask-hello-deployment --replicas=1
+minikube kubectl -- get pods -l app=flask-hello
+
+#Sprawdzenie
+minikube kubectl -- rollout status deployment/flask-hello-deployment
+deployment "flask-hello-deployment" successfully rolled out
+```
+
+![1replika](IMG/Lab11/lab11_1replika.png)
+![1replika](IMG/Lab11/lab11_1replika2.png)
+
+```bash
+# do 0 replik
+minikube kubectl -- scale deployment flask-hello-deployment --replicas=0
+minikube kubectl -- get pods -l app=flask-hello
+
+#Sprawdzenie
+minikube kubectl -- get pods -l app=flask-hello
+```
+
+![0replik](IMG/Lab11/lab11_0replik.png)
+![0replik](IMG/Lab11/lab11_0replik2.png)
+
+```bash
+# z powrotem do 4 replik
+minikube kubectl -- scale deployment flask-hello-deployment --replicas=4
+minikube kubectl -- get pods -l app=flask-hello
+minikube kubectl -- rollout status deployment/flask-hello-deployment
+
+#Sprawdzenie
+minikube kubectl -- get pods -l app=flask-hello
+```
+
+![4repliki_2](IMG/Lab11/lab11_4repliki2.png)
+![4repliki_2](IMG/Lab11/lab11_4repliki2_2.png)
+
+Aktualizacja obrazu:
+1. Przełączenie na wersje 2:
+
+```bash
+minikube kubectl -- set image deployment/flask-hello-deployment \
+  flask-hello=icharne2/flask-hello:v2
+minikube kubectl -- rollout status deployment/flask-hello-deployment
+```
+
+![ver2](IMG/Lab11/lab11_v2.png)
+![ver2](IMG/Lab11/lab11_v2_2.png)
+
+2. Cofnięcie do wersji 1:
+
+```bash
+minikube kubectl -- set image deployment/flask-hello-deployment \
+  flask-hello=icharne2/flask-hello:v1
+minikube kubectl -- rollout status deployment/flask-hello-deployment
+```
+
+![ver1](IMG/Lab11/lab11_v1.png)
+![ver1](IMG/Lab11/lab11_v1_2.png)
+
+3. wersja z bledem:
+
+```bash
+minikube kubectl -- set image deployment/flask-hello-deployment \
+  flask-hello=icharne2/flask-hello:bad
+```
+
+![bad](IMG/Lab11/lab11_bad.png)
+
+Strategia RollingUpdate dla obrazu `bad`:
+
+W przypadku obrazu `bad` nowe Pody natychmiast padają (`CrashLoopBackOff`), więc nigdy nie osiągną stanu Ready. Kubernetes nie usuwa kolejnych starych Podów. W efekcie w Dashboardzie jest widoczne kilka Podów z `:v1` w Running oraz kilka nowych z `:bad` w `Error/` `CrashLoopBackOff` — dopóki nowe repliki nie udowodnią, że potrafią się uruchomić, stare repliki pozostają włączone.
+
+Historia i Rollback:
+
+```bash
+#Wyświetlenie historii rewizji
+minikube kubectl -- rollout history deployment/flask-hello-deployment
+
+#szczegóły konkretnej rewizji
+minikube kubectl -- rollout history deployment/flask-hello-deployment --revision=18
+```
+
+![history](IMG/Lab11/history.png)
+
+Przywracanie do konkretnej rewizji:
+
+```bash
+minikube kubectl -- rollout undo deployment/flask-hello-deployment --to-revision=6
+minikube kubectl -- rollout status deployment/flask-hello-deployment
+minikube kubectl -- get pods -l app=flask-hello
+```
+
+![revision](IMG/Lab11/revision.png)
+
+Aby ustawic opis w kolumnie `CHANGE-CAUSE` należy dodać `-- record` w komendzie `minikube kubectl -- set image deployment/flask-hello-deployment \ flask-hello=icharne2/flask-hello:v2 --record` 
+
+Wtedy `rollout history` będzie pokazywało, jaką komendą dokonywane były zmiany.
+
+#### Kontrola wdrążeniowa
+
+Skrypt `wait-rollout.sh`, który w ciągu 60 s sprawdzi, czy Deployment osiągnął stan Available.
+
+```sh
+#!/usr/bin/env bash
+
+# wait-rollout.sh
+# Skrypt czeka do 60 sekund (domyślnie) na to, aż Deployment osiągnie stan Available.
+
+DEPLOY="${1:-flask-hello-deployment}"
+TIMEOUT="${2:-60}"
+
+end=$((SECONDS + TIMEOUT))
+echo "Czekam na dostępność Deploymentu '$DEPLOY' (max $TIMEOUT s)..."
+
+while [ $SECONDS -lt $end ]; do
+  status=$(kubectl get deployment "$DEPLOY" \
+    -o jsonpath='{.status.conditions[?(@.type=="Available")].status}')
+  if [[ "$status" == "True" ]]; then
+    echo "Deployment '$DEPLOY' jest dostępny."
+    exit 0
+  fi
+  sleep 2
+done
+
+echo "Timeout! Deployment '$DEPLOY' nie stał się dostępny w ciągu $TIMEOUT s."
+exit 1
+```
+
+Nadałam prawa do wykonywalności `chmod +x wait-rollout.sh` oraz uruchomiłam skrypt `./wait-rollout.sh flask-hello-deployment 60`.
+
+![skrypt](IMG/Lab11/lab_11_skrypt.png)
+
+
+#### Strategie wdrożenia
+
+Wersje wdrożen w pliku `yaml`:
+1. `Recreate`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-hello-deployment
+spec:
+  replicas: 4
+
+  strategy:
+    type: Recreate
+
+  selector:
+    matchLabels:
+      app: flask-hello
+  template:
+    metadata:
+      labels:
+        app: flask-hello
+    spec:
+      containers:
+      - name: flask-hello
+        image: icharne2/flask-hello:v1
+        ports:
+        - containerPort: 5000
+        imagePullPolicy: Always
+```
+
+Następnie wykonałam:
+
+```bash
+# 1. Stworzenie Deployment z Recreate
+minikube kubectl -- apply -f flask-deploy-recreate.yaml
+
+# 2. Sprawdzenie rollout
+minikube kubectl -- rollout status deployment/flask-hello-deployment-recreate
+
+# 3. Implementacja obrazu "bad"
+minikube kubectl -- set image deployment/flask-hello-deployment-recreate \
+  flask-hello=icharne2/flask-hello:bad
+
+# 4. Obserwacja Podów
+minikube kubectl -- get pods -l app=flask-hello
+```
+
+`Recreate`: przy tej strategii starych Pódów nie zastępuje się stopniowo — wszystkie są najpierw usuwane, a dopiero potem tworzone nowe repliki. Podczas przełączenia na obraz `bad` wszystkie 4 Pody zniknęły, a dopiero potem wpadły w `CrashLoopBackOff`. Nie było zachowania części starej wersji, co może prowadzić do całkowitej niedostępności aplikacji w czasie wdrożenia.
+
+
+
+![Recreate](IMG/Lab11/Recreate.png)
+
+2. `Rolling Update` (z parametrami maxUnavailable > 1, maxSurge > 20%)
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-hello-deployment-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2        # do 2 dodatkowych Podów poza 4
+      maxUnavailable: 2  # do 2 starych jednocześnie może być niedostępnych
+  selector:
+    matchLabels:
+      app: flask-hello
+  template:
+    metadata:
+      labels:
+        app: flask-hello
+    spec:
+      containers:
+      - name: flask-hello
+        image: icharne2/flask-hello:v1
+        ports:
+        - containerPort: 5000
+        imagePullPolicy: Always
+```
+
+Następnie wykonałam:
+
+```bash
+minikube kubectl -- apply -f flask-deploy-rolling.yaml
+minikube kubectl -- rollout status deployment/flask-hello-deployment-rolling
+
+# Aktualizacja na v2
+minikube kubectl -- set image deployment/flask-hello-deployment-rolling \
+  flask-hello=icharne2/flask-hello:v2
+minikube kubectl -- rollout status deployment/flask-hello-deployment-rolling
+
+# Obserwacja: 
+minikube kubectl -- get pods -l app=flask-hello-deployment-rolling
+```
+
+`RollingUpdate` (maxSurge=2, maxUnavailable=2): pozwala na szybsze przechodzenie między wersjami, tworząc do 2 nowych repliki ponad wymagane 4 i dopuszczając do 2 niegotowych starych. To balansuje szybkość aktualizacji z minimalnym ryzykiem utraty dostępności.
+
+![RollingUpdate](IMG/Lab11/RollingUpdate.png)
+
+3. `Canary Deployment workload`
+
+Stworzyłam dwa pliki `yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-hello-deployment-main
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flask-hello
+      role: main
+  template:
+    metadata:
+      labels:
+        app: flask-hello
+        role: main
+    spec:
+      containers:
+      - name: flask-hello
+        image: icharne2/flask-hello:v1
+        ports:
+        - containerPort: 5000
+```
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-hello-deployment-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-hello
+      role: canary
+  template:
+    metadata:
+      labels:
+        app: flask-hello
+        role: canary
+    spec:
+      containers:
+      - name: flask-hello
+        image: icharne2/flask-hello:v2
+        ports:
+        - containerPort: 5000
+```
+
+Następnie wykonałam:
+
+1. Dla `main`:
+
+```bash
+#Wdrążenie
+minikube kubectl -- apply -f flask-deploy-main.yaml
+
+#Weryfikacja
+minikube kubectl -- get deployments
+minikube kubectl -- get pods -l app=flask-hello,role=main
+
+#Expose główny Deployment jako Service
+minikube kubectl -- expose deployment flask-hello-deployment-main \
+  --name=flask-hello-svc-main \
+  --port=5000 \
+  --target-port=5000
+
+#Weryfikacja
+minikube kubectl -- get svc flask-hello-svc-main
+```
+
+2. dla `Canary `:
+
+```bash
+#Wdrążenie
+minikube kubectl -- apply -f flask-deploy-canary.yaml
+
+#Weryfikacja
+minikube kubectl -- get deployments
+minikube kubectl -- get pods -l app=flask-hello,role=canary
+
+#Expose główny Deployment jako Service
+minikube kubectl -- expose deployment flask-hello-deployment-canary \
+  --name=flask-hello-svc-canary \
+  --port=5000 \
+  --target-port=5000
+
+#Weryfikacja
+minikube kubectl -- get svc flask-hello-svc-canary
+```
+
+![Weryfikacja](IMG/Lab11/weryfikacja_punktc.png)
+
+Oraz wykonalam przekierowanie portu:
+
+```bash
+# – główny:
+minikube kubectl -- port-forward service/flask-hello-svc-main 5081:5000
+
+# – canary:
+minikube kubectl -- port-forward service/flask-hello-svc-canary 8090:5000
+```
+
+![Weryfikacja](IMG/Lab11/v1.png)
+
+![Weryfikacja](IMG/Lab11/v2.png)
