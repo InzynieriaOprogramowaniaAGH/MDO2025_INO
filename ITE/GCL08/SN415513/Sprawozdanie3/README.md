@@ -516,47 +516,171 @@ status:
 ## Rollout
 ![](36.png)
 
-
-# Zajęcia 11
-
 # Wdrażanie na zarządzalne kontenery: Kubernetes (2)
 
-## Zadania do wykonania
+## Stworzenie dwóch obrazów
+![](37.png)
+![](38.png)
+![](39.png)
 
-### Przygotowanie nowego obrazu
- * Zarejestruj nową wersję swojego obrazu `Deploy` (w Docker Hub lub lokalnie+przeniesienie)
- * Upewnij się, że dostępne są dwie co najmniej wersje obrazu z wybranym programem
- * Jeżeli potrzebny jest "gotowiec" z powodu problemów z `Deploy`, można użyć np `httpd`, ale powinien to być **własny** kontener: zmodyfikowany względem oryginału i opublikowany na własnym koncie Docker Hub.
- * Będzie to wymagać 
-   * przejścia przez *pipeline* dwukrotnie, lub
-   * ręcznego zbudowania dwóch wersji, lub
-   * przepakowania wybranego obrazu samodzielnie np przez ```commit```
- * Przygotuj kolejną wersję obrazu, którego uruchomienie kończy się błędem
-  
-### Zmiany w deploymencie
- * 🌵 Aktualizuj plik YAML z wdrożeniem i przeprowadzaj je ponownie po zastosowaniu następujących zmian:
-   * zwiększenie replik np. do 8
-   * zmniejszenie liczby replik do 1
-   * zmniejszenie liczby replik do 0
-   * ponowne przeskalowanie w górę do 4 replik (co najmniej)
-   * Zastosowanie nowej wersji obrazu
-   * Zastosowanie starszej wersji obrazu
-   * Zastosowanie "wadliwego" obrazu
- * Przywracaj poprzednie wersje wdrożeń za pomocą poleceń
-   * ```kubectl rollout history```
-   * ```kubectl rollout undo```
+## Push na docker hub-a
+![](40.png)
 
-### Kontrola wdrożenia
- * Zidentyfikuj historię wdrożenia i zapisane w niej problemy, skoreluj je z wykonywanymi czynnościami
- * Napisz skrypt weryfikujący, czy wdrożenie "zdążyło" się wdrożyć (60 sekund)
- * Zakres rozszerzony: Ujmij skrypt w pipeline Jenkins (o ile `minikube` jest dostępny z zewnątrz)
- 
-### Strategie wdrożenia
- * Przygotuj wersje [wdrożeń](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) stosujące następujące strategie wdrożeń
-   * Recreate
-   * Rolling Update (z parametrami `maxUnavailable` > 1, `maxSurge` > 20%)
-   * Canary Deployment workload
- * Zaobserwuj i opisz różnice
- * Uzyj etykiet
- * Dla wdrożeń z wieloma replikami, używaj [serwisów](https://kubernetes.io/docs/concepts/services-networking/service/)
+## apply i rollout
+![](41.png)
+
+## 8 replicas
+```
+  replicas: 8
+```
+![](42.png)
+
+## jedna
+![](43.png)
+
+## zero
+![](44.png)
+
+## cztery
+![](45.png)
+
+## wadliwy obraz 
+![](46.png)
+
+## wyświetlenie historii, rollback - deploy ponownie działa poprawnie
+![](47.png)
+
+## Skrypt weryfikujący czy wdrożenie zdążyło się wdrożyć
+```
+#!/bin/bash
+
+DEPLOYMENT_NAME="httpd-custom"
+NAMESPACE="default"
+TIMEOUT=60
+
+echo "Sprawdzam rollout '$DEPLOYMENT_NAME' (maks. $TIMEOUT sek)..."
+
+start_time=$(date +%s)
+
+while true; do
+    status=$(kubectl rollout status deployment/$DEPLOYMENT_NAME --namespace $NAMESPACE --timeout=5s 2>&1)
+
+    if echo "$status" | grep -q "successfully rolled out"; then
+        echo "Wdrożenie zakończone sukcesem!"
+        exit 0
+    fi
+
+    if echo "$status" | grep -q "error"; then
+        echo "Błąd rolloutu:"
+        echo "$status"
+        exit 1
+    fi
+
+    now=$(date +%s)
+    elapsed=$((now - start_time))
+
+    if [ $elapsed -ge $TIMEOUT ]; then
+        echo "❌ Timeout: rollout nie zakończył się w ciągu $TIMEOUT sekund"
+        kubectl get pods -l app=$DEPLOYMENT_NAME
+        exit 2
+    fi
+
+    sleep 3
+done
+
+```
+
+## Wersje wdrożeń 
+
+### Recreate
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-recreate
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: demo
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: demo
+        version: v1
+    spec:
+      containers:
+      - name: httpd
+        image: szymonnowaq/httpd-custom:v1
+        ports:
+        - containerPort: 80
+```
+
+### Rolling update
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 50%
+  selector:
+    matchLabels:
+      app: demo
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: demo
+        version: v1
+    spec:
+      containers:
+      - name: httpd
+        image: szymonnowaq/httpd-custom:v1
+        ports:
+        - containerPort: 80
+
+```
+
+### Canary Deployment workload
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-prod
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: demo
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: demo
+        version: v1
+    spec:
+      containers:
+      - name: httpd
+        image: szymonnowaq/httpd-custom:v1
+        ports:
+        - containerPort: 80
+
+```
+
+## Apply i rollout status
+![](48.png)
+
+### Różnice
+Recreate:	Brak dostępności aplikacji podczas zmiany.
+Rolling:	Stopniowe wdrażanie, zapewnia ciągłość działania.
+Canary:	Ręczne sterowanie ruchem – możliwość testów na części.
  
