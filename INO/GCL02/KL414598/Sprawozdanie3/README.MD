@@ -12,21 +12,24 @@ Obie maszyny działają na systemie Ubuntu 24.04 LTS, co ułatwia zarządzanie i
 Zainstalowano `tar` i `openssh-server`, aby umożliwić obsługę archiwów i dostęp przez SSH.
 
 ### 🌵 Nadanie hostname `ansible-target`
-Nazwa hosta została ustawiona już podczas instalacji systemu.
+Nazwa hosta została ustawiona już podczas instalacji systemu ale jeszcze się upewniłem.
 
 ![Opis](ss/1.jpg)
 
-### 🌵 Utworzenie użytkownika `ansible`
-Użytkownik `ansible` został stworzony w instalatorze i ma przyznane uprawnienia sudo.
 
 ### 🌵 Wykonanie migawki maszyny
 Zrobiono migawkę w VirtualBoxie, co pozwala wrócić do stanu początkowego w razie problemów.
+
+![Opis](ss/20.jpg)
 
 ### 🌵 Instalacja Ansible na głównej maszynie
 Na `server` zainstalowano Ansible za pomocą APT:
 ```bash
 sudo apt update && sudo apt install -y ansible
 ```
+![Opis](ss/21.jpg)
+
+
 
 ### 🌵 Wymiana kluczy SSH
 Na `server` wygenerowano parę kluczy SSH i przesłano je do `ansible@ansible-target`:
@@ -52,6 +55,9 @@ Na maszynie `server` wpisano:
 192.168.100.10 ansible-target
 192.168.100.11 server
 ```
+![Opis](ss/22.jpg)
+
+
 
 ### 🌵 Weryfikacja łączności
 Sprawdzono połączenie:
@@ -59,6 +65,9 @@ Sprawdzono połączenie:
 ping ansible-target
 ping server
 ```
+![Opis](ss/23.jpg)
+
+
 
 ### 🌵 Stworzenie pliku inwentaryzacji
 Plik `inventory.ini`:
