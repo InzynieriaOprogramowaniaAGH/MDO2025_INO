@@ -1,15 +1,13 @@
-FROM node:16
+FROM node AS express-build
 
-ARG VERSION_NUMBER=dev
+RUN git clone https://github.com/expressjs/express
 
-RUN git clone https://twoje-repo.git /app
+RUN npm install -g express-generator@4
 
-WORKDIR /app
+RUN express /tmp/foo
 
-RUN echo "app.get('/version', (req, res) => res.send('Version v${VERSION_NUMBER}'));" >> app.js
+WORKDIR /tmp/foo
+
+RUN echo "app.get('/version', (req, res) => res.send('New endpoint!'));" >> app.js
 
 RUN npm install
-
-EXPOSE 3000
-
-CMD ["node", "app.js"]
