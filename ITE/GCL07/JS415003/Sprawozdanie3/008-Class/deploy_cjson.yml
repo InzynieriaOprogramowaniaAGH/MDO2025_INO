@@ -9,3 +9,18 @@
     
   roles:
     - cjson_deploy
+
+  post_tasks:
+    - name: Display deployment summary
+      debug:
+        msg: |
+          ================================
+          cJSON Deployment Summary
+          ================================
+          Version: {{ cjson_version }}
+          Package: {{ package_name }}
+          Target: {{ inventory_hostname }}
+          Docker installed: ✓
+          Application deployed: ✓
+          Verification completed: ✓
+          ================================
