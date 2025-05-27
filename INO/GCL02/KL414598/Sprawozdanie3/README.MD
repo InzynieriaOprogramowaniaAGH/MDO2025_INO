@@ -78,6 +78,9 @@ server ansible_host=server ansible_user=krzysztof ansible_port=2222
 [Endpoints]
 ansible-target ansible_host=ansible-target ansible_user=ansible
 ```
+![Opis](ss/6,5.jpg)
+![Opis](ss/8.jpg)
+
 
 ### 🌵 Wysłanie ping przez Ansible
 ```bash
