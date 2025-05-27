@@ -37,6 +37,7 @@ Na `server` wygenerowano parę kluczy SSH i przesłano je do `ansible@ansible-ta
 ssh-keygen
 ssh-copy-id ansible@ansible-target
 ```
+![Opis](ss/6.jpg)
 
 ---
 
@@ -48,6 +49,9 @@ Ustawiono `hostnamectl` na obu maszynach:
 hostnamectl set-hostname server
 hostnamectl set-hostname ansible-target
 ```
+![Opis](ss/7.jpg)
+
+
 
 ### 🌵 Dodanie wpisów do /etc/hosts
 Na maszynie `server` wpisano:
@@ -86,6 +90,10 @@ ansible-target ansible_host=ansible-target ansible_user=ansible
 ```bash
 ansible -i inventory.ini all -m ping
 ```
+![Opis](ss/11.jpg)
+
+
+
 
 ### 🌵 Użyto dwóch maszyn wirtualnych
 Projekt został przeprowadzony z wykorzystaniem dwóch maszyn: `server` i `ansible-target`.
@@ -96,6 +104,7 @@ Upewniono się, że użytkownik `ansible` ma poprawnie dodany klucz publiczny.
 ### 🌵 Weryfikacja bezhasłowego logowania
 SSH działało bez potrzeby wpisywania hasła.
 
+![Opis](ss/6.jpg)
 ---
 
 ## ⚙️ 3. Zdalne wywoływanie procedur
@@ -109,6 +118,9 @@ Utworzono `ping.yml`:
     - name: Ping
       ansible.builtin.ping:
 ```
+![Opis](ss/12.jpg)
+![Opis](ss/13.jpg)
+
 
 ### 🌵 Skopiowanie pliku inwentaryzacji na zdalną maszynę
 ```yaml
@@ -120,6 +132,9 @@ Utworzono `ping.yml`:
         src: ../inventory.ini
         dest: /home/ansible/inventory.ini
 ```
+
+![Opis](ss/14.jpg)
+![Opis](ss/15.jpg)
 
 ### 🌵 Porównanie wyników
 Po skopiowaniu inventory na `ansible-target` uruchomiono test pingowy zdalnie — wynik był identyczny jak z `server`.
@@ -138,6 +153,9 @@ Po skopiowaniu inventory na `ansible-target` uruchomiono test pingowy zdalnie �
         upgrade: dist
 ```
 
+![Opis](ss/16.jpg)
+![Opis](ss/17.jpg)
+
 ### 🌵 Restart usług sshd i rngd
 ```yaml
 - hosts: Endpoints
@@ -154,6 +172,9 @@ Po skopiowaniu inventory na `ansible-target` uruchomiono test pingowy zdalnie �
         state: restarted
       ignore_errors: true
 ```
+
+![Opis](ss/18.jpg)
+![Opis](ss/19.jpg)
 
 ### 🌵 Test awarii (SSH down, interfejs down)
 Wyłączono `sshd` i kartę sieciową. Ansible zgłosił `UNREACHABLE` — zgodnie z oczekiwaniami.
