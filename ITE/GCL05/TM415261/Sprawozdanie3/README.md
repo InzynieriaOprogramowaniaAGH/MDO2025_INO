@@ -688,11 +688,9 @@ Możemy również wyświetlić historię naszego deploymentu, a dokładniej list
 
 Kolejnym krokiem było zastosowanie w deploymencie wcześniej stworzonego wadliwego obrazu. Zmieniłem wersję w pliku wdrożenia:
 ``` yaml
-...
 containers:
         - name: redis-container
           image: tomaszek03/redis-app:broken_version
-...
 ```
 Po uruchomieniu, zaobserwować można było błąd:
 ![ss](./Lab10/screenshots_lab11/broken.png)
