@@ -314,7 +314,7 @@ Instalator wykrył plik Kickstart i rozpoczął instalację automatyczną. W log
 
 Choć instalacja była automatyczna, pojawiło się okno z podsumowaniem konfiguracji. Musiałem ręcznie dokończyć konfigurację użytkownika i konta root.
 
-📷 ![Anaconda GUI - podsumowanie instalacji](./202.png)
+![Anaconda GUI - podsumowanie instalacji](ss/209.png)
 
 ---
 
@@ -322,7 +322,7 @@ Choć instalacja była automatyczna, pojawiło się okno z podsumowaniem konfigu
 
 Po uzupełnieniu wymaganych danych, instalacja postępowała dalej, tworząc partycję rozruchową i systemową.
 
-📷 ![Postęp instalacji - tworzenie biosboot](./203.png)
+![Anaconda GUI - podsumowanie instalacji](ss/207.png)
 
 ---
 
