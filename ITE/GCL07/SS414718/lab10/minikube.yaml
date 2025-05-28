@@ -125,22 +125,3 @@ spec:
       maxSurge: 25%
   revisionHistoryLimit: 10
   progressDeadlineSeconds: 600
-status:
-  observedGeneration: 2
-  replicas: 4
-  updatedReplicas: 4
-  readyReplicas: 4
-  availableReplicas: 4
-  conditions:
-    - type: Progressing
-      status: 'True'
-      lastUpdateTime: '2025-05-22T16:20:34Z'
-      lastTransitionTime: '2025-05-22T16:20:30Z'
-      reason: NewReplicaSetAvailable
-      message: ReplicaSet "nginx-depl-68c944fcbc" has successfully progressed.
-    - type: Available
-      status: 'True'
-      lastUpdateTime: '2025-05-22T16:22:53Z'
-      lastTransitionTime: '2025-05-22T16:22:53Z'
-      reason: MinimumReplicasAvailable
-      message: Deployment has minimum availability.
