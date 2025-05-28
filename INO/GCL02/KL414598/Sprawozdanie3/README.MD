@@ -250,7 +250,9 @@ Zadanie dotyczyło przygotowania automatycznego źródła instalacyjnego systemu
 
 Na początku uruchomiłem maszynę wirtualną z obrazem instalacyjnym Fedora 42 w trybie “Test this media & install Fedora 42”.
 
-📷 ![GRUB z parametrem instalacyjnym](ss/207.png)
+📷 
+![Opis](ss/207.png)
+
 
 ---
 
