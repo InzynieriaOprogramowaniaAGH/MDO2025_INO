@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: custom-redis-stable
+  labels:
+    role: stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: redis
+        version: stable
+    spec:
+      containers:
+        - name: redis
+          image: redis-custom:v1

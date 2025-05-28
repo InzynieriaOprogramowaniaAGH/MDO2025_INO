@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: custom-redis-canary
+  labels:
+    role: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: redis
+        version: canary
+    spec:
+      containers:
+        - name: redis
+          image: redis-custom:v2
