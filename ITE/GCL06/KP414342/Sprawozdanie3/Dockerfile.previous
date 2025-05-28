@@ -2,153 +2,18 @@ FROM httpd:2.4-alpine
 
 COPY <<EOF /usr/local/apache2/htdocs/index.html
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Apache Server</title>
+    <title>Custom Apache Server</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
-        
-        .container {
-            text-align: center;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            max-width: 600px;
-            margin: 2rem;
-        }
-        
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            animation: fadeInUp 1s ease-out;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            animation: fadeInUp 1s ease-out 0.3s both;
-        }
-        
-        .info-box {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin: 1rem 0;
-            animation: fadeInUp 1s ease-out 0.6s both;
-        }
-        
-        .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(46, 204, 113, 0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            border: 1px solid rgba(46, 204, 113, 0.5);
-            margin-top: 1rem;
-        }
-        
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #2ecc71;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        
-        .feature {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
-        }
-        
-        .feature:hover {
-            transform: translateY(-5px);
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        @media (max-width: 768px) {
-            h1 { font-size: 2rem; }
-            .container { margin: 1rem; padding: 1.5rem; }
-        }
+        body { font-family: Arial; text-align: center; margin-top: 50px; }
+        h1 { color: #2c3e50; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🚀 Apache Server</h1>
-        <p class="subtitle">Modern web server ready for action</p>
-        
-        <div class="info-box">
-            <h3>Server Information</h3>
-            <p>Apache HTTP Server 2.4 running on Alpine Linux</p>
-            <p>Lightweight, secure, and production-ready</p>
-        </div>
-        
-        <div class="features">
-            <div class="feature">
-                <h4>⚡ Fast Performance</h4>
-                <p>Optimized for speed and efficiency</p>
-            </div>
-            <div class="feature">
-                <h4>🔒 Secure</h4>
-                <p>Built with security best practices</p>
-            </div>
-            <div class="feature">
-                <h4>📱 Responsive</h4>
-                <p>Works on all devices</p>
-            </div>
-        </div>
-        
-        <div class="status">
-            <div class="status-dot"></div>
-            <span>Server Active on Port 80</span>
-        </div>
-    </div>
+    <h1>Welcome to Custom Apache Server</h1>
+    <p>This is a basic Apache configuration with custom content.</p>
+    <p>Server running on port 80</p>
 </body>
 </html>
 EOF

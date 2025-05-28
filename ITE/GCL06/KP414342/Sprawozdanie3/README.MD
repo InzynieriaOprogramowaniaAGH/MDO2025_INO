@@ -283,6 +283,7 @@ spec:
 ![alt text](image-13.png)
 
 ### Po forwardzie portu można zobaczyć że jesteśmy w stanie połączyć się z jednym z podów - natomiast nie mamy kontroli z którym, od tego służy load balancer
+`kubectl port-forward deployment/nginx-deployment 8889:80`
 ![alt text](image-11.png)
 
 ![alt text](image-12.png)
@@ -291,3 +292,100 @@ spec:
 ![alt text](image-14.png)
 
 ![alt text](image-15.png)
+
+## Na zajęciach 11 poprosiłem AI o wygenerowanie trzech Dockerfili aby zbudować obrazy, dwa z nich różnią się plikiem `index.html` a trzeci wywołuje skrypt zwracający exit code 1
+
+## Korzystając z Dockerfili, zbudowałem obrazy
+```
+docker build -t cumil/apache-basic -f Dockerfile.previous .
+docker build -t cumil/apache-ssl -f Dockerfile.new .
+docker build -t cumil/apache-failing -f Dockerfile.broken .
+```
+Zdaję sobie sprawę z niefortunnej nazwy drugiego obrazu
+
+## Zmiana pliku `conf.yaml` z poprzednich zajęć
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache-deployment
+  labels:
+    app: apache-basic
+spec:
+  replicas: 8
+  selector:
+    matchLabels:
+      app: apache-basic
+  template:
+    metadata:
+      labels:
+        app: apache-basic
+    spec:
+      containers:
+      - name: apache-basic
+        image: cumil/apache-basic
+        ports:
+        - containerPort: 80
+```
+## Zmiana z 8 replik na 1
+![alt text](image-29.png)
+
+## Z 1 na 0
+![alt text](image-28.png)
+
+## Z 1 na 4
+![alt text](image-27.png)
+
+## Zmiana obrazów
+### apache-basic
+![alt text](image-30.png)
+### apache-ssl
+![alt text](image-31.png)
+### apache-failing
+![alt text](image-32.png)
+### W przypadku zmiany obrazu z apache-basic na apache-ssl, potrzebowałem na nowo zrobić forward portu aby móc się połączyć, natomiast obraz apache-failing powoduje wejście podów w stan CrashLoopBackOff, skutkujący systematycznym restartem poda
+![alt text](image-33.png)
+## po użyciu polecenia `minikube kubectl -- rollout undo deployment/apache-deployment` wdrożenie wróciło do ostatniej działającej wersji
+
+## Poprosiłem AI do wygenerowania skryptu weryfikującego deployment
+
+```bash
+#!/bin/bash
+DEPLOYMENT=apache-deployment
+NAMESPACE=default
+TIMEOUT=60
+INTERVAL=5
+ELAPSED=0
+
+echo "Checking rollout status for $DEPLOYMENT"
+
+while [ $ELAPSED -lt $TIMEOUT ]; do
+  STATUS=$(minikube kubectl -- rollout status deployment/$DEPLOYMENT -n $NAMESPACE 2>&1)
+  echo "$STATUS"
+  if echo "$STATUS" | grep -q "successfully rolled out"; then
+    echo "✅ Deployment successful"
+    exit 0
+  fi
+  sleep $INTERVAL
+  ELAPSED=$((ELAPSED + INTERVAL))
+done
+
+echo "❌ Timeout: Deployment did not finish in time"
+exit 1
+```
+![alt text](image-35.png)
+
+## Strategie wdrożenia pozwalają na zdecydowanie w jaki sposób pody będą uaktualniane
+### Recreate zastępuje stare pody nowymi
+```yaml
+strategy:
+  type: Recreate
+```
+### RollingUpdate pozwala na dobranie np, ile dodatkowych replik może być uruchomionych podczas aktualizacji, lub ile replik może być wyłączonych
+```yaml
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 2
+    maxSurge: 30%
+```

@@ -5,7 +5,7 @@ metadata:
   labels:
     app: apache-basic
 spec:
-  replicas: 8
+  replicas: 4
   selector:
     matchLabels:
       app: apache-basic
@@ -15,7 +15,7 @@ spec:
         app: apache-basic
     spec:
       containers:
-      - name: apache-basic
+      - name: apache-ssl
         image: cumil/apache-ssl
         ports:
         - containerPort: 80
