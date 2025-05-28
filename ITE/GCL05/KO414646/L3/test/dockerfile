@@ -1,9 +1,0 @@
-FROM fedora:latest
-RUN dnf update -y && \
-    dnf install -y git && \
-    dnf install -y make && \
-    dnf install -y cc
-RUN git clone https://github.com/antirez/sds
-WORKDIR /sds
-RUN make
-CMD ["./sds-test"]

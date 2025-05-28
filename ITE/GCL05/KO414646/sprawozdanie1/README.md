@@ -138,9 +138,9 @@ Po zainstalowaniu wymaganych programów można zbudować i przetestować aplikac
 
 W oparciu u kontener pomocniczy utworzono dwa dockerfile'e, do budowania i testowania aplikacji. oba instalują gita, make'a, cc. Następnie klonują repozytorium i wykonują komende ```make``` w katalogu roboczym. obraz testowy wykonuje testy przy uruchomieniu kontenera
 
-[dockerfile-run](../L3/run/dockerfile)
+[dockerfile-run](L3/run/dockerfile)
 
-[dockerfile-test](../L3/test/dockerfile)
+[dockerfile-test](L3/test/dockerfile)
 
 - tworzenie obrazu testowego
 
