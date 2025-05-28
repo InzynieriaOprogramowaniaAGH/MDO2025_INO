@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis-app
+  name: redis-app-canary
 spec:
-  replicas: 6
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -19,6 +19,6 @@ spec:
     spec:
       containers:
         - name: redis-container
-          image: tomaszek03/redis-app:v1.0.29
+          image: tomaszek03/redis-app:v1.0.30
           ports:
             - containerPort: 6379

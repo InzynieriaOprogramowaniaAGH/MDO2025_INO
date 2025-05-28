@@ -51,8 +51,7 @@ Następnie należało dokonać inwentaryzacji systemów. Zacząłem od ustalenia
 Najpierw wykonałem to na głównej maszynie:
 ![ss](./Lab8/screenshots/ss10.png)
 
-A następnie na nowej:
-
+A następnie na nowej: <br>
 ![ss](./Lab8/screenshots/ss11.png)
 
 W kolejnym kroku zapewniłem możliwość wywoływania komputerów za pomocą nazw, a nie tylko adresów IP. W tym celu dopisałem adresy i nazwy hostów to pliku `/etc/hosts`. Jest to lokalna alternatywa dla `DNS`. Modyfikacja pliku nastąpiła na obydwu maszynach w identyczny sposób.
@@ -502,12 +501,12 @@ Po uruchomieniu systemu widzimy działający kontener, z którym możemy wchodzi
 Pierwszym zadaniem było zainstalowanie implementacji stosu `k8s` na maszynie wirtualnej. W naszym przypadku jest to `minikube`, czyli lekkie, lokalne środowisko do uruchamiania klastra Kubernetes na jednej maszynie.
 
 Instalacja `minikube` w postaci paczki `RPM` dla architektury `x86-64`odbyła się poleceniami:
-![ss](./Lab10/screenshots/ss2.png)
+![ss](./Lab10/screenshots_lab10/ss2.png)
 
 Instalator pobrany został z oficjalnego, certyfikowanego źródła dystrybucji, co minimalizuje ryzyko użycia złośliwego oprogramowania.
 
 Dodatkowo zainstalowałem narzędzie `conntrack`. Jest to narzędzie użytkowe i biblioteka jądra Linuksa do śledzenia stanu połączeń sieciowych, używane przez Kubernetes do kontrolowania routingu i przekierowywania pakietów między `podami` i `service'ami`.
-![ss](./Lab10/screenshots/ss1.png)
+![ss](./Lab10/screenshots_lab10/ss1.png)
 
 Następnie zaopatrzyłem się w polecenie `kubectl` w wariancie `minikube` za pomocą aliasu:
 ``` bash
@@ -515,32 +514,32 @@ alias kubectl="minikube kubectl --"
 ```
 
 Po zainstalowaniu wymaganych zależności, uruchomiłem Kubernetes:
-![ss](./Lab10/screenshots/ss4.png)
+![ss](./Lab10/screenshots_lab10/ss4.png)
 
 Operacja zakończyła się sukcesem:
-![ss](./Lab10/screenshots/ss5.png)
+![ss](./Lab10/screenshots_lab10/ss5.png)
 
 Rekomendowane zasoby dla `minicube` to co najmniej 2 rdzenie procesora, 2GB wolnej pamięci oraz 20GB wolnej przestrzeni na dysku. Moja maszyna wirtualna spełniała te wymagania, lecz w celu zwiększenia wydajności (mimo wystarczających zasobów maszyna wirtualna dosyć wolno działała) dołożyłem trochę pamięci RAM, co rozwiązało problem.
 
 Następnie uruchomiłem graficzny interfejs użytkownika dla klastra Kubernetes (Dashboard). Pozwala ono łatwo przeglądać i zarządzać zasobami k8s.
 
 Dashboard uruchomiłem poleceniem:
-![ss](./Lab10/screenshots/ss6.png)
+![ss](./Lab10/screenshots_lab10/ss6.png)
 
 Następnie po automatycznym przekierowaniu portu w VS Code wyświetliłem go w oknie domyślnej przeglądarki:
-![ss](./Lab10/screenshots/ss7.png)
+![ss](./Lab10/screenshots_lab10/ss7.png)
 
 <br>
 
 ### Analiza posiadanego kontenera
 Z racji, iż efektem mojego `pipeline`'u był obraz zawierający oprogramowanie `Redis` opublikowany na DockerHubie, mogłem go użyć podczas tych laboratoriów. Upewniłem się tylko, że kontener pracuje po uruchomieniu (a nie natychmiast kończy pracę).
-![ss](./Lab10/screenshots/ss8.png)
+![ss](./Lab10/screenshots_lab10/ss8.png)
 
 <br>
 
 ### Uruchamianie oprogramowania
 Celem zadania było uruchomienie kontenera z aplikacją (w moim przypadku `Redisa` z projektu `pipeline`) na stosie k8s.
-![ss](./Lab10/screenshots/ss9.png)
+![ss](./Lab10/screenshots_lab10/ss9.png)
 
 w wyniku tego polecenia utworzony został `pod`, czyli podstawowa jednostka uruchomieniowa (najprostszy, najmniejszy element, który można wdrożyć i zarządzać nim w klastrze)
 
@@ -549,13 +548,13 @@ Działanie poda można było zauważyć na powyższym zrzucie ekranu po wykonani
 kubectl get pods
 ```
 oraz poprzez Dashboard:
-![ss](./Lab10/screenshots/ss10.png)
+![ss](./Lab10/screenshots_lab10/ss10.png)
 
 Następnie przekierowałem port, aby móc połączyć się z kontenerem:
-![ss](./Lab10/screenshots/ss11.png)
+![ss](./Lab10/screenshots_lab10/ss11.png)
 
 W drugim terminalu spróbowałem nawiązać połączenie - najprotszym sposobem, czyli poleceniem `ping` za pomocą `redis-cli`:
-![ss](./Lab10/screenshots/ss12.png)
+![ss](./Lab10/screenshots_lab10/ss12.png)
 
 Uzyskałem odpowiedź `PONG`, co oznacza, że próba nawiązania połączenia zakończyła się sukcesem.
 
@@ -588,32 +587,222 @@ spec:
 ```
 
 Następnie przy pomocy pliku utworzyłem nowy deployment:
-![ss](./Lab10/screenshots/ss13.png)
+![ss](./Lab10/screenshots_lab10/ss13.png)
 
 Deployment zawiera 4 repliki. Wiele replik zwiększa odporność aplikacji — w przypadku awarii jednej z nich, aplikacja pozostaje dostępna dzięki pozostałym. Dodatkowymi zaletami replik są skalowalność oraz równoważenie obciążenia (load balancing). W sytuacji wzmożonego ruchu lub większej liczby użytkowników można zwiększyć liczbę replik, aby rozproszyć obciążenie i zapewnić płynne działanie systemu. Ruch użytkowników jest kierowany do różnych podów, co zmniejsza ryzyko przeciążenia pojedynczej instancji aplikacji.
 
 Sprawdziłem stan wdrożenia poniższym poleceniem:
-![ss](./Lab10/screenshots/ss14.png)
+![ss](./Lab10/screenshots_lab10/ss14.png)
 
 Informacja `deployment redis-app successfully rolled out` oznacza, że deployment Redis-a zakończył się sukcesem.
 
 Aby aplikacja działała z zewnątrz, należało wyeksponować port:
-![ss](./Lab10/screenshots/ss15.png)
+![ss](./Lab10/screenshots_lab10/ss15.png)
 
 Użyte polecenie tworzy zasób typu `Service` i eksponuje port `6379` kontenera. Ustawiłem typ NodePort, co umożliwia dostęp do aplikacji spoza klastra Kubernetes.
 
 Następnie, tak jak poprzednio, przekierowałem port do serwisu:
-![ss](./Lab10/screenshots/ss16.png)
+![ss](./Lab10/screenshots_lab10/ss16.png)
 
 Efekt poprawności działania ponownie zweryfikowałem wykonując `ping` w oddzielnym terminalu:
-![ss](./Lab10/screenshots/ss17.png)
+![ss](./Lab10/screenshots_lab10/ss17.png)
 
 Utworzony deployment można rownież monitorować za pomocą Dashboardu:
-![ss](./Lab10/screenshots/ss20.png)
+![ss](./Lab10/screenshots_lab10/ss20.png)
 
 * utworzone wdrożenia
-![ss](./Lab10/screenshots/ss18.png)
+![ss](./Lab10/screenshots_lab10/ss18.png)
 
 * utworzone pody:
-![ss](./Lab10/screenshots/ss19.png)
+![ss](./Lab10/screenshots_lab10/ss19.png)
 
+<br>
+
+### Przygotowanie nowego obrazu
+Na moim DockerHubie dostępne były 2 wersje obrazu będącego efektem `pipeline`:
+* v1.0.30 (latest)
+* v1.0.29
+
+Potrzebna była dodatkowa wersja obrazu, którego uruchomienie kończy się błędem. W tym celu zmodyfikowałem `Dockerfile` w wersji `Deploy` ustawiając ENTRYPOINT na `/usr/bin/false`, gdzie znajduję się domyślny kod wyjścia oznaczający niepowodzenie. 
+
+Zmodyfikowana wersja `Dockerfile.deploy`:
+``` dockerfile
+FROM redis-builder AS builder
+FROM ubuntu:latest
+
+RUN apt-get update && \
+    apt-get install -y libjemalloc2 && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /app/redis/src/redis-server /usr/local/bin/
+COPY --from=builder /app/redis/src/redis-cli /usr/local/bin/
+
+EXPOSE 6379
+
+ENTRYPOINT ["/usr/bin/false"]
+CMD ["--protected-mode", "no"]
+```
+
+Teraz uruchomienie obrazu zawsze skończy się niepowodzeniem. Następnie zbudowałem i opublikowałem wadliwy obraz na DockerHubie, tym razem już bez korzystania z `pipeline`'u:
+![ss](./Lab10/screenshots_lab11/build.png)
+![ss](./Lab10/screenshots_lab11/login.png)
+![ss](./Lab10/screenshots_lab11/push.png)
+
+Po tej operacji, na DockerHubie znajdują się już wszystkie wymagane obrazy:
+![ss](./Lab10/screenshots_lab11/dockerhub.png)
+
+<br>
+
+### Zmiany w deploymencie
+Zadanie polegało na aktualizacji pliku wdrożenia zmieniając liczbę replik (skalowanie). Po każdej zmianie, aby zastosować modyfikację, należało wykonać:
+``` bash
+kubectl apply -f redis-deployment.yaml
+```
+Poprzednia ilośc replik wynosiła 4 i była zmieniana następująco:
+* zwiększenie liczby replik do 8
+![ss](./Lab10/screenshots_lab11/replicas_8.png)
+* zmniejszenie liczby replik do 1:
+![ss](./Lab10/screenshots_lab11/replicas_1.png)
+* zmniejszenie liczby replik do 0:
+![ss](./Lab10/screenshots_lab11/replicas_0.png)
+* zwiększenie liczby replik do 4 (ponowne przeskalowanie w górę):
+zmniejszenie liczby replik do 1:
+![ss](./Lab10/screenshots_lab11/replicas_4.png)
+
+Zauważyć można było, że pody zmieniały się stopniowo (nie od razu). Działo się tak za sprawą strategii wdrożenia `RollingUpdate`. Na przykład:
+![ss](./Lab10/screenshots_lab11/replicas_4_not_completed.png)
+
+Obecne wdrożenia miały miejsce na najnowszej wersji obrazu (v1.0.30 - latest). W celu skorzystania ze starszej wersji, zmieniłem ją w pliku wdrożenia:
+``` yaml
+...
+containers:
+        - name: redis-container
+          image: tomaszek03/redis-app:v1.0.29
+...
+```
+Od teraz pody posiadały starszą wersję obrazu:
+![ss](./Lab10/screenshots_lab11/rollout_undo.png)
+
+Możemy również wyświetlić historię naszego deploymentu, a dokładniej listę poprzednich rewizji (wersji) wdrożenia danego zasobu.
+![ss](./Lab10/screenshots_lab11/rollout_history.png)
+
+Kolejnym krokiem było zastosowanie w deploymencie wcześniej stworzonego wadliwego obrazu. Zmieniłem wersję w pliku wdrożenia:
+``` yaml
+...
+containers:
+        - name: redis-container
+          image: tomaszek03/redis-app:broken_version
+...
+```
+Po uruchomieniu, zaobserwować można było błąd:
+![ss](./Lab10/screenshots_lab11/broken.png)
+
+Po sprawdzenia statusu wdrożenia, widzimy, że Kubernetes ciągle próbuje wdrożyć wadliwą wersję, lecz ciągle kończy się do niepowodzeniem:
+![ss](./Lab10/screenshots_lab11/rollout_status.png)
+
+Status podów oznaczony jest jako `CrashLoopBackOff`, co oznacza, że pod (a dokładniej jeden lub więcej kontenerów w podzie) ciągle się uruchamia, crashuje (awaryjnie kończy działanie) i Kubernetes próbuje go restartować, ale kontener nie może się stabilnie uruchomić.
+![ss](./Lab10/screenshots_lab11/get_pods.png)
+
+Ponieważ obecna wersja obrazu jest wadliwa, trzeba przywrócić starą, działającą wersję. Wykonałem to za pomocą:
+``` bash
+kubectl rollout undo deployment/redis-app
+```
+![ss](./Lab10/screenshots_lab11/rollout_undo_cmd.png)
+
+Pody teraz pracują na wersji obrazu z poprzedniego deploymentu:
+![ss](./Lab10/screenshots_lab11/rollout_undo.png)
+
+Historia deploymentu wygląda następująco:
+![ss](./Lab10/screenshots_lab11/rollout_history_after_undo.png)
+
+<br>
+
+### Kontrola wdrożenia
+Korzystając z historii, możemy uzyskać informacje o konrektnym wdrożeniu podając numer rewizji:
+![ss](./Lab10/screenshots_lab11/revision_details.png)
+
+Następne zadanie polegało na napisaniu skryptu weryfikującego, czy wdrożenie "zdążyło" się wdrożyć w ciągu 60 sekund:
+
+Plik [check-deploy.sh](./Lab10/check-deploy.sh):
+``` sh
+#!/bin/bash
+
+DEPLOY_NAME=$1
+TIMEOUT=60
+
+echo "Waiting for deployment $DEPLOY_NAME to be ready..."
+minikube kubectl -- wait --for=condition=available --timeout=${TIMEOUT}s deployment/${DEPLOY_NAME}
+if [ $? -ne 0 ]; then
+    echo "Deployment $DEPLOY_NAME did not become available within ${TIMEOUT} seconds."
+    exit 1
+fi
+echo "Deployment $DEPLOY_NAME is now available."
+```
+Powyższy skrypt jest przydatny do zapewnienia, że nowe pody działają poprawnie (w przeciwnym przypadku zostaniemy o tym poinformowani). Przydatny może być również w pipeline CI/CD do wstrzymania dalszych kroków, dopóki wdrożenie nie będzie gotowe - unikniemy w ten sposób wprowadzenia błędnej wersji.
+
+Aby zastosować powyższy skrypt, należy go uruchomić bezpośrednio po `kubectl apply...` poleceniem:
+``` bash
+./check-deploy.sh <deployment-name>
+```
+![ss](./Lab10/screenshots_lab11/apply_script.png)
+
+<br>
+
+### Strategie wdrożenia
+W tym zadaniu należało przygotować wersje wdrożeń różniące się strategią wdrożenia.
+
+**1. Recreate** <br>
+Podczas wdrożenia, wszystkie stare pody są zatrzymywane zanim nowe zostaną uruchomione. Przez to aplikacja może być przez chwilę niedostępna. Aby skorzystać z tej strategii, należy w pliku wdrożenia ustawić:
+``` yaml
+strategy:
+  type: Recreate
+```
+
+**2. Rolling Update** <br>
+Jest to domyślna strategia wdrożenia, w której to nowe pody są uruchamiane stopniowo wypierając te stare. Aby ustawić własne parametry, należy dodać w pliku wdrożenia odpowiednie informacje:
+``` yaml
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 2
+    maxSurge: 30%
+```
+Pola `maxUnavailable` oraz `maxSurge` określają odpowiednio: maksymalną liczbę podów, które mogą być niedostępne podczas aktualizacji, oraz liczbę dodatkowych podów, które mogą zostać uruchomione ponad zadeklarowaną liczbę replik.
+
+**3.  Canary Deployment workload** <br>
+Aby zastosować tę strategię, należy utworzyć nowy deployment z nowszą wersją obrazu oraz zdecydowanie mniejszą liczbą replik niż w przypadku wersji stabilnej. Celem tego podejścia jest udostępnienie nowej wersji aplikacji ograniczonej grupie użytkowników, co pozwala na wcześniejsze wykrycie ewentualnych błędów zanim aktualizacja zostanie wdrożona globalnie.
+Kluczowe jest, aby oba Deploymenty posiadały wspólną etykietę, dzięki czemu będą obsługiwane przez ten sam serwis. Pozwala to równolegle kierować ruch do obu wersji aplikacji.
+
+Krok po kroku:
+* Tworzymy plik wdrożenia (w moim przypadku [redis-app-canary.yaml](./Lab10/redis-deployment-canary.yaml))
+``` yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-app-canary
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
+  selector:
+    matchLabels:
+      app: redis-app
+  template:
+    metadata:
+      labels:
+        app: redis-app
+    spec:
+      containers:
+        - name: redis-container
+          image: tomaszek03/redis-app:v1.0.30
+          ports:
+            - containerPort: 6379
+```
+* Tworzymy deployment: <br>
+![ss](./Lab10/screenshots_lab11/canary_deployment_created.png)
+
+Oba deploymenty działają w ramach tego samego serwisu, przy czym 2 z 8 podów uruchomione są z nowszą wersją aplikacji. Dzięki temu niewielka część ruchu użytkowników trafia do nowej wersji, co pozwala na jej przetestowanie w warunkach produkcyjnych. Użytkownicy ci pełnią rolę "testerów", a ewentualne problemy mogą zostać wykryte i rozwiązane, zanim nowa wersja zostanie wdrożona na większą skalę.
+![ss](./Lab10/screenshots_lab11/canary_dashboard.png)
