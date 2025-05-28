@@ -211,104 +211,108 @@ Na koniec, kontener `hello-app` został usunięty z maszyny docelowej przez Ansi
 - 🐳 Wdrożono i przetestowano kontener aplikacji z Docker Hub
 - 📦 Rolę stworzono przy użyciu `ansible-galaxy`
 
+____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 __________________________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________________________
+
+
 
 # 📝 Sprawozdanie: Pliki odpowiedzi dla wdrożeń nienadzorowanych
 
 ## 🎯 Zagadnienie
 
-Tematem mojego zadania było przygotowanie źródła instalacyjnego systemu Fedora 42 w wersji nienadzorowanej, przeznaczonego do uruchomienia na maszynie wirtualnej. Takie źródła są szczególnie przydatne w środowiskach testowych oraz przy wdrażaniu oprogramowania, które nie działa w kontenerach, lecz wymaga pełnego systemu operacyjnego.
+Zadanie dotyczyło przygotowania automatycznego źródła instalacyjnego systemu Fedora 42 — przydatnego w środowiskach testowych, serwerowych lub IoT. Instalacja miała odbywać się w pełni automatycznie, dzięki zastosowaniu pliku odpowiedzi Kickstart.
 
 ---
 
 ## 🎯 Cel zadania
 
-Celem było:
-- utworzenie pliku odpowiedzi (`kickstart`), który automatyzuje instalację systemu,
-- przeprowadzenie rzeczywistej instalacji Fedora 42 na maszynie wirtualnej,
-- zapewnienie, że system po instalacji będzie gotowy do hostowania oprogramowania.
+- Utworzenie pliku odpowiedzi `kickstart` do instalacji systemu.
+- Zainstalowanie systemu Fedora 42 na maszynie wirtualnej w trybie nienadzorowanym.
+- Upewnienie się, że system uruchamia się w pełni skonfigurowany i gotowy do hostowania aplikacji.
 
 ---
 
-## 📌 Etapy realizacji
+## 📦 Środowisko i narzędzia
 
-### 1. Wybór instalatora
-
-Do realizacji zadania wybrałem obraz **Fedora 42 Everything Netinst**, który pobrałem i uruchomiłem w środowisku **Oracle VirtualBox**.
-
----
-
-### 2. Przygotowanie pliku odpowiedzi
-
-Plik `anaconda-ks.cfg` został pobrany z repozytorium GitHub, a jego treść została zmodyfikowana zgodnie z poniższymi wymaganiami:
-
-- dodanie repozytoriów dla pobrania pakietów:
-  ```kickstart
-  url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-42&arch=x86_64
-  repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f42&arch=x86_64
-  ```
-
-- zapewnienie formatowania całego dysku:
-  ```kickstart
-  clearpart --all --initlabel
-  ```
-
-- ustawienie własnej nazwy hosta:
-  ```kickstart
-  network --hostname=fedora42-host
-  ```
-
-- stworzenie użytkownika z uprawnieniami sudo oraz ustawienie hasła root:
-  ```kickstart
-  rootpw --iscrypted <zakodowane_haslo>
-  user --groups=wheel --name=user --password=haslohaslo --plaintext --iscrypted --gecos="user"
-  ```
-
-📷 *Miejsce na zrzut ekranu z podglądem pliku Kickstart*
+- Oracle VirtualBox
+- Obraz ISO Fedora 42 Everything Netinst
+- Plik `anaconda-ks.cfg` z repozytorium GitHub
+- Edytor nano, przeglądarka, TinyURL
 
 ---
 
-### 3. Uruchomienie instalacji z Kickstart
+## 🪜 Kroki realizacji
 
-W konfiguracji GRUB instalatora Fedora dodałem parametr:
+### 1. Uruchomienie instalatora z ISO
 
+Na początku uruchomiłem maszynę wirtualną z obrazem instalacyjnym Fedora 42 w trybie “Test this media & install Fedora 42”.
+
+📷 ![GRUB z parametrem instalacyjnym](./207.png)
+
+---
+
+### 2. Problem z długim linkiem i użycie TinyURL
+
+Podczas konfiguracji GRUB okazało się, że nie mogę wkleić długiego linku do GitHub Raw z plikiem Kickstart. W związku z tym postanowiłem użyć serwisu [TinyURL](https://tinyurl.com) do skrócenia odnośnika.
+
+📷 ![Skrócony link w TinyURL](./206.png)
+
+Link do pliku Kickstart:
 ```
-inst.ks=https://tinyurl.com/bdejyufr
+https://tinyurl.com/bdejyufr
 ```
 
-Dzięki temu instalator zaciągnął mój plik Kickstart z internetu i uruchomił się całkowicie automatycznie.
+---
 
-📷 *Miejsce na zrzut ekranu z GRUB i linkiem TinyURL*
+### 3. Uruchomienie instalacji z pliku Kickstart
+
+Instalator wykrył plik Kickstart i rozpoczął instalację automatyczną. W logach widać było, że używany jest tryb tekstowy, co potwierdza wykorzystanie `inst.ks`.
+
+📷 ![Logi Anaconda - instalacja z Kickstart](./201.png)
 
 ---
 
-### 4. Proces instalacji
+### 4. Wejście do Anaconda GUI
 
-Instalacja rozpoczęła się automatycznie, bez konieczności mojej ingerencji. Instalator przeszedł przez kolejne etapy:
+Choć instalacja była automatyczna, pojawiło się okno z podsumowaniem konfiguracji. Musiałem ręcznie dokończyć konfigurację użytkownika i konta root.
 
-- sprawdzenie konfiguracji dysku,
-- tworzenie partycji (w tym `biosboot`),
-- instalacja wybranych pakietów.
-
-📷 *Miejsce na zrzut ekranu z logów instalatora Anaconda*
-📷 *Miejsce na zrzut ekranu z postępu instalacji*
+📷 ![Anaconda GUI - podsumowanie instalacji](./202.png)
 
 ---
 
-### 5. Weryfikacja po instalacji
+### 5. Postęp instalacji
 
-Po zakończonej instalacji system uruchomił się poprawnie. Sprawdziłem:
+Po uzupełnieniu wymaganych danych, instalacja postępowała dalej, tworząc partycję rozruchową i systemową.
 
-- że użytkownik `user` został utworzony i ma dostęp do `sudo`,
-- że hostname został ustawiony zgodnie z plikiem Kickstart,
-- że strefa czasowa i język są poprawne,
-- że wszystkie partycje zostały utworzone od nowa.
+📷 ![Postęp instalacji - tworzenie biosboot](./203.png)
 
-📷 *Miejsce na zrzut ekranu z działającego systemu po instalacji*
+---
+
+### 6. Zawartość pliku Kickstart
+
+Po zakończeniu instalacji otworzyłem wygenerowany plik `/root/anaconda-ks.cfg` i sprawdziłem jego poprawność. Znajdują się w nim wszystkie kluczowe elementy:
+
+- Repozytoria online
+- Partycjonowanie i czyszczenie dysku
+- Hasła i użytkownik
+- Ustawienia strefy czasowej
+
+📷 ![Plik Kickstart w nano](./204.png)
+
+---
+
+### 7. Porównanie z wersją z GitHuba
+
+Porównałem lokalny plik z oryginałem znajdującym się w repozytorium GitHub. Pliki są zgodne.
+
+📷 ![Kickstart z GitHub Raw](./205.png)
 
 ---
 
 ## ✅ Podsumowanie
 
-Zrealizowałem pełny proces instalacji nienadzorowanej systemu Fedora 42 z użyciem pliku Kickstart. System został poprawnie zainstalowany i jest gotowy do działania jako host dla przyszłego oprogramowania. Rozwiązanie to pozwala zaoszczędzić czas i zapewnić spójne środowisko testowe w przyszłości.
+Przygotowałem środowisko instalacyjne systemu Fedora 42, który uruchamia się automatycznie dzięki zastosowaniu pliku Kickstart. Dzięki temu rozwiązaniu możliwe jest szybkie i spójne wdrażanie środowisk testowych lub serwerowych. Problem z długim linkiem został rozwiązany przez użycie TinyURL.
 
