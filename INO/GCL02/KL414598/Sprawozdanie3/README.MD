@@ -320,7 +320,7 @@ Choć instalacja była automatyczna, pojawiło się okno z podsumowaniem konfigu
 
 ### 5. Postęp instalacji
 
-Po uzupełnieniu wymaganych danych, instalacja postępowała dalej, tworząc partycję rozruchową i systemową.
+Następnie instalacja postępowała dalej, tworząc partycję rozruchową i systemową.
 
 ![Anaconda GUI - podsumowanie instalacji](ss/212.png)
 
@@ -329,3 +329,443 @@ Po uzupełnieniu wymaganych danych, instalacja postępowała dalej, tworząc par
 
 
 
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+  
+
+## Wdrażanie na zarządzalne kontenery: Kubernetes
+
+  
+
+### Instalacja klastra Kubernetes
+
+Pierwszym zadaniem było zainstalowanie implementacji stosu `k8s` na maszynie wirtualnej. W naszym przypadku jest to `minikube`, czyli lekkie, lokalne środowisko do uruchamiania klastra Kubernetes na jednej maszynie.
+
+  
+
+Instalacja `minikube` w postaci paczki `RPM` dla architektury `x86-64`odbyła się poleceniami:
+
+
+
+  
+
+Instalator pobrany został z oficjalnego, certyfikowanego źródła dystrybucji, co minimalizuje ryzyko użycia złośliwego oprogramowania.
+
+  
+
+Dodatkowo zainstalowałem narzędzie `conntrack`. Jest to narzędzie użytkowe i biblioteka jądra Linuksa do śledzenia stanu połączeń sieciowych, używane przez Kubernetes do kontrolowania routingu i przekierowywania pakietów między `podami` i `service'ami`.
+
+![ss](./Lab10/screenshots_lab10/ss1.png)
+
+  
+
+Następnie zaopatrzyłem się w polecenie `kubectl` w wariancie `minikube` za pomocą aliasu:
+
+``` bash
+
+alias  kubectl="minikube kubectl --"
+
+```
+
+  
+
+Po zainstalowaniu wymaganych zależności, uruchomiłem Kubernetes:
+
+![ss](./Lab10/screenshots_lab10/ss4.png)
+
+  
+
+Operacja zakończyła się sukcesem:
+
+![ss](./Lab10/screenshots_lab10/ss5.png)
+
+  
+
+Rekomendowane zasoby dla `minicube` to co najmniej 2 rdzenie procesora, 2GB wolnej pamięci oraz 20GB wolnej przestrzeni na dysku. Moja maszyna wirtualna spełniała te wymagania, lecz w celu zwiększenia wydajności (mimo wystarczających zasobów maszyna wirtualna dosyć wolno działała) dołożyłem trochę pamięci RAM, co rozwiązało problem.
+
+  
+
+Następnie uruchomiłem graficzny interfejs użytkownika dla klastra Kubernetes (Dashboard). Pozwala ono łatwo przeglądać i zarządzać zasobami k8s.
+
+  
+
+Dashboard uruchomiłem poleceniem:
+
+![ss](./Lab10/screenshots_lab10/ss6.png)
+
+  
+
+Następnie po automatycznym przekierowaniu portu w VS Code wyświetliłem go w oknie domyślnej przeglądarki:
+
+![ss](./Lab10/screenshots_lab10/ss7.png)
+
+  
+
+### Analiza posiadanego kontenera
+
+Z racji, iż efektem mojego `pipeline`'u był obraz zawierający oprogramowanie `Redis` opublikowany na DockerHubie, mogłem go użyć podczas tych laboratoriów. Upewniłem się tylko, że kontener pracuje po uruchomieniu (a nie natychmiast kończy pracę).
+
+![ss](./Lab10/screenshots_lab10/ss8.png)
+
+  
+
+### Uruchamianie oprogramowania
+
+Celem zadania było uruchomienie kontenera z aplikacją (w moim przypadku `Redisa` z projektu `pipeline`) na stosie k8s.
+
+![ss](./Lab10/screenshots_lab10/ss9.png)
+
+  
+
+w wyniku tego polecenia utworzony został `pod`, czyli podstawowa jednostka uruchomieniowa (najprostszy, najmniejszy element, który można wdrożyć i zarządzać nim w klastrze)
+
+  
+
+Działanie poda można było zauważyć na powyższym zrzucie ekranu po wykonaniu polecenia:
+
+``` bash
+
+kubectl  get  pods
+
+```
+
+oraz poprzez Dashboard:
+
+![ss](./Lab10/screenshots_lab10/ss10.png)
+
+  
+
+Następnie przekierowałem port, aby móc połączyć się z kontenerem:
+
+![ss](./Lab10/screenshots_lab10/ss11.png)
+
+  
+
+W drugim terminalu spróbowałem nawiązać połączenie - najprotszym sposobem, czyli poleceniem `ping` za pomocą `redis-cli`:
+
+![ss](./Lab10/screenshots_lab10/ss12.png)
+
+  
+
+Uzyskałem odpowiedź `PONG`, co oznacza, że próba nawiązania połączenia zakończyła się sukcesem.
+
+  
+
+### Przekucie wdrożenia manualnego w plik wdrożenia
+
+Celem tego zadania było zapisanie wdrożenia wybranej aplikacji w pliku wdrożenia (pliku YML).
+
+  
+
+Pracę rozpocząłem od utworzenia pliku wdrożenia: [redis-deployment.yaml](./Lab10/redis-deployment.yaml)
+
+```yaml
+
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+
+name: redis-app
+
+spec:
+
+replicas: 4
+
+selector:
+
+matchLabels:
+
+app: redis-app
+
+template:
+
+metadata:
+
+labels:
+
+app: redis-app
+
+spec:
+
+containers:
+
+- name: redis-container
+
+image: tomaszek03/redis-app
+
+ports:
+
+- containerPort: 6379
+
+```
+
+  
+
+Następnie przy pomocy pliku utworzyłem nowy deployment:
+
+![ss](./Lab10/screenshots_lab10/ss13.png)
+
+  
+
+Deployment zawiera 4 repliki. Wiele replik zwiększa odporność aplikacji — w przypadku awarii jednej z nich, aplikacja pozostaje dostępna dzięki pozostałym. Dodatkowymi zaletami replik są skalowalność oraz równoważenie obciążenia (load balancing). W sytuacji wzmożonego ruchu lub większej liczby użytkowników można zwiększyć liczbę replik, aby rozproszyć obciążenie i zapewnić płynne działanie systemu. Ruch użytkowników jest kierowany do różnych podów, co zmniejsza ryzyko przeciążenia pojedynczej instancji aplikacji.
+
+  
+
+Sprawdziłem stan wdrożenia poniższym poleceniem:
+
+![ss](./Lab10/screenshots_lab10/ss14.png)
+
+  
+
+Informacja `deployment redis-app successfully rolled out` oznacza, że deployment Redis-a zakończył się sukcesem.
+
+  
+
+Aby aplikacja działała z zewnątrz, należało wyeksponować port:
+
+![ss](./Lab10/screenshots_lab10/ss15.png)
+
+  
+
+Użyte polecenie tworzy zasób typu `Service` i eksponuje port `6379` kontenera. Ustawiłem typ NodePort, co umożliwia dostęp do aplikacji spoza klastra Kubernetes.
+
+  
+
+Następnie, tak jak poprzednio, przekierowałem port do serwisu:
+
+![ss](./Lab10/screenshots_lab10/ss16.png)
+
+  
+
+Efekt poprawności działania ponownie zweryfikowałem wykonując `ping` w oddzielnym terminalu:
+
+![ss](./Lab10/screenshots_lab10/ss17.png)
+
+  
+
+Utworzony deployment można rownież monitorować za pomocą Dashboardu:
+
+![ss](./Lab10/screenshots_lab10/ss20.png)
+
+  
+
+* utworzone wdrożenia
+
+![ss](./Lab10/screenshots_lab10/ss18.png)
+
+  
+
+* utworzone pody:
+
+![ss](./Lab10/screenshots_lab10/ss19.png)
+
+
+
+
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+
+
+
+
+# Zajęcia 10 – Kubernetes (1)
+
+  
+
+## Wdrażanie na zarządzalne kontenery: Kubernetes
+
+  
+
+### Instalacja Minikube
+
+  
+
+Aby rozpocząć pracę z Kubernetesem lokalnie, postanowiłem skorzystać z Minikube — lekkiego klastra, który pozwala uruchomić środowisko Kubernetes na lokalnym komputerze. Na początku pobrałem najnowszą wersję binarki Minikube:
+
+  
+
+```
+
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+
+```
+
+  
+
+![Pobieranie Minikube](ss/z1.png)
+
+  
+
+Następnie zainstalowałem pobraną binarkę w katalogu `/usr/local/bin`, aby móc ją wywoływać z dowolnego miejsca:
+
+  
+
+```
+
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+```
+
+  
+
+![Instalacja binarki](ss/z2.png)
+
+  
+
+### Uruchomienie klastra
+
+  
+
+Po instalacji przystąpiłem do uruchomienia klastra Minikube. W tym celu użyłem sterownika Docker oraz przydzieliłem klastra dwa CPU i 2 GB RAM:
+
+  
+
+```
+
+minikube start --driver=docker --cpus=2 --memory=2048
+
+```
+
+  
+
+![Start klastra](ss/z3.png)
+
+  
+
+Podczas uruchamiania napotkałem ostrzeżenie dotyczące braku miejsca na dysku, co mogłoby wpłynąć na stabilność działania. Zdecydowałem się kontynuować, ale mam świadomość, że w przyszłości konieczne może być zwiększenie dostępnej przestrzeni.
+
+  
+
+### Weryfikacja konfiguracji klastra
+
+  
+
+Aby sprawdzić poziom zabezpieczeń oraz poprawność działania komponentów, wykonałem kilka poleceń diagnostycznych. Najpierw sprawdziłem powiązania ról klastra:
+
+  
+
+```
+
+minikube kubectl -- get clusterrolebindings
+
+```
+
+  
+
+![ClusterRoleBindings](ss/z4.png)
+
+  
+
+Następnie sprawdziłem dostępne namespace'y:
+
+  
+
+```
+
+minikube kubectl -- get namespaces
+
+```
+
+  
+
+![Namespaces](ss/z5.png)
+
+  
+
+Zalogowałem się również do wirtualnej maszyny Minikube, aby sprawdzić certyfikaty zabezpieczające komunikację w klastrze:
+
+  
+
+```
+
+minikube ssh
+
+ls /var/lib/minikube/certs/
+
+```
+
+  
+
+![Certyfikaty](ss/z6.png)
+
+  
+
+### Dashboard Kubernetes
+
+  
+
+Kolejnym krokiem było uruchomienie interfejsu graficznego Kubernetes Dashboard, który pozwala wizualnie zarządzać aplikacjami w klastrze. Skorzystałem z polecenia:
+
+  
+
+```
+
+minikube dashboard
+
+```
+
+  
+
+![Start Dashboard](ss/z7.png)
+
+  
+
+Minikube automatycznie uruchomił Dashboard i otworzył go w domyślnej przeglądarce pod lokalnym adresem:
+
+  
+
+```
+
+http://127.0.0.1:45839/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/
+
+```
+
+  
+
+![Dashboard przeglądarka](ss/z9.png)
+
+![Dashboard proxy](ss/z10.png)
+
+  
+
+Dashboard poprawnie się załadował, ale ponieważ nie wdrożyłem jeszcze żadnych aplikacji, nie wyświetlał żadnych danych.
+
+  
+
+### Informacja o nodach
+
+  
+
+Sprawdziłem stan węzła w klastrze:
+
+  
+
+```
+
+minikubectl -- get nodes
+
+```
+
+  
+
+![Node status](ss/z8.png)
+
+  
+
+Węzeł o nazwie `minikube` działał poprawnie w roli `control-plane`.
+
+  
+
+---
