@@ -223,3 +223,55 @@
 ![image38.png](./img/image38.png)
 
 ![image13.png](./img/image13.png)
+
+# Zajęcia 11
+
+![alt text](./img/image022.png)
+
+![alt text](./img/image014.png)
+
+![alt text](./img/image025.png)
+
+![alt text](./img/image04.png)
+
+    minikube image load redis-custom:vx
+
+![alt text](./img/image019.png)
+
+![alt text](./img/image021.png)
+
+![alt text](./img/image100.png)
+
+![alt text](./img/image06.png)
+
+![alt text](./img/image023.png)
+
+![alt text](./img/image011.png)
+
+![alt text](./img/image03.png)
+
+![alt text](./img/image08.png)
+
+![alt text](./img/image018.png)
+
+![alt text](./img/image09.png)
+
+![alt text](./img/image024.png)
+
+![alt text](./img/image020.png)
+
+![alt text](./img/image05.png)
+
+![alt text](./img/image015.png)
+
+![alt text](./img/image013.png)
+
+![alt text](./img/image016.png)
+
+![alt text](./img/image07.png)
+
+![alt text](./img/image02.png)
+
+![alt text](./img/image2-1.png)
+
+![alt text](./img/image01.png)
