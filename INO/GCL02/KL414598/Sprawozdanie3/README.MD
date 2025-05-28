@@ -999,7 +999,6 @@ nano Canary.yaml
 
   
 
-![Strona Nginx](ss/x14.1.png)
 
   
 
@@ -1011,7 +1010,7 @@ nano Canary.yaml
 
   
 
-![Strona Nginx](ss/x14.2.png)
+![Strona Nginx](ss/x14.1.png)
 
   
 
@@ -1023,7 +1022,7 @@ nano Canary.yaml
 
   
 
-![Strona Nginx](ss/x14.3.png)
+![Strona Nginx](ss/x14.2.png)
 
   
 
@@ -1033,7 +1032,9 @@ nano Canary.yaml
 
 ### Strategia 3: Canary Deployment
 
-  
+  ![Strona Nginx](ss/x14.3.png)
+
+
 
 Zastosowałem dwa deploymenty, aby wdrożyć wersję canary.
 
