@@ -226,6 +226,8 @@
 
 # Zajęcia 11
 
+## Przygotowanie nowych wersji obrazu
+
 ![alt text](./img/image022.png)
 
 ![alt text](./img/image014.png)
@@ -237,6 +239,8 @@
     minikube image load redis-custom:vx
 
 ![alt text](./img/image019.png)
+
+## Przeprowadzanie zmian w deploy
 
 ![alt text](./img/image021.png)
 
@@ -252,15 +256,21 @@
 
 ![alt text](./img/image08.png)
 
+## Przywracanie poprzedniej wersji wadliwego obrazu
+
 ![alt text](./img/image018.png)
 
 ![alt text](./img/image09.png)
+
+## Monitorowanie wdrożenia
 
 ![alt text](./img/image024.png)
 
 ![alt text](./img/image020.png)
 
 ![alt text](./img/image05.png)
+
+## Strategie wdrożenia 
 
 ![alt text](./img/image015.png)
 
