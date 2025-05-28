@@ -1062,4 +1062,14 @@ kubectl get deployments -n default
 
   
 
-![Strona Nginx](ss/x15.png)
+![Strona Nginx](ss/x16.png)
+
+
+
+## 🔄 Porównanie strategii wdrożeniowych
+
+| Strategia         | Główne cechy                                                    | Przykład z podów                      | Zalety                             | Wady                                |
+|-------------------|------------------------------------------------------------------|----------------------------------------|------------------------------------|-------------------------------------|
+| **Recreate**      | Usuwa wszystkie stare pody, dopiero potem uruchamia nowe.       | `my-nginx-recreate-*`                  | Prosta, brak konfliktów wersji     | Krótka przerwa w dostępności        |
+| **RollingUpdate** | Stopniowo zamienia stare pody nowymi (część działa równolegle). | `my-nginx-rolling-update-*`            | Utrzymanie dostępności             | Może trwać dłużej                   |
+| **Canary**        | Nowa wersja uruchamiana tylko dla wybranych użytkowników.       | `my-nginx-canary-*`, `-replica-*`      | Minimalne ryzyko, kontrolowane     | Wymaga dodatkowej konfiguracji      |
