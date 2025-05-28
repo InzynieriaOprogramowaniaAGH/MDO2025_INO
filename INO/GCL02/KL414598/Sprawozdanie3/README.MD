@@ -579,193 +579,182 @@ ________________________________________________________________________________
 
 
 
-
 # Zajęcia 10 – Kubernetes (1)
-
-  
 
 ## Wdrażanie na zarządzalne kontenery: Kubernetes
 
-  
+### Instalacja klastra Kubernetes
 
-### Instalacja Minikube
+Na potrzeby zajęć zdecydowałem się skorzystać z `minikube`, czyli lekkiej implementacji Kubernetes do środowisk lokalnych. Dzięki niej mogę przeprowadzić pełną konfigurację klastra, testy oraz wdrożenia bez potrzeby korzystania z chmury.
 
-  
+#### Pobranie Minikube
 
-Aby rozpocząć pracę z Kubernetesem lokalnie, postanowiłem skorzystać z Minikube — lekkiego klastra, który pozwala uruchomić środowisko Kubernetes na lokalnym komputerze. Na początku pobrałem najnowszą wersję binarki Minikube:
-
-  
-
+Na początku pobrałem najnowszą wersję Minikube:
 ```
-
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-
 ```
-
-  
 
 ![Pobieranie Minikube](ss/z1.png)
 
-  
+#### Instalacja binarki
 
-Następnie zainstalowałem pobraną binarkę w katalogu `/usr/local/bin`, aby móc ją wywoływać z dowolnego miejsca:
-
-  
-
+Następnie zainstalowałem plik wykonywalny w katalogu `/usr/local/bin`:
 ```
-
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
-
 ```
-
-  
 
 ![Instalacja binarki](ss/z2.png)
 
-  
+#### Uruchomienie klastra
 
-### Uruchomienie klastra
-
-  
-
-Po instalacji przystąpiłem do uruchomienia klastra Minikube. W tym celu użyłem sterownika Docker oraz przydzieliłem klastra dwa CPU i 2 GB RAM:
-
-  
-
+Uruchomiłem Minikube z wykorzystaniem sterownika Docker oraz zadeklarowaniem zasobów:
 ```
-
 minikube start --driver=docker --cpus=2 --memory=2048
-
 ```
-
-  
 
 ![Start klastra](ss/z3.png)
 
-  
+### Weryfikacja działania klastra
 
-Podczas uruchamiania napotkałem ostrzeżenie dotyczące braku miejsca na dysku, co mogłoby wpłynąć na stabilność działania. Zdecydowałem się kontynuować, ale mam świadomość, że w przyszłości konieczne może być zwiększenie dostępnej przestrzeni.
-
-  
-
-### Weryfikacja konfiguracji klastra
-
-  
-
-Aby sprawdzić poziom zabezpieczeń oraz poprawność działania komponentów, wykonałem kilka poleceń diagnostycznych. Najpierw sprawdziłem powiązania ról klastra:
-
-  
-
+Sprawdziłem namespace'y oraz role:
 ```
-
-minikube kubectl -- get clusterrolebindings
-
-```
-
-  
-
-![ClusterRoleBindings](ss/z4.png)
-
-  
-
-Następnie sprawdziłem dostępne namespace'y:
-
-  
-
-```
-
 minikube kubectl -- get namespaces
-
+minikube kubectl -- get clusterrolebindings
 ```
-
-  
 
 ![Namespaces](ss/z5.png)
+![Cluster Roles](ss/z4.png)
 
-  
-
-Zalogowałem się również do wirtualnej maszyny Minikube, aby sprawdzić certyfikaty zabezpieczające komunikację w klastrze:
-
-  
-
+Dla pewności zajrzałem do certyfikatów:
 ```
-
 minikube ssh
-
 ls /var/lib/minikube/certs/
-
 ```
-
-  
 
 ![Certyfikaty](ss/z6.png)
 
-  
+---
 
-### Dashboard Kubernetes
+## Dashboard Kubernetes
 
-  
-
-Kolejnym krokiem było uruchomienie interfejsu graficznego Kubernetes Dashboard, który pozwala wizualnie zarządzać aplikacjami w klastrze. Skorzystałem z polecenia:
-
-  
-
+Dashboard uruchomiłem za pomocą:
 ```
-
 minikube dashboard
-
 ```
 
-  
+![Dashboard start](ss/z7.png)
 
-![Start Dashboard](ss/z7.png)
-
-  
-
-Minikube automatycznie uruchomił Dashboard i otworzył go w domyślnej przeglądarce pod lokalnym adresem:
-
-  
-
-```
-
-http://127.0.0.1:45839/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/
-
-```
-
-  
-
-![Dashboard przeglądarka](ss/z9.png)
-
-![Dashboard proxy](ss/z10.png)
-
-  
-
-Dashboard poprawnie się załadował, ale ponieważ nie wdrożyłem jeszcze żadnych aplikacji, nie wyświetlał żadnych danych.
-
-  
-
-### Informacja o nodach
-
-  
-
-Sprawdziłem stan węzła w klastrze:
-
-  
-
-```
-
-minikubectl -- get nodes
-
-```
-
-  
-
-![Node status](ss/z8.png)
-
-  
-
-Węzeł o nazwie `minikube` działał poprawnie w roli `control-plane`.
-
-  
+Z poziomu przeglądarki uzyskałem dostęp do interfejsu:
+![Dashboard GUI](ss/z9.png)
 
 ---
+
+## Uruchamianie aplikacji – pojedynczy Pod
+
+Postanowiłem przetestować wdrożenie kontenera z aplikacją nginx:
+```
+minikube kubectl -- run moja-aplikacja --image=nginx --port=80 --labels app=moja-aplikacja
+```
+
+![Pod gotowy](ss/z10.png)
+
+Sprawdziłem jego status:
+```
+minikube kubectl -- get pods
+```
+
+Następnie przekierowałem port:
+```
+minikube kubectl -- port-forward pod/moja-aplikacja 8080:80
+```
+
+Z przeglądarki na moim Windowsie odwiedziłem `http://localhost:8080`:
+![Port-forward działa](ss/z17.png)
+
+Komunikacja działa poprawnie, strona Nginxa się załadowała.
+
+---
+
+## Tworzenie pliku YAML dla Deploymentu
+
+Przekształciłem powyższe wdrożenie w pełnoprawny `Deployment` i `Service`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+```
+
+Plik zapisałem jako `nginx-deployment.yml`.
+
+![Plik YAML](ss/z16.png)
+
+Wdrożenie wykonałem komendą:
+```
+minikube kubectl -- apply -f nginx-deployment.yml
+```
+
+![Wdrożenie](ss/z15.png)
+
+---
+
+## Sprawdzanie rollout i działania aplikacji
+
+Status rollout:
+```
+minikube kubectl -- rollout status deployment/nginx-deployment
+```
+
+![Rollout](ss/z14.png)
+
+Sprawdziłem działające Pody:
+```
+minikube kubectl -- get pods
+```
+
+Sprawdziłem dostępność serwisu:
+```
+minikube service nginx-service --url
+```
+
+![Pody i serwis](ss/z12.png)
+
+Z przeglądarki odwiedziłem podany adres IP i port:
+![Strona Nginx](ss/z18.png)
+
+---
+
+## Wnioski
+
+Podczas realizacji zadania przeszedłem przez cały proces: od instalacji klastra Kubernetes w środowisku lokalnym, przez jego konfigurację, aż po przygotowanie i uruchomienie aplikacji w formie Poda oraz Deploymentu. Sprawdziłem działanie Dashboardu, przekierowanie portów oraz komunikację z aplikacją. Wdrożenie Nginxa z czterema replikami oraz jego wystawienie przez `NodePort` pozwoliło mi zrealizować pełny cykl wdrożeniowy zgodny z praktykami DevOps.
