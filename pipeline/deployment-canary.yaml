@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xz-canary
+  labels:
+    app: xz
+    version: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xz
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: xz
+        version: canary
+    spec:
+      containers:
+      - name: xz
+        image: periclesathin/xz:3.0
+        ports:
+        - containerPort: 80

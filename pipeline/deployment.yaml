@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xz-stable
+  labels:
+    app: xz
+    version: stable
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: xz
+      version: stable
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 20%
+  template:
+    metadata:
+      labels:
+        app: xz
+        version: stable
+    spec:
+      containers:
+      - name: xz-container
+        image: periclesathin/xz:1.0
+        ports:
+        - containerPort: 80

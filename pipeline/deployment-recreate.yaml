@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xz-deployment-recreate
+  labels:
+    app: xz
+    strategy: recreate
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: xz
+      strategy: recreate
+  template:
+    metadata:
+      labels:
+        app: xz
+        strategy: recreate
+    spec:
+      containers:
+      - name: xz
+        image: periclesathin/xz:1.0
+        ports:
+        - containerPort: 80
