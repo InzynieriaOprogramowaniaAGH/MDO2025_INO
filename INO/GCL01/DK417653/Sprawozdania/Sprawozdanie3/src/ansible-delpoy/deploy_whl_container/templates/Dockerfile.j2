@@ -1,0 +1,9 @@
+FROM python:3.11-slim
+
+COPY {{ wheel_filename }} /packages/
+WORKDIR /packages
+
+RUN pip install /packages/{{ wheel_filename }}
+
+#CMD ["sh", "-c", "python -c 'import pytest_examples; print(pytest_examples.__version__)'  && touch /packages/ready.txt && tail -f /dev/null"]
+

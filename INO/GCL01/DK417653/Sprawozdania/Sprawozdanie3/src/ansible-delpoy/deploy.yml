@@ -1,0 +1,5 @@
+- name: Deploy .whl in container
+  hosts: ansible-target
+  become: true
+  roles:
+    - deploy_whl_container

@@ -1,0 +1,36 @@
+---
+- name: Ping
+  hosts: all
+  tasks:
+  - name: Ping hosts
+    ansible.builtin.ping:
+    register: ping_results
+
+  - name: Show ping results
+    ansible.builtin.debug:
+      var: ping_results
+
+- name: Copy inventory.ini to Endpoints
+  hosts: Endpoints
+  tasks:
+  - name: Copy inv
+    ansible.builtin.copy:
+      src: inventory.ini
+      dest: /tmp/inventory.ini
+    register: copy_result
+
+  - name: Display copy results
+    ansible.builtin.debug:
+      var: copy_result
+
+- name: Repeat Ping to Compare
+  hosts: all
+  tasks:
+  - name: Ping hosts
+    ansible.builtin.ping:
+    register: ping_results
+
+  - name: Show ping results
+    ansible.builtin.debug:
+      var: ping_results
+
