@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kasia-httpd-main
+  labels:
+    app: kasia-httpd
+    role: main
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kasia-httpd
+      role: main
+  template:
+    metadata:
+      labels:
+        app: kasia-httpd
+        role: main
+    spec:
+      containers:
+      - name: httpd
+        image: kasiam23/custom-httpd:v1
+        ports:
+        - containerPort: 80

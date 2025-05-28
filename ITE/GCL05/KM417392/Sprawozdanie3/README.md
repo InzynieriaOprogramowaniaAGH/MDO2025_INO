@@ -942,3 +942,428 @@ Widoczne są wszystkie 4 repliki poda ```kasia-nginx```:
 Pokazuje aktywne wdrożenie z nazwą ```kasia-nginx```:
 
 ![obraz](KM/zajecia10a/15.png)
+<<<<<<< HEAD
+=======
+
+# Zajęcia11::Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+## Przygotowanie nowego obrazu
+Jako bazę wykorzystano oficjalny obraz ```httpd:alpine```. Do katalogu serwującego treści /usr/local/apache2/htdocs dodano własne pliki index.html z różną zawartością. Zbudowano i opublikowano trzy wersje obrazu:
+
+### ✅ Wersja 1: kasiam23/custom-httpd:v1 
+
+**Plik index-v1.html**
+```
+<!DOCTYPE html>
+<html>
+<head><title>Kasia HTTPD v1</title></head>
+<body><h1>Wersja 1 – Działa!</h1></body>
+</html> 
+```
+
+### ✅ Wersja 2: kasiam23/custom-httpd:v2 
+
+**Plik index-v2.html**
+```
+<!DOCTYPE html>
+<html>
+<head><title>Kasia HTTPD v2</title></head>
+<body><h1>Wersja 2 – Działa jeszcze lepiej!</h1></body>
+</html>
+```
+
+### ❌ Wersja błędna: kasiam23/custom-httpd:broken – kontener kończy się błędem exit 1 zaraz po starcie
+
+**Plik index-broken.html**
+```
+<!DOCTYPE html>
+<html>
+<head><title>Kasia HTTPD - Error</title></head>
+<body><h1>Ta wersja ma zwrócić błąd!</h1></body>
+</html>
+```
+
+### ✅ Dockerfile 
+
+**Plik Dockerfile**
+```
+FROM httpd:alpine
+COPY index.html /usr/local/apache2/htdocs/index.html
+CMD ["httpd-foreground"]
+```
+
+### ❌ Dockerfile
+
+**Plik Dockerfile**
+```
+FROM httpd:alpine
+COPY index.html /usr/local/apache2/htdocs/index.html
+CMD ["sh", "-c", "echo Błąd uruchomienia && exit 1"]
+```
+
+Każda wersja została ręcznie zbudowana i wypchnięta do Docker Hub.
+```
+docker build -t kasiam23/custom-httpd:v2 .
+docker push kasiam23/custom-httpd:v2
+```
+
+- budowanie poprawnej wersji 
+
+![obraz](KM/zajecia11/1.png)
+
+- budowanie niepoprawnej wersji
+
+![obraz](KM/zajecia11/2.png)
+
+- wypychanie na Docker Hub
+
+![obraz](KM/zajecia11/3.png)
+
+![obraz](KM/zajecia11/4.png)
+
+## Zmiany w deploymencie
+
+**Plik deployment.yaml**
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kasia-httpd
+spec:
+  replicas: 8
+  selector:
+    matchLabels:
+      app: kasia-httpd
+  template:
+    metadata:
+      labels:
+        app: kasia-httpd
+    spec:
+      containers:
+        - name: httpd
+          image: kasiam23/custom-httpd:v1
+          ports:
+            - containerPort: 80
+```
+
+### Skalowanie: Zwiększenie replik do 8
+
+1.  **Zastosowanie zmian** 
+
+```
+kubectl apply -f httpd-deployment.yaml
+```
+![obraz](KM/zajecia11/5.png)
+
+2. **Sprawdzenie liczby podów i deployment**
+```
+kubectl get pods
+kubectl get deployment kasia-httpd
+```
+![obraz](KM/zajecia11/6.png)
+
+3. **Dashboard**
+
+![obraz](KM/zajecia11/7.png)
+
+4. **Obserwacje** Znaczne zwiększenie liczby replik (np. z 4 do 28)
+
+- Występuje okres przejściowy: 4/28, z czego np. 4 Running, 24 Pending,
+
+- Wiele podów czeka na zasoby lub przydział węzłów (Pending),
+
+- Nowe pody uruchamiają się z widocznym statusem ContainerCreating,
+
+- Tworzenie nowych podów może zająć kilka-kilkanaście sekund.
+
+### Skalowanie: Zmniejszenie do 1 repliki
+
+1. **Sprawdzenie liczby podów i deployment**
+
+![obraz](KM/zajecia11/8.png)
+
+2. **Dashboard**
+
+![obraz](KM/zajecia11/9.png)
+
+### Zmniejszenie liczby replik do 0 (np. z 1 do 0)
+
+- Wszystkie pody są usuwane – kubectl get pods pokazuje brak zasobów (No resources found)
+
+- Usługa (Service) nadal istnieje, ale nie ma żadnych podów do obsługi żądań.
+
+1. **Sprawdzenie liczby podów i deployment**
+
+![obraz](KM/zajecia11/10.png)
+
+2. **Dashboard**
+
+![obraz](KM/zajecia11/11.png)
+
+3. **Obserwacje**  Znaczne zmniejszenie liczby replik (np. z 28 do 4)
+
+- Proces przebiega stopniowo – liczba aktywnych podów zmniejsza się krokowo (np. 28/4 → 21/4 → 18/4 → 4/4),
+
+- Niektóre pody przechodzą w stan Succeeded (zakończone poprawnie),
+
+- Pełne skalowanie może chwilę potrwać w zależności od zasobów klastra.
+
+- Pody są stopniowo usuwane: statusy przechodzą przez Terminating
+
+
+### Zwiększenie do 4 replik
+
+1. **Sprawdzenie liczby podów i deployment**
+
+![obraz](KM/zajecia11/12.png)
+
+2. **Dashboard**
+
+![obraz](KM/zajecia11/13.png)
+
+### Skalowanie: Zastosowanie nowej wersji obrazu
+
+1. **Sprawdzenie liczby podów i deployment**
+
+![obraz](KM/zajecia11/14.png)
+
+2. **Dashboard**
+
+![obraz](KM/zajecia11/15.png)
+
+3. **Obserwacje**
+
+![obraz](KM/zajecia11/31.png)
+
+- Kubernetes nie zaktualizował wszystkich replik jednocześnie, lecz zgodnie ze strategią RollingUpdate.
+
+- W trakcie rolloutu pojawił się etap:
+```1 old replicas are pending termination``` – wskazuje na zachowanie ciągłej dostępności, dopóki nowe pody nie były gotowe.
+
+- Finalnie:
+```3 of 4 updated replicas are available```
+a następnie:
+```deployment "kasia-httpd" successfully rolled out```
+co oznacza, że wszystkie nowe pody są aktywne, a stare zostały usunięte.
+
+### Zastosowanie starszej wersji obrazu
+
+1. **Sprawdzenie liczby podów i deployment**
+
+![obraz](KM/zajecia11/16.png)
+
+2. **Dashboard**
+
+![obraz](KM/zajecia11/17.png)
+
+### Zastosowanie "wadliwej" wersji obrazu
+
+1. **Sprawdzenie liczby podów i deployment**
+
+![obraz](KM/zajecia11/18.png)
+
+2. **Dashboard**
+
+![obraz](KM/zajecia11/19.png)
+
+![obraz](KM/zajecia11/20.png)
+
+3. **Obserwacje**
+
+- Po rolloutcie liczba podów zatrzymała się na 5/4, czyli więcej niż docelowa liczba replik.
+
+- 2 pody mają status ```CrashLoopBackOff``` – wskazuje na błąd startu kontenera 
+
+- 3 pody są w stanie ```Running```, ale nie odpowiadają docelowej konfiguracji,
+
+- Licznik ```RESTARTS``` wzrasta, co oznacza, że wadliwe pody próbują się ciągle uruchomić,
+
+
+### Sprawdzenie historii wdrożeń
+```
+kubectl rollout history deployment kasia-httpd
+```
+![obraz](KM/zajecia11/21.png)
+### Sprawdzenie konkretnej wersji
+```
+minikube kubectl -- rollout history deployment/flask-hello-deployment --revision=2
+```
+![obraz](KM/zajecia11/22.png)
+
+1. Mechanizm rewizji wdrożeń w Kubernetes pozwala na łatwe śledzenie zmian w konfiguracji Deploymentu, takich jak zmiana obrazu kontenera. 
+2. Zmiana liczby replik (replicas) w Deployment nie tworzy nowej rewizji (rollout revision)
+3. W historii wdrożenia Deploymentu kasia-httpd zarejestrowano trzy rewizje:
+
+- **Rewizja 2**: obraz kasiam23/custom-httpd:v2 – wersja działająca,
+
+- **Rewizja 3**: obraz kasiam23/custom-httpd:v1 – wersja działająca,
+
+- **Rewizja 4**: obraz kasiam23/custom-httpd:broken – wersja wadliwa, celowo kończąca się błędem.
+
+### Przywracanie do poprzedniej wersji
+Aktualnie jest na wersji niedziałającej, wcześniej był na ```kasiam23/custom-httpd:v1```
+```
+kubectl rollout undo deployment kasia-httpd
+```
+![obraz](KM/zajecia11/23.png)
+![obraz](KM/zajecia11/24.png)
+![obraz](KM/zajecia11/25.png)
+
+
+### Przywracanie do konkretnej wersji
+Przywracam wersje ```kasiam23/custom-httpd:v2```
+```
+kubectl rollout undo deployment kasia-httpd --to-revision=2
+```
+![obraz](KM/zajecia11/27.png)
+
+
+## Kontrola wzdrożenia
+
+**Plik check-deployment.sh**
+```
+#!/bin/bash
+
+DEPLOYMENT="kasia-httpd"
+TIMEOUT=60
+INTERVAL=5
+ELAPSED=0
+
+KUBECTL="minikube kubectl --"
+
+echo "Sprawdzanie, czy deployment '$DEPLOYMENT' zakończył się sukcesem (timeout: $TIMEOUT s)..."
+
+while [ $ELAPSED -lt $TIMEOUT ]; do
+  READY_REPLICAS=$($KUBECTL get deployment $DEPLOYMENT -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
+  TOTAL_REPLICAS=$($KUBECTL get deployment $DEPLOYMENT -o jsonpath='{.spec.replicas}' 2>/dev/null)
+
+  READY_REPLICAS=${READY_REPLICAS:-0}
+  TOTAL_REPLICAS=${TOTAL_REPLICAS:-0}
+
+  echo " Gotowe repliki: ${READY_REPLICAS}/${TOTAL_REPLICAS}"
+
+  if [ "$READY_REPLICAS" = "$TOTAL_REPLICAS" ] && [ "$TOTAL_REPLICAS" -ne 0 ]; then
+    echo " Wdrożenie zakończone sukcesem!"
+    exit 0
+  fi
+
+  sleep $INTERVAL
+  ELAPSED=$((ELAPSED + INTERVAL))
+done
+
+echo "Timeout: wdrożenie nie zakończyło się w ciągu $TIMEOUT sekund."
+exit 1
+```
+### 1. Nadanie uprawnień i uruchomienie
+```
+chmod +x check-deployment.sh
+./check-deployment.sh
+```
+
+### 2. Wynik dla ```kasiam23/custom-httpd:broken```
+![obraz](KM/zajecia11/29.png)
+
+- Skrypt wykonał 12 cykli sprawdzających gotowość podów w interwałach co 5 sekund (łącznie 60 sekund).
+
+- Przez cały czas gotowych było tylko 3 z 4 replik (Gotowe repliki: 3/4).
+
+- Czwarty pod nie osiągnął stanu Ready, prawdopodobnie z powodu błędu w kontenerze (CrashLoopBackOff).
+
+- Zarejestrowano niepowodzenie
+
+### 2. Wynik dla ```kasiam23/custom-httpd:v1```
+![obraz](KM/zajecia11/30.png)
+
+Deployment został zakończony prawidłowo i w przewidzianym czasie.
+Skrypt skutecznie wykrył, czy wersja poprawnie działa. To potwierdza jego przydatność do automatycznego nadzoru nad wdrożeniami i wczesnego wykrywania problemów.
+
+## Strategie wdrożenia
+
+### Recreate 
+
+**Plik deployment.yaml**
+```
+    strategy: 
+      type: Recreate
+```
+
+- [Recreate](http://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/KM/lab5/wazne_pliki/Dockerfile)
+
+Aby przetestować zachowanie podów, wprowadzałam zmiany w pliku ```deployment.yaml```, dostosowując wybraną metodę aktualizacji. Następnie stosowałam zmodyfikowaną konfigurację za pomocą polecenia ```kubectl apply```, a cały proces monitorowałam za pomocą polecenia ```kubectl get pods -w```, obserwując, jak zmienia się stan podów w czasie rzeczywistym.
+
+```
+kubectl set image deployment kasia-httpd httpd=kasiam23/custom-httpd:v2 && kubectl get pods -l app=kasia-httpd -w
+```
+![obraz](KM/zajecia11/34.png)
+
+- Stare pody przechodzą w stan ```Terminating```, a potem ```Completed```, czyli zostały najpierw usunięte.
+
+- Przez chwilę nie było żadnych nowych podów uruchomionych (czas przejściowy bez Running).
+
+- Nowe pody pojawiły się dopiero po zakończeniu starych.
+
+- Nowe pody przeszły kolejno: ```Pending``` → ```ContainerCreating``` → ```Running```.
+
+- Przerwa w działaniu jest możliwa
+
+### RollingUpdate
+**Zmiana strategii**
+```
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 25%
+```
+- [RollingUpdate](http://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/KM/lab5/wazne_pliki/Dockerfile)
+
+- maxSurge 25% = może powstać dodatkowy 1 pod (25% z 4).
+
+- maxUnavailable 2 = mogą być jednocześnie niedostępne 2 pody
+
+
+Strategia ```RollingUpdate```: Stopniowo podmienia stare pody na nowe.
+Strategia ```Recreate```: wszystkie stare pody usuwane naraz.
+
+### Canary Deployment
+Wdrożono nową wersję ```v2``` tylko na 1 replice, pozostawiając starszą wersję ```v1``` na 3 replikach.
+Dzięki temu można:
+- testować ```v2``` bez ryzyka
+
+- porównać zachowanie obu wersji
+
+
+- [kasia-httpd-main.yaml](http://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/KM/lab5/wazne_pliki/Dockerfile)
+
+- [kasia-httpd-canary.yaml](http://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/KM/lab5/wazne_pliki/Dockerfile)
+
+- [kasia-httpd-svc-main.yaml](http://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/KM/lab5/wazne_pliki/Dockerfile)
+
+- [kasia-httpd-svc-canary.yaml](http://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/KM417392/ITE/GCL05/KM417392/Sprawozdanie2/KM/lab5/wazne_pliki/Dockerfile)
+
+### Wdrażanie
+
+```
+kubectl apply -f kasia-httpd-main.yaml
+kubectl apply -f kasia-httpd-canary.yaml
+kubectl apply -f kasia-httpd-svc-main.yaml
+kubectl apply -f kasia-httpd-svc-canary.yaml
+```
+### Sprawdzanie działania
+```
+kubectl port-forward service/kasia-httpd-svc-main 8081:80
+kubectl port-forward service/kasia-httpd-svc-canary 8082:80
+```
+![obraz](KM/zajecia11/38.png)
+
+![obraz](KM/zajecia11/39.png)
+
+```http://localhost:8081``` → v1 (główna wersja)
+
+![obraz](KM/zajecia11/36.png)
+
+```http://localhost:8082`` → v2 (canary)
+
+![obraz](KM/zajecia11/37.png)
+
+### Dashboard
+![obraz](KM/zajecia11/40.png)
