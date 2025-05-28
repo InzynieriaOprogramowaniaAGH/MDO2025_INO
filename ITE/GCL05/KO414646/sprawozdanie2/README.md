@@ -100,6 +100,7 @@ Pobranie wszytkich potrzebych dockerfile'i z repozytorium
 4. pobierane są logi z kontenera realizującego serwer, aby sprawdzić czy serwer uruchomił się poprawnie
 5.  kontener jest zatrzymywany
 
+[deploy-dockerfile](./Dockerfile-Deploy)
 ```groovy
         stage('deploy') {
             steps {
