@@ -1,0 +1,23 @@
+FROM httpd:2.4-alpine
+
+COPY <<EOF /usr/local/apache2/htdocs/index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Custom Apache Server</title>
+    <style>
+        body { font-family: Arial; text-align: center; margin-top: 50px; }
+        h1 { color: #2c3e50; }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Custom Apache Server</h1>
+    <p>This is a basic Apache configuration with custom content.</p>
+    <p>Server running on port 80</p>
+</body>
+</html>
+EOF
+
+EXPOSE 80
+
+CMD ["httpd-foreground"]

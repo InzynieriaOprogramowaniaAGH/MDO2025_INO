@@ -1,0 +1,63 @@
+FROM httpd:2.4-alpine
+
+COPY <<EOF /usr/local/bin/failing-startup.sh
+#!/bin/sh
+echo "Starting Apache server..."
+echo "Performing pre-flight checks..."
+
+# Simulate some startup process
+sleep 2
+
+# Create error log entry
+echo "ERROR: Critical configuration validation failed!" >&2
+echo "ERROR: Missing required environment variable 'REQUIRED_CONFIG'" >&2
+echo "ERROR: Cannot start server due to configuration errors" >&2
+
+# Create a custom error page before failing
+cat > /usr/local/apache2/htdocs/index.html << 'HTML'
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Server Configuration Error</title>
+    <style>
+        body { font-family: Arial; background: #ffebee; color: #c62828; padding: 20px; }
+        .error-container { max-width: 600px; margin: 0 auto; text-align: center; }
+        .error-code { font-size: 72px; font-weight: bold; margin: 20px 0; }
+        .error-message { font-size: 18px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-code">ERROR</div>
+        <h1>Server Configuration Failed</h1>
+        <p class="error-message">The server encountered a critical configuration error and cannot start.</p>
+        <p>Please check the server logs for more details.</p>
+        <p><strong>Exit Code: 1</strong></p>
+    </div>
+</body>
+</html>
+HTML
+
+echo "Attempting to start httpd briefly to show error page..."
+# Start httpd in background briefly, then kill it
+httpd-foreground &
+HTTPD_PID=$!
+
+# Wait a moment, then terminate
+sleep 1
+kill $HTTPD_PID 2>/dev/null
+
+echo "Server startup failed - exiting with code 1"
+exit 1
+EOF
+
+RUN chmod +x /usr/local/bin/failing-startup.sh
+
+ENV SERVER_STATUS="MISCONFIGURED"
+
+RUN echo "ServerName failing-apache-server" >> /usr/local/apache2/conf/httpd.conf
+RUN echo "ErrorLog /proc/self/fd/2" >> /usr/local/apache2/conf/httpd.conf
+
+EXPOSE 80
+
+CMD ["/usr/local/bin/failing-startup.sh"]

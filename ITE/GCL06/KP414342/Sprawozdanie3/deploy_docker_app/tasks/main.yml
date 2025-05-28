@@ -1,0 +1,80 @@
+---
+- name: Zainstaluj wymagane pakiety
+  dnf:
+    name:
+      - dnf-plugins-core
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    state: present
+
+- name: Dodaj repozytorium Dockera
+  get_url:
+    url: https://download.docker.com/linux/fedora/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+
+- name: Zainstaluj Dockera
+  dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: latest
+
+- name: Włącz i uruchom usługę Docker
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Zainstaluj zależności Pythona dla Dockera
+  package:
+    name:
+      - python3-pip
+    state: present
+
+- name: Zainstaluj systemową wersję python3-packaging
+  package:
+    name: python3-packaging
+    state: present
+
+- name: Zainstaluj moduł Python 'docker', 'requests'
+  pip:
+    name:
+      - docker
+      - requests
+    executable: pip3
+
+- name: Pobierz obraz z Docker Hub
+  community.docker.docker_image:
+    name: "{{ docker_image }}"
+    source: pull
+
+- name: Uruchom kontener z aplikacją
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ docker_image }}"
+    state: started
+    restart_policy: always
+    published_ports:
+      - "{{ published_port }}:{{ container_port }}"
+
+- name: Poczekaj aż aplikacja zacznie odpowiadać
+  uri:
+    url: "http://localhost:{{ published_port }}/"
+    status_code: 200
+    timeout: 20
+  register: result
+  retries: 5
+  delay: 3
+  until: result.status == 200
+
+- name: Zatrzymaj kontener
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    state: stopped
+
+- name: Usuń kontener
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    state: absent

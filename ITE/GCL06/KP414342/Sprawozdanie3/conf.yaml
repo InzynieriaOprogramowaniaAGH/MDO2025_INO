@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: apache-deployment
   labels:
-    app: nginx
+    app: apache-basic
 spec:
-  replicas: 24
+  replicas: 8
   selector:
     matchLabels:
-      app: nginx
+      app: apache-basic
   template:
     metadata:
       labels:
-        app: nginx
+        app: apache-basic
     spec:
       containers:
-      - name: nginx
-        image: nginx:latest
+      - name: apache-basic
+        image: cumil/apache-ssl
         ports:
         - containerPort: 80
