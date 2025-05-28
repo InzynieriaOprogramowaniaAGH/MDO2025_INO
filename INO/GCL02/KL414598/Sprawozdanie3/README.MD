@@ -181,6 +181,9 @@ Po skopiowaniu inventory na `ansible-target` uruchomiono test pingowy zdalnie �
 ### 🌵 Test awarii (SSH down, interfejs down)
 Wyłączono `sshd` i kartę sieciową. Ansible zgłosił `UNREACHABLE` — zgodnie z oczekiwaniami.
 
+![Opis](ss/a1.png)
+![Opis](ss/a2.png)
+
 ---
 
 ## 🐳 4. Zarządzanie artefaktem (kontener)
