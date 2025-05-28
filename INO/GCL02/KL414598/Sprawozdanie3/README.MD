@@ -759,5 +759,306 @@ minikube service nginx-service --url
 Z przeglądarki odwiedziłem podany adres IP i port:
 ![Strona Nginx](ss/z14.png)
 
+_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+
+
+
+  
+
+# Zajęcia 11
+
+  
+
+## Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+
+  
+
 ---
 
+  
+
+## Zadania do wykonania
+
+  
+
+### Przygotowanie nowego obrazu
+
+  
+
+Na początku stworzyłem nowy katalog `my-nginx`, w którym przygotowałem własny Dockerfile. Dodałem do kontenera niestandardową stronę HTML, aby mieć pełną kontrolę nad jego zawartością.
+
+  
+
+```bash
+
+mkdir  my-nginx && cd  my-nginx
+
+nano  Dockerfile
+
+mkdir  my-custom-content
+
+echo  "Hello, this is my custom Nginx page!" > my-custom-content/index.html
+
+```
+
+  
+
+Zbudowałem pierwszy obraz i opublikowałem go w Docker Hub:
+
+  
+
+```bash
+
+docker  build  -t  iogougou/my-nginx:v1  .
+
+docker  login
+
+docker  push  iogougou/my-nginx:v1
+
+```
+
+  
+
+![Strona Nginx](ss/x1.png)
+
+![Strona Nginx](ss/x2.png)
+
+![Strona Nginx](ss/x3.png)
+
+  
+
+W kolejnych krokach przygotowałem wersje `v2` i `v3`, gdzie `v3` zawierała błędną konfigurację:
+
+  
+
+```bash
+
+docker  build  -t  iogougou/my-nginx:v2  .
+
+docker  push  iogougou/my-nginx:v2
+
+  
+
+echo "invalid_config" > my-custom-content/nginx.conf
+
+docker build -t iogougou/my-nginx:v3 .
+
+docker push iogougou/my-nginx:v3
+
+```
+
+  
+
+![Strona Nginx](ss/x4.png)
+
+![Strona Nginx](ss/x5.png)
+
+  
+
+---
+
+  
+
+### Zmiany w deploymencie
+
+  
+
+Przygotowałem plik `nginx-deployment.yaml` i wykonałem deployment:
+
+  
+
+```bash
+
+kubectl apply -f nginx-deployment.yaml
+
+```
+
+  
+
+![Strona Nginx](ss/x6.png)
+
+![Strona Nginx](ss/x7.png)
+
+  
+
+Sprawdziłem historię rolloutów i wykonałem rollback:
+
+  
+
+```bash
+
+kubectl rollout history deployment/my-nginx-deployment
+
+kubectl rollout undo deployment/my-nginx-deployment
+
+```
+
+  
+
+![Strona Nginx](ss/x8.png)
+
+![Strona Nginx](ss/x9.png)
+
+![Strona Nginx](ss/x10.png)
+
+  
+
+---
+
+  
+
+## Kontynuacja działań
+
+  
+
+### Częste aktualizacje deploymentu
+
+  
+
+Wielokrotnie edytowałem plik `nginx-deployment.yaml`, zmieniając liczbę replik, wersję obrazu itd.
+
+  
+
+![Strona Nginx](ss/x11.png)
+
+  
+
+---
+
+  
+
+### Weryfikacja wdrożenia
+
+  
+
+Stworzyłem skrypt `verify-deployment.sh`:
+
+  
+
+```bash
+
+chmod +x verify-deployment.sh
+
+./verify-deployment.sh
+
+```
+
+  
+
+![Strona Nginx](ss/x12.png)
+
+  
+
+---
+
+  
+
+### Lista aktywnych podów
+
+  
+
+```bash
+
+kubectl get pods -n default
+
+```
+
+  
+
+![Strona Nginx](ss/x13.png)
+
+  
+
+---
+
+  
+
+## Strategie wdrożenia
+
+  
+
+### Przygotowanie plików
+
+  
+
+```bash
+
+nano Recreate.yaml
+
+nano RollingUpdate.yaml
+
+nano Canary.yaml
+
+```
+
+  
+
+![Strona Nginx](ss/x14.1.png)
+
+  
+
+---
+
+  
+
+### Strategia 1: Recreate
+
+  
+
+![Strona Nginx](ss/x14.2.png)
+
+  
+
+---
+
+  
+
+### Strategia 2: Rolling Update
+
+  
+
+![Strona Nginx](ss/x14.3.png)
+
+  
+
+---
+
+  
+
+### Strategia 3: Canary Deployment
+
+  
+
+Zastosowałem dwa deploymenty, aby wdrożyć wersję canary.
+
+  
+
+---
+
+  
+
+### Wynik zastosowania strategii
+
+  
+
+```bash
+
+kubectl apply -f Recreate.yaml
+
+kubectl apply -f RollingUpdate.yaml
+
+kubectl apply -f Canary.yaml
+
+kubectl get deployments -n default
+
+```
+
+  
+
+![Strona Nginx](ss/x15.png)
