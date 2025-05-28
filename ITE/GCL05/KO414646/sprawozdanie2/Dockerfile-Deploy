@@ -1,0 +1,24 @@
+# Use an official Ubuntu as a base image
+
+FROM ubuntu:latest
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    curl \
+    libncurses5-dev \
+    libsqlite3-dev \
+    libicu74 \
+    && apt-get clean
+
+#copy files from build
+COPY --from=freeciv-server-build /build/freeciv-server /server/freeciv-server
+COPY --from=freeciv-server-build /build/libfreeciv.so /server/libfreeciv.so
+COPY --from=freeciv-server-build /freeciv/data/ /server/data
+#TODO: get all dependencies to run free-civ-server
+
+WORKDIR /server
+CMD ["./freeciv-server", "-r", "./data/civ2civ3.serv"]

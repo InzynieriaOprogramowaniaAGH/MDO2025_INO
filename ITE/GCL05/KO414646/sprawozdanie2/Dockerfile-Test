@@ -1,0 +1,20 @@
+# Use an official Ubuntu as a base image
+
+FROM ubuntu:latest
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    curl \
+    libncurses5-dev \
+    libsqlite3-dev \
+    && apt-get clean
+
+#Copy build files
+COPY --from=freeciv-server-build /build /build
+COPY --from=freeciv-server-build /freeciv /freeciv
+
+CMD [ "./freeciv/tests/src-check.sh" ]
