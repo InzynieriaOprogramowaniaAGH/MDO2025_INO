@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+    stages {
+    stage('prepare') {
+        steps {
+            echo 'Preparing'
+            sh 'rm -rf dockerci'
+            sh 'git clone https://github.com/HelloImSophie/dockerci.git'
+        }
+    }
+        stage('build') {
+            steps {
+                echo 'Building..'
+                sh "docker build -t freeciv-server-build -f ./dockerci/Dockerfile-Build ."
+            }
+        }
+        stage('test') {
+            steps {
+                echo 'Testing'
+                sh "docker build -t freeciv-server-test -f ./dockerci/Dockerfile-Test ."
+                sh "docker run freeciv-server-test"
+            }
+        }
+        stage('deploy') {
+            steps {
+                echo 'Deploying..'
+                sh "docker rm -f deploy-test 2>/dev/null || true"
+                sh "docker build -t freeciv-server-deploy -f ./dockerci/Dockerfile-Deploy ."
+                sh "docker run -d --user \$(id -u):\$(id -g) --name deploy-test -p 5556:5556 freeciv-server-deploy"
+                sleep 2
+                sh "docker logs deploy-test"
+script {
+    def secondToLastLine = sh(
+        script: "docker logs deploy-test | tail -n 5 | head -n 1",
+        returnStdout: true
+    ).trim()
+
+    echo "Second to last log line: ${secondToLastLine}"
+    def expectedLine = "3: Now accepting new client connections on port 5556."
+
+    if (secondToLastLine != expectedLine) {
+        error "Unexpected log line. Expected: '${expectedLine}', but got: '${secondToLastLine}'"
+    }
+}
+                sh "docker stop deploy-test"
+            }
+        }
+        stage('publish'){
+            steps {
+                echo 'Publishing..'
+                sh "docker create --name temp-container freeciv-server-deploy"
+                sh "docker cp temp-container:/server ./freeciv_server"
+                sh "docker rm temp-container"
+                sh "tar -czf freeciv_server.tar.gz freeciv_server"
+                archiveArtifacts artifacts: 'freeciv_server.tar.gz'
+            }
+        }
+            
+    }
+}
