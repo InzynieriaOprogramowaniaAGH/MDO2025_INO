@@ -957,8 +957,7 @@ Widoczne są wszystkie 4 repliki poda ```kasia-nginx```:
 Pokazuje aktywne wdrożenie z nazwą ```kasia-nginx```:
 
 ![obraz](KM/zajecia10a/15.png)
-<<<<<<< HEAD
-=======
+
 
 # Zajęcia11::Wdrażanie na zarządzalne kontenery: Kubernetes (2)
 ## Przygotowanie nowego obrazu
@@ -1386,3 +1385,7 @@ kubectl port-forward service/kasia-httpd-svc-canary 8082:80
 
 ### Dashboard
 ![obraz](KM/zajecia11/40.png)
+
+**Kubernetes** to narzędzie do budowy niezawodnych i skalowalnych systemów kontenerowych.
+Pozwala na automatyczne wdrażanie, zarządzanie i skalowanie aplikacji w środowiskach rozproszonych. Dzięki możliwości definiowania konfiguracji w plikach YAML, kontrolowania wersji obrazów kontenerów oraz wdrażania ich różnymi strategiami, Kubernetes umożliwia precyzyjne sterowanie cyklem życia aplikacji.
+
