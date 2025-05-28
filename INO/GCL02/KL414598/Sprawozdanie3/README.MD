@@ -189,31 +189,10 @@ Wyłączono `sshd` i kartę sieciową. Ansible zgłosił `UNREACHABLE` — zgodn
 
 ## 🐳 4. Zarządzanie artefaktem (kontener)
 
-### 🌵 Budowa i uruchomienie kontenera
-W playbooku użyto obrazu `nginx:alpine`, który został uruchomiony na porcie 8080.
 
-### 🌵 Pobranie z Docker Hub
-Ansible pobrał oficjalny obraz `nginx:alpine` bez potrzeby budowania lokalnego obrazu.
-
-### 🌵 Instalacja Dockera przez Ansible
-Rola `deploy_container` automatycznie instalowała Dockera przez APT.
-
-### 🌵 Weryfikacja działania aplikacji
-Sprawdzono dostępność strony pod `http://localhost:8080` za pomocą modułu `uri`.
-
-### 🌵 Usunięcie kontenera
-Na koniec, kontener `hello-app` został usunięty z maszyny docelowej przez Ansible.
 
 ---
 
-## ✅ 5. Podsumowanie
-
-- 🖥️ Środowisko składa się z dwóch maszyn wirtualnych
-- 🔐 Zrealizowano logowanie bez hasła
-- 📂 Plik inwentaryzacji z grupami: `Orchestrators` i `Endpoints`
-- ⚙️ Stworzono playbooki do pingu, kopiowania, aktualizacji, restartu usług
-- 🐳 Wdrożono i przetestowano kontener aplikacji z Docker Hub
-- 📦 Rolę stworzono przy użyciu `ansible-galaxy`
 
 _____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 _____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
