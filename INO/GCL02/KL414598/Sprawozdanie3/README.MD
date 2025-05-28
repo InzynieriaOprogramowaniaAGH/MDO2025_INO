@@ -211,5 +211,110 @@ Na koniec, kontener `hello-app` został usunięty z maszyny docelowej przez Ansi
 - 🐳 Wdrożono i przetestowano kontener aplikacji z Docker Hub
 - 📦 Rolę stworzono przy użyciu `ansible-galaxy`
 
-> Projekt wykonano w środowisku VirtualBox + Ubuntu 24.04  
-> Autor: **[Twoje imię i nazwisko]**
+__________________________________________________________________________________________________________________________________________
+
+
+
+
+
+# Instalacja Nienadzorowana Systemu Fedora 42
+
+## 🎯 Cel
+Celem zadania jest przeprowadzenie instalacji nienadzorowanej systemu Fedora 42 przy użyciu pliku odpowiedzi Kickstart.
+
+---
+
+## 🧰 Wymagania wstępne
+
+- Oracle VirtualBox
+- Obraz ISO Fedora 42 (Everything Netinst lub Server)
+- Plik odpowiedzi `anaconda-ks.cfg`
+- Połączenie z Internetem (jeśli używasz wersji Netinst)
+
+---
+
+## 🪜 Kroki instalacji
+
+### 1. Uruchomienie instalatora Fedora
+
+W VirtualBox uruchom nową maszynę z płytą instalacyjną Fedora 42 i podaj parametr Kickstart do GRUB-a:
+
+```
+inst.ks=https://tinyurl.com/bdejyufr
+```
+
+📷 *Miejsce na zrzut ekranu (GRUB z parametrem inst.ks)*
+
+---
+
+### 2. Rozpoczęcie instalacji
+
+Instalator rozpocznie proces instalacji automatycznie z pliku Kickstart.
+
+📷 *Miejsce na zrzut ekranu (logi Anaconda, tryb tekstowy)*
+
+---
+
+### 3. Interfejs graficzny (potwierdzenie ustawień)
+
+Przed instalacją system może zażądać uzupełnienia kilku brakujących pól (np. konto użytkownika lub root).
+
+📷 *Miejsce na zrzut ekranu (podsumowanie instalacji w GUI)*
+
+---
+
+### 4. Postęp instalacji
+
+📷 *Miejsce na zrzut ekranu (pasek postępu tworzenia partycji)*
+
+---
+
+### 5. Zawartość pliku Kickstart
+
+Otwórz i przeanalizuj zawartość `/root/anaconda-ks.cfg` po instalacji.
+
+📷 *Miejsce na zrzut ekranu (zawartość pliku Kickstart w edytorze nano)*
+
+---
+
+### 6. Link do pliku Kickstart w repozytorium
+
+📷 *Miejsce na zrzut ekranu (plik Kickstart otwarty z GitHub)*
+
+---
+
+### 7. Skracanie linku Kickstart (opcjonalne)
+
+📷 *Miejsce na zrzut ekranu (TinyURL z wygenerowanym linkiem)*
+
+---
+
+## 🛠️ Edycja pliku Kickstart
+
+Upewnij się, że plik zawiera poniższe elementy:
+
+```kickstart
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-42&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f42&arch=x86_64
+
+clearpart --all --initlabel
+network --hostname=fedora42-host
+```
+
+---
+
+## ✅ Weryfikacja
+
+Po instalacji sprawdź:
+
+- Zalogowanie się użytkownika `user`
+- Działające połączenie sieciowe
+- Ustawienia strefy czasowej i hostname
+
+---
+
+## 📁 Plik Kickstart (przykład)
+
+Pełna zawartość przykładowego pliku znajduje się pod adresem:  
+👉 `https://tinyurl.com/bdejyufr`
+
