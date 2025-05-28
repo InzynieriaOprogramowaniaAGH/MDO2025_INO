@@ -1,0 +1,8 @@
+- name: update
+  hosts: all
+  become: true
+  tasks:
+    - name: update
+      dnf:
+        name: "*"
+        state: latest
