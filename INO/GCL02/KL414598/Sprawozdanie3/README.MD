@@ -187,9 +187,117 @@ Wyłączono `sshd` i kartę sieciową. Ansible zgłosił `UNREACHABLE` — zgodn
 
 ---
 
-## 🐳 4. Zarządzanie artefaktem (kontener)
+## 🐳 4.  Zarządzanie stworzonym artefaktem
+
+  
+
+W ramach zadania przygotowano rolę Ansible służącą do zarządzania artefaktem. Rolę utworzono za pomocą komendy:
+
+  
+
+```
+
+ansible-galaxy init manage_artifact
+
+```
+
+  
+
+![Tworzenie roli Ansible](ss/p1.png)
+
+  
+
+Następnie uruchomiono playbook `playbook.yml` wykorzystujący utworzoną rolę:
+
+  
+
+```
+
+ansible-playbook -i inventory playbook.yml
+
+```
+
+  
+
+Efekt działania przedstawia poniższy zrzut ekranu:
+
+  
+
+![Wynik działania playbooka](ss/p2.png)
+
+  
+
+---
+
+  
+
+## Plik `playbook.yml`
+
+  
+
+Zawartość pliku `playbook.yml`, który definiuje użycie roli `manage_artifact`:
+
+  
+
+![playbook.yml](ss/p3.png)
+
+  
+
+---
+
+  
+
+## Zawartość pliku `main.yml` z roli `manage_artifact`
+
+  
+
+Plik zawiera następujące kroki:
+
+  
+
+1. Instalacja Dockera
+
+2. Weryfikacja działania Dockera
+
+3. Przesyłanie artefaktów i Dockerfile
+
+4. Budowanie obrazu Dockera
+
+5. Uruchamianie kontenera z aplikacją
 
 
+  
+
+Poniżej przedstawiono zawartość pliku:
+
+
+![main.yml część 1](ss/p4.png)  
+
+![main.yml część 2](ss/p4.4.png)
+
+  
+
+---
+
+  
+
+## Jeżeli artefaktem był plik binarny:
+
+  
+
+1.  **Plik aplikacji** został wysłany na zdalną maszynę.
+
+2.  **Dockerfile** i inne potrzebne pliki skopiowano.
+
+3.  **Obraz Docker** został zbudowany na zdalnej maszynie.
+
+4.  **Kontener** został uruchomiony z aplikacją w środku.
+
+5. Zweryfikowano poprawne wykonanie zadań przez Ansible.
+
+  
+
+Całość została ujęta w rolę `manage_artifact`, zgodnie z podejściem `ansible-galaxy`.
 
 ---
 
