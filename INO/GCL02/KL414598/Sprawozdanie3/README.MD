@@ -260,7 +260,34 @@ Na początku uruchomiłem maszynę wirtualną z obrazem instalacyjnym Fedora 42 
 
 ### 2. Problem z długim linkiem i użycie TinyURL
 
-Podczas konfiguracji GRUB okazało się, że nie mogę wkleić długiego linku do GitHub Raw z plikiem Kickstart. W związku z tym postanowiłem użyć serwisu [TinyURL](https://tinyurl.com) do skrócenia odnośnika.
+Podczas konfiguracji GRUB okazało się, że nie mogę wkleić długiego linku z GitHub Raw z plikiem Kickstart. W związku z tym postanowiłem użyć serwisu [TinyURL](https://tinyurl.com) do skrócenia odnośnika.
+
+```
+#version=DEVEL
+text
+skipx
+cdrom
+
+keyboard --vckeymap=pl --xlayouts='pl'
+lang pl_PL.UTF-8
+timezone Europe/Warsaw --utc
+
+rootpw --iscrypted --allow-ssh $y$j9T$u5Te1Uv/zc1G30Bm1z7ipamDc$3EBAqr78ouqUbIZt/CgcookAh0LiFJbyumYqU4WzW5
+user --groups=wheel --name=user --password=haslohaslo --plaintext --iscrypted --gecos="user"
+
+ignoredisk --only-use=sda
+clearpart --all --initlabel
+autopart
+
+firstboot --enable
+
+%packages
+@^custom-environment
+%end
+
+reboot
+```
+
 
 ![Opis](ss/203.png)
 ![Opis](ss/204.png)
