@@ -213,108 +213,102 @@ Na koniec, kontener `hello-app` został usunięty z maszyny docelowej przez Ansi
 
 __________________________________________________________________________________________________________________________________________
 
+# 📝 Sprawozdanie: Pliki odpowiedzi dla wdrożeń nienadzorowanych
 
+## 🎯 Zagadnienie
 
-
-
-# Instalacja Nienadzorowana Systemu Fedora 42
-
-## 🎯 Cel
-Celem zadania jest przeprowadzenie instalacji nienadzorowanej systemu Fedora 42 przy użyciu pliku odpowiedzi Kickstart.
+Tematem mojego zadania było przygotowanie źródła instalacyjnego systemu Fedora 42 w wersji nienadzorowanej, przeznaczonego do uruchomienia na maszynie wirtualnej. Takie źródła są szczególnie przydatne w środowiskach testowych oraz przy wdrażaniu oprogramowania, które nie działa w kontenerach, lecz wymaga pełnego systemu operacyjnego.
 
 ---
 
-## 🧰 Wymagania wstępne
+## 🎯 Cel zadania
 
-- Oracle VirtualBox
-- Obraz ISO Fedora 42 (Everything Netinst lub Server)
-- Plik odpowiedzi `anaconda-ks.cfg`
-- Połączenie z Internetem (jeśli używasz wersji Netinst)
+Celem było:
+- utworzenie pliku odpowiedzi (`kickstart`), który automatyzuje instalację systemu,
+- przeprowadzenie rzeczywistej instalacji Fedora 42 na maszynie wirtualnej,
+- zapewnienie, że system po instalacji będzie gotowy do hostowania oprogramowania.
 
 ---
 
-## 🪜 Kroki instalacji
+## 📌 Etapy realizacji
 
-### 1. Uruchomienie instalatora Fedora
+### 1. Wybór instalatora
 
-W VirtualBox uruchom nową maszynę z płytą instalacyjną Fedora 42 i podaj parametr Kickstart do GRUB-a:
+Do realizacji zadania wybrałem obraz **Fedora 42 Everything Netinst**, który pobrałem i uruchomiłem w środowisku **Oracle VirtualBox**.
+
+---
+
+### 2. Przygotowanie pliku odpowiedzi
+
+Plik `anaconda-ks.cfg` został pobrany z repozytorium GitHub, a jego treść została zmodyfikowana zgodnie z poniższymi wymaganiami:
+
+- dodanie repozytoriów dla pobrania pakietów:
+  ```kickstart
+  url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-42&arch=x86_64
+  repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f42&arch=x86_64
+  ```
+
+- zapewnienie formatowania całego dysku:
+  ```kickstart
+  clearpart --all --initlabel
+  ```
+
+- ustawienie własnej nazwy hosta:
+  ```kickstart
+  network --hostname=fedora42-host
+  ```
+
+- stworzenie użytkownika z uprawnieniami sudo oraz ustawienie hasła root:
+  ```kickstart
+  rootpw --iscrypted <zakodowane_haslo>
+  user --groups=wheel --name=user --password=haslohaslo --plaintext --iscrypted --gecos="user"
+  ```
+
+📷 *Miejsce na zrzut ekranu z podglądem pliku Kickstart*
+
+---
+
+### 3. Uruchomienie instalacji z Kickstart
+
+W konfiguracji GRUB instalatora Fedora dodałem parametr:
 
 ```
 inst.ks=https://tinyurl.com/bdejyufr
 ```
 
-📷 *Miejsce na zrzut ekranu (GRUB z parametrem inst.ks)*
+Dzięki temu instalator zaciągnął mój plik Kickstart z internetu i uruchomił się całkowicie automatycznie.
+
+📷 *Miejsce na zrzut ekranu z GRUB i linkiem TinyURL*
 
 ---
 
-### 2. Rozpoczęcie instalacji
+### 4. Proces instalacji
 
-Instalator rozpocznie proces instalacji automatycznie z pliku Kickstart.
+Instalacja rozpoczęła się automatycznie, bez konieczności mojej ingerencji. Instalator przeszedł przez kolejne etapy:
 
-📷 *Miejsce na zrzut ekranu (logi Anaconda, tryb tekstowy)*
+- sprawdzenie konfiguracji dysku,
+- tworzenie partycji (w tym `biosboot`),
+- instalacja wybranych pakietów.
 
----
-
-### 3. Interfejs graficzny (potwierdzenie ustawień)
-
-Przed instalacją system może zażądać uzupełnienia kilku brakujących pól (np. konto użytkownika lub root).
-
-📷 *Miejsce na zrzut ekranu (podsumowanie instalacji w GUI)*
+📷 *Miejsce na zrzut ekranu z logów instalatora Anaconda*
+📷 *Miejsce na zrzut ekranu z postępu instalacji*
 
 ---
 
-### 4. Postęp instalacji
+### 5. Weryfikacja po instalacji
 
-📷 *Miejsce na zrzut ekranu (pasek postępu tworzenia partycji)*
+Po zakończonej instalacji system uruchomił się poprawnie. Sprawdziłem:
 
----
+- że użytkownik `user` został utworzony i ma dostęp do `sudo`,
+- że hostname został ustawiony zgodnie z plikiem Kickstart,
+- że strefa czasowa i język są poprawne,
+- że wszystkie partycje zostały utworzone od nowa.
 
-### 5. Zawartość pliku Kickstart
-
-Otwórz i przeanalizuj zawartość `/root/anaconda-ks.cfg` po instalacji.
-
-📷 *Miejsce na zrzut ekranu (zawartość pliku Kickstart w edytorze nano)*
-
----
-
-### 6. Link do pliku Kickstart w repozytorium
-
-📷 *Miejsce na zrzut ekranu (plik Kickstart otwarty z GitHub)*
+📷 *Miejsce na zrzut ekranu z działającego systemu po instalacji*
 
 ---
 
-### 7. Skracanie linku Kickstart (opcjonalne)
+## ✅ Podsumowanie
 
-📷 *Miejsce na zrzut ekranu (TinyURL z wygenerowanym linkiem)*
-
----
-
-## 🛠️ Edycja pliku Kickstart
-
-Upewnij się, że plik zawiera poniższe elementy:
-
-```kickstart
-url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-42&arch=x86_64
-repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f42&arch=x86_64
-
-clearpart --all --initlabel
-network --hostname=fedora42-host
-```
-
----
-
-## ✅ Weryfikacja
-
-Po instalacji sprawdź:
-
-- Zalogowanie się użytkownika `user`
-- Działające połączenie sieciowe
-- Ustawienia strefy czasowej i hostname
-
----
-
-## 📁 Plik Kickstart (przykład)
-
-Pełna zawartość przykładowego pliku znajduje się pod adresem:  
-👉 `https://tinyurl.com/bdejyufr`
+Zrealizowałem pełny proces instalacji nienadzorowanej systemu Fedora 42 z użyciem pliku Kickstart. System został poprawnie zainstalowany i jest gotowy do działania jako host dla przyszłego oprogramowania. Rozwiązanie to pozwala zaoszczędzić czas i zapewnić spójne środowisko testowe w przyszłości.
 
