@@ -126,7 +126,7 @@ ansible-playbook -i inventory.ini ping.yml
 
 ![alt text](image-24.png)
 
-### Ubrałem całość w rolę:
+## Ubrałem całość w rolę:
 ### Inicjując poleceniem `ansible-galaxy init deploy_docker_app`
 
 ### Uzupełniając pliki:
@@ -234,19 +234,28 @@ published_port: 80
 ```ansible-playbook -i inventory.ini deploy_app_docker.yml```
 ![alt text](image-25.png)
 
+# LAB9 - Kickstart
 
+# LAB10/LAB11 - Kubernetes
+
+## Zaopatrzyłem się w minikube
 ![alt text](image-3.png)
 
+## Uruchomiłem kontener poleceniem `minikube start`
 ![alt text](image-4.png)
-
-![alt text](image-5.png)
-
+### Kontener uruchomił się poprawnie
+![alt text](image-26.png)
+## Uruchomiłem dashboard poleceniem `minikube dashboard`
 ![alt text](image-7.png)
 
-![alt text](image-8.png)
+## Na zajęciach 10 będę korzystał z gotowego obrazu nginx w wersji latest
+![alt text](image-5.png)
 
+## Uruchomiłem pojedynczego poda poleceniem `kubectl run nginx-single --image=nginx -- port=80 --labels app=nginx-single`, oraz przekierowałem port aby móc połączyć się z kontenerem
+![alt text](image-8.png)
 ![alt text](image-9.png)
 
+## Używając skryptu ze [[strony](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)] uruchomiłem deployment z 3 replikami korzystający z tego samego obrazu co pojedynczy pod
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -270,13 +279,15 @@ spec:
         ports:
         - containerPort: 80
 ```
-
+### Poleceniem `kubectl apply -f conf.yaml`
 ![alt text](image-13.png)
 
+### Po forwardzie portu można zobaczyć że jesteśmy w stanie połączyć się z jednym z podów - natomiast nie mamy kontroli z którym, od tego służy load balancer
 ![alt text](image-11.png)
 
 ![alt text](image-12.png)
 
+## Screeny z dashboarda po zwiekszeniu replik do 4
 ![alt text](image-14.png)
 
 ![alt text](image-15.png)
