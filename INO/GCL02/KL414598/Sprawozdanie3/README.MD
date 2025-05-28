@@ -312,7 +312,7 @@ Instalator wykrył plik Kickstart i rozpoczął instalację automatyczną. W log
 
 ### 4. Wejście do Anaconda GUI
 
-Choć instalacja była automatyczna, pojawiło się okno z podsumowaniem konfiguracji. Musiałem ręcznie dokończyć konfigurację użytkownika i konta root.
+Choć instalacja była automatyczna, pojawiło się okno z podsumowaniem konfiguracji. Musiałem ręcznie potwierdzić konfigurację użytkownika i konta root.
 
 ![Anaconda GUI - podsumowanie instalacji](ss/209.png)
 
@@ -322,32 +322,10 @@ Choć instalacja była automatyczna, pojawiło się okno z podsumowaniem konfigu
 
 Po uzupełnieniu wymaganych danych, instalacja postępowała dalej, tworząc partycję rozruchową i systemową.
 
-![Anaconda GUI - podsumowanie instalacji](ss/207.png)
+![Anaconda GUI - podsumowanie instalacji](ss/212.png)
 
 ---
 
-### 6. Zawartość pliku Kickstart
 
-Po zakończeniu instalacji otworzyłem wygenerowany plik `/root/anaconda-ks.cfg` i sprawdziłem jego poprawność. Znajdują się w nim wszystkie kluczowe elementy:
 
-- Repozytoria online
-- Partycjonowanie i czyszczenie dysku
-- Hasła i użytkownik
-- Ustawienia strefy czasowej
-
-📷 ![Plik Kickstart w nano](./204.png)
-
----
-
-### 7. Porównanie z wersją z GitHuba
-
-Porównałem lokalny plik z oryginałem znajdującym się w repozytorium GitHub. Pliki są zgodne.
-
-📷 ![Kickstart z GitHub Raw](./205.png)
-
----
-
-## ✅ Podsumowanie
-
-Przygotowałem środowisko instalacyjne systemu Fedora 42, który uruchamia się automatycznie dzięki zastosowaniu pliku Kickstart. Dzięki temu rozwiązaniu możliwe jest szybkie i spójne wdrażanie środowisk testowych lub serwerowych. Problem z długim linkiem został rozwiązany przez użycie TinyURL.
 
