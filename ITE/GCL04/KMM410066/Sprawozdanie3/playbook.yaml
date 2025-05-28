@@ -16,7 +16,6 @@
     - name: Update all packages
       become: true
       become_method: sudo
-      # become_user: ansible
       ansible.builtin.dnf:
         name: "*"
         state: latest
