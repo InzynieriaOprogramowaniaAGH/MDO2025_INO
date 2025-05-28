@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kasia-httpd
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 25%
+  selector:
+    matchLabels:
+      app: kasia-httpd
+  template:
+    metadata:
+      labels:
+        app: kasia-httpd
+    spec:
+      containers:
+        - name: httpd
+          image: kasiam23/custom-httpd:v1
+          ports:
+            - containerPort: 80

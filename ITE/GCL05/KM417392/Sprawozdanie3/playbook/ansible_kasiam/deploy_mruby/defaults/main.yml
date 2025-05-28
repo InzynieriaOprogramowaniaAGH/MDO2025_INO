@@ -1,0 +1,5 @@
+---
+# defaults file for deploy_mruby
+image_name: kasiam23/mruby
+container_name: mruby-app
+script_path: /tmp/script.rb

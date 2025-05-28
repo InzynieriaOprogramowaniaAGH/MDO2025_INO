@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kasia-nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: kasia-nginx
+  template:
+    metadata:
+      labels:
+        app: kasia-nginx
+    spec:
+      containers:
+        - name: kasia-nginx
+          image: kasiam23/custom-nginx:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
