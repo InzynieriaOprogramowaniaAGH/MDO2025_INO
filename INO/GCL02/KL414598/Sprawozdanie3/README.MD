@@ -645,7 +645,7 @@ minikube dashboard
 ![Dashboard start](ss/z7.png)
 
 Z poziomu przeglądarki uzyskałem dostęp do interfejsu:
-![Dashboard GUI](ss/z9.png)
+![Dashboard GUI](ss/z10.png)
 
 ---
 
@@ -656,12 +656,14 @@ Postanowiłem przetestować wdrożenie kontenera z aplikacją nginx:
 minikube kubectl -- run moja-aplikacja --image=nginx --port=80 --labels app=moja-aplikacja
 ```
 
-![Pod gotowy](ss/z10.png)
+
 
 Sprawdziłem jego status:
 ```
 minikube kubectl -- get pods
 ```
+![Pod gotowy](ss/z8.png)
+
 
 Następnie przekierowałem port:
 ```
@@ -669,7 +671,8 @@ minikube kubectl -- port-forward pod/moja-aplikacja 8080:80
 ```
 
 Z przeglądarki na moim Windowsie odwiedziłem `http://localhost:8080`:
-![Port-forward działa](ss/z17.png)
+![Port-forward działa](ss/z13.png)
+![Port-forward działa](ss/z14.png)
 
 Komunikacja działa poprawnie, strona Nginxa się załadowała.
 
@@ -726,7 +729,7 @@ minikube kubectl -- apply -f nginx-deployment.yml
 ```
 
 ![Wdrożenie](ss/z15.png)
-
+![Wdrożenie](ss/z16.png)
 ---
 
 ## Sprawdzanie rollout i działania aplikacji
@@ -736,7 +739,7 @@ Status rollout:
 minikube kubectl -- rollout status deployment/nginx-deployment
 ```
 
-![Rollout](ss/z14.png)
+![Rollout](ss/z17.png)
 
 Sprawdziłem działające Pody:
 ```
@@ -748,13 +751,10 @@ Sprawdziłem dostępność serwisu:
 minikube service nginx-service --url
 ```
 
-![Pody i serwis](ss/z12.png)
+![Pody i serwis](ss/z18.png)
 
 Z przeglądarki odwiedziłem podany adres IP i port:
-![Strona Nginx](ss/z18.png)
+![Strona Nginx](ss/z14.png)
 
 ---
 
-## Wnioski
-
-Podczas realizacji zadania przeszedłem przez cały proces: od instalacji klastra Kubernetes w środowisku lokalnym, przez jego konfigurację, aż po przygotowanie i uruchomienie aplikacji w formie Poda oraz Deploymentu. Sprawdziłem działanie Dashboardu, przekierowanie portów oraz komunikację z aplikacją. Wdrożenie Nginxa z czterema replikami oraz jego wystawienie przez `NodePort` pozwoliło mi zrealizować pełny cykl wdrożeniowy zgodny z praktykami DevOps.
