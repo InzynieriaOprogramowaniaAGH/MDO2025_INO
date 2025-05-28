@@ -251,7 +251,9 @@ Zadanie dotyczyło przygotowania automatycznego źródła instalacyjnego systemu
 Na początku uruchomiłem maszynę wirtualną z obrazem instalacyjnym Fedora 42 w trybie “Test this media & install Fedora 42”.
 
 📷 
-![Opis](ss/207.png)
+![Opis](ss/201.png)
+![Opis](ss/202.png)
+
 
 
 ---
@@ -260,7 +262,8 @@ Na początku uruchomiłem maszynę wirtualną z obrazem instalacyjnym Fedora 42 
 
 Podczas konfiguracji GRUB okazało się, że nie mogę wkleić długiego linku do GitHub Raw z plikiem Kickstart. W związku z tym postanowiłem użyć serwisu [TinyURL](https://tinyurl.com) do skrócenia odnośnika.
 
-📷 ![Skrócony link w TinyURL](./206.png)
+![Opis](ss/203.png)
+![Opis](ss/204.png)
 
 Link do pliku Kickstart:
 ```
@@ -273,7 +276,10 @@ https://tinyurl.com/bdejyufr
 
 Instalator wykrył plik Kickstart i rozpoczął instalację automatyczną. W logach widać było, że używany jest tryb tekstowy, co potwierdza wykorzystanie `inst.ks`.
 
-📷 ![Logi Anaconda - instalacja z Kickstart](./201.png)
+
+![Opis](ss/206.png)
+![Opis](ss/207.png)
+
 
 ---
 
