@@ -905,6 +905,70 @@ Poniżej widoczna lista obrazów dostępnych w moim repozytorium Docker Hub:
 
 ### Zmiany w deploymencie
 
-3 Deploymenty dla 3 różnych wersji:
+#### Modyfikacja liczby replik
 
-![3 Deploymenty](zrzuty11/zrzut_ekranu2.png)
+Na początku zmodyfikowałem istniejący deployment, ustawiając jako obraz `frigzer/my-nginx:v1` (bazujący na oryginalnym NGINX).
+
+![Zmodyfikowany deployment z obrazem my-nginx:v1](zrzuty11/zrzut_ekranu2_1.png)
+
+Następnie zmieniłem liczbę replik na 8. W interfejsie Dashboardu od razu pojawiła się informacja o nowym limicie. Pody nie zostały utworzone jednocześnie – Kubernetes rozkładał ich tworzenie w czasie.
+
+![Zwiekszenie replik do 8](zrzuty11/zrzut_ekranu2_2.png)
+
+Następnie zmniejszyłem liczbę replik do 1. Pody były stopniowo usuwane aż do pozostania jednej instancji.
+
+![Zmniejszenie replik do 1](zrzuty11/zrzut_ekranu2_3.png)
+
+Potem ponownie zwiększyłem replikację – tym razem do 4.
+
+![Zwiekszenie replik do 4](zrzuty11/zrzut_ekranu2_4.png)
+
+Kolejny krok to zmniejszenie liczby replik do 0 – co symuluje czasowe wyłączenie usługi bez usuwania samego deploymentu.
+
+![Zmniejszenie replik do 0](zrzuty11/zrzut_ekranu2_5.png)
+
+Na końcu ponownie skalowałem usługę w górę do 4 replik – proces odbył się bezproblemowo.
+
+![Zwiekszenie replik do 4](zrzuty11/zrzut_ekranu2_6.png)
+
+#### Zmiana wersji obrazu wdrażanego
+
+Następnie zaktualizowałem obraz kontenera do wersji `frigzer/my-nginx:v2`, która zawierała moją zmodyfikowaną konfigurację strony startowej.
+
+![Zmiana obrazu](zrzuty11/zrzut_ekranu3.png)
+
+Kolejnym krokiem była zmiana obrazu na `frigzer/my-nginx:v3`, czyli celowo wadliwą wersję kontenera, która natychmiast kończy działanie (`CMD ["false"]`).
+
+Deployment nie został pomyślnie uruchomiony, co było zgodne z założeniem – pody nie przechodziły w stan "Running", co pozwoliło zweryfikować mechanizmy rollbacku.
+
+![Zmiana obrazu](zrzuty11/zrzut_ekranu4.png)
+
+#### Przywracanie poprzednich wersji wdrożeń
+
+Za pomocą poniższego polecenia sprawdziłem historię zmian deploymentu:
+
+```bash
+kubectl rollout history deployment my-nginx-deploy
+```
+
+Historia pokazuje 4 zmiany, czyli pierwszy własny obraz oraz 3 zmiany na różne wersje nowego obrazu.
+
+![Historia zmian](zrzuty11/zrzut_ekranu5.png)
+
+Aby cofnąć się do wcześniejszej stabilnej wersji, użyłem:
+
+```bash
+kubectl rollout history deployment my-nginx-deploy
+```
+
+Po wykonaniu rollbacku dashboard ponownie pokazał wcześniej działającą wersję obrazu.
+
+![Cofnięcie modyfikacji](zrzuty11/zrzut_ekranu6_1.png)
+
+Przywrócona wcześniejsza wersjia obrazu:
+
+![Przywrócona wcześniejsza wersja w dashboardzie](zrzuty11/zrzut_ekranu6_2.png)
+
+Na liście historii wdrożeń można zaobserwować, że revision 10 (pierwotna zmiana na v2) zostało nadpisane przez revision 12, które również odpowiadało wersji v2 po rollbacku.
+
+![Historia zmian po cofnięciu](zrzuty11/zrzut_ekranu7.png)
