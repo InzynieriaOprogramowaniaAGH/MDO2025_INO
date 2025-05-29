@@ -4,6 +4,16 @@
 
 Celem zadania było utworzenie źródła i instalacji nienadzorowanej dla systemu operacyjnego hostującego nasze oprogramowanie i przeprowadzenie instalacji systemu, który po uruchomieniu rozpocznie hostowanie naszego programu.
 
+## Zadanie 8: Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
+
+NA DEVOPS:
+zaczelam od zainstalwoania 
+sudo dnf install -y ansible        # instalacja ansible
+
+ssh-copy-id ansible@ansible-target   # przesyłasz klucz SSH
+
+
+
 ## Zadanie 9: Pliki odpowiedzi dla wdroźeń nienadzorowanych
 
 1. **Instalacja systemu Fedora i wyciągniecie pliku odpowiedzi:**
