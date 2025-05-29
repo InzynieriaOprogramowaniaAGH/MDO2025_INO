@@ -1,0 +1,13 @@
+FROM fedora:41
+
+RUN dnf -y update && \
+	 dnf -y install git autoconf libtool openssl openssl openssl-devel libpsl-devel perl-I18N-Langinfo perl-Digest-SHA perl-Memoize perl-Time-HiRes
+
+RUN git clone https://github.com/curl/curl.git
+
+WORKDIR /curl
+
+RUN autoreconf -fi 
+RUN ./configure --with-openssl
+RUN make 
+RUN make install
