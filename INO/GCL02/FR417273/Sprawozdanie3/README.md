@@ -583,3 +583,63 @@ Ze względu na to, że ówczensy projekt to biblioteka `cJSON`, zdecydowano się
 
   ![Zrzut ekranu z panelu dashboard](media/m41_dash.png)
       
+### Zajęcia 10: Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+#### Przygotowanie nowego obrazu
+- Utworzono dwa takie same obrazy **nginx** otagowane wersjami `v1` i `v2`. poleceniami: `docker build -t custom-nginx:v1 .` i `docker build -t custom-nginx:v2 .`
+```
+FROM nginx:latest
+COPY index.html /usr/share/nginx/html/index.html
+```
+- *Budowa jednego z obrazów*:
+
+  ![Budowa jednego z obrazów](media/m42_build.png)
+
+- Utworzono trzeci obraz ze zmodyfikowanym plikiem `Dockerfile.false` gdzie zapewniono iż obraz nie uruchomi się poprawnie.
+```
+FROM nginx:latest
+COPY index.html /usr/share/nginx/html/index.html
+CMD ["false"]
+```
+- Na jego podstawie zbudowano obraz w wersji trzeciej, poleceniem: `docker build -t custom-nginx:v3 .`.
+    - *Zrut ekranu budowania*:
+ 
+      ![Zrzut ekranu budowania](media/m43_false.png)
+
+- Utworzone obrazy załadowano do minikube poleceniem `minikube image load <nazwa obrazu>`.
+  - *Zrzut ekranu wczytania obrazów*:
+
+    ![Wczytanie obrazów](media/m44_load.png)
+
+#### Zmiany w deploymencie
+- Wprowadzano szereg zmian w deploymencie, ustawiano ilość replik kolejno na: 8, 1, 0, 4
+  - *Zrzut ekranu zmian*:
+ 
+    ![Zrzut ekranu zmian](media/m45_rep.png)
+
+- Zmiany weryfikowano w dashboard'zie. Poniżej kompilacja zrzutów ekranu przedstawiająca historie zmian.
+    ![Zmiany](media/m53_pods.png)
+
+    Zmiany replik nie definiują historii wdrożenia przez co historia rolloutu nie została zmieniona. Oba rekordy były w historii przed zmianą ilości replik.
+- Upewniono się, że polecenie kubectl korzysta poprawnego kontekstu
+
+    ![Kontekst](media/m46_context.png)
+- **Zresetowano historie** poprzez usunięcie aktywnego deploymenta i ponowne jego wprowadzenie poleceniami: `kubectl delete deployment nginx-custom-deployment` i `kubectl apply -f nginx-deploy.yaml`.
+
+    ![Zrzut ekranu](media/m47_reset.png)
+
+- Przeprowadzono rollout nowej wersji obrazu i zweryfikowano powodzenie zmiany obrazu poleceniem `kubectl describe deployment nginx-custom-deployment | grep Image:`.
+    ![Zrzut ekranu](media/m48_update.png)
+
+  Jak widać w historii deploymentu pojawił się nowy rekord.
+
+- Przeprowadzono rollout trzeciej, uszkodzonej, wersji obrazu.
+    ![Zrzut ekranu](media/m49_v3.png)
+
+- Zweryfikowano niepoprawność w dashboard'zie.
+    ![Zrzut ekranu](media/m50_failure.png)
+
+- Następnie przeprowadzono rollback do poprzedniej wersji (v2).
+    ![Zrzut ekranu](media/m51_rollback.png)
+
+- Stan replik po wszystkich zmianach:
+    ![Zrzut ekranu](media/m52_replica.png)
