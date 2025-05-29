@@ -547,3 +547,113 @@ Zmieniamy część pliku replicas następująco :
 spec:
   replicas: 4
 ```
+
+Oraz wykonujemy następującą konfiguracje 
+
+![alt text](screeny/yaml2konfiguracja.png)
+
+![alt text](screeny/yaml2testdziałania.png)
+
+Jak widać konfiguracja została przeprowadzona poprawnie.
+
+# Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+
+Stworzenie obrazów na podstawie httpd oraz jednego obrazu który kończy się błędem oraz wypchnięcie na DockerHub.
+
+```
+<html>
+    <body>
+        <h1>Sprawdzenie działania</h1>
+    </body>
+</html>
+```
+
+```
+FROM httpd:2.4
+COPY ./index.html /usr/local/apache2/htdocs/index.html
+
+```
+
+```
+FROM httpd:2.4
+COPY ./broken.sh /start.sh
+RUN chmod +x /start.sh
+CMD ["/start.sh"]
+```
+
+![alt text](screeny/dbuild1.png)
+
+![alt text](screeny/dbuild2.png)
+
+![alt text](screeny/dockerPush.png)
+
+Po wypchnięciu utworzono pliki .yaml dla obu wersji httpd:v1 oraz httpd:v2
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-deployment          # nowa nazwa
+  labels:
+    app: httpd
+spec:
+  replicas: 4                     # zostawiasz lub zmieniasz wg potrzeb
+  selector:
+    matchLabels:
+      app: httpd                  # musi się zgadzać z template.metadata.labels
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+        - name: httpd             # dowolna przyjazna nazwa kontenera
+          image: bambusscooby/httpd-custom:v1   # ← tu wskazujesz swój obraz
+          ports:
+            - containerPort: 80   # Apache domyślnie słucha na 80
+
+
+
+```
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-deployment          # nowa nazwa
+  labels:
+    app: httpd
+spec:
+  replicas: 4                     # zostawiasz lub zmieniasz wg potrzeb
+  selector:
+    matchLabels:
+      app: httpd                  # musi się zgadzać z template.metadata.labels
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+        - name: httpd             # dowolna przyjazna nazwa kontenera
+          image: bambusscooby/httpd-custom:v2   # ← tu wskazujesz swój obraz
+          ports:
+            - containerPort: 80   # Apache domyślnie słucha na 80
+
+```
+
+## 🌵 Aktualizacja pliku YAML z wdrożeniem i przeprowadzenie je ponownie po zastosowaniu następujących zmian
+
+#### Stworzenie pierwszej wersji
+
+![alt text](screeny/httpd4.png)
+
+#### Zwiększenie do 8
+![alt text](screeny/httpd8.png)
+#### Zmniejszenie do 1
+![alt text](screeny/httpd1.png)
+#### Zmniejszenie do 0
+![alt text](screeny/httpd0.png)
+#### Zwiększenie do 4
+
+![alt text](screeny/httpd4.png)
+![alt text](screeny/httpdv1-komendy.png)

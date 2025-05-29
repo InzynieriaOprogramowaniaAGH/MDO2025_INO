@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-deployment          # nowa nazwa
+  labels:
+    app: httpd
+spec:
+  replicas: 4                     # zostawiasz lub zmieniasz wg potrzeb
+  selector:
+    matchLabels:
+      app: httpd                  # musi się zgadzać z template.metadata.labels
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+        - name: httpd             # dowolna przyjazna nazwa kontenera
+          image: bambusscooby/httpd-custom:v2   # ← tu wskazujesz swój obraz
+          ports:
+            - containerPort: 80   # Apache domyślnie słucha na 80
+
+
