@@ -1,5 +1,229 @@
 # Sprawozdanie 3
 
+## Class008
+
+Utworzono nową maszynę wirtualną na której utworzono użytkownika ansible. Następnie po instalacji na nowej maszynie nadano nazwę hosta na  "ansible-target". Nazwę dotychczasowej maszyny zmieniono na "orchestrator"
+
+![ss32](screeny/class010/Screenshot_32.png)
+![ss33](screeny/class010/Screenshot_33.png)
+
+Zapewniono zainstalowanie pakietów sshd i tar
+
+![ss34](screeny/class010/Screenshot_34.png)
+
+Zainstalowano na maszynie głównej ansible z repozytoriów dystrybucji
+
+![ss35](screeny/class010/Screenshot_35.png)
+![ss36](screeny/class010/Screenshot_36.png)
+
+Dodano adres ip do etc/hosts
+
+![ss37](screeny/class010/Screenshot_37.png)
+
+Następnie skopiowano klucz ssh na drugą maszynę 
+
+![ss38](screeny/class010/Screenshot_38.png)
+
+Udało się połączyć do maszyny po ssh bez podawania hasła
+
+![ss39](screeny/class010/Screenshot_39.png)
+
+W ramach inwenteryzacji zadbano o poprawne połączenie między maszynami po ssh, bez hasła i po nazwie urządzenia zamiast IP. Następnie stworzono plik inwentaryzacyjny `inventory.ini` w którym umieszczono sekcje `Orchestrators` oraz `Endpoints`
+
+```ini
+[Orchestrators]
+orchestrator ansible_user=filnaw
+
+[Endpoints]
+ansible-target ansible_user=ansible
+```
+
+Następnie wysłano żądanie ping do wszystkich maszyn, który był pomyślny
+
+![ss40](screeny/class010/Screenshot_40.png)
+
+W ramach zdalnego wywołania procedur utworzono Ansible playbook, który:
+
+- wysyła żądanie ping do wszystkich maszyn
+- kopiuje plik inwentaryzacji na maszynę Endpoints
+- Ponowia operacje ping, dzięki czemu można porównać różnicę w wyjściu po dodaniu pliku ini
+- Aktualizuje pliki w systemie
+- Rejestruję usługi sshd i rngd
+- Przeprowadza operację względem maszyny z wyłączonym serwerem SSH, odpiętą kartą sieciową
+
+### Dodano również instalacje rngd, ponieważ to nie było na maszynie docelowej
+
+`procedury.yml`
+
+```yml
+---
+- name: Ping all reachable machines
+  hosts: Endpoints
+  gather_facts: no
+  tasks:
+    - name: Ping the target machine
+      ansible.builtin.ping:
+
+- name: Copy inventory file to target machines
+  hosts: Endpoints
+  gather_facts: no
+  tasks:
+    - name: Copy the inventory file
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /tmp/inventory.ini
+        mode: '0644'
+
+- name: Ping the target machines again
+  hosts: Endpoints
+  gather_facts: no
+  tasks:
+    - name: Ping the target machine again
+      ansible.builtin.ping:
+
+- name: Update packages on target machines
+  hosts: Endpoints
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Update all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+      ignore_errors: yes
+      register: update_result
+      ignore_errors: yes
+
+- name: Install rngd service on target machines
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Install rngd package
+      ansible.builtin.dnf:
+        name: rng-tools
+        state: present
+        
+- name: Restart services on target machines
+  hosts: Endpoints
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Restart sshd service
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+      ignore_errors: yes
+
+    - name: Restart rngd service
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+      ignore_errors: yes
+
+- name: Wait for machines to become reachable again
+  hosts: Endpoints
+  gather_facts: no
+  tasks:
+    - name: Wait for SSH port to become available
+      ansible.builtin.wait_for:
+        port: 22
+        timeout: 300
+        state: started
+        delay: 10
+
+```
+
+Wynik wykonania playbooka
+
+![ss41](screeny/class010/Screenshot_41.png)
+![ss42](screeny/class010/Screenshot_42.png)
+
+Następnie utworzono plik `deploy.yml` który za pomoca playbooka Ansible 
+
+- Buduje i uruchamia kontener sekcji Deploy z poprzednich zajęć
+- Pobiera z Docker Hub aplikację "opublikowaną" w ramach kroku Publish
+- Na maszynie docelowej instaluje Dockera
+- Weryfikuję łączność z kontenerem
+- Zatrzymuję i usuwa kontener
+
+```yml
+---
+- name: Deploy express app container on Fedora
+  hosts: Endpoints
+  become: true
+  vars:
+    container_name: express_app
+    image_name: filnaw/express-app
+    exposed_port: 3000
+
+  tasks:
+    - name: Install Docker (moby-engine and docker packages)
+      ansible.builtin.dnf:
+        name:
+          - moby-engine
+          - docker
+        state: present
+        update_cache: yes
+
+    - name: Start and enable Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Pull the Docker image from Docker Hub
+      community.docker.docker_image:
+        name: "{{ image_name }}"
+        source: pull
+
+    - name: Run the container from the image
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}"
+        state: started
+        restart_policy: always
+        published_ports:
+          - "{{ exposed_port }}:3000"
+
+    - name: Wait for HTTP response from the container
+      ansible.builtin.uri:
+        url: "http://localhost:{{ exposed_port }}/"
+        method: GET
+        return_content: yes
+        status_code: 200
+      register: result
+      retries: 10
+      delay: 3
+      until: result.status == 200
+
+    - name: Display HTTP status code
+      ansible.builtin.debug:
+        msg: "HTTP status: {{ result.status }}"
+
+    - name: Display first 300 characters of HTTP response content
+      ansible.builtin.debug:
+        msg: "{{ result.content[:300] }}"
+
+    - name: Stop the container
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: stopped
+
+    - name: Remove the container
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: absent
+
+```
+
+Działanie zaprezentowano w terminalu, jak widać obraz udało się zpullować, uruchomić, jego zawartość (index.html) wypisać, a następnie zatrzymać kontener i go usunąć
+
+![ss43](screeny/class010/Screenshot_43.png)
+![ss44](screeny/class010/Screenshot_44.png)
+
+
+
 ## Class010
 
 instalacja minikube 

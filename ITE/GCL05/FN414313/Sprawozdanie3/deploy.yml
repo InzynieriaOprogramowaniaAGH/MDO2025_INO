@@ -1,0 +1,66 @@
+---
+- name: Deploy express app container on Fedora
+  hosts: Endpoints
+  become: true
+  vars:
+    container_name: express_app
+    image_name: filnaw/express-app
+    exposed_port: 3000
+
+  tasks:
+    - name: Install Docker (moby-engine and docker packages)
+      ansible.builtin.dnf:
+        name:
+          - moby-engine
+          - docker
+        state: present
+        update_cache: yes
+
+    - name: Start and enable Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Pull the Docker image from Docker Hub
+      community.docker.docker_image:
+        name: "{{ image_name }}"
+        source: pull
+
+    - name: Run the container from the image
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}"
+        state: started
+        restart_policy: always
+        published_ports:
+          - "{{ exposed_port }}:3000"
+
+    - name: Wait for HTTP response from the container
+      ansible.builtin.uri:
+        url: "http://localhost:{{ exposed_port }}/"
+        method: GET
+        return_content: yes
+        status_code: 200
+      register: result
+      retries: 10
+      delay: 3
+      until: result.status == 200
+
+    - name: Display HTTP status code
+      ansible.builtin.debug:
+        msg: "HTTP status: {{ result.status }}"
+
+    - name: Display first 300 characters of HTTP response content
+      ansible.builtin.debug:
+        msg: "{{ result.content[:300] }}"
+
+    - name: Stop the container
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: stopped
+
+    - name: Remove the container
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: absent
