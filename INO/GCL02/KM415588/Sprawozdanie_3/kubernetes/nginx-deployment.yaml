@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-custom
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx-custom
+  template:
+    metadata:
+      labels:
+        app: nginx-custom
+    spec:
+      containers:
+      - name: nginx-custom
+        image: kacpermazur/nginx-custom:v1
+        ports:
+        - containerPort: 80
+        resources: {}
+
+        readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 5
