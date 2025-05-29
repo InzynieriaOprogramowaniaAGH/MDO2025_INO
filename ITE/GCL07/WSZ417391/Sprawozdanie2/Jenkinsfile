@@ -59,9 +59,8 @@ pipeline {
                         docker cp temp-build-container:/node-js-dummy-test/package.json .
                         docker cp temp-build-container:/node-js-dummy-test/src ./src
                         docker cp temp-build-container:/node-js-dummy-test/views ./views
-                        sh 'echo VERSION=$VERSION >> .env'
-                        sh 'sed -i "s/A Simple To-Do List App/A Simple To-Do List App - ${VERSION}/g" views/index.ejs'
                         docker rm temp-build-container
+                        sed -i "s/A Simple To-Do List App/A Simple To-Do List App - $VERSION/" views/index.ejs
                         docker build -f Dockerfile.deploy -t $IMAGE_DEPLOY:$VERSION .
                     '''
                 }
