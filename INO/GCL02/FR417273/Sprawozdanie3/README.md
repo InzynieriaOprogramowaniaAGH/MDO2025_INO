@@ -761,3 +761,64 @@ fi
         - *Połączone zrzuty ekranu strategii rolling update*:
          
          ![Recreate](media/m58_rolling.png)
+
+- Canary. Pozwala na bezpośrednią kontrole nad procesem poprzez utworzenie dwóch niezależnych zestawów podów na obu wersjach aplikacji, wykorzystując service do zazrzadzania połączeniami użytkownika.
+    - Plik `nginx-deploy-canary-v1.yaml` obsługujący wersje oryginalną:
+      ```
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: nginx-canary-v1
+          labels:
+            app: nginx-custom
+        spec:
+          replicas: 3
+          selector:
+            matchLabels:
+              app: nginx-custom
+              version: v1
+          template:
+            metadata:
+              labels:
+                app: nginx-custom
+                version: v1
+            spec:
+              containers:
+              - name: nginx-custom
+                image: custom-nginx:v1
+                ports:
+                - containerPort: 80
+                imagePullPolicy: Never
+      ```
+      
+    - Plik `nginx-deploy-canary-v2.yaml` obsługujący nową wersje:
+      ```
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: nginx-canary-v2
+          labels:
+            app: nginx-custom
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: nginx-custom
+              version: v2
+          template:
+            metadata:
+              labels:
+                app: nginx-custom
+                version: v2
+            spec:
+              containers:
+              - name: nginx-custom
+                image: custom-nginx:v2
+                ports:
+                - containerPort: 80
+                imagePullPolicy: Never
+      ```
+
+        - *Połączone zrzuty ekranu strategii canary*:
+         
+         ![Recreate](media/m59_canary.png)
