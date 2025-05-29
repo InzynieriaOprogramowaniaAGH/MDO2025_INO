@@ -1,0 +1,165 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nginx-deploy
+  namespace: default
+  uid: 4ce641f2-3865-475a-8d52-e695ca61aa73
+  resourceVersion: '8556'
+  generation: 9
+  creationTimestamp: '2025-05-29T17:25:27Z'
+  labels:
+    k8s-app: nginx-deploy
+  annotations:
+    deployment.kubernetes.io/revision: '5'
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"deployment.kubernetes.io/revision":"1"},"creationTimestamp":"2025-05-29T17:25:27Z","generation":1,"labels":{"k8s-app":"nginx-deploy"},"managedFields":[{"apiVersion":"apps/v1","fieldsType":"FieldsV1","fieldsV1":{"f:metadata":{"f:annotations":{".":{},"f:deployment.kubernetes.io/revision":{},"f:kubectl.kubernetes.io/last-applied-configuration":{}},"f:labels":{".":{},"f:k8s-app":{}}},"f:spec":{"f:progressDeadlineSeconds":{},"f:replicas":{},"f:revisionHistoryLimit":{},"f:selector":{},"f:strategy":{"f:rollingUpdate":{".":{},"f:maxSurge":{},"f:maxUnavailable":{}},"f:type":{}},"f:template":{"f:metadata":{"f:labels":{".":{},"f:k8s-app":{}},"f:name":{}},"f:spec":{"f:containers":{"k:{\"name\":\"nginx-deploy\"}":{".":{},"f:image":{},"f:imagePullPolicy":{},"f:name":{},"f:resources":{},"f:securityContext":{".":{},"f:privileged":{}},"f:terminationMessagePath":{},"f:terminationMessagePolicy":{}}},"f:dnsPolicy":{},"f:restartPolicy":{},"f:schedulerName":{},"f:securityContext":{},"f:terminationGracePeriodSeconds":{}}}}},"manager":"kubectl-client-side-apply","operation":"Update","time":"2025-05-29T17:25:27Z"},{"apiVersion":"apps/v1","fieldsType":"FieldsV1","fieldsV1":{"f:status":{"f:availableReplicas":{},"f:conditions":{".":{},"k:{\"type\":\"Available\"}":{".":{},"f:lastTransitionTime":{},"f:lastUpdateTime":{},"f:message":{},"f:reason":{},"f:status":{},"f:type":{}},"k:{\"type\":\"Progressing\"}":{".":{},"f:lastTransitionTime":{},"f:lastUpdateTime":{},"f:message":{},"f:reason":{},"f:status":{},"f:type":{}}},"f:observedGeneration":{},"f:readyReplicas":{},"f:replicas":{},"f:updatedReplicas":{}}},"manager":"kube-controller-manager","operation":"Update","subresource":"status","time":"2025-05-29T17:25:30Z"}],"name":"nginx-deploy","namespace":"default","resourceVersion":"6010","uid":"4ce641f2-3865-475a-8d52-e695ca61aa73"},"spec":{"progressDeadlineSeconds":600,"replicas":8,"revisionHistoryLimit":10,"selector":{"matchLabels":{"k8s-app":"nginx-deploy"}},"strategy":{"rollingUpdate":{"maxSurge":"25%","maxUnavailable":"25%"},"type":"RollingUpdate"},"template":{"metadata":{"creationTimestamp":null,"labels":{"k8s-app":"nginx-deploy"},"name":"nginx-deploy"},"spec":{"containers":[{"image":"nginx:1.27.5","imagePullPolicy":"IfNotPresent","name":"nginx-deploy","resources":{},"securityContext":{"privileged":false},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File"}],"dnsPolicy":"ClusterFirst","restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{},"terminationGracePeriodSeconds":30}}},"status":{"availableReplicas":4,"conditions":[{"lastTransitionTime":"2025-05-29T17:25:30Z","lastUpdateTime":"2025-05-29T17:25:30Z","message":"Deployment
+      has minimum
+      availability.","reason":"MinimumReplicasAvailable","status":"True","type":"Available"},{"lastTransitionTime":"2025-05-29T17:25:27Z","lastUpdateTime":"2025-05-29T17:25:30Z","message":"ReplicaSet
+      \"nginx-deploy-765dddb774\" has successfully
+      progressed.","reason":"NewReplicaSetAvailable","status":"True","type":"Progressing"}],"observedGeneration":1,"readyReplicas":4,"replicas":4,"updatedReplicas":4}}
+  managedFields:
+    - manager: kubectl-client-side-apply
+      operation: Update
+      apiVersion: apps/v1
+      time: '2025-05-29T17:32:40Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:kubectl.kubernetes.io/last-applied-configuration: {}
+          f:labels:
+            .: {}
+            f:k8s-app: {}
+        f:spec:
+          f:progressDeadlineSeconds: {}
+          f:revisionHistoryLimit: {}
+          f:selector: {}
+          f:strategy:
+            f:rollingUpdate:
+              .: {}
+              f:maxSurge: {}
+              f:maxUnavailable: {}
+            f:type: {}
+          f:template:
+            f:metadata:
+              f:labels:
+                .: {}
+                f:k8s-app: {}
+              f:name: {}
+            f:spec:
+              f:containers:
+                k:{"name":"nginx-deploy"}:
+                  .: {}
+                  f:imagePullPolicy: {}
+                  f:name: {}
+                  f:resources: {}
+                  f:securityContext:
+                    .: {}
+                    f:privileged: {}
+                  f:terminationMessagePath: {}
+                  f:terminationMessagePolicy: {}
+              f:dnsPolicy: {}
+              f:restartPolicy: {}
+              f:schedulerName: {}
+              f:securityContext: {}
+              f:terminationGracePeriodSeconds: {}
+    - manager: dashboard
+      operation: Update
+      apiVersion: apps/v1
+      time: '2025-05-29T17:48:41Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:spec:
+          f:replicas: {}
+          f:template:
+            f:spec:
+              f:containers:
+                k:{"name":"nginx-deploy"}:
+                  f:image: {}
+    - manager: kube-controller-manager
+      operation: Update
+      apiVersion: apps/v1
+      time: '2025-05-29T17:55:45Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:deployment.kubernetes.io/revision: {}
+        f:status:
+          f:availableReplicas: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Available"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Progressing"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:lastUpdateTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+          f:observedGeneration: {}
+          f:readyReplicas: {}
+          f:replicas: {}
+          f:updatedReplicas: {}
+      subresource: status
+spec:
+  replicas: 8
+  selector:
+    matchLabels:
+      k8s-app: nginx-deploy
+  template:
+    metadata:
+      name: nginx-deploy
+      creationTimestamp: null
+      labels:
+        k8s-app: nginx-deploy
+    spec:
+      containers:
+        - name: nginx-deploy
+          image: nginx:1.27.5
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+status:
+  observedGeneration: 9
+  replicas: 8
+  updatedReplicas: 8
+  readyReplicas: 8
+  availableReplicas: 8
+  conditions:
+    - type: Available
+      status: 'True'
+      lastUpdateTime: '2025-05-29T17:41:57Z'
+      lastTransitionTime: '2025-05-29T17:41:57Z'
+      reason: MinimumReplicasAvailable
+      message: Deployment has minimum availability.
+    - type: Progressing
+      status: 'True'
+      lastUpdateTime: '2025-05-29T17:55:45Z'
+      lastTransitionTime: '2025-05-29T17:25:27Z'
+      reason: NewReplicaSetAvailable
+      message: ReplicaSet "nginx-deploy-765dddb774" has successfully progressed.
