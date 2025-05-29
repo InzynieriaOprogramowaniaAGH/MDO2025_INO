@@ -667,4 +667,97 @@ fi
 - Przykład użycia skryptu:
   ![Skrypt](media/m54_script.png)
 
-- 
+#### Strategie wdrożenia
+- Utworzono prosty serwis poleceniem `kubectl apply -f nginx-service.yaml`.
+    
+    ```
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: nginx-service
+    spec:
+      selector:
+        app: nginx-custom
+      ports:
+        - port: 80
+          targetPort: 80
+      type: NodePort
+    ```
+    
+    ![Zrzut ekranu](media/m55_service.png)
+
+    - *Perpsektywa z dashbordu*:
+ 
+      ![Zrzut ekranu](media/m56_dashboard.png)
+
+- Przetestowano różne strategie wdrożen:
+    - Recreate.
+        - W tej strategi kubernetes usuwa wszystkie pody zanim uruchomi nowe co oznacza, że pojawi się pewien downtime
+        - Plik `nginx-deploy-recreate.yaml`
+          ```
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: nginx-custom-deployment
+              labels:
+                app: nginx-custom
+            spec:
+              replicas: 4
+              strategy:
+                type: Recreate
+              selector:
+                matchLabels:
+                  app: nginx-custom
+              template:
+                metadata:
+                  labels:
+                    app: nginx-custom
+                spec:
+                  containers:
+                  - name: nginx-custom
+                    image: custom-nginx:v1
+                    ports:
+                    - containerPort: 80
+                    imagePullPolicy: Never
+          ```
+        - *Połączone zrzuty ekranu strategii recreate*:
+         
+         ![Recreate](media/m57_recreate.png)
+
+- RollingUpdate. Stopniowa aktualizacja podów co pozwala na uniknięcie braku dostępu do usługi.
+    - `maxUnavailable: 2` -> maksymalnie dwa pody będa niedostępne.
+    - `maxSurge: 20%` -> maksymalnie może zostać tyle tymczasowych podów. 20% z 4 = 0.8, zaokrąglane w górę czyli 1.
+    - Plik `nginx-deploy-rollingupdate.yaml`
+      ```
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: nginx-custom-deployment
+          labels:
+            app: nginx-custom
+        spec:
+          replicas: 4
+          strategy:
+            type: RollingUpdate
+            rollingUpdate:
+              maxUnavailable: 2
+              maxSurge: 20%
+          selector:
+            matchLabels:
+              app: nginx-custom
+          template:
+            metadata:
+              labels:
+                app: nginx-custom
+            spec:
+              containers:
+              - name: nginx-custom
+                image: custom-nginx:v2
+                ports:
+                - containerPort: 80
+                imagePullPolicy: Never   
+      ```
+      
+        - *Połączone zrzuty ekranu strategii rolling update*:
+         
+         ![Recreate](media/m58_rolling.png)
