@@ -502,3 +502,588 @@ minikube dashboard
 Jeśli nie przeniesie nas bezpośrednio należy wprowadzić link w error - przykładowo w moim wypadku `http://127.0.0.1:35743/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/` wyświetli nam się następująca strona:
 
 ![kube_dash_start](./kubernetes/img/kub_disp.png)
+
+### 2️⃣ Wdrożenie
+
+Te część zadania realiozwać będę dla obrazu nginx - biblioteka chalk-pipe nie nadaje się do wystawiania serwisu http. Zacznijmy od modyfikacji nginx - w tym celu napisze plik html wyświetlający jakiś komunikat:
+
+```html
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head><title>NGINX zmodyfikowany</title></head>
+  <body><h1>Witaj w moim kontenerze NGINX!</h1></body>
+</html>
+```
+
+Następnie w celu zautymatyzowania tworzenia się dockerowego obrazu napisze krutki Dockerfile kopiujący zawartość pliku `index.html` do nginx:
+
+```dockerfile
+FROM nginx:latest
+COPY index.html /usr/share/nginx/html/index.html
+```
+
+Obraz musimy zbudować w dockerze minikube, ponieważ korzysta on ze swojej wirtualnej maszyny i swojego dockera a nie z lokalnych odpowiedników. 
+
+```bash
+eval $(minikube docker-env)
+docker build -t custom-nginx .
+```
+
+Wdrożenie podzielimy na dwa rodzaje:
+
+- ręczne:
+
+**Należy zadbać o uruchomienie minikube i znajdowanie się w jego środowisku** po czym możemy przejść do uruchomienia pojedyńczego poda z naszym obrazem nginx:  
+```bash
+kubectl run moja-nginxka-pod --image=custom-nginx --port=80 --labels app=moja-nginxka
+```  
+Następnie sprawdzimy czy pod się utworzył możemy to wykonać poleceniem:
+
+```bash
+kubectl get pods
+```
+
+Bądź w minikube dashboard:
+
+![dash1](./kubernetes/img/wynik_z.png)
+
+Możemy wyświetlić jak wygląda nasza strona forwardując port dla naszego poda - przykładowo:
+
+```bash
+kubectl port-forward pods/moja-nginxka-pod 8080:80
+```
+
+Po przejściu pod adres `localhost:8081` moim przypadku pojawia się następująca strona:
+
+![strona1](./kubernetes/img/custom_ngnx.png)
+
+- automatycznie
+
+Piszemy plik deploymentu `.yaml` :
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-custom
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-custom
+  template:
+    metadata:
+      labels:
+        app: nginx-custom
+    spec:
+      containers:
+      - name: nginx-custom
+        image: custom-nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+```
+
+Następnie możemy uruchomić wdrożenie:
+
+```bash
+kubectl apply -f nginx-deployment.yaml
+```
+
+Po sprawdzeniu statusu rollout-u:
+
+```bash
+kubectl rollout status deployment/nginx-custom
+```
+
+![stat1](./kubernetes/img/status_first_auto.png)
+
+Jak widzimy status jest pozytywny (za mały deployment żeby można było zaobserować zmiany), to samo zaobserwujemy w dashboardzie:
+
+![dash2](./kubernetes/img/second_dash.png)
+
+Jak widzimy powstał nowy pod (1 ponieważ w sekcji replicas w pliku `nginx-deployment.yaml` jest tak podane). Dalej eksponujemy deployment jako serwis:
+
+```bash
+kubectl expose deployment nginx-custom --type=ClusterIP --port=80 --target-port=80
+```
+
+Po sprawdzeniu komendą:
+
+```bash
+kubectl get svc
+```
+
+Otrzymamy listę serwisów. W dalszym kroku musimy sforwardować port, ale tym razem możemy bezpośrednio do serwisu a nie do poda:
+
+```bash
+kubectl port-forward service/nginx-deployment 8080:80
+```
+
+Po wejściu pod adres `localhost:8081` otrzymujemy ten sam wynik co wcześniej.
+
+## Labolatorium 11 - Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+
+### 1️⃣ Przygotowanie nowego obrazu
+
+Celem tego zadania jest eksperymentowanie z wprowadzaniem zmian w deployment. Jednym z tych eksperymentów jest przełączannie się między różnymi wersjami jednego obrazu. W tym celu musimy dopisać dwa nowe obrazy:
+
+- działający - taki sam jak utworzony na poprzednich zajęciach, ale drukujący co innego -
+przykładowe pliki `.html` oraz `Dockerfile`:
+
+```html
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head><title>NGINX zmodyfikowany</title></head>
+  <body><h1>Witaj w moim kontenerze NGINX WERSJAAAA 2!</h1></body>
+</html>
+```
+```dockerfile
+FROM nginx:latest
+COPY index.html /usr/share/nginx/html/index.html
+```
+
+- zepsuty - zwracający error:
+
+```dockerfile
+FROM node:18
+CMD ["node", "-e", "process.exit(1)"]
+```
+
+Następnie zbuduje wszystkie trzy obrazy i wypchne je na Docker Hub:
+
+```bash
+# v1
+cd nginx_custom
+docker build -t kacpermazur/nginx-custom:v1 .
+docker push kacpermazur/nginx-custom:v1
+
+# v2
+cd ../nginx-2
+docker build -t kacpermazur/nginx-custom:v2 .
+docker push kacpermazur/nginx-custom:v2
+
+# broken
+cd ../broken
+docker build -t kacpermazur/nginx-custom:broken .
+docker push kacpermazur/nginx-custom:broken
+```
+
+Po wejsciu na Docker Hub:
+
+![doc_hub](./kubernetes/img/dockerhub.png)
+
+### 2️⃣ Zmiany w deploymencie:
+
+Plik `nginx-deployment.yaml` zmieniam na następujący:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-custom
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx-custom
+  template:
+    metadata:
+      labels:
+        app: nginx-custom
+    spec:
+      containers:
+      - name: nginx-custom
+        image: kacpermazur/nginx-custom:v1
+        ports:
+        - containerPort: 80
+        resources: {}
+
+        readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 5
+```
+
+Oprócz zmian nazw i ilości podów dodaje sekcje `readinessProbe`, zgodnie z którą kuberenetes będzie wykonywał zapytanie `Get` na port 80 po 3 sekundach i będzie wykonywał powtażające się zapytanie co 5 sekund. Powoduje to, iż juz kuberentes będzie potrafił wykryć błędny obraz i zatrzymać jego deployment. Nasępnie taki deployment uruchamiamy już znanym poleceniem:
+
+```bash
+kubectl apply -f nginx-deployment.yaml
+```
+#### Zmiana ilości podów:
+
+Jednym z sposobów na to jest zmiana w pliku wdrożenia w sekcji replicas i każdorazwoe wykonywanie `kubectl apply`. Moim zdaniem o wiele przyjemniejsza jest funkcja:
+
+```bash
+kubectl scale deployment nginx-custom --replicas=x
+```
+Gdzie za x wstawiamy dowolną liczbę. Po kolei w naszym ćwiczeniu wykonuje eksperymenty dla 8 podów:
+
+![dash_pod8](./kubernetes/img/dash_8pods.png)
+
+![stat_pod8](./kubernetes/img/stat_8pod.png)
+
+Dla 0 podów
+
+![dash0](./kubernetes/img/pods_0.png)
+
+Dla 1:
+
+![stst_pod1](./kubernetes/img/pod_1.png)
+
+Udało mi sie złapać jescze wdrażające sie pody dla 8. Dla zmiany scali pody zawsze znikają i pojawiają sie nowe w liczbie x. Na końcu wracamy do liczby podów = 4.
+
+#### Wersja obrazu:
+
+Z obrazami możemy postępować tak samo jak z podami - albo możemy zmieniać plik wdrożenia, albo używać konkretnej komendy:
+
+```bash
+kubectl set image deployment/nginx-custom nginx-custom=kacpermazur/nginx-custom:VERS --record
+```
+
+Gdzie w VERS wprowadzamy wybraną przez nas nazwe obrazu. I tak dla pierwszego obrazu mamy takie same wyniki jak podczas poprzednich labolatoriów, natomiast dla dwóch pozostałych (**PAMIĘTAĆ O `kubectl port-forward`**):
+
+![v2_http](./kubernetes/img/wer2.png)
+
+Po zmiany obrazu na broken obserwujemy ciekawe zjawisko - po wywołaniu funkcji `kubectl rollout status`:
+
+![broken_stat](./kubernetes/img/broken_status.png)
+
+I trwa on nieskonczenie długo (do przerwania `CTRL+C`). Po wejsciu do dashboardu natomiast:
+
+![broken_dash](./kubernetes/img/broken.png)
+
+W celu cofnięcia do poprzedniej wersji możemy wykonać:
+
+```bash
+kubectl rollout undo deployment/nginx-custom
+```
+
+Wtedy kuberenets wraca nam do poprzedniego rolloutu możliwe jest również wyświetlenie historii rolloutów w konsoli (w dashboardzie zjechanie w dół)
+
+```bash
+kubectl rollout history deployment/nginx-custom
+```
+
+Przykładowo:
+
+![hist](./kubernetes/img/hist.png)
+
+Znając id rollout do którego chcemy się cofnąć możemy również wykonać:
+
+```bash
+kubectl rollout undo deployment/nginx-custom --to-revision=2
+```
+
+Jak widzimy w historii nie zapisały się polecenia donoszące się do zmiany ilości podów - wynika to z braku flagi `--record` na końcu.
+
+### 3️⃣ Kontrola wdrożenia:
+
+Celem jest napisanie skryptu sprawdzającego czy wdrożenie zdąży się wdrożyć w 60 sekund:
+
+```bash
+#!/bin/bash
+DEPLOYMENT="nginx-custom"
+TIMEOUT=60
+INTERVAL=5
+
+echo "Sprawdzanie rollout'u dla \"$DEPLOYMENT\"..."
+
+for ((i=0; i<TIMEOUT; i+=INTERVAL)); do
+  STATUS=$(minikube kubectl -- rollout status deployment/$DEPLOYMENT --timeout=5s 2>&1)
+
+  echo "$STATUS" | grep -q "successfully rolled out"
+  if [ $? -eq 0 ]; then
+    echo "✅ Rollout zakończony sukcesem."
+    exit 0
+  fi
+
+  echo "Czekam dalej... ($i/${TIMEOUT}s)"
+  sleep $INTERVAL
+done
+
+echo "❌ Rollout NIE zakończył się w czasie $TIMEOUT sekund."
+exit 1
+```
+
+Następnie uruchamiamy rollout z ogromną liczbą podów (np 200) i uruchamiamy skrypt check_rollout.sh:
+
+```bash
+kubectl scale deployment nginx-custom --replicas=200 --record
+bash check_rollout.sh 
+```
+
+Po wcześniejszych próbach wiem, że ta liczba dla mojego systemu jest wystarczająca abu deployment sie nie wykonał i/lub trwał więcej niż 60 s. W wyniku działania skryptu otrzymuje:
+
+![roll_fail](./kubernetes/img/rollout_fail_200.png)
+
+Zmieniamy ilość podów na mniejszą i uruchamiamy jeszcze raz. Tym Razem otrzymuje:
+
+![check_suc](./kubernetes/img/check_roll_suc.png)
+
+### 4️⃣ Strategie wdrożenia:
+
+W świecie Kubernetes, strategia wdrożenia to sposób, w jaki nowa wersja aplikacji jest wprowadzana do środowiska produkcyjnego, czyli jak system zastępuje działające już pody nowymi, bez (lub z minimalnym) zakłóceniem działania całej aplikacji.
+
+Strategia wdrożenia określa:
+
+- czy najpierw usunąć stare pody, a potem włączyć nowe,
+
+- czy robić to stopniowo, jeden po drugim,
+
+- czy testować nową wersję tylko na małej części ruchu.
+
+#### Główne strategie wdrożeń:
+
+<hr>
+<h2 align="center">───────────────<strong>Recreate</strong>───────────────</h2>
+<hr>
+
+Strategia Recreate jest najprostszą i najbardziej bezpośrednią metodą wdrożenia nowej wersji aplikacji. Polega na tym, że Kubernetes najpierw usuwa wszystkie działające pody, a dopiero potem uruchamia nowe zaktualizowane instancje. Choć ta metoda jest szybka i łatwa do zrozumienia, ma jedną istotną wadę: prowadzi do chwilowego przestoju w działaniu usługi, co może być niedopuszczalne w systemach o wysokiej dostępności. W celu jej przetestowania napisałem poniższy plik wdrożenia:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-custom
+  labels:
+    app: nginx-custom
+    version: v1
+spec:
+  strategy:
+    type: Recreate
+  replicas: 10
+  selector:
+    matchLabels:
+      app: nginx-custom
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: nginx-custom
+        tier: frontend
+    spec:
+      containers:
+      - name: nginx-custom
+        image: kacpermazur/nginx-custom:v1
+        ports:
+        - containerPort: 80
+        resources: {}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 5
+```
+
+Po czym standardowo zastosowałem poniższą komendę:
+
+```bash
+kubectl apply -f nginx-custom-recreate.yaml
+```
+
+Może wystąpić błąd mówiący, iż aplikacja nginx-custom już istnieje - deployment stworzony w poprzednim zadaniu. Wtedy albo należy zmienić nazwę aplikacji w etykiecie `app:` w pliku `nginx-custom-recreate.yaml` albo usunąć stary deployment i uruchomić nowy:
+
+```bash
+kubectl delete deployment/nginx-custom
+kubectl apply -f nginx-custom-recreate.yaml
+```
+
+Po utworzeniu nowego deploymentu widzimy, iż pody tworzą się standardowo:
+
+![rec1](./kubernetes/img/recreate1.png)
+
+Na zdjęciu jeden pod jest dużo starszy - wynika to z początkowego uruchomienia przeze mnie deploymentu z 1 podem i potem rescallingu do 10 - wtedy strategia recreate nie działa, bo nie ma po co (stare pody mają dobre oprogramowanie, więc wystarczy dodać nowe). Następnie zmieniłem obraz kontenera na `v2`:
+
+```bash
+kubectl set image deployment/nginx-custom nginx-custom=kacpermazur/nginx-custom:v2 --record
+```
+
+Po czym zaobserwowałem poniższy wynik w dashboardzie:
+
+![rec2](./kubernetes/img/recreate2.png)
+
+Jak widizmy wszystkie stare pody zostały usunięte i powstały nowe - wskazuje na to krótki czas created (kilka sekund, a nie jak na poprzednim kilkanaście i jeden pod 3 minutowy).
+
+
+<hr>
+<h2 align="center">───────────────<strong>Rolling Update</strong>───────────────</h2>
+<hr>
+
+Rolling Update to domyślna strategia w Kubernetesie i najbardziej zalecana w większości przypadków. W tym podejściu nowe pody są uruchamiane stopniowo, podczas gdy stare są po kolei usuwane, aż cały klaster przejdzie na nową wersję. Zachowana jest pełna dostępność aplikacji – zawsze działa przynajmniej część instancji. Parametry takie jak `maxUnavailable` (ile podów może być chwilowo niedostępnych) i `maxSurge` (ile dodatkowych podów może być utworzonych tymczasowo) pozwalają dostosować tempo aktualizacji do potrzeb. Napisałem w celu zasymulowania działania tej strategi nowy plik `nginx-deployment-rolling.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-custom
+  labels:
+    app: nginx-custom
+    version: v2
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
+  replicas: 10
+  selector:
+    matchLabels:
+      app: nginx-custom
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: nginx-custom
+        tier: frontend
+    spec:
+      containers:
+      - name: nginx-custom
+        image: kacpermazur/nginx-custom:v2
+        ports:
+        - containerPort: 80
+        resources: {}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 5
+```
+Zastsowałem wartość parametrów `maxUnavailable` = 2 oraz `maxSurge`=30%. Następnie postępujemy podobnie jak z strategią recreate - przebudowujemy deployment `kubectl apply -f nginx-deployment-rolling.yaml` - jeśli wystąpi błąd postępować tak samo jak w wypadku recreate. Po wprowadzeniu się wdrożenia obserwujemy poniższy stan:
+
+![roll1](./kubernetes/img/rolling1.png)
+
+Następnie zmieniamy wersje obrazu - **Uwaga w pliku deployment jest wersja v2 więc trzeba zmienić na v1**:
+
+```bash
+kubectl set image deployment/nginx-custom nginx-custom=kacpermazur/nginx-custom:v1 --record
+```
+
+![roll2](./kubernetes/img/rolling2_2.png)
+
+Jak widać na obrazku pody z tym samym czasem życia mieszczą się w naszych ograniczeniach - tj. `2 unactive + 30% maxSurge*10 = 5`. Nie udało mi się udokumentować zmian w czasie rzeczywistym - za szybko się zmieniały pody.
+
+<hr>
+<h2 align="center">───────────────<strong>Canary Deployment</strong>───────────────</h2>
+<hr>
+
+Canary Deployment – zaawansowana strategia, w której nowa wersja aplikacji jest wdrażana najpierw tylko na części infrastruktury – zwykle 1 z wielu podów. System monitoruje jej działanie, analizuje błędy i wydajność, a dopiero potem — jeśli wszystko działa poprawnie — rozszerza wdrożenie na pozostałe instancje. W tym celu napisałem dwie wersje plików wdrożeń - 
+
+`nginx-stable.yaml`
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-custom
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: nginx-custom
+        version: stable
+    spec:
+      containers:
+      - name: nginx-custom
+        image: kacpermazur/nginx-custom:v1
+        ports:
+        - containerPort: 80
+```
+
+`nginx-canary.yaml`
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-custom
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: nginx-custom
+        version: canary
+    spec:
+      containers:
+      - name: nginx-custom
+        image: kacpermazur/nginx-custom:v2
+        ports:
+        - containerPort: 80
+```
+
+Należy dodatkowo zadbać, aby był uruchomiony serwis nginx-service z poprzedniego zadania - jeśli nie został utworzony i uruchomiony poprzednio tworzymy go `kubectl apply -f nginx-service.yaml` po utworzeniu poniższego pliku:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: NodePort
+  selector:
+    app: nginx-custom
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+```
+
+Bedzie on obsługiwał aplikację nginx-custom i wszytskie jej pody - umożliwi to dostęp do nginx-stable i nginx-canary. Należy jej jednak uruchomić poleceniem `kubectl apply`. Po wejściu w zakłądke deployment:
+
+![dep1](./kubernetes/img/canary1.png)
+
+Pojawiają nam się oba deploymenty, w pods natomiast:
+
+![can11](./kubernetes/img/canary11.png)
+
+Jeśli udostępnimy port serwisowi nginx-service i wejdziemy na niego w przeglądarce możemy otrzymać zarówno jedną jak i druga wersję. Podczas symulacji możemy rescalować oba deploymenty i wtedy serwis też ma odpowiednią ilość podów jednego i drugiego deploymentu.
+
+<hr>
+<h2 align="center">───────────────<strong>Etykiety</strong>───────────────</h2>
+<hr>
+
+W powyższych zadaniach przewijało się czesto pojęcie etykiet - podstawowy mechanizm organizacji, selekcji i zarządzania zasobami w Kubernetesie. Są to pary `klucz–wartość` (key: value), które można przypisywać niemal każdemu obiektowi (Pod, Deployment, Service itd.). Dzięki etykietom możliwe jest:
+
+- grupowanie zasobów logicznie (np. app: nginx-custom),
+
+- rozróżnienie wersji aplikacji (np. version: v1, version: canary),
+
+- selektywne kierowanie ruchem przez serwisy,
+
+- śledzenie historii i strategii wdrożeń,
+
+- filtrowanie i automatyzacja za pomocą kubectl, CI/CD, Prometheusa czy Jenkins Pipelines.
+
+Etykiety są także kluczowe dla działania selektorów (matchLabels), które decydują, które pody należą do danego Deploymentu lub które instancje są obsługiwane przez Service.
+
+Przykładowe użyte przeze mnie etykiety i ich wyjaśnienie:
+
+| Klucz etykiety | Przykładowe wartości           | Opis funkcjonalny                                          |
+| -------------- | ------------------------------ | ---------------------------------------------------------- |
+| `app`          | `nginx-custom`                 | Identyfikator aplikacji – wspólny dla różnych wersji       |
+| `version`      | `v1`, `v2`, `canary`, `stable` | Rozróżnienie wersji aplikacji – wspiera rollout i canary   |
+| `strategy`     | `recreate`, `rolling`          | Informacja o strategii wdrożenia dla celów diagnostycznych |
+| `tier`         | `frontend`                     | Klasyfikacja warstwy aplikacyjnej (np. frontend/backend)   |
+
+## Użycie AI w sprawozdaniu:
+
+- generacja szablonów tabel do sprawozdania
+- kontrola poprawności napisanych plików
+- sprawdzenie logiki i poprawności myślenia
+- diagnostyka problemu i udostępnianie źródeł do rozwiązania ich
+- wygenerowanie nagłówków w formacie `HTML` do strategi
