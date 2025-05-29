@@ -92,12 +92,11 @@ Obrazy zbudowano i wypchnięto do Docker Hub:
 #### Wersja 1
 - Zedytowano plik [Deployment.yaml](files/lab1011/Deployment.yaml) (poprzednie materiały z laboratorium).  
   ![alt text](images/lab1011/Deploy1.png)
+  ![alt text](images/lab1011/8-1podsv1.png)
 - Uruchomiono Deployment z 8 Podami (wersja 1).  
-  ![alt text](images/lab1011/8-1podsv1.png)  
   ![alt text](images/lab1011/8podsv1dashboard.png)
 - Zmieniono liczbę Podów z 8 na 1:  
   ![alt text](images/lab1011/8-1podsv1.png)  
-  ![alt text](images/lab1011/8podsv1dashboard.png)
 - Zmieniono liczbę Podów z 1 na 0 (skalowanie do zera):  
   ![alt text](images/lab1011/1-0podsv1.png)
 - Przywrócono domyślną liczbę 4 Podów:  
