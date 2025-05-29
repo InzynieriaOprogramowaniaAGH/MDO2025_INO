@@ -9,7 +9,7 @@
 
 ## Ansible
 
-### 1. Instalacja zarządcy Ansible
+### Instalacja zarządcy Ansible
 
 #### Przygotowanie `ansible-target`
 
@@ -536,7 +536,7 @@ LD_LIBRARY_PATH=/usr/local/lib64 /opt/example/example
 
 ![Uruchomienie programu](zrzuty9/zrzut_ekranu14.png)
 
-## Wdrażanie na zarządzalne kontenery: Kubernetes
+## Wdrażanie na zarządzalne kontenery: Kubernetes (1)
 
 ### Instalacja klastra Kubernetesa
 
@@ -853,7 +853,57 @@ Po wpisaniu `localhost:8080` w przeglądarce, otrzymałem stronę domyślną ser
 W ramach tego etapu wdrożenie aplikacji zostało w pełni opisane za pomocą plików YAML i uruchomione w sposób deklaratywny z wykorzystaniem `kubectl apply`.\
 Dzięki temu możliwe jest łatwe powtórzenie, modyfikowanie i wersjonowanie konfiguracji — co jest kluczowym aspektem pracy z Kubernetesem i zgodne z podejściem „Infrastructure as Code”.
 
-### Przekucie wdrożenia manualnego w plik wdrożenia (część dalsza)
+## Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+
+### Przygotowanie nowego obrazu
+
+#### Wybór obrazu
+
+Celem zadania było przygotowanie obrazu w co najmniej trzech wersjach. Postanowiłem kontynuować pracę na obrazie `NGINX`, modyfikując go w kolejnych wariantach.
+
+- Wersja 1 – `my-nginx:v1`: Bazowy obraz `nginx:alpine`, bez zmian.
+
+```Dockerfile
+# Dockerfile.v1
+FROM nginx:alpine
+```
+
+- Wersja 2 – `my-nginx:v2`: Obraz z własną konfiguracją NGINX (zmieniona strona startowa poprzez `nginx.conf`).
+
+```Dockerfile
+# Dockerfile.v2
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+```
+
+- Wersja 3 – `my-nginx:v3`: Obraz, który po uruchomieniu natychmiast kończy działanie z błędem (przy użyciu komendy `false`).
+
+```Dockerfile
+# Dockerfile.v3
+FROM alpine
+CMD ["false"]
+```
+
+#### Publikacja obrazów na Docker Hub
+
+Wszystkie trzy obrazy zostały zbudowane lokalnie, a następnie opublikowane na moim koncie Docker Hub (`frigzer`):
+
+```bash
+docker build -t frigzer/my-nginx:v1 -f Dockerfile.v1 .
+docker push frigzer/my-nginx:v1
+
+docker build -t frigzer/my-nginx:v2 -f Dockerfile.v2 .
+docker push frigzer/my-nginx:v2
+
+docker build -t frigzer/my-nginx:v3 -f Dockerfile.v3 .
+docker push frigzer/my-nginx:v3
+```
+
+Poniżej widoczna lista obrazów dostępnych w moim repozytorium Docker Hub:
+
+![Wszystkie wersje obrazu na Docker Hub](zrzuty11/zrzut_ekranu1.png)
+
+### Zmiany w deploymencie
 
 3 Deploymenty dla 3 różnych wersji:
 
