@@ -692,7 +692,7 @@ fi
 
 - Przetestowano różne strategie wdrożen:
     - Recreate.
-        - W tej strategi kubernetes usuwa wszystkie pody zanim uruchomi nowe co oznacza, że pojawi się pewien downtime
+        - W tej strategii kubernetes usuwa wszystkie pody zanim uruchomi nowe co oznacza, że pojawi się pewien downtime
         - Plik `nginx-deploy-recreate.yaml`
           ```
             apiVersion: apps/v1
@@ -762,7 +762,8 @@ fi
          
          ![Recreate](media/m58_rolling.png)
 
-- Canary. Pozwala na bezpośrednią kontrole nad procesem poprzez utworzenie dwóch niezależnych zestawów podów na obu wersjach aplikacji, wykorzystując service do zazrzadzania połączeniami użytkownika.
+- Canary. Pozwala na bezpośrednią kontrole nad procesem poprzez utworzenie dwóch niezależnych zestawów podów na obu wersjach aplikacji. `Service` z odpowiednim selektorem etykiet umożliwia równoczesne kierowanie ruchu do obu wersji.
+    - Do skalowania użyto polecenia `kubectl scale deployment <nazwa deploymentu> --replicas=<liczba replik>`. Gdzie stopniowo zwiększano liczbe replik w deploymencie *v1* i zmniejszano tą liczbę w deploymencie *v2*.
     - Plik `nginx-deploy-canary-v1.yaml` obsługujący wersje oryginalną:
       ```
         apiVersion: apps/v1
@@ -822,3 +823,11 @@ fi
         - *Połączone zrzuty ekranu strategii canary*:
          
          ![Recreate](media/m59_canary.png)
+
+##### Porównanie strategii
+| Strategia       | Opis działania                                                                 | Zalety                                      | Wady                                       |
+|-----------------|----------------------------------------------------------------------------------|---------------------------------------------|--------------------------------------------|
+| Recreate        | Usuwa wszystkie stare Pody, a dopiero potem uruchamia nowe                     | Prosta, szybka                              | Wprowadza downtime |
+| Rolling Update  | Stopniowo podmienia stare Pody na nowe                                          | Bez przerw w działaniu, automatyczna        | Mniej kontroli nad procesem                 |
+| Canary          | Uruchamia równolegle dwa Deploymenty i rozdziela ruch ręcznie     | Duża kontrola, możliwość testu nowej wersji przed pełną migracją | Wymaga ręcznego skalowania i zarządzania   |
+
