@@ -1,0 +1,50 @@
+febru@ubsrv:~/MDO2025_INO/ITE/GCL05/KL417218/Sprawozdanie3/ansible$ ansible-playbook -i inventory.yml redis_playbook.yml --ask-become-pass
+BECOME password: 
+
+PLAY [Endpoints] 
+
+TASK [Gathering Facts] 
+ok: [ansible-target]
+
+TASK [deploy_redis : Create temporary directory for Redis deployment] 
+changed: [ansible-target]
+
+TASK [deploy_redis : Copy Redis .deb package to remote machine] 
+changed: [ansible-target]
+
+TASK [deploy_redis : Ensure Docker is installed] 
+changed: [ansible-target]
+
+TASK [deploy_redis : Start Docker] 
+ok: [ansible-target]
+
+TASK [deploy_redis : Create container] 
+changed: [ansible-target]
+
+TASK [deploy_redis : Create Docker network for Redis] 
+changed: [ansible-target]
+
+TASK [deploy_redis : Create Dockerfile for Redis] 
+changed: [ansible-target]
+
+TASK [deploy_redis : Build Redis Docker image] 
+changed: [ansible-target]
+
+TASK [deploy_redis : Create Redis data directory] 
+changed: [ansible-target]
+
+TASK [deploy_redis : Stop existing Redis container if running] 
+ok: [ansible-target]
+
+TASK [deploy_redis : Run Redis container] 
+changed: [ansible-target]
+
+TASK [deploy_redis : Wait for Redis container to be ready] 
+ok: [ansible-target]
+
+TASK [deploy_redis : Display Redis deployment status] 
+ok: [ansible-target] => {
+    "msg": [
+        "Redis deployment completed successfully!"
+    ]
+}

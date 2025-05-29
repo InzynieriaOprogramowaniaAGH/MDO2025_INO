@@ -1,2 +1,3 @@
 ---
-# vars file for deploy_redis
+# Role-specific variables
+redis_temp_dir: "/tmp/redis-deploy"

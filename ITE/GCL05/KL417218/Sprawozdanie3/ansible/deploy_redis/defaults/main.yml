@@ -1,2 +1,8 @@
 ---
 # defaults file for deploy_redis
+redis_deb_package: "redis-deb.deb"
+redis_port: 6379
+redis_container_name: "redis-container"
+redis_image_name: "redis-custom"
+redis_data_dir: "/opt/redis-data"
+docker_network: "redis-network"

@@ -1,4 +1,18 @@
 ---
+
+- name: Create temporary directory for Redis deployment
+  ansible.builtin.file:
+    path: "{{ redis_temp_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy Redis .deb package to remote machine
+  ansible.builtin.copy:
+    src: "{{ redis_deb_package }}"
+    dest: "{{ redis_temp_dir }}/{{ redis_deb_package }}"
+    mode: '0644'
+  register: copy_result
+
 - name: Ensure Docker is installed
   ansible.builtin.package:
     name: docker.io
@@ -17,4 +31,62 @@
     state: started
     command: sleep infinity
     tty: yes
-# Dokończyć konfigurację Redis w kontenerze
+
+- name: Create Docker network for Redis
+  community.docker.docker_network:
+    name: "{{ docker_network }}"
+    state: present
+
+- name: Create Dockerfile for Redis
+  ansible.builtin.template:
+    src: Dockerfile.j2
+    dest: "{{ redis_temp_dir }}/Dockerfile"
+    mode: '0644'
+
+- name: Build Redis Docker image
+  community.docker.docker_image:
+    name: "{{ redis_image_name }}"
+    build:
+      path: "{{ redis_temp_dir }}"
+    source: build
+    state: present
+    force_source: yes
+
+- name: Create Redis data directory
+  ansible.builtin.file:
+    path: "{{ redis_data_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Stop existing Redis container if running
+  community.docker.docker_container:
+    name: "{{ redis_container_name }}"
+    state: absent
+  ignore_errors: yes
+
+- name: Run Redis container
+  community.docker.docker_container:
+    name: "{{ redis_container_name }}"
+    image: "{{ redis_image_name }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "{{ redis_port }}:{{ redis_port }}"
+    volumes:
+      - "{{ redis_data_dir }}:/data"
+    networks:
+      - name: "{{ docker_network }}"
+
+- name: Wait for Redis container to be ready
+  ansible.builtin.command:
+    cmd: docker ps -f name={{ redis_container_name }}
+  register: container_status
+  until: "'Up' in container_status.stdout"
+  retries: 5
+  delay: 3
+  changed_when: false
+
+- name: Display Redis deployment status
+  ansible.builtin.debug:
+    msg:
+      - "Redis deployment completed successfully!"
