@@ -79,7 +79,7 @@ jobs:
 Powyższy plik definiuje nastęoującą akcje:
 - Warunki uruchomienia:
   - push do gałęzi `master` lub
-  - pull request do gałeźi `master` lub
+  - pull request do gałęzi `master` lub
   - manualne uruchomienie z interfejsu GitHub.
 - Job build:
     - Uruchomiony na maszynie Ubuntu.
@@ -135,3 +135,50 @@ Powyższy plik definiuje nastęoującą akcje:
               name: cjson-rpm
               path: "*.rpm"
           ```
+
+Utworzony plik zacommitowano co wywołało jego uruchomienie:
+![Build](media/m4_build.png)
+
+oraz utworzyło artefakt:
+![Artifact](media/m5_artifact.png)
+
+## Pobranie i test artefaktu
+Utworzono nowy **Personal Acces Token**
+
+![PAT](media/m6_pat.png)
+
+Zainstalowano oficjalną usługę **Github CLI**, `gh` i przeprowadzono autentyfikacje za pomocą tokenu.
+
+![gh](media/m7_gh.png)
+
+Pobrano i zainstalowano pakiet poprzez użycie poleceń: `gh run download 15331720525 --repo Filip-Rak/cJSON` i `sudo rpm -i cjson-rpm/cjson-1.0-1.x86_64.rpm`.
+
+![Instalacja](media/m8_inst.png)
+
+Przeprowadzono weryfikacje działania z plikiem testowym `deploy.c`:
+```
+#include <stdio.h>
+#include <cjson/cJSON.h>
+
+int main() {
+    const char *json = "{\"name\":\"Github Actions\",\"type\":\"CI\"}";
+    cJSON *root = cJSON_Parse(json);
+
+    if (root == NULL) {
+        printf("Parse error\n");
+        return 1;
+    }
+
+    cJSON *name = cJSON_GetObjectItemCaseSensitive(root, "name");
+    if (cJSON_IsString(name) && (name->valuestring != NULL)) {
+        printf("Parsed name: %s\n", name->valuestring);
+    }
+
+    cJSON_Delete(root);
+    return 0;
+}
+```
+
+Kod źródłowy skompilowano i uruchomiono potwierdzając poprawne działanie biblioteki:
+
+![Test](media/m9_test.png)
