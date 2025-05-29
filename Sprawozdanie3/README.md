@@ -1,4 +1,7 @@
 ## Sprawozdanie 3 DevOps
+#Zajecia 8 
+
+
 # Zajęcia9 
 Pliki odpowiedzi dla wdrożeń nienadzorowanych
 
