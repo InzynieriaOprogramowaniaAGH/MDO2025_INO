@@ -2,7 +2,8 @@
 - Przedmiot: DevOps
 - Kierunek: Inżynieria Obliczeniowa
 - Autor: Filip Rak
-- Data: 29/04/2025
+- Data rozpoczęcia: 29/04/2025
+- Data zakończenia: 29/05/2025
 
 ## Przebieg Ćwiczeń
 ### Zajęcia 8: Instalacja zarządcy Ansible
@@ -831,3 +832,11 @@ fi
 | Rolling Update  | Stopniowo podmienia stare Pody na nowe                                          | Bez przerw w działaniu, automatyczna        | Mniej kontroli nad procesem                 |
 | Canary          | Uruchamia równolegle dwa Deploymenty i rozdziela ruch ręcznie     | Duża kontrola, możliwość testu nowej wersji przed pełną migracją | Wymaga ręcznego skalowania i zarządzania   |
 
+
+
+## Wykorzystanie Sztucznej Intelginecji w ramach zajęć
+- W ramach zajęć korzystano z modelu `GPT-4o` w celach konsultacji związanych z teorią składnią oraz weryfikacji spełnienia założeń zadań.
+- Sztuczna inteligencja była zaopatrzona w ogólny kontekst poleceń oraz środowiska.
+- Odpowiedzi AI nie były weryfikowane, zapytany o źródła, GPT by je zwyczajnie wymyślił :)
+- Bot za każdym razem musiał wszystko wyjaśnić (w przypadku sugerowanych poleceń będą to m.i.n wszystkie opcje i działanie) oraz przedstawić swój tok 'myślenia'.
+- Nie kopiowano niczego od SI. Wszelkie zwrócone polecenia były intepretowane i ręcznie pisane z uwagą na własne potrzeby i preferencje.
