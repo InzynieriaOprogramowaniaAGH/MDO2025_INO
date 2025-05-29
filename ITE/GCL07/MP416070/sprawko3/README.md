@@ -478,3 +478,72 @@ Czyli idąc krok po kroku:
 Sekcja %post to kluczowy element dla pliku kickstartowego przy automatyzacji instalacji aplikacji z pipeline'u.
 
 # Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+
+## Instalacje minikube
+
+![alt text](screeny/curl_minikube.png)
+## Uruchomienie klastra
+
+![alt text](<screeny/minikube start.png>)
+## Zaopatrzenie się w polecenie kubectl oraz dodanie aliasu
+
+![alt text](screeny/alias.png)
+![alt text](screeny/daszboard1.png)
+![alt text](screeny/daszboard2.png)
+
+## Uruchamianie oprogramowania
+
+```
+minikube kubectl -- run nginx-pod --image=nginx --port=80 --labels app=nginx-deployment
+```
+
+Utworzony zostaje pod oraz następnie jest skalowany do 12 instancji, przez zakładke deployments w dashboard minikube.
+![alt text](screeny/pods1.png)
+![alt text](screeny/scale.png)
+![alt text](screeny/podsyskalowane.png)
+
+![alt text](screeny/workloads.png)
+
+## Wyprowadzenie portu
+
+![alt text](screeny/portFoward.png)
+
+![alt text](screeny/ngixDZIAŁĄAAAAAA.png)
+
+## Utworzenie pliku yaml oraz kubectl apply
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+```
+
+![alt text](screeny/yaml1.png)
+
+## Rozszerzenie pliku yaml o 4 repliki 
+
+Zmieniamy część pliku replicas następująco :
+
+```
+spec:
+  replicas: 4
+```
