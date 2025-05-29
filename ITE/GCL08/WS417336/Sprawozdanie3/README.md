@@ -266,7 +266,7 @@ systemctl enable docker
 ![alt text](<zdjecia/lab 9/Zrzut ekranu 2025-05-21 134512.png>)
 
 
-# Lab 9
+# Lab 10
 
 **Laby zaczęto od pobrania kubernetesa**
 
@@ -344,3 +344,153 @@ spec:
 ![alt text](<zdjecia/lab 10/Zrzut ekranu 2025-05-20 192304.png>)
 
 **Do poprawnego działania tych programów należało wyeksponować porty w zakładce "ports" Visual Studio Code**
+
+
+# Lab 11
+
+**Laby nie poszły pomyślnie. Największym problemem było wysłanie obrazu zmienionej aplikacji w wersji v2 na dockerhuba. Samo wstawienie tego obrazu nie jest problemem, lecz edytowanie programu tak aby byly widoczne zmiany, a nastepnie przesłanie tych obrazów tak aby były widoczne zmiany. Nieudane próby zaliczały chociażby próbę bezpośredniego edytowania dockerfile'ów oraz pobranie go lokalnie tak aby zmienić pliki źródłowe aby nastepnie stworzony obraz wysłać na Dockerhuba. I gdy te zmiany były widoczne lokalnie, to w przesłanym obrazie już nie. Przy okazji totalnie mi się także totalnie wywalił Jenkins poprzez problemy z repozytorium. W trakcie prób, wersja v2 zaczeła zwracać błąd, w związku z tym potraktuje ją jako tą wersję "v3", gdyż do v2 nigdy nie udało mi się dojść.**
+
+**Stworzono yamle do wersji v1 oraz v2.**
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-app-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: express-app
+  template:
+    metadata:
+      labels:
+        app: express-app
+    spec:
+      containers:
+        - name: express-app
+          image: zbogenza/express-app:v1 //Zmieniamy tutaj v1 na v2
+          ports:
+            - containerPort: 3000
+```
+
+**Przykłady zwiększania oraz zmniejszania liczby replik:**
+
+
+
+**Widać również iż przy zmianie z wersji działającej na zwracającą błąd liczba podów długo się aktualizuje (momentami ma więcej niż określoną liczbę podów)**
+
+
+
+**Dodano skrypt bashowy który sprawdziłbym o ile działałby mi Jenkins.**
+
+```
+#!/bin/bash
+DEPLOYMENT_NAME="express-app"
+NAMESPACE="default"
+TIMEOUT=60
+
+echo "Oczekwianie"
+kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE --timeout=${TIMEOUT}s
+
+if [ $? -eq 0 ]; then
+  echo "Wdrożenie zakończone sukcesem."
+else
+  echo "Oczekiwany czas minał, wdrożenie nie powiodło się."
+fi
+```
+
+**Dodano również strategie wdrożenia**
+
+**Rolling:**
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-app-rolling
+  labels:
+    app: express-app
+    strategy: rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
+  selector:
+    matchLabels:
+      app: express-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: express-app
+        version: v1
+    spec:
+      containers:
+        - name: express-app
+          image: zbogenza/express-app:v1
+          ports:
+            - containerPort: 3000
+```
+
+
+**Recreate**
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-app-recreate
+  labels:
+    app: express-app
+    strategy: recreate
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: express-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: express-app
+        version: v1
+    spec:
+      containers:
+        - name: express-app
+          image: zbogenza/express-app:v1
+          ports:
+            - containerPort: 3000
+```
+
+
+**Canary**
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-app-canary
+  labels:
+    app: express-app
+    track: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: express-app
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: express-app
+        version: v2
+    spec:
+      containers:
+        - name: express-app
+          image: zbogenza/express-app:v2
+          ports:
+            - containerPort: 3000
+```
