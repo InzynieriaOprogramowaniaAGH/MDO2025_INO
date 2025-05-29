@@ -8,22 +8,22 @@
     - name: Copy inventory file to Endpoints
       ansible.builtin.copy:
         src: ./inventory.yml
-        dest: /home/ansible/
+        dest: /home/ansible/inventory.yml
         owner: ansible
 
     - name: Try to copy again
       ansible.builtin.copy:
         src: ./inventory.yml
-        dest: /home/ansible/
+        dest: /home/ansible/inventory.yml
         owner: ansible
 
     - name: Update packages
       ansible.builtin.package:
         state: latest
 
-    - name: Restart sshd
+    - name: Restart ssh
       ansible.builtin.service:
-        name: sshd
+        name: ssh
         state: restarted
 
     - name: Restart rng-tools

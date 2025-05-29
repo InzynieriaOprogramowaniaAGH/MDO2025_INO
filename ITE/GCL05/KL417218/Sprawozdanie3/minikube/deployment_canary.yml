@@ -1,0 +1,81 @@
+---
+# Stable (10%)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-stable-dep
+  labels:
+    app: redis
+    version: stable
+    strategy: canary
+spec:
+  replicas: 9
+  selector:
+    matchLabels:
+      app: redis
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: redis
+        version: stable
+    spec:
+      containers:
+      - name: redis-container
+        image: februu/mdo-redis:1.0
+        ports:
+        - containerPort: 6379
+        readinessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+# Canary (10%)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-canary-dep
+  labels:
+    app: redis
+    version: canary
+    strategy: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: redis
+        version: canary
+    spec:
+      containers:
+      - name: redis-container
+        image: februu/mdo-redis:1.1
+        ports:
+        - containerPort: 6379
+        readinessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-canary-service
+  labels:
+    app: redis
+    strategy: canary
+spec:
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+    targetPort: 6379
+    nodePort: 30086
+    protocol: TCP
+  type: NodePort

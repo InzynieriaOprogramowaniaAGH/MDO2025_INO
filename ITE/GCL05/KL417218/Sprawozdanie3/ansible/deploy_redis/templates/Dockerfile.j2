@@ -1,0 +1,21 @@
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install -y \
+    wget \
+    gnupg \
+    lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY {{ redis_deb_package }} {{ redis_temp_dir }}/
+
+RUN dpkg -i {{ redis_temp_dir }}/{{ redis_deb_package }} || apt-get install -f -y
+
+RUN mkdir -p /data
+
+EXPOSE {{ redis_port }}
+
+CMD ["redis-server", "--protected-mode", "no", "--dir", "/data"]
+
