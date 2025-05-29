@@ -1,0 +1,89 @@
+---
+- name: Upewnij się, że Docker jest zainstalowany
+  ansible.builtin.dnf:
+    name: docker
+    state: present
+
+- name: Uruchom i włącz docker
+  ansible.builtin.systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Utwórz katalog na aplikację
+  ansible.builtin.file:
+    path: "{{ app_dir }}"
+    state: directory
+    owner: ansible
+    group: ansible
+    mode: '0755'
+
+- name: Skopiuj archiwum .tgz na host
+  ansible.builtin.copy:
+    src: "{{ app_tgz }}"
+    dest: "{{ app_dir }}/{{ app_tgz }}"
+    owner: ansible
+    group: ansible
+    mode: '0644'
+
+- name: Rozpakuj archiwum aplikacji
+  ansible.builtin.unarchive:
+    src: "{{ app_dir }}/{{ app_tgz }}"
+    dest: "{{ app_dir }}"
+    remote_src: yes
+    owner: ansible
+
+- name: Wylistuj strukturę katalogu aplikacji
+  ansible.builtin.command:
+    cmd: ls -R "{{ app_dir }}"
+  register: ls_output
+
+- name: Debug – struktura katalogu
+  ansible.builtin.debug:
+    var: ls_output.stdout_lines
+
+- name: Skopiuj Dockerfile
+  ansible.builtin.template:
+    src: Dockerfile.j2
+    dest: "{{ app_dir }}/package/Dockerfile"
+    owner: ansible
+    mode: '0644'
+
+- name: Zbuduj obraz z katalogu aplikacji
+  community.docker.docker_image:
+    name: "{{ image_name }}"
+    tag: latest
+    source: build
+    build:
+      path: "{{ app_dir }}/package"
+      dockerfile: Dockerfile
+
+- name: Usuń stary kontener, jeżeli istnieje
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    state: absent
+    force_kill: yes
+
+- name: Uruchom kontener aplikacji
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ image_name }}"
+    state: started
+    restart_policy: always
+    ports: "{{ ports }}"
+
+- name: Poczekaj, aż port aplikacji będzie otwarty
+  ansible.builtin.wait_for:
+    port: "{{ ports[0].split(':')[0] }}"
+    state: started
+    timeout: 60
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Sprawdź HTTP 200 na aplikacji (remote check)
+  ansible.builtin.uri:
+    url: "http://localhost:3000/"
+    status_code: 200
+    return_content: no
+  delegate_to: "{{ inventory_hostname }}"
+
+# tasks file for roles/tgz_deploy
