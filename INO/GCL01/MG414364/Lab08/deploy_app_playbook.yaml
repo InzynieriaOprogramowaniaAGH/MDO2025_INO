@@ -1,0 +1,10 @@
+- name: Wdrożenie aplikacji RustScan na Endpoints
+  hosts: Endpoints
+  become: no
+  vars:
+    rustscan_binary_path: "files/rustscan"
+    rustscan_arguments: "-a 127.0.0.1" # Domyślne argumenty
+    base_docker_image_for_rustscan: "ubuntu:latest"
+
+  roles:
+    - deploy_rustscan_app

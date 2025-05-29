@@ -1,9 +1,29 @@
-- name: My first play
-  hosts: Orchestrators
+- name: Podstawowa konfiguracja i testy
+  hosts: all
+  become: yes # sudo
   tasks:
-   - name: Ping my hosts
-     ansible.builtin.ping:
+    - name: Ping wszystkich hostów
+      ansible.builtin.ping:
 
-   - name: Print message
-     ansible.builtin.debug:
-       msg: Hello world
+    - name: Kopiuj plik inwentaryzacji na maszyny Endpoints
+      ansible.builtin.copy:
+        src: inventory.ini
+        dest: /home/ansible/inventory_copied.ini 
+      when: inventory_hostname in groups['Endpoints'] # Wykonaj tylko na hostach z grupy Endpoints
+
+    - name: Zaktualizuj pakiety w systemie (Debian/Ubuntu) # Wolę na wszelki wypadek nie aktualizować fedory...
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: dist
+      when: ansible_os_family == "Debian"
+
+    - name: Zrestartuj usługę sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+    - name: Zrestartuj usługę rngd
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+      ignore_errors: yes
