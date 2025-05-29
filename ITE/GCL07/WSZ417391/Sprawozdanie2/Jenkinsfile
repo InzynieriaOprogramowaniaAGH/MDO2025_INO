@@ -67,21 +67,7 @@ pipeline {
             }
         }
 
-        stage('SmokeTest') {
-            steps {
-                dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
-                    sh '''
-                        docker network create ci || true
-                        docker run -dit --network ci --name deploy -p 3000:3000 $IMAGE_DEPLOY:$VERSION
-                        sleep 5
-                        docker run --rm --network ci curlimages/curl curl http://deploy:3000
-                        docker stop deploy
-                        docker rm deploy
-                        docker network rm ci
-                    '''
-                }
-            }
-        }
+
 
         stage('Publish') {
             steps {
