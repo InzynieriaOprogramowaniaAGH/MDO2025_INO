@@ -1,5 +1,7 @@
 1.	Utworzenie instancji Jenkins z docker
+
 a)	Utworzenie instancji Jenkins zostało wykonane w ramach poprzedniego sprawozdania.
+
 b)	Aby rozpocząć pracę z Jenkinsem uruchomiono następujące kontenery:
  
  ![alt text](Obraz1.png)
@@ -9,7 +11,9 @@ b)	Aby rozpocząć pracę z Jenkinsem uruchomiono następujące kontenery:
 c)	Uruchomienie strony.
 
 2.	Zadania wstępne - uruchomienie.
+
 a)	Utworzenie projektu, który wyświetla uname.
+
 Wybieramy z menu na stronie „+ nowy projekt”
 
  ![alt text](Obraz3.png)
@@ -29,6 +33,7 @@ Klikamy zapisz i klikamy uruchom w menu po lewej stronie
 Dostajemy komunikat z zielona ikonka co oznacza ze wszystko uruchomiło się poprawnie.
 
 b)	Utwórz projekt który zwraca błąd, gdy godzina jest nieparzysta.
+
 Powtarzamy powyższe kroki. Zmieniamy jedynie polecenie.
 
 #!/bin/bash
@@ -46,6 +51,7 @@ Otrzymany wynik:
  ![alt text](Obraz8.png)
 
 c)	Pobranie w projekcie obrazu kontenera ubuntu, stosująć docker pull.
+
 Ponownie powtarzamy kroki, zmieniamy treść polecenia powłoki.
 
  ![alt text](Obraz9.png)
@@ -53,12 +59,15 @@ Ponownie powtarzamy kroki, zmieniamy treść polecenia powłoki.
  ![alt text](Obraz10.png)
 
 3.	Zadania wstępne – pipeline.
+
 Utwórz nowy obiekt typu pipeline.
 
  ![alt text](Obraz11.png)
  
 Wpisz treść pipeline'u bezpośrednio do obiektu.
+
 Spróbuj sklonować repo przedmiotowe (MDO2025_INO).
+
     stages {
         stage('Clone repository') {
             steps {
@@ -69,6 +78,7 @@ Spróbuj sklonować repo przedmiotowe (MDO2025_INO).
         }
 
 Zrób checkout do swojego pliku Dockerfile (na osobistej gałęzi) właściwego dla buildera wybranego w poprzednim sprawozdaniu programu.
+
         stage('Checkout Dockerfile') {
             steps {
                 script {
@@ -91,6 +101,7 @@ Zbuduj Dockerfile.
  
 
 Cały pipeline:
+
 pipeline {
     agent any
     
@@ -133,6 +144,7 @@ Uruchom stworzony pipeline drugi raz.
  
 
 4.	Pipeline – projekt.
+
 Do wykonania zadania posłużymy się repozytorium Node-red.
 
 Przed utworzeniem pipeline’u należy zrobić fork na repozytorium z projektem.
@@ -144,11 +156,17 @@ Przed utworzeniem pipeline’u należy zrobić fork na repozytorium z projektem.
 Utworzenie pipeline’u rozpoczynamy od utworzenia nowego projektu typu pipeline, podobnie jak w zadaniu powyżej. Przechodzimy do zakładki „Nowy projekt +”, klikamy typ „pipeline”, nadajemy nazwę „node-red-pipeline”.
 
 W opcjach konfiguracji ustawiamy następująco:
+
 Definition: Pipeline from script SCM 
+
 SCM: Git 
+
 Repository URL: https://github.com/nacymon/node-red 
+
 Branch Specifier: */master 
+
 Script path: Jenkinsfile 
+
 
  ![alt text](Obraz16.png)
  
@@ -157,6 +175,7 @@ Następnie musimy sklonować repozytorium na maszynę i utworzyć pliki Dockerfi
 ![alt text](Obraz17.png)
 
 Plik Jenkinsfile wygląda następująco:
+
 pipeline {
     agent any
 
@@ -223,6 +242,7 @@ pipeline {
 }
 
 Plik Dockerfile wygląda następująco:
+
 FROM node:20-slim
 
 RUN apt-get update && \
@@ -243,32 +263,45 @@ CMD ["node-red", "--port", "3000"]
 
 
 Diagram aktywności procesu CI/CD
+
 •	Start
+
 •	Manual trigger lub commit do repozytorium
+
 •	Pobranie kodu z SCM (Checkout)
 – Klonowanie repozytorium zawierającego Jenkinsfile, Dockerfile oraz kod Node-RED.
+
 •	Budowanie obrazu Dockera (Build)
 – Wykonanie komendy docker build w celu utworzenia obrazu aplikacji Node-RED.
+
 •	Utworzenie sieci Docker (network create)
 – Tworzenie odizolowanej sieci CI na potrzeby komunikacji między kontenerami.
+
 •	Uruchomienie kontenera Node-RED (Deploy)
 – Kontener RED zostaje uruchomiony z przypisaniem do sieci CI oraz portem 3000.
+
 •	Test zdrowia aplikacji (Health check)
 – W osobnym kontenerze curl wykonywane jest żądanie HTTP do kontenera RED po adresie http://RED:3000.
+
 •	Warunek: Czy test zdrowia zakończył się sukcesem?
     Tak:
     o	Logowanie do Docker Hub
     o	Wysłanie obrazu (docker push)
     Nie:
     Pipeline kończy się błędem
+
 •	Czyszczenie środowiska (Cleanup)
 – Usuwanie kontenera RED i sieci CI, niezależnie od sukcesu lub porażki wcześniejszych etapów.
+
 •	Stop
 
 
 Dodajemy pliki na repo, dodając commita na repozytorium github.
+
 a)	git add .
+
 b)	git commit -m „Add files”
+
 c)	git push
 
 ![alt text](Obraz18.png)
