@@ -972,3 +972,54 @@ Przywrócona wcześniejsza wersjia obrazu:
 Na liście historii wdrożeń można zaobserwować, że revision 10 (pierwotna zmiana na v2) zostało nadpisane przez revision 12, które również odpowiadało wersji v2 po rollbacku.
 
 ![Historia zmian po cofnięciu](zrzuty11/zrzut_ekranu7.png)
+
+### Kontrola wdrożenia
+
+#### Weryfikacja hostorii wdrożeń
+
+Aby sprawdzić szczegóły dotyczące konkretnych wersji wdrożeń (revisions), skorzystałem z opcji `--revision`. Przeanalizowałem każdą zmianę, aby zidentyfikować, które obrazy były wdrażane oraz jakie były różnice między nimi.
+
+Zmiana obrazu na `frigzer/my-nginx:v1` (Revision 9):
+
+![Informacje o revision 9](zrzuty11/zrzut_ekranu8_1.png)
+
+Zmiana obrazu na `frigzer/my-nginx:v3` (Revision 11 – wersja wadliwa):
+
+![Informacje o revision 11](zrzuty11/zrzut_ekranu8_2.png)
+
+Zmiana obrazu na `frigzer/my-nginx:v2` (Revision 12 – wersja z niestandardową konfiguracją):
+
+![Informacje o revision 12](zrzuty11/zrzut_ekranu8_3.png)
+
+#### Skrypt weryfikujący powodzenie wdrożenia
+
+Napisałem prosty skrypt w Bashu, który sprawdza, czy rollout zakończył się powodzeniem w przeciągu 60 sekund. Jest to przydatne narzędzie automatyzujące kontrolę poprawności wdrożenia – szczególnie w środowiskach CI/CD lub podczas testowania wielu wersji kontenerów.
+
+Plik `check_rollout.sh`:
+
+```sh
+#!/bin/bash
+
+DEPLOYMENT_NAME="my-nginx-deploy"
+NAMESPACE="default"
+TIMEOUT=60
+
+echo "Czekam aż wdrożenie \"$DEPLOYMENT_NAME\" się zakończy..."
+
+kubectl rollout status deployment/"$DEPLOYMENT_NAME" --namespace="$NAMESPACE" --timeout=${TIMEOUT}s
+
+if [ $? -eq 0 ]; then
+    echo "✅ Wdrożenie zakończone sukcesem!"
+else
+    echo "❌ Wdrożenie NIE zakończyło się w ciągu $TIMEOUT sekund."
+    exit 1
+fi
+```
+
+Dla poprawnej wersji (`frigzer/my-nginx:v2`) skrypt zakończył się sukcesem:
+
+![Wywołanie skryptu](zrzuty11/zrzut_ekranu9_1.png)
+
+Natomiast dla wadliwego obrazu (`frigzer/my-nginx:v3`), skrypt przerwał działanie z komunikatem błędu, potwierdzając niepowodzenie rolloutu:
+
+![Wywołanie skryptu zakończone porażką](zrzuty11/zrzut_ekranu9_2.png)
