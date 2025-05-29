@@ -58,14 +58,14 @@ ansible-playbook -i inventory.yml main_playbook.yml --ask-become-pass
 
 ![1](./screenshots/a_2.png)
 
-Na koniec utworzono playbook [`redis-playbook.log`](./ansible/redis_playbook.yml). Korzysta on ze szkieletowania _ansible-galaxy_. Narzędzie to tworzy katalog z predefiniowaną strukturą, w której – poprzez modyfikację odpowiednich plików – możemy w prosty i uporządkowany sposób zbudować kompletną rolę do automatyzacji konfiguracji usług. W pliku [`tasks/main.yml`](./ansible/deploy_redis/tasks/main.yml) znajduje się najważniejsza logika, która wysyła plik .deb na maszynę docelową, za pomocą szkieletowania _Jinja2_ tworzy Dockerfile, buduje obraz, a następnie uruchamia dockerowy kontener z binarką Redisa. Na koniec sprawdza status kontenera, weryfikując poprawność wykonania playbooka.
+Na koniec utworzono playbook [`redis_playbook.log`](./ansible/redis_playbook.yml). Korzysta on ze szkieletowania _ansible-galaxy_. Narzędzie to tworzy katalog z predefiniowaną strukturą, w której – poprzez modyfikację odpowiednich plików – możemy w prosty i uporządkowany sposób zbudować kompletną rolę do automatyzacji konfiguracji usług. W pliku [`tasks/main.yml`](./ansible/deploy_redis/tasks/main.yml) znajduje się najważniejsza logika, która wysyła plik .deb na maszynę docelową, za pomocą szkieletowania _Jinja2_ tworzy Dockerfile, buduje obraz, a następnie uruchamia dockerowy kontener z binarką Redisa. Na koniec sprawdza status kontenera, weryfikując poprawność wykonania playbooka.
 
 ```sh
 ansible-galaxy init deploy_redis
 ansible-playbook -i inventory.yml redis_playbook.yml --ask-become-pass
 ```
 
-[`redis-playbook.log`](./ansible/redis_playbook.log)
+[`redis_playbook.log`](./ansible/redis_playbook.log)
 
 ### Kickstart
 
@@ -121,7 +121,11 @@ systemctl status redis
 
 ![3](./screenshots/ks_3.png)
 
-### Minikube
+### minikube
+
+> Minikube to narzędzie umożliwiające lokalne uruchamianie klastra na jednej maszynie wirtualnej, co ułatwia testowanie i rozwijanie aplikacji w środowisku Kubernetes.
+
+Na początku pobrano i zainstalowano **minikube** zgodnie z instrukcją podaną w [dokumentacji](https://minikube.sigs.k8s.io/docs/start/).
 
 ```sh
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
@@ -129,10 +133,13 @@ sudo dpkg -i minikube_latest_amd64.deb
 minikube kubectl
 ```
 
+Do pliku `~/.bashrc` dodano alias `alias kubectl="minikube kubectl --"`, aby ułatwić wpisywanie komend. Następnie wczytano jego zawartość, stosując poniższą komendę.
+
 ```sh
-# Dodano do ./bashrc
-alias kubectl="minikube kubectl --"
+source ~/.bashrc
 ```
+
+Uruchomiono usługę minikube.
 
 ```sh
 minikube start
@@ -140,11 +147,15 @@ minikube start
 
 ![1](./screenshots/mk_1.png)
 
+Za pomocą poniższej komendy uruchomiono Kubernetes Dashboard. VS Code, używane podczas laboratorium, automatycznie utworzyło przekierowanie portów, co pozwoliło na dostęp do tego panelu z poziomu przeglądarki działającej poza maszyną wirtualną.
+
 ```sh
 minikube dashboard
 ```
 
 ![2](./screenshots/mk_2.png)
+
+W celu przetestowania działania minikube, stworzono pod z kontenerem na podstawie obrazu `nginx`. Następnie utworzono przekierowanie portów z 80 usługi wewnątrz do 8081 maszyny wirtualnej. Dodatkowo w VS Code, utworzono przekierowanie z 8081 VM na 8081 localhost.
 
 ```sh
 minikube kubectl run -- nxginx-pod --image=nginx --port=80 --labels app=nginx-pod
@@ -157,16 +168,23 @@ kubectl port-forward pod/nxginx-pod 8081:80
 
 ![5](./screenshots/mk_5.png)
 
-[`deployment_nginx.yml`](./minikube/deployment_nginx.yml)
+Następnie, powyższy pod ubrano w deployment. W tym celu stworzono plik [`deployment_nginx.yml`](./minikube/deployment_nginx.yml). Następnie wywołano poniższe komendy, aby utworzyć **deployment**, serwis eksponujący wdrożenie na porcie 80, a także przekierowanie, aby wyeksponować całość na porcie 8082 wirtualnej maszyny.
 
 ```sh
 kubectl apply -f deployment.yml
-kubectl get deployments
 kubectl expose deployment nginx-dep --type=NodePort --name=nginx-service --port=80 --target-port=80
 kubectl port-forward service/nginx-service 8082:80
 ```
 
 ![6](./screenshots/mk_6.png)
+
+Kolejnym krokiem było przystąpienie do stworzenia pliku [`deployment.yml`](./minikube/deployment.yml), którego zadaniem będzie opisywanie wdrożenia aplikacji Redis. Na tym przykładzie zostaną przetestowane trzy scenariusze:
+
+- utworzenie nowego wdrożenia
+- aktualizacja istniejącego wdrożenia do nowej wersji
+- aktualizacja istniejącego wdrożenia w przypadku wadliwego obrazu Docker
+
+Utworzono 3 obrazy ([`redis.Dockerfile`](./minikube/redis.Dockerfile)). Pierwsze dwa różnią się od siebie dodaniem jednego pliku, a trzeci posiada entrypoint, który zawsze zwraca wartość 1 (błąd). Aby łatwiej korzystać z obrazów, zpushowano je na Docker Hub.
 
 ```sh
 docker build -f redis.Dockerfile -t februu/mdo-redis:1.0 .
@@ -175,9 +193,11 @@ docker push februu/mdo-redis:1.0
 docker build -f redis.Dockerfile -t februu/mdo-redis:1.1 .
 docker push februu/mdo-redis:1.1
 
-docker build -f redis.Dockerfile -t februu/mdo-redis:1.1 .
-docker push februu/mdo-redis:1.1
+docker build -f redis.Dockerfile -t februu/mdo-redis:1.2 .
+docker push februu/mdo-redis:1.2
 ```
+
+Utworzono wdrożenie. W celu przetestowania jego działania skorzystano z `redis-cli`.
 
 ```sh
 kubectl apply -f deployment.yml
@@ -186,9 +206,7 @@ redis-cli -h $(minikube ip) -p 30083
 
 ![7](./screenshots/mk_7.png)
 
-```sh
-kubectl apply -f deployment.yml
-```
+Następnie przeprowadzono eksperyment ze zmianą liczby replik we wdrożeniu. Kolejno przetestowano i obserwowano wdrażanie nowych podów dla wartości 8, 1, 0 oraz 4. Następnie podniesiono wersję obrazu w pliku [`deployment.yml`](./minikube/deployment.yml) do 1.1. Ponownie dokonano wdrożenia. Na końcu podniesiono i wzdrożono wersję 1.2 (wersja wadliwa).
 
 ![8](./screenshots/mk_8.png)
 
@@ -198,18 +216,23 @@ kubectl apply -f deployment.yml
 
 ![11](./screenshots/mk_11.png)
 
-Po zmianie wersji: 
+Poniżej zmiana wersji do 1.1. Część podów zostaje wyłączona i uruchomiona na nowym obrazie. Przez moment we wdrożeniu pracuje nadwyżka podów.
 
 ![13](./screenshots/mk_13.png)
 
+Po zmianie wersji do 1.2. Występuje nadwyżka podów. Dwa z nich w wyniku celowo wywołanego błędu znajdują się w niekończącej się pętli ponownych uruchomień.
 
 ![15](./screenshots/mk_15.png)
+
+Przywrócono poprzednią wersję wdrożenia, korzystając z komendy poniżej.
 
 ```sh
 kubectl rollout undo deployment/redis-febru-dep
 ```
 
 ![16](./screenshots/mk_16.png)
+
+Utworzono prosty skrypt sprawdzający poprawność (status) wdrożenia.
 
 ```sh
 #!/bin/bash
@@ -224,17 +247,31 @@ fi
 
 ```
 
+Na koniec stworzono 3 pliki wdrożeń: [`deployment_recreate.yml`](./minikube/deployment_recreate.yml), [`deployment_rolling.yml`](./minikube/deployment_rolling.yml) i [`deployment_canary.yml`](./minikube/deployment_canary.yml). Na ich podstawie przetestowano różne strategie wdrożeń.
+
+#### Recreate
+
+W przypadku **Recreate** w momencie podniesienia wersji podów są one wszystkie zatrzymywane, a następnie uruchamiane ponownie z nową wersją. Jest to najprostszy sposób aktualizacji, lecz powoduje downtime całej aplikacji.
+
 ```sh
 kubectl apply -f deployment_recreate.yml
 ```
 
 ![17](./screenshots/mk_17.png)
 
+#### Rolling Update
+
+W przypadku **Rolling Update** aktualizacja podów odbywa się stopniowo – nowe wersje są uruchamiane pojedynczo, a stare usuwane dopiero po ich poprawnym wystartowaniu. Dzięki temu aplikacja pozostaje dostępna podczas całego procesu aktualizacji, co minimalizuje lub eliminuje downtime.
+
 ```sh
 kubectl apply -f deployment_rolling.yml
 ```
 
 ![18](./screenshots/mk_18.png)
+
+#### Canary Deployment
+
+**Canary Deployment** polega na wdrożeniu nowej wersji aplikacji tylko na części podów, podczas gdy reszta nadal działa na starej wersji. Umożliwia to przetestowanie nowej wersji na ograniczonej liczbie użytkowników i szybkie wycofanie zmian w razie problemów, bez wpływu na całą aplikację.
 
 ```sh
 kubectl apply -f deployment_canary.yml
