@@ -1,0 +1,46 @@
+name: Build and Package cJSON
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y make gcc rpm
+        sudo gem install --no-document fpm
+
+    - name: Build
+      run: make
+
+    - name: Test
+      run: |
+        make test
+
+    - name: Create install structure
+      run: |
+        mkdir -p /tmp/cjson-install/usr/include/cjson
+        mkdir -p /tmp/cjson-install/usr/lib
+        cp cJSON.h cJSON_Utils.h /tmp/cjson-install/usr/include/cjson
+        cp libcjson*.so libcjson*.a /tmp/cjson-install/usr/lib
+
+    - name: Build RPM package
+      run: |
+        fpm -s dir -t rpm -n cjson -v 1.0 -C /tmp/cjson-install .
+
+    - name: Upload RPM artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: cjson-rpm
+        path: "*.rpm"
