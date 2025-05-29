@@ -1,0 +1,81 @@
+    1  minikube start
+    2  sudo usermod -aG wheel milosz
+    3  ls
+    4  cd ..
+    5  ls
+    6  cd laby
+    7  ls
+    8  cd MDO2025_INO/
+    9  ls
+   10  cd ITE
+   11  ls
+   12  cd GCL06/
+   13  ls
+   14  cd MD415045/
+   15  ls
+   16  cd lab 5
+   17  cd lab5
+   18  ls
+   19  cd ..
+   20  cd Sprawozdanie2
+   21  ls
+   22  cd ..
+   23  clear
+   24  ls
+   25  cd lab10
+   26  ls
+   27  touch nginx-v1.conf
+   28  touch nginx-v2.conf
+   29  touch nginxv2.Dockerfile
+   30  eval $(minikube docker-env)
+   31  docker build --build-arg CONF=nginx-v1.conf -t custom-nginx:v1 .
+   32  docker build --build-arg CONF=nginx-v2.conf -t custom-nginx:v2 .
+   33  docker build --build-arg CONF=nginx-v1.conf -t custom-nginx:v1 .
+   34  docker build --build-arg CONF=nginx-v2.conf -t custom-nginx:v2 .
+   35  touch nginx-bad.conf
+   36  docker build --build-arg CONF=nginx-bad.conf -t custom-nginx:bad .
+   37  minikue start
+   38  minikube start
+   39  docker build --build-arg CONF=nginx-v1.conf -t custom-nginx:v1 .
+   40  docker build --build-arg CONF=nginx-v2.conf -t custom-nginx:v2 .
+   41  docker build --build-arg CONF=nginx-bad.conf -t custom-nginx:bad .
+   42  kubectl apply -f nginx-deployment.yaml
+   43  kubectl apply -f nginx-service.yaml
+   44  minikube kubectl -- apply -f nginx-deployment.yaml
+   45  minikube kubectl -- apply -f nginx-service.yaml
+   46  minikube kubectl -- apply -f nginx-deployment.yaml
+   47  docker images
+   48  docker image delete
+   49  docker image rm
+   50  docker image rm b18
+   51  docker image rm 915
+   52  docker image rm 9f5
+   53  clear
+   54  docker build --build-arg CONF=nginx-v1.conf -t custom-nginx:v1 .
+   55  docker build --build-arg CONF=nginx-v2.conf -t custom-nginx:v2 .
+   56  docker build --build-arg CONF=nginx-bad.conf -t custom-nginx:bad .
+   57  minikube image load custom-nginx:v1
+   58  minikube image load custom-nginx:v2
+   59  minikube image load custom-nginx:bad
+   60  kubectl apply -f nginx-deployment.yaml
+   61  kubectl apply -f nginx-service.yaml
+   62  minikube kubectl -- apply -f nginx-deployment.yaml
+   63  minikube kubectl -- apply -f nginx-service.yaml
+   64  minikube kubectl -- apply -f nginx-deployment.yaml
+   65  minikube kubectl -- apply -f nginx-service.yaml
+   66  minikube kubectl -- apply -f nginx-deployment.yaml
+   67  minikube kubectl -- rollout history deployment/nginx-deployment
+   68  minikube kubectl -- rollout undo deployment/nginx-deployment
+   69  minikube kubectl -- rollout history deployment/nginx-deployment
+   70  minikube kubectl -- rollout undo deployment/nginx-deployment --to-revision=2
+   71  minikube kubectl -- rollout undo deployment/nginx-deployment --to-revision=1
+   72  minikube kubectl -- rollout status deployment/nginx-deployment
+   73  touch check-deployment.sh
+   74  chmod +x check-deployment.sh
+   75  ./check-deployment.sh
+   76  minikube kubectl -- apply -f nginx-deployment.yaml
+   77  ./check-deployment.sh
+   78  minikube kubectl -- apply -f nginx-deployment.yaml
+   79  ./check-deployment.sh
+   80  minikube kubectl -- apply -f nginx-deployment.yaml
+   81  history >> historia.txt
