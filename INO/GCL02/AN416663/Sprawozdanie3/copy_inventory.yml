@@ -1,0 +1,9 @@
+---
+- name: Copy inventory file to endpoints
+  hosts: Endpoints
+  tasks:
+    - name: Copy inventory file
+      copy:
+        src: inventory.ini
+        dest: /home/ansible/inventory.ini
+        mode: '0644'

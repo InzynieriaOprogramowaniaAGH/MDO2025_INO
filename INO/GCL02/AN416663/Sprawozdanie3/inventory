@@ -1,0 +1,2 @@
+[Endpoints]
+ansible-target ansible_host=10.0.2.15 ansible_user=ansible

@@ -1,0 +1,21 @@
+---
+- name: Instalacja Dockera na Fedorze
+  hosts: all
+  become: true
+  tasks:
+    - name: Zaktualizuj cache pakietów
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: true
+
+    - name: Zainstaluj Dockera
+      ansible.builtin.dnf:
+        name: moby-engine
+        state: present
+
+    - name: Upewnij się, że Docker działa
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+        enabled: true

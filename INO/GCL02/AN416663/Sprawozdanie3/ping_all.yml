@@ -1,0 +1,7 @@
+---
+- name: Ping all endpoints
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ping host
+      ping:

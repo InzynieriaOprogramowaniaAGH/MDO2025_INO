@@ -1,0 +1,20 @@
+---
+- name: Restart usług na maszynach końcowych
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Restart usługi sshd
+      service:
+        name: sshd
+        state: restarted
+      ignore_errors: yes
+
+    - name: Restart usługi rngd
+      service:
+        name: rngd
+        state: restarted
+      ignore_errors: yes
+
+    - name: Potwierdzenie restartu
+      debug:
+        msg: "Usługi zrestartowane na {{ inventory_hostname }}"
