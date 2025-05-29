@@ -1,0 +1,56 @@
+- name: Ensure Docker is installed
+  ansible.builtin.package:
+    name: docker
+    state: present
+  become: yes
+
+- name: Ensure Docker service is running
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Create a directory for sqlite package
+  ansible.builtin.file:
+    path: "/tmp/sqlite"
+    state: directory
+    mode: '0755'
+
+- name: Extract sqlite package
+  ansible.builtin.unarchive:
+    src: "{{ sqlite_package_name }}"
+    dest: "/tmp/sqlite"
+
+- name: Copy test script to the container
+  ansible.builtin.copy:
+    src: "{{ test_script }}"
+    dest: "/tmp/sqlite/{{ test_script }}"
+    mode: '0755'
+
+- name: Template for Dockerfile
+  ansible.builtin.template:
+    src: Dockerfile.j2
+    dest: "/tmp/sqlite/Dockerfile"
+
+- name: Build Docker image
+  community.docker.docker_image:
+    name: "{{ image_name }}"
+    build:
+      path: "/tmp/sqlite"
+      dockerfile: "Dockerfile"
+    source: build
+    
+- name: Run Docker container and capture test results
+  ansible.builtin.command:
+    cmd: "docker run --rm --name {{ container_name }} {{ image_name }}"
+  register: container_result
+
+- name: Show test results
+  ansible.builtin.debug:
+    msg: "{{ container_result.stdout }}"
+
+- name: Check if the test script executed successfully
+  ansible.builtin.fail:
+    msg: "Test script failed"
+  when: container_result.rc != 0

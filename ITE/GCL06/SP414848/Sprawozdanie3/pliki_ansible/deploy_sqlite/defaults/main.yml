@@ -1,0 +1,4 @@
+sqlite_package_name: "sqlite_linux_3490100.tar.gz"
+container_name: "sqlite_container"
+test_script: "smoke-test.sh"
+image_name: "sqlite_image"
