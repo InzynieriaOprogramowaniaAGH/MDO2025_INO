@@ -1,0 +1,4 @@
+# Dockerfile.v2 (np. zmieniony komunikat na stronie)
+FROM httpd:2.4
+COPY ./website-v2/ /usr/local/apache2/htdocs/
+LABEL version="2.0"

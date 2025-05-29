@@ -1,0 +1,4 @@
+# Dockerfile.v1
+FROM httpd:2.4
+COPY ./website/ /usr/local/apache2/htdocs/
+LABEL version="1.0"
