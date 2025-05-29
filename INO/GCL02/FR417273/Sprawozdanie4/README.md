@@ -78,8 +78,8 @@ jobs:
 
 Powyższy plik definiuje nastęoującą akcje:
 - Warunki uruchomienia:
-  - push do gałęzi `master` lub
-  - pull request do gałęzi `master` lub
+  - push do gałęzi `master` lub,
+  - pull request do gałęzi `master` lub,
   - manualne uruchomienie z interfejsu GitHub.
 - Job build:
     - Uruchomiony na maszynie Ubuntu.
@@ -182,3 +182,6 @@ int main() {
 Kod źródłowy skompilowano i uruchomiono potwierdzając poprawne działanie biblioteki:
 
 ![Test](media/m9_test.png)
+
+## Wykorzystanie Sztucznej Intelginecji w ramach zajęć
+W ramach sprawozdania korzystano z modelu `GPT-4o` w celu pomocy z formatowaniem i prezentacją.
