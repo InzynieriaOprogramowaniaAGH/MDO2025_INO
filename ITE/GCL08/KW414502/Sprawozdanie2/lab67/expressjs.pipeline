@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+
+    environment {
+        APP_DIR = 'ITE/GCL08/KW414502/Sprawozdanie2/lab67'
+        LOGIN_CREDS = credentials('dockercreds')
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'KW414502', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Clean up docker') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker kill express-js'
+                    sh 'docker rmi -f express-js-build || true'
+                    sh 'docker rmi -f express-js-test || true'
+                    sh 'docker rmi -f frostyfire1/express-js-deploy:latest || true'
+                    sh 'docker builder prune --force --all || true'
+                    sh 'docker network rm express-js -f || true'
+                    sh 'docker rm -f express-js-deploy || true'
+                }
+            }
+        }
+
+        stage('Build express-js container') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfile.express -t express-js-build .'
+                }
+            }
+        }
+
+        stage('Build and run test container') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfile.expressTest -t express-js-test .'
+                }
+            }
+        }
+        
+        stage('Build deployable container') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh 'docker build -f Dockerfile.expressDeploy -t frostyfire1/express-js-deploy:latest .'
+                }
+            }
+        }
+
+        stage('Smoke Test deployable container before publishing') {
+            steps {
+                dir("${APP_DIR}") {
+                    sh '''
+                        docker network create express-js || true
+                        docker run -d --rm --network express-js --name express-js -p 3000:3000 frostyfire1/express-js-deploy:latest
+                        docker run --rm --network express-js curlimages/curl curl -s --max-time 5 express-js:3000
+                    '''
+                }
+            }
+        }
+
+        stage('Publish Container') {
+            steps {
+                script {
+                    sh "echo ${LOGIN_CREDS_PSW} | docker login -u ${LOGIN_CREDS_USR} --password-stdin"
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockercreds') {
+                        docker.image("frostyfire1/express-js-deploy:latest").push()
+                    }
+                }
+            }
+        }
+    }
+}

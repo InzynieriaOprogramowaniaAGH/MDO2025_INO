@@ -1,0 +1,63 @@
+- name: Konfiguracja Dockera
+  hosts: Orchestrators
+  become: true
+  tasks:
+    - name: "Create docker network: ansible"
+      ansible.builtin.docker_network:
+        name: ansible
+        driver: bridge
+    - name: "Create base image"
+      ansible.builtin.docker_image:
+        name: express-js-build
+        source: build
+        build:
+          path: /home/frosty/MDO2025_INO/ITE/GCL08/KW414502/Sprawozdanie2/lab67/
+          dockerfile: Dockerfile.express
+    - name: "Create test image"
+      ansible.builtin.docker_image:
+        name: express-js-test
+        source: build
+        build:
+          path: /home/frosty/MDO2025_INO/ITE/GCL08/KW414502/Sprawozdanie2/lab67/
+          dockerfile: Dockerfile.expressTest
+    - name: "Create deploy image"
+      ansible.builtin.docker_image:
+        name: express-js-deploy
+        source: build
+        build:
+          path: /home/frosty/MDO2025_INO/ITE/GCL08/KW414502/Sprawozdanie2/lab67/
+          dockerfile: Dockerfile.expressDeploy
+    - name: "Pull frostyfire1/express-js-deploy:latest"
+      ansible.builtin.docker_image:
+        name: frostyfire1/express-js-deploy
+        tag: latest
+        source: pull
+    - name: Start deploy container
+      ansible.builtin.docker_container:
+        name: express-js
+        image: express-js-deploy
+        state: started
+        ports: "3000:3000"
+
+
+
+- name: Zarządzanie stworzonym artefaktem
+  hosts: Endpoints
+  become: true
+  tasks:
+  - name: Ensure latest docker is installed
+    ansible.builtin.dnf:
+      name: docker
+      state: latest
+  - name: Test host container
+    ansible.builtin.uri:
+      url: http://192.168.122.56:3000/hello.txt
+      method: GET
+- name: Zakończenie pracy kontenera
+  hosts: Orchestrators
+  become: true
+  tasks:
+    - name: Stop container
+      ansible.builtin.docker_container:
+        name: express-js
+        state: stopped

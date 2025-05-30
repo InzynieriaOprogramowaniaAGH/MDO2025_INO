@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: super-nginx-kocham
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: super-nginx
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: super-nginx
+        version: "3000"
+    spec:
+      containers:
+      - name: nginx
+        image: frostyfire1/nginx-good2:latest
+        ports:
+        - containerPort: 80
