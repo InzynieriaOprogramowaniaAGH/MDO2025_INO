@@ -1,4 +1,4 @@
-# Sprawozdanie 3 - Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
+# Sprawozdanie 3
 
 - **Przedmiot: DevOps**
 - **Kierunek: Inżynieria Obliczeniowa**
@@ -1023,3 +1023,79 @@ Dla poprawnej wersji (`frigzer/my-nginx:v2`) skrypt zakończył się sukcesem:
 Natomiast dla wadliwego obrazu (`frigzer/my-nginx:v3`), skrypt przerwał działanie z komunikatem błędu, potwierdzając niepowodzenie rolloutu:
 
 ![Wywołanie skryptu zakończone porażką](zrzuty11/zrzut_ekranu9_2.png)
+
+### Strategie wdrożenia
+
+W tej części zadania przetestowałem różne strategie wdrożenia aplikacji w Kubernetesie, uwzględniając m.in. mechanizm Rolling Update, Recreate oraz symulację wdrożenia typu Canary. Wszystkie wersje aplikacji korzystają z moich własnych obrazów umieszczonych na Docker Hub (`frigzer/my-nginx` w wersjach `v1`, `v2`).
+
+#### 1. Strategia `Recreate`
+
+W pierwszym wdrożeniu zastosowałem strategię Recreate, która powoduje całkowite zatrzymanie starych podów przed uruchomieniem nowych.
+
+```yaml
+strategy:
+  type: Recreate
+```
+
+Dzięki niej podczas aktualizacji deploymentu najpierw wszystkie pody zostały usunięte, a dopiero potem utworzono nowe z nowym obrazem. W praktyce prowadzi to do krótkiej niedostępności usługi, ale zapewnia spójność wersji (wszystko jest nowe lub nic).
+
+#### 2. Strategia `RollingUpdate` z parametrami
+
+W kolejnym kroku zastosowałem strategię `RollingUpdate`, która umożliwia płynne przechodzenie między wersjami bez przerwy w działaniu usługi. Dodatkowo ustawiłem parametry zwiększające agresywność aktualizacji:
+
+```yaml
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 2
+    maxSurge: 30%
+```
+
+Dzięki temu w trakcie aktualizacji do nowych wersji mogło być tymczasowo więcej niż zakładana liczba podów (`surge`), a do dwóch podów mogło być równocześnie niedostępnych (`unavailable`). Przejście między wersjami było płynne, bez utraty dostępności aplikacji.
+
+#### 3. Canary Deployment
+
+Na potrzeby wdrożenia typu canary przygotowałem dwa oddzielne deploymenty:
+
+- `my-nginx-stable` – korzystający z obrazu `frigzer/my-nginx:v1` (3 repliki)
+- `my-nginx-canary` – korzystający z obrazu `frigzer/my-nginx:v2` (1 replika)
+
+Oba deploymenty mają wspólną etykietę `app: my-nginx-deploy`, dzięki czemu są obsługiwane przez jeden `Service`, natomiast różnią się dodatkową etykietą `track`:
+
+```yaml
+# Stable:
+labels:
+  app: my-nginx-deploy
+  track: stable
+
+# Canary:
+labels:
+  app: my-nginx-deploy
+  track: canary 
+```
+
+Dzięki takiemu podejściu serwis kieruje ruch do obu wersji aplikacji, umożliwiając testowanie nowej wersji na części użytkowników. W tym przypadku ~25% ruchu trafia do wersji canary (`v2`), a pozostałe ~75% do stabilnej (`v1`).
+
+![Deploymenty stable i canary](zrzuty11/zrzut_ekranu10.png) 
+
+![Pody dla serwisu my-nginx-deploy](zrzuty11/zrzut_ekranu11.png) 
+
+#### Użycie etykiet
+
+Każdy deployment i jego pody zostały oznaczone odpowiednimi etykietami (`app`, `track`), co umożliwia:
+
+- filtrowanie w dashboardzie
+- selektywne zarządzanie ruchem przez `Service`
+- lepszą kontrolę rolloutów i testów
+
+#### Użycie serwisów
+
+Dla wszystkich strategii wykorzystałem jeden wspólny `Service` typu LoadBalancer, który kieruje ruch do podów z etykietą `app: my-nginx-deploy`. Dzięki temu nie było konieczności modyfikacji warstwy sieciowej mimo istnienia dwóch niezależnych deploymentów (stable i canary).
+
+#### Wnioski
+
+- Strategia `Recreate` jest prosta, ale niesie ryzyko niedostępności.
+- `RollingUpdate` zapewnia ciągłość działania, nawet przy większych aktualizacjach.
+- Canary deployment pozwala bezpiecznie przetestować nową wersję bez pełnego wdrożenia.
+- Etykiety i selektory to kluczowe mechanizmy organizujące routing i zarządzanie wdrożeniem.
+- Service może bez problemu obsługiwać pody z różnych deploymentów, jeśli są poprawnie oznaczone.
