@@ -1,4 +1,4 @@
-# Sprawozdanie 3 - Poznawanie Ansible, kickstart, ...
+# Sprawozdanie 3 - Poznawanie Ansible, kickstart oraz kubernetes
 
 ---
 
@@ -6,7 +6,7 @@
 
 ---
 
-**Celem ćwiczeń było nauczenie się podstaw ansible, kickstart, ....**
+**Celem ćwiczeń było nauczenie się podstaw ansible, kickstart oraz kubernetes**
 
 ---
 
@@ -724,3 +724,379 @@ minikube service hello-minikube
 ```
 
 ![Zrzut ekranu – 51 - ](zrzuty_ekranu_sprawozdanie_3/51.png)
+
+# **Wdrażanie na zarządzalne kontenery: Kubernetes (2)** 
+
+## **Przygotowanie nowego obrazu**
+
+Na początku utworzyłem trzy osobne wersje obrazu Dockera (v1, v2, v3), każdą z własnym Dockerfile i ewentualnie zmodyfikowanym index.html.
+Dla wersji v3 celowo przygotowałem wadliwy obraz (błędny entrypoint), co powoduje błąd RunContainerError przy uruchomieniu(v3 nie ma index.html).
+Wszystkie obrazy były budowane lokalnie, wewnątrz środowiska Dockera skonfigurowanego przez Minikube — bez potrzeby korzystania z Docker Huba.
+
+Użyłem poniższych poleceń:
+
+Przełączałem się na lokalne środowisko Dockera działające w Minikube:
+
+```bash
+eval $(minikube docker-env)
+```
+Budowanie działającej wersji (v1)
+
+```bash
+docker build -f Dockerfile_aplikacja_dzialajaca -t moja-aplikacja:v1 .
+```
+
+Budowanie poprawionej wersji (v2)
+
+```bash
+docker build -f Dockerfile_nowa_wersja_z_poprawka -t moja-aplikacja:v2 .
+```
+
+Budowanie wadliwej wersji (v3)
+
+```bash
+docker build -f Dockerfile_fail -t moja-aplikacja:v3 .
+```
+
+![Zrzut ekranu – 53 - ](zrzuty_ekranu_sprawozdanie_3/53.png)
+
+![Zrzut ekranu – 54 - ](zrzuty_ekranu_sprawozdanie_3/54.png)
+
+![Zrzut ekranu – 55 - ](zrzuty_ekranu_sprawozdanie_3/55.png)
+
+Sprawdzenie czy wszystko działa(port-forwarding):
+
+- moja-aplikacja:v1
+
+![Zrzut ekranu – 56 - ](zrzuty_ekranu_sprawozdanie_3/56.png)
+
+![Zrzut ekranu – 57 - ](zrzuty_ekranu_sprawozdanie_3/57.png)
+
+- moja-aplikacja:v2
+
+![Zrzut ekranu – 58 - ](zrzuty_ekranu_sprawozdanie_3/58.png)
+
+![Zrzut ekranu – 59 - ](zrzuty_ekranu_sprawozdanie_3/59.png)
+
+- moja-aplikacja:v3
+
+![Zrzut ekranu – 60 - ](zrzuty_ekranu_sprawozdanie_3/60.png)
+
+![Zrzut ekranu – 61 - ](zrzuty_ekranu_sprawozdanie_3/61.png)
+
+![Zrzut ekranu – 62 - ](zrzuty_ekranu_sprawozdanie_3/62.png)
+
+## **Zmiany w deploymencie**
+
+Edytowałem plik deployment2.yaml, modyfikując wartość replicas: kolejno do 8, 1, 0 i 4 dla poszczególnych wersji: v1, v2, v3 i sprawdzałem czy wszystko działa prawidłowo.
+Po każdej zmianie wykonywałem kubectl apply, a następnie kubectl get pods, by obserwować efekty:
+
+```bash
+kubectl apply -f deployment2.yaml
+```
+
+```bash
+kubectl get pods
+```
+
+Przeglądałem historię wdrożeń:
+
+```bash
+kubectl rollout history deployment moja-aplikacja
+```
+
+Cofałem się do poprzedniej wersji za pomocą:
+
+```bash
+kubectl rollout undo deployment moja-aplikacja
+```
+
+- Wersja moja-aplikacja:v1 (działająca):
+
+  - replicas: 8
+ 
+![Zrzut ekranu – 63 - ](zrzuty_ekranu_sprawozdanie_3/63.png)
+
+  - replicas: 1
+
+![Zrzut ekranu – 64 - ](zrzuty_ekranu_sprawozdanie_3/64.png)
+
+  - replicas: 0
+
+![Zrzut ekranu – 65 - ](zrzuty_ekranu_sprawozdanie_3/65.png)
+
+  - replicas: 4
+
+![Zrzut ekranu – 66 - ](zrzuty_ekranu_sprawozdanie_3/66.png)
+
+- Wersja moja-aplikacja:v2 (alternatywna):
+
+  - replicas: 8
+ 
+![Zrzut ekranu – 67 - ](zrzuty_ekranu_sprawozdanie_3/67.png)
+
+  - replicas: 1
+
+![Zrzut ekranu – 68 - ](zrzuty_ekranu_sprawozdanie_3/68.png)
+
+  - replicas: 0
+
+![Zrzut ekranu – 69 - ](zrzuty_ekranu_sprawozdanie_3/69.png)
+
+  - replicas: 4
+
+![Zrzut ekranu – 70 - ](zrzuty_ekranu_sprawozdanie_3/70.png)
+
+- moja-aplikacja:v3 (wadliwa – celowy błąd):
+
+  - replicas: 8
+ 
+![Zrzut ekranu – 71 - ](zrzuty_ekranu_sprawozdanie_3/71.png)
+
+  - replicas: 1
+
+![Zrzut ekranu – 72 - ](zrzuty_ekranu_sprawozdanie_3/72.png)
+
+  - replicas: 0
+
+![Zrzut ekranu – 73 - ](zrzuty_ekranu_sprawozdanie_3/73.png)
+
+  - replicas: 4
+
+![Zrzut ekranu – 74 - ](zrzuty_ekranu_sprawozdanie_3/74.png)
+
+## **Kontrola wdrożenia**
+
+Przeglądałem listę rewizji Deploymentu moja-aplikacja za pomocą:
+
+```bash
+kubectl rollout history deployment moja-aplikacja
+```
+
+Komendą z --revision=XX sprawdzałem szczegóły konkretnej wersji:
+
+```bash
+kubectl rollout history deployment moja-aplikacja --revision=XX
+```
+
+![Zrzut ekranu – 75 - ](zrzuty_ekranu_sprawozdanie_3/75.png)
+
+![Zrzut ekranu – 76 - ](zrzuty_ekranu_sprawozdanie_3/76.png)
+
+Przygotowałem skrypt weryfikujący wdrożenie (do 60 sekund):
+
+- check_deploy.sh:
+
+```bash
+#!/bin/bash
+
+DEPLOYMENT="moja-aplikacja"
+NAMESPACE="default"
+TIMEOUT=60
+
+echo "Czekam aż deployment \"$DEPLOYMENT\" osiągnie pełną gotowość..."
+
+for ((i=1; i<=$TIMEOUT; i++)); do
+  READY=$(kubectl get deployment "$DEPLOYMENT" -n "$NAMESPACE" -o=jsonpath='{.status.readyReplicas}')
+  EXPECTED=$(kubectl get deployment "$DEPLOYMENT" -n "$NAMESPACE" -o=jsonpath='{.spec.replicas}')
+
+  if [[ "$READY" == "$EXPECTED" && "$READY" != "" ]]; then
+    echo "✔️  Deployment gotowy po $i sekundach."
+    exit 0
+  fi
+
+  sleep 1
+done
+
+echo "❌ Deployment NIE gotowy po $TIMEOUT sekundach."
+kubectl get pods -n "$NAMESPACE"
+exit 1
+
+```
+
+Skrypt pozwala automatycznie ocenić, czy wdrożenie się powiodło w rozsądnym czasie – co spełnia wymagania zadania.
+
+- Powodzenie:
+
+![Zrzut ekranu – 77 - ](zrzuty_ekranu_sprawozdanie_3/77.png)
+
+- Fail:
+
+![Zrzut ekranu – 78 - ](zrzuty_ekranu_sprawozdanie_3/78.png)
+
+## **Strategie wdrożenia**
+
+Strategia Recreate powoduje, że stare pody są usuwane przed utworzeniem nowych. 
+
+- Plik deployment-recreate.yaml:
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moja-aplikacja-recreate
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: moja-aplikacja
+  template:
+    metadata:
+      labels:
+        app: moja-aplikacja
+    spec:
+      containers:
+      - name: moja-aplikacja
+        image: moja-aplikacja:v1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moja-aplikacja
+spec:
+  type: NodePort
+  selector:
+    app: moja-aplikacja
+  ports:
+    - port: 80
+      targetPort: 80
+
+```
+
+Komendy do deployu:
+
+```bash
+kubectl apply -f deployment-recreate.yaml
+```
+
+```bash
+kubectl get pods -l app=moja-aplikacja 
+```
+
+```bash
+kubectl rollout history deployment moja-aplikacja-recreate
+```
+
+![Zrzut ekranu – 79 - ](zrzuty_ekranu_sprawozdanie_3/79.png)
+
+Strategia Rolling Update (z maxUnavailable > 1, maxSurge > 20%). Rolling Update aktualizuje pody stopniowo, pozwalając utrzymać usługę online. maxUnavailable: 2 – maks. 2 pody mogą być jednocześnie niedostępne.
+maxSurge: 2 – mogą być uruchomione maksymalnie 2 dodatkowe pody. Lepsza dostępność niż w Recreate, choć większe zużycie zasobów.
+
+- Plik deployment-rolling.yaml:
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moja-aplikacja-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
+  selector:
+    matchLabels:
+      app: moja-aplikacja
+  template:
+    metadata:
+      labels:
+        app: moja-aplikacja
+    spec:
+      containers:
+      - name: moja-aplikacja
+        image: moja-aplikacja:v2
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moja-aplikacja
+spec:
+  type: NodePort
+  selector:
+    app: moja-aplikacja
+  ports:
+    - port: 80
+      targetPort: 80
+```
+
+Komendy do deployu:
+
+```bash
+kubectl apply -f deployment-rolling.yaml
+```
+
+```bash
+kubectl get pods -l app=moja-aplikacja
+```
+
+```bash
+kubectl rollout history deployment moja-aplikacja-rolling deployment.apps/moja-aplikacja-rolling
+```
+
+![Zrzut ekranu – 80 - ](zrzuty_ekranu_sprawozdanie_3/80.png)
+
+Strategia Canary Deployment. Wdrożyłem wersję testową (canary) obok wersji stabilnej, obie wersje są obecne w systemie. Możliwość testowania nowych funkcji bez wpływu na wszystkich użytkowników.
+Można zastosować oddzielne serwisy (np. canary-service) do ich kierowania.
+
+- Plik deployment-canary.yaml:
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moja-aplikacja-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moja-aplikacja
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: moja-aplikacja
+        version: canary
+    spec:
+      containers:
+      - name: moja-aplikacja
+        image: moja-aplikacja:v3
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+```
+
+Komendy do deployu:
+
+```bash
+kubectl apply -f deployment-canary.yaml
+```
+
+```bash
+kubectl get pods -l app=moja-aplikacja
+```
+
+```bash
+kubectl rollout history deployment moja-aplikacja-canary deployment.apps/moja-aplikacja-canary
+```
+
+![Zrzut ekranu – 81 - ](zrzuty_ekranu_sprawozdanie_3/81.png)
+
+
+
+
+
+
+
+
+
+
