@@ -427,16 +427,16 @@ rootpw --iscrypted --allow-ssh $y$j9T$oGuE12lf4pzUttXSQZqrN3GB$RhftiA11WvLnHUGl5
  * Wyprowadź port celem dotarcia do eksponowanej funkcjonalności
  * ```kubectl port-forward pod/<nazwa-wdrożenia> <LO_PORT>:<PODMAIN_CNTNR_PORT> ```
 
-        Miałem problem aby kubernetes rzeczywiście korzystał ze stworzonego nginxowego obrazu zamiast z tego domyślnego z docker-hub.
-        Ostatecznie zastosowałem następujące rozwiązanie: https://stackoverflow.com/questions/42564058/how-can-i-use-local-docker-images-with-minikube#42564211, 
-        czyli:
-        eval $(minikube docker-env)
-        I dzięki temu mogłem zbudować obraz na daemonie minikuba.
-        Później już tylko wystarczy pamiętać żeby ustawić ```imagePullPolicy=Never``` żeby minikube nie pobierał z repozytorium.
-        Ostatecznie polecenie kubectl run miało postać:
+Miałem problem aby kubernetes rzeczywiście korzystał ze stworzonego nginxowego obrazu zamiast z tego domyślnego z docker-hub.
+Ostatecznie zastosowałem następujące rozwiązanie: https://stackoverflow.com/questions/42564058/how-can-i-use-local-docker-images-with-minikube#42564211, 
+czyli:
+ eval $(minikube docker-env)
+I dzięki temu mogłem zbudować obraz na daemonie minikuba.
+Później już tylko wystarczy pamiętać żeby ustawić ```imagePullPolicy=Never``` żeby minikube nie pobierał z repozytorium.
+Ostatecznie polecenie kubectl run miało postać:
         ```minikube kubectl -- run nginx   --image=jknginx:latest   --port=80   --labels app=nginxKubDep --image-pull-policy=Never```
 
-![Port forwarding](Images/port_forward.png "Port forwarding")  
+![Port forwarding](Images/port_forwarding.png "Port forwarding")  
 
  * Przedstaw komunikację z eskponowaną funkcjonalnością
 
