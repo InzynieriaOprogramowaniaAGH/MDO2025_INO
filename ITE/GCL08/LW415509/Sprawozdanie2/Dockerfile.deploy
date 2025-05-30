@@ -1,0 +1,3 @@
+FROM myapp-build:latest
+WORKDIR /app
+CMD ["npm", "run", "start"]

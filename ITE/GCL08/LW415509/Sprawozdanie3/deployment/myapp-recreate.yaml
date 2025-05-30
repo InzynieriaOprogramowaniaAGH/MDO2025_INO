@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-recreate
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: myapp-recreate
+  template:
+    metadata:
+      labels:
+        app: myapp-recreate
+    spec:
+      containers:
+      - name: myapp
+        image: elwilk/myapp:1.0.31
+        ports:
+        - containerPort: 3000

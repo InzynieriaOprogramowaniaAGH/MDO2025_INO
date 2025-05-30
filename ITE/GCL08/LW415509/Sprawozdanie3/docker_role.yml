@@ -1,0 +1,6 @@
+- name: Deploy Dockerized app using role
+  hosts: endpoints
+  become: yes
+
+  roles:
+    - docker-app

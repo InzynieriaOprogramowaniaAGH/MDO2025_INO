@@ -1,0 +1,73 @@
+- name: Deploy Docker container
+  hosts: endpoints
+  become: yes
+  tasks:
+
+    - name: Add Docker CE repo
+      ansible.builtin.yum_repository:
+        name: docker-ce
+        description: Docker CE Stable - $basearch
+        baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+        enabled: yes
+        gpgcheck: yes
+        gpgkey: https://download.docker.com/linux/centos/gpg
+
+    - name: Install Docker
+      become: true
+      ansible.builtin.package:
+        name: docker-ce
+        state: present
+
+    - name: Start and enable Docker service
+      become: true
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Pull Docker image elwilk/myapp
+      become: true
+      community.docker.docker_image:
+        name: elwilk/myapp
+        source: pull
+
+    - name: Run container
+      become: true
+      community.docker.docker_container:
+        name: myapp_container
+        image: elwilk/myapp
+        state: started
+        ports:
+          - "80:3000"
+
+    - name: Wait for app to respond
+      ansible.builtin.uri:
+        url: http://localhost:80
+        status_code: 200
+        timeout: 10
+      register: result
+      until: result.status == 200
+      retries: 5
+      delay: 3
+
+    - name: Run curl to fetch app homepage
+      ansible.builtin.command:
+        cmd: curl -s http://localhost:80
+      register: curl_result
+      failed_when: curl_result.rc != 0
+
+    - name: Display curl output
+      ansible.builtin.debug:
+        msg: "Wynik curl:\n{{ curl_result.stdout }}"    
+
+    - name: Stop container
+      become: true
+      community.docker.docker_container:
+        name: myapp_container
+        state: stopped
+
+    - name: Remove container
+      become: true
+      community.docker.docker_container:
+        name: myapp_container
+        state: absent
