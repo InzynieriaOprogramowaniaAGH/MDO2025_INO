@@ -381,13 +381,13 @@ Teraz można uruchomić instalację - F10.
 
 Po uruchomieniu instalacji po chwili czekania wyświetli się gui instalatora, nic nie ruszamy i po kilku sekundach instalacja sama się zaczyna:
 
-![](screens/lab9-x.png)
+![](screens/Lab9-x.png)
 
 ### Uruchomienie systemu po instalacji
 
 Logujemy się na roota (inni użytkownicy na głównej maszynie byli dodawani po instalacji więc nie będą zawarci w pliku odpowiedzi), hasło identyczne jak na maszynie głównej.
 
-![](screens/lab9-x+1.png)
+![](screens/Lab9-x+1.png)
 
 Instalacja powiodła się, od razu widzimy też odpowiedni hostname.
 
@@ -506,6 +506,134 @@ cp sqlite3 /usr/local/bin/
 
 ### Weryfikacja instalacji
 
-![](screens/lab9-4.png)
+![](screens/Lab9-4.png)
 
 Program uruchamia się poprawnie oraz w pliku tekstowym znajduje się poprawny wpis - instalacja przebiegła pomyślnie.
+
+# Wdrażanie na zarządzalne kontenery: Kubernetes
+
+Kubernetes to platforma do zarządzania kontenerami, automatyzuje wdrażanie, skalowanie i zarządzanie kontenerami.
+
+## Wybór oprogramowania
+
+Z uwagi na charakter aplikacji na której pracowano - sqlite, na potrzeby tej części ćwiczenia zdecydowano się na zmianę aplikacji na `nginx` z dorzuconą własną konfiguracją.
+
+### Dockerfile aplikacji `my_nginx`
+
+```Dockerfile
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY html /usr/share/nginx/html
+EXPOSE 80
+```
+
+Aplikacja posiada własny plik konfiguracyjny i własną stronę html, nasłuchuje na porcie 80.
+
+Aplikacja została opublikowana w docker hub'ie pod: user123user321/my_nginx
+
+### Działanie aplikacji:
+
+![](screens/apka-1.png)
+
+![](screens/apka-2.png)
+
+## Instalacja klastra Kubernetes
+
+### Instalacja minikube
+
+Minikube to narzędzie, które pozwala na lokalne uruchomienie klastra Kubernetes, bez potrzeby korzystania z pełnej infrastruktury chmurowej.
+
+Instalacja zgodnie z dokumentacją:
+
+![](screens/lab10-1.png)
+
+### Uruchomienie minikube - `minikube start`
+
+![](screens/lab10-2.png)
+
+### Uruchomienie dashboard'a - `minikube dashboard`
+
+![](screens/lab10-3.png)
+
+W przeglądarce:
+
+![](screens/lab10-4.png)
+
+## Uruchamianie oprogramowania
+
+### Uruchomienie pojedynczego poda: 
+
+Pod to podstawowa jednostka w Kubernetes, zawiera w sobie kontener.
+
+![](screens/lab10-5.png)
+
+Korzystamu z polecenia `kubectl run`, podajemy:
+
+- nazwę poda,
+
+- obraz (z docker huba),
+
+- port na którym będzie działała aplikacja,
+
+- nazwę aplikacji.
+
+---
+
+Pod widoczny w panelu:
+
+![](screens/lab10-6.png)
+
+### Przekierowanie portu
+
+Pod działa ale żeby był widoczny poza środowikiem Kubernetes należy jeszcze przekierować port:
+
+![](screens/lab10-7.png)
+
+Wykorzystujemy polecenie `kubectl port-forward`, podajemy nazwę poda poprzedzoną `/pod` oraz porty, gdzie drugi port to port na którym działa aplikacja.
+
+---
+
+Dodatkowo należy jeszcze przekierować port w VS Code, aby był on widoczny poza maszynę wirtualną.
+
+Przechodzimy do zakładki `PORTS` (zaraz obok terminala), klikamy `Add Port` i wprowadzamy interesujący nas port (8800).
+
+![](screens/lab10-8.png)
+
+### Działająca aplikacja
+
+![](screens/lab10-9.png)
+
+## Plik wdrożenia
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-deploy
+  labels:
+    app: my-nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: my-nginx
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: user123user321/my_nginx:1.0
+        ports:
+        - containerPort: 80
+```
+
+![](screens/lab10-10.png)
+![](screens/lab10-11.png)
+![](screens/lab10-12.png)
+![](screens/lab10-13.png)
+![](screens/lab10-14.png)
+![](screens/lab10-15.png)
+![](screens/lab10-16.png)
+![](screens/lab10-17.png)
