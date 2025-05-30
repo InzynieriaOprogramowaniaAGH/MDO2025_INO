@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: todo-containers
-        image: winterwollf/node-deploy:v2
+        image: winterwollf/node-deploy:v6
         ports:
           - containerPort: 3000
             protocol: TCP
