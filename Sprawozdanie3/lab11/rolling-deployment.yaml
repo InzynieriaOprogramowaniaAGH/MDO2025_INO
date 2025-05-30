@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: periclesathin-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2       # >1
+      maxSurge: 25%           # >20%
+  selector:
+    matchLabels:
+      app: periclesathin
+      version: rolling
+  template:
+    metadata:
+      labels:
+        app: periclesathin
+        version: rolling
+    spec:
+      containers:
+        - name: index
+          image: periclesathin/index:v1
+          ports:
+            - containerPort: 80

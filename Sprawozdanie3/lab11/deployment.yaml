@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: periclesathin-index
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: periclesathin-index
+  template:
+    metadata:
+      labels:
+        app: periclesathin-index
+    spec:
+      containers:
+        - name: index
+          image: periclesathin/index:v1
+          ports:
+            - containerPort: 80

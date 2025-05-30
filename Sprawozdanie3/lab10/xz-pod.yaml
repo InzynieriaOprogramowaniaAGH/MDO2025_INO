@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: xz-app
+spec:
+  containers:
+  - name: xz-container
+    image: xz-app:latest
+    imagePullPolicy: Never
