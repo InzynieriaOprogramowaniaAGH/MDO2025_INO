@@ -581,3 +581,253 @@ Aplikacja `xz` została zainstalowana lokalnie i uruchamiana poza kontenerem.
 W pliku odpowiedzi `ks.cfg` utworzono jednostkę `run-xz.service`, która automatycznie uruchamia komendę kompresji przy starcie systemu.
 
 Aby zweryfikować działanie aplikacji, można wykonać następujące polecenie:
+
+
+
+# Zajęcia10::Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#zaj%C4%99cia10wdra%C5%BCanie-na-zarz%C4%85dzalne-kontenery-kubernetes-1)
+
+## Instalacja klastra Kubernetes
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#instalacja-klastra-kubernetes)
+
+### 1. Pobranie i instalacja Minikube
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#1-pobranie-i-instalacja-minikube)
+
+Instalator został pobrany bezpośrednio z oficjalnego źródła i zainstalowany poleceniem:
+
+```
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+sudo dpkg -i minikube_latest_amd64.deb
+
+```
+
+### 2. Uruchomienie klastra Kubernates
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-uruchomienie-klastra-kubernates)
+
+Minikube domyślnie uruchamia klaster lokalnie w maszynie wirtualnej. Start klastra odbywa się przy pomocy polecenia
+
+```
+minikube start
+```
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfAoETzlrdVIUfOoMhHJrbGgwK_3EjJRoWa4dZYBZ2C2kE2F_NNSpDd6H6P0-4V5rL8Wh0nRPxXZQCNrgfNvY7ZUWIPGwlwihz8yZCMT-infgHQZ7qoMFxBJmsRD9CGXnllQMqU6Q?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+### 3. Uruchomienie Dashboard
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#3-uruchomienie-dashboard)
+
+Aby ułatwić wizualne zarządzanie klastrem, uruchomiono wbudowany Kubernetes Dashboard, dostępny z poziomu przeglądarki
+
+```
+minikube dashboard
+```
+
+To polecenie otwiera lokalny panel graficzny w nowym oknie przeglądarki i jednocześnie uruchamia lokalne tunelowanie portów:
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXc55Nt-u8tghowTNECePiemj44fvdl8XF30tvc-3v0KVv2_CNBkCKG_TqPfeCF_SIieXgKPtuqA88gHc2hp2tKyxqKcOwYjZEdkNIg16oQxebWcFMsEK1ZTGqNhm6agIy8VAHts?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+_Zalecane jest korzystanie z VS Code, z powodu automatycznego przekierowywania portów z maszyny wirtualnej do hosta_
+
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfztUUj--RcCUiC91IlQxINiGosjtWfqzK4mbCcKxitCJU-HwwB3ulRHFSkG4xvfR9fILRGpgVbo92cDSEw9oicEHf37VuCflip-L9AETbSnUV2zdKjmI0GUUYVjQP3fECf_RGpJA?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+
+### 4. Konfiguracja  `kubectl`  (alias dla Minikube)
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#4-konfiguracja-kubectl--alias-dla-minikube)
+
+Zaopatrzono się w polecenie  `kubectl`  w wariancie minikube
+
+```
+alias kubectl="minikube kubectl --"
+```
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXeCnkAJ84yA2AUqD_O5kljq5syCvWJL2kx6e7fgI0ksrqXOrrP7bjdp1jB-y5jdeoGrPC7qJs3vtcwx5XmaTDRTCq7MK2B5en0vMrIwTh2MvDRWzH-HDiGd_EX8tncipkI-HINRYw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+
+### 5. Działający klaster - weryfikacja
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#5-dzia%C5%82aj%C4%85cy-klaster---weryfikacja)
+
+Działanie klastra można potwierdzić poprzez
+```
+kubectl get nodes
+kubectl get pods -A
+```
+
+
+### 6. Problemy sprzętowe i sposoby ich ograniczenia
+
+Aby uruchomić klaster Minikube, wymagane jest podstawowe środowisko do wirtualizacji oraz odpowiednie zasoby sprzętowe, które zazwyczaj są dostępne na współczesnych komputerach. Zgodnie z oficjalną dokumentacją Minikube, minimalne wymagania to:
+
+- przynajmniej **2 rdzenie CPU**,
+- co najmniej **2 GB pamięci RAM**,
+- około **20 GB wolnego miejsca na dysku**,
+- zainstalowany **menedżer kontenerów lub maszyn wirtualnych**, taki jak:  
+  **Docker**, **VirtualBox**, **Podman** lub **KVM**.
+    
+
+### 7. Podstawowe obiekty Kubernetesa
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#7-podstawowe-obiekty-kubernetesa)
+
+W ramach pracy z Minikube i Dashboardem zapoznano się z podstawowymi komponentami K8s:
+
+-   Pod – najmniejsza jednostka wdrożeniowa, zawierająca jeden lub więcej kontenerów
+    
+-   Deployment – definiuje strategię wdrażania i skalowania podów
+    
+-   Service – zapewnia stały adres dostępu do grupy podów
+    
+-   Namespace – logiczne grupowanie zasobów
+    
+
+Dashboard pozwala na łatwą eksplorację tych zasobów i podgląd ich stanu w czasie rzeczywistym.
+
+### Analiza posiadanego kontenera
+
+#### Projekt: Deploy to cloud
+
+Obraz znajdujący się w repozytorium **XZ** zawiera aplikację, która uruchamia się poprawnie, jednak nie spełnia wymagań zadania **"Deploy to cloud"**, ponieważ:
+
+- kontener kończy działanie zaraz po starcie (Pod otrzymuje status `Completed`),
+- nie udostępnia żadnego interfejsu sieciowego – brak portów, brak możliwości użycia `kubectl expose` czy `kubectl port-forward`.
+
+#### Test – deploy i analiza własnego obrazu z repozytorium XZ
+
+**Etap 1 – przygotowanie aplikacji**
+
+Wykorzystana aplikacja została odpowiednio umieszczona w obrazie Docker. Po uruchomieniu kontenera, aplikacja wykonuje swoją funkcję i natychmiast się kończy, bez dalszego działania.
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXevT-OkYjBYQ3VN2U06sq0y-Xd31hwBMamPN8ZebA3l6fJdYfZayjk_8ac5pKj1-3kAdQVW5gY5V5Q4N_mUYOIWu3E-PtFXboD4NEEhOnlSqP8MEr1jmGtqD0KMuWdNrZL8t43T3A?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+
+**Etap 2 – uruchomienie Poda**
+
+Utworzono plik `xz-pod.yaml`, definiujący pojedynczy Pod uruchamiający kontener z obrazem aplikacji:
+
+```
+kubectl apply -f xz-pod.yaml
+```
+![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXegkRs5OHz5amRHJDypo2c7PinQ4hNq8auHWk-yHRRKrcxaZVadWJvc-mpyeQcnbS-rDsC_FC9ABDNz4HCDHdHOFVKRncKzNcg5Fo0R2xdlNX3o51tBAHAJKrqGl5PLHPB5WPweTA?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+**Etap 3 – weryfikacja działania kontenera**
+
+Po uruchomieniu:
+
+`kubectl get pods` 
+
+Kontener natychmiast osiąga status `Completed`. 
+
+#### Wnioski
+
+Obraz z repozytorium **XZ** działa poprawnie, ale nie jest odpowiedni do wdrożenia w chmurze jako trwała usługa – nie posiada mechanizmu komunikacji przez sieć. Dlatego zdecydowano się na zmianę projektu na inną aplikację również z repozytorium **XZ**, która spełnia wymagania zadania – umożliwia interakcję przez interfejs sieciowy i może działać jako kontenerowa usługa w Kubernetes.
+
+## Alternatywny projekt: Deploy aplikacji jako usługowego kontenera
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#alternatywny-projekt-deploy-aplikacji-jako-us%C5%82ugowego-kontenera)
+
+Na potrzeby zadania wybrano alternatywny projekt oparty na serwerze NGINX, który działa jako usługowy kontener. Celem było zbudowanie i uruchomienie kontenera zawierającego prostą aplikację webową z własną stroną startową.
+
+### 1. Obraz Dockera
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#1-obraz-dockera)
+
+Do budowy obrazu wykorzystano oficjalny obraz  `nginx:latest`  jako bazę. Do katalogu serwowanego przez NGINX (/usr/share/nginx/html) dodano własny plik  `index.html`  z niestandardową zawartością, potwierdzającą poprawne wdrożenie kontenera.
+
+**Zawartość  `Dockerfile`**
+
+```
+FROM nginx:latest
+COPY custom-index.html /usr/share/nginx/html/index.html
+```
+**Zawartość  `index.html`**
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXd9qlKRImIShvpRsMto6z4OIDiDpDjdb0XH2fFhNk3LP4T3-vjTAKfjCHH8FH8arigcpK3xb22uf-EKvs6VfsYaTP8XYMBFa3ARYx_n9jMGjRFSBrhBNrhMw1Ux3qnj7MxlyHfkWw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+### 2. Budowa i uruchomienie kontenera
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-budowa-i-uruchomienie-kontenera)
+
+-   Obraz został zbudowany poleceniem:
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdfq2KlvAw-nHYYRzyBxWF8nH77rnOSg7bDXdbd_gldkvQ3LJUIOREonI6qvB2hQ5ebxBqKwSLbHIL3aD0xfBRvKbLUTCoyjj7Ptc7EXBSZH0uKaXg_v14nAuVcUlBYLBoqWMPpPg?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+-   Kontener został uruchomiony w tle:
+```
+kubectl run nginx-custom-pod --image=nginx-custom --port=80 --image-pull-policy=Never
+```
+
+-   dostęp to aplikacji w przeglądarce:
+![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXeI5TseCjCzqR43vTYWrc0hYtZfSyG7osR02sD9rUGHB3r_Ue8DQn8qE7PzISVBIAUK4Njyjmcq5h4wR7H6mPSNjW0XFuwUsgqBJAEhKMfsU8FLPFiYuTPTp13QXTHTG4dgEc6ZMw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+## Przekucie wdrożenia manualnego w plik wdrożenia
+Ręczne uruchomienie aplikacji zostało przekształcone w deklaratywne wdrożenie Kubernetes za pomocą pliku perykles-nginx-deploy.yaml
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+
+```
+### 1. Wdrożenie aplikacji z pliku YAML
+Polecenie użyte do wdrożenia oraz jego wynik:
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfjkYZH2KnUcvB6U7SzzkMpzNG6AMA9NrLyB3uzcSpbiHdCsc1YjBBQNXaq7Vl6u58_J5JeKt1emBaNXwa6RotLY8gU-gGbtnk37tzJ7QIrG_82OVHi21WkM7Wwe9ve9RYDDrns?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+Wdrożenie wykonałem komendą:
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcDnJYwMpM3zceSutiPg3-r0F-AaigrAsiRxo5qLALQLsnQ6D1Sgcz3vacwv02-DUDyCvBa9KLi8rmmskn52LYsY_h4_VF4QPZVJKC1oUKWYN5yrZO2hkBlIO5S2bh78Fhw9Rcl?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+Monitoring rolloutu
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-monitoring-rolloutu)
+
+Aby upewnić się, że wdrożenie zostało przeprowadzone poprawnie, użyto:
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdyQpS-3Kr1m_Q9BRbuSz0ByTWXj4CoxHNwZea657qxaV8vrECOjvGVsyCaST2JPNkB5LfYJ7vmdYko9bC9PxIehcLFcSvm9YPeoRaafEo-ppnbZh8UpxnQoUZdAesDSBES-lus3Q?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+Wszystkie 4 repliki zostały poprawnie uruchomione i działają bez błędów.
+
+### 3. Eksponowanie aplikacji
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#3-eksponowanie-aplikacji)
+
+Aby udostępnić aplikację na zewnątrz klastra, wykonano:
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdmzPlTJDjpzPeUxxPsVTJPfhunTDyfDXYiDdc9Jfeicpf9bzOKpzzhSgJSYgB9J-hLEx-W6dmw--4jDqJwoZt397toeAiwNDqEWwoGENHPDhUeo0B1cEVtAHu3y3eFgQXK4_oAEg?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+### 4. Przekierowanie portu do serwisu
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#4-przekierowanie-portu-do-serwisu)
+
+Aplikacja została wystawiona lokalnie poprzez przekierowanie portu z serwisu:
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXctaYGqUMrSiVc0c9tBewHWxBXTxOuwxQ-1jZwPuEdoJJ5Sud0i4dH_cAiAU0MDTwX6Cw060tLpkYe80pX225beLeG8UsoQqNq-DunMPGNZufLRN15q5WaDNJK5VTnhx2jdeeXM?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+### Dashboard – Weryfikacja wizualna
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#dashboard--weryfikacja-wizualna)
+
+Do weryfikacji działania aplikacji i zarządzania zasobami klastra wykorzystano Dashboard Minikube.
+
+1.  **Workload Status**
+
+Pokazuje ogólny stan zasobów wdrożonych w klastrze:
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXeEIcQwqneX1Iqk1j6ckEfk5jJ2yQ5zrUoPX7SIzyWMaZXSaZMNR5t9Deq-tBqtx-yjlic8-L6IpzziMKIaglgoRTivpxNMo8k0wEKRMavO91GnEvv_VwKSWtAg6PwUwUtx5LvVvA?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+2.  **Pods**
+
+Widoczne są wszystkie 4 repliki poda  `nginx-deployment`:
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXe4caEo7kF3YCUtvCNQD4yoMWC6jmu-FS6auChYJkiYG1BQ_YUep9DQDVGkNrMEPkHG31mRqfSkzexiK1lFI4c3tHP9KRJ4BtUDGCMdj5nfqb4kyWqeJAFRT4FmKat4z3FIlMOIDQ?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+3.  **Deployments**
+
+Pokazuje aktywne wdrożenie z nazwą  `nginx-deployment`:
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcdAndO7HvS6kFwA-VPgWf5Mim6TjgCxh_EaGsub060WjOFR95C3Fgfhp00WKjP1PC4rebjer8nnkEp5qqEGQt7UWI0k18dW1-nvzhYOWm4nL3lyynd13FDD1-bPWzZQ-D5H1VeFw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
