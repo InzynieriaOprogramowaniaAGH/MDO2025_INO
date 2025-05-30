@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache-deployment
+  labels:
+    app: apache-basic
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: apache-basic
+  template:
+    metadata:
+      labels:
+        app: apache-basic
+    spec:
+      containers:
+      - name: apache-ssl
+        image: cumil/apache-ssl
+        ports:
+        - containerPort: 80

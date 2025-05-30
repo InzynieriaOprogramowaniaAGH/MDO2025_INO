@@ -1,0 +1,7 @@
+- name: Copy inventory file to endpoints
+  hosts: Endpoints
+  tasks:
+    - name: Copy inventory file
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /tmp/inventory.ini

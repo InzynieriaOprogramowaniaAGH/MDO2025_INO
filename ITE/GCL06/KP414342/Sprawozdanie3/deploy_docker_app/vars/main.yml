@@ -1,0 +1,5 @@
+---
+docker_image: cumil/apache-basic
+container_name: myapp
+container_port: 80
+published_port: 80
