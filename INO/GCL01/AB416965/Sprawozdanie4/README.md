@@ -1,0 +1,1 @@
+GitHub actions: https://github.com/Frigzer/cJSON/blob/ino_dev/.github/workflows/c-cpp.yml

@@ -1,0 +1,3 @@
+# Dockerfile.v3
+FROM alpine
+CMD ["false"]

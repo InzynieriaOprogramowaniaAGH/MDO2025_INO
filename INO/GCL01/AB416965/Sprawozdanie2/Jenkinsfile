@@ -25,7 +25,7 @@ pipeline {
                         sh '''
                             mkdir -p artifacts
                             CID=$(docker create cjson-builder-image)
-                            docker cp $CID:/app/cjson.rpm artifacts/
+                            docker cp $CID:/app/mycjson.rpm artifacts/
                             docker rm $CID
                         '''
                     }
@@ -55,7 +55,7 @@ pipeline {
                 dir ("INO/GCL01/AB416965/Sprawozdanie2/pipeline")
                 {
                     script {
-                        sh 'cp ../artifacts/cjson.rpm .'              
+                        sh 'cp artifacts/mycjson.rpm .'              
                         docker.build("cjson-deploy-image", "-f Dockerfile.deploy .")
 
                         // Run deployment
