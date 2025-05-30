@@ -1,0 +1,17 @@
+FROM ubuntu:22.04
+
+WORKDIR /app
+
+RUN apt update && \
+    apt install -y git make gcc ruby ruby-dev build-essential rpm
+
+RUN gem install --no-document fpm
+
+WORKDIR /app/cJSON
+
+RUN make
+
+RUN ./test.sh
+
+CMD ["/bin/bash"]
+
