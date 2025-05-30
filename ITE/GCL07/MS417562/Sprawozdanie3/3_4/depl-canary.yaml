@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-canary
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: express-canary
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: express-canary
+        version: v1
+    spec:
+      containers:
+      - name: express-deploy-img
+        image: docker.io/msior/express-deploy-img:latest
+        imagePullPolicy: Always

@@ -1,0 +1,6 @@
+FROM node:20
+WORKDIR /app
+RUN git clone https://github.com/expressjs/express.git
+WORKDIR /app/express
+COPY newDBFile.js ./examples/content-negotiation/db.js
+RUN npm install

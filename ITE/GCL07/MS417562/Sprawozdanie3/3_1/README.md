@@ -33,3 +33,35 @@ Na dwoch maszynach
 ![alt text](image-19.png)
 
 ![alt text](image-18.png)
+
+```yaml
+- name: Ping all hosts
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+```
+
+![alt text](image-20.png)
+
+![alt text](image-21.png)
+
+Dodac w inventory.ini ansible_user i ansible_become_password
+lub
+--ask-become-pass
+
+![alt text](image-22.png)
+
+```
+[Orchestrators]
+ansible-main ansible_user=michals ansible_become_pass=123
+
+[Endpoints]
+ansible-target ansible_user=ansible ansible_become_pass=ansible
+```
+![alt text](image-24.png)
+
+![alt text](image-25.png)
+
+![alt text](image-26.png)
