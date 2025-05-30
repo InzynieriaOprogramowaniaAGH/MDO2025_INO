@@ -1,0 +1,23 @@
+services:
+  build: 
+    build:
+      context: ./image_1
+      dockerfile: Dockerfile
+    image: doctest-build
+    container_name: my-doctest-buils
+    volumes:
+      - build_data:/app/build
+
+  test:
+    build: 
+      context: ./image_2
+      dockerfile: Dockerfile
+    image: doctest-test
+    container_name: doctest-test
+    depends_on:
+      - build
+    volumes:
+      - build_data:/app/build
+
+volumes:
+  build_data:
