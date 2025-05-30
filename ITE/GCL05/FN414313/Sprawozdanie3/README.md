@@ -222,6 +222,103 @@ Działanie zaprezentowano w terminalu, jak widać obraz udało się zpullować, 
 ![ss43](screeny/class010/Screenshot_43.png)
 ![ss44](screeny/class010/Screenshot_44.png)
 
+## Class009
+
+Laboratoria wymagały instalacji nienadzorowanej z użyciem pliku anaconda-ks.cfg, który znajduje się w folderze ze sprawozdaniem i ma nadane uprawnienia 777. Plik został zmodyfikowany, aby korzystał z odpowiedniego mirrora Fedory (wersja 41) oraz zawierał w sekcji %post polecenia do automatycznego uruchomienia programu express.js. Artefakt dostępny jest na Docker Hubie pod nazwą filnaw/express-app.
+
+`anaconda-ks.cfg`
+```cfg
+#version=DEVEL
+# System language
+lang pl_PL.UTF-8
+
+# Keyboard layouts
+keyboard --vckeymap=pl --xlayouts='pl'
+
+# Timezone
+timezone Europe/Warsaw --utc
+
+# Network & hostname
+network --hostname=orchestrator
+
+# Root user
+rootpw --iscrypted --allow-ssh $y$j9T$BT0dYcpFq7wgHuNrYpBa3/O8$K.tSJXLkZv9cBS67kKVBGrna9W8E8I7L0WT6IBlcwH/
+
+# User with sudo access
+user --groups=wheel --name=filnaw --password=$y$j9T$MRuSJ6lvJaR6pRWX2WXBi4G9$anZCunEdWr2HO/EBwdK3wuGKZ7sE0WxnFycrA6mUxZ7 --iscrypted --gecos="Filip Nawalaniec"
+
+# Installation source
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+
+# System boot settings
+firstboot --enable
+reboot
+
+# Partitioning
+ignoredisk --only-use=sda
+clearpart --all --initlabel
+autopart
+
+# Package selection
+%packages
+@^server-product-environment
+@headless-management
+docker
+wget
+%end
+
+%post --log=/root/kickstart-post.log
+
+# Skrypt, który pobierze obraz i uruchomi kontener po pierwszym uruchomieniu systemu
+mkdir -p /opt/express_app
+cat << 'EOF' > /opt/express_app/firstboot.sh
+#!/bin/bash
+
+# Uruchom docker (na wszelki wypadek)
+systemctl start docker
+
+# Pobierz obraz z Docker Huba
+docker pull filnaw/express-app:latest
+
+# Uruchom kontener w tle z mapowaniem portu
+docker run -d --name express-app -p 3000:3000 filnaw/express-app:latest
+
+# Wyłącz tę usługę po wykonaniu
+systemctl disable express-app-firstboot.service
+rm -f /etc/systemd/system/express-app-firstboot.service
+rm -f /opt/express_app/firstboot.sh
+EOF
+
+chmod +x /opt/express_app/firstboot.sh
+
+# Utwórz usługę systemd, która wykona ten skrypt raz po pierwszym starcie systemu
+cat << 'EOF' > /etc/systemd/system/express-app-firstboot.service
+[Unit]
+Description=Pull and run express-app container on first boot
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/express_app/firstboot.sh
+RemainAfterExit=true
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Włącz usługę, aby odpalała się po starcie systemu
+systemctl enable express-app-firstboot.service
+
+# Włącz dockera, aby działał po starcie systemu
+systemctl enable docker
+
+%end
+
+```
 
 
 ## Class010
