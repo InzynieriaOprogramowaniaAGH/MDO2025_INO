@@ -247,5 +247,174 @@ spec:
         image: frostyfire1/express-js-deploy
         ports:
         - containerPort: 3000
+          targetPort: 3000
+          nodePort: 30080
 ```
  ![](lab10/10-9.png)
+### Lab 11 (nginx)
+Do relizacji tych laboratoriów należało pryzgotować trzy obrazy: Dwa z widocznymi zmianami oraz jeden, który zawsze nie działa.
+Obraz 1
+```docker
+FROM nginx:stable
+RUN echo '<h1>NGINX GOOD_V1</h1>' > /usr/share/nginx/html/index.ht
+```
+Obraz 2
+```docker
+FROM nginx:stable
+RUN echo '<h1>NGINX SUPER SPINMATRON-2777</h1>' > /usr/share/nginx/html/index.html
+```
+Obraz 3
+```docker
+FROM nginx:stable
+RUN rm -rf /etc/nginx
+```
+Usunięcie aplikacji na pewno spowoduje, że nie będzie działać.
+Przygotowane obrazy na dockerhubie
+ ![](lab11/11-1.png)
+`deployment.yaml`
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: super-nginx-kocham
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: super-nginx
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: super-nginx
+        version: "3000"
+    spec:
+      containers:
+      - name: nginx
+        image: frostyfire1/nginx-good1:latest
+        ports:
+        - containerPort: 80
+```
+LoadBalancer `portService.yaml`
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: super-nginx-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: super-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30081
+```
+Skalowanie wdrożenia
+4 repliki
+ ![](lab11/11-2.png)
+
+8 replik
+ ![](lab11/11-3.png)
+
+1 replika
+ ![](lab11/11-4.png)
+
+0 replik
+ ![](lab11/11-5.png)
+
+10 replik
+ ![](lab11/11-6.png)
+
+Druga wersja obrazu
+Uwaga: Po zaaplikowaniu tego wdrożenia stary Replica Set pozostał aktwyny z 0/0 podami
+ ![](lab11/11-7.png)
+
+Pierwsza wersja obrazu
+ ![](lab11/11-8.png)
+
+Zła wersja obrazu
+ ![](lab11/11-9.png)
+Historia wdrożeń
+ ![](lab11/11-10.png)
+Przywrócenie poprzedniego wdrożenia
+ ![](lab11/11-11.png)
+ ![](lab11/11-12.png)
+ ![](lab11/11-13.png)
+Skrypt weryfikujący wdrożenie
+```bash
+#!/bin/bash
+
+# Setup
+DEPLOYMENT_NAME="super-nginx-kocham"
+NAMESPACE="default"
+SERVICE_NAME="super-nginx-loadbalancer"
+EXPECTED_PORT=80
+TIMEOUT_SECONDS=60
+
+start_time=$(date +%s)
+
+# Verify that the deployment even exists
+echo "Checking deployment '$DEPLOYMENT_NAME'..."
+if ! kubectl get deployment "$DEPLOYMENT_NAME" -n "$NAMESPACE" >/dev/null 2>&1; then
+  echo "Deployment '$DEPLOYMENT_NAME' not found in namespace '$NAMESPACE'."
+  exit 1
+fi
+
+# Wait for deployment (max 1 minute)
+echo "Waiting for deployment to become ready (timeout: ${TIMEOUT_SECONDS}s)..."
+while true; do
+  if kubectl rollout status deployment "$DEPLOYMENT_NAME" -n "$NAMESPACE" --timeout=5s >/dev/null 2>&1; then
+    break
+  fi
+  now=$(date +%s)
+  elapsed=$(( now - start_time ))
+  if (( elapsed > TIMEOUT_SECONDS )); then
+    echo "Deployment did not become ready within $TIMEOUT_SECONDS seconds."
+    exit 1
+  fi
+  sleep 2
+done
+
+# Check the load balancer
+echo "Checking service '$SERVICE_NAME'..."
+SERVICE_INFO=$(kubectl get svc "$SERVICE_NAME" -n "$NAMESPACE" -o json 2>/dev/null)
+if [[ $? -ne 0 ]]; then
+  echo "Service '$SERVICE_NAME' not found."
+  exit 1
+fi
+
+# Extract service IP and port
+SERVICE_IP=$(echo "$SERVICE_INFO" | jq -r '.status.loadBalancer.ingress[0].ip // .spec.clusterIP')
+PORT=$(echo "$SERVICE_INFO" | jq -r '.spec.ports[0].port')
+
+echo "Service is accessible at $SERVICE_IP:$PORT"
+
+# Check endpoints
+ENDPOINTS=$(kubectl get endpoints "$SERVICE_NAME" -n "$NAMESPACE" -o json | jq -r '.subsets[].addresses[].ip' 2>/dev/null)
+
+if [[ -z "$ENDPOINTS" ]]; then
+  echo "No endpoints found for service '$SERVICE_NAME'."
+  exit 1
+fi
+
+echo "Found endpoints: $ENDPOINTS"
+
+# HTTP check
+echo "Checking HTTP response from service..."
+RESPONSE=$(curl -s --max-time 5 "http://$SERVICE_IP:$PORT")
+if [[ $? -ne 0 ]]; then
+  echo "Failed to get HTTP response from service."
+  exit 1
+fi
+
+echo "Service responded:"
+echo "$RESPONSE"
+
+echo "Deployment '$DEPLOYMENT_NAME' verified successfully."
+```
+Weryfikacja po zmianie deploymentu z 10 na 6 replik oraz wersji 2 na 1
+ ![](lab11/11-14.png)
+ ![](lab11/11-15.png)
