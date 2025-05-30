@@ -317,8 +317,6 @@ Komenda ta instaluje minikube jako globalną komendę minikube oraz czyści plik
 
 ![alt text](image29.png)
 
-![alt text](image30.png)
-
 Analiza posiadanego kontenera:
 
 W tej części nieużyłem wcześniej przygotowanego obrazu "cjson-deploy" ze względu fakt, że biblioteka ta służy do parsowania JSON-a, a nie jest to aplikacja webowa – sama w sobie nie dostarcza interfejsu HTTP, więc nie będzie bezpośrednio nadawała się jako serwis do uruchomienia w Kubernetesie
@@ -373,24 +371,81 @@ my-nginx-app-pod – nazwa poda
 --port=80 – informacyjnie deklaruje port (nie tworzy serwisu)
 
 --labels app=my-nginx-app-pod – przypisuje etykietę do poda (można ją potem wykorzystać do selektorów w serwisach)
-
 ```
 
 ![alt text](image34.png)
 
-![alt text](image35.png)
+Dalej przygotowany pod zostaw wystawiony na porcie 8080 za pomocą komendy:
+
+```
+kubectl port-forward pod/my-nginx-app-pod 8080:80
+
+kubectl port-forward – przekierowuje port z lokalnego komputera do portu w podzie 
+
+pod/my-nginx-app-pod – wskazuje konkretny pod
+
+8080:80 – oznacza, że port 8080 na lokalnej maszynie jest kierowany  do portu 80 w podzie
+```
 
 ![alt text](image36.png)
 
+Pod z aplikacją wystawiony prawidłowo na zewnątrz:
+
 ![alt text](image37.png)
 
-YAMLE
+Przekucie wdrożenia manualnego w plik wdrożenia:
+
+Na sam początek stworzyłem deployment na bazie wcześniejszego poda:
 
 ![alt text](image38.png)
 
-Skopiowanie zawartości deploymentu do pliku oraz usunięcie go:
+Skopiowanie zawartości deploymentu do pliku .yaml oraz usunięcie go:
 
 ![alt text](image39.png)
+
+Przygotowany plik deployment.yaml:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-app
+  labels:
+    app: my-nginx-app
+spec:
+  replicas: 4
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: my-nginx-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: my-nginx-app
+    spec:
+      containers:
+      - name: my-nginx-app
+        image: jaktyl/my-nginx-app:v3
+        imagePullPolicy: Always
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+```
+
+Utworzenie nowego wdrożenia na bazie definkcji w pliku deployment.yaml za pomocą komendy:
+
+```
+kubectl apply -f deployment.yaml
+```
 
 ![alt text](image40.png)
 
@@ -402,19 +457,99 @@ Sprawdzenie, czy posiadam cztery działające repliki po ręcznej modyfikacji pl
 
 ![alt text](image42.png)
 
+Dalej został stworzony plik service.yaml, który zawierał definicję serwisu, czyli usługi w Kubernetes, która odpowiada za udostępnianie dostępu do podów
+
+Plik service.yaml:
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx-app-service
+spec:
+  type: NodePort
+  selector:
+    app: my-nginx-app
+  ports:
+  - port: 80
+    targetPort: 80
+```
+
+Utworzenie serwisu za pomocą komendy:
+
+```
+kubectl apply -f service.yaml
+```
+
 ![alt text](image43.png)
 
 ![alt text](image44.png)
 
-![alt text](image45.png)
+Wystawiona aplikacja:
 
 ![alt text](image46.png)
 
+Screen z minikube dashboard:
+
 ![alt text](image47.png)
 
-KUBERNETES v2
+**Wdrażanie na zarządzalne kontenery: Kubernetes (2)**
+
+Na potrzebny tych zajęć przygotowałem dwa nowe obrazy z własną konfiguracją NGINXa. W tym celu jak poprzednio wykorzystałem dedykowane pliki Dockerfile wraz z własnym plikiem index.html
+
+Nowa wersja (v2): 
+
+Dockerfile:
+
+```
+FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/index.html
+```
+
+index.html:
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jakubowy NGINX wersja 2</title>
+</head>
+<body>
+    <h1>Hello from Jakubowy NGINX w wersji 2</h1>
+</body>
+</html>
+```
+
+Wadliwa wersja (v3): 
+
+Dockerfile:
+
+```
+FROM nginx:alpine
+CMD ["sh", "-c", "exit 1"]
+```
+
+index.html:
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jakubowy NGINX wersja 3</title>
+</head>
+<body>
+    <h1>Hello from Jakubowy NGINX w wersji 3</h1>
+</body>
+</html>
+```
+
+Zbudowanie obrazu v2:
 
 ![alt text](image48.png)
+
+Wysłanie na DockerHub nowy oraz stary obraz:
 
 ![alt text](image49.png)
 
@@ -426,7 +561,7 @@ Wypnięcie na DockerHub:
 
 ![alt text](image51.png)
 
-Wszystkie wersje:
+Wszystkie wersje razem:
 
 ![alt text](image52.png)
 
@@ -446,15 +581,15 @@ Aktualizacja pliku yaml i zmiejszenie liczby replik do 0:
 
 ![alt text](image56.png)
 
-nowy:
+Utworzenenie kolojnego deploymentu z nowym obrazem (wersja v2):
 
 ![alt text](image57.png)
 
-stary:
+Deployment z starym obrazem (wersja v1):
 
 ![alt text](image58.png)
 
-wadliwy
+Deployment z wadliwą wersją obrazu (v3): 
 
 ![alt text](image59.png)
 
@@ -466,7 +601,7 @@ Przykładowe cofnięcie się do jednej z rewizji za pomocą poelecenia "kubectl 
 
 ![alt text](image61.png)
 
-Warto zwrócić uwagę w tym miejscu, że historia zmian replik nie zostaje zapisywana w historii rolloutów. Polecenie "kubectl rollout history" pokazuje tylko zmiany szablonu podów (spec.template) – czyli na przykładL image, env, ports, labels itd...
+Warto zwrócić uwagę w tym miejscu, że historia zmian replik nie zostaje zapisywana w historii rolloutów. Polecenie "kubectl rollout history" pokazuje tylko zmiany szablonu podów (spec.template) – czyli na przykład: image, env, ports, labels itd...
 
 Przygotowany skrypt verify_deployment.sh weryfikujący czy dany deployment został wdrożony w czasie mniejszym bądź równym 60 sekundom:
 
