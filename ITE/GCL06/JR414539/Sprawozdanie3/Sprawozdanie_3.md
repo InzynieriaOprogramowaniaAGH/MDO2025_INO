@@ -1091,12 +1091,51 @@ kubectl rollout history deployment moja-aplikacja-canary deployment.apps/moja-ap
 
 ![Zrzut ekranu – 81 - ](zrzuty_ekranu_sprawozdanie_3/81.png)
 
+Wyświetliłem wszystkie wdrożenia za pomocą komendy:
 
+```bash
+kubectl get deployments
+```
 
+![Zrzut ekranu – 82 - ](zrzuty_ekranu_sprawozdanie_3/82.png)
 
+Wynik wszystkich wdrożeń w dashboardzie:
 
+![Zrzut ekranu – 83 - ](zrzuty_ekranu_sprawozdanie_3/83.png)
 
+W każdym z deploymentów zastosowano etykietę:
 
+```bash
+labels:
+  app: moja-aplikacja
+  version: canary / stable
+```
 
+Dzięki temu możliwa jest selekcja konkretnych podów:
 
+```bash
+kubectl get pods -l app=moja-aplikacja
+```
 
+```bash
+kubectl get pods -l version=canary
+```
+
+W plikach yaml dodawałem:
+
+```bash
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moja-aplikacja
+spec:
+  type: NodePort
+  selector:
+    app: moja-aplikacja
+  ports:
+    - port: 80
+      targetPort: 80
+```
+
+Sprawia to, że serwis równoważy ruch między wszystkimi replikami, niezależnie od strategii.
