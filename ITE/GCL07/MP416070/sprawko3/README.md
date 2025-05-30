@@ -1,4 +1,4 @@
-# Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
+# Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible (^o^)/ 
 
 Do przeprowadzenia laboratoriów utworzono drugą maszyne wirtualną ansible-target (na systemie Fedora) oraz przygotowano ją do pracy aby umożliwić komunikację pomiędzy maszynami wirtualnymi. Nadano obu maszynom hostame (ansible-target oraz ansible-controller). Następnie wygenerowano nowy klucz SSH, aby umożliwić bezhasłowe logowanie do maszyny ansible-target.
 
