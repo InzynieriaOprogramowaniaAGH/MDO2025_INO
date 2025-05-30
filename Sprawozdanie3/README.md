@@ -1,4 +1,3 @@
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdvpy9ZBTieqcvi_tp_R9GYd2xjd8isfoqIRtls2XbKZ8ZEYiH7eExgWonTZcQybPCYE21ra6xMBabCB746_SGY_nAGS_8zjYvLg8nNjD3FrvNyaVntUaDW0Mb88yHDqg9XfqcmIw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ## Instalacja zarządcy Ansible
 
 [](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#instalacja-zarz%C4%85dcy-ansible)
@@ -229,9 +228,111 @@ sudo systemctl stop ssh
 Spowodowało to dezaktywację usługi `sshd` oraz mechanizmu automatycznego nasłuchiwania (ssh.socket). W rezultacie, podczas kolejnego uruchomienia playbooka, Ansible nie był w stanie nawiązać połączenia z hostem i oznaczył go jako `UNREACHABLE`.
 
 ## Zarządzanie stworzonym artefaktem
+W moim pipeline'ie budowany był artefakt w postaci pliku binarnego i Dockerfile umożliwiającego uruchomienie aplikacji **XZ** w kontenerze. W ramach zadania celem było przygotowanie playbooka Ansible, który automatycznie skonfiguruje środowisko na zdalnej maszynie, przeniesie artefakt, zbuduje i uruchomi kontener z aplikacją.
 
+### **1. Struktura playbooka**
 
+Na potrzeby realizacji zadania przygotowałem strukturę katalogową roli przy użyciu narzędzia `ansible-galaxy`:
 
+ansible-galaxy init manage_artifact
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcyhl3wZV-TlUacC5CepEg21JOQg_BLBVeHHileUzW6b30wVaahD7VxwascxCsV7JAriGmPKhHO1k00Ufe-nMJs9DO-6vBdfNb-56MA2tji0T5RPXyNNHSFv5uM6sFKafltethd?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+### **2. Główne zadania roli**
+
+W pliku `tasks/main.yml` zostały zaimplementowane zadania:
+
+-   Instalacja Dockera
+    
+-   Upewnienie się, że Docker działa
+    
+-   Skopiowanie artefaktu `xz.tar.gz`, pliku źródłowego `deploy.c` oraz `Dockerfile`
+    
+-   Budowa obrazu kontenera z aplikacją XZ
+    
+-   Uruchomienie kontenera
+    
+-   Zatrzymanie i usunięcie kontenera po zakończeniu pracy
+
+```
+- name: Zainstaluj Dockera
+  ansible.builtin.apt:
+    name: docker.io
+    update_cache: yes
+    state: present
+
+- name: Upewnij się, że Docker działa
+  ansible.builtin.systemd:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Skopiuj artefakt
+  ansible.builtin.copy:
+    src: xz.tar.gz
+    dest: /home/ansible/xz.tar.gz
+
+- name: Skopiuj deploy.c
+  ansible.builtin.copy:
+    src: deploy.c
+    dest: /home/ansible/deploy.c
+
+- name: Skopiuj Dockerfile
+  ansible.builtin.copy:
+    src: Dockerfile
+    dest: /home/ansible/Dockerfile
+
+- name: Zbuduj obraz Docker
+  community.docker.docker_image:
+    name: xz-runtime
+    tag: latest
+    source: build
+    build:
+      path: /home/ansible
+
+- name: Uruchom kontener z aplikacją
+  community.docker.docker_container:
+    name: artifact-app
+    image: xz-runtime:latest
+    state: started
+    detach: true
+    tty: true
+
+- name: Zatrzymaj kontener
+  community.docker.docker_container:
+    name: artifact-app
+    state: stopped
+
+- name: Usuń kontener
+  community.docker.docker_container:
+    name: artifact-app
+    state: absent
+```
+
+### **3. Plik inwentarza (inventory)**
+
+Zawiera definicję hosta zdalnego:
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcoIM7Brmj8nJIxEmOKVX7ksdJyCelnGtX2EUm7OjPt1bIFYlIsIOOqvXKz1QssF8LG_OfA1or1YNF-e1GydB4-9Y81vSQstdzGXwwaWS2PAUC7M3A5_-2zVpYzMhJaLURKsbZU?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+### 4. Playbook główny (`playbook.yml`)
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXeZmB-1e8ESJDHjrI4OCzYnsu421PEaTMFdyCj24qEgo5zWBepGQZV2WZTYn3Ea1dpih8xPezGEYwMO9rNatKj-luTVSy1ie0o3Jh-NOiIXw0XpbrIwHOKbQaATJ2iJooxu8U6WZQ?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+### **5. Weryfikacja działania**
+
+Po uruchomieniu playbooka komendą:
+
+`ansible-playbook -i inventory playbook.yml` 
+
+Ansible wykonał wszystkie kroki z sukcesem:
+
+-   Docker został poprawnie zainstalowany
+    
+-   Obraz został zbudowany z plików źródłowych i artefaktu
+    
+-   Kontener z aplikacją został uruchomiony, a następnie zatrzymany i usunięty
+    
+
+Zrzut ekranu z podsumowaniem `PLAY RECAP` potwierdza, że wszystkie zadania zakończyły się powodzeniem (`ok=10`, `failed=0`).
+
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfNRkGiuz4l1jKz4XA5YF9bMkr9iJS3T2C1UhQk8rU44lKEqNBAFhsvTXRo36ho3VFelxdFUo92Z-j0fkALjtryMYUmKss7aAgRUpSj3oPrdMOz0WW--OQZPR9kUuh5OA2QTNQc?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+### Struktura katalogu roles
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXezziL7RPPj09s1wDh2wpZyzzMvBU1o9IBxiYDNdCiqoiS9jEWbKS-bh9IiHes4CLRhEjhtuoR8JzXEU7LnncLdTLwJ8zbe6QPXiFQ4x9iWGssTHh_izgYOWIglGsMvKjXpXlr_iA?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 # Zajęcia9 
 Pliki odpowiedzi dla wdrożeń nienadzorowanych
 
