@@ -1099,3 +1099,15 @@ Dla wszystkich strategii wykorzystałem jeden wspólny `Service` typu LoadBalanc
 - Canary deployment pozwala bezpiecznie przetestować nową wersję bez pełnego wdrożenia.
 - Etykiety i selektory to kluczowe mechanizmy organizujące routing i zarządzanie wdrożeniem.
 - Service może bez problemu obsługiwać pody z różnych deploymentów, jeśli są poprawnie oznaczone.
+
+### **Wykorzystanie sztucznej inteligencji**
+
+Podczas realizacji projektu wspierałem się modelem ChatGPT 4o, który pomagał w zrozumieniu i wykonaniu zadań związanych z automatyzacją oraz konfiguracją środowisk.
+
+W części poświęconej Ansible AI wspomagała mnie przy tworzeniu pliku inwentaryzacji, opracowywaniu playbooków, organizacji ról oraz automatyzacji zdalnych działań na maszynach wirtualnych.
+
+W zadaniu dotyczącym Kickstarta model pomógł zinterpretować plik odpowiedzi, dobrać odpowiednie dyrektywy oraz zautomatyzować instalację systemu wraz z wdrożeniem potrzebnego oprogramowania po starcie systemu.
+
+W obszarze Kubernetes AI wspierała mnie przy konfiguracji deploymentów, strategii wdrożeń (Recreate, Rolling Update, Canary), rozwiązywaniu błędów YAML i przygotowaniu plików do pracy z Minikube.
+
+Wygenerowane treści były każdorazowo weryfikowane i dostosowywane przeze mnie do kontekstu projektu.
