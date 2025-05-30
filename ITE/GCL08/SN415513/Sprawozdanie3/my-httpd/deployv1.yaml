@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-custom
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: httpd-custom
+  template:
+    metadata:
+      labels:
+        app: httpd-custom
+    spec:
+      containers:
+      - name: httpd
+        image: szymonnowaq/httpd-custom:v1
+        ports:
+        - containerPort: 80

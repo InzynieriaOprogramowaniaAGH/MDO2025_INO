@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Wyszyść repo') {
+            steps {
+                cleanWs()
+            }
+        }
+        
+        stage('Zklonuj repo') {
+            steps {
+                git url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git', branch: 'main'
+            }
+        }
+        
+        stage('Checkout Brancha SN415513') {
+            steps {
+                sh 'git checkout SN415513'
+            }
+        }
+        
+        stage('Usuń obrazy dockerowe') {
+            steps {
+                sh 'docker rmi -f weechat-build weechat-test || true'
+            }
+        }
+        
+        stage('Wyczyść cache') {
+            steps {
+                sh 'docker builder prune -a -f'
+            }
+        }
+        
+        stage('Budowanie obrazu do budowania') {
+            steps {
+                dir('ITE/GCL08/SN415513/Sprawozdanie1/lab3') {
+                    sh 'docker build -t weechat-build -f Dockerfile.build .'
+                }
+            }
+        }
+        
+        stage('Budowanie obrazu do testowania') {
+            steps {
+                dir('ITE/GCL08/SN415513/Sprawozdanie1/lab3') {
+                    sh 'docker build -t weechat-test -f Dockerfile.test .'
+                }
+            }
+        }
+        
+        stage('Uruchomienie kontenera do budowy .deb') {
+            steps {
+                sh '''
+                docker run --rm -v $(pwd)/output:/output weechat-build bash -c "
+                cd /app/weechat/build &&
+                make install &&
+                mkdir -p /output/DEBIAN &&
+                echo 'Package: weechat' > /output/DEBIAN/control &&
+                echo 'Version: 1.0' >> /output/DEBIAN/control &&
+                echo 'Section: base' >> /output/DEBIAN/control &&
+                echo 'Priority: optional' >> /output/DEBIAN/control &&
+                echo 'Architecture: amd64' >> /output/DEBIAN/control &&
+                echo 'Maintainer: Your Name <your.email@example.com>' >> /output/DEBIAN/control &&
+                echo 'Description: WeeChat built from source' >> /output/DEBIAN/control &&
+                dpkg-deb --build /output /output/weechat.deb
+                "
+                '''
+            }
+        }
+        
+        stage('Archiwizacja artefaktów') {
+            steps {
+                archiveArtifacts artifacts: 'output/weechat.deb', fingerprint: true
+            }
+        }
+    }
+}
