@@ -5,7 +5,7 @@ metadata:
   labels:
     app: todo-deployment
 spec:
-  replicas: 4
+  replicas: 8
   selector:
     matchLabels:
       app: todo
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: todo-containers
-        image: winterwollf/node-deploy:v6
+        image: winterwollf/node-deploy:v4
         ports:
           - containerPort: 3000
             protocol: TCP
