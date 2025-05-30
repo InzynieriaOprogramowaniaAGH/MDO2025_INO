@@ -563,7 +563,7 @@ W przeglądarce:
 
 ### Uruchomienie pojedynczego poda: 
 
-Pod to podstawowa jednostka w Kubernetes, zawiera w sobie kontener.
+Pod to podstawowa jednostka w Kubernetes, zawiera w sobie kontenery.
 
 ![](screens/lab10-5.png)
 
@@ -603,7 +603,17 @@ Przechodzimy do zakładki `PORTS` (zaraz obok terminala), klikamy `Add Port` i w
 
 ![](screens/lab10-9.png)
 
-## Plik wdrożenia
+## Wdrożenie
+
+Wdrożenie (deployment) to obiekt Kubernetes zarządzający zestawem podów, główne funkcje wdrożeń to:
+
+- skalowanie liczby instacji aplikacji,
+
+- automatyczne zastępowanie starszych wersji aplikacji nowymi,
+
+- rollback - możliwość wycofania zmian, jeżeli nowa wersja nie działa poprawnie.
+
+### Plik wdrożenia (oparty na przykładzie z dokumentacji Kubernetes)
 
 ```yaml
 apiVersion: apps/v1
@@ -629,11 +639,45 @@ spec:
         - containerPort: 80
 ```
 
+W nagłówku definiujemy wersję api kubernetesa oraz typ zasobu, następnie w metadanych podajemy nazwę wdrożenia i etykiety do identyfikacji.
+
+Pod `spec:` znajduje się specyfikacja wdrożenia, są to np. `replicas:` - liczba instancji podów, `selector:` - etykiety do indentyfikacji podów, `template:` - struktura podów, w tym meta dane oraz ich specyfikacja, w której podajemy poszczególne kontenery.
+
+### Uruchomienie wdrożenia
+
+Wdrożenie uruchamiamy komendą `kubectl apply` i po tagu `-f` podajemy ścieżkę do pliku wdrożenia.
+
 ![](screens/lab10-10.png)
+
+Status wdrożenia możemy sprawdzić z poziomu terminala komendą `kubectl rollout status` + zasób kubernetesa, czyli dla wdrożeń 'deployments/nazwa_wdrożenia'.
+
 ![](screens/lab10-11.png)
+
+Wdrożenia możemy też kontrolować z poziomu panelu gui:
+
 ![](screens/lab10-12.png)
+
+Pody dla wdrożenia mają wspólną podobną nazwę, ale różnią się indentyfikatorem na końcu nazwy.
+
 ![](screens/lab10-13.png)
+
+Aby dostęp do aplikacji był możliwy musimy expose'ować aplikację na zewnątrz klastra, jednak tym razem nie wystarczy tylko port forwarding na konkretny pod gdyż mamy wiele podów.
+
+Rozwiązaniem tego problemu jest użycie serwisu - serwis w Kubernetes to obiekt który zapewnia punkt dostępu do grupy podów i automatycznie dystrybuuje ruuch między nimi.
+
+Aby szybko expose'ować wdrożenie jako serwis możemy skorzystać z komendy `kubectl expose deployment` + nazwa deploymentu + typ serwisu: `type=` (tutaj w przykładzie użyto `NodePort`) + port: `--port=`.
+
+Po utowrzeniu serwisu należy go jeszcze przekierować na jakiś port aby był widoczny poza klastrem, robimy to podobnie jak w przypadku pojedynczego poda, ale podajemy serwis zamiast konkretnego poda.
+
 ![](screens/lab10-14.png)
+
+Serwis w dashboardzie:
+
 ![](screens/lab10-15.png)
+
+Działanie aplikacji pod nowym portem: (użytkownik nie jest w stanie określić do którego konkretnego poda jest podłączony)
+
 ![](screens/lab10-16.png)
+
 ![](screens/lab10-17.png)
+
