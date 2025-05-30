@@ -106,7 +106,7 @@ Za pomocą [*playbooka*](https://docs.ansible.com/ansible/latest/getting_started
 
     Treść playbooka wykonującego te operacje:
 
-    ```yaml
+```yaml
     - name: My first play
   hosts: Endpoints
   tasks:
@@ -143,14 +143,14 @@ Za pomocą [*playbooka*](https://docs.ansible.com/ansible/latest/getting_started
      ansible.builtin.service:
         name: rngd
         state: restarted
-    ```
+```
 
     A efektem jego uruchomienia jest:
 
 ![Uruchomiony Playbook](Images/run_playbook.png "Efekt uruchomienia Playbooka")
 
-    Po pierwszym skopiowaniu pliku inwentaryzacji na maszyny status zadania to 'changed', ponieważ w efekcie maszyny zmieniały swój stan.
-    Podczas drugiej próby kopiowania, status to 'ok' ponieważ tym razem nie nastąpiła żadna zmiana na maszynie, ponieważ ten plik już istniał w docelowej lokalizacji.
+Po pierwszym skopiowaniu pliku inwentaryzacji na maszyny status zadania to 'changed', ponieważ w efekcie maszyny zmieniały swój stan.
+Podczas drugiej próby kopiowania, status to 'ok' ponieważ tym razem nie nastąpiła żadna zmiana na maszynie, ponieważ ten plik już istniał w docelowej lokalizacji.
 
   * Przeprowadź operacje względem maszyny z wyłączonym serwerem SSH, odpiętą kartą sieciową
 
@@ -415,13 +415,13 @@ rootpw --iscrypted --allow-ssh $y$j9T$oGuE12lf4pzUttXSQZqrN3GB$RhftiA11WvLnHUGl5
 
  * ```minikube kubectl run -- <nazwa-jednopodowego-wdrożenia> --image=<obraz-docker> --port=<wyprowadzany port> --labels app=<nazwa-jednopodowego-wdrożenia>```
 
-         ![Stworzenie poda](Images/pod_created.png "Stworzenie poda")  
+![Stworzenie poda](Images/pod_created.png "Stworzenie poda")  
 
  * Przedstaw że *pod* działa (via Dashboard oraz `kubectl`)
 
-         ![Działający pod wyświetlony w dashboardzie](Images/working_pod.png "Działający pod wyświetlony w dashboardzie")  
+![Działający pod wyświetlony w dashboardzie](Images/working_pod.png "Działający pod wyświetlony w dashboardzie")  
 
-         ![Działający pod wyświetlony w terminalu przez polecenie kubectl](Images/working_pod_terminal.png "Działający pod wyświetlony w terminalu przez polecenie kubectl")  
+![Działający pod wyświetlony w terminalu przez polecenie kubectl](Images/working_pod_terminal.png "Działający pod wyświetlony w terminalu przez polecenie kubectl")  
 
 
  * Wyprowadź port celem dotarcia do eksponowanej funkcjonalności
@@ -436,11 +436,11 @@ rootpw --iscrypted --allow-ssh $y$j9T$oGuE12lf4pzUttXSQZqrN3GB$RhftiA11WvLnHUGl5
         Ostatecznie polecenie kubectl run miało postać:
         ```minikube kubectl -- run nginx   --image=jknginx:latest   --port=80   --labels app=nginxKubDep --image-pull-policy=Never```
 
-         ![Port forwarding](Images/port_forward.png "Port forwarding")  
+![Port forwarding](Images/port_forward.png "Port forwarding")  
 
  * Przedstaw komunikację z eskponowaną funkcjonalnością
 
-           ![Nginx za pomoca kubernetesa](Images/nginx_kubernetes.png "Nginx za pomoca kubernetesa")  
+![Nginx za pomoca kubernetesa](Images/nginx_kubernetes.png "Nginx za pomoca kubernetesa")  
  
 ### Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
  * Zapisz [wdrożenie](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) jako plik YML
@@ -484,7 +484,7 @@ spec:
 
    * Zbadaj stan za pomocą ```kubectl rollout status```
 
-         ![Sprawdzenie statusu deploymentu](Images/status.png "Sprawdzenie statusu deploymentu") 
+![Sprawdzenie statusu deploymentu](Images/status.png "Sprawdzenie statusu deploymentu") 
 
  * Wyeksponuj wdrożenie jako serwis
  * Przekieruj port do serwisu (tak, jak powyżej)
