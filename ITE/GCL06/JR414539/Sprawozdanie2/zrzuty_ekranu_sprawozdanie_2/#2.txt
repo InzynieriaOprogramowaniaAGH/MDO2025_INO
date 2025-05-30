@@ -1,0 +1,130 @@
+Started by user JakubRobak
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/Build
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (📥 Klonowanie repozytorium)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/Build/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/JR414539^{commit} # timeout=10
+Checking out Revision 052410f0e225c50777e2af505b8778869b8e4e4e (refs/remotes/origin/JR414539)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 052410f0e225c50777e2af505b8778869b8e4e4e # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D JR414539 # timeout=10
+ > git checkout -b JR414539 052410f0e225c50777e2af505b8778869b8e4e4e # timeout=10
+Commit message: "JR414539 Połączenie z powrotem gałęzi z mainem, nie mogłem pull requesta zrobić"
+ > git rev-list --no-walk 052410f0e225c50777e2af505b8778869b8e4e4e # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (📄 Sprawdzenie Dockerfile)
+[Pipeline] sh
++ ls -la ITE/GCL06/JR414539/Sprawozdanie1
+total 52
+drwxr-xr-x 3 jenkins jenkins  4096 Apr  3 20:09 .
+drwxr-xr-x 3 jenkins jenkins  4096 Apr  3 20:09 ..
+-rw-r--r-- 1 jenkins jenkins   257 Apr  3 20:09 Dockerfile
+-rw-r--r-- 1 jenkins jenkins   452 Apr  3 20:09 Dockerfile.build
+-rw-r--r-- 1 jenkins jenkins    58 Apr  3 20:09 Dockerfile.test
+-rw-r--r-- 1 jenkins jenkins 22572 Apr  3 20:09 Sprawozdanie1.md
+-rwxr-xr-x 1 jenkins jenkins   189 Apr  3 20:09 commit-msg
+drwxr-xr-x 2 jenkins jenkins  4096 Apr  3 20:09 zrzuty_ekranu_sprawozdanie_1
+[Pipeline] sh
++ cat ITE/GCL06/JR414539/Sprawozdanie1/Dockerfile.build
+FROM ubuntu:22.04
+
+RUN apt update && apt install -y \
+    build-essential \
+    autoconf \
+    automake \
+    autopoint \
+    texinfo \
+    flex \
+    gperf \
+    gettext \
+    libssl-dev \
+    libgnutls28-dev \
+    zlib1g-dev \
+    pkg-config \
+    git \
+    wget \
+    autoconf-archive \
+    ca-certificates
+
+WORKDIR /opt
+
+RUN git clone https://github.com/mirror/wget.git
+
+WORKDIR /opt/wget
+
+RUN ./bootstrap && ./configure && make
+
+CMD ["/bin/bash"]
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (🐳 Budowanie obrazu Dockera)
+[Pipeline] sh
++ docker build -t wget-jenkins-build -f ITE/GCL06/JR414539/Sprawozdanie1/Dockerfile.build ITE/GCL06/JR414539/Sprawozdanie1
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.build
+#1 transferring dockerfile: 497B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 1.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/6] FROM docker.io/library/ubuntu:22.04@sha256:ed1544e454989078f5dec1bfdabd8c5cc9c48e0705d07b678ab6ae3fb61952d2
+#4 DONE 0.0s
+
+#5 [2/6] RUN apt update && apt install -y     build-essential     autoconf     automake     autopoint     texinfo     flex     gperf     gettext     libssl-dev     libgnutls28-dev     zlib1g-dev     pkg-config     git     wget     autoconf-archive     ca-certificates
+#5 CACHED
+
+#6 [3/6] WORKDIR /opt
+#6 CACHED
+
+#7 [4/6] RUN git clone https://github.com/mirror/wget.git
+#7 CACHED
+
+#8 [5/6] WORKDIR /opt/wget
+#8 CACHED
+
+#9 [6/6] RUN ./bootstrap && ./configure && make
+#9 CACHED
+
+#10 exporting to image
+#10 exporting layers done
+#10 writing image sha256:09b3620e8a98098ee9d697a8624f83dca2991767a8ca6990a5a61c5c2030d46a done
+#10 naming to docker.io/library/wget-jenkins-build done
+#10 DONE 0.0s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+✅ Pipeline zakończony sukcesem.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

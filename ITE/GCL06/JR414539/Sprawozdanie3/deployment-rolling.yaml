@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moja-aplikacja-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
+  selector:
+    matchLabels:
+      app: moja-aplikacja
+  template:
+    metadata:
+      labels:
+        app: moja-aplikacja
+    spec:
+      containers:
+      - name: moja-aplikacja
+        image: moja-aplikacja:v2
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moja-aplikacja
+spec:
+  type: NodePort
+  selector:
+    app: moja-aplikacja
+  ports:
+    - port: 80
+      targetPort: 80

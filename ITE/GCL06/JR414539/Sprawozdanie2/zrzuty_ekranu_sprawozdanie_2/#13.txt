@@ -1,0 +1,674 @@
+Started by user JakubRobak
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/Build
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (📥 Klonowanie repozytorium)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/Build/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/JR414539^{commit} # timeout=10
+Checking out Revision 0a2e677150b1a599cef151839dd956c2ee6608db (refs/remotes/origin/JR414539)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 0a2e677150b1a599cef151839dd956c2ee6608db # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git branch -D JR414539 # timeout=10
+ > git checkout -b JR414539 0a2e677150b1a599cef151839dd956c2ee6608db # timeout=10
+Commit message: "JR414539: usuniecie wget.deb z githuba"
+ > git rev-list --no-walk 0a2e677150b1a599cef151839dd956c2ee6608db # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (📄 Sprawdzenie Dockerfile)
+[Pipeline] sh
++ ls -la ITE/GCL06/JR414539/Sprawozdanie1
+total 64
+drwxr-xr-x 3 jenkins jenkins  4096 Apr 10 10:13 .
+drwxr-xr-x 4 jenkins jenkins  4096 Apr 10 09:27 ..
+-rw-r--r-- 1 jenkins jenkins   257 Apr  3 20:09 Dockerfile
+-rw-r--r-- 1 jenkins jenkins   799 Apr 10 10:13 Dockerfile.build
+-rw-r--r-- 1 jenkins jenkins    58 Apr  3 20:09 Dockerfile.test
+-rw-r--r-- 1 jenkins jenkins    80 Apr 10 09:27 Dockerfile_deploy
+-rw-r--r-- 1 jenkins jenkins   758 Apr 10 09:27 Dockerfile_jenkins
+-rw-r--r-- 1 jenkins jenkins  1051 Apr 10 09:27 Pipeline_script
+-rw-r--r-- 1 jenkins jenkins 22572 Apr  3 20:09 Sprawozdanie1.md
+-rwxr-xr-x 1 jenkins jenkins   189 Apr  3 20:09 commit-msg
+drwxr-xr-x 2 jenkins jenkins  4096 Apr  3 20:09 zrzuty_ekranu_sprawozdanie_1
+[Pipeline] sh
++ cat ITE/GCL06/JR414539/Sprawozdanie1/Dockerfile.build
+FROM ubuntu:22.04
+
+RUN apt update && apt install -y \
+    build-essential \
+    autoconf \
+    automake \
+    autopoint \
+    texinfo \
+    flex \
+    gperf \
+    gettext \
+    libssl-dev \
+    libgnutls28-dev \
+    zlib1g-dev \
+    pkg-config \
+    git \
+    wget \
+    autoconf-archive \
+    ca-certificates \
+    checkinstall
+
+WORKDIR /opt
+
+RUN git clone https://github.com/mirror/wget.git
+
+WORKDIR /opt/wget
+
+RUN ./bootstrap && ./configure && make && \
+    checkinstall --install=no \
+                 --pkgname=wget \
+                 --pkgversion=1.0 \
+                 --pkgarch=amd64 \
+                 --pkgrelease=1 \
+                 --maintainer="JR414539@student.agh.edu.pl" \
+                 --fstrans=no \
+                 --pakdir=/opt/wget \
+                 -y
+
+CMD ["/bin/bash"]
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (🐳 Budowanie obrazu Dockera)
+[Pipeline] sh
++ docker build -t wget-jenkins-build -f ITE/GCL06/JR414539/Sprawozdanie1/Dockerfile.build ITE/GCL06/JR414539/Sprawozdanie1
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.build
+#1 transferring dockerfile: 844B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.9s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/6] FROM docker.io/library/ubuntu:22.04@sha256:d80997daaa3811b175119350d84305e1ec9129e1799bba0bd1e3120da3ff52c3
+#4 DONE 0.0s
+
+#5 [2/6] RUN apt update && apt install -y     build-essential     autoconf     automake     autopoint     texinfo     flex     gperf     gettext     libssl-dev     libgnutls28-dev     zlib1g-dev     pkg-config     git     wget     autoconf-archive     ca-certificates     checkinstall
+#5 CACHED
+
+#6 [3/6] WORKDIR /opt
+#6 CACHED
+
+#7 [4/6] RUN git clone https://github.com/mirror/wget.git
+#7 CACHED
+
+#8 [5/6] WORKDIR /opt/wget
+#8 CACHED
+
+#9 [6/6] RUN ./bootstrap && ./configure && make &&     checkinstall --install=no                  --pkgname=wget                  --pkgversion=1.0                  --pkgarch=amd64                  --pkgrelease=1                  --maintainer="JR414539@student.agh.edu.pl"                  --fstrans=no                  --pakdir=/opt/wget                  -y
+#9 CACHED
+
+#10 exporting to image
+#10 exporting layers done
+#10 writing image sha256:648bb1c60d1cc2805caa7a880202787dccd8039db1c09be2b4d3c5d357a4cf60 done
+#10 naming to docker.io/library/wget-jenkins-build done
+#10 DONE 0.0s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (🚀 Deploy & Test wget)
+[Pipeline] echo
+Buduję deploy-image do testu wget
+[Pipeline] sh
++ docker build -t wget-deploy-test -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile_deploy ITE/GCL06/JR414539/Sprawozdanie2
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile_deploy
+#1 transferring dockerfile: 124B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/wget-jenkins-build:latest
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/1] FROM docker.io/library/wget-jenkins-build:latest
+#4 CACHED
+
+#5 exporting to image
+#5 exporting layers done
+#5 writing image sha256:1aac85220bc737c63af3da3e7d27ee23212cdd12fd3b27fad5b372ab4a00015f done
+#5 naming to docker.io/library/wget-deploy-test done
+#5 DONE 0.0s
+[Pipeline] echo
+Odpalam kontener i testuję wget
+[Pipeline] sh
++ docker run --rm wget-deploy-test
+--2025-04-14 11:24:04--  http://www.metal.agh.edu.pl/
+Resolving www.metal.agh.edu.pl (www.metal.agh.edu.pl)... 149.156.112.15
+Connecting to www.metal.agh.edu.pl (www.metal.agh.edu.pl)|149.156.112.15|:80... connected.
+HTTP request sent, awaiting response... 301 Moved Permanently
+Location: https://www.metal.agh.edu.pl/ [following]
+--2025-04-14 11:24:04--  https://www.metal.agh.edu.pl/
+Connecting to www.metal.agh.edu.pl (www.metal.agh.edu.pl)|149.156.112.15|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1440 (1.4K) [text/html]
+Saving to: 'STDOUT'
+
+     0K .                                                     100% 99.5M=0s
+
+2025-04-14 11:24:04 (99.5 MB/s) - written to stdout [1440/1440]
+
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet" />
+    <script defer data-domain="metal.agh.edu.pl" src="https://plausible.kisim.eu.org/js/script.file-downloads.outbound-links.js"></script>
+    <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+
+    <title>Wydział Inżynierii Metali i Informatyki Przemysłowej AGH</title>
+    <script type="module" crossorigin src="/assets/index-C3cQh9by.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-6N9pVZ0n.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (📦 Build wget .deb package)
+[Pipeline] echo
+Buduję paczkę wget.deb
+[Pipeline] sh
++ docker create --name wget-builder wget-jenkins-build
+6a71f48524589f6afd23d0d92a59d2428ab60a262aa65d07e2864cba54166556
+[Pipeline] sh
++ docker cp wget-builder:/opt/wget/wget_1.0-1_amd64.deb wget.deb
+[Pipeline] sh
++ docker rm wget-builder
+wget-builder
+[Pipeline] archiveArtifacts
+Archiving artifacts
+Recording fingerprints
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (🔍 Test wget (Tester))
+[Pipeline] echo
+Buduję obraz tester-a
+[Pipeline] sh
++ docker build -t wget-tester -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile.test ITE/GCL06/JR414539/Sprawozdanie2
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.test
+#1 transferring dockerfile: 108B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/wget-jenkins-build:latest
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/2] FROM docker.io/library/wget-jenkins-build:latest
+#4 DONE 0.0s
+
+#5 [2/2] WORKDIR /opt/wget
+#5 CACHED
+
+#6 exporting to image
+#6 exporting layers done
+#6 writing image sha256:6a19a9e5f56fd51d182345d6203872cf36f7cd92751761bdd47d422f8df187ac done
+#6 naming to docker.io/library/wget-tester done
+#6 DONE 0.0s
+[Pipeline] echo
+Odpalam testy wget
+[Pipeline] sh
++ docker run --rm wget-tester
+  GEN      public-submodule-commit
+make  check-recursive
+make[1]: Entering directory '/opt/wget'
+Making check in lib
+make[2]: Entering directory '/opt/wget/lib'
+make  check-am
+make[3]: Entering directory '/opt/wget/lib'
+make[3]: Nothing to be done for 'check-am'.
+make[3]: Leaving directory '/opt/wget/lib'
+make[2]: Leaving directory '/opt/wget/lib'
+Making check in src
+make[2]: Entering directory '/opt/wget/src'
+make  libunittest.a
+make[3]: Entering directory '/opt/wget/src'
+  CC       libunittest_a-connect.o
+  CC       libunittest_a-convert.o
+convert.c: In function 'local_quote_string':
+cc1: warning: function may return address of local variable [-Wreturn-local-addr]
+convert.c:745:8: note: declared here
+  745 |   char buf[1024];
+      |        ^~~
+  CC       libunittest_a-cookies.o
+  CC       libunittest_a-ftp.o
+  CC       libunittest_a-css_.o
+  CC       libunittest_a-css-url.o
+  CC       libunittest_a-ftp-basic.o
+  CC       libunittest_a-ftp-ls.o
+  CC       libunittest_a-hash.o
+  CC       libunittest_a-host.o
+  CC       libunittest_a-hsts.o
+hsts.c: In function 'hsts_store_save':
+hsts.c:577:11: warning: ignoring return value of 'ftruncate' declared with attribute 'warn_unused_result' [-Wunused-result]
+  577 |           ftruncate (fd, 0);
+      |           ^~~~~~~~~~~~~~~~~
+  CC       libunittest_a-html-parse.o
+  CC       libunittest_a-html-url.o
+  CC       libunittest_a-http.o
+  CC       libunittest_a-init.o
+  CC       libunittest_a-log.o
+  CC       libunittest_a-main.o
+  CC       libunittest_a-netrc.o
+  CC       libunittest_a-progress.o
+  CC       libunittest_a-ptimer.o
+  CC       libunittest_a-recur.o
+  CC       libunittest_a-res.o
+  CC       libunittest_a-retr.o
+retr.c: In function 'test_retr_rate':
+retr.c:1628:25: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+ 1628 |   for (struct test *t = tests; t < tests+countof(tests); t++)
+      |                         ^~~~~
+  CC       libunittest_a-spider.o
+  CC       libunittest_a-url.o
+  CC       libunittest_a-warc.o
+  CC       libunittest_a-utils.o
+  CC       libunittest_a-exits.o
+  CC       libunittest_a-build_info.o
+  CC       libunittest_a-iri.o
+  CC       libunittest_a-xattr.o
+  CC       libunittest_a-ftp-opie.o
+  CC       libunittest_a-http-ntlm.o
+  CC       libunittest_a-gnutls.o
+  CC       libunittest_a-version.o
+  AR       libunittest.a
+make[3]: Leaving directory '/opt/wget/src'
+make[2]: Leaving directory '/opt/wget/src'
+Making check in doc
+make[2]: Entering directory '/opt/wget/doc'
+make[2]: Nothing to be done for 'check'.
+make[2]: Leaving directory '/opt/wget/doc'
+Making check in po
+make[2]: Entering directory '/opt/wget/po'
+make[2]: Nothing to be done for 'check'.
+make[2]: Leaving directory '/opt/wget/po'
+Making check in gnulib_po
+make[2]: Entering directory '/opt/wget/gnulib_po'
+make[2]: Nothing to be done for 'check'.
+make[2]: Leaving directory '/opt/wget/gnulib_po'
+Making check in util
+make[2]: Entering directory '/opt/wget/util'
+make[2]: Nothing to be done for 'check'.
+make[2]: Leaving directory '/opt/wget/util'
+Making check in fuzz
+make[2]: Entering directory '/opt/wget/fuzz'
+make  wget_cookie_fuzzer wget_css_fuzzer wget_ftpls_fuzzer wget_html_fuzzer wget_netrc_fuzzer wget_options_fuzzer wget_progress_fuzzer wget_read_hunk_fuzzer wget_robots_fuzzer wget_url_fuzzer wget_ntlm_fuzzer
+make[3]: Entering directory '/opt/wget/fuzz'
+  CC       wget_cookie_fuzzer.o
+  CC       main.o
+make  -C ../src libunittest.a
+make[4]: Entering directory '/opt/wget/src'
+make[4]: Leaving directory '/opt/wget/src'
+  CCLD     wget_cookie_fuzzer
+  CC       wget_css_fuzzer.o
+/usr/include/stdlib.h: In function 'exit':
+wget_css_fuzzer.c:90:1: warning: 'noreturn' function does return
+   90 | }
+      | ^
+  CCLD     wget_css_fuzzer
+  CC       wget_ftpls_fuzzer.o
+/usr/include/stdlib.h: In function 'exit':
+wget_ftpls_fuzzer.c:82:1: warning: 'noreturn' function does return
+   82 | }
+      | ^
+  CCLD     wget_ftpls_fuzzer
+  CC       wget_html_fuzzer.o
+  CCLD     wget_html_fuzzer
+  CC       wget_netrc_fuzzer.o
+/usr/include/stdlib.h: In function 'exit':
+wget_netrc_fuzzer.c:81:1: warning: 'noreturn' function does return
+   81 | }
+      | ^
+  CCLD     wget_netrc_fuzzer
+  CC       wget_options_fuzzer.o
+wget_options_fuzzer.c: In function 'exit':
+wget_options_fuzzer.c:92:1: warning: 'noreturn' function does return
+   92 | }
+      | ^
+  CCLD     wget_options_fuzzer
+  CC       wget_progress_fuzzer.o
+  CCLD     wget_progress_fuzzer
+  CC       wget_read_hunk_fuzzer.o
+  CCLD     wget_read_hunk_fuzzer
+  CC       wget_robots_fuzzer.o
+  CCLD     wget_robots_fuzzer
+  CC       wget_url_fuzzer.o
+  CCLD     wget_url_fuzzer
+  CC       wget_ntlm_fuzzer.o
+  CCLD     wget_ntlm_fuzzer
+make[3]: Leaving directory '/opt/wget/fuzz'
+make  check-TESTS
+make[3]: Entering directory '/opt/wget/fuzz'
+make  -C ../src libunittest.a
+make[4]: Entering directory '/opt/wget/src'
+make[4]: Leaving directory '/opt/wget/src'
+  CCLD     wget_cookie_fuzzer
+  CCLD     wget_css_fuzzer
+  CCLD     wget_ftpls_fuzzer
+  CCLD     wget_html_fuzzer
+  CCLD     wget_netrc_fuzzer
+  CCLD     wget_options_fuzzer
+  CCLD     wget_progress_fuzzer
+  CCLD     wget_read_hunk_fuzzer
+  CCLD     wget_robots_fuzzer
+  CCLD     wget_url_fuzzer
+  CCLD     wget_ntlm_fuzzer
+make[4]: Entering directory '/opt/wget/fuzz'
+make  -C ../src libunittest.a
+make[5]: Entering directory '/opt/wget/src'
+make[5]: Leaving directory '/opt/wget/src'
+  CCLD     wget_cookie_fuzzer
+PASS: wget_cookie_fuzzer
+  CCLD     wget_css_fuzzer
+PASS: wget_css_fuzzer
+  CCLD     wget_ftpls_fuzzer
+PASS: wget_ftpls_fuzzer
+  CCLD     wget_html_fuzzer
+PASS: wget_html_fuzzer
+  CCLD     wget_netrc_fuzzer
+PASS: wget_netrc_fuzzer
+  CCLD     wget_options_fuzzer
+PASS: wget_options_fuzzer
+  CCLD     wget_progress_fuzzer
+PASS: wget_progress_fuzzer
+  CCLD     wget_read_hunk_fuzzer
+PASS: wget_read_hunk_fuzzer
+  CCLD     wget_robots_fuzzer
+PASS: wget_robots_fuzzer
+  CCLD     wget_url_fuzzer
+PASS: wget_url_fuzzer
+  CCLD     wget_ntlm_fuzzer
+PASS: wget_ntlm_fuzzer
+============================================================================
+Testsuite summary for wget 1.24.5.22-8775
+============================================================================
+# TOTAL: 11
+# PASS:  11
+# SKIP:  0
+# XFAIL: 0
+# FAIL:  0
+# XPASS: 0
+# ERROR: 0
+============================================================================
+make[4]: Leaving directory '/opt/wget/fuzz'
+make[3]: Leaving directory '/opt/wget/fuzz'
+make[2]: Leaving directory '/opt/wget/fuzz'
+Making check in tests
+make[2]: Entering directory '/opt/wget/tests'
+make  unit-tests
+make[3]: Entering directory '/opt/wget/tests'
+  CC       unit-tests.o
+cd ../src && make  libunittest.a
+make[4]: Entering directory '/opt/wget/src'
+make[4]: Leaving directory '/opt/wget/src'
+  CCLD     unit-tests
+make[3]: Leaving directory '/opt/wget/tests'
+make  check-TESTS
+make[3]: Entering directory '/opt/wget/tests'
+cd ../src && make  libunittest.a
+make[4]: Entering directory '/opt/wget/src'
+make[4]: Leaving directory '/opt/wget/src'
+  CCLD     unit-tests
+make[4]: Entering directory '/opt/wget/tests'
+cd ../src && make  libunittest.a
+make[5]: Entering directory '/opt/wget/src'
+make[5]: Leaving directory '/opt/wget/src'
+  CCLD     unit-tests
+PASS: unit-tests
+PASS: Test-c-full.px
+PASS: Test-c-partial.px
+PASS: Test-c.px
+PASS: Test-c-shorter.px
+PASS: Test-cookies.px
+PASS: Test-cookies-401.px
+PASS: Test-E-k-K.px
+PASS: Test-E-k.px
+PASS: Test-ftp.px
+PASS: Test-ftp-dir.px
+PASS: Test-ftp-pasv-fail.px
+PASS: Test-ftp-bad-list.px
+PASS: Test-ftp-recursive.px
+PASS: Test-ftp-iri.px
+PASS: Test-ftp-iri-fallback.px
+PASS: Test-ftp-iri-recursive.px
+PASS: Test-ftp-iri-disabled.px
+PASS: Test-ftp-list-Multinet.px
+PASS: Test-ftp-list-Unknown.px
+PASS: Test-ftp-list-Unknown-a.px
+PASS: Test-ftp-list-Unknown-hidden.px
+PASS: Test-ftp-list-Unknown-list-a-fails.px
+PASS: Test-ftp-list-UNIX-hidden.px
+PASS: Test-ftp--start-pos.px
+PASS: Test-HTTP-Content-Disposition-1.px
+PASS: Test-HTTP-Content-Disposition-2.px
+PASS: Test-HTTP-Content-Disposition.px
+PASS: Test-i-ftp.px
+PASS: Test-i-http.px
+PASS: Test-idn-headers.px
+PASS: Test-idn-meta.px
+PASS: Test-idn-cmd.px
+PASS: Test-idn-cmd-utf8.px
+PASS: Test-idn-robots.px
+PASS: Test-idn-robots-utf8.px
+PASS: Test-iri.px
+PASS: Test-iri-percent.px
+PASS: Test-iri-disabled.px
+PASS: Test-iri-forced-remote.px
+PASS: Test-iri-list.px
+PASS: Test-meta-robots.px
+PASS: Test-N-current.px
+PASS: Test-N-HTTP-Content-Disposition.px
+PASS: Test-N--no-content-disposition.px
+PASS: Test-N--no-content-disposition-trivial.px
+PASS: Test-N-no-info.px
+PASS: Test--no-content-disposition.px
+PASS: Test--no-content-disposition-trivial.px
+PASS: Test-N-old.px
+PASS: Test-nonexisting-quiet.px
+PASS: Test-noop.px
+PASS: Test-np.px
+PASS: Test-N.px
+PASS: Test-N-smaller.px
+PASS: Test-O-HTTP-Content-Disposition.px
+PASS: Test-O-nc.px
+PASS: Test-O--no-content-disposition.px
+PASS: Test-O--no-content-disposition-trivial.px
+PASS: Test-O-nonexisting.px
+PASS: Test-O.px
+PASS: Test--post-file.px
+PASS: Test-proxied-https-auth.px
+PASS: Test-proxied-https-auth-keepalive.px
+PASS: Test-proxy-auth-basic.px
+PASS: Test-restrict-ascii.px
+PASS: Test-Restrict-Lowercase.px
+PASS: Test-Restrict-Uppercase.px
+PASS: Test-stdouterr.px
+PASS: Test--spider-fail.px
+PASS: Test--spider.px
+PASS: Test--spider-r-HTTP-Content-Disposition.px
+PASS: Test--spider-r--no-content-disposition.px
+PASS: Test--spider-r--no-content-disposition-trivial.px
+PASS: Test--spider-r.px
+PASS: Test--start-pos.px
+PASS: Test--start-pos--continue.px
+PASS: Test--httpsonly-r.px
+PASS: Test-204.px
+PASS: Test-ftp-pasv-not-supported.px
+PASS: Test-https-pfs.px
+PASS: Test-https-tlsv1.px
+PASS: Test-https-tlsv1x.px
+PASS: Test-https-selfsigned.px
+SKIP: Test-https-weboftrust.px
+PASS: Test-https-clientcert.px
+PASS: Test-https-crl.px
+PASS: Test-https-badcerts.px
+============================================================================
+Testsuite summary for wget 1.24.5.22-8775
+============================================================================
+# TOTAL: 88
+# PASS:  87
+# SKIP:  1
+# XFAIL: 0
+# FAIL:  0
+# XPASS: 0
+# ERROR: 0
+============================================================================
+make[4]: Leaving directory '/opt/wget/tests'
+make[3]: Leaving directory '/opt/wget/tests'
+make[2]: Leaving directory '/opt/wget/tests'
+Making check in testenv
+make[2]: Entering directory '/opt/wget/testenv'
+make  check-TESTS
+make[3]: Entering directory '/opt/wget/testenv'
+make[4]: Entering directory '/opt/wget/testenv'
+============================================================================
+Testsuite summary for wget 1.24.5.22-8775
+============================================================================
+# TOTAL: 0
+# PASS:  0
+# SKIP:  0
+# XFAIL: 0
+# FAIL:  0
+# XPASS: 0
+# ERROR: 0
+============================================================================
+make[4]: Leaving directory '/opt/wget/testenv'
+make[3]: Leaving directory '/opt/wget/testenv'
+make[2]: Leaving directory '/opt/wget/testenv'
+make[2]: Entering directory '/opt/wget'
+make[2]: Nothing to be done for 'check-am'.
+make[2]: Leaving directory '/opt/wget'
+make[1]: Leaving directory '/opt/wget'
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (🚀 Publish Runtime Image)
+[Pipeline] echo
+Kopiuję wget.deb do katalogu Sprawozdanie2
+[Pipeline] sh
++ cp wget.deb ITE/GCL06/JR414539/Sprawozdanie2/
+[Pipeline] echo
+Buduję runtime image z wget
+[Pipeline] sh
++ docker build -t wget-runtime -f ITE/GCL06/JR414539/Sprawozdanie2/Dockerfile.runtime ITE/GCL06/JR414539/Sprawozdanie2
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.runtime
+#1 transferring dockerfile: 270B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:22.04
+#2 DONE 0.4s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/4] FROM docker.io/library/ubuntu:22.04@sha256:d80997daaa3811b175119350d84305e1ec9129e1799bba0bd1e3120da3ff52c3
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 953.75kB 0.0s done
+#5 DONE 0.0s
+
+#6 [2/4] WORKDIR /opt
+#6 CACHED
+
+#7 [3/4] COPY wget.deb /opt/wget.deb
+#7 CACHED
+
+#8 [4/4] RUN apt update && apt install -y ca-certificates &&     dpkg -i /opt/wget.deb || apt-get install -f -y &&     rm -f /opt/wget.deb
+#8 CACHED
+
+#9 exporting to image
+#9 exporting layers done
+#9 writing image sha256:32c73f9eca62eb844aff1367f0f4d48daa8eb426f22770fe76f3d61338175e21 done
+#9 naming to docker.io/library/wget-runtime done
+#9 DONE 0.0s
+[Pipeline] echo
+Odpalam kontener runtime z wget
+[Pipeline] sh
++ docker run --rm wget-runtime
+GNU Wget 1.24.5.22-8775 built on linux-gnu.
+
+-cares +digest -gpgme +https +ipv6 +iri +large-file -metalink +nls 
++ntlm +opie -psl +ssl/gnutls 
+
+Wgetrc: 
+    /usr/local/etc/wgetrc (system)
+Locale: 
+    /usr/local/share/locale 
+Compile: 
+    gcc -DHAVE_CONFIG_H -DSYSTEM_WGETRC="/usr/local/etc/wgetrc" 
+    -DLOCALEDIR="/usr/local/share/locale" -I. -I../lib -I../lib 
+    -I/usr/include/p11-kit-1 -DHAVE_LIBGNUTLS -DNDEBUG -g -O2 
+Link: 
+    gcc -I/usr/include/p11-kit-1 -DHAVE_LIBGNUTLS -DNDEBUG -g -O2 
+    -lidn2 -lnettle -lgnutls -lz ../lib/libgnu.a 
+
+Copyright (C) 2015 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later
+<http://www.gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Originally written by Hrvoje Niksic <hniksic@xemacs.org>.
+Please send bug reports and questions to <bug-wget@gnu.org>.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+✅ Pipeline zakończony sukcesem.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

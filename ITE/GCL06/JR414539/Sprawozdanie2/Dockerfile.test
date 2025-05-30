@@ -1,0 +1,5 @@
+FROM wget-jenkins-build
+
+WORKDIR /opt/wget
+
+CMD ["make", "check"]

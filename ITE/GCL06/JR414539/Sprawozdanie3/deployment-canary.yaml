@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moja-aplikacja-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moja-aplikacja
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: moja-aplikacja
+        version: canary
+    spec:
+      containers:
+      - name: moja-aplikacja
+        image: moja-aplikacja:v3
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80

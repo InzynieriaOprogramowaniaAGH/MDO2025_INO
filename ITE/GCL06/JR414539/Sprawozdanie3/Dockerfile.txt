@@ -1,0 +1,5 @@
+FROM ubuntu:22.04
+RUN apt-get update && apt-get install -y gdebi-core
+COPY wget.deb /tmp/wget.deb
+RUN gdebi -n /tmp/wget.deb || apt-get install -f -y
+CMD ["wget", "--version"]

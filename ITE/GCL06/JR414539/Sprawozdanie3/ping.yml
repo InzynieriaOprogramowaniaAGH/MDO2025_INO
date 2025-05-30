@@ -1,0 +1,49 @@
+- name: Ping all endpoints
+  hosts: Endpoints
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+- name: Update all packages
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Apt update
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: dist
+
+- name: Restart services
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: ssh
+        state: restarted
+
+    - name: Restart rng-tools-debian
+      ansible.builtin.service:
+        name: rng-tools-debian
+        state: restarted
+
+- name: Copy inventory to endpoint
+  hosts: Endpoints
+  become: yes
+  tasks:
+
+- name: Ensure /home/ansible directory exists
+  ansible.builtin.file:
+    path: /home/ansible
+    state: directory
+    owner: ansible
+    group: ansible
+    mode: '0755'
+
+- name: Copy inventory
+  ansible.builtin.copy:
+    src: ./inventory.ini
+    dest: /home/ansible/inventory.ini
+    owner: ansible
+    group: ansible
+    mode: '0644'

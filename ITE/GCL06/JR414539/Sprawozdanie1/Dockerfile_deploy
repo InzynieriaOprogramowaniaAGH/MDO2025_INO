@@ -1,0 +1,3 @@
+FROM wget-jenkins-build
+
+CMD ["wget", "http://www.metal.agh.edu.pl", "-O", "-"]

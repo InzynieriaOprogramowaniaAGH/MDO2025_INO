@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_REPO = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+        BRANCH = 'JR414539'
+        DOCKERFILE_PATH = 'ITE/GCL06/JR414539/Sprawozdanie1/Dockerfile.build'
+        DOCKER_CONTEXT = 'ITE/GCL06/JR414539/Sprawozdanie1'
+        DOCKER_IMAGE = 'wget-jenkins-build'
+    }
+
+    stages {
+        stage('Klonowanie repozytorium') {
+            steps {
+                git branch: "${BRANCH}", url: "${GIT_REPO}"
+            }
+        }
+
+        stage('Sprawdzenie Dockerfile') {
+            steps {
+                sh "ls -la ${DOCKER_CONTEXT}"
+                sh "cat ${DOCKERFILE_PATH}"
+            }
+        }
+
+        stage('Budowanie obrazu Dockera') {
+            steps {
+                sh "docker build -t ${DOCKER_IMAGE} -f ${DOCKERFILE_PATH} ${DOCKER_CONTEXT}"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline zakończony sukcesem.'
+        }
+        failure {
+            echo 'Pipeline zakończył się błędem.'
+        }
+    }
+}
