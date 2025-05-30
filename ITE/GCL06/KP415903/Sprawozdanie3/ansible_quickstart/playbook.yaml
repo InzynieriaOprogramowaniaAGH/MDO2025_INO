@@ -1,0 +1,57 @@
+---
+- name: Ping all hosts
+  hosts: all
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+- name: Copy inventory.ini to endpoints
+  hosts: Endpoints
+  tasks:
+    - name: Copy inventory.ini
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /home/ansible/inventory.ini
+
+- name: Ping all hosts again
+  hosts: all
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+- name: Update system packages
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Update all packages to the latest version
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+      register: update_result
+
+    - name: Show update result
+      debug:
+        var: update_result
+
+- name: Restart system services (sshd, rngd)
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Restart SSHD
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+    - name: Restart RNGD (if installed)
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+        enabled: true
+      ignore_errors: true  # in case rngd is not installed
+
+- name: Verify connectivity after updates (optional)
+  hosts: all
+  tasks:
+    - name: Ping all hosts
+      ansible.builtin.ping:
+      ignore_unreachable: true

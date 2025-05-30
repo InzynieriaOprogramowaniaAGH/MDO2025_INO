@@ -1,0 +1,185 @@
+[kpudzisz@main ansible_quickstart]$ ansible-playbook -i inventory.ini -u ansible playbook.yaml
+
+PLAY [Ping all hosts] ****************************************************************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************************
+ok: [main]
+ok: [ansible-target]
+
+TASK [Ping] **************************************************************************************************************************************************************
+ok: [main]
+ok: [ansible-target]
+
+PLAY [Copy inventory.ini to endpoints] ***********************************************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************************
+ok: [ansible-target]
+
+TASK [Copy inventory.ini] ************************************************************************************************************************************************
+ok: [ansible-target]
+
+PLAY [Ping all hosts again] **********************************************************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************************
+ok: [main]
+ok: [ansible-target]
+
+TASK [Ping] **************************************************************************************************************************************************************
+ok: [main]
+ok: [ansible-target]
+
+PLAY [Update system packages] ********************************************************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************************
+ok: [ansible-target]
+
+TASK [Update all packages to the latest version] *************************************************************************************************************************
+changed: [ansible-target]
+
+TASK [Show update result] ************************************************************************************************************************************************
+ok: [ansible-target] => {
+    "update_result": {
+        "changed": true,
+        "failed": false,
+        "msg": "",
+        "rc": 0,
+        "results": [
+            "Installed: kernel-6.14.6-200.fc41.x86_64",
+            "Installed: kernel-core-6.14.6-200.fc41.x86_64",
+            "Installed: kernel-modules-6.14.6-200.fc41.x86_64",
+            "Installed: kernel-modules-core-6.14.6-200.fc41.x86_64",
+            "Installed: amd-gpu-firmware-20250509-1.fc41.noarch",
+            "Installed: amd-ucode-firmware-20250509-1.fc41.noarch",
+            "Installed: atheros-firmware-20250509-1.fc41.noarch",
+            "Installed: brcmfmac-firmware-20250509-1.fc41.noarch",
+            "Installed: cirrus-audio-firmware-20250509-1.fc41.noarch",
+            "Installed: elfutils-debuginfod-client-0.193-2.fc41.x86_64",
+            "Installed: elfutils-default-yama-scope-0.193-2.fc41.noarch",
+            "Installed: elfutils-libelf-0.193-2.fc41.x86_64",
+            "Installed: elfutils-libs-0.193-2.fc41.x86_64",
+            "Installed: exfatprogs-1.2.9-1.fc41.x86_64",
+            "Installed: fedora-release-41-32.noarch",
+            "Installed: fedora-release-common-41-32.noarch",
+            "Installed: fedora-release-identity-basic-41-32.noarch",
+            "Installed: fwupd-1.9.30-1.fc41.x86_64",
+            "Installed: fwupd-plugin-flashrom-1.9.30-1.fc41.x86_64",
+            "Installed: fwupd-plugin-modem-manager-1.9.30-1.fc41.x86_64",
+            "Installed: fwupd-plugin-uefi-capsule-data-1.9.30-1.fc41.x86_64",
+            "Installed: glibc-2.40-25.fc41.x86_64",
+            "Installed: glibc-common-2.40-25.fc41.x86_64",
+            "Installed: glibc-gconv-extra-2.40-25.fc41.x86_64",
+            "Installed: glibc-langpack-pl-2.40-25.fc41.x86_64",
+            "Installed: intel-audio-firmware-20250509-1.fc41.noarch",
+            "Installed: intel-gpu-firmware-20250509-1.fc41.noarch",
+            "Installed: iputils-20240905-4.fc41.x86_64",
+            "Installed: libnghttp2-1.62.1-3.fc41.x86_64",
+            "Installed: libyaml-0.2.5-16.fc41.x86_64",
+            "Installed: linux-firmware-20250509-1.fc41.noarch",
+            "Installed: linux-firmware-whence-20250509-1.fc41.noarch",
+            "Installed: mt7xxx-firmware-20250509-1.fc41.noarch",
+            "Installed: nspr-4.36.0-6.fc41.x86_64",
+            "Installed: nss-3.110.0-2.fc41.x86_64",
+            "Installed: nss-softokn-3.110.0-2.fc41.x86_64",
+            "Installed: nss-softokn-freebl-3.110.0-2.fc41.x86_64",
+            "Installed: nss-sysinit-3.110.0-2.fc41.x86_64",
+            "Installed: nss-util-3.110.0-2.fc41.x86_64",
+            "Installed: nvidia-gpu-firmware-20250509-1.fc41.noarch",
+            "Installed: nxpwireless-firmware-20250509-1.fc41.noarch",
+            "Installed: openssh-9.9p1-4.fc41.x86_64",
+            "Installed: openssh-clients-9.9p1-4.fc41.x86_64",
+            "Installed: openssh-server-9.9p1-4.fc41.x86_64",
+            "Installed: passim-0.1.10-1.fc41.x86_64",
+            "Installed: passim-libs-0.1.10-1.fc41.x86_64",
+            "Installed: policycoreutils-3.7-8.fc41.x86_64",
+            "Installed: python-unversioned-command-3.13.3-2.fc41.noarch",
+            "Installed: python3-3.13.3-2.fc41.x86_64",
+            "Installed: python3-libs-3.13.3-2.fc41.x86_64",
+            "Installed: realtek-firmware-20250509-1.fc41.noarch",
+            "Installed: selinux-policy-41.39-1.fc41.noarch",
+            "Installed: selinux-policy-targeted-41.39-1.fc41.noarch",
+            "Installed: sqlite-libs-3.46.1-3.fc41.x86_64",
+            "Installed: tiwilink-firmware-20250509-1.fc41.noarch",
+            "Installed: xz-1:5.8.1-2.fc41.x86_64",
+            "Installed: xz-libs-1:5.8.1-2.fc41.x86_64",
+            "Removed: amd-gpu-firmware-20250410-1.fc41.noarch",
+            "Removed: amd-ucode-firmware-20250410-1.fc41.noarch",
+            "Removed: atheros-firmware-20250410-1.fc41.noarch",
+            "Removed: brcmfmac-firmware-20250410-1.fc41.noarch",
+            "Removed: cirrus-audio-firmware-20250410-1.fc41.noarch",
+            "Removed: elfutils-debuginfod-client-0.192-9.fc41.x86_64",
+            "Removed: elfutils-default-yama-scope-0.192-9.fc41.noarch",
+            "Removed: elfutils-libelf-0.192-9.fc41.x86_64",
+            "Removed: elfutils-libs-0.192-9.fc41.x86_64",
+            "Removed: exfatprogs-1.2.8-1.fc41.x86_64",
+            "Removed: fedora-release-41-31.noarch",
+            "Removed: fedora-release-common-41-31.noarch",
+            "Removed: fedora-release-identity-basic-41-31.noarch",
+            "Removed: fwupd-1.9.29-1.fc41.x86_64",
+            "Removed: fwupd-plugin-flashrom-1.9.29-1.fc41.x86_64",
+            "Removed: fwupd-plugin-modem-manager-1.9.29-1.fc41.x86_64",
+            "Removed: fwupd-plugin-uefi-capsule-data-1.9.29-1.fc41.x86_64",
+            "Removed: glibc-2.40-24.fc41.x86_64",
+            "Removed: glibc-common-2.40-24.fc41.x86_64",
+            "Removed: glibc-gconv-extra-2.40-24.fc41.x86_64",
+            "Removed: glibc-langpack-pl-2.40-24.fc41.x86_64",
+            "Removed: intel-audio-firmware-20250410-1.fc41.noarch",
+            "Removed: intel-gpu-firmware-20250410-1.fc41.noarch",
+            "Removed: iputils-20240905-1.fc41.x86_64",
+            "Removed: libnghttp2-1.62.1-2.fc41.x86_64",
+            "Removed: libyaml-0.2.5-15.fc41.x86_64",
+            "Removed: linux-firmware-20250410-1.fc41.noarch",
+            "Removed: linux-firmware-whence-20250410-1.fc41.noarch",
+            "Removed: mt7xxx-firmware-20250410-1.fc41.noarch",
+            "Removed: nspr-4.36.0-4.fc41.x86_64",
+            "Removed: nss-3.109.0-1.fc41.x86_64",
+            "Removed: nss-softokn-3.109.0-1.fc41.x86_64",
+            "Removed: nss-softokn-freebl-3.109.0-1.fc41.x86_64",
+            "Removed: nss-sysinit-3.109.0-1.fc41.x86_64",
+            "Removed: nss-util-3.109.0-1.fc41.x86_64",
+            "Removed: nvidia-gpu-firmware-20250410-1.fc41.noarch",
+            "Removed: nxpwireless-firmware-20250410-1.fc41.noarch",
+            "Removed: openssh-9.9p1-3.fc41.x86_64",
+            "Removed: openssh-clients-9.9p1-3.fc41.x86_64",
+            "Removed: openssh-server-9.9p1-3.fc41.x86_64",
+            "Removed: passim-0.1.8-2.fc41.x86_64",
+            "Removed: passim-libs-0.1.8-2.fc41.x86_64",
+            "Removed: policycoreutils-3.7-7.fc41.x86_64",
+            "Removed: python-unversioned-command-3.13.3-1.fc41.noarch",
+            "Removed: python3-3.13.3-1.fc41.x86_64",
+            "Removed: python3-libs-3.13.3-1.fc41.x86_64",
+            "Removed: realtek-firmware-20250410-1.fc41.noarch",
+            "Removed: selinux-policy-41.38-1.fc41.noarch",
+            "Removed: selinux-policy-targeted-41.38-1.fc41.noarch",
+            "Removed: sqlite-libs-3.46.1-2.fc41.x86_64",
+            "Removed: tiwilink-firmware-20250410-1.fc41.noarch",
+            "Removed: xz-1:5.6.2-2.fc41.x86_64",
+            "Removed: xz-libs-1:5.6.2-2.fc41.x86_64"
+        ]
+    }
+}
+
+PLAY [Restart system services (sshd, rngd)] ******************************************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************************
+ok: [ansible-target]
+
+TASK [Restart SSHD] ******************************************************************************************************************************************************
+changed: [ansible-target]
+
+TASK [Restart RNGD (if installed)] ***************************************************************************************************************************************
+fatal: [ansible-target]: FAILED! => {"changed": false, "msg": "Could not find the requested service rngd: host"}
+...ignoring
+
+PLAY [Verify connectivity after updates (optional)] **********************************************************************************************************************
+
+TASK [Gathering Facts] ***************************************************************************************************************************************************
+ok: [main]
+ok: [ansible-target]
+
+TASK [Ping all hosts] ****************************************************************************************************************************************************
+ok: [main]
+ok: [ansible-target]
+
+PLAY RECAP ***************************************************************************************************************************************************************
+ansible-target             : ok=14   changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=1   
+main                       : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 

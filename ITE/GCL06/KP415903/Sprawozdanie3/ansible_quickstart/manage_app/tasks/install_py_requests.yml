@@ -1,0 +1,5 @@
+- name: Install python3-requests on target
+  ansible.builtin.yum:
+    name: python3-requests
+    state: present
+  become: yes

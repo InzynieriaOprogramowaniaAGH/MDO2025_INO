@@ -1,0 +1,24 @@
+364  sudo dnf update -y
+  365  sudo dnf install ansible -y
+  366  ansible --version
+  367  ssh-copy-id ansible@ansible-target
+  368  sudo nano /etc/hosts
+  369  ssh-copy-id ansible@ansible-target
+  370  sudo nano /etc/hosts
+  371  ssh ansible@ansible-target
+  372  ssh-copy-id ansible@ansible-target
+  373  ssh ansible@ansible-target
+  374  cat ~/.ssh/config
+  375  cat ~/.ssh/id_rsa
+  376  ssh -vvv ansible@ansible-target
+  377  ssh ansible@ansible-target
+  378  cat ~/.ssh/id_rsa.pub | ssh ansible@ansible-target 'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys'
+  379  ssh ansible@ansible-target
+  380  ls
+  381  ping ansible-target
+  382  sudo hostnamectl
+  383  sudo hostnamectl set-hostname main
+  384  sudo hostnamectl
+  385  nano resolv.conf
+  386  mv resolv.conf inventory.txt
+  387  history
