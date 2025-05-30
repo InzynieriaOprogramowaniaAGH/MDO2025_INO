@@ -1,16 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: igor-nginx
+  name: igor-nginx-canary
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: igor-nginx
+      track: canary
   template:
     metadata:
       labels:
         app: igor-nginx
+        track: canary
     spec:
       containers:
         - name: nginx

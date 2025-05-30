@@ -1,9 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: igor-nginx
+  name: igor-nginx-rolling
 spec:
   replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
   selector:
     matchLabels:
       app: igor-nginx

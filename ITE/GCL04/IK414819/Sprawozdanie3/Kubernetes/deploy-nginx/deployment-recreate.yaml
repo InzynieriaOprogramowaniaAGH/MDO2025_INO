@@ -1,19 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: igor-nginx
+  name: igor-nginx-recreate
 spec:
   replicas: 4
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: igor-nginx
+      app: igor-nginx-recreate
   template:
     metadata:
       labels:
-        app: igor-nginx
+        app: igor-nginx-recreate
     spec:
       containers:
         - name: nginx
-          image: igor/nginx:v2
+          image: igor/nginx:v1
           ports:
             - containerPort: 80
