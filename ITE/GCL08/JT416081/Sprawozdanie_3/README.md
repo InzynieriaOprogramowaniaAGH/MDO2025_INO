@@ -10,7 +10,7 @@ Jakub Tyliński, Grupa 8, 416081
 
 ![alt text](image25.png)
 
-**Ansible**
+**Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible**
 
 Zajęcia poświecone narzędziu jakim jest Ansible rozpoczołem od przygotowania drugiej VM na tym samym obrazie co moja maszyna główna. Aby obie VM-ki się widziały dodałem kartę sieciową - sieć NAT z utworzoną wcześniej siecią NAT z zakresem IP 10.2.0.X/24. W celu uniknięcią problemów na na nowej VM-ce zmieniłem przypisany adres automatycznie adres IP. W przeciwnym wypadku dwie VM-ki w tej samej sieci miały by dokładnie ten sam adres - 10.2.0.15!
 
@@ -285,17 +285,17 @@ Wynik działania playbooka:
 
 ![alt text](image21.png)
 
-**Kubernetes**
+**Wdrażanie na zarządzalne kontenery: Kubernetes (1)**
 
-Instalacja klastra Kubernetes
+Instalacja klastra Kubernetes:
 
-Proces instalacji zgodnie z oficjalną dokumentacją minikube rozpoczołem do pobrania najnowszej wersji pliku binarnego za pomocą:
+1. Proces instalacji zgodnie z oficjalną dokumentacją minikube rozpoczołem od pobrania najnowszej wersji pliku binarnego za pomocą:
 
 ```
 curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
 ```
 
-W dalszej części wykonałem komendę: 
+2. W dalszej części wykonałem komendę: 
 
 ```
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
@@ -303,25 +303,23 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-a
 
 Komenda ta instaluje minikube jako globalną komendę minikube oraz czyści plik tymczasowy
 
-Następnie za pomocą komendy "minikube start" uruchamiłem lokalny klaster Kubernetes:
+3. Następnie za pomocą komendy "minikube start" uruchamiłem lokalny klaster Kubernetes:
 
 ![alt text](image26.png)
 
 ![alt text](image27.png)
 
-Dalej ustawiłem alias powłoki, który sprawia, że od teraz za każdym razem gdy tylko wykonam komendę "kubectl..."  faktycznie zostanie wykonana komenda "minikube kubectl..."
+4. Dalej ustawiłem alias powłoki, który sprawia, że od teraz za każdym razem gdy tylko wykonam komendę "kubectl..."  faktycznie zostanie wykonana komenda "minikube kubectl..."
 
 ![alt text](image28.png)
 
-Na samym końcu uruchomiłem dashboard i przetestowałem łączność:
+5. Na samym końcu uruchomiłem dashboard i przetestowałem łączność:
 
 ![alt text](image29.png)
 
 ![alt text](image30.png)
 
-Zapoznaj się z koncepcjami funkcji wyprowadzanych przez Kubernetesa (pod, deployment itp)!
-
-Analiza posiadanego kontenera
+Analiza posiadanego kontenera:
 
 W tej części nieużyłem wcześniej przygotowanego obrazu "cjson-deploy" ze względu fakt, że biblioteka ta służy do parsowania JSON-a, a nie jest to aplikacja webowa – sama w sobie nie dostarcza interfejsu HTTP, więc nie będzie bezpośrednio nadawała się jako serwis do uruchomienia w Kubernetesie
 
@@ -359,7 +357,24 @@ Lokalne przetestowanie, czy kontener działa prawidłowo:
 
 ![alt text](image33.png)
 
-Deploy aplikacji do Minikube
+Deploy aplikacji do Minikube:
+
+Uruchomienie poda z przygotowanym obrazem za pomocą polecenia:
+
+```
+kubectl run my-nginx-app-pod --image=jaktyl/my-nginx-app:latest --port=80 --labels app=my-nginx-app-pod
+
+kubectl run – tworzy pojedynczy pod (nie deployment)
+
+my-nginx-app-pod – nazwa poda
+
+--image=jaktyl/my-nginx-app:latest – obraz Dockera, który ma zostać uruchomiony
+
+--port=80 – informacyjnie deklaruje port (nie tworzy serwisu)
+
+--labels app=my-nginx-app-pod – przypisuje etykietę do poda (można ją potem wykorzystać do selektorów w serwisach)
+
+```
 
 ![alt text](image34.png)
 
@@ -394,3 +409,101 @@ Sprawdzenie, czy posiadam cztery działające repliki po ręcznej modyfikacji pl
 ![alt text](image45.png)
 
 ![alt text](image46.png)
+
+![alt text](image47.png)
+
+KUBERNETES v2
+
+![alt text](image48.png)
+
+![alt text](image49.png)
+
+Zbudowanie trzeciej (wadliwej) wersji mojego obrazu:
+
+![alt text](image50.png)
+
+Wypnięcie na DockerHub:
+
+![alt text](image51.png)
+
+Wszystkie wersje:
+
+![alt text](image52.png)
+
+Uruchomienie deploymentu z pierwszą wersją obrazu oraz 3 replikami:
+
+![alt text](image53.png)
+
+Aktualizacja pliku yaml i zwiększenie liczby replik do 8:
+
+![alt text](image54.png)
+
+Aktualizacja pliku yaml i zmiejszenie liczby replik do 1:
+
+![alt text](image55.png)
+
+Aktualizacja pliku yaml i zmiejszenie liczby replik do 0:
+
+![alt text](image56.png)
+
+nowy:
+
+![alt text](image57.png)
+
+stary:
+
+![alt text](image58.png)
+
+wadliwy
+
+![alt text](image59.png)
+
+Wyświetlenie histori zmian deploymentu oraz uzyskanie szczegółów o danej rewizji:
+
+![alt text](image60.png)
+
+Przykładowe cofnięcie się do jednej z rewizji za pomocą poelecenia "kubectl rollout undo":
+
+![alt text](image61.png)
+
+Warto zwrócić uwagę w tym miejscu, że historia zmian replik nie zostaje zapisywana w historii rolloutów. Polecenie "kubectl rollout history" pokazuje tylko zmiany szablonu podów (spec.template) – czyli na przykładL image, env, ports, labels itd...
+
+Przygotowany skrypt verify_deployment.sh weryfikujący czy dany deployment został wdrożony w czasie mniejszym bądź równym 60 sekundom:
+
+```
+#!/bin/bash
+
+DEPLOYMENT_NAME=$1
+TIMEOUT=60
+
+kubectl rollout status deployment "$DEPLOYMENT_NAME" --timeout=${TIMEOUT}s
+
+if [ $? -eq 0 ]; then
+  echo "Deployment $DEPLOYMENT_NAME finished within $TIMEOUT seconds"
+  exit 0
+else
+  echo "Deployment $DEPLOYMENT_NAME not finished within $TIMEOUT seconds"
+  exit 1
+fi
+```
+
+Sprawdzenie deploymentu z wersją obrazu v1:
+
+![alt text](image62.png)
+
+Sprawdzenie deploymentu z wersją obrazu v2:
+
+![alt text](image63.png)
+
+Strategie wdrożeń:
+
+W tej części zajęć przygotowałem sobie 3 osobne pliki deployment.yaml definiujące wdrożenia z strategiami: Recreate, Rolling Update, Canary Deployment workload
+
+Stworzone nowe deploymenty:
+
+![alt text](image64.png)
+
+Wnioski:
+- Recreate usuwa wszystkie stare pody zanim stworzy nowe, co powoduje chwilowy brak dostępności.
+- Rolling Update stopniowo podmienia pody, utrzymując dostępność aplikacji przez cały czas. 
+- Canary Deployment pozwala uruchomić nową wersję obok starej (np. tylko 1 pod z nowym obrazem), dzięki czemu można ją bezpiecznie przetestować przed pełnym wdrożeniem.
