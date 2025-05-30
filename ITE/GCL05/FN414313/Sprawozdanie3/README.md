@@ -242,10 +242,10 @@ timezone Europe/Warsaw --utc
 network --hostname=orchestrator
 
 # Root user
-rootpw --iscrypted --allow-ssh $y$j9T$BT0dYcpFq7wgHuNrYpBa3/O8$K.tSJXLkZv9cBS67kKVBGrna9W8E8I7L0WT6IBlcwH/
+rootpw --iscrypted --allow-ssh $y$j9T$Ue5uObLv57A.Qh7B91u7Z0$qJzHpvIwFKXO6NgN6myL242U3RH9pRZwgNPkgoxdoJ2
 
 # User with sudo access
-user --groups=wheel --name=filnaw --password=$y$j9T$MRuSJ6lvJaR6pRWX2WXBi4G9$anZCunEdWr2HO/EBwdK3wuGKZ7sE0WxnFycrA6mUxZ7 --iscrypted --gecos="Filip Nawalaniec"
+user --groups=wheel --name=filnaw --password=$y$j9T$DPkkFJJkb5B5y0vplaL3jBwA$iQ/o9YZxPyY.FvZQyX0lv/PVlzaP5E2yWwqaEU2xfO8 --iscrypted --gecos="Filnaw"
 
 # Installation source
 url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
@@ -320,6 +320,13 @@ systemctl enable docker
 
 ```
 
+Następnie podczas instalacji w GRUBie dopisano instrukcje "inst.ks", która wskazywała na link do będącego na repo pliku anaconda-ks.cfg. Link został skrócony w tiny url.
+
+![ss45](screeny/class010/Screenshot_45.png)
+
+Po wykonaniu automatycznej instalacji działa aplikacja z włączona z pomocą linuxowych serwisów. Wykonanie curl pokazuję działanie aplikacji
+
+![ss46](screeny/class010/Screenshot_46.png)
 
 ## Class010
 
