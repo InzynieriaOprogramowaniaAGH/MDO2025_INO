@@ -236,6 +236,45 @@ published_port: 80
 
 # LAB9 - Kickstart
 
+## Pobrałem plik /root/anaconda-ks.cfg
+
+## Dodałem do niego 
+```
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-42&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f42&arch=x86_64
+```
+## Nazwę hosta
+```
+network --hostname=Fedora
+```
+## Oraz sekcję post
+
+```
+%post
+
+dnf -y install dnf-plugins-core
+dnf config-manager --add-repo=https://download.docker.com/linux/fedora/docker-ce.repo
+
+dnf install -y docker-ce docker-ce-cli containerd.io
+
+systemctl enable docker
+
+usermod -aG docker user
+
+cat << 'EOF' > /etc/rc.d/rc.local
+
+docker pull cumil/apache-basic:latest
+docker run -d --name apache_container cumil/apache-basic:latest
+EOF
+
+%end
+```
+## Uruchamiam instalator, podaję plik odpowiedzi jako jeden z argumentów
+![alt text](image-36.png)
+
+## Po uruchomieniu kontener działa i zwraca plik index.html
+![alt text](image-37.png)
+
 # LAB10/LAB11 - Kubernetes
 
 ## Zaopatrzyłem się w minikube
