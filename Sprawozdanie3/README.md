@@ -483,7 +483,7 @@ systemctl enable run-xz.service
 
 # Reboot after installation
 reboot
-```
+	```
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcfyyPepRVqIsWGoy6kBRTyV-VB8bJoKc5OHxv3Yaf4uedMUx0QOHOL-dUMi7_03KtQcs05ngLYx3eXWi3NIu-9xt-RsFtupY3JIctmNPdC4LF4qS0HTZvMgNQL_zUcJ6ohlmBdsA?key=xa3PLGIWh5Jf6oqWZQDg0GXU)** 
 ### Potwierdzenie działania
 
