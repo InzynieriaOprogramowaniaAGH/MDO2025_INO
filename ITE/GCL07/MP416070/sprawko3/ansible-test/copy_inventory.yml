@@ -1,0 +1,7 @@
+- name: Copy inventory file to remote machine
+  hosts: targets
+  tasks:
+    - name: Copy inventory file to /tmp on ansible-target
+      ansible.builtin.copy:
+        src: inventory
+        dest: /tmp/inventory_copy

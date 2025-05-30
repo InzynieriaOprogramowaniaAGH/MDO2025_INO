@@ -1,0 +1,29 @@
+docker run --rm --name docker \
+  --network jenkins \
+  --privileged \
+  -d \
+  -p 2376:2376 \
+  -e DOCKER_TLS_CERTDIR=/certs \
+  -v jenkins-docker-certs:/certs/client \
+  -v jenkins-data:/var/jenkins_home \
+  docker:dind
+
+
+docker run --rm --name jenkins-blueocean \
+  --network jenkins \
+  -u root \
+  -d \
+  -p 8080:8080 -p 50000:50000 \
+  -v jenkins-data:/var/jenkins_home \
+  -v jenkins-docker-certs:/certs/client:ro \
+  -e DOCKER_HOST=tcp://docker:2376 \
+  -e DOCKER_CERT_PATH=/certs/client \
+  -e DOCKER_TLS_VERIFY=1 \
+  jenkins/jenkins:lts
+
+i wewnatrz jenkins doisntalowac klienta docker
+
+docker exec -it jenkins-blueocean bash
+
+apt update
+apt install -y docker.io

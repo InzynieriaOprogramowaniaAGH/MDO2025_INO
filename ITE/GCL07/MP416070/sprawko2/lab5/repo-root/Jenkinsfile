@@ -1,0 +1,127 @@
+/*
+ * Pipeline: buduje obraz buildera (Fedora + irssi) → buduje obraz testera
+ * → uruchamia testy Meson i archiwizuje logi.
+ *
+ * Plik leży w katalogu:
+ *   ITE/GCL07/MP416070/sprawko2/lab5/repo-root/Jenkinsfile
+ */
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_USER = 'bambusscooby'
+        // Katalog z Dockerfile’ami (relatywnie od root repo)
+        DOCKER_DIR     = 'ITE/GCL07/MP416070/sprawko2/lab5/repo-root'
+        // Unikalne tagi: irssi/builder:42, irssi/tester:42, …
+        BUILDER_IMG    = "${DOCKER_USER}/irssi-builder:${BUILD_NUMBER}"
+        TESTER_IMG     = "${DOCKER_USER}/irssi/tester:${BUILD_NUMBER}"
+        RUNTIME_IMG  = "${DOCKER_USER}/irssi-runtime:${BUILD_NUMBER}"
+        TAR_NAME     = "irssi-${BUILD_NUMBER}.tar.gz"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps { checkout scm }
+        }
+
+        /* ─────────────── Build: builder image ─────────────── */
+        stage('Build ➜ builder image') {
+            steps {
+                sh """
+                  docker build  --target builder \
+                        --build-arg FEDORA_VER=40 \
+                         -f ${DOCKER_DIR}/Dockerfile.build \
+                         -t ${BUILDER_IMG} \
+                         ${DOCKER_DIR}
+                """
+            }
+        }
+
+        /* ─────────────── Build: tester image ──────────────── */
+        stage('Build ➜ tester image') {
+            steps {
+                sh """
+                  docker build  \
+                         -f ${DOCKER_DIR}/Dockerfile.test  \
+                         --build-arg BASE=${BUILDER_IMG}   \
+                         -t ${TESTER_IMG}                  \
+                         ${DOCKER_DIR}
+                """
+            }
+        }
+
+        /* ─────────────── Test inside tester ───────────────── */
+        stage('Test') {
+            steps {
+                sh """
+                  docker run --rm ${TESTER_IMG} \
+                    /bin/bash -c "meson test -C /app/builddir --print-errorlogs --logbase junit" \
+                    | tee test.log
+                """
+            }
+        }
+
+        /* --------  build runtime image -------- */
+        stage('Build ➜ runtime image') {
+            steps {
+                sh """
+                docker build --target runtime \
+                            --build-arg FEDORA_VER=40 \
+                            -t ${RUNTIME_IMG} \
+                            -f ${DOCKER_DIR}/Dockerfile.build \
+                            ${DOCKER_DIR}
+                """
+            }
+            }
+
+
+            
+        stage('Smoke-test runtime') {
+            steps {
+                sh """
+                docker run --rm ${RUNTIME_IMG} irssi --version
+                """
+            }
+        }
+
+        /* --------  package tarball -------- */
+        stage('Package ➜ tar.gz artifact') {
+            steps {
+                sh """
+                cid=\$(docker create ${BUILDER_IMG})             # tymczasowy kontener
+                
+                mkdir -p .out
+                docker cp \${cid}:/usr .out/          # ← kopiujemy całe /usr
+                docker rm \${cid}
+
+                tar -czf ${TAR_NAME} -C .out usr 
+                """
+            }
+        }
+
+        stage('Publish images') {
+            environment {
+                DOCKERHUB  = credentials('dockerhub-creds')   // token+login zapisany w Jenkinsie
+            }
+            steps {
+                sh """
+                echo \$DOCKERHUB_PSW | docker login \
+                        -u \$DOCKERHUB_USR --password-stdin
+
+                docker push ${BUILDER_IMG}
+                docker push ${RUNTIME_IMG}
+                """
+            }
+        }
+    }
+
+    /* ─────────────── Artefakty & raporty ─────────────────── */
+    post {
+        always {
+            archiveArtifacts artifacts: '**/test.log', allowEmptyArchive: true
+            junit            testResults: '**/builddir/meson-logs/*.xml',
+                              allowEmptyResults: true
+            archiveArtifacts artifacts: "${TAR_NAME}", allowEmptyArchive: false
+        }
+    }
+}
