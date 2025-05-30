@@ -307,8 +307,7 @@ Zrzut ekranu z podsumowaniem `PLAY RECAP` potwierdza, że wszystkie zadania zako
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfNRkGiuz4l1jKz4XA5YF9bMkr9iJS3T2C1UhQk8rU44lKEqNBAFhsvTXRo36ho3VFelxdFUo92Z-j0fkALjtryMYUmKss7aAgRUpSj3oPrdMOz0WW--OQZPR9kUuh5OA2QTNQc?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ### Struktura katalogu roles
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXezziL7RPPj09s1wDh2wpZyzzMvBU1o9IBxiYDNdCiqoiS9jEWbKS-bh9IiHes4CLRhEjhtuoR8JzXEU7LnncLdTLwJ8zbe6QPXiFQ4x9iWGssTHh_izgYOWIglGsMvKjXpXlr_iA?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-# Zajęcia9 
-Pliki odpowiedzi dla wdrożeń nienadzorowanych
+# Zajęcia 9  Pliki odpowiedzi dla wdrożeń nienadzorowanych
 
 ## Automatyzacja instalacji Fedory z wykorzystaniem Kickstart
 
@@ -357,8 +356,8 @@ clearpart --all --initlabel
 network --hostname=fedora-mruby.local
 ```
 ### 4. anaconda-ks.cfg
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXd3I08kCh4qFC068FyBOeh7ajGY65R-9oWwtduuFaX5mXSTjS26eD5QbQPu8GIZu8klnfTn-ExGtcFTFBbY5fFxSoPSrlG3UuV9GNbOVf6tY4O7Ugy9UOR5ka8icdolOoDXCHCD?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-```
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXd3I08kCh4qFC068FyBOeh7ajGY65R-9oWwtduuFaX5mXSTjS26eD5QbQPu8GIZu8klnfTn-ExGtcFTFBbY5fFxSoPSrlG3UuV9GNbOVf6tY4O7Ugy9UOR5ka8icdolOoDXCHCD?key=xa3PLGIWh5Jf6oqWZQDg0GXU)
+
 
 ### 5. Automatyczna instalacja z użyciem Kickstart
 
@@ -374,7 +373,7 @@ inst.ks=https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_IN
 3.  Następnie naciśnięto kombinację klawiszy  `Ctrl`  +  `X`, co uruchomiło instalator z podanym plikiem odpowiedzi.
 
 Instalator automatycznie rozpoczął instalację zgodnie z przepisami zawartymi w pliku Kickstart.
-(screen)
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdY-J5pQdartRddgAbfnT-AYoiHxRT3fC1jWhRAbP9E_KObfw2EVcBz_3LGIckgKNGsYuEW1eHkHsZDgFk2gN2WVRsMsxqcy_5tij0_LgYSKGrf7N-D4SLN8l4E6bDpHvXStHDZ?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 
 ## Rozszerzenie pliku odpowiedzi
 
@@ -483,8 +482,9 @@ systemctl enable run-xz.service
 
 # Reboot after installation
 reboot
-	```
+```
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcfyyPepRVqIsWGoy6kBRTyV-VB8bJoKc5OHxv3Yaf4uedMUx0QOHOL-dUMi7_03KtQcs05ngLYx3eXWi3NIu-9xt-RsFtupY3JIctmNPdC4LF4qS0HTZvMgNQL_zUcJ6ohlmBdsA?key=xa3PLGIWh5Jf6oqWZQDg0GXU)** 
+
 ### Potwierdzenie działania
 
 Po zakończeniu instalacji i automatycznym restarcie systemu jednostka `run-xz.service` została uruchomiona.
@@ -512,7 +512,7 @@ Aby zweryfikować działanie aplikacji, można wykonać następujące polecenie:
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfX3luMWCgyjx3ZEHo73zmOhTmfZyMmYn3NpJBwCXwBwZ_fQH5juNBMrbnYpDj0ixW8n4BvZn65y6fO53neo_OYLUK0siErAYbiRIhysMPcvoMtnpyE-AVyEL8PIgYfpYfFq-HMJg?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 
 
-# Zajęcia10::Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+# Zajęcia10 Wdrażanie na zarządzalne kontenery: Kubernetes (1)
 
 
 ## Instalacja klastra Kubernetes
@@ -742,239 +742,6 @@ Widoczne są wszystkie 4 repliki poda  `nginx-deployment`:
 Pokazuje aktywne wdrożenie z nazwą  `nginx-deployment`:
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcdAndO7HvS6kFwA-VPgWf5Mim6TjgCxh_EaGsub060WjOFR95C3Fgfhp00WKjP1PC4rebjer8nnkEp5qqEGQt7UWI0k18dW1-nvzhYOWm4nL3lyynd13FDD1-bPWzZQ-D5H1VeFw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 
-
-# Zajęcia10::Wdrażanie na zarządzalne kontenery: Kubernetes (1)
-
-
-## Instalacja klastra Kubernetes
-
-
-### 1. Pobranie i instalacja Minikube
-
-
-Instalator został pobrany bezpośrednio z oficjalnego źródła i zainstalowany poleceniem:
-
-```
-curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
-sudo dpkg -i minikube_latest_amd64.deb
-
-```
-
-### 2. Uruchomienie klastra Kubernates
-
-
-Minikube domyślnie uruchamia klaster lokalnie w maszynie wirtualnej. Start klastra odbywa się przy pomocy polecenia
-
-```
-minikube start
-```
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfAoETzlrdVIUfOoMhHJrbGgwK_3EjJRoWa4dZYBZ2C2kE2F_NNSpDd6H6P0-4V5rL8Wh0nRPxXZQCNrgfNvY7ZUWIPGwlwihz8yZCMT-infgHQZ7qoMFxBJmsRD9CGXnllQMqU6Q?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-### 3. Uruchomienie Dashboard
-
-
-Aby ułatwić wizualne zarządzanie klastrem, uruchomiono wbudowany Kubernetes Dashboard, dostępny z poziomu przeglądarki
-
-```
-minikube dashboard
-```
-
-To polecenie otwiera lokalny panel graficzny w nowym oknie przeglądarki i jednocześnie uruchamia lokalne tunelowanie portów:
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXc55Nt-u8tghowTNECePiemj44fvdl8XF30tvc-3v0KVv2_CNBkCKG_TqPfeCF_SIieXgKPtuqA88gHc2hp2tKyxqKcOwYjZEdkNIg16oQxebWcFMsEK1ZTGqNhm6agIy8VAHts?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-_Zalecane jest korzystanie z VS Code, z powodu automatycznego przekierowywania portów z maszyny wirtualnej do hosta_
-
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfztUUj--RcCUiC91IlQxINiGosjtWfqzK4mbCcKxitCJU-HwwB3ulRHFSkG4xvfR9fILRGpgVbo92cDSEw9oicEHf37VuCflip-L9AETbSnUV2zdKjmI0GUUYVjQP3fECf_RGpJA?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-
-### 4. Konfiguracja  `kubectl`  (alias dla Minikube)
-
-
-Zaopatrzono się w polecenie  `kubectl`  w wariancie minikube
-
-```
-alias kubectl="minikube kubectl --"
-```
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXeCnkAJ84yA2AUqD_O5kljq5syCvWJL2kx6e7fgI0ksrqXOrrP7bjdp1jB-y5jdeoGrPC7qJs3vtcwx5XmaTDRTCq7MK2B5en0vMrIwTh2MvDRWzH-HDiGd_EX8tncipkI-HINRYw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-
-### 5. Działający klaster - weryfikacja
-
-
-Działanie klastra można potwierdzić poprzez
-```
-kubectl get nodes
-kubectl get pods -A
-```
-
-
-### 6. Problemy sprzętowe i sposoby ich ograniczenia
-
-Aby uruchomić klaster Minikube, wymagane jest podstawowe środowisko do wirtualizacji oraz odpowiednie zasoby sprzętowe, które zazwyczaj są dostępne na współczesnych komputerach. Zgodnie z oficjalną dokumentacją Minikube, minimalne wymagania to:
-
-- przynajmniej **2 rdzenie CPU**,
-- co najmniej **2 GB pamięci RAM**,
-- około **20 GB wolnego miejsca na dysku**,
-- zainstalowany **menedżer kontenerów lub maszyn wirtualnych**, taki jak:  
-  **Docker**, **VirtualBox**, **Podman** lub **KVM**.
-    
-
-### 7. Podstawowe obiekty Kubernetesa
-
-
-W ramach pracy z Minikube i Dashboardem zapoznano się z podstawowymi komponentami K8s:
-
--   Pod – najmniejsza jednostka wdrożeniowa, zawierająca jeden lub więcej kontenerów
-    
--   Deployment – definiuje strategię wdrażania i skalowania podów
-    
--   Service – zapewnia stały adres dostępu do grupy podów
-    
--   Namespace – logiczne grupowanie zasobów
-    
-
-Dashboard pozwala na łatwą eksplorację tych zasobów i podgląd ich stanu w czasie rzeczywistym.
-
-### Analiza posiadanego kontenera
-
-#### Projekt: Deploy to cloud
-
-Obraz znajdujący się w repozytorium **XZ** zawiera aplikację, która uruchamia się poprawnie, jednak nie spełnia wymagań zadania **"Deploy to cloud"**, ponieważ:
-
-- kontener kończy działanie zaraz po starcie (Pod otrzymuje status `Completed`),
-- nie udostępnia żadnego interfejsu sieciowego – brak portów, brak możliwości użycia `kubectl expose` czy `kubectl port-forward`.
-
-#### Test – deploy i analiza własnego obrazu z repozytorium XZ
-
-**Etap 1 – przygotowanie aplikacji**
-
-Wykorzystana aplikacja została odpowiednio umieszczona w obrazie Docker. Po uruchomieniu kontenera, aplikacja wykonuje swoją funkcję i natychmiast się kończy, bez dalszego działania.
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXevT-OkYjBYQ3VN2U06sq0y-Xd31hwBMamPN8ZebA3l6fJdYfZayjk_8ac5pKj1-3kAdQVW5gY5V5Q4N_mUYOIWu3E-PtFXboD4NEEhOnlSqP8MEr1jmGtqD0KMuWdNrZL8t43T3A?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-
-**Etap 2 – uruchomienie Poda**
-
-Utworzono plik `xz-pod.yaml`, definiujący pojedynczy Pod uruchamiający kontener z obrazem aplikacji:
-
-```
-kubectl apply -f xz-pod.yaml
-```
-![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXegkRs5OHz5amRHJDypo2c7PinQ4hNq8auHWk-yHRRKrcxaZVadWJvc-mpyeQcnbS-rDsC_FC9ABDNz4HCDHdHOFVKRncKzNcg5Fo0R2xdlNX3o51tBAHAJKrqGl5PLHPB5WPweTA?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-**Etap 3 – weryfikacja działania kontenera**
-
-Po uruchomieniu:
-
-`kubectl get pods` 
-
-Kontener natychmiast osiąga status `Completed`. 
-
-#### Wnioski
-
-Obraz z repozytorium **XZ** działa poprawnie, ale nie jest odpowiedni do wdrożenia w chmurze jako trwała usługa – nie posiada mechanizmu komunikacji przez sieć. Dlatego zdecydowano się na zmianę projektu na inną aplikację również z repozytorium **XZ**, która spełnia wymagania zadania – umożliwia interakcję przez interfejs sieciowy i może działać jako kontenerowa usługa w Kubernetes.
-
-## Alternatywny projekt: Deploy aplikacji jako usługowego kontenera
-
-
-Na potrzeby zadania wybrano alternatywny projekt oparty na serwerze NGINX, który działa jako usługowy kontener. Celem było zbudowanie i uruchomienie kontenera zawierającego prostą aplikację webową z własną stroną startową.
-
-### 1. Obraz Dockera
-
-
-Do budowy obrazu wykorzystano oficjalny obraz  `nginx:latest`  jako bazę. Do katalogu serwowanego przez NGINX (/usr/share/nginx/html) dodano własny plik  `index.html`  z niestandardową zawartością, potwierdzającą poprawne wdrożenie kontenera.
-
-**Zawartość  `Dockerfile`**
-
-```
-FROM nginx:latest
-COPY custom-index.html /usr/share/nginx/html/index.html
-```
-**Zawartość  `index.html`**
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXd9qlKRImIShvpRsMto6z4OIDiDpDjdb0XH2fFhNk3LP4T3-vjTAKfjCHH8FH8arigcpK3xb22uf-EKvs6VfsYaTP8XYMBFa3ARYx_n9jMGjRFSBrhBNrhMw1Ux3qnj7MxlyHfkWw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-### 2. Budowa i uruchomienie kontenera
-
-
--   Obraz został zbudowany poleceniem:
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdfq2KlvAw-nHYYRzyBxWF8nH77rnOSg7bDXdbd_gldkvQ3LJUIOREonI6qvB2hQ5ebxBqKwSLbHIL3aD0xfBRvKbLUTCoyjj7Ptc7EXBSZH0uKaXg_v14nAuVcUlBYLBoqWMPpPg?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
--   Kontener został uruchomiony w tle:
-```
-kubectl run nginx-custom-pod --image=nginx-custom --port=80 --image-pull-policy=Never
-```
-
--   dostęp to aplikacji w przeglądarce:
-![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXeI5TseCjCzqR43vTYWrc0hYtZfSyG7osR02sD9rUGHB3r_Ue8DQn8qE7PzISVBIAUK4Njyjmcq5h4wR7H6mPSNjW0XFuwUsgqBJAEhKMfsU8FLPFiYuTPTp13QXTHTG4dgEc6ZMw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-## Przekucie wdrożenia manualnego w plik wdrożenia
-Ręczne uruchomienie aplikacji zostało przekształcone w deklaratywne wdrożenie Kubernetes za pomocą pliku perykles-nginx-deploy.yaml
-```
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  labels:
-    app: nginx
-spec:
-  replicas: 4
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-service
-spec:
-  selector:
-    app: nginx
-  type: NodePort
-  ports:
-  - port: 80
-    targetPort: 80
-    nodePort: 30080
-
-```
-### 1. Wdrożenie aplikacji z pliku YAML
-Polecenie użyte do wdrożenia oraz jego wynik:
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfjkYZH2KnUcvB6U7SzzkMpzNG6AMA9NrLyB3uzcSpbiHdCsc1YjBBQNXaq7Vl6u58_J5JeKt1emBaNXwa6RotLY8gU-gGbtnk37tzJ7QIrG_82OVHi21WkM7Wwe9ve9RYDDrns?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-Wdrożenie wykonałem komendą:
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcDnJYwMpM3zceSutiPg3-r0F-AaigrAsiRxo5qLALQLsnQ6D1Sgcz3vacwv02-DUDyCvBa9KLi8rmmskn52LYsY_h4_VF4QPZVJKC1oUKWYN5yrZO2hkBlIO5S2bh78Fhw9Rcl?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-Monitoring rolloutu
-
-
-Aby upewnić się, że wdrożenie zostało przeprowadzone poprawnie, użyto:
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdyQpS-3Kr1m_Q9BRbuSz0ByTWXj4CoxHNwZea657qxaV8vrECOjvGVsyCaST2JPNkB5LfYJ7vmdYko9bC9PxIehcLFcSvm9YPeoRaafEo-ppnbZh8UpxnQoUZdAesDSBES-lus3Q?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-Wszystkie 4 repliki zostały poprawnie uruchomione i działają bez błędów.
-
-### 3. Eksponowanie aplikacji
-
-
-Aby udostępnić aplikację na zewnątrz klastra, wykonano:
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdmzPlTJDjpzPeUxxPsVTJPfhunTDyfDXYiDdc9Jfeicpf9bzOKpzzhSgJSYgB9J-hLEx-W6dmw--4jDqJwoZt397toeAiwNDqEWwoGENHPDhUeo0B1cEVtAHu3y3eFgQXK4_oAEg?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-### 4. Przekierowanie portu do serwisu
-
-
-Aplikacja została wystawiona lokalnie poprzez przekierowanie portu z serwisu:
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXctaYGqUMrSiVc0c9tBewHWxBXTxOuwxQ-1jZwPuEdoJJ5Sud0i4dH_cAiAU0MDTwX6Cw060tLpkYe80pX225beLeG8UsoQqNq-DunMPGNZufLRN15q5WaDNJK5VTnhx2jdeeXM?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-### Dashboard – Weryfikacja wizualna
-
-
-Do weryfikacji działania aplikacji i zarządzania zasobami klastra wykorzystano Dashboard Minikube.
-
-1.  **Workload Status**
-
-Pokazuje ogólny stan zasobów wdrożonych w klastrze:
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXeEIcQwqneX1Iqk1j6ckEfk5jJ2yQ5zrUoPX7SIzyWMaZXSaZMNR5t9Deq-tBqtx-yjlic8-L6IpzziMKIaglgoRTivpxNMo8k0wEKRMavO91GnEvv_VwKSWtAg6PwUwUtx5LvVvA?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-2.  **Pods**
-
-Widoczne są wszystkie 4 repliki poda  `nginx-deployment`:
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXe4caEo7kF3YCUtvCNQD4yoMWC6jmu-FS6auChYJkiYG1BQ_YUep9DQDVGkNrMEPkHG31mRqfSkzexiK1lFI4c3tHP9KRJ4BtUDGCMdj5nfqb4kyWqeJAFRT4FmKat4z3FIlMOIDQ?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
-3.  **Deployments**
-
-Pokazuje aktywne wdrożenie z nazwą  `nginx-deployment`:
-**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcdAndO7HvS6kFwA-VPgWf5Mim6TjgCxh_EaGsub060WjOFR95C3Fgfhp00WKjP1PC4rebjer8nnkEp5qqEGQt7UWI0k18dW1-nvzhYOWm4nL3lyynd13FDD1-bPWzZQ-D5H1VeFw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 
 
 # Zajęcia11 Wdrażanie na zarządzalne kontenery: Kubernetes (2)
@@ -1195,7 +962,7 @@ Wszystkie pody są w stanie `Running`, co oznacza poprawne zakończenie rollout�
 
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcoXS3LyAT5dnJXe0OzM4FPVEjjVNfIiIJ885zy5nzU7q08xYG6Wrb-JPPwf8zJLFkqwTqjAtO9Ws-XsivfI13o4xQiiPSuSYfSnx_9S6SEB4czPdLev2aD5WiNw5mL_JqaNdZZMw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 
-### 📊 Porównanie strategii wdrożenia w Kubernetes
+### Porównanie strategii wdrożenia w Kubernetes
 
 | Strategia         | Opis działania                                                             | Dostępność podczas wdrożenia | Zalety                                             | Wady                                                  | Zastosowanie typowe            |
 |-------------------|------------------------------------------------------------------------------|-------------------------------|----------------------------------------------------|--------------------------------------------------------|---------------------------------|
