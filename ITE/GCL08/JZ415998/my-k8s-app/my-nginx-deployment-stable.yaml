@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-nginx-app # Ważna etykieta dla serwisu
+      version: v1       # Dodatkowa etykieta dla rozróżnienia
+  template:
+    metadata:
+      labels:
+        app: my-nginx-app # Ta etykieta musi pasować do selektora serwisu
+        version: v1
+    spec:
+      containers:
+      - name: nginx-stable-container
+        image: zboro02/my-custom-nginx:v1
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
