@@ -1,0 +1,4 @@
+---
+# vars file for cjson
+dockerhub_image: zboro02/cjson-deploy
+container_name: cjson_app
