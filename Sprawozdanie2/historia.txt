@@ -1,0 +1,618 @@
+    1  sudo su
+    2  ls
+    3  cd test/
+    4  ls
+    5  cd MDO2025_INO/
+    6  ls
+    7  docker ps -a
+    8  sudo docker ps -a
+    9  cd ..
+   10  ls
+   11  cd ..
+   12  ls
+   13  cd MDO2025_INO/
+   14  ls
+   15  cd lab3
+   16  ls
+   17  cd ..
+   18  cd lab3
+   19  cd irssi/
+   20  ls
+   21  docker ps -a
+   22  sudo docker ps -a
+   23  cd ../../..
+   24  ls
+   25  cd test/
+   26  ls
+   27  cd MDO2025_INO/
+   28  ls
+   29  mkdir lab4
+   30  ls
+   31  sudo mkdir lab4
+   32  cd lab4
+   33  ls
+   34  cd ..
+   35  l
+   36  ls
+   37  cd lab2
+   38  ls
+   39  cd ..
+   40  ls
+   41  cd ..
+   42  ls
+   43  cd MDO2025_INO/
+   44  ls
+   45  cd lab3
+   46  ls
+   47  cd irssi/
+   48  ls
+   49  docker volume create
+   50  sudo docker volume create
+   51  ls
+   52  sudo docker volume ls
+   53  sudo docker volume create
+   54  sudo docker volume ls
+   55  sudo docker rm 6d
+   56  sudo docker volume rm 6d
+   57  sudo docker volume rm 6d*
+   58  sudo docker volume ls
+   59  sudo docker volume rm b17
+   60  sudo docker volume rm b17*
+   61  sudo docker volume prune
+   62  sudo docker volume create wejscie
+   63  sudo docker volume create wyjscie
+   64  docker run -rm -tty -i -v wejscie:/wejscie fedora bash
+   65  docker run --rm -tty -i -v wejscie:/wejscie fedora bash
+   66  sudo docker run --rm -tty -i -v wejscie:/wejscie fedora bash
+   67  sudo docker run --rm --it -v wejscie:/wejscie fedora bash
+   68  sudo docker run --rm -it -v wejscie:/wejscie fedora bash
+   69  docker run -it --rm     -v wejscie:/app/input     -v wyjscie:/app/output     ubuntu bash
+   70  sudo docker run -it --rm     -v wejscie:/app/input     -v wyjscie:/app/output     ubuntu bash
+   71  docker run --rm     -v wejscie:/repo     alpine/git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO /repo
+   72  sudo docker run --rm     -v wejscie:/repo     alpine/git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO /repo
+   73  sudo docker run -it --rm     -v wejscie:/app/input     -v wyjscie:/app/output     twoj-bazowy-kontener bash
+   74  docker volume -ls
+   75  docker volume ls
+   76  sudo docker volume ls
+   77  sudo docker volume pruune
+   78  sudo docker volume prune
+   79  sudo docker volume ls
+   80  sudo docker volume prune
+   81  sudo docker volume ls
+   82  sudo docker volume rm wejscie wyjscie
+   83  sudo docker volume ls
+   84  cd 
+   85  ls
+   86  cd MDO2025_INO/
+   87  ls
+   88  mkdir lab4
+   89  cd lab4
+   90  ls
+   91  pwd
+   92  cd lab3
+   93  cd ..
+   94  ls
+   95  cd lab3
+   96  ls
+   97  cd..
+   98  cd ..
+   99  cd lab4
+  100  ls
+  101  docker build -t node-base
+  102  docker build -t node-base .
+  103  sudo docker build -t node-base .
+  104  cd ..
+  105  rmdir lab4
+  106  ls
+  107  cd lab3
+  108  ls
+  109  cd irssi/
+  110  ls
+  111  cd ..
+  112  mkdir lab4
+  113  ls
+  114  cd lab4
+  115  ls
+  116  sudo docker build -t node-base .
+  117  cd ..
+  118  ls
+  119  cd lab4
+  120  cd ..
+  121  ls
+  122  sudo docker build -t nodebld .
+  123  cd lab4
+  124  ls
+  125  nano Dockerfile
+  126  sudo docker build -t node-base .
+  127  npm init -y
+  128  sudo npm init -y
+  129  sudo dnf install nodejs -y
+  130  npm init -y
+  131  ls
+  132  sudo docker build -t node-base .
+  133  docker volume create input
+  134  history
+  135  sudo su
+  136  sudo docker inspect iperf-server | grep '"IPAddress"'
+  137  sudo docker run -it --rm networkstatic/iperf3 -c 172.17.0.3
+  138  sudo docker run -it --rm networkstatic/iperf3 -c 172.17.0.2
+  139  iperf3 -c localhost -p 5201
+  140  sudo iperf3 -c localhost -p 5201
+  141  sudo dnf install -y iperf3
+  142  iperf3 -c localhost -p 5201
+  143  .\iperf3.exe -c 192.168.56.118 -p 5201
+  144  ip a
+  145  docker logs perfcont > logs.txt
+  146  sudoo docker logs perfcont > logs.txt
+  147  sudo docker logs perfcont > logs.txt
+  148  ls
+  149  nano logs.txt 
+  150  sudo docker logs iperf-server > logs.txt
+  151  nano logs.txt 
+  152  ls
+  153  cd MDO2025_INO/lab3/lab4/
+  154  ls
+  155  ls -las
+  156  socker network create jenkins
+  157  sudo docker network create jenkins
+  158  docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+  159  sudo docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+  160  nano Dockerfile 
+  161  mv Dockerfile node-Dockerfile 
+  162  nano Dockerfile
+  163  docker build -t myjenkins-blueocean:2.440.2-1 .
+  164  sudo docker build -t myjenkins-blueocean:2.440.2-1 .
+  165  sudo docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.440.2-1
+  166  docker ps
+  167  sudo docker ps
+  168  sudo docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+  169  sudo docker rm d5a2
+  170  sudo docker stop d5a2
+  171  sudo docker rm d5a2
+  172  sudo docker stop 6a6
+  173  sudo docker rm 6a6
+  174  sudo docker ps
+  175  docker network create jenkins
+  176  sudo docker network create jenkins
+  177  docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+  178  sudo docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+  179  mkdir jenkinss
+  180  cd jenkinss/
+  181  docker build -t myjenkins-blueocean:2.440.2-1 .
+  182  sudo docker build -t myjenkins-blueocean:2.440.2-1 .
+  183  sudo docker ps
+  184  sudo docker stop d17
+  185  sudo docker ps
+  186  cd ..
+  187  ls
+  188  rm jenkinss/
+  189  sudo rm jenkinss/
+  190  ls
+  191  sudo rm -rf jenkinss/
+  192  ls
+  193  sudo docker network ls
+  194  sudo docker ps -a | grep "jenkins" | awk '{print $1}' | xargs sudo docker rm -f
+  195  sudo docker network rm jenkins
+  196  docker network create jenkins
+  197  sudo docker network create jenkins
+  198  sudo docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+  199  docker run --name jenkins-docker --rm --detach   --privileged --network jenkins --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind --storage-driver overlay2
+  200  sudo docker run --name jenkins-docker --rm --detach   --privileged --network jenkins --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind --storage-driver overlay2
+  201  sudo docker rm 095
+  202  sudo docker stop 095
+  203  sudo docker rm 095
+  204  sudo docker run --name jenkins-docker --rm --detach   --privileged --network jenkins --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind --storage-driver overlay2
+  205  ls
+  206  nano Dockerfile 
+  207  docker build -t myjenkins-blueocean:2.492.2-1 .
+  208  sudo docker build -t myjenkins-blueocean:2.492.2-1 .
+  209  sudo docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.2-1
+  210  sudo docker run --name jenkins-blueocean --restart=on-failure --detach   --network jenkins --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1   --publish 8080:8080 --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.2-1
+  211  sudo docker stop e1e
+  212  sudo docker rm e1e
+  213  sudo docker run --name jenkins-blueocean --restart=on-failure --detach   --network jenkins --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1   --publish 8080:8080 --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.2-1
+  214  sudo docker ps
+  215  sudo docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+  216  history
+  217  history > historia_komend1.txt
+  218  ls
+  219  history\
+  220  history
+  221  sudo su
+  222  ls
+  223  cd MDO2025_INO/
+  224  ls
+  225  cd lab3
+  226  cd lab4
+  227  ls
+  228  docker ps -a
+  229  sudo docker ps -a
+  230  date
+  231  docker volume ls
+  232  sudo docker volume ls
+  233  docker run -it --name base-cont -v input:/input -v output:/output node-base base
+  234  sudo docker run -it --name base-cont -v input:/input -v output:/output node-base base
+  235  docker run -it --name base-cont -v input:/input -v output:/output node-base bash
+  236  sudo docker run -it --name base-cont -v input:/input -v output:/output node-base bash
+  237  docker ps -a
+  238  sudo docker ps -a
+  239  docker rm base-cont
+  240  sudo docker rm base-cont
+  241  docker ps -a\
+  242  sudo docker rm base-con
+  243  docker ps -a
+  244  sudo docker ps -a
+  245  docker run -it --name base-cont -v input:/input -v output:/output node-base bash
+  246  sudo docker run -it --name base-cont -v input:/input -v output:/output node-base bash
+  247  git clone https://github.com/devenes/node-js-dummy-test ~/dummy-repo
+  248  docker run --rm -v ~/dummy-repo:/input -v output_volume:/output node-base ls /input
+  249  sudo docker run --rm -v ~/dummy-repo:/input -v output_volume:/output node-base ls /input
+  250  docker run --rm -v input_volume:/input alpine ls /input
+  251  sudo docker run --rm -v input_volume:/input alpine ls /input
+  252  docker run --rm -v input_volume:/input -v output_volume:/output node-base bash -c "cd /input && npm install && npm run build && cp -r dist /output"
+  253  sudo docker run --rm -v input_volume:/input -v output_volume:/output node-base bash -c "cd /input && npm install && npm run build && cp -r dist /output"
+  254  cd ..
+  255  rm -rf lab4/
+  256  ls
+  257  mkdir lab4
+  258  cd lab4
+  259  sudo docker volume create input_volume
+  260  sudo docker volume create output_volume
+  261  sudo docker volume ls
+  262  sudo docker rm input
+  263  sudo docker rm volume input
+  264  sudo docker volume rm  input
+  265  sudo docker ps -a
+  266  sudo docker stop 8389*
+  267  sudo docker stop 83892885930c
+  268  sudo docker rm  83892885930c
+  269  sudo docker ps -a
+  270  sudo docker rm volume input
+  271  sudo docker volume rm  input
+  272  sudo docker volume rm  output
+  273  sudo docker volume ls
+  274  nano Dockerfile
+  275  sudo docker build -t node-base .
+  276  timedatectl
+  277  sudo timedatectl set-ntp true
+  278  systemctl status systemd-timesyncd
+  279  sudo systemctl restart systemd-timesyncd
+  280  timedatectl
+  281  sudo docker build -t node-base .
+  282  docker run -it --name base-cont -v input_volume:/input -v output_volume:/output node-base bash
+  283  sudo docker run -it --name base-cont -v input_volume:/input -v output_volume:/output node-base bash
+  284  docker run --rm -v input_volume:/input node-base ls /input
+  285  sudo docker run --rm -v input_volume:/input node-base ls /input
+  286  sudo docker run --rm -v input_volume:/input -v output_volume:/output node-base bash -c "cd /input && npm install && npm run build && cp -r dist /output"
+  287  docker run --rm -v output_volume:/output alpine ls /output
+  288  sudo docker run --rm -v output_volume:/output alpine ls /output
+  289  ls /output
+  290  sudp r ps -a
+  291  sudo docker ps -a
+  292  sudo docker rm  95cba
+  293  sudo docker ps
+  294  sudo docker volume ls
+  295  sudo docker volume rm input_volume
+  296  sudo docker volume rm output
+  297  sudo docker volume rm output_volume
+  298  sudo docker volume ls
+  299  sudo docker ps -a
+  300  cd ..
+  301  ls
+  302  rm -rf /lab4
+  303  mkdir lab4
+  304  lsls
+  305  ls
+  306  rm -rf lab4/
+  307  ls
+  308  mkdir lab4
+  309  cd lab4
+  310  sudoer volume create input
+  311  sudo docker volume create input
+  312  sudo docker volume create output
+  313  sudo docker build -t node-base .
+  314  nano Dockerfile
+  315  sudo docker build -t node-base .
+  316  sudo docker run -it --name base-cont -v input:/input -v output:/output node-base bash
+  317  ls
+  318  ls -las
+  319  docker ps -a
+  320  sudo docker ps -a
+  321  sudo docker run -it --name base-cont -v input:/input -v output:/output node-base bash
+  322  # Uruchom kontener (bez interaktywnego terminala)
+  323  sudo docker start base-cont
+  324  # Połącz się z kontenerem, aby uzyskać dostęp do terminala
+  325  sudo docker exec -it base-cont bash
+  326  docker pull networkstatic/iperf3
+  327  sudo docker pull networkstatic/iperf3
+  328  docker run -it --name=perfcont -p 5201:5201 networkstatic/iperf3 -s
+  329  sudo docker run -it --name=perfcont -p 5201:5201 networkstatic/iperf3 -s
+  330  sudo docker inspect perfcont
+  331  sudo docker ps -a
+  332  sudo   cker run -it --name=drugi networkstatic/iperf3 -c 172.17.0.2
+  333  sudker run -it --name=drugi networkstatic/iperf3 -c 172.17.0.2docker run -it --name=drugi networkstatic/iperf3 -c 172.17.0.2docker run -it --name=drugi networkstatic/iperf3 -c 172.17.0.2
+  334  sudo docker run -it --name=drugi networkstatic/iperf3 -c 172.17.0.2
+  335  docker run -it --name=perfcont -p 5201:5201 networkstatic/iperf3 -s
+  336  sudo docker run -it --name=perfcont -p 5201:5201 networkstatic/iperf3 -s
+  337  sudo docker run -it --name=base-cont -p 5201:5201 networkstatic/iperf3 -s
+  338  sudo docker run -it --name=perfcont  networkstatic/iperf3 -c 172.17.0.2
+  339  sudo docker run -it --name=base-cont  networkstatic/iperf3 -c 172.17.0.2
+  340  sudo docker stop base-cont perfcont
+  341  sudo docker run -it --name=perfcont  networkstatic/iperf3 -c 172.17.0.2
+  342  sudo docker rm base-cont perfcont
+  343  sudo docker run -it --name=perfcont  networkstatic/iperf3 -c 172.17.0.2
+  344  sudo docker run -it --name=base-cont  networkstatic/iperf3 -c 172.17.0.2
+  345  sudo docker inspect perfcont | grep '"IPAddress"'
+  346  sudo docker inspect base-cont | grep '"IPAddress"'
+  347  docker ps -a
+  348  sudo docker ps -a
+  349  sudo docker run -it --rm --name=iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  350  history
+  351  history > historia_komend.txt
+  352  ls
+  353  nano node-Dockerfile 
+  354  sudo docker volume ls
+  355  sudo docker volume rm input output
+  356  docker volume create input_volume output_volume
+  357  docker volume create input_volume
+  358  sudo docker volume create input_volume
+  359  sudo docker volume create output_volume
+  360  sudo docker volume ls
+  361  docker run -it --name base-cont -v input_volume:/input -v output_volume:/output node-base bash
+  362  sudo docker run -it --name base-cont -v input_volume:/input -v output_volume:/output node-base bash
+  363  sudo docker stop ed88
+  364  sudo docker rm ed88
+  365  sudo docker run -it --name base-cont -v input_volume:/input -v output_volume:/output node-base bash
+  366  sudo dnf install nodejs npm
+  367  cd node-js-dummy-test
+  368  git clone https://github.com/devenes/node-js-dummy-test.git
+  369  cd node-js-dummy-test
+  370  pwd
+  371  docker cp /home/maciej/MDO2025_INO/lab3/lab4/node-js-dummy-test base-cont:/input
+  372  sudo docker cp /home/maciej/MDO2025_INO/lab3/lab4/node-js-dummy-test base-cont:/input
+  373  sudo docker run -it --name base-cont -v input_volume:/input -v output_volume:/output node-base bash
+  374  docker run 33b
+  375  sudo docker run 33b
+  376  sudo docker start 33b
+  377  sudo docker run -it --name base-cont -v input_volume:/input -v output_volume:/output node-base bash
+  378  docker ps =a
+  379  docker ps
+  380  sudo docker ps
+  381  sudo docker exec -it 33ba57010df3 bash
+  382  ls
+  383  cd ..
+  384  ls
+  385  nano historia_komend
+  386  nano historia_komend.txt
+  387  nano historia_komend1.txt 
+  388  history > historia_komend1.txt
+  389  nano historia_komend1.txt
+  390  history
+  391  ls
+  392  cd MDO2025_INO/
+  393  ls
+  394  cd lab3
+  395  ls
+  396  cd lab4
+  397  ls
+  398  docker volume lsdocker volume lsdocker volume ls
+  399  docker volume ls
+  400  sudo docker volume ls
+  401  docker volume create input
+  402  sudo docker volume create input
+  403  docker volume create output
+  404  sudo r volume create output
+  405  docker volume create output
+  406  sudo docker volume create output
+  407  sudo docker volume ls
+  408  docker run -it --name base-cont -v input:/input -v output:/output node-base base
+  409  sudo docker run -it --name base-cont -v input:/input -v output:/output node-base base
+  410  ls -a
+  411  docker volume ls
+  412  sudo docker volume ls
+  413  docker ps -a
+  414  sudo docker ps -a
+  415  docker build -t node-base .
+  416  sudo docker build -t node-base .
+  417  docker volume rm input output
+  418  sudo docker volume rm input output
+  419  history
+  420  sudo su
+  421  history
+  422  sudo su
+  423  history
+  424  history | grep "docker pull n"
+  425  history | grep "docker run -it --name"
+  426  history | grep "docker inspect"
+  427  ls
+  428  cd test/
+  429  ls
+  430  cd MDO2025_INO/
+  431  ls
+  432  cd lab4
+  433  ls
+  434  cd ..
+  435  ls
+  436  cd MDO2025_INO/
+  437  ls
+  438  cd lab3
+  439  ls
+  440  cd lab4
+  441  ls
+  442  nano Dockerfile 
+  443  history | grep "docker cp"
+  444  ls
+  445  ip a
+  446  docker ps
+  447  sudo docker ps
+  448  docker ps
+  449  sudo docker ps
+  450  history
+  451  history > historia.txt
+  452  ls
+  453  docker ps
+  454  sudo docker ps
+  455  sudo su
+  456  history
+  457  history | grep jenkins
+  458  ls
+  459  cd MDO2025_INO/
+  460  ls
+  461  cd lab3
+  462  ls
+  463  pwd
+  464  cd ..
+  465  ls
+  466  pwd
+  467  ls
+  468  cd lab3
+  469  ls
+  470  pwd Dockerfile.nodebld
+  471  ls
+  472  docker ps
+  473  sudo docker ps
+  474  docker build -t node-builder -f Dockerfile.nodebld .
+  475  sudo docker build -t node-builder -f Dockerfile.nodebld .
+  476  ls -lah $WORKSPACE/lab3/
+  477  sudo ls -lah $WORKSPACE/lab3/
+  478  ls
+  479  git clone -b MS416436 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  480  cd MDO2025_INO
+  481  git checkout MS416436
+  482  ls
+  483  git branch
+  484  ls -lah
+  485  git checkout MS416436
+  486  mkdir lab3
+  487  ls
+  488  cd lab3
+  489  ls
+  490  cp Dockerfile.nodebld /lab3
+  491  pwd Dockerfile.nodebld
+  492  cp /home/maciej/MDO2025_INO/lab3/MDO2025_INO/lab3/Dockerfile.nodebld cd /home/maciej/MDO2025_INO/lab3/MDO2025_INO/lab3/lab3.
+  493  cp /home/maciej/MDO2025_INO/lab3/MDO2025_INO/lab3/Dockerfile.nodebld cd /home/maciej/MDO2025_INO/lab3/MDO2025_INO/lab3/lab3 .
+  494  cp /home/maciej/MDO2025_INO/lab3/MDO2025_INO/lab3/Dockerfile.nodebld /lab3
+  495  cp /home/maciej/MDO2025_INO/lab3/MDO2025_INO/lab3/Dockerfile.nodebld /home/maciej/MDO2025_INO/lab3/MDO2025_INO/lab3/lab3
+  496  sudo cp /home/maciej/MDO2025_INO/lab3/MDO2025_INO/lab3/Dockerfile.nodebld /home/maciej/MDO2025_INO/lab3/MDO2025_INO/lab3/lab3
+  497  pwd Dockerfile.nodebld
+  498  cd lab3
+  499  pwd
+  500  cd /lab3
+  501  ls
+  502  cd ..
+  503  ls
+  504  cd lab3
+  505  pwd
+  506  ls
+  507  cp /home/maciej/MDO2025_INO/lab3/Dockerfile.nodebld .
+  508  ls
+  509  git status
+  510  git add Dockerfile.nodebld
+  511  git commit -m "Dodano Dockerfile.nodebld do katalogu lab3"
+  512  git push origin MS416436
+  513  ls
+  514  cd ..
+  515  ls
+  516  nano Dockerfile.nodetest
+  517  ls
+  518  cd MDO2025_INO/
+  519  ls
+  520  cd Sprawozdanie1/
+  521  ls
+  522  ls -las
+  523  cd ..
+  524  ls
+  525  mkdir pull_request
+  526  cd pull_request/
+  527  ls
+  528  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  529  cd MDO2025_INO
+  530  git checkout MS416436
+  531  ls MDO2025_INO/Sprawozdanie1/Sprawozdanie1/
+  532  ls
+  533  cd Sprawozdanie1/
+  534  ls
+  535  cd Sprawozdanie1/
+  536  ls
+  537  git add MDO2025_INO/Sprawozdanie1/Sprawozdanie1/
+  538  git add Sprawozdanie1.md *.png
+  539  git add .
+  540  docker ps
+  541  sudo docker ps
+  542  ip a
+  543  ls
+  544  cd ..
+  545  ls
+  546  cd ..
+  547  ls
+  548  cd ..
+  549  ls
+  550  rm pull_request/
+  551  rm -rf  pull_request/
+  552  ls
+  553  cd MDO2025_INO/
+  554  ;s
+  555  ls
+  556  docker --version
+  557  cd ..
+  558  ls
+  559  docker --version
+  560  sudo docker ps
+  561  ls
+  562  cd MDO2025_INO/
+  563  ls
+  564  git checkout
+  565  sudo docker ps
+  566  sudo docker run --privileged --name dind-container -d   -v /var/run/docker.sock:/var/run/docker.sock   docker:latest
+  567  sudo docker ps
+  568  sudo docker stop ae2
+  569  sudo docker rm ae2
+  570  sudo docker ps
+  571  sudo docker pull docker:latest
+  572  sudo docker run --privileged --name dind-container -d   -p 2376:2376   -v /var/run/docker.sock:/var/run/docker.sock   docker:latest-dind
+  573  sudo docker run --privileged --name dind-container -d   -p 2376:2376   -v /var/run/docker.sock:/var/run/docker.sock   docker:latest
+  574  9fe18a13163458428c4a244387862fe08b2ce2809715f9c7eb4a08c2ceb898e0
+  575  sudo docker ps
+  576  sudo docker run --privileged --name dind-container -d   -p 2376:2376   -v /var/run/docker.sock:/var/run/docker.sock   docker:latest
+  577  sudo docker stop 9fe
+  578  sudo docker remove 9fe
+  579  ls
+  580  sudo docker pull docker:latest
+  581  sudo docker run --privileged --name dind-container -d   -p 2376:2376   -v /var/run/docker.sock:/var/run/docker.sock   docker:latest
+  582  sudo docker ps
+  583  sudo docker logs dind-container
+  584  sudo lsof | grep '/var/run/docker.sock'
+  585  apt install lsof
+  586  dnf install lsof
+  587  sudp dnf install lsof
+  588  sudo dnf install lsof
+  589  sudo lsof | grep '/var/run/docker.sock'
+  590  sudo systemctl status docker
+  591  sudo docker run --privileged --name dind-container -d   -p 2376:2376   -v /var/run/docker.sock:/var/run/docker.sock   docker:latest
+  592  sudo docker stop dind-container
+  593  sudo docker rm dind-container
+  594  sudo docker run --privileged --name dind-container -d   -p 2376:2376   -v /var/run/docker.sock:/var/run/docker.sock   docker:latest
+  595  sudo docker exec -it dind-container /bin/sh
+  596  sudo docker logs dind-container
+  597  sudo lsof /var/run/docker.sock
+  598  sudo systemctl restart docker
+  599  sudo docker ps
+  600  sudo docker run --privileged --name dind-container -d   -p 2376:2376   -v /var/run/docker.sock:/var/run/docker.sock   --env DOCKER_TLS_CERTDIR=/certs   docker:latest
+  601  sudo lsof /var/run/docker.sock
+  602  ls
+  603  https://github.com/MaciejSerafin/simple-webapp.git
+  604  git clone https://github.com/MaciejSerafin/simple-webapp.git
+  605  ls
+  606  cd simple-webapp/
+  607  ls
+  608  nano Jenkinsfile
+  609  git add Jenkinsfile 
+  610  git commit -m "simple webapp"
+  611  git push origin master
+  612  history
+  613  git push origin master
+  614  exit
+  615  ls
+  616  history
+  617  sudo su
+  618  history > historia.txt

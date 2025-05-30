@@ -1,0 +1,67 @@
+---
+- name: Install Docker and Docker Compose
+  ansible.builtin.dnf:
+    name:
+      - moby-engine
+      - docker-compose
+    state: present
+
+- name: Ensure Docker service is enabled and running
+  ansible.builtin.service:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Clone node‑js‑dummy‑test repo
+  ansible.builtin.git:
+    repo: https://github.com/devenes/node-js-dummy-test.git
+    dest: /opt/nodejs-dummy-test
+    version: master
+    force: yes
+
+- name: Create Dockerfile for custom nodejs image
+  copy:
+    dest: /opt/nodejs-dummy-test/Dockerfile
+    content: |
+      FROM node:16-alpine
+      WORKDIR /app
+      COPY package.json package-lock.json ./
+      RUN npm ci --only=production
+      COPY . .
+      EXPOSE 3000
+      CMD ["npm", "start"]
+
+- name: Build custom Docker image for node‑js‑dummy‑test
+  become: true
+  ansible.builtin.docker_image:
+    name: nodejs_dummy_img
+    source: build
+    build:
+      path: /opt/nodejs-dummy-test
+      dockerfile: Dockerfile
+
+- name: Run node‑js‑dummy‑test container
+  ansible.builtin.docker_container:
+    name: nodejs_dummy_test
+    image: nodejs_dummy_img
+    state: started
+    published_ports:
+      - "3000:3000"
+    env:
+      NODE_ENV: production
+    restart_policy: unless-stopped
+
+- name: Verify Docker container is running
+  ansible.builtin.docker_container_info:
+    name: nodejs_dummy_test
+  register: container_status
+
+- name: Container is running ✔
+  debug:
+    msg: "Docker container is running"
+  when: container_status.container.State.Status == 'running'
+
+- name: Container failed to start ⚠
+  debug:
+    msg: "Docker container failed to start"
+  when: container_status.container.State.Status != 'running'

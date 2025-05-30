@@ -1,0 +1,7 @@
+---
+- name: Ping all endpoints
+  hosts: Endpoints
+#  become: true
+  tasks:
+    - name: Ping endpoint
+      ansible.builtin.ping:
