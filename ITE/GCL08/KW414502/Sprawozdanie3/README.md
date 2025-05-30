@@ -224,3 +224,28 @@ Stworzenie poda przez minikube poleceniem `minikube kubectl run -- expressjs --i
 Żeby zweryfikować, że pod działa należy przekierować port poprzez kubectl
 `kubectl port-forward pod/expressjs 3000:3000&`
  ![](lab10/10-8.png)
+Stworzenie wdrożenia 
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expressjs
+  labels:
+    app: expresspod
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: expresspod
+  template:
+    metadata:
+      labels:
+        app: expresspod
+    spec:
+      containers:
+      - name: expresspod
+        image: frostyfire1/express-js-deploy
+        ports:
+        - containerPort: 3000
+```
+ ![](lab10/10-9.png)
