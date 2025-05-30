@@ -1,0 +1,11 @@
+FROM ubuntu:24.04
+
+RUN apt update && apt install -y \
+    libglib2.0-0 \
+    libssl3 \
+    libncurses6 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY output/bin/irssi /usr/local/bin/irssi
+
+ENTRYPOINT ["irssi"]

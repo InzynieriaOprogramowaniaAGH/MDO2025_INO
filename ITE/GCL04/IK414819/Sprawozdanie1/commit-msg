@@ -1,0 +1,13 @@
+#!/usr/bin/python
+import sys
+
+with open(sys.argv[1],'r') as file:
+    commit_msg = file.read().strip()
+
+is_correct_msg = commit_msg.startswith("IK414819")
+
+if not is_correct_msg:
+    print("incorrect commit message")
+    sys.exit(1)
+
+sys.exit(0)

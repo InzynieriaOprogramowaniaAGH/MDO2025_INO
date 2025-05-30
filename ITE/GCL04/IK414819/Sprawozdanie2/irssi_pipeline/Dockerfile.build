@@ -1,0 +1,28 @@
+# Dockerfile.build
+FROM ubuntu:24.04
+
+RUN apt update && apt install -y \
+    git \
+    gcc \
+    make \
+    meson \
+    ninja-build \
+    pkg-config \
+    libglib2.0-dev \
+    libssl-dev \
+    libncurses-dev \
+    perl \
+    cmake \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+RUN git clone https://github.com/irssi/irssi.git
+
+WORKDIR /app/irssi
+
+RUN git describe --tags > VERSION.txt
+
+RUN meson setup build --prefix=/output && meson compile -C build && meson install -C build
+
+RUN cp VERSION.txt /output/VERSION.txt

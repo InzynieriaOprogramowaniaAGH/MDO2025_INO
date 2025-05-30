@@ -1,0 +1,289 @@
+Started by user admin
+Obtained ITE/GCL04/IK414819/Sprawozdanie2/irssi_pipeline/.jenkinsfile from git https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/irssi_pipeline_github
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: git
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git init /var/jenkins_home/workspace/irssi_pipeline_github # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse origin/IK414819^{commit} # timeout=10
+Checking out Revision 9fadf71fde92831501a476cad752ab801647539a (origin/IK414819)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 9fadf71fde92831501a476cad752ab801647539a # timeout=10
+Commit message: "IK414819 jenkinsfile"
+First time build. Skipping changelog.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Klonowanie repozytorium)
+[Pipeline] git
+The recommended git tool is: git
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/irssi_pipeline_github/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/IK414819^{commit} # timeout=10
+Checking out Revision 9fadf71fde92831501a476cad752ab801647539a (refs/remotes/origin/IK414819)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 9fadf71fde92831501a476cad752ab801647539a # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git checkout -b IK414819 9fadf71fde92831501a476cad752ab801647539a # timeout=10
+Commit message: "IK414819 jenkinsfile"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Budowanie obrazu - build)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/irssi_pipeline_github/ITE/GCL04/IK414819/Sprawozdanie2/irssi_pipeline
+[Pipeline] {
+[Pipeline] sh
++ mkdir -p output
+[Pipeline] sh
++ docker build -f Dockerfile.build -t irssi-builder .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.build
+#1 transferring dockerfile: 628B 0.0s done
+#1 DONE 0.2s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:24.04
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.2s
+
+#4 [1/8] FROM docker.io/library/ubuntu:24.04
+#4 DONE 0.0s
+
+#5 [2/8] RUN apt update && apt install -y     git     gcc     make     meson     ninja-build     pkg-config     libglib2.0-dev     libssl-dev     libncurses-dev     perl     cmake     && rm -rf /var/lib/apt/lists/*
+#5 CACHED
+
+#6 [3/8] WORKDIR /app
+#6 CACHED
+
+#7 [4/8] RUN git clone https://github.com/irssi/irssi.git
+#7 CACHED
+
+#8 [6/8] RUN git describe --tags > VERSION.txt
+#8 CACHED
+
+#9 [7/8] RUN meson setup build --prefix=/output && meson compile -C build && meson install -C build
+#9 CACHED
+
+#10 [5/8] WORKDIR /app/irssi
+#10 CACHED
+
+#11 [8/8] RUN cp VERSION.txt /output/VERSION.txt
+#11 CACHED
+
+#12 exporting to image
+#12 exporting layers done
+#12 writing image sha256:07d0e63be5abbf6c39d930917d498f4ab4ef008a7271bdac0828a34dad8c2584
+#12 writing image sha256:07d0e63be5abbf6c39d930917d498f4ab4ef008a7271bdac0828a34dad8c2584 0.0s done
+#12 naming to docker.io/library/irssi-builder 0.0s done
+#12 DONE 0.1s
+[Pipeline] sh
++ docker create --name irssi_temp_container irssi-builder
+73e17b695ba95922296155fb394b1e4b3ac68f5234f5059b1621aead7504a486
+[Pipeline] sh
++ docker cp irssi_temp_container:/output/. ./output
+[Pipeline] sh
++ docker rm irssi_temp_container
+irssi_temp_container
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Budowanie obrazu - test)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/irssi_pipeline_github/ITE/GCL04/IK414819/Sprawozdanie2/irssi_pipeline
+[Pipeline] {
+[Pipeline] sh
++ docker build -f Dockerfile.test -t irssi-test .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.test
+#1 transferring dockerfile: 197B 0.0s done
+#1 DONE 0.2s
+
+#2 [internal] load metadata for docker.io/library/irssi-builder:latest
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.1s
+
+#4 [1/2] FROM docker.io/library/irssi-builder:latest
+#4 DONE 0.0s
+
+#5 [2/2] WORKDIR /app/irssi
+#5 CACHED
+
+#6 exporting to image
+#6 exporting layers done
+#6 writing image sha256:3177b1ca0d09efe1daa3eef79cd9ad94f35a46aa28d07a899ad95637213d9726 0.0s done
+#6 naming to docker.io/library/irssi-test
+#6 naming to docker.io/library/irssi-test 0.0s done
+#6 DONE 0.1s
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Uruchamianie testów)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ docker run --rm irssi-test
+ninja: Entering directory `/app/irssi/build'
+[1/1] Generating irssi-version.h with a custom command (wrapped by meson to capture output)
+1/5 test-formats test              OK              0.04s   1 subtests passed
+2/5 test-irc test                  OK              0.04s   22 subtests passed
+3/5 test-channel-events test       OK              0.05s   3 subtests passed
+4/5 test-796 test                  OK              0.06s   1 subtests passed
+5/5 test-paste-join-multiline test OK              0.03s   3 subtests passed
+
+Ok:                 5   
+Expected Fail:      0   
+Fail:               0   
+Unexpected Pass:    0   
+Skipped:            0   
+Timeout:            0   
+
+Full log written to /app/irssi/build/meson-logs/testlog.txt
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Budowanie obrazu - deploy)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/irssi_pipeline_github/ITE/GCL04/IK414819/Sprawozdanie2/irssi_pipeline
+[Pipeline] {
+[Pipeline] sh
++ docker build -f Dockerfile.deploy -t irssi-deploy .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.deploy
+#1 transferring dockerfile: 312B 0.0s done
+#1 DONE 0.2s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:24.04
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.1s
+
+#4 [1/3] FROM docker.io/library/ubuntu:24.04
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 276B done
+#5 DONE 0.1s
+
+#6 [2/3] RUN apt update && apt install -y     libglib2.0-0     libssl3     libncurses6     && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [3/3] COPY output/bin/irssi /usr/local/bin/irssi
+#7 CACHED
+
+#8 exporting to image
+#8 exporting layers done
+#8 writing image sha256:dde8f5ba4a139d3f91c55704bb1383c1dceab55645a1187918617d6082842e99 0.0s done
+#8 naming to docker.io/library/irssi-deploy
+#8 naming to docker.io/library/irssi-deploy 0.0s done
+#8 DONE 0.1s
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Uruchamianie irssi --version)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ docker run --rm irssi-deploy --version
+irssi 1.5+1-dev-265-g44494551-dirty (20250414 1500)
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Publish)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/irssi_pipeline_github/ITE/GCL04/IK414819/Sprawozdanie2/irssi_pipeline
+[Pipeline] {
+[Pipeline] readFile
+[Pipeline] sh
++ rm -rf package
++ mkdir -p package/DEBIAN
++ mkdir -p package/usr/local/bin
+[Pipeline] sh
++ cp output/bin/irssi package/usr/local/bin/irssi
+[Pipeline] writeFile
+[Pipeline] sh
++ dpkg-deb --build package irssi-1.5+1-dev-265-g44494551.deb
+dpkg-deb: building package 'irssi' in 'irssi-1.5+1-dev-265-g44494551.deb'.
+[Pipeline] archiveArtifacts
+Archiving artifacts
+Recording fingerprints
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+Pipeline zakończony (sukces lub porażka).
+[Pipeline] echo
+Testy zakończone sukcesem!
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
