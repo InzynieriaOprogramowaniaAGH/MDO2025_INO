@@ -1,0 +1,4 @@
+FROM doctest-build:latest
+
+WORKDIR /app/doctest/build
+CMD ["make", "test"]
