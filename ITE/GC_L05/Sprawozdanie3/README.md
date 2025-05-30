@@ -78,10 +78,27 @@ Dzięki temu system po zakończonej instalacji automatycznie otrzymuje nazwę fe
 
 ---
 
-
-## Github Actions
+# Zajęcia 11 - Wdrażanie na zarządzalne kontenery: Kubernetes (2)
 
 ---
 
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/Sprawozdanie3/fork%20TFT.png?raw=true)
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/Sprawozdanie3/forked%20TFT.png)
+## Przygotowanie nowego obrazu
+
+W ramach realizacji zadania przygotowano dwa obrazy Dockera z aplikacją frontendową. Jako bazę wykorzystano publiczne repozytorium `Amelia_Nawrot_Web_Wroclaw`.
+
+```
+git clone https://github.com/LadyAmely/Amelia_Nawrot_Web_Wroclaw.git
+
+```
+
+Następnie zbudowano dwie wersje obrazu. Wersja pierwsza (v1) po zbudowaniu została załadowana bezpośrednio do klastra Kubernetes za pomocą polecenia:
+
+```
+minikube image load ladyamely/amelia-web:v1
+minikube image load ladyamely/amelia-web:v2
+
+```
+Wersja druga (v2) została przygotowana celowo z błędem — poprzez modyfikację pliku Dockerfile. Tę wersję również załadowano do klastra Minikube.
+
+
+Oba obrazy zostały oznaczone odpowiednimi tagami (v1 i v2) i użyte w definicji deploymentu Kubernetes. 
