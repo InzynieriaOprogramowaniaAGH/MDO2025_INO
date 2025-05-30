@@ -1,0 +1,51 @@
+---
+- name: Instalacja Dockera
+  ansible.builtin.package:
+    name:
+      - docker
+      - docker-compose
+    state: present
+
+- name: Uruchomienie i włączenie usługi Docker
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Instalacja biblioteki requests
+  ansible.builtin.package:
+    name: python3-requests
+    state: present
+
+- name: Pull obrazu z Docker Hub
+  community.docker.docker_image:
+    name: winterwollf/node-deploy
+    tag: v2
+    source: pull
+
+- name: Uruchomienie kontenera
+  community.docker.docker_container:
+    name: node_app
+    image: winterwollf/node-deploy:v2
+    state: started
+    published_ports:
+      - "3000:3000"
+
+- name: Weryfikacja działania aplikacji
+  ansible.builtin.uri:
+    url: http://localhost:3000
+    return_content: yes
+  register: response
+  retries: 5
+  delay: 3
+  until: response.status == 200
+
+- name: Zatrzymanie kontenera
+  community.docker.docker_container:
+    name: node_app
+    state: stopped
+
+- name: Usunięcie kontenera
+  community.docker.docker_container:
+    name: node_app
+    state: absent

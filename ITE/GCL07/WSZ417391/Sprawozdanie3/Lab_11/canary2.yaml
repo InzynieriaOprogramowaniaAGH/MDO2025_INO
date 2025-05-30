@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-stable
+  labels:
+    app: todo
+    version: stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: todo
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: todo
+        version: stable
+    spec:
+      containers:
+      - name: todo
+        image: winterwollf/node-deploy:v2
+        ports:
+        - containerPort: 3000
