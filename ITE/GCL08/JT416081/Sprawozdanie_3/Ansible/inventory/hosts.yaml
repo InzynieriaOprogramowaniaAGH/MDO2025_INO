@@ -1,0 +1,11 @@
+---
+Orchestrators:
+  hosts:
+    mojaVM:
+      ansible_connection: local
+
+Endpoints:
+  hosts:
+    ansible-target:
+      ansible_hosts: 10.0.2.4
+      ansible_user: ansible
