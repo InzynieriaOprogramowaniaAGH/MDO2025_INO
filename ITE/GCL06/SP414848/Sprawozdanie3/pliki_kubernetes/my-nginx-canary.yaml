@@ -1,0 +1,65 @@
+# Deployment - v1 (stable)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-canary-v1
+  labels:
+    app: my-nginx
+    version: v1
+spec:
+  replicas: 9
+  selector:
+    matchLabels:
+      app: my-nginx
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+        version: v1
+    spec:
+      containers:
+        - name: app
+          image: user123user321/my_nginx:1.0
+          ports:
+            - containerPort: 80
+
+---
+# Deployment - v2 (canary)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-canary-v2
+  labels:
+    app: my-nginx
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-nginx
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+        version: v2
+    spec:
+      containers:
+        - name: app
+          image: user123user321/my_nginx:2.0
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx-canary-service
+spec:
+  selector:
+    app: my-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

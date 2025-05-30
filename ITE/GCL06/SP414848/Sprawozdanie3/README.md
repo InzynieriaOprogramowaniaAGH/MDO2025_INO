@@ -681,3 +681,344 @@ Działanie aplikacji pod nowym portem: (użytkownik nie jest w stanie określić
 
 ![](screens/lab10-17.png)
 
+## Kontrolowanie wdrożeń
+
+### Przygotowanie nowych wersji obrazu
+
+Na potrzeby ćwiczenia przygotowano nowe wersję obrazu:
+
+- 2.0, różni się od wersji 1.0 jedynie zawartością strony html,
+
+- err, obraz którego uruchomienie kończy się błędem poprzez wywołanie polecenia `false`, wystarczyło dodać pojedynczą linijkę w Dockerfile: `CMD["false"]`.
+
+Tutaj uruchomienie obrazu err, z widocznym zwracanym kodem wyjścia (pod State.ExitCode), kod jest równy 1, co oznacza błąd - tak jak oczekiwano:
+
+![](screens/lab11-1.png)
+
+Obraz z wersjami na dockerhubie:
+
+![](screens/lab11-2.png)
+
+### Zmiany we wdrożeniu
+
+W tym kroku przedstawione zostaną proste zmiany w pliku wdrożeniowym, po każdej zmianie wdrożenie zostanie ponownie przeprowadzone - identycznie jak przy pierwszym uruchomieniu wdrożenia korzystamy z polecenia `kubectl apply -f` + plik wdrożenia, kubernetes sam porówna aktualny stan wdrożenia z plikiem i zastosuje zmiany:
+
+![](screens/lab11-3.png)
+
+Domyślnie kubernetes działa wesług strategii `Rolling Update`, oznacza to że gdy zajdzie jakaś zmiana to kubernetes najpierw utworzy nowe pody z nową instancją aplikacji, następnie będzie jest stopniowo podmieniał ze starymi podami, aby nie zatrzymać aplikacji - w trakcie aktualizacji ruch kierowany jest do działających podów, dodatkowo kubernetes sprawdza czy nowe pody działają zanim będzie usuwał stare pody.
+
+---
+
+Zwiększenie liczby replik do 8: (w pliku wdrożenia: `replicas: 4` -> `replicas: 8`)
+
+![](screens/lab11-4.png)
+
+(widzimy nowo utworzone pody, stare pody dalej działają)
+
+Zmniejszenie liczby replik do 1: (w pliku wdrożenia: `replicas: 8` -> `replicas: 1`)
+
+![](screens/lab11-5.png)
+
+(został jeden pod - należy on do oryginalnych 4 podów, kubernetes najpierw usuwa nowsze pody i preferuje te starsze)
+
+Zmniejszenie liczby replik do 0: (w pliku wdrożenia: `replicas: 1` -> `replicas: 0`)
+
+![](screens/lab11-6.png)
+
+![](screens/lab11-7.png)
+
+![](screens/lab11-8.png)
+
+(brak podów - aplikacja nie działa, ale deployment dalej istnieje)
+
+
+Utrata aktywnego połączenia z podem - error:
+
+![](screens/lab11-9.png)
+
+Powrót do 4 replik: (w pliku wdrożenia: `replicas: 0` -> `replicas: 4`)
+
+![](screens/lab11-10.png)
+
+![](screens/lab11-11.png)
+
+(aplikacja znowu działa)
+
+Zastosowanie nowej wersji obrazu: (w pliku wdrożenia `image: user123user321/my_nginx:1.0` -> `image: user123user321/my_nginx:2.0`)
+
+![](screens/lab11-12.png)
+
+Zastosowanie wadliwej wersji obrazu: (w pliku wdrożenia `image: user123user321/my_nginx:2.0` -> `image: user123user321/my_nginx:err`)
+
+![](screens/lab11-13.png)
+
+Możemy zauważyć 2 wadliwe pody oraz 3 działające, dzieje się tak ponieważ kubernetes próbował zaktualizować/podmienić poda, ale ponieważ kontener na nim uruchomiony zwrócił kod błędu kubernetes zatrzymał wdrożenie nowego obrazu i podtrzymał starą wersję na reszcie podów, aplikacja dalej działa bo pozostałe pody działają na poprzedniej wersji (2.0):
+
+![](screens/lab11-14.png)
+
+Jednak wadliwe pody dalej widnieją i wypadałoby cofnąć poprzednie wdrożenie, aby to zrobić najpierw należy sprawdzić numer rewizji do której chcemy się cofnąć, aby zobaczyć historię wdrożeń korzystamy z polecenia: `kubectl rollout history deployment` + nazwa wdrożenia.
+
+Następnie cofamy się do poprzedniej rewizji poleceniem: `kubectl rollout undo deployment` + nazwa wdrożenia + `--to-revision=...` <- w miejsce kropek numer rewizji do której chcemy się cofnąć.
+
+![](screens/lab11-15.png)
+
+Dashboard:
+
+![](screens/lab11-15+.png)
+
+### Historia wdrożenia
+
+Jeżeli chcemy podpatrzeć historię wycofanego wdrożenia najpierw sprawdzamy jego numer rewizji (podobnie jak poprzednio), następnie wywołujemy to samo polecenie ale wskazujemy na konkretną rewizję: `--revision` + numer rewizji:
+
+![](screens/lab11-16.png)
+
+Z wypisanych informacji możemy odczytać szablon nazewnictwa podów z tej rewizji (pod `pod-template-hash=`).
+
+Znając hash podów możemy wypisać wszystkie zdarzenia z nimi związane: (polecenie: `kubectl get events` + ewentualne sortowanie + grep z hashem aby wypisać tylko interesujące nas pody).
+
+![](screens/lab11-17.png)
+
+Widzimy że po pobraniu nowego obrazu na nowych podach replikach wystąpił błąd, a pody te są wycofywane (linijki ze statusem 'Warning' i sąsiednie).
+
+### Skrypt weryfikujący, czy dane wdrożenie wdrożyło się w 60 sekund.
+
+Treść:
+
+```bash
+#!/bin/bash
+
+DEPLOYMENT_NAME="$1"
+TIMEOUT=60s
+
+if [[ -z "$DEPLOYMENT_NAME" ]]; then
+    echo "Użycie: $0 <nazwa-deployment>"
+    exit 1
+fi
+
+echo "Sprawdzam wdrożenie: $DEPLOYMENT_NAME"
+START_TIME=$(date +%s)
+
+timeout $TIMEOUT kubectl rollout status deployment/"$DEPLOYMENT_NAME" --timeout=$TIMEOUT
+
+if [[ $? -eq 0 ]]; then
+    END_TIME=$(date +%s)
+    DURATION=$((END_TIME - START_TIME))
+    echo "✅ Wdrożenie ukończone w ${DURATION} sekund"
+    
+    if [[ $DURATION -gt 60 ]]; then
+        echo "❌ Przekroczono limit ${TIMEOUT}"
+        exit 1
+    fi
+    exit 0
+else
+    echo "❌ Wdrożenie nie ukończone w ${TIMEOUT}"
+    exit 1
+fi
+```
+
+Skrypt używa polecenia `kubectl rollout status`, aby sprawdzić, czy rollout (wdrożenie) zakończył się sukcesem, `timeout` przerywa polecenie jeżeli nie ukończyło się w ustalonym czasie. Następnie sprawdzamy ile czasu upłynęło, jeżeli więcej niż 60 sekund to wdrożenie przekroczyło limit czasu.
+
+Użycie skryptu:
+
+- zaraz po uruchomieniu wdrożenia,
+
+- albo lepiej - jednoczesne uruchomienie wdrożenia i skryptu za pomocą operatora `&&`, dzięki temu całe polecenie zwróci kod błędu, również eliminujemy czas pomiędzy uruchomieniem poleceń.
+
+Warto wspomnieć że wdrożenie i tak będzie dalej się wdrażało po wykonaniu skryptu - skrypt działa tylko jako narzędzie obserwacyjne i nie ingeruje w samo wdrożenie.
+
+Skrypt z czasem ustawionym na 1s - błąd:
+
+![](screens/lab11-18.png)
+
+Skrypt z czasem ustawionym na 60s - sukces:
+
+![](screens/lab11-19.png)
+
+## Strategie wdrożeń
+
+### Recreate
+
+Recreate polega na usuwaniu starych podów przed uruchomieniem nowych.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-recreate
+  labels:
+    app: my-nginx
+    strategy: recreate
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: my-nginx
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    spec:
+      containers:
+        - name: app
+          image: user123user321/my_nginx:2.0
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx-recreate-service
+spec:
+  selector:
+    app: my-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+```
+
+Uruchomienie wdrożenia (ze skryptem):
+
+![](screens/lab11-20.png)
+
+Szybki czas wdrożenia - pody znikają zanim pojawią się nowe - prosta startegia. Minusem brak kontroli ruchu, aplikacja na chwilę przestaje całkowicie działać.
+
+### Rolling Update
+
+Rolling Update polega na stopniowym uruchamianiu nowych podów wraz z usuwaniem starych.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-rollingupdate
+  labels:
+    app: my-nginx
+    strategy: rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 25%
+  selector:
+    matchLabels:
+      app: my-nginx
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    spec:
+      containers:
+        - name: my-nginx
+          image: user123user321/my_nginx:2.0
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx-rollingupdate-service
+spec:
+  selector:
+    app: my-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+```
+
+Uruchomienie wdrożenia (ze skryptem):
+
+![](screens/lab11-21.png)
+
+Wdrożenie zajmuje trochę dłużej ze względu na zastosowanie bardziej skomplikowanej strategii, ruch jest przekirowywany do działających podów, aplikacja dalej działa.
+
+### Canary Deployment workload
+
+Canary Deployment polega na stopniowym wdrażaniu nowej wersji obok starej - tylko część ruchu idzie do nowych podów.
+
+```yaml
+# Deployment - v1 (stable)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-canary-v1
+  labels:
+    app: my-nginx
+    version: v1
+spec:
+  replicas: 9
+  selector:
+    matchLabels:
+      app: my-nginx
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+        version: v1
+    spec:
+      containers:
+        - name: app
+          image: user123user321/my_nginx:1.0
+          ports:
+            - containerPort: 80
+
+---
+# Deployment - v2 (canary)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-canary-v2
+  labels:
+    app: my-nginx
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-nginx
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+        version: v2
+    spec:
+      containers:
+        - name: app
+          image: user123user321/my_nginx:2.0
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx-canary-service
+spec:
+  selector:
+    app: my-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+```
+
+Uruchomienie wdrożenia: (ze skryptem, z uwagi na to że skrypt obsługuje jedno pojedyncze wdrożenie, uruchomiono go równolegle w 2 terminalach - najszybciej jak się dało)
+
+![](screens/lab11-22.png)
+
+![](screens/lab11-23.png)
+
+Najbardziej skomplikowana strategia z tych 3, ale zapewnia najwięcej bezpieczeństwa, większość użytkowników dalej będzie korzystać ze stabilnej wersji aplikacji podczas gdy część z nich zobaczy nową wersję.
+
+---
+
+Wszystkie wdrożenia w dashboardzie:
+
+![](screens/lab11-24.png)
