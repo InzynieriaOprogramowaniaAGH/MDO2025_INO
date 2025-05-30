@@ -5,7 +5,7 @@
 ## Zadania do wykonania
 
 ### Przygotowanie nowego obrazu
- * Zarejestruj nową wersję swojego obrazu `Deploy` (w Docker Hub lub lokalnie+przeniesienie)
+ * Zarejestruj nową wersję swojego obrazu `Deploy` (w Docker Hub lub [lokalnie+przeniesienie](https://minikube.sigs.k8s.io/docs/commands/image/#minikube-image-load))
  * Upewnij się, że dostępne są dwie co najmniej wersje obrazu z wybranym programem
  * Jeżeli potrzebny jest "gotowiec" z powodu problemów z `Deploy`, można użyć np `httpd`, ale powinien to być **własny** kontener: zmodyfikowany względem oryginału i opublikowany na własnym koncie Docker Hub.
  * Będzie to wymagać 
