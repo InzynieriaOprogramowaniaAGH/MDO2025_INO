@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-nginx-app # Ważna etykieta dla serwisu
+      version: v2       # Dodatkowa etykieta dla rozróżnienia
+  template:
+    metadata:
+      labels:
+        app: my-nginx-app # Ta etykieta musi pasować do selektora serwisu
+        version: v2
+    spec:
+      containers:
+      - name: nginx-canary-container
+        image: zboro02/my-custom-nginx:v2
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
