@@ -1,18 +1,14 @@
 ### Zajęcia 8 
 ## Instalacja zarządcy Ansible
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#instalacja-zarz%C4%85dcy-ansible)
-
 ### 1. Utworzenie drugiej maszyny wirtualnej
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#1-utworzenie-drugiej-maszyny-wirtualnej)
 
 Prace rozpoczęto od utworzenia drugiej maszyny wirtualnej, wyposażonej w ten sam system operacyjny i tę samą wersję co "główna" maszyna — Ubuntu Server 24.04.2. Podczas instalacji nadano maszynie hostname  **ansible-target**  oraz utworzono w systemie użytkownika  **ansible**.
 -   Główna maszyna:  **perykles@ubuntu**
 -   Dodatkowa maszyna:  **ansible@ansible-target**
 ### 2. Konfiguracja połączenia SSH (bez hasła)
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-konfiguracja-po%C5%82%C4%85czenia-ssh-bez-has%C5%82a)
 
 a) Połączenie za pomocą adresu IP
 
@@ -50,7 +46,6 @@ sudo nano /etc/hosts
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdUXf6LJJ-6jnDRFgd8bL-cQBOiowbasCab9lUbGB61-7BQ7Us4sIqmVrSTLKQj-JVLHcKCG_c3LmCNCF_imbb6a3cIgYv6Uy8yHHU5J_typ_-O6Z4fAOBFx3GaB0fYYO_dG5kMcg?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ### 3. Migawka maszyny wirtualnej
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#3-migawka-maszyny-wirtualnej)
 
 Migawka zapisuje pełny stan maszyny (RAM, pliki, ustawienia). 
 
@@ -61,8 +56,6 @@ Migawka zapisuje pełny stan maszyny (RAM, pliki, ustawienia).
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfhGIU3dY4QN7D6yVzZniPQVUGdISI-oZBabJ8AtgvUMcsxI3CTtbhFGe7MOPQKGuSjBT61_SwNXwqdeIxzhiAhogZmLKtvpIRFGsGVeR1GelJVSMdpGjb8qqQm4Xej2B8ryn8_?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ### 4. Eksport maszyny wirtualnej
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#4-eksport-maszyny-wirtualnej)
-
 Eksport umożliwia backup.
 
 **Kroki (VirtualBox):**
@@ -71,14 +64,10 @@ Eksport umożliwia backup.
 
 ### 5. Instalacja Ansible
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#5-instalacja-ansible)
-
 Na maszynie głównej zainstalowano Ansible
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdXPp1silW5QI4yDNf-3mhP9YWl_H0x1AGRdJg2oBeKZNwCTHT7fveVjqGz8qZ6JEwbyN3AmWam9j08UGPlI5Jb5Bc37qLuS1EOIxhM7JDhYF1JyZkM4PT1NvkTnsdomHGfFF16zw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 
 ### 6. Weryfikacja narzędzi
-
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#6-weryfikacja-narz%C4%99dzi)
 
 Sprawdzono obecność wymaganych programów  `tar`  oraz  `sshd`
 ```
@@ -88,11 +77,7 @@ which sshd
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdvpy9ZBTieqcvi_tp_R9GYd2xjd8isfoqIRtls2XbKZ8ZEYiH7eExgWonTZcQybPCYE21ra6xMBabCB746_SGY_nAGS_8zjYvLg8nNjD3FrvNyaVntUaDW0Mb88yHDqg9XfqcmIw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ## Inwentaryzacja
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#inwentaryzacja)
-
 ### 1. Ustawienie nazw hostów
-
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#1-ustawienie-nazw-host%C3%B3w)
 
 Na głównej maszynie zmieniono nazwę hosta na  `orchestrator`
 
@@ -104,19 +89,13 @@ exec bash
 ```
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdzUs0wOUabH-XUUMm0EAClUC4FGQRu-ffEVYNRpsWzBUuwvw1ESSpnjtaRnbEZSQFGUOuO91mvUj0ZV-Em3OuvsYeMKKsqZP_nDWGB6BqnedfwyQWJZKA1bJ2LAr3kiPxBxqwt?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 Na dodatkowej maszynie hostname pozostał taki sam jak przy instalacji maszyny  `ansible-target`
-### 2. Konfiguracja nazw DNS (plik  `/etc/hosts`)
-
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-konfiguracja-nazw-dns-plik-etchosts)
 
 Aby umożliwić rozpoznawianie nazw hostów zamiast korzystania z adresów IP
 
 ### 2. Konfiguracja nazw DNS (plik  `/etc/hosts`)
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-konfiguracja-nazw-dns-plik-etchosts)
 
 Aby umożliwić rozpoznawianie nazw hostów zamiast korzystania z adresów IP
-
-(Szczegóły:  [Połączenie z użyciem nazwy hosta](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#po%C5%82%C4%85czenie-z-u%C5%BCyciem-nazwy-hosta))
 
 1.  Zmodyfikowano plik  `/etc/hosts`
 
@@ -129,7 +108,7 @@ sudo nano /etc/hosts
 IP_address_1   orchestrator
 IP_address_2   ansible-target
 ```
-### 3. Weryfikacja łączności[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#3-weryfikacja-%C5%82%C4%85czno%C5%9Bci)
+### 3. Weryfikacja łączności
 Sprawdzono możliwość komunikacji między naszynami za pomocą polecenia  `ping`
 ```
 ping ansible-target
@@ -137,8 +116,6 @@ ping ansible-target
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfuJyoq3qABy6pPXEEAdsgffXtDyCRLKGQyHfLDrayIaRiak2ubq9h_AYb7h8qw5FNPoDApncZ_8GFp7hOU52qxWd5uqxlpeEtjY0GJCBTTaPeCNsTBzTBKeYFdRH_empXQcUFg3A?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 
 ### 4. Przygotowanie pliku inwentaryzacyjnego Ansible
-
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#4-przygotowanie-pliku-inwentaryzacyjnego-ansible)
 
 Utworzono plik  `inventory.yml`  z podziałem na grupy maszyn:
 
@@ -154,8 +131,6 @@ ubuntu ansible_host=10.0.2.15 ansible_user=perykles
 ansible-target ansible_host=10.200.4.4 ansible_user=ansible
 ```
 ### 5. Test połączenia (Ansible ping)
-
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#5-test-po%C5%82%C4%85czenia-ansible-ping)
 
 a) Ping do wszystkich maszyn:
 
@@ -215,8 +190,6 @@ W kolejnym kroku przygotowano playbook `restart_services.yml`, który ma na celu
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdlO-4PGoFaA1S5LwcnXY6cv4cFIyoEa8KsfrC3T99m9USCAM7Mks-yT70sU7O3JeL8YIV7UUFLBWWidCXHro1QnOyzxZ53QatoTqxZ1w_IJ1bHToLiJGXLKifqlILnwXI0U-F-4A?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 
 ### **6. Test z maszyną niedostępną (brak SSH / brak sieci)**
-
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#operacja-wzgl%C4%99dem-maszyny-z-wy%C5%82%C4%85czonym-serwerem-ssh-i-od%C5%82%C4%85czon%C4%85-kart%C4%85-sieciow%C4%85)
 
 1.  Wyłączenie serwera SSH Na maszynie  `ansible-target`  wykonano
 
@@ -541,7 +514,6 @@ Aby zweryfikować działanie aplikacji, można wykonać następujące polecenie:
 
 # Zajęcia10::Wdrażanie na zarządzalne kontenery: Kubernetes (1)
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#zaj%C4%99cia10wdra%C5%BCanie-na-zarz%C4%85dzalne-kontenery-kubernetes-1)
 
 ## Instalacja klastra Kubernetes
 
@@ -558,7 +530,6 @@ sudo dpkg -i minikube_latest_amd64.deb
 
 ### 2. Uruchomienie klastra Kubernates
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-uruchomienie-klastra-kubernates)
 
 Minikube domyślnie uruchamia klaster lokalnie w maszynie wirtualnej. Start klastra odbywa się przy pomocy polecenia
 
@@ -568,7 +539,6 @@ minikube start
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfAoETzlrdVIUfOoMhHJrbGgwK_3EjJRoWa4dZYBZ2C2kE2F_NNSpDd6H6P0-4V5rL8Wh0nRPxXZQCNrgfNvY7ZUWIPGwlwihz8yZCMT-infgHQZ7qoMFxBJmsRD9CGXnllQMqU6Q?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ### 3. Uruchomienie Dashboard
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#3-uruchomienie-dashboard)
 
 Aby ułatwić wizualne zarządzanie klastrem, uruchomiono wbudowany Kubernetes Dashboard, dostępny z poziomu przeglądarki
 
@@ -584,8 +554,6 @@ _Zalecane jest korzystanie z VS Code, z powodu automatycznego przekierowywania p
 
 ### 4. Konfiguracja  `kubectl`  (alias dla Minikube)
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#4-konfiguracja-kubectl--alias-dla-minikube)
-
 Zaopatrzono się w polecenie  `kubectl`  w wariancie minikube
 
 ```
@@ -595,7 +563,6 @@ alias kubectl="minikube kubectl --"
 
 ### 5. Działający klaster - weryfikacja
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#5-dzia%C5%82aj%C4%85cy-klaster---weryfikacja)
 
 Działanie klastra można potwierdzić poprzez
 ```
@@ -617,7 +584,6 @@ Aby uruchomić klaster Minikube, wymagane jest podstawowe środowisko do wirtual
 
 ### 7. Podstawowe obiekty Kubernetesa
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#7-podstawowe-obiekty-kubernetesa)
 
 W ramach pracy z Minikube i Dashboardem zapoznano się z podstawowymi komponentami K8s:
 
@@ -670,13 +636,10 @@ Obraz z repozytorium **XZ** działa poprawnie, ale nie jest odpowiedni do wdroż
 
 ## Alternatywny projekt: Deploy aplikacji jako usługowego kontenera
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#alternatywny-projekt-deploy-aplikacji-jako-us%C5%82ugowego-kontenera)
-
 Na potrzeby zadania wybrano alternatywny projekt oparty na serwerze NGINX, który działa jako usługowy kontener. Celem było zbudowanie i uruchomienie kontenera zawierającego prostą aplikację webową z własną stroną startową.
 
 ### 1. Obraz Dockera
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#1-obraz-dockera)
 
 Do budowy obrazu wykorzystano oficjalny obraz  `nginx:latest`  jako bazę. Do katalogu serwowanego przez NGINX (/usr/share/nginx/html) dodano własny plik  `index.html`  z niestandardową zawartością, potwierdzającą poprawne wdrożenie kontenera.
 
@@ -690,7 +653,6 @@ COPY custom-index.html /usr/share/nginx/html/index.html
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXd9qlKRImIShvpRsMto6z4OIDiDpDjdb0XH2fFhNk3LP4T3-vjTAKfjCHH8FH8arigcpK3xb22uf-EKvs6VfsYaTP8XYMBFa3ARYx_n9jMGjRFSBrhBNrhMw1Ux3qnj7MxlyHfkWw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ### 2. Budowa i uruchomienie kontenera
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-budowa-i-uruchomienie-kontenera)
 
 -   Obraz został zbudowany poleceniem:
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdfq2KlvAw-nHYYRzyBxWF8nH77rnOSg7bDXdbd_gldkvQ3LJUIOREonI6qvB2hQ5ebxBqKwSLbHIL3aD0xfBRvKbLUTCoyjj7Ptc7EXBSZH0uKaXg_v14nAuVcUlBYLBoqWMPpPg?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
@@ -747,7 +709,6 @@ Wdrożenie wykonałem komendą:
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcDnJYwMpM3zceSutiPg3-r0F-AaigrAsiRxo5qLALQLsnQ6D1Sgcz3vacwv02-DUDyCvBa9KLi8rmmskn52LYsY_h4_VF4QPZVJKC1oUKWYN5yrZO2hkBlIO5S2bh78Fhw9Rcl?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 Monitoring rolloutu
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-monitoring-rolloutu)
 
 Aby upewnić się, że wdrożenie zostało przeprowadzone poprawnie, użyto:
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdyQpS-3Kr1m_Q9BRbuSz0ByTWXj4CoxHNwZea657qxaV8vrECOjvGVsyCaST2JPNkB5LfYJ7vmdYko9bC9PxIehcLFcSvm9YPeoRaafEo-ppnbZh8UpxnQoUZdAesDSBES-lus3Q?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
@@ -755,19 +716,16 @@ Wszystkie 4 repliki zostały poprawnie uruchomione i działają bez błędów.
 
 ### 3. Eksponowanie aplikacji
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#3-eksponowanie-aplikacji)
 
 Aby udostępnić aplikację na zewnątrz klastra, wykonano:
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdmzPlTJDjpzPeUxxPsVTJPfhunTDyfDXYiDdc9Jfeicpf9bzOKpzzhSgJSYgB9J-hLEx-W6dmw--4jDqJwoZt397toeAiwNDqEWwoGENHPDhUeo0B1cEVtAHu3y3eFgQXK4_oAEg?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ### 4. Przekierowanie portu do serwisu
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#4-przekierowanie-portu-do-serwisu)
 
 Aplikacja została wystawiona lokalnie poprzez przekierowanie portu z serwisu:
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXctaYGqUMrSiVc0c9tBewHWxBXTxOuwxQ-1jZwPuEdoJJ5Sud0i4dH_cAiAU0MDTwX6Cw060tLpkYe80pX225beLeG8UsoQqNq-DunMPGNZufLRN15q5WaDNJK5VTnhx2jdeeXM?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ### Dashboard – Weryfikacja wizualna
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#dashboard--weryfikacja-wizualna)
 
 Do weryfikacji działania aplikacji i zarządzania zasobami klastra wykorzystano Dashboard Minikube.
 
@@ -787,15 +745,12 @@ Pokazuje aktywne wdrożenie z nazwą  `nginx-deployment`:
 
 # Zajęcia10::Wdrażanie na zarządzalne kontenery: Kubernetes (1)
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#zaj%C4%99cia10wdra%C5%BCanie-na-zarz%C4%85dzalne-kontenery-kubernetes-1)
 
 ## Instalacja klastra Kubernetes
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#instalacja-klastra-kubernetes)
 
 ### 1. Pobranie i instalacja Minikube
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#1-pobranie-i-instalacja-minikube)
 
 Instalator został pobrany bezpośrednio z oficjalnego źródła i zainstalowany poleceniem:
 
@@ -807,7 +762,6 @@ sudo dpkg -i minikube_latest_amd64.deb
 
 ### 2. Uruchomienie klastra Kubernates
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-uruchomienie-klastra-kubernates)
 
 Minikube domyślnie uruchamia klaster lokalnie w maszynie wirtualnej. Start klastra odbywa się przy pomocy polecenia
 
@@ -817,7 +771,6 @@ minikube start
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfAoETzlrdVIUfOoMhHJrbGgwK_3EjJRoWa4dZYBZ2C2kE2F_NNSpDd6H6P0-4V5rL8Wh0nRPxXZQCNrgfNvY7ZUWIPGwlwihz8yZCMT-infgHQZ7qoMFxBJmsRD9CGXnllQMqU6Q?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ### 3. Uruchomienie Dashboard
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#3-uruchomienie-dashboard)
 
 Aby ułatwić wizualne zarządzanie klastrem, uruchomiono wbudowany Kubernetes Dashboard, dostępny z poziomu przeglądarki
 
@@ -833,7 +786,6 @@ _Zalecane jest korzystanie z VS Code, z powodu automatycznego przekierowywania p
 
 ### 4. Konfiguracja  `kubectl`  (alias dla Minikube)
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#4-konfiguracja-kubectl--alias-dla-minikube)
 
 Zaopatrzono się w polecenie  `kubectl`  w wariancie minikube
 
@@ -844,7 +796,6 @@ alias kubectl="minikube kubectl --"
 
 ### 5. Działający klaster - weryfikacja
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#5-dzia%C5%82aj%C4%85cy-klaster---weryfikacja)
 
 Działanie klastra można potwierdzić poprzez
 ```
@@ -866,7 +817,6 @@ Aby uruchomić klaster Minikube, wymagane jest podstawowe środowisko do wirtual
 
 ### 7. Podstawowe obiekty Kubernetesa
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#7-podstawowe-obiekty-kubernetesa)
 
 W ramach pracy z Minikube i Dashboardem zapoznano się z podstawowymi komponentami K8s:
 
@@ -919,13 +869,11 @@ Obraz z repozytorium **XZ** działa poprawnie, ale nie jest odpowiedni do wdroż
 
 ## Alternatywny projekt: Deploy aplikacji jako usługowego kontenera
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#alternatywny-projekt-deploy-aplikacji-jako-us%C5%82ugowego-kontenera)
 
 Na potrzeby zadania wybrano alternatywny projekt oparty na serwerze NGINX, który działa jako usługowy kontener. Celem było zbudowanie i uruchomienie kontenera zawierającego prostą aplikację webową z własną stroną startową.
 
 ### 1. Obraz Dockera
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#1-obraz-dockera)
 
 Do budowy obrazu wykorzystano oficjalny obraz  `nginx:latest`  jako bazę. Do katalogu serwowanego przez NGINX (/usr/share/nginx/html) dodano własny plik  `index.html`  z niestandardową zawartością, potwierdzającą poprawne wdrożenie kontenera.
 
@@ -939,7 +887,6 @@ COPY custom-index.html /usr/share/nginx/html/index.html
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXd9qlKRImIShvpRsMto6z4OIDiDpDjdb0XH2fFhNk3LP4T3-vjTAKfjCHH8FH8arigcpK3xb22uf-EKvs6VfsYaTP8XYMBFa3ARYx_n9jMGjRFSBrhBNrhMw1Ux3qnj7MxlyHfkWw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ### 2. Budowa i uruchomienie kontenera
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-budowa-i-uruchomienie-kontenera)
 
 -   Obraz został zbudowany poleceniem:
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdfq2KlvAw-nHYYRzyBxWF8nH77rnOSg7bDXdbd_gldkvQ3LJUIOREonI6qvB2hQ5ebxBqKwSLbHIL3aD0xfBRvKbLUTCoyjj7Ptc7EXBSZH0uKaXg_v14nAuVcUlBYLBoqWMPpPg?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
@@ -996,7 +943,6 @@ Wdrożenie wykonałem komendą:
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcDnJYwMpM3zceSutiPg3-r0F-AaigrAsiRxo5qLALQLsnQ6D1Sgcz3vacwv02-DUDyCvBa9KLi8rmmskn52LYsY_h4_VF4QPZVJKC1oUKWYN5yrZO2hkBlIO5S2bh78Fhw9Rcl?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 Monitoring rolloutu
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-monitoring-rolloutu)
 
 Aby upewnić się, że wdrożenie zostało przeprowadzone poprawnie, użyto:
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdyQpS-3Kr1m_Q9BRbuSz0ByTWXj4CoxHNwZea657qxaV8vrECOjvGVsyCaST2JPNkB5LfYJ7vmdYko9bC9PxIehcLFcSvm9YPeoRaafEo-ppnbZh8UpxnQoUZdAesDSBES-lus3Q?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
@@ -1004,19 +950,16 @@ Wszystkie 4 repliki zostały poprawnie uruchomione i działają bez błędów.
 
 ### 3. Eksponowanie aplikacji
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#3-eksponowanie-aplikacji)
 
 Aby udostępnić aplikację na zewnątrz klastra, wykonano:
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdmzPlTJDjpzPeUxxPsVTJPfhunTDyfDXYiDdc9Jfeicpf9bzOKpzzhSgJSYgB9J-hLEx-W6dmw--4jDqJwoZt397toeAiwNDqEWwoGENHPDhUeo0B1cEVtAHu3y3eFgQXK4_oAEg?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ### 4. Przekierowanie portu do serwisu
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#4-przekierowanie-portu-do-serwisu)
 
 Aplikacja została wystawiona lokalnie poprzez przekierowanie portu z serwisu:
 **![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXctaYGqUMrSiVc0c9tBewHWxBXTxOuwxQ-1jZwPuEdoJJ5Sud0i4dH_cAiAU0MDTwX6Cw060tLpkYe80pX225beLeG8UsoQqNq-DunMPGNZufLRN15q5WaDNJK5VTnhx2jdeeXM?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
 ### Dashboard – Weryfikacja wizualna
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#dashboard--weryfikacja-wizualna)
 
 Do weryfikacji działania aplikacji i zarządzania zasobami klastra wykorzystano Dashboard Minikube.
 
@@ -1037,7 +980,6 @@ Pokazuje aktywne wdrożenie z nazwą  `nginx-deployment`:
 # Zajęcia11 Wdrażanie na zarządzalne kontenery: Kubernetes (2)
 ## Przygotowanie nowego obrazu
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#przygotowanie-nowego-obrazu)
 
 Jako bazę wykorzystano oficjalny obraz  `httpd:alpine`. Do katalogu serwującego treści /usr/local/apache2/htdocs dodano własne pliki index.html z różną zawartością. Zbudowano i opublikowano trzy wersje obrazu:
 ### Wersja 1: Działająca 
@@ -1136,7 +1078,6 @@ spec:
 
 ### Skalowanie: Zwiększenie replik do 8
 
-[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#skalowanie-zwi%C4%99kszenie-replik-do-8)
 
 1.  **Zastosowanie zmian**
 
