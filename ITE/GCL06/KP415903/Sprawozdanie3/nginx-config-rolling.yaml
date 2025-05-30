@@ -1,18 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deploy
+  name: nginx-deploy-rolling
   labels:
-    app: nginx-deploy
+    app: nginx-rolling
 spec:
   replicas: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
   selector:
     matchLabels:
-      app: nginx-deploy
+      app: nginx-rolling
   template:
     metadata:
       labels:
-        app: nginx-deploy
+        app: nginx-rolling
     spec:
       containers:
       - name: nginx

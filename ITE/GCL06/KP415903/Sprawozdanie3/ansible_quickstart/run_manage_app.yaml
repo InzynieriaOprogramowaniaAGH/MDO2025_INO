@@ -1,0 +1,5 @@
+---
+- hosts: Endpoints
+  become: yes
+  roles:
+    - manage_app
