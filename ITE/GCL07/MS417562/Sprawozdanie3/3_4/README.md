@@ -93,3 +93,5 @@ kubectl rollout status deployment/express-canary
 
 ![alt text](image-30.png)
 
+
+
