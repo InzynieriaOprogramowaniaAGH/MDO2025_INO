@@ -1,27 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-deployment
+  name: todo-canary
   labels:
-    app: todo-deployment
+    app: todo
+    version: canary
 spec:
-  replicas: 8
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 2
-      maxSurge: 25%
+  replicas: 1
   selector:
     matchLabels:
       app: todo
+      version: canary
   template:
     metadata:
       labels:
         app: todo
+        version: canary
     spec:
       containers:
-      - name: todo-containers
+      - name: todo
         image: winterwollf/node-deploy:v4
         ports:
-          - containerPort: 3000
-            protocol: TCP
+        - containerPort: 3000
