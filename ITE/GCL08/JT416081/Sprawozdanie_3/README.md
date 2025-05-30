@@ -57,7 +57,7 @@ Początek prawidłowej instalacji:
 
 Następnym krokiem było zmodyfikowanie pierwotnego pliku o doinstalowanie Dockera oraz narzędzi takich jak curl i wget. Dodatkowo włącza usługę Dockera na starcie (systemctl enable docker), tworzy usługę systemd, która uruchamia Twój kontener jaktyl/cjson-deploy oraz ustawia ją jako automatycznie uruchamianą po starcie systemu. 
 
-Tak zmodyfikowany plik anaconda-ks.cfg tym razem przesłałem na swoje repozytorium na Githubie. Klikająć na opcję RAW pliku, skopowałem link, a nastęonie w menu GRUB ustawiłem link do opcji "inst.ks" 
+Tak zmodyfikowany plik anaconda-ks.cfg tym razem przesłałem na swoje repozytorium na Githubie. Klikająć na opcję RAW pliku, skopiowałem link, a nastęonie w menu GRUB ustawiłem link do opcji "inst.ks" 
 
 ![alt text](image65.png)
 
