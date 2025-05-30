@@ -208,3 +208,19 @@ virt-install \
  ![](lab9/9-2.png)
  Weryfikacja, że maszyna działa tak jak należy (logowanie, sprawdzenie serwisu docker)
  ![](lab9/9-3.png)
+
+### Lab 10
+Weryfikacja działalności minikube
+ ![](lab10/10-1.png)
+ ![](lab10/10-2.png)
+Żeby udostępnić dashboard poza maszynę należy przekierować port 8001
+ ![](lab10/10-3.png)
+ ![](lab10/10-4.png)
+Weryfikacja pracy kontenera
+ ![](lab10/10-5.png)
+ ![](lab10/10-6.png)
+Stworzenie poda przez minikube poleceniem `minikube kubectl run -- expressjs --image=frostyfire1/express-js-deploy --port=3000 --labels app=expresspod`
+ ![](lab10/10-7.png)
+Żeby zweryfikować, że pod działa należy przekierować port poprzez kubectl
+`kubectl port-forward pod/expressjs 3000:3000&`
+ ![](lab10/10-8.png)
