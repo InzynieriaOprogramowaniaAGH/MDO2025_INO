@@ -1,0 +1,34 @@
+- name: Zdalne wywoływanie procedur
+  hosts: all
+  become: true
+  tasks:
+  - name: Ping
+    ansible.builtin.ping:
+
+  - name: Copy Inventory
+    ansible.builtin.copy:
+      src: ./inventory.ini
+      dest: ./inventory.ini
+  - name: Copy Inventory Again
+    ansible.builtin.copy:
+      src: ./inventory.ini
+      dest: ./inventory.ini
+
+  - name: Update Packages
+    ansible.builtin.dnf:
+      name: "*"
+      state: latest
+  - name: Install rngd
+    ansible.builtin.dnf:
+      name: rngd
+      state: latest
+
+  - name: Restart sshd service
+    ansible.builtin.service:
+      name: sshd
+      state: restarted
+
+  - name: Restart rngd service
+    ansible.builtin.service:
+      name: rngd
+      state: restarted
