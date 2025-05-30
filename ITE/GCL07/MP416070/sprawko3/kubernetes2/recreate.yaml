@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-recreate
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: demo
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: demo
+        version: v1
+    spec:
+      containers:
+      - name: httpd
+        image: bambusscooby/httpd-custom:v1
+        ports:
+        - containerPort: 80

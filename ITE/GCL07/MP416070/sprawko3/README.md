@@ -247,12 +247,12 @@ Natomiast przy użyciu 'make clean' uruchamia playbook usuwający kontener.
 
 ![alt text](screeny/make3.png)
 
-![alt text](screeny/make4.png)\
+![alt text](screeny/make4.png)
 
-pozdrawiam
+(づ｡◕‿‿◕｡)づpozdrawiam(づ｡◕‿‿◕｡)づ
 
 # Pliki odpowiedzi dla wdrożeń nienadzorowanych
-
+(╯°□°）╯︵ ┻━┻
 ## Cel zadania
 Utworzyć źródło instalacji nienadzorowanej dla systemu operacyjnego hostującego nasze oprogramowanie
 Przeprowadzić instalację systemu, który po uruchomieniu rozpocznie hostowanie naszego programu
@@ -336,6 +336,7 @@ Po wykonaniu tych kroków i rozpoczęciu instlacji przez Ctrl + X, instalacja pr
 
 ### Dodanie do pliku odpowiedzi repozytoria i oprogramowanie potrzebne do uruchomienia programu, zbudowanego w ramach projektu - naszego pipeline'u.
 
+(ಥ﹏ಥ)(ಥ﹏ಥ)
 Rozbudowujemy plik odpowiedzi, aby mieć w pełni nienadzorowaną instalację Fedory z Dockerem i automatycznym startem utworzonego w ramach pipeline'u obrazu. Dokonujemy modyfikacji pliku odpowiedzi, plik wygląda następująco :
 
 ```
@@ -477,22 +478,24 @@ Czyli idąc krok po kroku:
 
 Sekcja %post to kluczowy element dla pliku kickstartowego przy automatyzacji instalacji aplikacji z pipeline'u.
 
-# Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+┬─┬ ノ( ゜-゜ノ)
 
+# Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+(^o^)/ 
 ## Instalacje minikube
 
 ![alt text](screeny/curl_minikube.png)
 ## Uruchomienie klastra
-
+Uruchamiamy klaster Kubernetes za pomocą polecenia minikube start, co powoduje uruchomienie środowiska gotowego do wdrażania kontenerów.
 ![alt text](<screeny/minikube start.png>)
 ## Zaopatrzenie się w polecenie kubectl oraz dodanie aliasu
-
+Instalujemy narzędzie kubectl służące do zarządzania klastrem Kubernetes oraz definiujemy alias, aby wygodniej używać tego polecenia.
 ![alt text](screeny/alias.png)
 ![alt text](screeny/daszboard1.png)
 ![alt text](screeny/daszboard2.png)
 
 ## Uruchamianie oprogramowania
-
+Polecenie uruchamia kontener z obrazem nginx w Kubernetes jako pojedynczy pod o nazwie nginx-pod, wystawiając go na porcie 80 i przypisując mu etykietę app=nginx-deployment.
 ```
 minikube kubectl -- run nginx-pod --image=nginx --port=80 --labels app=nginx-deployment
 ```
@@ -557,7 +560,7 @@ Oraz wykonujemy następującą konfiguracje
 Jak widać konfiguracja została przeprowadzona poprawnie.
 
 # Wdrażanie na zarządzalne kontenery: Kubernetes (2)
-
+(¬‿¬)(⌒ω⌒)(¬‿¬)
 Stworzenie obrazów na podstawie httpd oraz jednego obrazu który kończy się błędem oraz wypchnięcie na DockerHub.
 
 ```
@@ -644,16 +647,157 @@ spec:
 ## 🌵 Aktualizacja pliku YAML z wdrożeniem i przeprowadzenie je ponownie po zastosowaniu następujących zmian
 
 #### Stworzenie pierwszej wersji
+Tworzona jest początkowa wersja deploymentu, która uruchamia 4 instancje aplikacji HTTPD.
 
 ![alt text](screeny/httpd4.png)
 
 #### Zwiększenie do 8
+Następuje skalowanie liczby instancji aplikacji z 4 do 8 replik, aby zwiększyć dostępność i obsłużyć większy ruch.
 ![alt text](screeny/httpd8.png)
 #### Zmniejszenie do 1
+Liczba instancji jest redukowana z 8 do 1 repliki, minimalizując zużycie zasobów klastra Kubernetes.
 ![alt text](screeny/httpd1.png)
 #### Zmniejszenie do 0
+Wszystkie instancje aplikacji zostają zatrzymane poprzez skalowanie deploymentu do 0, co powoduje całkowity brak dostępności aplikacji.
 ![alt text](screeny/httpd0.png)
 #### Zwiększenie do 4
-
+Ponownie uruchamiane są 4 instancje aplikacji, przywracając deployment do pierwotnej konfiguracji.
 ![alt text](screeny/httpd4.png)
 ![alt text](screeny/httpdv1-komendy.png)
+
+## Uruchomienie wadliwego obrazu
+Wdrożony zostaje wadliwy obraz aplikacji, co prowadzi do niepowodzenia uruchomienia podów i przejścia deploymentu w stan błędu.
+![alt text](screeny/wadliwyHttpd.png)
+
+![alt text](screeny/wadliwyKubernetes.png)
+
+## Sprawdzenie history rollout'ów oraz przywrócenie do działającej wersji 
+Za pomocą historii rollout sprawdzane są poprzednie wersje wdrożenia, a następnie deployment jest cofany (rollback) do ostatniej poprawnie działającej wersji aplikacji.
+![alt text](screeny/rolloutHistory.png)
+
+![alt text](screeny/rolloutUndo.png)
+
+# Strategie wdrożenia 
+
+### Skrypt weryfikujący wdrożenia 
+
+```
+#!/bin/bash
+
+DEPLOYMENT_NAME="httpd-custom"
+NAMESPACE="default"
+TIMEOUT=60
+
+echo "Sprawdzam rollout '$DEPLOYMENT_NAME' (maks. $TIMEOUT sek)..."
+
+start_time=$(date +%s)
+
+while true; do
+    status=$(kubectl rollout status deployment/$DEPLOYMENT_NAME --namespace $NAMESPACE --timeout=5s 2>&1)
+
+    if echo "$status" | grep -q "successfully rolled out"; then
+        echo "Wdrożenie zakończone sukcesem!"
+        exit 0
+    fi
+
+    if echo "$status" | grep -q "error"; then
+        echo "Błąd rolloutu:"
+        echo "$status"
+        exit 1
+    fi
+
+    now=$(date +%s)
+    elapsed=$((now - start_time))
+
+    if [ $elapsed -ge $TIMEOUT ]; then
+        echo "Timeout: rollout nie zakończył się w ciągu $TIMEOUT sekund"
+        kubectl get pods -l app=$DEPLOYMENT_NAME
+        exit 2
+    fi
+
+    sleep 3
+done
+```
+
+## Wersje Wdrożeń
+
+### Wdrożenie typu recreate
+
+1. Strategia Recreate (odtworzenie):
+Na czym polega?
+
+Stara wersja aplikacji jest najpierw całkowicie zatrzymywana.
+
+Dopiero gdy poprzednia wersja jest całkowicie usunięta, uruchamiana jest nowa wersja.
+Powoduje krótką przerwę w dostępności aplikacji.
+
+Idealna dla aplikacji, które nie mogą działać jednocześnie w dwóch różnych wersjach (np. baza danych z niekompatybilnymi wersjami).
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-recreate
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: demo
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: demo
+        version: v1
+    spec:
+      containers:
+      - name: httpd
+        image: bambusscooby/httpd-custom:v1
+        ports:
+        - containerPort: 80
+```
+
+2. Strategia Rolling Update:
+Stopniowo zastępuje stare instancje aplikacji nowymi.
+
+Pozwala uniknąć całkowitej niedostępności aplikacji. Kluczowe parametry obejmują:
+
+available: liczba podów, które mogą być jednocześnie niedostępne podczas aktualizacji. Jeśli ustawimy > 1, zezwalamy na jednoczesne zatrzymanie kilku podów.
+
+maxSurge: dodatkowe pody uruchamiane ponad liczbę docelową podczas aktualizacji. Wartość > 20% pozwala przyspieszyć wdrożenie, uruchamiając więcej podów niż standardowa liczba.
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 50%
+  selector:
+    matchLabels:
+      app: demo
+      version: v1
+  template:
+    metadata:
+      labels:
+```
+
+![alt text](screeny/apply&&rollout.png)
+
+![](screeny/strategieWdrożenie_kubernetes.png)
+
+![alt text](screeny/kubectlpods.png)
+
+| Cecha                  | Recreate                               | Rolling Update               | Canary Deployment                                    |
+| ---------------------- | -------------------------------------- | ---------------------------- | ---------------------------------------------------- |
+| Przestój aplikacji     | Tak                                    | Nie                          | Nie                                                  |
+| Kontrola ryzyka        | Niska                                  | Średnia                      | Wysoka (pełna kontrola)                              |
+| Złożoność konfiguracji | Niska                                  | Średnia                      | Wysoka (wymaga dodatkowych narzędzi)                 |
+| Zastosowanie           | Bazy danych, aplikacje niekompatybilne | Większość aplikacji webowych | Aplikacje krytyczne, wymagające szczególnej kontroli |

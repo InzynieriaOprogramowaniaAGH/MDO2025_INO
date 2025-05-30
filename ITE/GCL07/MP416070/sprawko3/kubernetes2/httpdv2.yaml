@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: httpd-deployment          # nowa nazwa
+  name: httpd-deployment          
   labels:
     app: httpd
 spec:
