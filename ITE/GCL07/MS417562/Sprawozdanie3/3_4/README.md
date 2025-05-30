@@ -82,16 +82,14 @@ exit 0
 
 ![alt text](image-27.png)
 
-```yaml
-strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 2
-      maxSurge: 30%
-```
 
+kubectl apply -f depl-canary.yaml 
 
-```yaml
-strategy:
-  type: Recreate
-```
+![alt text](image-28.png)
+
+kubectl rollout status deployment/express-canary
+
+![alt text](image-29.png)
+
+![alt text](image-30.png)
+
