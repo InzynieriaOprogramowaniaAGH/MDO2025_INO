@@ -1,0 +1,14 @@
+#!/bin/sh
+
+COMMIT_MSG_FILE="$1"
+
+REQUIRED_PREFIX="BW414439"
+
+FIRST_LINE=$(head -n 1 "$COMMIT_MSG_FILE")
+
+if ! echo "$FIRST_LINE" | grep -q "^$REQUIRED_PREFIX"; then
+    echo "Error: Commit message must start with '$REQUIRED_PREFIX'."
+    exit 1
+fi
+
+exit 0

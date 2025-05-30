@@ -1,0 +1,25 @@
+- name: Send .deb application to remote
+  copy:
+    src: irssi_1.0-1_amd64.deb
+    dest: /tmp/irssi_1.0-1_amd64.deb
+
+- name: Remove existing container if exists
+  command: docker rm -f irssi-cont || true
+
+- name: Create container
+  command: docker run -dit --name irssi-cont ubuntu:latest sleep infinity
+
+- name: Update apt
+  command: docker exec irssi-cont apt-get update
+
+- name: Copy .deb file into the container
+  command: docker cp /tmp/irssi_1.0-1_amd64.deb irssi-cont:/tmp/app.deb
+
+- name: Install .deb app inside the container
+  command: docker exec irssi-cont bash -c "dpkg -i /tmp/app.deb || apt-get install -f -y"
+
+- name: Run application
+  command: docker exec irssi-cont irssi --version
+  register: app_status
+  failed_when: app_status.rc != 0
+  changed_when: false

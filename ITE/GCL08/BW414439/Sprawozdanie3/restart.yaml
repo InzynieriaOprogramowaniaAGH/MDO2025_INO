@@ -1,0 +1,8 @@
+- name: Restart sshd and rngd
+  hosts: all
+  become: yes
+  tasks:
+    - name: Restart sshd
+      ansible.builtin.systemd:
+        name: sshd
+        state: restarted
