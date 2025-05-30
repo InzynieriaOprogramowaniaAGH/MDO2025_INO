@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-rolling
+  labels:
+    app: nginx
+    strategy: rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
+  selector:
+    matchLabels:
+      app: nginx
+      version: rolling
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: rolling
+    spec:
+      containers:
+      - name: nginx
+        image: jaktyl/my-nginx-app:v2
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-rolling-svc
+spec:
+  selector:
+    app: nginx
+    version: rolling
+  ports:
+  - port: 80
+    targetPort: 80
+  type: NodePort

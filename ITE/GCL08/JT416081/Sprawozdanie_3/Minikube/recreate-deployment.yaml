@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-recreate
+  labels:
+    app: nginx
+    strategy: recreate
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nginx
+      version: recreate
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: recreate
+    spec:
+      containers:
+      - name: nginx
+        image: jaktyl/my-nginx-app:v1
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-recreate-svc
+spec:
+  selector:
+    app: nginx
+    version: recreate
+  ports:
+  - port: 80
+    targetPort: 80
+  type: NodePort
