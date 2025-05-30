@@ -19,7 +19,7 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-a
 Oraz (pozyskanie narzędzia kubectl):
 ```bash
 sudo dnf install -y kubectl
-```
+``` 
 
 Warto dodać, że minikube ma swoje wymagania, czyli:
 
