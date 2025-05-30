@@ -1,0 +1,55 @@
+- name: Install Docker
+  become: true
+  ansible.builtin.apt:
+    name: docker.io
+    update_cache: yes
+    state: present
+
+- name: Check if docker works properly
+  become: true
+  ansible.builtin.systemd:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Copy artefact
+  ansible.builtin.copy:
+    src: xz.tar.gz
+    dest: /home/ansible/xz.tar.gz
+
+- name: Copy deploy.c
+  ansible.builtin.copy:
+    src: deploy.c
+    dest: /home/ansible/deploy.c
+
+- name: Copy Dockerfile
+  ansible.builtin.copy:
+    src: Dockerfile
+    dest: /home/ansible/Dockerfile
+
+- name: Build image Docker
+  community.docker.docker_image:
+    name: xz-runtime
+    tag: latest
+    source: build
+    build:
+      path: /home/ansible
+
+- name: Run container and app
+  community.docker.docker_container:
+    name: artifact-app
+    image: xz-runtime:latest
+    state: started
+    detach: true
+    tty: true
+
+# Opcjonalnie:
+- name: stop contener
+  community.docker.docker_container:
+    name: artifact-app
+    state: stopped
+
+- name: delete contener
+  community.docker.docker_container:
+    name: artifact-app
+    state: absent

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: periclesathin-recreate
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: periclesathin
+      version: recreate
+  template:
+    metadata:
+      labels:
+        app: periclesathin
+        version: recreate
+    spec:
+      containers:
+        - name: index
+          image: periclesathin/index:v1
+          ports:
+            - containerPort: 80

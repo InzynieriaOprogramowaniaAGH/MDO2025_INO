@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-custom-service
+spec:
+  selector:
+    app: nginx-custom
+  ports:
+    - protocol: TCP
+      port: 80         # port serwisu w klastrze
+      targetPort: 80   # port kontenera
+  type: ClusterIP
+

@@ -1,0 +1,39 @@
+FROM debian:bullseye
+
+WORKDIR /app
+
+# 1) Skopiuj repo xz w całości
+COPY xz/ ./
+
+# 2) Zainstaluj narzędzia potrzebne do autotools, gettext, po4a itp.
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+      autopoint \
+      po4a \
+      build-essential \
+      autotools-dev \
+      autoconf \
+      automake \
+      libtool \
+      gettext \
+      pkg-config \
+      ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+# 3) Wygeneruj skrypty, skompiluj i zrób 'make dist'
+RUN ./autogen.sh \
+ && ./configure \
+ && make -j"$(nproc)" \
+ && make dist \
+ && mv xz-*.tar.gz xz.tar.gz
+
+# 4) Etap testów: rozpakuj, zbuduj, odpal 'make check' i zbierz logi
+RUN tar xzf xz.tar.gz \
+ && cd xz-* \
+ && ./configure \
+ && make -j"$(nproc)" check || true \
+ && cd /app \
+ && mkdir -p logs \
+ \
+ # skopiuj wszystkie .log do katalogu logs/
+ && find xz-*/tests -name '*.log' -exec cp {} logs/ \;

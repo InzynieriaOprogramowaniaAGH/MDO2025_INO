@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: periclesathin-stable
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: periclesathin
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: periclesathin
+        version: stable
+    spec:
+      containers:
+        - name: index
+          image: periclesathin/index:v1
+          ports:
+            - containerPort: 80
