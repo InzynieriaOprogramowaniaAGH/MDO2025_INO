@@ -67,7 +67,13 @@ pipeline {
             }
         }
 
-
+        stage('Verify Deployment') {
+            steps {
+                dir('ITE/GCL07/WSZ417391/Sprawozdanie3/Lab_11') {
+                    sh './check-deploy.sh'
+                }
+            }
+        }
 
         stage('Publish') {
             steps {
