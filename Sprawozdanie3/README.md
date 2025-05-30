@@ -1,5 +1,235 @@
-## Sprawozdanie 3 DevOps
-#Zajecia 8 
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdvpy9ZBTieqcvi_tp_R9GYd2xjd8isfoqIRtls2XbKZ8ZEYiH7eExgWonTZcQybPCYE21ra6xMBabCB746_SGY_nAGS_8zjYvLg8nNjD3FrvNyaVntUaDW0Mb88yHDqg9XfqcmIw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+## Instalacja zarządcy Ansible
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#instalacja-zarz%C4%85dcy-ansible)
+
+### 1. Utworzenie drugiej maszyny wirtualnej
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#1-utworzenie-drugiej-maszyny-wirtualnej)
+
+Prace rozpoczęto od utworzenia drugiej maszyny wirtualnej, wyposażonej w ten sam system operacyjny i tę samą wersję co "główna" maszyna — Ubuntu Server 24.04.2. Podczas instalacji nadano maszynie hostname  **ansible-target**  oraz utworzono w systemie użytkownika  **ansible**.
+-   Główna maszyna:  **perykles@ubuntu**
+-   Dodatkowa maszyna:  **ansible@ansible-target**
+### 2. Konfiguracja połączenia SSH (bez hasła)
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-konfiguracja-po%C5%82%C4%85czenia-ssh-bez-has%C5%82a)
+
+a) Połączenie za pomocą adresu IP
+
+1.  Wygenerowanie pary kluczy SSH
+
+```
+ssh-keygen
+```
+
+2.  Skopiowanie klucza publicznego na maszynę  `ansible-target` wykonano poleceniem
+
+```
+ssh-copy-id ansible@IP_address
+```
+
+3.  Połączenie przez SSH bez hasła
+
+```
+ssh ansible@IP_address
+```
+
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdrFMqz2O6LR2qlLB-PmdhgGRT8fVXXkjy0d-sd5LxbGRmtrVUWK1QX6aVI5sCtmxuIRIwROWF3__36VXYuO8FNfhks6RgVSLtQYqixLLhHKepkoDYM7l8sEk6kNTvrzvfjxaOw3w?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+
+b) Połączenie z użyciem nazwy hosta
+
+1.  Edycja pliku  `/etc/hosts`
+
+```
+sudo nano /etc/hosts
+```
+2.  Dodanie wpisu w pliku /etc/hosts
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfd4e4AcBgyAEYvdyxPILl1J_vWBG9FYR76yUsi1CG7uDTQ8DdvBq3y0L0MRv1mniX5LADa-HFGsq7cnfGbmZ8CYamRCNmi9Jc8hywlR_9k0ISxQDhvT_wxjMm2uEZGwv1ebdLJrA?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+
+3. Test połączenia
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdUXf6LJJ-6jnDRFgd8bL-cQBOiowbasCab9lUbGB61-7BQ7Us4sIqmVrSTLKQj-JVLHcKCG_c3LmCNCF_imbb6a3cIgYv6Uy8yHHU5J_typ_-O6Z4fAOBFx3GaB0fYYO_dG5kMcg?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+### 3. Migawka maszyny wirtualnej
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#3-migawka-maszyny-wirtualnej)
+
+Migawka zapisuje pełny stan maszyny (RAM, pliki, ustawienia). 
+
+**Kroki (VirtualBox):**
+
+`Wybierz maszynę`  >  `Migawki`  >  `Zrób migawkę`  >  `Nadaj nazwe`  >  `OK`
+
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfhGIU3dY4QN7D6yVzZniPQVUGdISI-oZBabJ8AtgvUMcsxI3CTtbhFGe7MOPQKGuSjBT61_SwNXwqdeIxzhiAhogZmLKtvpIRFGsGVeR1GelJVSMdpGjb8qqQm4Xej2B8ryn8_?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+### 4. Eksport maszyny wirtualnej
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#4-eksport-maszyny-wirtualnej)
+
+Eksport umożliwia backup.
+
+**Kroki (VirtualBox):**
+
+`Eksportuj jako urządzenie wirtualne`  >  `Wybierz maszynę`
+
+### 5. Instalacja Ansible
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#5-instalacja-ansible)
+
+Na maszynie głównej zainstalowano Ansible
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdXPp1silW5QI4yDNf-3mhP9YWl_H0x1AGRdJg2oBeKZNwCTHT7fveVjqGz8qZ6JEwbyN3AmWam9j08UGPlI5Jb5Bc37qLuS1EOIxhM7JDhYF1JyZkM4PT1NvkTnsdomHGfFF16zw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+
+### 6. Weryfikacja narzędzi
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#6-weryfikacja-narz%C4%99dzi)
+
+Sprawdzono obecność wymaganych programów  `tar`  oraz  `sshd`
+```
+which tar
+which sshd
+```
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdvpy9ZBTieqcvi_tp_R9GYd2xjd8isfoqIRtls2XbKZ8ZEYiH7eExgWonTZcQybPCYE21ra6xMBabCB746_SGY_nAGS_8zjYvLg8nNjD3FrvNyaVntUaDW0Mb88yHDqg9XfqcmIw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+## Inwentaryzacja
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#inwentaryzacja)
+
+### 1. Ustawienie nazw hostów
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#1-ustawienie-nazw-host%C3%B3w)
+
+Na głównej maszynie zmieniono nazwę hosta na  `orchestrator`
+
+**Przed:**
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXe3O2JdyZjuNLeHJl_44pspHgbrWrqXc4cjZq-C2H871bNrA9EndGYuYC3ap92ZqrUm_OAZ5en7tGQdjklaa0XbGOjkZGAMTDEDbnbk5V0UBDYnkFcNso7CHXalPIHbs-uuODjb?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+**Po:**
+```
+exec bash
+```
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdzUs0wOUabH-XUUMm0EAClUC4FGQRu-ffEVYNRpsWzBUuwvw1ESSpnjtaRnbEZSQFGUOuO91mvUj0ZV-Em3OuvsYeMKKsqZP_nDWGB6BqnedfwyQWJZKA1bJ2LAr3kiPxBxqwt?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+Na dodatkowej maszynie hostname pozostał taki sam jak przy instalacji maszyny  `ansible-target`
+### 2. Konfiguracja nazw DNS (plik  `/etc/hosts`)
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-konfiguracja-nazw-dns-plik-etchosts)
+
+Aby umożliwić rozpoznawianie nazw hostów zamiast korzystania z adresów IP
+
+### 2. Konfiguracja nazw DNS (plik  `/etc/hosts`)
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#2-konfiguracja-nazw-dns-plik-etchosts)
+
+Aby umożliwić rozpoznawianie nazw hostów zamiast korzystania z adresów IP
+
+(Szczegóły:  [Połączenie z użyciem nazwy hosta](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#po%C5%82%C4%85czenie-z-u%C5%BCyciem-nazwy-hosta))
+
+1.  Zmodyfikowano plik  `/etc/hosts`
+
+```
+sudo nano /etc/hosts
+```
+
+2.  Dodano wpisy przypisujące IP do nazw hostów
+```
+IP_address_1   orchestrator
+IP_address_2   ansible-target
+```
+### 3. Weryfikacja łączności[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#3-weryfikacja-%C5%82%C4%85czno%C5%9Bci)
+Sprawdzono możliwość komunikacji między naszynami za pomocą polecenia  `ping`
+```
+ping ansible-target
+```
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXfuJyoq3qABy6pPXEEAdsgffXtDyCRLKGQyHfLDrayIaRiak2ubq9h_AYb7h8qw5FNPoDApncZ_8GFp7hOU52qxWd5uqxlpeEtjY0GJCBTTaPeCNsTBzTBKeYFdRH_empXQcUFg3A?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+
+### 4. Przygotowanie pliku inwentaryzacyjnego Ansible
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#4-przygotowanie-pliku-inwentaryzacyjnego-ansible)
+
+Utworzono plik  `inventory.yml`  z podziałem na grupy maszyn:
+
+-   `Orchestrators`  - zawiera maszynę główną (zarządzającą)
+-   `Endpoints`  - zawiera maszyny docelowe (zarządzane przez Ansible)
+
+Zawartość pliku  `inventory.yml`
+```
+[Orchestrators]
+ubuntu ansible_host=10.0.2.15 ansible_user=perykles
+
+[Endpoints]
+ansible-target ansible_host=10.200.4.4 ansible_user=ansible
+```
+### 5. Test połączenia (Ansible ping)
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#5-test-po%C5%82%C4%85czenia-ansible-ping)
+
+a) Ping do wszystkich maszyn:
+
+```
+ansible all -i inventory.yml -m ping
+```
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXcuMsVZUJglMSeOqVoScU_JbvLeilVrKXGExQt2scbXrfgDDRjTJliMia04wSCFB5d4NdywSfQYYs_Y_Km1lrBbMgGyLpgHOGe-cRRkbmfLP-dbvFYJyZerRMMIKPGdyadKk3OHGA?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+
+## **Zdalne wywoływanie procedur za pomocą Ansible**
+
+W ramach tego zadania przygotowano oraz uruchomiono serię procedur z wykorzystaniem playbooków Ansible, których celem było zdalne zarządzanie maszynami końcowymi (Endpoints). Operacje wykonano zgodnie z instrukcją, a ich przebieg został udokumentowany poniżej.
+
+### **1. Skopiowanie pliku inwentaryzacji na zdalne maszyny**
+
+Utworzono playbook `copy_inventory.yml`, który kopiuje lokalny plik `inventory` do katalogu `/tmp` na wszystkich maszynach docelowych:
+```
+- name: Copy inventory file to Endpoints
+  hosts: Endpoints
+  tasks:
+    - name: Copy inventory file to /tmp directory
+      ansible.builtin.copy:
+        src: ~/inventory
+        dest: /tmp/inventory
+```
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXckjPBaG3EBZYRNhk9aVBvVBniAqybOJhzGIReRtlAGTLi2tvHMIptKhbIsb8V14cW1pHDXXgDRFFQ7rP4vxxpqp_rmNeIU2m_EZKthUwxpnvsUuK1f70LFgUucW0oHk__KDEUP3A?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+### **3. Ponowne wykonanie operacji kopiowania (test idempotencji)**
+
+Po pierwszym wykonaniu playbooka `copy_inventory.yml`, plik został skopiowany (status `changed`). Przy ponownym uruchomieniu, Ansible nie wprowadził zmian (status `ok`), co potwierdza jego idempotentność – czyli wielokrotne wywołanie nie zmienia systemu, jeśli nie ma takiej potrzeby.
+![Uploaded image](https://files.oaiusercontent.com/file-7kqyRvsCJeS8C4oF3SkMuJ?se=2025-05-30T13%3A32%3A21Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D299%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Db9fe3b3a-6979-41ea-a912-2ad8bcc35f9b.png&sig=da25I4YIzWiLODh7TOcipj93KMnEb9fTjoZZsceKAnE%3D)
+### **4. Aktualizacja wszystkich pakietów**
+
+Kolejnym krokiem była aktualizacja pakietów systemowych na wszystkich maszynach. W tym celu stworzono playbook `update_packages.yml`, który używa modułu `apt` z odpowiednimi opcjami:
+```
+- name: Update all packages on Endpoints
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Update and upgrade packages
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
+```
+### **5. Restart usług `sshd` i `rngd`**
+
+W kolejnym kroku przygotowano playbook `restart_services.yml`, który ma na celu restartowanie usług systemowych na maszynach docelowych. Poniżej widoczna jest część odpowiadająca za restart `sshd`:
+
+```
+- name: Restart sshd service on all Endpoints
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Restart sshd
+      ansible.builtin.systemd:
+        name: ssh
+        state: restarted
+```
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXdlO-4PGoFaA1S5LwcnXY6cv4cFIyoEa8KsfrC3T99m9USCAM7Mks-yT70sU7O3JeL8YIV7UUFLBWWidCXHro1QnOyzxZ53QatoTqxZ1w_IJ1bHToLiJGXLKifqlILnwXI0U-F-4A?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+
+### **6. Test z maszyną niedostępną (brak SSH / brak sieci)**
+
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/KM417392/ITE/GCL05/KM417392/Sprawozdanie3#operacja-wzgl%C4%99dem-maszyny-z-wy%C5%82%C4%85czonym-serwerem-ssh-i-od%C5%82%C4%85czon%C4%85-kart%C4%85-sieciow%C4%85)
+
+1.  Wyłączenie serwera SSH Na maszynie  `ansible-target`  wykonano
+
+```
+sudo systemctl stop ssh
+```
+
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXeT-iiLDJ0eukaXSPZ4-cmBWwDx1DWSVV-rLxhIGqTZJOj5tYzCavbLt4cBGedS_ZYedFuQUSTgZZL8PmP6tJGJE3LOyDUVl9whXyKPoVtg3XVJSv0ZytL6yZNHnpaLWl341vLgJw?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+**![](https://lh7-rt.googleusercontent.com/docsz/AD_4nXf2PvEy5aDdYiKhMoKTsd9WcN61QBVwRpd5rM0TIEZweQC6UnT0pL0EoXhfwHfz0mu15ZX5sL_BbSSx7RQH3T79uwizPYzOt7IhPMbUc5yQ1bcXYfkckNybcKX7nszfxadA9-67?key=xa3PLGIWh5Jf6oqWZQDg0GXU)**
+Spowodowało to dezaktywację usługi `sshd` oraz mechanizmu automatycznego nasłuchiwania (ssh.socket). W rezultacie, podczas kolejnego uruchomienia playbooka, Ansible nie był w stanie nawiązać połączenia z hostem i oznaczył go jako `UNREACHABLE`.
+
+## Zarządzanie stworzonym artefaktem
+
 
 
 # Zajęcia9 
