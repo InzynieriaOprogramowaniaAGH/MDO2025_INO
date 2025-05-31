@@ -11,7 +11,4 @@
 ![12](./images/r8/12.png)
 ![13](./images/r8/13.png)
 ![14](./images/r8/14.png)
-![15](./images/r8/15.png)
-![16](./images/r8/16.png)
-![17](./images/r8/17.png)
 ![18](./images/r8/18.png)
