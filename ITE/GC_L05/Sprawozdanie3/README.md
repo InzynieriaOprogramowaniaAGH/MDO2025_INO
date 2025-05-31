@@ -111,6 +111,8 @@ kubectl scale deployment amelia-web --replicas=8
 ```
 Polecenie uruchomiło 8 podów aplikacji w stanie „Running”.
 
+![]('https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/8%20replicas.png?raw=true')
+
 Następnie zastosowano polecenie:
 
 ```
