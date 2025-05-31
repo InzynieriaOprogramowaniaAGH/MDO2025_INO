@@ -1,0 +1,37 @@
+---
+- name: Create app directory
+  file:
+    path: "{{ app_remote_path }}"
+    state: directory
+
+- name: Copy app files
+  copy:
+    src: .
+    dest: "{{ app_remote_path }}/"
+    mode: '0755'
+
+- name: Build image
+  command: docker build -t {{ image_name }} .
+  args:
+    chdir: "{{ app_remote_path }}"
+
+- name: Run container
+  docker_container:
+    name: "{{ container_name }}"
+    image: "{{ image_name }}"
+    ports:
+      - "{{ app_port }}:5000"
+    restart_policy: always
+    state: started
+
+- name: Run healthcheck
+  uri:
+    url: "http://localhost:{{ app_port }}/api/apihealth"
+    method: GET
+    return_content: yes
+  register: healthcheck
+
+- name: Healthcheck result
+  debug:
+    msg: "Response: {{ healthcheck.content }}"
+

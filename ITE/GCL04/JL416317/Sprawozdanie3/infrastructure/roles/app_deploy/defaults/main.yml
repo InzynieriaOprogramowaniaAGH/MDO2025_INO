@@ -1,0 +1,5 @@
+app_name: WeatherForecastApi
+app_port: 5000
+app_remote_path: "/opt/{{ app_name }}"
+image_name: "{{ app_name | lower }}_image"
+container_name: "{{ app_name | lower }}_container"

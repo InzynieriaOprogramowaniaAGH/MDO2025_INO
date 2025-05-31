@@ -1,0 +1,31 @@
+- name: Ansible playbook
+  hosts: all
+  become: true
+  tasks:
+
+    - name: Ping
+      ansible.builtin.ping:
+
+    - name: Copy
+      copy:
+        src: inventory.ini
+        dest: /tmp/inventory.ini
+      when: "'endpoints' in group_names"
+
+    - name: Update
+      apt:
+        update_cache: yes
+        upgrade: dist
+      when: "'endpoints' in group_names"
+
+    - name: SSH Restart
+      service:
+        name: ssh
+        state: restarted
+      when: "'endpoints' in group_names"
+
+    - name: RNGD Restart
+      service:
+        name: rngd
+        state: restarted
+      when: "'endpoints' in group_names"
