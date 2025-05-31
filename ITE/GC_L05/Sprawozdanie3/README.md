@@ -102,3 +102,27 @@ Wersja druga (v2) została przygotowana celowo z błędem — poprzez modyfikacj
 
 
 Oba obrazy zostały oznaczone odpowiednimi tagami (v1 i v2) i użyte w definicji deploymentu Kubernetes. 
+
+## Zmiany w deploymencie
+
+W pierwszym kroku wykonano komendę:
+```
+kubectl scale deployment amelia-web --replicas=8
+```
+Polecenie uruchomiło 8 podów aplikacji w stanie „Running”.
+
+Następnie zastosowano polecenie:
+
+```
+kubectl scale deployment amelia-web --replicas=1 
+```
+czyli zredukowano liczbę działających podów do jednej instacji.
+
+W kolejnym etapie użyto komendy 
+```
+kubectl scale deployment amelia-web --replicas=0 
+```
+Ta komenda usuwa wszystkie pody i powoduje tymaczsowe wyłączenie aplikacji.
+
+ Polecenie `kubectl scale deployment amelia-web --replicas=4` ponownie uruchomiło cztery instancje aplikacji, wszystkie osiągnęły stan „Running”.
+
