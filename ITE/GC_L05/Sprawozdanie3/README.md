@@ -137,3 +137,5 @@ Ta komenda usuwa wszystkie pody i powoduje tymaczsowe wyłączenie aplikacji.
  ```
  ponownie uruchomiło cztery instancje aplikacji, wszystkie osiągnęły stan „Running”.
 
+ ![4 replicas screenshot](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/4%20replicas.png)
+
