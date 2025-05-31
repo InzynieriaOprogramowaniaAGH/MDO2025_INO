@@ -15,7 +15,7 @@ autoinstall:
 
   late-commands:
     - mkdir -p /target/opt/WeatherForecastApi
-    - curl -L https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/tree/JL416317/ITE/GCL04/JL416317/Sprawozdanie3/artefact > /target/opt/WeatherForecastApi/WeatherForecast.Api
+    - curl -L https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/JL416317/ITE/GCL04/JL416317/Sprawozdanie3/artefact/WeatherForecast.Api > /target/opt/WeatherForecastApi/WeatherForecast.Api
     - chmod +x /target/opt/WeatherForecastApi/WeatherForecast.Api
     - echo '[Unit]
 Description=My REST API
