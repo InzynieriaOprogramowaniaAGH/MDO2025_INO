@@ -120,6 +120,8 @@ kubectl scale deployment amelia-web --replicas=1
 ```
 czyli zredukowano liczbę działających podów do jednej instacji.
 
+![1 replicas screenshot](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/1%20replicas.png?raw=true)
+
 W kolejnym etapie użyto komendy 
 ```
 kubectl scale deployment amelia-web --replicas=0 
