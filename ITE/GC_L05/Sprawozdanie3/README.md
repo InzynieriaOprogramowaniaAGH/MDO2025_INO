@@ -166,3 +166,10 @@ kubectl rollout undo deployment amelia-web
 kubectl describe pod amelia-web
 ```
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/undo%20v1.png?raw=true)
+
+## Kontrola wdrożenia
+
+W celu kontroli przebiegu wdrożeń, wykorzystano polecenie `kubectl rollout history`.
+Wersja v2 zawierała błędną konfigurację i spowodowała, że pody wchodziły w stan CrashLoopBackOff. Kubernetes automatycznie przerwał rollout i nie kontynuował wdrażania pozostałych replik. Wdrożenie zakończyło się niepowodzeniem.
+
+
