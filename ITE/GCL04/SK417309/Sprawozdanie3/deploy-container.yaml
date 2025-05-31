@@ -1,0 +1,138 @@
+---
+- name: Deploy Spring Boot App with MySQL using Docker
+  hosts: Endpoints
+  become: yes
+  vars:
+    app_image: "sauer88/exam-seat-arrangement"
+    mysql_root_password: "rootpassword123"
+    mysql_database: "exam_db"
+    mysql_user: "app_user"
+    mysql_password: "app_password123"
+    app_port: "8080"
+    mysql_port: "3306"
+    docker_network: "app-network"
+
+  tasks:
+    - name: Update dnf package index
+      dnf:
+        update_cache: yes
+
+    - name: Install required packages for Docker
+      dnf:
+        name:
+          - dnf-plugins-core
+          - curl
+          - ca-certificates
+        state: present
+
+    - name: Add Docker repository
+      yum_repository:
+        name: docker-ce
+        description: Docker CE Stable - $basearch
+        baseurl: https://download.docker.com/linux/fedora/$releasever/$basearch/stable
+        enabled: yes
+        gpgcheck: yes
+        gpgkey: https://download.docker.com/linux/fedora/gpg
+
+    - name: Install Docker
+      dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Install Python Docker library
+      dnf:
+        name: 
+          - python3-pip
+        state: present
+
+    #- name: Install Docker Python modules
+    #  pip:
+    #    name: 
+    #      - docker
+    #      - docker-compose
+    #    state: present
+
+    - name: Create Docker network
+      docker_network:
+        name: "{{ docker_network }}"
+        state: present
+
+    - name: Pull MySQL Docker image
+      docker_image:
+        name: mysql:8.0
+        source: pull
+
+    - name: Pull Spring Boot application image
+      docker_image:
+        name: "{{ app_image }}"
+        source: pull
+
+    - name: Create MySQL container
+      docker_container:
+        name: mysql-db
+        image: mysql:8.0
+        state: started
+        restart_policy: always
+        networks:
+          - name: "{{ docker_network }}"
+        ports:
+          - "{{ mysql_port }}:3306"
+        env:
+          MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
+          MYSQL_DATABASE: "{{ mysql_database }}"
+          MYSQL_USER: "{{ mysql_user }}"
+          MYSQL_PASSWORD: "{{ mysql_password }}"
+        volumes:
+          - mysql_data:/var/lib/mysql
+
+    - name: Wait for MySQL to be ready
+      wait_for:
+        port: "{{ mysql_port }}"
+        host: localhost
+        delay: 30
+        timeout: 60
+
+    - name: Create Spring Boot application container
+      docker_container:
+        name: spring-app
+        image: "{{ app_image }}"
+        state: started
+        restart_policy: always
+        networks:
+          - name: "{{ docker_network }}"
+        ports:
+          - "{{ app_port }}:8080"
+        env:
+          SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-db:3306/{{ mysql_database }}"
+          SPRING_DATASOURCE_USERNAME: "{{ mysql_user }}"
+          SPRING_DATASOURCE_PASSWORD: "{{ mysql_password }}"
+          SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
+          SPRING_JPA_DATABASE_PLATFORM: "org.hibernate.dialect.MySQL8Dialect"
+
+    - name: Create Docker volume for MySQL data persistence
+      docker_volume:
+        name: mysql_data
+        state: present
+
+    - name: Display application status
+      debug:
+        msg: 
+          - "Spring Boot application is running on port {{ app_port }}"
+          - "MySQL database is running on port {{ mysql_port }}"
+          - "Application URL: http://{{ ansible_default_ipv4.address }}:{{ app_port }}"
+
+  handlers:
+    - name: restart docker
+      systemd:
+        name: docker
+        state: restarted

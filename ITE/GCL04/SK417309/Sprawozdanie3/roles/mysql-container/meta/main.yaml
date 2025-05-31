@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: Szczepan Kwaśny
+  description: Deploy MySQL container for Spring Boot application
+  company: AGH
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+    - name: Fedora
+      versions:
+        - all
+  galaxy_tags:
+    - mysql
+    - docker
+    - database
+
+dependencies:
+  - docker-setup

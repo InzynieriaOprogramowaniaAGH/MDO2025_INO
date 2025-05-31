@@ -5,7 +5,7 @@ metadata:
   labels:
     app: exam-seat-arrangement
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: exam-seat-arrangement
@@ -16,9 +16,9 @@ spec:
     spec:
       containers:
       - name: exam-seat-arrangement
-        image: sauer88/exam-seat-arrangement
+        image: sauer88/exam-seat-arrangement:error
         ports:
-        - containerPort: 8080
+        - containerPort: 8081
         env:
         - name: SPRING_DATASOURCE_URL
           value: jdbc:mysql://mysql:3306/examseatdb
@@ -43,6 +43,6 @@ spec:
     app: exam-seat-arrangement
   ports:
   - port: 8080
-    targetPort: 8080
+    targetPort: 8081
     nodePort: 30080
   type: NodePort
