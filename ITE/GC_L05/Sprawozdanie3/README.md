@@ -124,5 +124,10 @@ kubectl scale deployment amelia-web --replicas=0
 ```
 Ta komenda usuwa wszystkie pody i powoduje tymaczsowe wyłączenie aplikacji.
 
- Polecenie `kubectl scale deployment amelia-web --replicas=4` ponownie uruchomiło cztery instancje aplikacji, wszystkie osiągnęły stan „Running”.
+ Polecenie 
+ ```
+ kubectl scale deployment amelia-web --replicas=4
+
+ ```
+ ponownie uruchomiło cztery instancje aplikacji, wszystkie osiągnęły stan „Running”.
 
