@@ -160,3 +160,9 @@ kubectl set image deployment amelia-web amelia-web=ladyamely/amelia-web:v2
 kubectl rollout history deployment amelia-web
 ```
 ![rollback history](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/rollout%20history.png?raw=true)
+
+```
+kubectl rollout undo deployment amelia-web
+kubectl describe pod amelia-web
+```
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/undo%20v1.png?raw=true)
