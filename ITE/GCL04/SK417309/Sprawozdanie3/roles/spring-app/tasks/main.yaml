@@ -1,0 +1,29 @@
+---
+- name: Pull Spring Boot application image
+  docker_image:
+    name: "{{ app_image }}"
+    source: pull
+
+- name: Create Spring Boot application container
+  docker_container:
+    name: spring-app
+    image: "{{ app_image }}"
+    state: started
+    restart_policy: always
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ app_port }}:8080"
+    env:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql-db:3306/{{ mysql_database }}"
+      SPRING_DATASOURCE_USERNAME: "{{ mysql_user }}"
+      SPRING_DATASOURCE_PASSWORD: "{{ mysql_password }}"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
+      SPRING_JPA_DATABASE_PLATFORM: "org.hibernate.dialect.MySQL8Dialect"
+
+- name: Display application status
+  debug:
+    msg: 
+      - "Spring Boot application is running on port {{ app_port }}"
+      - "MySQL database is running on port {{ mysql_port }}"
+      - "Application URL: http://{{ ansible_default_ipv4.address }}:{{ app_port }}"

@@ -1,0 +1,46 @@
+- name: Update dnf package index
+  dnf:
+    update_cache: yes
+
+- name: Install required packages for Docker
+  dnf:
+    name:
+      - dnf-plugins-core
+      - curl
+      - ca-certificates
+    state: present
+
+- name: Add Docker repository
+  yum_repository:
+    name: docker-ce
+    description: Docker CE Stable - $basearch
+    baseurl: https://download.docker.com/linux/fedora/$releasever/$basearch/stable
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/fedora/gpg
+
+- name: Install Docker CE
+  dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: present
+
+- name: Start and enable Docker service
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Install Python Docker library
+  dnf:
+    name: 
+      - python3-pip
+    state: present
+
+- name: Create Docker network
+  docker_network:
+    name: "{{ docker_network }}"
+    state: present

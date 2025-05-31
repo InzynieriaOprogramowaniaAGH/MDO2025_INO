@@ -1,0 +1,31 @@
+---
+- name: Update packages and restart services
+  hosts: Endpoints
+  become: yes
+
+  tasks:
+    - name: Clean dnf cache
+      ansible.builtin.dnf:
+        update_cache: yes
+
+    - name: Update all packages
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+
+    - name: Remove unnecessary packages
+      ansible.builtin.dnf:
+        autoremove: yes
+
+    - name: Ensure sshd is running
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+        enabled: true
+
+    - name: Ensure rngd is running
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+        enabled: true
+      ignore_errors: yes
