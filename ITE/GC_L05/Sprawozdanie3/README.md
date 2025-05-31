@@ -146,6 +146,8 @@ kubectl set image deployment amelia-web amelia-web=ladyamely/amelia-web:v1
 
 ```
 
+![older version img](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/older%20image%20version.png?raw=true)
+
 Zastosowanie wadliwego obrazu:
 
 ```
