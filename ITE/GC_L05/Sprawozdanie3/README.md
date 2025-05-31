@@ -155,3 +155,5 @@ kubectl set image deployment amelia-web amelia-web=ladyamely/amelia-web:v2
 
 ```
 ![faulty version img](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/new%20image%20version%20.png?raw=true)
+
+![rollback history](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/rollout%20history.png?raw=true)
