@@ -241,3 +241,57 @@ Następnie sprawdziłam, jaki port został przypisany na węźle klastra poprzez
 ![8.19.24](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.19.24%E2%80%AFPM.png)
 ![8.23.44](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.23.44%E2%80%AFPM.png)
 
+## Zadanie 11: Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+
+
+1. **Przygotowanie nowego obrazu**
+
+
+Stworzyłam dwa obrazy Docker, które opublikowałam na Docker Hub pod nazwą `malgorzatapalewicz/moje-nginx`. Pierwszy obraz, oznaczony jako `v1`, bazował na oficjalnym obrazie `nginx:latest`. Do tego obrazu dodałam jedynie mój własny plik `index.html`, który skopiowałam do katalogu `/usr/share/nginx/html/index.html`, aby Nginx serwował moją stronę. Dockerfile dla tej wersji był prosty i wyglądał tak:
+
+```
+FROM nginx:latest
+COPY index.html /usr/share/nginx/html/index.html
+```
+
+Obraz ten zbudowałam komendą `docker build -t malgorzatapalewicz/moje-nginx:v1 .` i opublikowałam go poleceniem `docker push malgorzatapalewicz/moje-nginx:v1`. Ta wersja działała prawidłowo i uruchamiała się bez problemów.
+
+Następnie przygotowałam drugi obraz, oznaczony jako `v2`. Bazą również był oficjalny obraz `nginx:latest`, a do niego skopiowałam ten sam plik `index.html`. Jednak tym razem dodałam do Dockerfile polecenie: `CMD ["sh", "-c", "exit 1"]`. To polecenie powoduje, że po uruchomieniu kontenera natychmiast wykonywane jest wyjście z kodem błędu 1. Oznacza to, że gdy kontener się uruchamia, zamiast startować proces `Nginx`, wykonywane jest polecenie `exit 1`, które powoduje natychmiastowe zakończenie działania kontenera z błędem. W efekcie kontener przestaje działać zaraz po starcie i nie świadczy żadnych usług. Pełny Dockerfile dla wersji `v2` wyglądał tak:
+
+```
+FROM nginx:latest
+COPY index.html /usr/share/nginx/html/index.html
+CMD ["sh", "-c", "exit 1"]
+```
+
+Obraz zbudowałam i wypchnęłam do Docker Hub analogicznie jak w przypadku wersji `v1`.
+
+
+Po wdrożeniu obrazu `v2` Kubernetes uruchamia kontenery, ale proces w nich się natychmiast kończy z błędem. Kubernetes próbuje automatycznie restartować pod, ale ponieważ problem jest powtarzalny (kontener kończy się zawsze tym samym błędem), pod szybko przechodzi w stan `CrashLoopBackOff`. Oznacza to, że Kubernetes wielokrotnie próbuje uruchomić pod, ale ten ciągle się wyłącza, co skutkuje niestabilnym i niedostępnym środowiskiem.
+
+
+Kiedy wdrożyłam wadliwy obraz, zauważyłam, że pody nie uruchamiają się poprawnie. Sprawdziłam historię wdrożeń mojego deploymentu poleceniem:
+
+```
+kubectl rollout history deployment/moj-nginx
+```
+
+Widziałam tam kolejne rewizje deploymentu, dzięki czemu mogłam zidentyfikować, która wersja była stabilna (v1), a która wprowadziła problem (v2). Następnie wykonałam rollback do poprzedniej, działającej wersji komendą:
+
+```
+kubectl rollout undo deployment/moj-nginx
+```
+
+Zalogowałam się do dockerHuba, poprzez usluge docker login i otrzymalam informacje o prawildowym polaczeniu z moim urzadzeniem.
+![7.07.20]()
+![7.08.02]()
+
+Zbudowalam wersje v1 i v2:
+![]()
+
+  
+3. hjkl
+4. jkl;
+
+
+
