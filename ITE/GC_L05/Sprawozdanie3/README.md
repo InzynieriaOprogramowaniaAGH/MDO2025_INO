@@ -145,3 +145,10 @@ Zastosowanie starszej wersji obrazu:
 kubectl set image deployment amelia-web amelia-web=ladyamely/amelia-web:v1
 
 ```
+
+Zastosowanie wadliwego obrazu:
+
+```
+kubectl set image deployment amelia-web amelia-web=ladyamely/amelia-web:v2
+
+```
