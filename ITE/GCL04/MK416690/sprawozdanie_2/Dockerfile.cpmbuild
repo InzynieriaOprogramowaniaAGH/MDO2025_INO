@@ -2,7 +2,7 @@ FROM node:latest
 
 WORKDIR /app
 
-RUN apk add --no-cache git
+RUN apt-get update && apt-get install -y git
 RUN git clone https://github.com/mareczek2115/cpm-app.git .
 
 WORKDIR /app/frontend
