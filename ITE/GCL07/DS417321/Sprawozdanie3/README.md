@@ -67,22 +67,28 @@
 ## 1. Instalacja klastra Kubernetes
 
 ### Wybranie odpowiedniego instalatora
+
 ![1](../reports/images/r10/1.png)
 
 ### Przeklejenie poleceń do terminala
+
 ![2](../reports/images/r10/2.png)
 
 ### Uruchomienie klastra
+
 ![3](../reports/images/r10/3.png)
 ![8](../reports/images/r10/8.png)
 
 ### Automatyczne pobranie odpowiedniej wersji `kubectl`
+
 ![4](../reports/images/r10/4.png)
 
 ### Uruchomienie dashboardu kubernetes z automatycznym przekierowaniem portu w VSCode
+
 ![5](../reports/images/r10/5.png)
 
 ### Widok przeglądarki
+
 ![6](../reports/images/r10/6.png)
 
 ## 2. Analiza posiadanego kontenera
@@ -92,19 +98,24 @@ Kontenerem używanym na zajęciach jest `nginx` wystawiający autorską aplikcj�
 ## 3. Uruchamianie oprogramowania
 
 ### Uruchomienie poda korzystając z obrazu z dockerhub
+
 ![10](../reports/images/r10/10.png)
 
 ### Sprawdzenie czy pod pracuje
+
 ![11](../reports/images/r10/11.png)
 
 ### Wyprowadzenie portu
+
 ![9](../reports/images/r10/9.png)
 ![14](../reports/images/r10/14.png)
 
 ### Test działania poleceniem `curl`
+
 ![12](../reports/images/r10/12.png)
 
 ### Test działania w przeglądarce
+
 ![13](../reports/images/r10/13.png)
 
 ### Pobranie pliku wdrożenia
@@ -112,40 +123,68 @@ Kontenerem używanym na zajęciach jest `nginx` wystawiający autorską aplikcj�
 Plik zapisany [tutaj](./3/traffic-lights-deploy.yml)
 
 ### Próbne wdrożenie deploymentu
+
 ![15](../reports/images/r10/15.png)
 
 ### Sprawdzenie statusu wdrożenia
+
 ![16](../reports/images/r10/16.png)
 ![17](../reports/images/r10/17.png)
 
 ### Przekierowanie portów oraz test w przeglądarce
+
 W VSCode przekierowanie z 8081 na 8082  
 ![23](../reports/images/r10/23.png)
 ![19](../reports/images/r10/19.png)
 
 ### Widok minikube dashboard
+
 ![21](../reports/images/r10/21.png)
 ![20](../reports/images/r10/20.png)
 
 # CWL11
 
-## 1. Instalacja zarządcy Ansible
+## 1. Przygotowanie nowego obrazu
+
+Obrazy zostały przygotowane manualnie i wysłane na [dockerhub](https://hub.docker.com/repository/docker/itscmd/traffic-lights-app/general)
+![3](../reports/images/r11/3.png)
+
+### W obrazie zwarcającym błąd wykorzystane jest polecenie `false`
 
 ![1](../reports/images/r11/1.png)
-![2](../reports/images/r11/2.png)
-![3](../reports/images/r11/3.png)
-![4](../reports/images/r11/4.png)
-![5](../reports/images/r11/5.png)
-![6](../reports/images/r11/6.png)
-![8](../reports/images/r11/8.png)
-![9](../reports/images/r11/9.png)
-![10](../reports/images/r11/10.png)
-![11](../reports/images/r11/11.png)
-![12](../reports/images/r11/12.png)
-![13](../reports/images/r11/13.png)
-![14](../reports/images/r11/14.png)
-![15](../reports/images/r11/15.png)
+
+## 2. Zmiany w deploymencie
+
+### Aktualizacja pliku YAML
+
+-   8 replik  
+    ![4](../reports/images/r11/4.png)
+    ![6](../reports/images/r11/6.png)
+-   1 replika  
+    ![8](../reports/images/r11/8.png)
+-   0 replik  
+    ![9](../reports/images/r11/9.png)
+-   4 repliki  
+    ![5](../reports/images/r11/5.png)
+    ![10](../reports/images/r11/10.png)
+-   nowy obraz  
+    ![11](../reports/images/r11/11.png)
+    ![15](../reports/images/r11/15.png)
+-   starszy obraz  
+    ![14](../reports/images/r11/14.png)
+-   wadliwy obraz  
+    ![13](../reports/images/r11/13.png)
+
+## 3. Kontrola wdrożenia
+
+### Historia wdrożenia
+
 ![16](../reports/images/r11/16.png)
-![17](../reports/images/r11/17.png)
+
+## Skrypt weryfikujący wdrożenie
+
+![17](../reports/images/r11/17.png)  
 ![18](../reports/images/r11/18.png)
+
+## Cofnięcie do specyficznej wersji oraz przetestowanie skyptu
 ![19](../reports/images/r11/19.png)
