@@ -8,4 +8,7 @@ RUN express /tmp/foo
 
 WORKDIR /tmp/foo
 
+RUN sed -i '/block content/a\  p Version 2!' views/index.jade \
+ && cat views/index.jade
+
 RUN npm install
