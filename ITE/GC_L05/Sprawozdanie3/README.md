@@ -100,7 +100,23 @@ minikube dashboard
 
 ## Analiza posiadanego kontenera
 
+---
 
+## Uruchamianie oprogramowania
+
+Uruchomiono jako pojedynczy pod:
+
+```
+minikube kubectl -- run nginx-demo --image=nginx-custom --port=80 --labels app=nginx-demo
+
+```
+
+Sprawdzono czy pod działa:
+
+```
+kubectl get pods
+
+```
 
 ---
 
