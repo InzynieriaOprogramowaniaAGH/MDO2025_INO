@@ -1,0 +1,58 @@
+---
+- hosts: Endpoints
+  become: yes
+  vars:
+    image_name: kasiam23/mruby
+    container_name: mruby-app
+    script_path: /tmp/script.rb
+
+  tasks:
+    - name: Install required system packages (Ubuntu)
+      ansible.builtin.apt:
+        name:
+          - docker.io
+          - python3-pip
+          - python3-docker
+        state: present
+        update_cache: yes
+
+    - name: Start and enable Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull Docker image from DockerHub
+      ansible.builtin.docker_image:
+        name: "{{ image_name }}"
+        source: pull
+
+    - name: Copy script.rb to remote host
+      ansible.builtin.copy:
+        src: ./script.rb
+        dest: "{{ script_path }}"
+        mode: '0644'
+
+    - name: Run container with mounted script.rb
+      ansible.builtin.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}"
+        state: started
+        volumes:
+          - "{{ script_path }}:/app/script.rb"
+        auto_remove: no
+        detach: no
+
+    - name: Show logs from container
+      ansible.builtin.command: docker logs {{ container_name }}
+      register: container_logs
+
+    - name: Show actual output
+      debug:
+        var: container_logs.stdout
+
+    - name: Stop and remove Docker container
+      ansible.builtin.docker_container:
+        name: "{{ container_name }}"
+        state: absent
+        force_kill: yes

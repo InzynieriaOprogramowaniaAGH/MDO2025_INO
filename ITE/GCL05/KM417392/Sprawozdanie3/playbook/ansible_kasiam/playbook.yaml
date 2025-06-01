@@ -1,0 +1,4 @@
+- hosts: Endpoints
+  become: yes
+  roles:
+    - deploy_mruby
