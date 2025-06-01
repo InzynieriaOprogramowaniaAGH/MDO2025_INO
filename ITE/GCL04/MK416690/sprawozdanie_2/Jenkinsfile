@@ -12,6 +12,14 @@ pipeline {
     }
 
     stages {
+        stage('Logs') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh 'mkdir -p logs'
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 dir(env.APP_DIR){
