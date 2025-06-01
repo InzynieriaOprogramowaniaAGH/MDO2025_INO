@@ -34,35 +34,35 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                dir(env.APP_DIR) (
+                dir(env.APP_DIR) {
                     sh """
                         docker build -t ${DEPLOY_IMAGE} -f Dockerfile.cpmdeploy .
                         docker run -d --name cpm_app -p 3000:3000 ${DEPLOY_IMAGE}
                         sleep 5
                     """
-                )
+                }
             }
         }
 
         stage('Test Deploy') {
             steps {
-                dir(env.APP_DIR) (
+                dir(env.APP_DIR) {
                     sh """
                         docker exec cpm_app curl -s http://localhost:3000 || (echo 'Smoke test failed' && false)
                     """  
-                )
+                }
             }
         }
 
         stage('Publish') {
             steps {
-                dir(env.APP_DIR) (
+                dir(env.APP_DIR) {
                     sh """
                         mkdir -p artifacts
                         docker save ${BUILD_IMAGE} -o artifacts/cpm_build.tar
                     """
                     archiveArtifacts artifacts: 'artifacts/cpm_build.tar', fingerprint: true
-                )
+                }
             }
         }
     }
