@@ -1,2 +1,17 @@
 ---
 # handlers file for deploy_redis
+
+- name: restart redis container
+  community.docker.docker_container:
+    name: "{{ redis_container_name }}"
+    state: started
+    restart: yes
+
+- name: rebuild redis image
+  community.docker.docker_image:
+    name: "{{ redis_image_name }}"
+    build:
+      path: "{{ redis_temp_dir }}"
+    source: build
+    state: present
+    force_source: yes
