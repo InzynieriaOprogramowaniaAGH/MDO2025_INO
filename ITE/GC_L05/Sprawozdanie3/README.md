@@ -78,6 +78,30 @@ Dzięki temu system po zakończonej instalacji automatycznie otrzymuje nazwę fe
 
 ---
 
+# Zajęcia 10 - Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+
+## Instalacja klastra Kubernetes
+
+Zainstalowano  lokalny klaster Kubernetes z użyciem polecenia minikube.
+
+```
+minikube start
+
+```
+
+Następnie uruchomiono dashboard poleceniem:
+
+```
+minikube dashboard
+
+```
+
+## Analiza posiadanego kontenera
+
+
+
+---
+
 # Zajęcia 11 - Wdrażanie na zarządzalne kontenery: Kubernetes (2)
 
 ---
