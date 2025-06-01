@@ -1,0 +1,15 @@
+FROM fedora:latest
+
+# Instalacja wymaganych pakietów
+RUN dnf update -y && dnf install -y git nasm gcc make perl
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
+
+# Klonowanie repozytorium
+RUN git clone https://git.ffmpeg.org/ffmpeg.git /app
+
+# Konfiguracja i kompilacja
+RUN ./configure && make -j$(nproc)
+
+CMD ["bash"]

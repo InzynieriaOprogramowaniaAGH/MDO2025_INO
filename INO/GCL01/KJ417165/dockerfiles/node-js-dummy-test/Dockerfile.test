@@ -1,0 +1,6 @@
+FROM node-js-dummy-test-build:latest
+
+WORKDIR /app
+
+# Uruchomienie testów
+CMD ["npm", "test"]
