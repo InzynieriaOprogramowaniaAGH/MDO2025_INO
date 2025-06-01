@@ -355,3 +355,7 @@ Deployment amelia-recreate zastosował strategię Recreate. Wszystkie stare pody
 #### Canary Deployment
 
 Canary Deployment został zrealizowany za pomocą dwóch osobnych deploymentów: amelia-canary-v1 i amelia-canary-v2. Deployment v1 działa poprawnie. Natomiast v2 zawiera błędny obraz lub konfigurację — pod nie wystartował (0/1, status: Failed). 
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/minikube%20service.png?raw=true)
+
+
