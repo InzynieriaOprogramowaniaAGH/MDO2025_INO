@@ -1,0 +1,18 @@
+- name: Update packages on all hosts
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update all packages with DNF
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: true
+      become: true
+    - name: SSHD restart
+      ansible.builtin.service:
+        name: sshd 
+        state: restarted 
+    - name: RNGD restart 
+      ansible.builtin.service: 
+        name: rngd 
+        state: restarted 
