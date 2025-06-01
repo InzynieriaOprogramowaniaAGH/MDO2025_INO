@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HOST = "tcp://jenkins-docker:2376"
+        DOCKER_HOST = "tcp://localhost:2376"
         BUILD_IMAGE = "cpm_build"
         TEST_IMAGE = "cpm_test"
         DEPLOY_IMAGE = "cpm_deploy"
