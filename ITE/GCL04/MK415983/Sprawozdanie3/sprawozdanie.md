@@ -125,3 +125,7 @@ inst.ks=https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_IN
 ```
 
 any zaciągnąć z repo plik Kickstart (w rzeczywistości wykorzystano link shortener aby łatwiej wkleić link repozytorium do terminala). Tym sposobem otrzymano drugą maszynę wirtualną, skonfigurowaną tak samo jak główna, z automatyzowanym procesem instalacyjnym. 
+
+```
+https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/MK415983/ITE/GCL04/MK415983/Sprawozdanie3/swiftcode-application.jar
+```
