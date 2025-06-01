@@ -28,6 +28,13 @@ A następnie, zauważywszy że nie posiadam do niego dostępu, wykonałem:
 
 Wykonałem commit i push do repozytorium, początkowo bez żadnych zmian w pliku. Utworzyłem nową maszynę wirttualną w `Oracle VirtualBox` podając to ISO, które uprzednio posłużyło mi do zainstalowania obecnie wykorzystywanej maszyny wirtualnej.
 
+![](3_1_1.png)
+
+Ekran z postępem instalacji sugeruje, że instalacja przebiegła pomyślnie:
+
+![](3_1_2.png)
+
+Dalej przystąpiłem do edytowania pliku `anaconda-ks.cfg` wg wytycznych i tak by pobierał kontener z Dockerhub, zamieszony w ramach projektu pipeline'owego.
 ## Ansible
 
 Utworzyłem nową maszynę wirtualną i nazwałem ją `ansible-target`, podałem ISO `Fedora-Everything-netinst-x86_64-41-1.4`, system operacyjny Fedora, pamięć RAM i dysk zostawiłem bez zmian. Odpaloiłem instalację. Ustawiłem nazwę hosta na `ansible-target` 
