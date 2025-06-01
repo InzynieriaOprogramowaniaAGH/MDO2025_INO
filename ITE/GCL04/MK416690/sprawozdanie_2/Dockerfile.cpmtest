@@ -1,0 +1,5 @@
+FROM cpm_build as test
+
+WORKDIR /app/frontend
+
+CMD ["npm", "run", "test"]
