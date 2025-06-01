@@ -23,8 +23,14 @@ pipeline {
         stage('Build') {
             steps {
                 dir(env.APP_DIR){
-                    sh "pwd && ls -l"
-                    sh "docker build -t ${BUILD_IMAGE} -f Dockerfile.cpmbuild ."
+                    script{
+                        try{
+                            sh "pwd && ls -l"
+                            sh "docker build -t ${BUILD_IMAGE} -f Dockerfile.cpmbuild . > logs/build.log 2>&1"
+                        } finally{
+                            archiveArtifacts artifacts: 'logs/build.logs', allowEmptyArchive: true
+                        }
+                    }
                 }
             }
         }
@@ -32,10 +38,15 @@ pipeline {
         stage('Test') {
             steps {
                 dir(env.APP_DIR) {
-                    sh """
-                        docker build -t ${TEST_IMAGE} -f Dockerfile.cpmtest .
-                        docker run --rm ${TEST_IMAGE}
-                    """
+                    script{
+                        try{
+                            sh 'docker build -t ${TEST_IMAGE} -f Dockerfile.cpmtest . > logs/test.log 2>&1'
+                            sh 'docker run --rm ${TEST_IMAGE}'
+                        } finally{
+                            archiveArtifacts artifacts: 'logs/test.log', allowEmptyArchive: true
+                        }
+                    }
+                    
                 }
             }
         }
