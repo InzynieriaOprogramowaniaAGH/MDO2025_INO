@@ -11,21 +11,9 @@ pipeline {
     }
 
     stages {
-        stage('Docker info') {
-            steps {
-                sh 'docker info'
-            }
-        }
-
-        stage('Certs check') {
-            steps {
-                sh 'ls -l /certs/client'
-            }
-        }
-
-
         stage('Build') {
             steps {
+                sh "pwd && ls -l"
                 sh "docker build -t ${BUILD_IMAGE} -f Dockerfile.cpmbuild ."
             }
         }
