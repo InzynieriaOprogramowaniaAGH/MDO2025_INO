@@ -5,18 +5,20 @@ keyboard pl
 
 network --bootproto=dhcp --hostname=fedora-deploy
 
-rootpw --iscrypted $6$yqDkThNAK7$6lZ/ccJrHeVaGwnJspq9AJvoFZNgUeD0XLkgdjSmX1u7aFSn/PI7Z2dzWkqBlFqI/kKoZquBP4wWWDtc4XXaJ0
+rootpw --iscrypted $6$7j0iWmtubLvk9.zk$mXT0qFhWW4QMQGWktIUvXvjOBZbifer/5P/d59Yk8z99L8vjoR8HUPUAWodBSnDtXWXGWhVocFBaHLQRB8iOm1
 
 # User account
-user --name=deploy_user --password=$6$X5ftNRhAxk$wIU8pI0fUsJOLSHDRjHb/7OtD68ShsR7mYXZfY/5FbPEnJP6W59V/fbSTz58FdG7vS5pFJIC/VDOwUSt1hvT3. --iscrypted --gecos="Deploy User"
+user --name=deploy_user --password=$6$7j0iWmtubLvk9.zk$mXT0qFhWW4QMQGWktIUvXvjOBZbifer/5P/d59Yk8z99L8vjoR8HUPUAWodBSnDtXWXGWhVocFBaHLQRB8iOm1 --iscrypted --gecos="Deploy User" --groups=wheel
 
 timezone Europe/Warsaw --isUtc
 
 clearpart --all --initlabel
 autopart
 
-url --mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=fedora-38&arch=x86_64
-repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f38&arch=x86_64
+url --mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=fedora-41&arch=x86_64
+repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f41&arch=x86_64
+
+reboot
 
 %packages
 @^server-product-environment
@@ -40,7 +42,7 @@ After=network.target
 [Service]
 ExecStart=/opt/WeatherForecastApi/WeatherForecast.Api
 Restart=always
-User=deploy_user
+User=root
 Environment=ASPNETCORE_URLS=http://+:5000
 
 [Install]
@@ -49,9 +51,7 @@ EOF
 
 systemctl enable weatherforecastapi.service
 
+firewall-offline-cmd --add-port=5000/tcp
 systemctl enable firewalld
-systemctl start firewalld
-firewall-cmd --permanent --add-port=5000/tcp
-firewall-cmd --reload
 
 %end
