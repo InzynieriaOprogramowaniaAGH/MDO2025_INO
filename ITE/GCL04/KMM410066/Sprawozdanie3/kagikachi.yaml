@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: kagikachi
-        image: skanerooo/kagikachi:57
+        image: skanerooo/kagikachi:56
         ports:
         - containerPort: 7878
