@@ -11,8 +11,10 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                retry(3) {
-                    checkout scm
+                script {
+                    retry(3) {
+                        checkout scm
+                    }
                 }
             }
         }
