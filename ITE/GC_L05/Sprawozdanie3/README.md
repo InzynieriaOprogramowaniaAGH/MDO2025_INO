@@ -214,4 +214,95 @@ kubectl describe pod amelia-web
 W celu kontroli przebiegu wdrożeń, wykorzystano polecenie `kubectl rollout history`.
 Wersja v2 zawierała błędną konfigurację i spowodowała, że pody wchodziły w stan CrashLoopBackOff. Kubernetes automatycznie przerwał rollout i nie kontynuował wdrażania pozostałych replik. Wdrożenie zakończyło się niepowodzeniem.
 
+## Strategie wdrożenia
 
+### Recreate
+
+```
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amelia-recreate
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: amelia
+      version: recreate
+  template:
+    metadata:
+      labels:
+        app: amelia
+        version: recreate
+    spec:
+      containers:
+      - name: amelia-web
+        image: ladyamely/amelia-web:v1
+        ports:
+        - containerPort: 80
+
+```
+
+### Rolling Update (z parametrami maxUnavailable > 1, maxSurge > 20%)
+
+```
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amelia-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 50%
+  selector:
+    matchLabels:
+      app: amelia
+      version: rolling
+  template:
+    metadata:
+      labels:
+        app: amelia
+        version: rolling
+    spec:
+      containers:
+      - name: amelia-web
+        image: ladyamely/amelia-web:v1
+        ports:
+        - containerPort: 80
+
+
+```
+
+### Canary Deployment workload
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amelia-canary-v1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: amelia
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: amelia
+        version: v1
+    spec:
+      containers:
+      - name: amelia-web
+        image: ladyamely/amelia-web:v1
+        ports:
+        - containerPort: 80
+
+```
