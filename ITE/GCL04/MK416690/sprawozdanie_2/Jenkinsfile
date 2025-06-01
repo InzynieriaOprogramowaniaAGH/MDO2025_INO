@@ -9,6 +9,14 @@ pipeline {
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                retry(3) {
+                    checkout scm
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 sh "docker build -t ${BUILD_IMAGE} -f Dockerfile.cpmbuild ."
