@@ -280,7 +280,7 @@ spec:
 
 ```
 
-### Canary Deployment workload
+### Canary Deployment workload - v1
 
 ```
 apiVersion: apps/v1
@@ -304,6 +304,35 @@ spec:
         image: ladyamely/amelia-web:v1
         ports:
         - containerPort: 80
+
+```
+
+### Canary Deployment workload - v2
+
+```
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amelia-canary-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: amelia
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: amelia
+        version: canary
+    spec:
+      containers:
+      - name: amelia-web
+        image: ladyamely/amelia-web:v2
+        ports:
+        - containerPort: 80
+
 
 ```
 
