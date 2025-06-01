@@ -2,13 +2,28 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HOST = "tcp://jenkins-docker:2375"
+        DOCKER_HOST = "tcp://docker:2376"
+        DOCKER_CERT_PATH = "/certs/client"
+        DOCKER_TLS_VERIFY = "1"
         BUILD_IMAGE = "cpm_build"
         TEST_IMAGE = "cpm_test"
         DEPLOY_IMAGE = "cpm_deploy"
     }
 
     stages {
+        stage('Docker info') {
+            steps {
+                sh 'docker info'
+            }
+        }
+
+        stage('Certs check') {
+            steps {
+                sh 'ls -l /certs/client'
+            }
+        }
+
+
         stage('Build') {
             steps {
                 sh "docker build -t ${BUILD_IMAGE} -f Dockerfile.cpmbuild ."
