@@ -5,7 +5,7 @@ pipeline {
         DOCKER_HOST = "tcp://docker:2376"
         DOCKER_CERT_PATH = "/certs/client"
         DOCKER_TLS_VERIFY = "1"
-        APP_DIR = "ITE"
+        APP_DIR = "ITE/GCL04"
         BUILD_IMAGE = "cpm_build"
         TEST_IMAGE = "cpm_test"
         DEPLOY_IMAGE = "cpm_deploy"
