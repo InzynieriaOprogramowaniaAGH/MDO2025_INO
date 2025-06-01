@@ -28,7 +28,7 @@ pipeline {
                             sh "pwd && ls -l"
                             sh "docker build -t ${BUILD_IMAGE} -f Dockerfile.cpmbuild . > logs/build.log 2>&1"
                         } finally{
-                            archiveArtifacts artifacts: 'logs/build.logs', allowEmptyArchive: true
+                            archiveArtifacts artifacts: 'logs/build.log', allowEmptyArchive: true
                         }
                     }
                 }
