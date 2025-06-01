@@ -1,0 +1,76 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.nodebld
+#1 transferring dockerfile:
+#1 transferring dockerfile: 253B done
+#1 DONE 0.2s
+
+#2 [internal] load metadata for docker.io/library/node:23-alpine
+#2 DONE 1.8s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.1s
+
+#4 [1/5] FROM docker.io/library/node:23-alpine@sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc
+#4 resolve docker.io/library/node:23-alpine@sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc 0.1s done
+#4 sha256:86703151a18fcd06258e013073508c4afea8e19cd7ed451554221dd00aea83fc 6.41kB / 6.41kB done
+#4 sha256:0d468be7d2997dd2f6a3cda45e121a6b5140eb7ba3eba299a215030dbb0fb1ca 1.72kB / 1.72kB done
+#4 sha256:2b99bc550caad6f10cf0fd4ad72f86a14cc9818a05a66cc72d1997a4e8ee5c77 6.18kB / 6.18kB done
+#4 DONE 0.5s
+
+#5 [2/5] RUN apk add --no-cache git
+#5 0.286 fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/main/x86_64/APKINDEX.tar.gz
+#5 0.578 fetch https://dl-cdn.alpinelinux.org/alpine/v3.21/community/x86_64/APKINDEX.tar.gz
+#5 0.903 (1/12) Installing brotli-libs (1.1.0-r2)
+#5 0.995 (2/12) Installing c-ares (1.34.5-r0)
+#5 1.037 (3/12) Installing libunistring (1.2-r0)
+#5 1.091 (4/12) Installing libidn2 (2.3.7-r0)
+#5 1.133 (5/12) Installing nghttp2-libs (1.64.0-r0)
+#5 1.173 (6/12) Installing libpsl (0.21.5-r3)
+#5 1.214 (7/12) Installing zstd-libs (1.5.6-r2)
+#5 1.263 (8/12) Installing libcurl (8.12.1-r1)
+#5 1.309 (9/12) Installing libexpat (2.7.0-r0)
+#5 1.350 (10/12) Installing pcre2 (10.43-r0)
+#5 1.396 (11/12) Installing git (2.47.2-r0)
+#5 1.533 (12/12) Installing git-init-template (2.47.2-r0)
+#5 1.575 Executing busybox-1.37.0-r12.trigger
+#5 1.593 OK: 21 MiB in 29 packages
+#5 DONE 2.1s
+
+#6 [3/5] RUN git clone https://github.com/devenes/node-js-dummy-test
+#6 0.300 Cloning into 'node-js-dummy-test'...
+#6 DONE 1.3s
+
+#7 [4/5] WORKDIR /node-js-dummy-test
+#7 DONE 0.3s
+
+#8 [5/5] RUN npm i
+#8 5.635 
+#8 5.635 added 354 packages, and audited 355 packages in 5s
+#8 5.636 
+#8 5.636 37 packages are looking for funding
+#8 5.636   run `npm fund` for details
+#8 5.644 
+#8 5.644 17 vulnerabilities (3 low, 3 moderate, 9 high, 2 critical)
+#8 5.644 
+#8 5.644 To address issues that do not require attention, run:
+#8 5.644   npm audit fix
+#8 5.644 
+#8 5.644 To address all issues (including breaking changes), run:
+#8 5.644   npm audit fix --force
+#8 5.644 
+#8 5.644 Run `npm audit` for details.
+#8 5.645 npm notice
+#8 5.645 npm notice New major version of npm available! 10.9.2 -> 11.3.0
+#8 5.645 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.3.0
+#8 5.645 npm notice To update run: npm install -g npm@11.3.0
+#8 5.645 npm notice
+#8 DONE 6.4s
+
+#9 exporting to image
+#9 exporting layers
+#9 exporting layers 0.8s done
+#9 writing image sha256:b218a301d8db3e987c39ed59e6084b23c1d1ae984008de5bf85fe32b42c4f17f done
+#9 naming to docker.io/library/nodebld:23-alpine 0.1s done
+#9 DONE 1.0s
