@@ -339,3 +339,19 @@ spec:
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/all%20deployments.png?raw=true)
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/all%20get%20pods.png?raw=true)
+
+---
+
+### Porównanie
+
+#### Rolling
+
+Deployment amelia-rolling używa strategii RollingUpdate z parametrami maxUnavailable=2, maxSurge=50%. Podczas aktualizacji pody były stopniowo zastępowane nową wersją, a aplikacja była cały czas dostępna. W dashboardzie widać, że wszystkie 4 pody działają poprawnie.
+
+#### Recreate
+
+Deployment amelia-recreate zastosował strategię Recreate. Wszystkie stare pody zostały usunięte, zanim uruchomiono nowe. Mimo że aktualnie wszystkie 3 pody działają, ta strategia może powodować krótkotrwały brak dostępności. W czasie zmiany obrazu aplikacja przez chwilę była niedostępna.
+
+#### Canary Deployment
+
+Canary Deployment został zrealizowany za pomocą dwóch osobnych deploymentów: amelia-canary-v1 i amelia-canary-v2. Deployment v1 działa poprawnie. Natomiast v2 zawiera błędny obraz lub konfigurację — pod nie wystartował (0/1, status: Failed). 
