@@ -1,0 +1,35 @@
+- name: Stwórz Dockerfile do zbudowania obrazu dla rustscan
+  ansible.builtin.copy:
+    dest: "/tmp/Dockerfile.rustscan"
+    content: |
+      FROM {{ base_docker_image }}
+      #RUN apk add --no-cache libgcc
+      COPY rustscan /usr/local/bin/rustscan
+      RUN chmod +x /usr/local/bin/rustscan
+      ENTRYPOINT ["/usr/local/bin/rustscan"]
+  vars:
+    base_docker_image: "ubuntu:latest"
+
+- name: Zbuduj obraz Docker dla rustscan za pomocą polecenia shell
+  ansible.builtin.shell: |
+    set -e
+    cd /tmp
+    docker build --pull --no-cache -f Dockerfile.rustscan -t rustscan_app:latest .
+  args:
+    executable: /bin/bash
+  changed_when: true
+  become: yes
+
+- name: Uruchom kontener rustscan
+  community.docker.docker_container:
+    name: rustscan_instance
+    image: rustscan_app:latest
+    command: "-a 127.0.0.1"
+    state: started
+    detach: false 
+    auto_remove: false 
+  register: rustscan_log_output
+
+- name: Wyświetl logi rustscan
+  ansible.builtin.debug:
+    msg: "Docker logs: {{rustscan_log_output.container.Output | trim | regex_replace('\\x1B\\[[0-?]*[ -/]*[@-~]', '') }}"
