@@ -1,0 +1,55 @@
+- name: Deploy aplikacji z artefaktu .tar.gz z Jenkinsa
+  hosts: endpoints
+  become: true
+  vars:
+    artifact_url: "http://192.168.0.139:8080/job/Done_Pipe_Chalk/lastSuccessfulBuild/artifact/INO/GCL02/KM415588/Sprawozdanie_2/artifact_result.tar.gz"
+    deploy_dir: /home/{{ ansible_user }}/artifact/chalk-pipe
+
+  tasks:
+    - name: Upewnij się, że katalog docelowy istnieje
+      file:
+        path: "{{ deploy_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Pobierz artefakt z Jenkinsa
+      get_url:
+        url: "{{ artifact_url }}"
+        dest: "/tmp/artifact_result.tar.gz"
+        mode: '0644'
+
+    - name: Rozpakuj artefakt
+      unarchive:
+        src: "/tmp/artifact_result.tar.gz"
+        dest: "{{ deploy_dir }}"
+        remote_src: yes
+
+    - name: Uruchom aplikację (przykładowy plik example.js)
+      shell: "node {{ deploy_dir }}/lib/chalk-pipe/example.js > /tmp/app_output.log 2>&1 &"
+      args:
+        chdir: "{{ deploy_dir }}"
+      async: 15
+      poll: 0
+
+    - name: Poczekaj chwilę na wygenerowanie logu
+      wait_for:
+        path: /tmp/app_output.log
+        state: present
+        timeout: 10
+
+    - name: Odczytaj log działania aplikacji
+      shell: cat /tmp/app_output.log
+      register: app_output
+      changed_when: false
+
+    - name: Wyświetl wynik działania aplikacji
+      debug:
+        var: app_output.stdout_lines
+
+    - name: Wyświetl zawartość katalogu
+      command: ls -l {{ deploy_dir }}
+      register: ls_output
+
+    - name: Pokaż zawartość
+      debug:
+        var: ls_output.stdout_lines
