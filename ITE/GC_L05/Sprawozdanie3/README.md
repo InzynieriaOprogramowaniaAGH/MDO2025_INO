@@ -96,6 +96,8 @@ minikube dashboard
 
 ```
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/minikube_dashboad.png?raw=true)
+
 ## Analiza posiadanego kontenera
 
 
