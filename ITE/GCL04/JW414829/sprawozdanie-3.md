@@ -1,5 +1,4 @@
 ### Lab 8
----
 ## Instalacja zarządcy Ansible
 Zacząłem od postawienia nowej maszyny z systemem Fedora, w dokładnie takiej samej wersji jak poprzednia. Utworzylem uytkownika o nazwie `ansible`, zmieniłem hostname na `ansible-target` i zainstalowałem `tar` a następnie potwierdziłem obecność `sshd`. 
 ![nowa fedora](./lab7/nowa-fedora.png)
@@ -235,7 +234,6 @@ do `deploy_apache.yml`:
 ---
 
 # Lab 9
----
 
 Pobrałem plik `anaconda-ks.cfg` i dodałem do niego url do mirrora, nazwe hosta i sekcję post.
 
@@ -303,3 +301,26 @@ Uruchomiłem instalator i wrzuciłem plik odpowiedzi jako argument.
 
 Po uruchomieniu kontener zadziałał i zwrócił plik index.html.
 ![result](./lab9/)
+
+---
+
+# Lab 10
+
+## Instalacja klastra Kubernetes
+
+Zaopatrzyłem się w minikube. Przeprowadziłem instalację i wykazałem poziom bezpieczeństwa instalacji a następnie uruchomiłem dashboard.
+![curl](./lab10/curl-minikube.png)
+![bezp](./lab10/bezp.png)
+![dashboard](./lab10/dashboard.png)
+
+Zainstalowałem `kubectl`.
+![kubectl install](./lab10/kubectl-install.png)
+
+## Analiza posiadanego kontenera / Uruchamianie oprogramowania
+
+Podczas realizacji tych laboratoriów zdecydowałem sie korzystać z obrazu `nginx` z powodu problemów z poprzednio wybranym projektem. Przy pomocy uprzednio zainstalowanego `kubectl` uruchomiłem pojedynczego poda. Musiałem przekierować tez port, aby umozliwić połączenie się z kontenerem.
+![alt text](./lab10/1pod-przekierowanie.png)
+![alt text](./lab10/port-forward-vsc.png)
+![alt text](./lab10/nginx-localhost.png)
+
+## Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
