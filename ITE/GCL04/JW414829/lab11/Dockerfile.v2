@@ -1,0 +1,2 @@
+FROM httpd:alpine
+RUN echo '<!DOCTYPE html><html><body><h1>Apache Version 2</h1></body></html>' > /usr/local/apache2/htdocs/index.html
