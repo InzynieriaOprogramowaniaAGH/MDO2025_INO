@@ -1,0 +1,36 @@
+- name: My first play
+  hosts: Endpoints
+  tasks:
+   - name: Pinguj maszyny
+     ansible.builtin.ping:
+
+   - name: Skopiuj plik  inwentaryzacji na maszyny
+     ansible.builtin.copy:
+        src: inventory.ini
+        dest: /home/ansible/inventory.ini
+        owner: ansible
+        group: ansible
+        mode: '0644'
+
+   - name: Ponownie skopiuj plik inwentaryzacji na maszyny
+     ansible.builtin.copy:
+        src: inventory.ini
+        dest: /home/ansible/inventory.ini
+        owner: ansible
+        group: ansible
+        mode: '0644'
+
+   - name: Zaktualizuj wszystkie pakiety w systemie
+     ansible.builtin.package:
+        name: "*"
+        state: latest
+
+   - name: Zrestartuj usługę sshd
+     ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+   - name: Zrestartuj usługę rngd
+     ansible.builtin.service:
+        name: rngd
+        state: restarted
