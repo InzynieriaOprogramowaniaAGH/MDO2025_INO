@@ -397,7 +397,7 @@ docker push jakubwawrzyczek/apache:broken
 
 ![dockerhub screen](./lab11/dockerhub-push.png)
 
-Na screenshocie widać, ze repozytorium jest prywatne - później to zmieniłem.
+Na screenshocie widać, ze repozytorium jest prywatne - później to
 Następnie zedytowałem plik `yaml` z poprzednich zajęć i wykonałem pierwsze wdrozenie.
 
 ```yaml
@@ -533,7 +533,7 @@ strategy:
 * maxUnavailable – maksymalna liczba replik, które mogą być niedostępne w trakcie aktualizacji,
 * maxSurge – maksymalna liczba dodatkowych replik, które mogą być uruchomione ponad zadeklarowaną liczbę.
 
-W tym przypadku mogą być tymczasowo uruchomione aż 2 dodatkowe pody (30% z 4 = 1.2 i zaokrąglone do 2), a równocześnie mogą być wyłączone 2 istniejące. Dzięki temu cały czas dostępna jest większość instancji aplikacji.
+W tym przypadku mogą być tymczasowo uruchomione az 2 dodatkowe pody (30% z 4 = 1.2 i zaokrąglone do 2), a równocześnie mogą być wyłączone 2 istniejące. Dzięki temu cały czas dostępna jest większość instancji aplikacji.
 
 ```yaml
 apiVersion: apps/v1
@@ -638,3 +638,5 @@ spec:
       port: 80
       targetPort: 80
 ```
+
+(nigdzie w sprawku nie ma litery `ż` bo mam jakiś skrót w vsc który to uniemozliwia)
