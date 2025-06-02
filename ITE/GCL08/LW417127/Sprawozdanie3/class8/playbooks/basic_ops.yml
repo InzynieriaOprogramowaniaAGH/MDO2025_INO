@@ -1,0 +1,59 @@
+---
+- name: Basic operations
+  hosts: all
+  gather_facts: true
+  become: yes
+  vars:
+    inventory_owner: "{{ 'lwrobel' if inventory_hostname == 'ansible-main' else 'ansible' }}"
+
+  tasks:
+    # 1. Test połączenia (wykonaj wszędzie)
+    - name: Test connection with ping
+      ansible.builtin.ping:
+
+    # 2. Kopiowanie inventory (wykonaj wszędzie)
+    - name: Copy inventory file
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../inventory.ini"
+        dest: /tmp/inventory_copy.ini
+        owner: "{{ inventory_owner }}"
+        group: "{{ inventory_owner }}"
+        mode: '0644'
+
+    # 3. Operacje tylko dla hostów docelowych (z wykluczeniem ansible-main)
+    - name: Apply operations only to endpoints
+      block:
+        - name: Update packages (skip kernel)
+          ansible.builtin.dnf:
+            name: "*"
+            state: latest
+            exclude: kernel*
+            update_cache: yes
+          register: update_result
+          notify: reboot_if_needed
+    
+    - name: Restart services
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: restarted
+      loop:
+        - sshd
+        - rngd
+
+    # 4. Komunikat dla ansible-main
+    - name: Skip message for control node
+      ansible.builtin.debug:
+        msg: "Skipping package updates on control node (ansible-main)"
+      when: inventory_hostname == 'ansible-main'
+
+  handlers:
+    - name: reboot_if_needed
+      ansible.builtin.reboot:
+        msg: "Reboot initiated by Ansible"
+        connect_timeout: 5
+        reboot_timeout: 600
+        pre_reboot_delay: 0
+        post_reboot_delay: 30
+      when: 
+        - update_result.changed
+        - inventory_hostname != 'ansible-main'

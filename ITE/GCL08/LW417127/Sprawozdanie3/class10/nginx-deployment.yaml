@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-deployment
+  labels:
+    app: my-nginx-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-nginx-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
+  template:
+    metadata:
+      labels:
+        app: my-nginx-app
+    spec:
+      containers:
+      - name: nginx-container
+        image: lukasparrow/my-custom-nginx:v2
+        ports:
+        - containerPort: 80

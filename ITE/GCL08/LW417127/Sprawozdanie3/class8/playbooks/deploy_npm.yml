@@ -1,0 +1,68 @@
+---
+- name: Deploy npm package
+  hosts: endpoints  # Tylko maszyny docelowe (zdefiniowane w inventory.ini)
+  become: yes
+  vars:
+    npm_package: "devops_lukasz_wrobel"
+    npm_global: true
+    npm_registry: "https://registry.npmjs.org"
+    npm_user: "{{ 'lwrobel' if inventory_hostname == 'ansible-main' else 'ansible' }}"
+
+  tasks:
+    # 1. Instalacja Node.js (tylko jeśli nie jest zainstalowany)
+    - name: Check if Node.js is installed
+      ansible.builtin.command: node --version
+      register: node_check
+      ignore_errors: yes
+      changed_when: false
+
+    - name: Install Node.js
+      ansible.builtin.dnf:
+        name: nodejs
+        state: latest
+      when: node_check is failed
+
+    # 2. Instalacja paczki npm (z cache'owaniem)
+    - name: Install npm package
+      ansible.builtin.npm:
+        name: "{{ npm_package }}"
+        global: "{{ npm_global }}"
+        registry: "{{ npm_registry }}"
+        executable: /usr/bin/npm
+      register: npm_install
+      retries: 3
+      delay: 10
+      until: npm_install is success
+
+    # 3. Weryfikacja instalacji
+    - name: Verify global installation
+      ansible.builtin.command: npm list -g --depth=0
+      register: npm_list
+      changed_when: false
+      when: npm_global
+
+    - name: Verify local installation
+      ansible.builtin.command: npm list --depth=0
+      register: npm_list_local
+      changed_when: false
+      when: not npm_global
+
+    # 4. Ustawienie właściciela (tylko dla instalacji globalnych)
+    - name: Fix global package permissions
+      ansible.builtin.file:
+        path: "/usr/lib/node_modules/{{ npm_package }}"
+        owner: "{{ npm_user }}"
+        group: "{{ npm_user }}"
+        recurse: yes
+      when: 
+        - npm_global
+        - npm_install is changed
+
+    # 5. Komunikat podsumowujący
+    - name: Show installation result
+      ansible.builtin.debug:
+        msg: |
+          Package {{ npm_package }} installed successfully:
+          - Version: {{ npm_list.stdout | regex_search(npm_package + '@\\S+') }}
+          - Location: {{ npm_list.stdout | regex_search(npm_package + '@\\S+.*\\n\\s+.*') }}
+      when: npm_install is success

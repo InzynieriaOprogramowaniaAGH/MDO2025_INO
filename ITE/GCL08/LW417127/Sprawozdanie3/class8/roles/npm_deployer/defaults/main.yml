@@ -1,0 +1,8 @@
+---
+# Domyślne wartości zmiennych
+npm_package_name: ""
+npm_global: true
+npm_registry: "https://registry.npmjs.org"
+npm_version: "latest"
+npm_install_args: ""
+npm_user: "ansible"
