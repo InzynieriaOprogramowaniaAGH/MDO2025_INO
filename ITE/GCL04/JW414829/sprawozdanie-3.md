@@ -357,5 +357,11 @@ Utworzyłem serwis `nginx-service.yaml` i uruchomiłem go a następnie przeforwa
 ![service](./lab10/nginx-service-run.png)
 ![service safari](./lab10/polaczenie-nginx-4-pody.png)
 
-W dashboardzie widać pody w ilości 5, wynika to z faktu, ze pierwszy pod z wykonywanych laboratoriów nadal jest aktywny.
+W dashboardzie widać pody w ilości 5, wynika to z faktu, ze pierwszy pod z wykonywanych laboratoriów nadal jest aktywny. Widać tez deployment `nginx-deployment`.
 ![dashboard 2](./lab10/image.png)
+
+---
+
+# Lab 11
+
+cdn
