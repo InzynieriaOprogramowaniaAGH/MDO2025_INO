@@ -397,7 +397,7 @@ docker push jakubwawrzyczek/apache:broken
 
 ![dockerhub screen](./lab11/dockerhub-push.png)
 
-
+Na screenshocie widać, ze repozytorium jest prywatne - później to zmieniłem.
 Następnie zedytowałem plik `yaml` z poprzednich zajęć i wykonałem pierwsze wdrozenie.
 
 ```yaml
