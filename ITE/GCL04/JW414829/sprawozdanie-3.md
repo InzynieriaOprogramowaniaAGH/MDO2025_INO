@@ -300,7 +300,7 @@ Uruchomiłem instalator i wrzuciłem plik odpowiedzi jako argument.
 ![instalacja dodanie configu](./lab9/image.png)
 
 Po uruchomieniu kontener zadziałał i zwrócił plik index.html.
-![result](./lab9/)
+![result](./lab9/index-html.png)
 
 ---
 
