@@ -1,0 +1,15 @@
+---
+
+- name: Pull image from Docker Hub
+  ansible.builtin.docker_image:
+    name: white67/node-dummy-deploy
+    source: pull
+
+- name: Run container
+  ansible.builtin.docker_container:
+    name: deploy-container
+    image: white67/node-dummy-deploy
+    state: started
+    restart_policy: always
+    ports:
+      - "3000:3000"
