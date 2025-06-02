@@ -364,4 +364,90 @@ W dashboardzie widać pody w ilości 5, wynika to z faktu, ze pierwszy pod z wyk
 
 # Lab 11
 
-cdn
+## Przygotowanie nowego obrazu / Zmiany w deploymencie
+
+Przygotowałem trzy dockerfiles do zbudowania obrazów. Jeden z nich powoduje failure a dwa pozostałe róznią się pomiędzy sobą zawartością pliku `index.html`. Po zbudowaniu obrazów zpushowałem je na `dockerhub` (wrzucam same wykonane polecenia z uwagi na ilość linii w konsoli i screenów które musiałbym zrobić).
+
+```Dockerfile
+FROM httpd:alpine
+RUN echo '<html><body><h1>Apache Version 1</h1></body></html>' > /usr/local/apache2/htdocs/index.html
+```
+```Dockerfile
+FROM httpd:alpine
+RUN echo '<!DOCTYPE html><html><body><h1>Apache Version 2</h1></body></html>' > /usr/local/apache2/htdocs/index.html
+```
+```Dockerfile
+FROM httpd:alpine
+RUN echo "exit 1" > /start.sh && chmod +x /start.sh
+CMD ["/start.sh"]
+```
+
+
+```bash
+docker build -t jakubwawrzyczek/apache:v1 -f Dockerfile.v1 .
+docker push jakubwawrzyczek/apache:v1
+
+docker build -t jakubwawrzyczek/apache:v2 -f Dockerfile.v2 .
+docker push jakubwawrzyczek/apache:v2
+
+docker build -t jakubwawrzyczek/apache:broken -f Dockerfile.broken .
+docker push jakubwawrzyczek/apache:broken
+
+```
+
+![dockerhub screen](./lab11/dockerhub-push.png)
+
+
+Następnie zedytowałem plik `yaml` z poprzednich zajęć i wykonałem pierwsze wdrozenie.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache-deployment
+  labels:
+    app: apache
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: apache
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+        - name: apache
+          image: jakubwawrzyczek/apache:v1
+          ports:
+            - containerPort: 80
+```
+
+![wdr](./lab11/wdrozenie-1.png)
+![apache v1](./lab11/apache-v1-przegladarka.png)
+![dashboard 1](./lab11/dashboard-1.png)
+
+Zmiana ilości podów:
+
+![8 podow](./lab11/8-podow.png)
+![1 pod](./lab11/1-pod.png)
+![0 podow](./lab11/0-podow.png)
+![4 pody](./lab11/4-pody.png)
+
+Zmiana obrazów:
+
+Dwa działające obrazy zadziałały.
+
+![v1](./lab11/obraz-v1.png)
+![v2](./lab11/obraz-v2.png)
+
+Przy rolloucie obrazu `broken` proces zatrzymał się na tym etapie:
+
+![broken](./lab11/obraz-broken-rollout.png)
+
+Pody weszły w stan `CrashLoopBackOff` co oznaczało, ze ciągle się restartowały.
+`kubectl rollout undo` pozwoliło mi cofnąć wdrozenie do najblizszej poprzedniej działającej wersji.
+
+![rollout undo](./lab11/rollout-undo.png)
+![rollout undo dashboard](./lab11/rollout-undo-dashboard.png)
