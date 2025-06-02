@@ -1,4 +1,4 @@
-# Sprawozdanie 3 - Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
+# Sprawozdanie 3
 
 - **Przedmiot: DevOps**
 - **Kierunek: Inżynieria Obliczeniowa**
@@ -7,7 +7,9 @@
 
 ---
 
-### 1. Instalacja zarządcy Ansible
+## Ansible
+
+### Instalacja zarządcy Ansible
 
 #### Przygotowanie `ansible-target`
 
@@ -329,3 +331,783 @@ asnible-playbook -i inventory.ini playbook-cjson.yaml
 ![Uruchomienie playbooka cjson](zrzuty8/zrzut_ekranu11.png)
 
 > [Pełne logi z wykonania znajdują się tutaj](ansible_quickstart/playbook-cjson.log)
+
+## Kickstart
+
+### Instalacja systemu Fedora 41
+
+Do wykonania tego zadania nie musiałem ponownie instalować Fedory, ponieważ korzystałem z niej jako systemu głównego (hosta) od początku trwania przedmiotu.
+
+#### Przygotowanie pliku `anaconda-ks.cfg`
+
+Będąc zalogowanym jako administrator, skopiowałem plik odpowiedzi znajdujący się w systemie pod ścieżką `/root/anaconda-ks.cfg` do folderu `Sprawozdanie3`, aby mógł być łatwo udostępniony za pomocą GitHuba.
+
+Następnie zmodyfikowałem plik, dodając informacje o repozytoriach:
+
+```kickstart
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+```
+
+Tak przygotowany plik został wypchnięty na GitHuba.
+
+#### Instalacja feodry z kickstarta
+
+Z racji korzystania z maszyn wirtualnych VirtualBox postanowiłem skrócić długi adres URL do pliku Kickstart z GitHuba za pomocą serwisu [TinyURL](https://tinyurl.com).
+
+Ostateczny link:
+```arduino
+https://tinyurl.com/aborek
+```
+
+> **Uwaga**: VirtualBox nie pozwala na wklejanie linków na etapie instalatora — stąd konieczność użycia skracacza.
+
+Podczas tworzenia nowej maszyny wirtualnej, w menu startowym instalatora kliknąłem `e`, aby wejść do trybu edycji poleceń GRUB i dopisałem dodatkowy parametr instalacyjny:
+
+```ini
+inst.ks=https://tinyurl.com/aborek
+```
+
+![Dodatkowe parametry](zrzuty9/zrzut_ekranu1.png)
+
+Instalator uruchomił się dalej z interfejsem graficznym — jednak większość pól była wygaszona (nieedytowalna), ponieważ wartości zostały już określone w pliku `kickstart`.
+
+![Ekran wyboru](zrzuty9/zrzut_ekranu2.png)
+
+Po chwili rozpoczęła się właściwa instalacja:
+
+![Instalacja](zrzuty9/zrzut_ekranu3.png)
+
+Instalacja przebiegła pomyślnie. Po jej zakończeniu należało ponownie uruchomić system (`reboot` nie był jeszcze automatyczny):
+
+![Po instalacji](zrzuty9/zrzut_ekranu4.png)
+
+Po restarcie zalogowałem się do systemu — dane logowania były takie same jak na oryginalnej Fedorze, co potwierdza, że instalacja przebiegła poprawnie:
+
+![Gotowy system](zrzuty9/zrzut_ekranu5.png)
+
+#### Rozszerzenie pliku odpowiedzi o dodatkowe opcje
+
+W kolejnym kroku rozszerzyłem `anaconda-ks.cfg`, dodając:
+
+- `reboot` — aby system automatycznie uruchomił się ponownie po instalacji,
+- `network --hostname=fedora.test` — aby nadać maszynie nazwę hosta,
+- `clearpart --all --initlabel` — aby usunąć wszystkie partycje przed instalacją,
+- `autopart` — aby automatycznie utworzyć nowe partycje.
+
+Zaktualizowany plik ponownie wypchnąłem na GitHuba. Proces instalacji przeprowadziłem jeszcze raz, tym razem reboot wykonał się automatycznie.
+
+Po zalogowaniu się do systemu sprawdziłem nazwę hosta:
+
+```bash
+hostname
+```
+
+Wynik:
+
+```
+feodra.test
+```
+
+![Ustawiona nazwa hosta](zrzuty9/zrzut_ekranu6.png)
+
+### Instalacja biblioteki `cjson` w wykorzystaniem pliku odpowiedzi
+
+#### Przygotowanie `cjson.rpm`
+
+Na potrzeby testów zmieniłem nazwę pliku `cjson.rpm` na `mycjson.rpm`, aby uniknąć konfliktu nazw i ryzyka przypadkowego pobrania innej wersji biblioteki.
+
+#### Utworzenie repozytorium HTTP
+
+W celu udostępnienia biblioteki w formie repozytorium YUM, zainstalowałem serwer Apache oraz narzędzie `createrepo` poleceniem:
+
+```bash
+sudo dnf install -y httpd createrepo
+```
+
+![Instalacja httpd i createrepo](zrzuty9/zrzut_ekranu7.png)
+
+Następnie utworzyłem katalog:
+
+```bash
+sudo mkdir -p /var/www/html/myrepo
+sudo cp mycjson.rpm /var/www/html/myrepo/
+cd /var/www/html/myrepo
+createrepo .
+```
+
+![Utworzenie repozytorium](zrzuty9/zrzut_ekranu8.png)
+
+Aby umożliwić dostęp HTTP, dodałem reguły do firewalla:
+
+```bash
+sudo firewall-cmd --permanent -add-service=http
+sudo firewall-cmd --reload
+```
+
+![Wyłączenie firewalla](zrzuty9/zrzut_ekranu9.png)
+
+Następnie w pliku `/etc/httpd/conf/httpd.conf` zmodyfikowałem konfigurację serwera Apache, aby umożliwić poprawne linkowanie zawartości repozytorium.
+
+![Naprawa linkowania](zrzuty9/zrzut_ekranu10.png)
+
+Po tych krokach repozytorium było dostępne pod adresem:
+
+```arduino
+http://192.168.56.101/myrepo/
+```
+
+![Gotowe repozytorium](zrzuty9/zrzut_ekranu11.png)
+
+#### Modyfikacja pliku Kickstart
+
+W pliku anaconda-ks.cfg dodałem własne repozytorium:
+
+```kickstart
+repo --name=myrepo --baseurl=http://192.168.56.101/myrepo/
+```
+
+W sekcji %packages wskazałem pakiety do zainstalowania:
+
+```kickstart
+%packages
+@^custom-environment
+mycjson
+gcc
+glibc
+curl
+%end
+```
+
+Dodatkowo utworzyłem sekcję `%post`, która odpowiadała za kompilację i uruchomienie programu po zakończeniu instalacji:
+
+```
+%post
+mkdir -p /opt/example
+
+chown aborek:aborek /opt/example
+
+# Pobierz plik main.c z GitHuba
+curl -o /opt/example/main.c https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/AB416965/INO/GCL01/AB416965/Sprawozdanie2/pipeline/main.c
+
+# Skrypt uruchamiany po zalogowaniu (tekstowo)
+cat << 'EOF' > /etc/profile.d/run_example.sh
+#!/bin/bash
+if [ ! -f /opt/example/.compiled ]; then
+    echo "Kompiluję program z main.c" >> /opt/example/autostart.log
+    gcc /opt/example/main.c -o /opt/example/example -lcjson -I/usr/local/include/cjson -L/usr/local/lib64
+    if [ -f /opt/example/example ]; then
+        echo "Uruchamiam program:" >> /opt/example/autostart.log
+        LD_LIBRARY_PATH=/usr/local/lib64 /opt/example/example >> /opt/example/autostart.log 2>&1
+    else
+        echo "Kompilacja nie powiodła się" >> /opt/example/autostart.log
+    fi
+    touch /opt/example/.compiled
+fi
+EOF
+
+chmod +x /etc/profile.d/run_example.sh
+%end
+```
+
+#### Weryfikacja po instalacji
+
+Po zakończeniu instalacji zalogowałem się na swoje konto i sprawdziłem log działania skryptu:
+
+```bash
+cat /opt/example/autostart.log
+```
+
+![Logi uruchomienia](zrzuty9/zrzut_ekranu12.png)
+
+Następnie zweryfikowałem ścieżki plików zainstalowanych przez pakiet:
+
+```bash
+rpm -ql mycjson
+```
+
+![Lokalizacja plików zainstalowanej biblioteki](zrzuty9/zrzut_ekranu13.png)
+
+Ostatecznie uruchomiłem program ręcznie:
+
+```bash
+LD_LIBRARY_PATH=/usr/local/lib64 /opt/example/example
+```
+
+![Uruchomienie programu](zrzuty9/zrzut_ekranu14.png)
+
+## Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+
+### Instalacja klastra Kubernetesa
+
+#### Instalacja minikube
+
+Instalacja Minikube została przeprowadzona zgodnie z oficjalną dokumentacją, dostępną pod adresem: [minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download).
+
+Wybrałem wersję dla architektury x86-64 systemu Linux, w formacie `.rpm`.
+
+Instalacja nie wymagała zmian systemowych poza dodaniem ścieżki do zmiennych środowiskowych.\
+Nie zaobserwałem modyfikacji polityk bezpieczeństwa systemu, reguł firewalla ani nieautoryzowanej aktywności sieciowej po stronie instalatora.
+
+![Pobranie i instalacja minikube](zrzuty10/zrzut_ekranu1.png)
+
+#### Instalacja kubectl
+
+Podążając za oficjalną instrukcją Minikube, przeszedłem do dokumentacji Kubernetes dotyczącej instalacji `kubectl`: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+Zdecydowałem się na instalację binarną, rozpoczynając od pobrania pliku poleceniem:
+
+```bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+```
+
+![Pobranie kubectl](zrzuty10/zrzut_ekranu2.png)
+
+Następnie pobrałem plik kontrolny do weryfikacji integralności binarki i sprawdziłem jej poprawność:
+
+![Pobranie pliku kontrolnego dla kubectl i sprawdzenie poprawności](zrzuty10/zrzut_ekranu3.png)
+
+Po pozytywnej weryfikacji, zainstalowałem `kubectl` poleceniem:
+
+```bash
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
+
+![Instalacja kubectl](zrzuty10/zrzut_ekranu4.png)
+
+#### Uruchomienie minikube
+
+Do uruchomienia klastra Kubernetes wykorzystałem polecenie:
+
+```
+minikube start
+```
+
+![Uruchomienie minikube](zrzuty10/zrzut_ekranu5.png)
+
+Minikube uruchomił się w kontenerze Docker:
+
+![Minikube w kontenerze](zrzuty10/zrzut_ekranu6.png)
+
+#### Wymagania sprzętowe i ich spełnienie
+
+Zgodnie z dokumentacją Minikube, minimalne wymagania to:
+
+```
+2 CPUs or more
+2GB of free memory
+20GB of free disk space
+Internet connection
+Container or virtual machine manager, such as: Docker, QEMU, Hyperkit, Hyper-V, KVM, Parallels, Podman, VirtualBox, or VMware Fusion/Workstation
+```
+
+Mój system spełnia wszystkie powyższe wymagania.\
+Minikube działa w środowisku Docker, który posłużył jako driver kontenerowy.\
+Nie było konieczności zmiany ustawień BIOS ani wprowadzania modyfikacji sprzętowych.
+
+#### Uruchomienie dashboarda
+
+Do uruchomienia dashboarda wykorzystałem polecenie:
+
+```bash
+minikube dashboard
+```
+
+W terminalu pojawił się adres URL, który następnie wkleiłem do przeglądarki, aby uzyskać dostęp do panelu.
+
+![Uruchomienie dashboarda](zrzuty10/zrzut_ekranu7.png)
+
+![Dashboard w przeglądarce](zrzuty10/zrzut_ekranu8.png)
+
+#### Podstawowe obiekty Kubernetes
+
+- **Pod** – najmniejsza jednostka wykonawcza w Kubernetesie. Uruchamia jeden lub więcej kontenerów, które współdzielą sieć i system plików.
+- **Deployment** – obiekt zarządzający tworzeniem i utrzymywaniem replik podów. Pozwala na aktualizacje, rollbacki oraz skalowanie aplikacji.
+- **Service** – abstrahuje dostęp do podów, zapewniając stabilny adres IP i nazwę DNS. Umożliwia komunikację wewnętrzną i zewnętrzną w klastrze.
+
+### Analiza posiadanego kontenera
+
+#### Przygotowanie kontenera
+
+W poprzednich zadaniach pracowałem z biblioteką `cJSON`, którą budowałem i pakowałem do archiwum. Efektem końcowym był artefakt w formacie `.rpm`.
+Na potrzeby tego zadania zdecydowałem się wykorzystać aplikację NGINX z drobną modyfikacją własnej konfiguracji.
+
+W tym celu utworzyłem katalog `my-nginx`, w którym umieściłem plik `nginx.conf` oraz `Dockerfile`.
+
+Plik `Dockerfile` bazuje na oficjalnym obrazie `nginx:alpine` i podmienia domyślną konfigurację serwera na moją własną.
+
+Plik `nginx.conf`:
+
+```yaml
+events {}
+
+http {
+    server {
+        listen 80;
+        location / {
+            return 200 'Hello from my custom NGINX config!\n';
+        }
+    }
+}
+```
+
+Plik `Dockerfile`:
+
+```Dockerfile
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+```
+
+![Zbudowanie własnego NGINX-a](zrzuty10/zrzut_ekranu9.png)
+
+Następnie zbudowałem obraz i uruchomiłem go lokalnie z przekierowaniem portu 8080, aby sprawdzić poprawność działania:
+
+```bash
+docker run -d -p 8080:80 --name test-nginx my-nginx-custom
+```
+
+![Uruchomienie kontenera z NGINX-em](zrzuty10/zrzut_ekranu10.png)
+
+Działanie konfiguracji potwierdziłem poleceniem:
+
+```bash
+curl localhost:8080
+```
+
+![Test konfiguracji poprzez curl](zrzuty10/zrzut_ekranu11.png)
+
+#### Umieszczenie obrazu na Docker Hubie
+
+Po pomyślnym teście lokalnym przystąpiłem do przygotowania obrazu do wdrożenia w środowisku Kubernetes.\
+Aby móc z niego skorzystać w klastrze, opublikowałem go w publicznym rejestrze Docker Hub.
+
+W pierwszym kroku nadałem mu odpowiedni tag (`frigzer/my-nginx-custom`) z użyciem polecenia `docker tag`:
+
+```bash
+docker tag my-nginx-custom frigzer/my-nginx/custom
+```
+
+Następnie przesłałem obraz do Docker Hub za pomocą polecenia `docker push`:
+
+```bash
+docker push frigzer/my-nginx-custom
+```
+
+![Umieszczenie obrazu na Docker Hubie](zrzuty10/zrzut_ekranu12.png)
+
+Na koniec potwierdziłem obecność obrazu w moim repozytorium, logując się na Docker Hub przez przeglądarkę:
+
+![Potwierdzenie publikacji obrazu](zrzuty10/zrzut_ekranu13.png)
+
+Dzięki tak przygotowanemu i opublikowanemu obrazowi mogłem przejść do jego wdrożenia w klastrze Kubernetes.
+
+### Uruchamianie oprogramowania
+
+#### Deployment aplikacji w klastrze Kubernetes
+
+Na podstawie oficjalnej dokumentacji Minikube przygotowałem wdrożenie własnej aplikacji (NGINX z niestandardową konfiguracją) do klastra Kubernetes.
+W tym celu użyłem polecenia:
+
+```bash
+kubectl create deployment my-nginx-deploy --image=frigzer/my-nginex-custom
+```
+
+Następnie utworzyłem obiekt `Service` typu `LoadBalancer`, który umożliwia zewnętrzny dostęp do aplikacji na porcie 80:
+
+```bash
+kubectl expose deployment my-nginx-deploy --type=LoadBalancer --port=80
+```
+
+![Umieszczenie kontenera na klastrze](zrzuty10/zrzut_ekranu14.png)
+
+W panelu Dashboard Kubernetes pojawił się odpowiedni Deployment. (Na liście widoczny jest również oryginalny NGINX, używany wcześniej do testów lokalnych.)
+
+![Deployment widoczny w dashboardzie](zrzuty10/zrzut_ekranu15.png)
+
+Sprawdzenie działania poda:
+
+```bash
+kubectl get pods
+```
+
+![Sprawdzenie działania poda](zrzuty10/zrzut_ekranu18.png)
+
+#### Przekierowanie portu
+
+Aby umożliwić dostęp do aplikacji z poziomu hosta, przekierowałem lokalny port 8080 na port 80 w Podzie:
+
+```bash
+kubectl port-forward pod/my-nginx-deploy-8f58cfc94-vxfnt 8080:80
+```
+
+![Komenda przekierowania i widoczna obsługa połączeń](zrzuty10/zrzut_ekranu16.png)
+
+Po wpisaniu `http://localhost:8080` w przeglądarce pojawia się mój własny komunikat serwowany przez aplikację – `"Hello from my custom NGINX config!"`.
+
+> Nie jest to kontener lokalny – wcześniej usunąłem lokalną wersję po przesłaniu obrazu do Docker Hub.\
+> Aplikacja działa w pełni w środowisku Kubernetes.
+
+![Mój NGINX widoczny w przeglądarce](zrzuty10/zrzut_ekranu17.png)
+
+### Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
+
+#### Wdrożenie Deploymentu
+
+Korzystając z oficjalnej dokumentacji dotyczącej [Deploymentów w Kubernetesie](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) utworzyłem plik `nginx-deployment.yaml`, który zawiera konfigurację dla aplikacji NGINX.
+
+Plik `nginx-deployment.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+```
+
+Do uruchomienia konfiguracji użyłem polecenia `kubectl apply`, które umożliwia deklaratywne wdrażanie lub aktualizowanie zasobów w klastrze Kubernetes:
+
+```bash
+kubectl apply -f nginx-deployment.yaml
+```
+
+Następnie sprawdziłem stan wdrożenia komendą:
+
+```bash
+kubectl apply -f deployment/nginx-deployment
+```
+
+![Przygotowanie wdrożenia deploymentu](zrzuty10/zrzut_ekranu19.png)
+
+W Dashboardzie Kubernetes potwierdziłem, że Deployment został poprawnie utworzony i że widoczna jest pełna liczba replik:
+
+![Potwierdzenie deploymentu w dashboardzie](zrzuty10/zrzut_ekranu20.png)
+
+#### Wdrożenie service
+
+Analogicznie do wcześniejszych etapów, utworzyłem plik `nginx-service.yaml`, który definiuje obiekt `Service` typu `LoadBalancer`, eksponujący aplikację na porcie 80. Zastosowano etykiety zgodne z Deploymentem (`app: nginx`), aby poprawnie powiązać usługę z uruchomionymi podami.
+
+Plik `nginx-service.yaml`:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+```
+
+Polecenie użyte do wdrożenia:
+
+```bash
+kubectl apply -f nginx-service.yaml
+```
+
+![Wdrożenie service](zrzuty10/zrzut_ekranu21.png)
+
+Po wdrożeniu sprawdziłem obecność i konfigurację usługi w Dashboardzie:
+
+![Widoczne service w dashboardzie](zrzuty10/zrzut_ekranu22.png)
+
+#### Przekierowanie portu i test aplikacji
+
+Aby umożliwić dostęp do aplikacji z przeglądarki, wykonałem przekierowanie portu lokalnego 8080 do portu 80 w usłudze:
+
+```bash
+kubectl port-forward service/nginx-service 8080:80
+```
+
+![Przekierowanie portu](zrzuty10/zrzut_ekranu23.png)
+
+Po wpisaniu `localhost:8080` w przeglądarce, otrzymałem stronę domyślną serwera NGINX, co potwierdza, że aplikacja działa prawidłowo w klastrze Kubernetes:
+
+![Localhost:8080 w przeglądarce](zrzuty10/zrzut_ekranu24.png)
+
+#### Podsumowanie
+
+W ramach tego etapu wdrożenie aplikacji zostało w pełni opisane za pomocą plików YAML i uruchomione w sposób deklaratywny z wykorzystaniem `kubectl apply`.\
+Dzięki temu możliwe jest łatwe powtórzenie, modyfikowanie i wersjonowanie konfiguracji — co jest kluczowym aspektem pracy z Kubernetesem i zgodne z podejściem „Infrastructure as Code”.
+
+## Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+
+### Przygotowanie nowego obrazu
+
+#### Wybór obrazu
+
+Celem zadania było przygotowanie obrazu w co najmniej trzech wersjach. Postanowiłem kontynuować pracę na obrazie `NGINX`, modyfikując go w kolejnych wariantach.
+
+- Wersja 1 – `my-nginx:v1`: Bazowy obraz `nginx:alpine`, bez zmian.
+
+```Dockerfile
+# Dockerfile.v1
+FROM nginx:alpine
+```
+
+- Wersja 2 – `my-nginx:v2`: Obraz z własną konfiguracją NGINX (zmieniona strona startowa poprzez `nginx.conf`).
+
+```Dockerfile
+# Dockerfile.v2
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+```
+
+- Wersja 3 – `my-nginx:v3`: Obraz, który po uruchomieniu natychmiast kończy działanie z błędem (przy użyciu komendy `false`).
+
+```Dockerfile
+# Dockerfile.v3
+FROM alpine
+CMD ["false"]
+```
+
+#### Publikacja obrazów na Docker Hub
+
+Wszystkie trzy obrazy zostały zbudowane lokalnie, a następnie opublikowane na moim koncie Docker Hub (`frigzer`):
+
+```bash
+docker build -t frigzer/my-nginx:v1 -f Dockerfile.v1 .
+docker push frigzer/my-nginx:v1
+
+docker build -t frigzer/my-nginx:v2 -f Dockerfile.v2 .
+docker push frigzer/my-nginx:v2
+
+docker build -t frigzer/my-nginx:v3 -f Dockerfile.v3 .
+docker push frigzer/my-nginx:v3
+```
+
+Poniżej widoczna lista obrazów dostępnych w moim repozytorium Docker Hub:
+
+![Wszystkie wersje obrazu na Docker Hub](zrzuty11/zrzut_ekranu1.png)
+
+### Zmiany w deploymencie
+
+#### Modyfikacja liczby replik
+
+Na początku zmodyfikowałem istniejący deployment, ustawiając jako obraz `frigzer/my-nginx:v1` (bazujący na oryginalnym NGINX).
+
+![Zmodyfikowany deployment z obrazem my-nginx:v1](zrzuty11/zrzut_ekranu2_1.png)
+
+Następnie zmieniłem liczbę replik na 8. W interfejsie Dashboardu od razu pojawiła się informacja o nowym limicie. Pody nie zostały utworzone jednocześnie – Kubernetes rozkładał ich tworzenie w czasie.
+
+![Zwiekszenie replik do 8](zrzuty11/zrzut_ekranu2_2.png)
+
+Następnie zmniejszyłem liczbę replik do 1. Pody były stopniowo usuwane aż do pozostania jednej instancji.
+
+![Zmniejszenie replik do 1](zrzuty11/zrzut_ekranu2_3.png)
+
+Potem ponownie zwiększyłem replikację – tym razem do 4.
+
+![Zwiekszenie replik do 4](zrzuty11/zrzut_ekranu2_4.png)
+
+Kolejny krok to zmniejszenie liczby replik do 0 – co symuluje czasowe wyłączenie usługi bez usuwania samego deploymentu.
+
+![Zmniejszenie replik do 0](zrzuty11/zrzut_ekranu2_5.png)
+
+Na końcu ponownie skalowałem usługę w górę do 4 replik – proces odbył się bezproblemowo.
+
+![Zwiekszenie replik do 4](zrzuty11/zrzut_ekranu2_6.png)
+
+#### Zmiana wersji obrazu wdrażanego
+
+Następnie zaktualizowałem obraz kontenera do wersji `frigzer/my-nginx:v2`, która zawierała moją zmodyfikowaną konfigurację strony startowej.
+
+![Zmiana obrazu](zrzuty11/zrzut_ekranu3.png)
+
+Kolejnym krokiem była zmiana obrazu na `frigzer/my-nginx:v3`, czyli celowo wadliwą wersję kontenera, która natychmiast kończy działanie (`CMD ["false"]`).
+
+Deployment nie został pomyślnie uruchomiony, co było zgodne z założeniem – pody nie przechodziły w stan "Running", co pozwoliło zweryfikować mechanizmy rollbacku.
+
+![Zmiana obrazu](zrzuty11/zrzut_ekranu4.png)
+
+#### Przywracanie poprzednich wersji wdrożeń
+
+Za pomocą poniższego polecenia sprawdziłem historię zmian deploymentu:
+
+```bash
+kubectl rollout history deployment my-nginx-deploy
+```
+
+Historia pokazuje 4 zmiany, czyli pierwszy własny obraz oraz 3 zmiany na różne wersje nowego obrazu.
+
+![Historia zmian](zrzuty11/zrzut_ekranu5.png)
+
+Aby cofnąć się do wcześniejszej stabilnej wersji, użyłem:
+
+```bash
+kubectl rollout history deployment my-nginx-deploy
+```
+
+Po wykonaniu rollbacku dashboard ponownie pokazał wcześniej działającą wersję obrazu.
+
+![Cofnięcie modyfikacji](zrzuty11/zrzut_ekranu6_1.png)
+
+Przywrócona wcześniejsza wersjia obrazu:
+
+![Przywrócona wcześniejsza wersja w dashboardzie](zrzuty11/zrzut_ekranu6_2.png)
+
+Na liście historii wdrożeń można zaobserwować, że revision 10 (pierwotna zmiana na v2) zostało nadpisane przez revision 12, które również odpowiadało wersji v2 po rollbacku.
+
+![Historia zmian po cofnięciu](zrzuty11/zrzut_ekranu7.png)
+
+### Kontrola wdrożenia
+
+#### Weryfikacja hostorii wdrożeń
+
+Aby sprawdzić szczegóły dotyczące konkretnych wersji wdrożeń (revisions), skorzystałem z opcji `--revision`. Przeanalizowałem każdą zmianę, aby zidentyfikować, które obrazy były wdrażane oraz jakie były różnice między nimi.
+
+Zmiana obrazu na `frigzer/my-nginx:v1` (Revision 9):
+
+![Informacje o revision 9](zrzuty11/zrzut_ekranu8_1.png)
+
+Zmiana obrazu na `frigzer/my-nginx:v3` (Revision 11 – wersja wadliwa):
+
+![Informacje o revision 11](zrzuty11/zrzut_ekranu8_2.png)
+
+Zmiana obrazu na `frigzer/my-nginx:v2` (Revision 12 – wersja z niestandardową konfiguracją):
+
+![Informacje o revision 12](zrzuty11/zrzut_ekranu8_3.png)
+
+#### Skrypt weryfikujący powodzenie wdrożenia
+
+Napisałem prosty skrypt w Bashu, który sprawdza, czy rollout zakończył się powodzeniem w przeciągu 60 sekund. Jest to przydatne narzędzie automatyzujące kontrolę poprawności wdrożenia – szczególnie w środowiskach CI/CD lub podczas testowania wielu wersji kontenerów.
+
+Plik `check_rollout.sh`:
+
+```sh
+#!/bin/bash
+
+DEPLOYMENT_NAME="my-nginx-deploy"
+NAMESPACE="default"
+TIMEOUT=60
+
+echo "Czekam aż wdrożenie \"$DEPLOYMENT_NAME\" się zakończy..."
+
+kubectl rollout status deployment/"$DEPLOYMENT_NAME" --namespace="$NAMESPACE" --timeout=${TIMEOUT}s
+
+if [ $? -eq 0 ]; then
+    echo "✅ Wdrożenie zakończone sukcesem!"
+else
+    echo "❌ Wdrożenie NIE zakończyło się w ciągu $TIMEOUT sekund."
+    exit 1
+fi
+```
+
+Dla poprawnej wersji (`frigzer/my-nginx:v2`) skrypt zakończył się sukcesem:
+
+![Wywołanie skryptu](zrzuty11/zrzut_ekranu9_1.png)
+
+Natomiast dla wadliwego obrazu (`frigzer/my-nginx:v3`), skrypt przerwał działanie z komunikatem błędu, potwierdzając niepowodzenie rolloutu:
+
+![Wywołanie skryptu zakończone porażką](zrzuty11/zrzut_ekranu9_2.png)
+
+### Strategie wdrożenia
+
+W tej części zadania przetestowałem różne strategie wdrożenia aplikacji w Kubernetesie, uwzględniając m.in. mechanizm Rolling Update, Recreate oraz symulację wdrożenia typu Canary. Wszystkie wersje aplikacji korzystają z moich własnych obrazów umieszczonych na Docker Hub (`frigzer/my-nginx` w wersjach `v1`, `v2`).
+
+#### 1. Strategia `Recreate`
+
+W pierwszym wdrożeniu zastosowałem strategię Recreate, która powoduje całkowite zatrzymanie starych podów przed uruchomieniem nowych.
+
+```yaml
+strategy:
+  type: Recreate
+```
+
+Dzięki niej podczas aktualizacji deploymentu najpierw wszystkie pody zostały usunięte, a dopiero potem utworzono nowe z nowym obrazem. W praktyce prowadzi to do krótkiej niedostępności usługi, ale zapewnia spójność wersji (wszystko jest nowe lub nic).
+
+#### 2. Strategia `RollingUpdate` z parametrami
+
+W kolejnym kroku zastosowałem strategię `RollingUpdate`, która umożliwia płynne przechodzenie między wersjami bez przerwy w działaniu usługi. Dodatkowo ustawiłem parametry zwiększające agresywność aktualizacji:
+
+```yaml
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 2
+    maxSurge: 30%
+```
+
+Dzięki temu w trakcie aktualizacji do nowych wersji mogło być tymczasowo więcej niż zakładana liczba podów (`surge`), a do dwóch podów mogło być równocześnie niedostępnych (`unavailable`). Przejście między wersjami było płynne, bez utraty dostępności aplikacji.
+
+#### 3. Canary Deployment
+
+Na potrzeby wdrożenia typu canary przygotowałem dwa oddzielne deploymenty:
+
+- `my-nginx-stable` – korzystający z obrazu `frigzer/my-nginx:v1` (3 repliki)
+- `my-nginx-canary` – korzystający z obrazu `frigzer/my-nginx:v2` (1 replika)
+
+Oba deploymenty mają wspólną etykietę `app: my-nginx-deploy`, dzięki czemu są obsługiwane przez jeden `Service`, natomiast różnią się dodatkową etykietą `track`:
+
+```yaml
+# Stable:
+labels:
+  app: my-nginx-deploy
+  track: stable
+
+# Canary:
+labels:
+  app: my-nginx-deploy
+  track: canary 
+```
+
+Dzięki takiemu podejściu serwis kieruje ruch do obu wersji aplikacji, umożliwiając testowanie nowej wersji na części użytkowników. W tym przypadku ~25% ruchu trafia do wersji canary (`v2`), a pozostałe ~75% do stabilnej (`v1`).
+
+![Deploymenty stable i canary](zrzuty11/zrzut_ekranu10.png) 
+
+![Pody dla serwisu my-nginx-deploy](zrzuty11/zrzut_ekranu11.png) 
+
+#### Użycie etykiet
+
+Każdy deployment i jego pody zostały oznaczone odpowiednimi etykietami (`app`, `track`), co umożliwia:
+
+- filtrowanie w dashboardzie
+- selektywne zarządzanie ruchem przez `Service`
+- lepszą kontrolę rolloutów i testów
+
+#### Użycie serwisów
+
+Dla wszystkich strategii wykorzystałem jeden wspólny `Service` typu LoadBalancer, który kieruje ruch do podów z etykietą `app: my-nginx-deploy`. Dzięki temu nie było konieczności modyfikacji warstwy sieciowej mimo istnienia dwóch niezależnych deploymentów (stable i canary).
+
+#### Wnioski
+
+- Strategia `Recreate` jest prosta, ale niesie ryzyko niedostępności.
+- `RollingUpdate` zapewnia ciągłość działania, nawet przy większych aktualizacjach.
+- Canary deployment pozwala bezpiecznie przetestować nową wersję bez pełnego wdrożenia.
+- Etykiety i selektory to kluczowe mechanizmy organizujące routing i zarządzanie wdrożeniem.
+- Service może bez problemu obsługiwać pody z różnych deploymentów, jeśli są poprawnie oznaczone.
+
+### **Wykorzystanie sztucznej inteligencji**
+
+Podczas realizacji projektu wspierałem się modelem ChatGPT 4o, który pomagał w zrozumieniu i wykonaniu zadań związanych z automatyzacją oraz konfiguracją środowisk.
+
+W części poświęconej Ansible AI wspomagała mnie przy tworzeniu pliku inwentaryzacji, opracowywaniu playbooków, organizacji ról oraz automatyzacji zdalnych działań na maszynach wirtualnych.
+
+W zadaniu dotyczącym Kickstarta model pomógł zinterpretować plik odpowiedzi, dobrać odpowiednie dyrektywy oraz zautomatyzować instalację systemu wraz z wdrożeniem potrzebnego oprogramowania po starcie systemu.
+
+W obszarze Kubernetes AI wspierała mnie przy konfiguracji deploymentów, strategii wdrożeń (Recreate, Rolling Update, Canary), rozwiązywaniu błędów YAML i przygotowaniu plików do pracy z Minikube.
+
+Wygenerowane treści były każdorazowo weryfikowane i dostosowywane przeze mnie do kontekstu projektu.
