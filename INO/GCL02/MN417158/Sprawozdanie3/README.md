@@ -4,7 +4,7 @@
 
 ## Zajęcia 08 Ansible:
 
-1. Wykonywania zadania rozpocząłem od instalacji nowej wirtualnej maszyny. Była to Fedora 42 w minimalnej wersji. Zapewniłem obecność programu ```tar ```
+1. Wykonywanie zadania rozpocząłem od instalacji nowej wirtualnej maszyny. Była to Fedora 42 w minimalnej wersji. Zapewniłem obecność programu ```tar ```
 i serwera ```sshd```
 Maszynie nadałem nazwę hosta ```ansible-target``` i utworzyłem użytkownika ```ansible```
 Następnie utworzyłem migawkę maszyny w oknie VirtualBoxa.
@@ -55,6 +55,32 @@ Wyłączyłem SSH. Następnie na maszynie dyrygencie uruchomiłem ponownie plik 
 ![Zrzut11](screenshots/Zrzut-A11.png)
 
 ## Zajęcia 09 Kickstart:
+
+1. Do wykonania zadanie użyłem instalatora sieciowego Netinst Everything systemu Fedora 41. Utworzyłem nową maszynę wirtualną.
+
+2. Przed jej uruchomieniem na głównej maszynie z tym samym systemem pobrałem plik odpowiedzi ```/root/anaconda-ks.cfg```
+
+3. Następnie edytowałem go według potrzeb. Dodałem wzmiankę o potrzebnych repozytoriach i pakietach przed informacjami o dysku.
+```
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-42&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f42&arch=x86_64
+```
+
+4. Ustawiłem formatowanie całości dysku za pomocą ```clearpart --all```
+Utworzyłem nowego użytkownika i ustawiłem hostname.
+
+5. Po wysłaniu nowego pliku na github, uruchomiłem nową maszynę wirtualną. W ekranie wyboru sposobu instalacji nacisnąłem przycisk "e" na klawiaturze. Umożliwia to wskazanie instalatorowi pkiku odpowiedzi z którego zostanie przeprowadzona instalacja nienadzorowana.
+W pliku należy dopisać ```inst.ks=```
+A następnie wstawić link do [Pliku odpowiedzi w wersji Raw na Github](https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/MN417158/INO/GCL02/MN417158/Sprawozdanie3/anaconda-ks.cfg)
+
+6. Uruchomiłem instalację.
+
+![Zrzut12](screenshots/Zrzut ekranu 2025-05-13 175528.png)
+
+7. Po zakończeniu instalacji edytowałem plik odpowiedzi aby ustawić automatyczne uruchomienie ponowne po instalacji. Na końcu pliku dodałem polecenie ```reboot```
+
+ 
+
 
 ## Zajęcia 10 Kubernetes:
 
