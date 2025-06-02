@@ -6,7 +6,7 @@ metadata:
   name: nginx-deployment
 spec:
   progressDeadlineSeconds: 600
-  replicas: 5
+  replicas: 16
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -23,7 +23,7 @@ spec:
         app: nginx
     spec:
       containers:
-      - image: nginx:1.14.2
+      - image: nginx-custom:1.0
         imagePullPolicy: IfNotPresent
         name: nginx
         ports:
@@ -37,22 +37,3 @@ spec:
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
-status:
-  availableReplicas: 3
-  conditions:
-  - lastTransitionTime: "2025-05-30T16:58:23Z"
-    lastUpdateTime: "2025-05-30T16:58:23Z"
-    message: Deployment has minimum availability.
-    reason: MinimumReplicasAvailable
-    status: "True"
-    type: Available
-  - lastTransitionTime: "2025-05-30T16:58:13Z"
-    lastUpdateTime: "2025-05-30T16:58:23Z"
-    message: ReplicaSet "nginx-deployment-647677fc66" has successfully progressed.
-    reason: NewReplicaSetAvailable
-    status: "True"
-    type: Progressing
-  observedGeneration: 1
-  readyReplicas: 3
-  replicas: 3
-  updatedReplicas: 3
