@@ -1,0 +1,7 @@
+---
+- name: Instalacja Dockera i uruchomienie aplikacji z Docker Hub
+  hosts: Endpoints
+  become: true
+
+  roles:
+    - deploy_docker_app
