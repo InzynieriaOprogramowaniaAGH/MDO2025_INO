@@ -1,0 +1,27 @@
+- name: Install packages
+  ansible.builtin.yum:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    state: present
+
+- name: Add Docker repository
+  ansible.builtin.yum_repository:
+    name: docker-ce
+    description: Docker CE Repo
+    baseurl: https://download.docker.com/linux/centos/7/x86_64/stable/
+    gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg
+    enabled: yes
+
+- name: Install Docker
+  ansible.builtin.yum:
+    name: docker-ce
+    state: latest
+
+- name: Docker service
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true

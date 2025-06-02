@@ -1,0 +1,10 @@
+- name: Stop container
+  ansible.builtin.docker_container:
+    name: deploy-container
+    state: stopped
+    force_kill: true
+
+- name: Remove container
+  ansible.builtin.docker_container:
+    name: deploy-container
+    state: absent

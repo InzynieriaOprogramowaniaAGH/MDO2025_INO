@@ -1,0 +1,13 @@
+- name: Pull image
+  ansible.builtin.docker_image:
+    name: cadmusinho/nodedeploy
+    source: pull
+
+- name: Run container
+  ansible.builtin.docker_container:
+    name: deploy-container
+    image: cadmusinho/nodedeploy
+    state: started
+    restart_policy: always
+    ports:
+      - "3000:3000"
