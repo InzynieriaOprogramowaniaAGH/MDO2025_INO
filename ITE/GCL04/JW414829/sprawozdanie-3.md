@@ -451,3 +451,190 @@ Pody weszły w stan `CrashLoopBackOff` co oznaczało, ze ciągle się restartowa
 
 ![rollout undo](./lab11/rollout-undo.png)
 ![rollout undo dashboard](./lab11/rollout-undo-dashboard.png)
+
+## Kontrola wdrożenia
+
+Rollout history zawiera kilka rewizji co oznacza, ze deployment byl kilkukrony i modyfikowany. Poszczegolne rekordy w hisorii odpowiadają zmianom obrazów lub liczby replik. Mogłem podejrzeć konkretną rewizję korzystając z flagi `--revision=`.
+
+![rollout history](./lab11/rollout-history.png)
+
+Dodałem skrypt weryfikujący wdrozenie i nadałem mu odpowiednie uprawnienia.
+
+```bash
+#!/bin/bash
+DEPLOYMENT=apache-deployment
+NAMESPACE=default
+TIMEOUT=60
+INTERVAL=5
+ELAPSED=0
+
+echo "Checking rollout status for $DEPLOYMENT..."
+
+while [ $ELAPSED -lt $TIMEOUT ]; do
+  STATUS=$(kubectl rollout status deployment/$DEPLOYMENT -n $NAMESPACE 2>&1)
+  echo "$STATUS"
+  if echo "$STATUS" | grep -q "successfully rolled out"; then
+    echo "Deployment completed successfully."
+    exit 0
+  fi
+  sleep $INTERVAL
+  ELAPSED=$((ELAPSED + INTERVAL))
+done
+
+echo "Timeout reached. Deployment did not complete in time."
+exit 1
+```
+
+![check deployment](./lab11/check-deployment.png)
+
+## Strategie wdrożenia
+
+W strategii `Recreate` stare pody są usuwane zanim utworzone zostaną nowe.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache-deployment
+  labels:
+    app: apache
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 2
+  selector:
+    matchLabels:
+      app: apache
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+        - name: apache
+          image: jakubwawrzyczek/apache:v2
+          ports:
+            - containerPort: 80
+```
+
+W strategii `RollingUpdate` nowe pody są uruchamiane stopniowo i stara wersja działa równolegle dzięki czemu nie ma przerwy w ich działaniu. To wazne w przypadku aplikacji w których nie mozemy sobie pozwolic na przerwe w działaniu.
+
+```
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 2
+    maxSurge: 30%
+```
+
+* maxUnavailable – maksymalna liczba replik, które mogą być niedostępne w trakcie aktualizacji,
+* maxSurge – maksymalna liczba dodatkowych replik, które mogą być uruchomione ponad zadeklarowaną liczbę.
+
+W tym przypadku mogą być tymczasowo uruchomione aż 2 dodatkowe pody (30% z 4 = 1.2 i zaokrąglone do 2), a równocześnie mogą być wyłączone 2 istniejące. Dzięki temu cały czas dostępna jest większość instancji aplikacji.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache-rolling
+  labels:
+    app: apache
+    strategy: rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 2
+  selector:
+    matchLabels:
+      app: apache
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: apache
+        version: v1
+    spec:
+      containers:
+        - name: apache
+          image: jakubwawrzyczek/apache:v1
+          ports:
+            - containerPort: 80
+```
+
+W strategii `Canary` tylko jakaś część podów jest aktualizowana do nowej wersji co umozliwia testowanie zmian na małych częściach uzytkowników zanim zostaną one wprowadzone globalnie. Robimy dwa wdrozenia i do tego serwis, który rozdziela traffic.
+
+Wdrazane są 3 pody z wersją `v1` i 1 pod z wersją `v2` a do tego tworzony jest serwis, który kieruje ruch do wszystkich podów.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache-canary-v1
+  labels:
+    app: apache
+    version: v1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: apache
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: apache
+        version: v1
+    spec:
+      containers:
+        - name: apache
+          image: jakubwawrzyczek/apache:v1
+          ports:
+            - containerPort: 80
+```
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache-canary-v2
+  labels:
+    app: apache
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apache
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: apache
+        version: v2
+    spec:
+      containers:
+        - name: apache
+          image: jakubwawrzyczek/apache:v2
+          ports:
+            - containerPort: 80
+```
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache-service
+spec:
+  selector:
+    app: apache
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+```

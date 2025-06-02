@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: apache
-          image: jakubwawrzyczek/apache:broken
+          image: jakubwawrzyczek/apache:v2
           ports:
             - containerPort: 80
