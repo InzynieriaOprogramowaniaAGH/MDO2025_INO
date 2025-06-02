@@ -1,0 +1,6 @@
+---
+- name: Pingowanie wszystkich maszyn
+  hosts: all        # Odwołanie do wszystkich maszyn z inventory
+  tasks:
+    - name: Wykonaj ping do wszystkich maszyn
+      ansible.builtin.ping:

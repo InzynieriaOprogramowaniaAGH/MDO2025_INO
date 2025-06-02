@@ -1,0 +1,1 @@
+Komentarz: Test poprawnej instalacji biblioteki cJSON

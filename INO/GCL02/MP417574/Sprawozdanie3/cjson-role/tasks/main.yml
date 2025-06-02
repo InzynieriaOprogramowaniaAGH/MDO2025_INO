@@ -1,0 +1,72 @@
+---
+# tasks file for cjson-role
+- name: Create artifacts directory
+  become: yes
+  file:
+    path: /home/ansible/cjson
+    state: directory
+    owner: ansible
+    group: ansible
+    mode: '0755'
+
+- name: Copy artifacts to target
+  copy:
+    src: "{{ item }}"
+    dest: /home/ansible/cjson/
+    mode: '0644'
+  loop:
+    - files/cjson.rpm
+    - files/main.c
+
+- name: Install python3-requests
+  ansible.builtin.dnf:
+    name: python3-requests
+    state: present
+
+- name: Install Docker
+  become: yes
+  dnf:
+    name: docker
+    state: present
+  
+- name: Ensure Docker is started
+  become: yes
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Add ansible to docker group
+  user:
+    name: ansible
+    groups: docker
+    append: true
+
+- name: Start fedora container
+  community.docker.docker_container:
+    name: cjson
+    image: fedora:41
+    state: started
+    command: sleep infinity
+    volumes:
+      - /home/ansible/cjson:/tmp:z
+
+- name: Install gcc, cjson and tools
+  community.docker.docker_container_exec:
+    container: cjson
+    command: dnf install -y gcc make /tmp/cjson.rpm
+
+- name: Compile source file
+  community.docker.docker_container_exec:
+    container: cjson
+    command: gcc -o /tmp/example /tmp/main.c -lcjson
+
+- name: Run program
+  community.docker.docker_container_exec:
+    container: cjson
+    command: bash -c "LD_LIBRARY_PATH=/usr/local/lib64 /tmp/example"
+  register: result
+
+- name: Print the result of the program
+  debug:
+    var: result.stdout

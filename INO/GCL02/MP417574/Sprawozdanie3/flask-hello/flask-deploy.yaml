@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-hello-deployment
+spec:
+  replicas: 4
+
+  selector:
+    matchLabels:
+      app: flask-hello
+  template:
+    metadata:
+      labels:
+        app: flask-hello
+    spec:
+      containers:
+      - name: flask-hello
+        image: icharne2/flask-hello:v1
+        ports:
+        - containerPort: 5000
+        imagePullPolicy: Always

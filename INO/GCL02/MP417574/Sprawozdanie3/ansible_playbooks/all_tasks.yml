@@ -1,0 +1,30 @@
+---
+- name: Zdalne wywoływanie procedur na wszystkich maszynach
+  hosts: all
+  become: yes  # Umożliwia używanie sudo - dla aktyalizacji pakietow
+
+  tasks:
+    - name: Wykonaj ping do wszystkich maszyn
+      ansible.builtin.ping:
+
+    - name: Skopiowanie pliku inventory.ini na maszynę
+      copy:
+        src: /home/mpaskowski/MDO2025_INO/INO/GCL02/MP417574/Sprawozdanie3/ansible_1/inventory.ini  # Ścieżka do pliku lokalnego
+        dest: /home/ansible/  # Ścieżka docelowa na maszynach z grupy Endpoints
+        mode: '0644'  #Uprawnienia
+
+    - name: Zaktualizuj wszystkie pakiety
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: Zrestartuj usługę sshd
+      ansible.builtin.systemd:
+        name: sshd
+        state: restarted
+
+    - name: Zrestartuj usługę rngd
+      ansible.builtin.systemd:
+        name: rngd
+        state: restarted
+
