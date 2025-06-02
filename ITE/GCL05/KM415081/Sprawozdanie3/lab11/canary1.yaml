@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-can
+  labels:
+    role: todo
+    stage: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: todo
+      stage: canary
+  template:
+    metadata:
+      labels:
+        role: todo
+        stage: canary
+    spec:
+      containers:
+        - name: todo-app
+          image: cadmusinho/nodedeploy:latest
+          ports:
+            - containerPort: 3000

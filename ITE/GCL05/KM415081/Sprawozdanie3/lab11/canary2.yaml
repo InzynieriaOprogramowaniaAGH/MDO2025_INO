@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-prod
+  labels:
+    role: todo
+    stage: stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      role: todo
+      stage: stable
+  template:
+    metadata:
+      labels:
+        role: todo
+        stage: stable
+    spec:
+      containers:
+        - name: todo-app
+          image: cadmusinho/nodedeploy:v2.0
+          ports:
+            - containerPort: 3000
