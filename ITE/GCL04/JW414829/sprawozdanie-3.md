@@ -324,3 +324,38 @@ Podczas realizacji tych laboratoriów zdecydowałem sie korzystać z obrazu `ngi
 ![alt text](./lab10/nginx-localhost.png)
 
 ## Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
+
+Utworzyłem plik `nginx-deployment.yaml` z wdrozeniem i przeprowadziłem próbę wdrozenia. Zastosowałem deployment i sprawdziłem status wdrozenia. Sprawdziłem, ze zgodnie z oczekiwaniami powstały 4 nowe pody.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+```
+
+![deployment](./lab10/nginx-deployment.png)
+
+
+Utworzyłem serwis `nginx-service.yaml` i uruchomiłem go a następnie przeforwardowałem porty.
+
+![service](./lab10/nginx-service-run.png)
+![service safari](./lab10/polaczenie-nginx-4-pody.png)
+
+W dashboardzie widać pody w ilości 5, wynika to z faktu, ze pierwszy pod z wykonywanych laboratoriów nadal jest aktywny.
+![dashboard 2](./lab10/image.png)
