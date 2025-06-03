@@ -44,6 +44,8 @@ pipeline {
                         def delaySeconds = 3
                         def success = false
                         
+                        sleep delaySeconds
+
                         for (int i = 0; i < maxRetries; i++) {
                             def result = sh(
                                 script: 'curl -s -o /dev/null -w "%{http_code}" http://172.27.8.113:8082/api/auth/.well-known',
