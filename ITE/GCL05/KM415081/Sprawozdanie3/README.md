@@ -6,4 +6,6 @@ Celem laboratorium jest zautomatyzowanie zarządzania środowiskiem wielomaszyno
 ### Utworzenie nowej maszyny wirtualnej
 W VirtualBox stworzono maszynę o jak najmniejszym zbiorze zainstalowanego oprogramowania, z tym samym systemem operacyjnym co uprzednio używana maszyna. Dodatkowo zapewniono obecność programu 'tar' i 'sshd', ustawiono hostname i użytkownika odpowiednio jako 'ansible-target' oraz 'ansible'.
 
-![Opis obrazka](lab8/1.png)
+<div style="text-align: center;">
+  ![Opis obrazka](lab8/1.png)
+ </div>
