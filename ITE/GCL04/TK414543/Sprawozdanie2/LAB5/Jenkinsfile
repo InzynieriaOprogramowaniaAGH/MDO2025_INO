@@ -70,18 +70,18 @@ pipeline {
             }
         }
 
-        /*stage('Publish') {
+        stage('Publish') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                         sh 'docker tag ${IMAGE_NAME}:${VERSION} ${IMAGE_NAME}:latest'
                         sh 'docker push ${IMAGE_NAME}:${VERSION}'
                         sh 'docker push ${IMAGE_NAME}:latest'
                     }
                 }
             }
-        }*/
+        }
     }
 
     post {

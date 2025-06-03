@@ -100,6 +100,57 @@ pipeline {
 
 ![alt text](screenshots/LAB5/image9.png)
 
+Zastosowane Dockerfile:
+
+Dockerfile.build
+```Dockerfile
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+
+WORKDIR /app
+RUN apt update && apt install -y git
+
+RUN git clone --recurse-submodules -j8 https://github.com/OceanBattle/OceanBattle.WebAPI.git .
+RUN dotnet restore
+RUN dotnet build -c Debug
+RUN dotnet build -c Release -p:DebugType=None -p:DebugSymbols=false
+```
+
+Dockerfile.test
+```Dockerfile
+FROM oceanbattle-build AS test
+
+WORKDIR /app
+
+CMD ["dotnet", "test"]
+```
+
+Dockerfile.deploy
+```Dockerfile
+FROM oceanbattle-build AS build
+
+WORKDIR /app
+
+RUN dotnet publish OceanBattle.WebAPI/OceanBattle.WebAPI.csproj \ 
+  -c Release \
+  -p:PublishSingleFile=true \
+  -p:UseAppHost=true \
+  -p:IncludeNativeLibrariesForSelfExtract=true \
+  -p:PublishTrimmed=false \
+  -p:DebugType=None \
+  -p:DebugSymbols=false \
+  --self-contained true \
+  -o /app/publish
+
+FROM mcr.microsoft.com/dotnet/runtime:7.0 AS runtime
+
+WORKDIR /app
+
+COPY --from=build /app/publish .
+ENTRYPOINT ["./OceanBattle.WebAPI"]
+
+EXPOSE 80
+```
+
 ```Groovy
         stage('Checkout'){
             steps{
@@ -136,26 +187,70 @@ pipeline {
             steps {
                 dir('ITE/GCL04/TK414543/Sprawozdanie2/LAB6') {
                     sh 'docker build -f Dockerfile.deploy -t oceanbattle-deploy .'
-                    sh 'docker run -p 8082:80 --rm oceanbattle-deploy'
+                    sh 'docker run --rm -d --name oceanbattle --network jenkins oceanbattle-deploy'
+
+                    script {
+                        def maxRetries = 20
+                        def delaySeconds = 5
+                        def success = false
+                        
+                        sleep delaySeconds
+
+                        for (int i = 0; i < maxRetries; i++) {
+                            def result = sh(
+                                script: 'docker run --rm --network jenkins curlimages/curl:8.8.0 -s -o /dev/null -w "%{http_code}" http://oceanbattle:80/api/auth/.well-known',
+                                returnStdout: true
+                                ).trim()
+                                
+                            if (result == '200') {
+                                echo "Container is responding with HTTP 200"
+                                success = true
+                                break
+                            }
+                                
+                            echo "Waiting for container... (attempt ${i + 1})"
+                            sleep delaySeconds                    
+                        }
+                        
+                        if (!success) {
+                            error("Container did not become healthy in time")
+                        }
+                    }
                 }
             }
         }
 ```
 
-RUN dotnet publish OceanBattle.WebAPI/OceanBattle.WebAPI.csproj \ 
-  -c Release \
-  -p:PublishSingleFile=true \
-  -p:UseAppHost=true \
-  -p:IncludeNativeLibrariesForSelfExtract=true \
-  -p:PublishTrimmed=false \
-  -p:DebugType=None \
-  -p:DebugSymbols=false \
-  --self-contained true \
-  -o /app/publish
+![alt text](screenshots/LAB5/image10.png)
+![alt text](screenshots/LAB5/image11.png)
+![alt text](screenshots/LAB5/image12.png)
 
-docker run -p 8082:80 --rm oceanbattle-deploy
+```Groovy
+        stage('Publish') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                        sh 'docker tag ${IMAGE_NAME}:${VERSION} ${IMAGE_NAME}:latest'
+                        sh 'docker push ${IMAGE_NAME}:${VERSION}'
+                        sh 'docker push ${IMAGE_NAME}:latest'
+                    }
+                }
+            }
+        }
+```
 
-http://172.27.8.113:8082/swagger/index.html
+```Groovy
+    post {
+        always {
+                echo 'Cleaning up workspace...'
+                sh 'docker rm -f oceanbattle || true'
+                sh 'docker stop $(docker ps -aq) || true'
+                sh 'docker system prune -a -f'
+                deleteDir() 
+        }
+    }
+```
 
   * Uruchomiono obraz Dockera który eksponuje środowisko zagnieżdżone
   * Przygotowano obraz blueocean na podstawie obrazu Jenkinsa (czym się różnią?)
