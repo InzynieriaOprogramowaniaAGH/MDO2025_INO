@@ -335,7 +335,8 @@ repo --name=updates --baseurl=http://download.fedoraproject.org/pub/fedora/linux
 
 
 %packages
-@^custom-environment
+@^server-product-environment
+@^desktop-environment
 
 %end
 
