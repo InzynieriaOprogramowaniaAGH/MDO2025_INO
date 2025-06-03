@@ -217,7 +217,7 @@ run_app.yaml - playbook
 
 Zadania w playbooku podzielono na moduły dzięki czemu kod jest bardziej przejrzysty i łatwiej go utrzymać. Instalacja zależności, jak python3-requests, została wyodrębniona, co zapobiega błędom związanym z brakującymi bibliotekami potrzebnymi do działania modułów Ansible. Sprawdzenie działania aplikacji przez test HTTP pozwala automatycznie potwierdzić sukces wdrożenia, a końcowe usunięcie kontenera utrzymuje porządek i oszczędza zasoby.
 
-Pierwsze uruchomienie (błedne) playbooka:
+Pierwsze uruchomienie (błędne) playbooka:
 
 ![Opis obrazka](lab8/16.png)
 
@@ -380,3 +380,140 @@ Ten rozszerzony plik instalacyjny Fedora Kickstart umożliwia w pełni automatyc
 Weryfikacja działania:
 
 ![Opis obrazka](lab9/7.png)
+
+# Zajęcia 10
+## Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+Ćwiczenie polegało na praktycznym wdrożeniu aplikacji w lokalnym klastrze Kubernetes z użyciem Minikube. Skonfigurowano środowisko, przygotowano pliki deploymentu, uruchomiono kontenery oraz wystawiono i przetestowano usługi. Laboratorium rozwinęło umiejętności zarządzania Kubernetes i automatyzacji deployu aplikacji.
+
+### Instalacja klastra Kubernetes
+Instalacja minikube:
+
+![Opis obrazka](lab10/1.png)
+
+Uruchomienie Kubernesta:
+
+![Opis obrazka](lab10/2.png)
+
+Wyświetlenie listy wszystkich węzłów w klastrze oraz stan lokalnego klastra:
+
+![Opis obrazka](lab10/3.png)
+
+Wyświetlenie dostępnego miejsca na dysku - zalecane z dokumentacji jest minimum 20GB (u mnie spełnione):
+
+![Opis obrazka](lab10/4.png)
+
+Uruchomienie Dashboard:
+
+![Opis obrazka](lab10/5.png)
+
+![Opis obrazka](lab10/6.png)
+
+Na tej stronie zapoznano się z funkcjalnościami Kubernetesa.
+
+### Analiza posiadanego kontenera
+Wybrałem aplikację 'node-js-dummy-test', na której pracuję od początku zajęć.
+Uruchomienie aplikacji w konenerze:
+
+![Opis obrazka](lab10/7.png)
+
+![Opis obrazka](lab10/8.png)
+
+### Uruchamianie oprogramowania
+Aplikacja została uruchomiona w kontenerze na stosie Kubernetesa i wyświetlono pody wraz z ich aktualnym stanem:
+
+![Opis obrazka](lab10/9.png)
+
+![Opis obrazka](lab10/10.png)
+
+Wyprowadzono port celem dotarcia do esponowanej funkcjonalności:
+
+![Opis obrazka](lab10/11.png)
+
+![Opis obrazka](lab10/12.png)
+
+### Przekucie wdrożenia manualnego w plik wdrożenia
+
+node.yaml
+```sh
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node
+  labels:
+    app: node
+    environment: production
+
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: todo-app
+  template:
+    metadata:
+      labels:
+        app: todo-app
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: todo-container
+        image: cadmusinho/nodedeploy:latest
+        ports:
+          - containerPort: 3000
+            protocol: TCP
+        env:
+          - name: NODE_ENV
+            value: "production"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+```
+
+Plik YAML definiuje zasób Deployment w Kubernetes, który zarządza uruchomieniem i skalowaniem aplikacji kontenerowej.
+- apiVersion: apps/v1 wskazuje wersję API używaną do tworzenia Deploymentu.
+- kind: Deployment oznacza, że jest to zasób kontrolujący zestaw replik podów.
+- W sekcji metadata znajdują się dane identyfikujące Deployment, takie jak jego nazwa node oraz etykiety app: node i environment: production, które służą do selekcji i organizacji zasobów.
+- spec.replicas: 4 ustala, że ma działać cztery kopie podów.
+- selector.matchLabels definiuje, które etykiety muszą mieć pody, aby należały do tego Deploymentu (app: todo-app).
+- template.metadata.labels to etykiety przypisywane tworzonym podom (tutaj również app: todo-app), zgodne z selektorem, co jest konieczne do prawidłowego działania Deploymentu.
+- template.spec opisuje zawartość każdego poda:
+  - restartPolicy: Always wymusza automatyczne restartowanie kontenera w razie błędów,
+  - containers zawiera listę kontenerów, w tym przypadku jeden:
+    - name: todo-container — nazwa kontenera,
+    - image: cadmusinho/nodedeploy:latest — obraz Dockera, który ma być uruchomiony,
+    - ports otwiera port 3000 TCP,
+    - env ustawia zmienną środowiskową NODE_ENV na wartość production,
+    - resources definiuje minimalne wymagania (requests) i limity zużycia CPU i pamięci RAM dla kontenera.
+Całość zapewnia deklaratywne, skalowalne i odporne na awarie wdrożenie aplikacji działającej na porcie 3000.
+
+Wdrożenie:
+
+![Opis obrazka](lab10/13.png)
+
+![Opis obrazka](lab10/14.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
