@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moj-nginx-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2        
+      maxSurge: 20%            
+  selector:
+    matchLabels:
+      app: moj-nginx-rolling
+  template:
+    metadata:
+      labels:
+        app: moj-nginx-rolling
+    spec:
+      containers:
+      - name: nginx
+        image: malgorzatapalewicz/moje-nginx:v1
+        ports:
+        - containerPort: 80

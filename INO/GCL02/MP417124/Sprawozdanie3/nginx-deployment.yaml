@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moj-nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: moj-nginx
+  template:
+    metadata:
+      labels:
+        app: moj-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: malgorzatapalewicz/moje-nginx:v1
+        ports:
+        - containerPort: 80
+
+        

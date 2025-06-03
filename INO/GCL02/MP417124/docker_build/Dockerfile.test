@@ -1,0 +1,20 @@
+FROM ubuntu:22.04
+
+WORKDIR /app
+
+RUN apt update && \
+    apt install -y git make gcc ruby ruby-dev build-essential rpm
+
+RUN gem install --no-document fpm
+
+WORKDIR /app/cJSON
+
+COPY deploy.c /app/cJSON/deploy.c
+
+RUN make
+
+RUN gcc deploy.c -lcjson -o deploy_test && \
+    ./deploy_test > /app/cJSON/logs/test_results.log
+
+CMD ["/bin/bash"]
+
