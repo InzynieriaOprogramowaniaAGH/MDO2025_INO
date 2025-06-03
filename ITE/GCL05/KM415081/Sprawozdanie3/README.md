@@ -495,25 +495,211 @@ Wdrożenie:
 
 ![Opis obrazka](lab10/14.png)
 
+Zbadano stan oraz wyeksponowano wdrożenie jako serwis:
 
+![Opis obrazka](lab10/15.png)
 
+![Opis obrazka](lab10/16.png)
 
+Przekierowano port do serwisu:
 
+![Opis obrazka](lab10/17.png)
 
+# Zajęcia 11
+## Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+Celem zajęć było praktyczne opanowanie zaawansowanych technik wdrażania aplikacji w Kubernetes. Przygotowano różne wersje obrazów, przeprowadzono skalowanie i aktualizacje deploymentów, testowano strategie takie jak Rolling Update, Recreate i Canary, oraz automatyzowano weryfikację wdrożeń. Laboratorium rozwijało umiejętności zarządzania cyklem życia kontenerów, obsługi błędów oraz kontroli historii i cofania zmian w deploymentach.
 
+### Przygotowanie nowego obrazu
+Do zadania wykorzystuję trzy wersje obrazów:
+- :latest - obraz aplikacji pochodzący z pipeline Jenkins
+- :v2.0 - drugi poprawny obraz
+- :v.30 - wadaliwy obraz (w polu command ustawiono wartość ["/bin/false"])
 
+![Opis obrazka](lab11/1.png)
 
+### Zmiany w deploymencie
+#### Aktualizacje pliku YAML
+Zwiększenie replik do 8:
 
+![Opis obrazka](lab11/2.png)
 
+![Opis obrazka](lab11/3.png)
 
+Zmniejszenie replik do 1:
 
+![Opis obrazka](lab11/4.png)
 
+![Opis obrazka](lab11/5.png)
 
+Zmniejszenie replik do 0:
 
+![Opis obrazka](lab11/28.png)
 
+![Opis obrazka](lab11/29.png)
 
+Przeskalowanie do 4 replik:
 
+![Opis obrazka](lab11/6.png)
 
+![Opis obrazka](lab11/7.png)
 
+Zastosowanie nowej wersji obrazu:
+
+![Opis obrazka](lab11/8.png)
+
+![Opis obrazka](lab11/9.png)
+
+Zastosowanie starszej wersji:
+
+![Opis obrazka](lab11/10.png)
+
+![Opis obrazka](lab11/11.png)
+
+![Opis obrazka](lab11/12.png)
+
+Zastosowanie "wadliwego" obrazu:
+
+![Opis obrazka](lab11/13.png)
+
+![Opis obrazka](lab11/14.png)
+
+![Opis obrazka](lab11/15.png)
+
+Przywracanie poprzednich werjsi wdrożeń za pomocą poleceń 'kubectl rollout history' oraz 'kubectl rollout undo':
+
+![Opis obrazka](lab11/16.png)
+
+![Opis obrazka](lab11/17.png)
+
+![Opis obrazka](lab11/18.png)
+
+![Opis obrazka](lab11/19.png)
+
+### Kontrola wdrożenia
+Napisano skrypt, który sprawdza czy wdrożenie wykonało się w 60 sekund.
+
+check.sh
+```sh
+#!/bin/bash
+
+TARGET_DEPLOY="node"
+NS="default"
+MAX_WAIT=60
+CHECK_EVERY=5
+TIME_PASSED=0
+
+echo "Sprawdzam status wdrożenia: $TARGET_DEPLOY"
+
+while [ $TIME_PASSED -lt $MAX_WAIT ]; do
+    if minikube kubectl -- rollout status deployment/$TARGET_DEPLOY --namespace $NS --timeout=5s > /dev/null 2>&1; then
+        echo "Deployment sukces po ${TIME_PASSED}s"
+        exit 0
+    fi
+    sleep $CHECK_EVERY
+    TIME_PASSED=$((TIME_PASSED + CHECK_EVERY))
+done
+
+echo "Deployment NIE udany po $MAX_WAIT sekundach"
+exit 1
+```
+
+Sprawdzenie działania skryptu:
+
+![Opis obrazka](lab11/20.png)
+
+![Opis obrazka](lab11/21.png)
+
+### Strategie wdrożenia
+Strategia Recreate polega na usunięciu istniejących podów przed utworzeniem nowych.
+
+![Opis obrazka](lab11/22.png)
+
+![Opis obrazka](lab11/23.png)
+
+Strategia RollingUpdate umożliwia stopniowe aktualizowanie aplikacji poprzez jednoczesne usuwanie i tworzenie podów.
+
+![Opis obrazka](lab11/24.png)
+
+![Opis obrazka](lab11/25.png)
+
+Canary Deployment workload:
+
+canary1.yaml
+  ```sh
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-can
+  labels:
+    role: todo
+    stage: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: todo
+      stage: canary
+  template:
+    metadata:
+      labels:
+        role: todo
+        stage: canary
+    spec:
+      containers:
+        - name: todo-app
+          image: cadmusinho/nodedeploy:latest
+          ports:
+            - containerPort: 3000
+  ```
+Wdrożenie nowej, testowej wersji aplikacji (canary). Tworzy jeden pod z obrazem cadmusinho/nodedeploy:latest, oznaczony etykietami role: todo i stage: canary. Takie wdrożenie pozwala na wprowadzenie zmian na małej liczbie replik, minimalizując ryzyko i umożliwiając testowanie nowej wersji równolegle ze stabilną.
+
+canary2.yaml
+```sh
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-prod
+  labels:
+    role: todo
+    stage: stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      role: todo
+      stage: stable
+  template:
+    metadata:
+      labels:
+        role: todo
+        stage: stable
+    spec:
+      containers:
+        - name: todo-app
+          image: cadmusinho/nodedeploy:v2.0
+          ports:
+            - containerPort: 3000
+```
+Ten manifest definiuje stabilne wdrożenie aplikacji, które uruchamia trzy repliki kontenera z obrazem cadmusinho/nodedeploy:v2.0. Podobnie jak w canary, pody mają etykiety role: todo i stage: stable, co pozwala na łatwe rozróżnienie wersji. Ta stabilna wersja obsługuje większość ruchu, zapewniając ciągłość działania.
+
+node-service.yaml
+```sh
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-svc
+spec:
+  selector:
+    role: todo
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: ClusterIP
+```
+Definicja usługi w Kubernetes, która łączy się z podami oznaczonymi etykietą role: todo. Serwis nasłuchuje na porcie 80 i przekierowuje ruch na port 3000 w podach. Typ ClusterIP oznacza, że usługa jest dostępna tylko wewnątrz klastra, ułatwiając komunikację między komponentami.
+
+![Opis obrazka](lab11/26.png)
+
+![Opis obrazka](lab11/27.png)
 
 
