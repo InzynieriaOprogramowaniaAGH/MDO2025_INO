@@ -48,10 +48,7 @@ pipeline {
 
                         for (int i = 0; i < maxRetries; i++) {
                             def result = sh(
-                                script: '''
-                                docker run --rm --network jenkins curlimages/curl:8.8.0 \ 
-                                -s -o /dev/null -w "%{http_code}" http://oceanbattle:80/api/auth/.well-known
-                                ''',
+                                script: 'docker run --rm --network jenkins curlimages/curl:8.8.0 -s -o /dev/null -w "%{http_code}" http://oceanbattle:80/api/auth/.well-known',
                                 returnStdout: true
                                 ).trim()
                                 
