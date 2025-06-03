@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pipeline-redis-canary
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
+  selector:
+    matchLabels:
+      app: pipeline-redis
+  template:
+    metadata:
+      labels:
+        app: pipeline-redis
+    spec:
+      containers:
+        - name: redis-container
+          image: mlorenc4/pipeline-redis:v1.0.30
+          ports:
+            - containerPort: 6379

@@ -92,10 +92,10 @@ Wyłączenie serwera `ssh`:
 sudo systemctl stop sshd
 ```
 ![sshd](./screenshots/sshd.png)
-![sshdown](./screenshots/sshdown.png)
+![sshd-down](./screenshots/shhdown.png)
 
 ### Zarządzanie stworzonym artefaktem
-
+Zadanie wymagało zbudowania i uruchomienia kontenera z opublikowanego na Docker Hubie obrazu (będącego artefaktem z poprzedniego pipeline'u) oraz połączenia się z nim, wykorzystując do tego playbook Ansible.
 
 Playbook:
 ```
@@ -161,8 +161,21 @@ Playbook:
         force_kill: yes
 ```
 
-![apbhost](./screenshots/apbhost.png)
-![apbansible](./screenshots/apbansible.png)
+Playbook obejmuje instalację niezbędnych narzędzi (m.in. Redis), pobranie opublikowanego obrazu Dockerowego, uruchomienie kontenera, przetestowanie połączenia z zewnątrz, a na końcu – zatrzymanie i usunięcie kontenera.
+
+![playbook2](./screenshots/playbook2.png)
+
+Utworzenie nowej roli do zarządzania stworzonym kontenerem:
+```
+ansible-galaxy init deploy_container
+```
+
+![ansgalax](./screenshots/galaxy.png)
+
+Konfiguracja roli polegała na skopiowaniu zawartości [playbooka 2](./playbook2.yaml) do deploy_container/tasks/[main.yml](./deploy_container/tasks/main.yml). Część zmiennych została zastąpiona symbolicznymi nazwami zdefiniowanymi w deploy_container/defaults/[main.yml](./deploy_container/defaults/main.yml). Utworzono `playbook3` korzystający z nowej roli.
+
+![playbook3](./screenshots/playbox3.png)
+
 
 
 ## Pliki odpowiedzi dla wdrożeń nienadzorowanych
@@ -181,20 +194,147 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest
 sudo rpm -Uvh minikube-latest.x86_64.rpm
 ```
 
+![minikubeinstal]
+
+Alias dla kubectl:
+```
+```
+
+Uruchomienie Kubernetesa
+![kubernetes]
+![kubersukces]
+
+Uruchomienie Kubernetes dashboard
+![dashboard]
+
+Wyświetlenie dashboardu w oknie przeglądarki
+![dash-web]
+
+
+
 ### Analiza posiadanego kontenera
 
+![analiz-kont]
 
 ### Uruchamianie oprogramowania
 
+![kubectl]
+
+
+![kube-dash]
+
+![port-forward]
+![redis-ping]
 
 ### Przekucie wdrożenia manualnego w plik wdrożenia
 
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pipeline-redis
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: pipeline-redis
+  template:
+    metadata:
+      labels:
+        app: pipeline-redis
+    spec:
+      containers:
+        - name: redis-container
+          image: mlorenc4/pipeline-redis
+          ports:
+            - containerPort: 6379
+```
+
+![newdeplo]
+
+![standeplo]
+
+![expoport]
+
+![port-forward-2]
+
+![redis-ping-2]
+
+![dashdeplo]
+![wdrozenia]
+![pody]
 
 ### Przygotowanie nowego obrazu
 
+Niedziałający `redis`:
+```
+FROM redis-builder AS builder
+FROM ubuntu:latest
+
+RUN apt-get update && \
+    apt-get install -y libjemalloc2 && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /app/redis/src/redis-server /usr/local/bin/
+COPY --from=builder /app/redis/src/redis-cli /usr/local/bin/
+
+EXPOSE 6379
+
+ENTRYPOINT ["/usr/bin/false"]
+CMD ["--protected-mode", "no"]
+```
+
+![damaged-version]
+![docker-login]
+![docker-push]
+![Dockerhub-images]
 
 ### Zmiany w deploymencie
 
+Wprowadzanie zmian w deploymencie poprzez zmianę replik, zatwierdzane poleceniem:
+```
+kubectl apply -f redis-deployment.yaml
+```
+
+Zwiększenie liczby do 8:
+![8repl]
+
+Zmniejszenie do 1:
+![1repl]
+
+Zmniejszenie do 0:
+![0repl]
+
+Zwiększenie do 4:
+![4repl]
+
+Zmniejszenie do 1:
+![4-1repl]
+
+Starszy obraz w podzie:
+![old-pod]
+
+Historia deploymentu:
+![kub-rollout]
+
+Błąd deploymentu:
+![damaged]
+
+Porażka wdrożenia błędnego deployu:
+![damaged-deploy]
+
+Przywrócenie poprzedniej działającej wersji komendą:
+```
+kubectl rollout undo deployment/redis-app
+```
+
+![rollout-undo]
+
+Działanie podów na starej wersji:
+![old-pod-deploy]
+
+Historia deploymentu po cofnięciu:
+![kub-rollout-hist-2]
 
 ### Kontrola wdrożenia
 

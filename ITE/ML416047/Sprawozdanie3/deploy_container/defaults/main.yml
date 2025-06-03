@@ -1,0 +1,4 @@
+---
+redis_image: "mlorenc4/pipeline-redis:latest"
+redis_container_name: "pipeline-redis"
+redis_port: 6379

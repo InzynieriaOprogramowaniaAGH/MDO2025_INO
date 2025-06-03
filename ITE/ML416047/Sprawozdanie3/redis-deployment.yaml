@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pipeline-redis
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: pipeline-redis
+  template:
+    metadata:
+      labels:
+        app: pipeline-redis
+    spec:
+      containers:
+        - name: redis-container
+          image: mlorenc4/pipeline-redis
+          ports:
+            - containerPort: 6379
