@@ -37,7 +37,33 @@ pipeline {
             steps {
                 dir('ITE/GCL04/TK414543/Sprawozdanie2/LAB6') {
                     sh 'docker build -f Dockerfile.deploy -t oceanbattle-deploy .'
-                    sh 'docker run -p 8082:80 --rm oceanbattle-deploy'
+                    sh 'docker run -d -p 8082:80 --rm oceanbattle-deploy'
+
+                    script {
+                        def maxRetries = 20
+                        def delaySeconds = 3
+                        def success = false
+                        
+                        for (int i = 0; i < maxRetries; i++) {
+                            def result = sh(
+                                script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/swagger/index.html',
+                                returnStdout: true
+                                ).trim()
+                                
+                            if (result == '200') {
+                                echo "Container is responding with HTTP 200"
+                                success = true
+                                break
+                            }
+                                
+                            echo "Waiting for container... (attempt ${i + 1})"
+                            sleep delaySeconds                    
+                        }
+                        
+                        if (!success) {
+                            error("Container did not become healthy in time")
+                        }
+                    }
                 }
             }
         }

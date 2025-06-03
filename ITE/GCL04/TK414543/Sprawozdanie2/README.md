@@ -131,8 +131,19 @@ pipeline {
         }
 ```
 
+```Groovy
+        stage('Deploy') {
+            steps {
+                dir('ITE/GCL04/TK414543/Sprawozdanie2/LAB6') {
+                    sh 'docker build -f Dockerfile.deploy -t oceanbattle-deploy .'
+                    sh 'docker run -p 8082:80 --rm oceanbattle-deploy'
+                }
+            }
+        }
+```
 
-publish -c Release \
+RUN dotnet publish OceanBattle.WebAPI/OceanBattle.WebAPI.csproj \ 
+  -c Release \
   -p:PublishSingleFile=true \
   -p:UseAppHost=true \
   -p:IncludeNativeLibrariesForSelfExtract=true \
@@ -142,7 +153,9 @@ publish -c Release \
   --self-contained true \
   -o /app/publish
 
+docker run -p 8082:80 --rm oceanbattle-deploy
 
+http://172.27.8.113:8082/swagger/index.html
 
   * Uruchomiono obraz Dockera który eksponuje środowisko zagnieżdżone
   * Przygotowano obraz blueocean na podstawie obrazu Jenkinsa (czym się różnią?)
