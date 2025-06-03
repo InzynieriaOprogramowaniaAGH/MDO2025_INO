@@ -1,19 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: express-app-deployment
+  name: express-app-canary
+  labels:
+    app: express-app
+    track: canary
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: express-app
+      version: v2
   template:
     metadata:
       labels:
         app: express-app
+        version: v2
     spec:
       containers:
         - name: express-app
-          image: lucyferryt/express-app:1
+          image: lucyferryt/express-app:v2
           ports:
             - containerPort: 3000

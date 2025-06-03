@@ -1,19 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: express-app-deployment
+  name: express-app-recreate
+  labels:
+    app: express-app
+    strategy: recreate
 spec:
   replicas: 4
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: express-app
+      version: v1
   template:
     metadata:
       labels:
         app: express-app
+        version: v1
     spec:
       containers:
         - name: express-app
-          image: lucyferryt/express-app:1
+          image: lucyferryt/express-app:v1
           ports:
             - containerPort: 3000

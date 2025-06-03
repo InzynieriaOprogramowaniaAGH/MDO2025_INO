@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-app-rolling
+  labels:
+    app: express-app
+    strategy: rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
+  selector:
+    matchLabels:
+      app: express-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: express-app
+        version: v1
+    spec:
+      containers:
+        - name: express-app
+          image: lucyferryt/express-app:v1
+          ports:
+            - containerPort: 3000
