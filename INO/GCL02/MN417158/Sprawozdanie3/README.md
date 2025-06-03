@@ -80,11 +80,70 @@ A następnie wstawić link do [Pliku odpowiedzi w wersji Raw na Github](https://
 7. Po zakończeniu instalacji edytowałem plik odpowiedzi aby ustawić automatyczne uruchomienie ponowne po instalacji. Na końcu pliku dodałem polecenie ```reboot```
 
  
-
-
 ## Zajęcia 10 Kubernetes:
 
+1. Zadanie rozpocząłem od instalacji Minikube zgodnie z instrukcją w [dokumentacji](https://minikube.sigs.k8s.io/docs/start/?arch=%2Flinux%2Fx86-64%2Fstable%2Frpm+package)
+Wybrałem wariant z instalacją na system Linux i za pomocą paczki ```rpm```
+
+2. Uruchomiłem Kubernetes poleceniem ```minikube start  --driver=docker```
+Uruchomiłem również dashboard, który umożliwia łatwiejsze, za pomocą graficznego interfejsu, operowanie na podach i deploymentach ```minikube dashboard```
+
+![Zrzut13](screenshots/Zrzut5.png)
+
+3. W nowym terminalu zalogowałem się ponownie do maszyny tworząc tunel pomiędzy lokalnym portem a adresem dashboardu utworzonego na maszynie wirtualnej. Umożliwia to uruchomienie dashboardu w przeglądarce na hoście
+```ssh -L 35551:127.0.0.1:35551 Milosz@192.168.100.38```
+
+4. Następnie uruchomiłem pod ```nginx-single```
+```
+minikube kubectl -- run nginx-single \
+  --image=nginx \
+  --port=80 \
+  --labels app=nginx-single
+```
+5. I sprawdziłem stan podów ```minikube kubectl -- get pods```
+
+**Wydruk ukazujące poprawne tunelowanie, uruchomienie i działanie utworzonego podu**
+![Zrzut14](screenshots/Zrzut6.png)
+
+6. Ponownie przeprowadziłem proces tunelowania aby wyświetlić działanie ```nginx```
+
+![Zrzut15](screenshots/Zrzut7.png)
+![Zrzut16](screenshots/Zrzut8.png)
+
+**Efekt poprawnego działania nginx**
+![Zrzut17](screenshots/Zrzut9.png)
+
+7. Utworzyłem plik ```nginx-deployment.yaml```
+Odpowiada on za utworzenie pliku wdrażającego pod zawierającego kontener ```nginx```
+
+![Zrzut18](screenshots/Zrzut10.png)
+
+8. Następnie użyłem polecenia ```minikube kubectl -- apply -f nginx-deployment.yaml```
+Aby uruchomić swój plik wdrożenia
+
+![Zrzut19](screenshots/Zrzut11.png)
+
+9. Kolejnym krokiem było rozszerzenie deploymentu do 4 replik. Użyłem poleceń
+```
+minikube kubectl -- scale deployment nginx-deployment --replicas=4
+minikube kubectl -- get pods
+```
+Aby ukazać poprawne utworzenie 4 replik
+
+![Zrzut20](screenshots/Zrzut12.png)
+
+10. Wyeksponowałem wdrożenie jako serwis i przekierowałem port do serwisu
+
+![Zrzut21](screenshots/Zrzut13.png)
+
+11. 
+**Efekt działań w interejsie dashboardu:**
+![Zrzut22](screenshots/Zrzut14.png)
+
 ## Zajęcia 11 Kubernetes cd.:
+
+
+
 
 ## Korzystanie z narzędzi AI podczas wykonywania zadań
 
