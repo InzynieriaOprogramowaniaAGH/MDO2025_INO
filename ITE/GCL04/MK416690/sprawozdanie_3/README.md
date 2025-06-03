@@ -355,7 +355,7 @@ clearpart --all --initlabel --drives=sda
 # System timezone
 timezone Europe/Warsaw --utc
 
-network --hostname=rogal_ddl
+network --hostname=rogal-ddl
 
 # Root password
 rootpw --iscrypted $y$j9T$b2DtvHN/QOO96Jm7qeNegaLP$T4zrpEVTg7itvAX6uYuf4/K3ytfS61TZ.4kba5SkUp5
