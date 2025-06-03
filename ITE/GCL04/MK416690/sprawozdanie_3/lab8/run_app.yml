@@ -1,8 +1,8 @@
 - name: Deploy prebuilt Docker image and run container
   hosts: endpoints
   vars:
-    artifact_local_path: /home/marek/cpm_build.tar        # lokalna ścieżka na kontrolerze ansible
-    artifact_remote_path: /home/ansible/cpm_build.tar     # docelowa ścieżka na maszynie target
+    artifact_local_path: /home/marek/cpm_build.tar
+    artifact_remote_path: /home/ansible/cpm_build.tar 
     container_name: cpm_deploy
     image_name: cpm_deploy
     app_port: 3000
