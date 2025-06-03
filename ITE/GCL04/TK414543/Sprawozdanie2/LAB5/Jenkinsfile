@@ -37,7 +37,7 @@ pipeline {
             steps {
                 dir('ITE/GCL04/TK414543/Sprawozdanie2/LAB6') {
                     sh 'docker build -f Dockerfile.deploy -t oceanbattle-deploy .'
-                    sh 'docker run --rm --network=host -d --name oceanbattle -p 8082:80 oceanbattle-deploy'
+                    sh 'docker run --rm -d --name oceanbattle -p 8082:80 oceanbattle-deploy'
 
                     script {
                         def maxRetries = 20
