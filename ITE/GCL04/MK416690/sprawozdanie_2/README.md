@@ -304,7 +304,7 @@ pipeline {
                 dir(env.APP_DIR) {
                     sh """
                         mkdir -p artifacts
-                        docker save ${BUILD_IMAGE} -o artifacts/cpm_build.tar
+                        docker save ${DEPLOY_IMAGE} -o artifacts/cpm_build.tar
                     """
                     archiveArtifacts artifacts: 'artifacts/cpm_build.tar', fingerprint: true
                 }
