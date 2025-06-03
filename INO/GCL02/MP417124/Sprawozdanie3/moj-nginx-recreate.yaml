@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moj-nginx-recreate
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: moj-nginx-recreate
+  template:
+    metadata:
+      labels:
+        app: moj-nginx-recreate
+    spec:
+      containers:
+      - name: nginx
+        image: malgorzatapalewicz/moje-nginx:v1
+        ports:
+        - containerPort: 80

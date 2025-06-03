@@ -1,0 +1,15 @@
+FROM fedora:41
+
+RUN dnf install -y gcc && dnf clean all
+
+WORKDIR /app
+
+COPY cjson.rpm /tmp/cjson.rpm
+COPY deploy.c /app/deploy.c
+
+RUN dnf install -y /tmp/cjson.rpm
+
+RUN gcc /app/deploy.c -lcjson -o /app/deploy_test
+
+CMD ["tail", "-f", "/dev/null"]
+

@@ -9,9 +9,12 @@ RUN gem install --no-document fpm
 
 WORKDIR /app/cJSON
 
+COPY deploy.c /app/cJSON/deploy.c
+
 RUN make
 
-RUN ./test.sh
+RUN gcc deploy.c -lcjson -o deploy_test && \
+    ./deploy_test > /app/cJSON/logs/test_results.log
 
 CMD ["/bin/bash"]
 

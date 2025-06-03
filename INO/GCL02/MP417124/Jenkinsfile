@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+
+    environment {
+        VERSION = "1.0.0"
+    }
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                git branch: 'MP417124', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Build Docker image for cJSON') {
+            steps {
+                script {
+                    docker.build("cj-build:${VERSION}", '-f INO/GCL02/MP417124/docker_build/Dockerfile.build .')
+                    sh 'mkdir -p artifacts'
+                    def buildContainer = sh(script: "docker create cj-build:${VERSION}", returnStdout: true).trim()
+                    sh "docker cp ${buildContainer}:/app/cJSON/build/output/cjson.rpm artifacts/cjson-${VERSION}.rpm"
+                    sh "docker rm ${buildContainer}"
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    docker.build("cj-test:${VERSION}", '-f INO/GCL02/MP417124/docker_build/Dockerfile.test .')
+                    sh 'mkdir -p logs'
+                    def testContainer = sh(script: "docker create cj-test:${VERSION}", returnStdout: true).trim()
+                    sh "docker cp ${testContainer}:/app/cJSON/logs/test_results.log logs/test_results-${VERSION}.log"
+                    sh "docker rm ${testContainer}"
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    docker.build("cj-deploy:${VERSION}", '-f INO/GCL02/MP417124/docker_build/Dockerfile.deploy .')
+                    def deployContainer = sh(script: "docker create cj-deploy:${VERSION}", returnStdout: true).trim()
+                    sh "docker cp artifacts/cjson-${VERSION}.rpm ${deployContainer}:/tmp/cjson.rpm"
+                    sh "docker cp INO/GCL02/MP417124/docker_build/deploy.c ${deployContainer}:/app/deploy.c"
+                    sh "docker start ${deployContainer}"
+                    sh "docker exec ${deployContainer} dnf install -y /tmp/cjson.rpm"
+                    sh "docker exec ${deployContainer} gcc /app/deploy.c -lcjson -o /tmp/deploy_test"
+                    sh "docker exec ${deployContainer} /tmp/deploy_test"
+                    sh "docker rm -f ${deployContainer}"
+                }
+            }
+        }
+
+        stage('Print') {
+            steps {
+                echo "Pipeline finished successfully for version ${VERSION}."
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: "artifacts/cjson-${VERSION}.rpm", allowEmptyArchive: true
+            archiveArtifacts artifacts: "logs/test_results-${VERSION}.log", allowEmptyArchive: true
+        }
+    }
+}
