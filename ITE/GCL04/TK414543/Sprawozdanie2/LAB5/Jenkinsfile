@@ -48,7 +48,7 @@ pipeline {
 
                         for (int i = 0; i < maxRetries; i++) {
                             def result = sh(
-                                script: 'curl -s -o /dev/null -w "%{http_code}" http://oceanbattle:80/api/auth/.well-known',
+                                script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/api/auth/.well-known',
                                 returnStdout: true
                                 ).trim()
                                 
