@@ -241,6 +241,9 @@ EXPOSE 80
                         
                         sh "docker push ${versionTag}"
                         sh "docker push ${latestTag}"
+
+                        sh 'docker save oceanbattle-deploy | gzip > oceanbattle-deploy.tar.gz'
+                        archiveArtifacts artifacts: 'oceanbattle-deploy.tar.gz', fingerprint: true
                     }
                 }
             }

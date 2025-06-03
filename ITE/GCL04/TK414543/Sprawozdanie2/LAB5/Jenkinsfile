@@ -88,9 +88,7 @@ pipeline {
                         sh "docker push ${versionTag}"
                         sh "docker push ${latestTag}"
                     }
-
-                    archiveArtifacts artifacts: '**/build.log', fingerprint: true
-
+                    
                     sh 'docker save oceanbattle-deploy | gzip > oceanbattle-deploy.tar.gz'
                     archiveArtifacts artifacts: 'oceanbattle-deploy.tar.gz', fingerprint: true
                 }
