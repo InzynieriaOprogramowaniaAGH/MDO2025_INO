@@ -81,7 +81,7 @@ pipeline {
                 echo 'rm -rf build' >>  ~/rpmbuild/SPECS/weechat.spec &&
                 echo 'mkdir build' >>  ~/rpmbuild/SPECS/weechat.spec &&
                 echo 'cd build' >>  ~/rpmbuild/SPECS/weechat.spec &&
-                echo 'cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_IGNORE_PATH=/usr/local -DENABLE_PHP=OFF -DENABLE_LUA=OFF -DENABLE_TESTS=ON' >>  ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_IGNORE_PATH=/usr/local -DENABLE_RUBY=OFF -DENABLE_TCL=OFF -DENABLE_PHP=OFF -DENABLE_LUA=OFF -DENABLE_TESTS=ON' >>  ~/rpmbuild/SPECS/weechat.spec &&
                 echo 'make' >>  ~/rpmbuild/SPECS/weechat.spec &&
 
                 echo '%install' >> ~/rpmbuild/SPECS/weechat.spec &&
