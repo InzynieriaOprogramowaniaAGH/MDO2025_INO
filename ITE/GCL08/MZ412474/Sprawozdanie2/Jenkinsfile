@@ -81,7 +81,7 @@ pipeline {
                 echo 'rm -rf build' >>  ~/rpmbuild/SPECS/weechat.spec &&
                 echo 'mkdir build' >>  ~/rpmbuild/SPECS/weechat.spec &&
                 echo 'cd build' >>  ~/rpmbuild/SPECS/weechat.spec &&
-                echo 'cmake .. -DENABLE_PHP=OFF -DENABLE_LUA=OFF -DENABLE_TESTS=ON' >>  ~/rpmbuild/SPECS/weechat.spec &&
+                echo 'cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_PHP=OFF -DENABLE_LUA=OFF -DENABLE_TESTS=ON' >>  ~/rpmbuild/SPECS/weechat.spec &&
                 echo 'make' >>  ~/rpmbuild/SPECS/weechat.spec &&
 
                 echo '%install' >> ~/rpmbuild/SPECS/weechat.spec &&
@@ -89,13 +89,13 @@ pipeline {
                 echo 'make install DESTDIR=%{buildroot}' >> ~/rpmbuild/SPECS/weechat.spec &&
                 
                 echo '%files' >> ~/rpmbuild/SPECS/weechat.spec &&
-                echo '/usr/local/bin/weechat*' >> ~/rpmbuild/SPECS/weechat.spec &&
-                echo '/usr/local/include/weechat/' >> ~/rpmbuild/SPECS/weechat.spec &&
-                echo '/usr/local/lib/pkgconfig/weechat.pc' >> ~/rpmbuild/SPECS/weechat.spec &&
-                echo '/usr/local/lib/weechat/' >> ~/rpmbuild/SPECS/weechat.spec &&
-                echo '/usr/local/share/applications/weechat.desktop' >> ~/rpmbuild/SPECS/weechat.spec &&
-                echo '/usr/local/share/icons/hicolor/*/apps/weechat.png' >> ~/rpmbuild/SPECS/weechat.spec &&
-                echo '/usr/local/share/locale/*/LC_MESSAGES/weechat.mo' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/bin/weechat*' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/include/weechat/' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/lib/pkgconfig/weechat.pc' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/lib/weechat/' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/share/applications/weechat.desktop' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/share/icons/hicolor/*/apps/weechat.png' >> ~/rpmbuild/SPECS/weechat.spec &&
+                echo '/usr/share/locale/*/LC_MESSAGES/weechat.mo' >> ~/rpmbuild/SPECS/weechat.spec &&
                 
                 echo '%changelog' >> ~/rpmbuild/SPECS/weechat.spec &&
                 echo '* Sat May 03 2025 - 1.0-1' >> ~/rpmbuild/SPECS/weechat.spec &&
