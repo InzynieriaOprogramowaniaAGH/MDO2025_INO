@@ -36,6 +36,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 dir('ITE/GCL04/TK414543/Sprawozdanie2/LAB6') {
+                    sh 'docker network inspect jenkins >/dev/null 2>&1 || docker network create jenkins'
+
                     sh 'docker build -f Dockerfile.deploy -t oceanbattle-deploy .'
                     sh 'docker run --rm -d --name oceanbattle --network jenkins oceanbattle-deploy'
 
