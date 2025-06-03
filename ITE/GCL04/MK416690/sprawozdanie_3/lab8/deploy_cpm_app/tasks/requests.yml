@@ -1,0 +1,8 @@
+- name: Install pip3
+  command: dnf -y install python3-pip
+  become: yes
+
+
+- name: Install requests
+  command: pip3 install requests
+  become: yes

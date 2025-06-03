@@ -1,0 +1,6 @@
+- name: Deploy CPM app container
+  hosts: endpoints
+  become: yes
+  become_method: sudo
+  roles:
+    - deploy_cpm_app

@@ -1,0 +1,38 @@
+- name: Deploy prebuilt Docker image and run container
+  hosts: endpoints
+  vars:
+    artifact_local_path: /home/marek/cpm_build.tar        # lokalna ścieżka na kontrolerze ansible
+    artifact_remote_path: /home/ansible/cpm_build.tar     # docelowa ścieżka na maszynie target
+    container_name: cpm_deploy
+    image_name: cpm_deploy
+    app_port: 3000
+
+  tasks:
+    - name: Copy docker image tarball to remote host
+      copy:
+        src: "{{ artifact_local_path }}"
+        dest: "{{ artifact_remote_path }}"
+
+    - name: Remove old container if exists
+      docker_container:
+        name: "{{ container_name }}"
+        state: absent
+        force_kill: yes
+
+    - name: Remove old image if exists
+      docker_image:
+        name: "{{ image_name }}"
+        state: absent
+        force_absent: yes
+
+    - name: Load docker image from tarball
+      command: docker load -i "{{ artifact_remote_path }}"
+
+    - name: Run container
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}"
+        state: started
+        ports:
+          - "{{ app_port }}:{{ app_port }}"
+        pull: no
