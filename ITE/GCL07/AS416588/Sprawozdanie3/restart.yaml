@@ -1,0 +1,8 @@
+- name: restart
+  hosts: all
+  become: true
+  tasks:
+    - name: restart ssh
+      service:
+        name: sshd
+        state: restarted

@@ -1,0 +1,29 @@
+- name: check if docker works
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+# - name: create build catalogue
+#   file:
+#       path: /opt/flatpak
+#       state: directory
+
+- name: copy dockerfile
+  copy:
+    src: Dockerfile.deploy
+    dest: /tmp/Dockerfile.deploy
+
+
+- name: copy app
+  copy:
+    src: irssi-23.flatpak
+    dest: /tmp
+
+- name: build docker image
+  command: docker build -t irssi -f /tmp/Dockerfile.deploy /tmp
+
+- name: create container
+  command: docker run --rm -e VERSION=23 --privileged -v /tmp:/app --cap-add=SYS_ADMIN --device=/dev/fuse --security-opt seccomp=unconfined irssi
+  register: build_output
+  failed_when: "'error' in build_output.stderr or build_output.rc != 0"

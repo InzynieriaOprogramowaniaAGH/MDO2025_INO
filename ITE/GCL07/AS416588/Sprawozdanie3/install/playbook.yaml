@@ -1,0 +1,6 @@
+- name: deploy docker and irssi
+  hosts: Endpoints
+  become: yes
+  roles:
+    - install_docker
+    - install_irssi

@@ -1,0 +1,7 @@
+- name: copy
+  hosts: Endpoints
+  tasks:
+    - name: copy
+      copy:
+        src: ./inventory.ini
+        dest: /tmp/inventory.ini

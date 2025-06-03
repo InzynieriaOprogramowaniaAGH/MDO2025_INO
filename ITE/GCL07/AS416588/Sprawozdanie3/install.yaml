@@ -1,0 +1,47 @@
+- name: install app
+  hosts: Endpoints
+  become: yes
+  tasks:
+  - name: install docker
+    dnf:
+      name: docker
+      state: present
+      update_cache: yes
+
+  - name: check if docker works
+    service:
+      name: docker
+      state: started
+      enabled: true
+
+  - name: create build catalogue
+    file:
+      path: /opt/flatpak
+      state: directory
+
+  - name: copy dockerfile
+    template:
+      src: /home/jaszczur/MDO2025_INO/ITE/GCL07/AS416588/Sprawozdanie2/Dockerfile.flatpak
+      dest: /opt/flatpak/Dockerfile
+
+  - name: copy app
+    copy:
+      src: ../../../../irssi-23.flatpak
+      dest: /opt/flatpak/
+    loop:
+      - build.sh
+      - com.example.irssi.yaml
+
+  - name: build docker image
+    command: docker build -t flatpak-builder /opt/flatpak
+    args:
+      chdir: /opt/flatpak
+
+  - name: create contener
+    command: docker run --rm flatpak-builder
+    register: build_output
+    failed_when: "'error' in build_output.stderr or build_output.rc != 0"
+
+  - name: show build
+    debug:
+      var: build_output.stdout
