@@ -1,0 +1,7 @@
+---
+local_deb_path: /home/tomek/toasty_1.0.0_amd64.deb
+remote_deb_path: /tmp/toasty_1.0.0_amd64.deb
+container_deb_path: /toasty.deb
+container_name: gcc_toasty
+remote_test_source: /tmp/test.c
+container_test_source: /test.c
