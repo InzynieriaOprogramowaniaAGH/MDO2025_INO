@@ -131,6 +131,19 @@ pipeline {
         }
 ```
 
+
+publish -c Release \
+  -p:PublishSingleFile=true \
+  -p:UseAppHost=true \
+  -p:IncludeNativeLibrariesForSelfExtract=true \
+  -p:PublishTrimmed=false \
+  -p:DebugType=None \
+  -p:DebugSymbols=false \
+  --self-contained true \
+  -o /app/publish
+
+
+
   * Uruchomiono obraz Dockera który eksponuje środowisko zagnieżdżone
   * Przygotowano obraz blueocean na podstawie obrazu Jenkinsa (czym się różnią?)
   * Uruchomiono Blueocean

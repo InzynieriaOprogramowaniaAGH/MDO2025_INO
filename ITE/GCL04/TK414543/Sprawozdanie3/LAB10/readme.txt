@@ -1,0 +1,1 @@
+minikube kubectl -- run oceanbattle-deploy --image=oceanbattle:latest --port=8080 --labels app=oceanbattle

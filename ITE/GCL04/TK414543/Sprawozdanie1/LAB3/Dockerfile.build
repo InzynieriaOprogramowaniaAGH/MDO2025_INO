@@ -1,8 +1,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 
 WORKDIR /app
-RUN apt update && apt install -y git
+#RUN apt update && apt install -y git
+RUN apt install -y git
 
 RUN git clone --recurse-submodules -j8 https://github.com/OceanBattle/OceanBattle.WebAPI.git .
 RUN dotnet restore
-RUN dotnet build
+RUN dotnet build -c Debug
+RUN dotnet build -c Release -p:DebugType=None -p:DebugSymbols=false
+

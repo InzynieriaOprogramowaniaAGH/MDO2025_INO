@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "oceanbattle/webapi"
+        VERSION = "1.0.${BUILD_NUMBER}"
+    }
+
+    stages {
+
+        stage('Checkout'){
+            steps{
+                git branch: 'TK414543',
+                    url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('ITE/GCL04/TK414543/Sprawozdanie1/LAB3') {
+                    sh 'docker build --no-cache --pull -f Dockerfile.build -t oceanbattle-build .'
+                    sh 'docker run --rm oceanbattle-build'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('ITE/GCL04/TK414543/Sprawozdanie1/LAB3') {
+                    sh 'docker build -f Dockerfile.test -t oceanbattle-test .'
+                    sh 'docker run --rm oceanbattle-test'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('ITE/GCL04/TK414543/Sprawozdanie2/LAB6') {
+                    sh 'docker build -f Dockerfile.deploy -t oceanbattle-deploy .'
+                    sh 'docker run -p 8082:80 --rm oceanbattle-deploy'
+                }
+            }
+        }
+
+        /*stage('Publish') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                        sh 'docker tag ${IMAGE_NAME}:${VERSION} ${IMAGE_NAME}:latest'
+                        sh 'docker push ${IMAGE_NAME}:${VERSION}'
+                        sh 'docker push ${IMAGE_NAME}:latest'
+                    }
+                }
+            }
+        }*/
+    }
+
+    post {
+        always {
+            script {
+                sh 'docker rm -f oceanbattle || true'
+            }
+        }
+    }
+}
