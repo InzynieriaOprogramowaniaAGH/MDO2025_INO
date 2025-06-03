@@ -36,40 +36,36 @@
 
 ### 2. Pobranie pozostalych obrazow
 
-![2](Lab_2/screeny/22.png)
+![2](Lab_2/screeny/2.png)
 
 ### 3. Uruchominie kontenera BusyBox i sprawdzenie jego wersji
 
-![3](Lab_2/screeny/33.png)
+![3](Lab_2/screeny/3.png)
 
-### 4. 
+### 4. Uruchomienie Fedory w kontenerze
 
-![4](Lab_2/screeny/.png)
+![5](Lab_2/screeny/5.png)
 
-### 5. Uruchomienie Fedory w kontenerze
+### 5. Pokazanie PID1 po zainstalowaniu procps
 
-![5](Lab_2/screeny/55.png)
+![6](Lab_2/screeny/6.png)
 
-### 6. Pokazanie PID1 po zainstalowaniu procps
+### 6. Aktualizacja pakietow
 
-![6](Lab_2/screeny/66.png)
+![7](Lab_2/screeny/7.png)
 
-### 7. Aktualizacja pakietow
-
-![7](Lab_2/screeny/77.png)
-
-### 8. Przygotowanie Docerfile, ktory bedzize tworzyl kontener z fedora, instalowal gita i clonowal 
+### 7. Przygotowanie Docerfile, ktory bedzize tworzyl kontener z fedora, instalowal gita i clonowal 
 ### repozytorium
 
-![8](Lab_2/screeny/88.png)
+![8](Lab_2/screeny/8.png)
 
-### 9. Budowa obrazu 
+### 8. Budowa obrazu 
 
-![9](Lab_2/screeny/99.png)
+![9](Lab_2/screeny/9.png)
 
-### 10. Usuniecie wszystkich obrazow
+### 9. Usuniecie wszystkich obrazow
 
-![10](Lab_2/screeny/111.png)
+![10](Lab_2/screeny/10.png)
 
 # Lab 3
 
