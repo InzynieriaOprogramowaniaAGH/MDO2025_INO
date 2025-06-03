@@ -37,7 +37,7 @@ pipeline {
             steps {
                 dir('ITE/GCL04/TK414543/Sprawozdanie2/LAB6') {
                     sh 'docker build -f Dockerfile.deploy -t oceanbattle-deploy .'
-                    sh 'docker run -d -p 8082:80 --rm oceanbattle-deploy'
+                    sh 'docker run -d --name oceanbattle -p 8082:80 oceanbattle-deploy'
 
                     script {
                         def maxRetries = 20
@@ -46,7 +46,7 @@ pipeline {
                         
                         for (int i = 0; i < maxRetries; i++) {
                             def result = sh(
-                                script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/swagger/index.html',
+                                script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:8082',
                                 returnStdout: true
                                 ).trim()
                                 
