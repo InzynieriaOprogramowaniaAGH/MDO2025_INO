@@ -1,3 +1,5 @@
+#Sprawozdanie 1
+
 # Lab 1
 
 ### 1. Klonowanie repozytorium przez HTTPS
@@ -26,9 +28,49 @@
 
 ![Dodanie](Lab_1/screeny/2.png)
 
-#Lab 2
+# Lab 2
 
- 
+### 1. Dodanie uzytkownika do grupy Docker i pobranie obrazu hello world
+
+![1](Lab2/screeny/11.png)
+
+### 2. Pobranie pozostalych obrazow
+
+![2](Lab2/screeny/22.png)
+
+### 3. Uruchominie kontenera BusyBox i sprawdzenie jego wersji
+
+![3](Lab2/screeny/33.png)
+
+### 4. 
+
+![4](Lab2/screeny/.png)
+
+### 5. Uruchomienie Fedory w kontenerze
+
+![5](Lab2/screeny/55.png)
+
+### 6. Pokazanie PID1 po zainstalowaniu procps
+
+![6](Lab2/screeny/66.png)
+
+### 7. Aktualizacja pakietow
+
+![7](Lab2/screeny/77.png)
+
+### 8. Przygotowanie Docerfile, ktory bedzize tworzyl kontener z fedora, instalowal gita i clonowal 
+### repozytorium
+
+![8](Lab2/screeny/88.png)
+
+### 9. Budowa obrazu 
+
+![9](Lab2/screeny/99.png)
+
+### 10. Usuniecie wszystkich obrazow
+
+![10](Lab2/screeny/111.png)
+
 
 
 
