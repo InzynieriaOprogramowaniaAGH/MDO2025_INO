@@ -186,7 +186,7 @@ EXPOSE 80
         stage('Deploy') {
             steps {
                 dir('ITE/GCL04/TK414543/Sprawozdanie2/LAB6') {
-                    sh 'docker build -f Dockerfile.deploy -t oceanbattle-deploy .'
+                    sh 'docker build -f Dockerfile.deploy -t ${IMAGE_NAME}:${VERSION} -t oceanbattle-deploy .'
                     sh 'docker run --rm -d --name oceanbattle --network jenkins oceanbattle-deploy'
 
                     script {
@@ -230,10 +230,17 @@ EXPOSE 80
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        def versionTag = "${IMAGE_NAME}:${VERSION}"
+                        def latestTag = "${IMAGE_NAME}:latest"
+                        def builtImage = "oceanbattle-deploy"
+
+                        sh "docker tag ${builtImage} ${versionTag}"
+                        sh "docker tag ${builtImage} ${latestTag}"
+                    
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                        sh 'docker tag ${IMAGE_NAME}:${VERSION} ${IMAGE_NAME}:latest'
-                        sh 'docker push ${IMAGE_NAME}:${VERSION}'
-                        sh 'docker push ${IMAGE_NAME}:latest'
+                        
+                        sh "docker push ${versionTag}"
+                        sh "docker push ${latestTag}"
                     }
                 }
             }
