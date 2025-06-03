@@ -4,6 +4,16 @@
 
 Celem zadania było utworzenie źródła i instalacji nienadzorowanej dla systemu operacyjnego hostującego nasze oprogramowanie i przeprowadzenie instalacji systemu, który po uruchomieniu rozpocznie hostowanie naszego programu.
 
+## Zadanie 8: Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
+
+NA DEVOPS:
+zaczelam od zainstalwoania 
+sudo dnf install -y ansible        # instalacja ansible
+
+ssh-copy-id ansible@ansible-target   # przesyłasz klucz SSH
+
+
+
 ## Zadanie 9: Pliki odpowiedzi dla wdroźeń nienadzorowanych
 
 1. **Instalacja systemu Fedora i wyciągniecie pliku odpowiedzi:**
@@ -79,4 +89,209 @@ inst.ks=https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_IN
 ```
 
 Po wprowadzeniu zmian zatwierdziłam je, naciskając kombinację klawiszy `Ctrl` + `X`, co spowodowało powrót do ekranu startowego i rozpoczęcie instalacji z wykorzystaniem wskazanego pliku Kickstart. Dzięki temu instalacja przebiegła w sposób automatyczny, zgodnie z zawartą w pliku konfiguracją.
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-06%20at%207.40.16%E2%80%AFPM.png)
+
+
+## Zadanie 10: Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+
+1. **Instalacja i uruchomienie Minikube:**
+
+Proces rozpoczęłam od pobrania i zainstalowania narzędzia Minikube, które pozwala na uruchomienie lokalnego klastra Kubernetes na moim systemie Fedora działającym na architekturze aarch64. Najpierw pobrałam odpowiedni instalator za pomocą polecenia:
+
+``` 
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.aarch64.rpm
+```
+Następnie zainstalowałam Minikube przy użyciu menedżera pakietów RPM:
+``` 
+sudo rpm -Uvh minikube-latest.aarch64.rpm
+```
+Dzięki temu Minikube zostało poprawnie zainstalowane w moim systemie:
+![7.22.34](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.22.34%E2%80%AFPM.png)
+
+2. **Konfiguracja środowiska i uruchomienie klastra:**
+
+Po instalacji uruchomiłam usługę Docker, która jest wykorzystywana jako sterownik kontenerowy przez Minikube:
+```
+sudo systemctl start docker
+```
+Następnie rozpoczęłam pracę z Minikube, uruchamiając lokalny klaster Kubernetes:
+```
+minikube start
+```
+![7.24.25](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.24.25%E2%80%AFPM.png)
+Uruchomienie klastra przebiegło pomyślnie, co potwierdziło działanie podstawowych komponentów Kubernetes.
+
+Aby ułatwić korzystanie z narzędzia kubectl w kontekście Minikube, dodałam alias do pliku `~/.bashrc`:
+
+```
+echo 'alias kubectl="minikube kubectl --"' >> ~/.bashrc
+source ~/.bashrc
+```
+![7.25.16](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.25.16%E2%80%AFPM.png)
+
+Dzięki temu wszystkie polecenia kubectl automatycznie korzystają z kontekstu klastra Minikube, co upraszcza zarządzanie zasobami Kubernetes. 
+
+
+3. **Weryfikacja działania klastra:**
+
+Sprawdziłam działanie podstawowych komponentów i status podów systemowych komendą:
+
+```
+kubectl get po -A
+```
+Widoczne były wszystkie kluczowe komponenty systemowe, działające bez problemów, co potwierdziło, że klaster jest gotowy do wdrożeń. Włączyłam również przydatny dodatek metrics-server w Minikube, który pozwala na zbieranie i monitorowanie metryk zasobów klastra:
+
+```
+minikube addons enable metrics-server
+```
+
+![7.25.51](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.25.51%E2%80%AFPM.png)
+
+4. **Uruchomienie interfejsu Kubernetes Dashboard:**
+
+Aby ułatwić zarządzanie klastrem oraz podgląd stanu wdrożonych aplikacji, uruchomiłam graficzny dashboard Minikube:
+
+```
+minikube dashboard &
+```
+
+![7.26.16](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.26.16%E2%80%AFPM.png)
+Dzięki uruchomieniu go w tle nie blokowałam terminala i mogłam jednocześnie wykonywać dalsze polecenia. Dashboard otworzył się w przeglądarce pod lokalnym adresem, umożliwiając wygodne zarządzanie zasobami Kubernetes.
+
+link:  `http://127.0.0.1:32955/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/#/workloads?namespace=default`.
+
+
+5. **Uruchomienie przykładowego kontenera jako Pod:**
+
+Kolejnym krokiem było uruchomienie prostej aplikacji – serwera nginx – jako pojedynczego poda w klastrze:
+
+```
+minikube kubectl -- run mojpod --image=nginx --port=80 --labels app=mojpod
+```
+![7.36.02](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.36.02%E2%80%AFPM.png)
+
+Sprawdziłam, czy pod działa poprawnie, za pomocą:
+```
+kubectl get pods
+```
+oraz w zakładce `Workloads` > `Pods` w Dashboardzie. Wszystko wskazywało na prawidłowe działanie.
+![7.36.46](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.36.46%E2%80%AFPM.png)
+![7.32.25](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.32.25%E2%80%AFPM.png)
+![7.38.08](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.38.08%E2%80%AFPM.png)
+
+6. **Uzyskanie dostępu do aplikacji:**
+
+Aby uzyskać dostęp do serwera nginx działającego w podzie, wyprowadziłam port lokalny na port kontenera:
+```
+kubectl port-forward pod/mojpod 8080:80
+```
+![7.39.45](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.39.45%E2%80%AFPM.png)
+
+Po wpisaniu w przeglądarce adresu: `http://localhost:8080` pojawiła się strona powitalna nginx, co potwierdziło, że połączenie z pod-em działa poprawnie.
+
+![7.42.17](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.42.17%E2%80%AFPM.png)
+![7.42.44](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%207.42.44%E2%80%AFPM.png)
+
+7. **Tworzenie i wdrożenie Deploymentu z pliku YAML:**
+
+Aby przejść od pojedynczego poda do bardziej produkcyjnego wdrożenia z replikami, przygotowałam plik `nginx-deployment.yaml` z definicją Deploymentu:
+
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moj-nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: moj-nginx
+  template:
+    metadata:
+      labels:
+        app: moj-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+```
+
+Deployment ten definiuje cztery repliki aplikacji nginx, zapewniając tym samym wysoką dostępność i skalowalność. Wdrożyłam go komendą `kubectl apply -f nginx-deployment.yaml` i sprawdziłam status wdrożenia `kubectl rollout status deployment/moj-nginx`. Wszystkie repliki uruchomiły się poprawnie i były dostępne.
+
+![8.08.45](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.08.45%E2%80%AFPM.png)
+![8.12.04](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.12.04%E2%80%AFPM.png)
+
+8. **Eksponowanie Deploymentu jako usługi:**
+
+Aby umożliwić dostęp do aplikacji spoza klastra, wyeksponowałam Deployment jako serwis typu NodePort:
+
+```
+kubectl expose deployment moj-nginx --type=NodePort --port=80
+```
+
+
+Następnie sprawdziłam, jaki port został przypisany na węźle klastra poprzez `kubectl get svc moj-nginx` i na podstawie przydzielonego portu `NodePort` (z zakresu 30000-32767) wyprowadziłam port lokalny na port serwisu `kubectl port-forward svc/moj-nginx 8080:80`. Po otwarciu w przeglądarce adresu `http://localhost:8080` mogłam korzystać z aplikacji działającej w Kubernetes.
+
+![8.15.42](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.15.42%E2%80%AFPM.png)
+![8.18.42](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.18.42%E2%80%AFPM.png)
+![8.19.24](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.19.24%E2%80%AFPM.png)
+![8.23.44](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-20%20at%208.23.44%E2%80%AFPM.png)
+
+## Zadanie 11: Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+
+
+1. **Przygotowanie nowego obrazu**
+
+
+Stworzyłam dwa obrazy Docker, które opublikowałam na Docker Hub pod nazwą `malgorzatapalewicz/moje-nginx`. Pierwszy obraz, oznaczony jako `v1`, bazował na oficjalnym obrazie `nginx:latest`. Do tego obrazu dodałam jedynie mój własny plik `index.html`, który skopiowałam do katalogu `/usr/share/nginx/html/index.html`, aby Nginx serwował moją stronę. Dockerfile dla tej wersji był prosty i wyglądał tak:
+
+```
+FROM nginx:latest
+COPY index.html /usr/share/nginx/html/index.html
+```
+
+Obraz ten zbudowałam komendą `docker build -t malgorzatapalewicz/moje-nginx:v1 .` i opublikowałam go poleceniem `docker push malgorzatapalewicz/moje-nginx:v1`. Ta wersja działała prawidłowo i uruchamiała się bez problemów.
+
+Następnie przygotowałam drugi obraz, oznaczony jako `v2`. Bazą również był oficjalny obraz `nginx:latest`, a do niego skopiowałam ten sam plik `index.html`. Jednak tym razem dodałam do Dockerfile polecenie: `CMD ["sh", "-c", "exit 1"]`. To polecenie powoduje, że po uruchomieniu kontenera natychmiast wykonywane jest wyjście z kodem błędu 1. Oznacza to, że gdy kontener się uruchamia, zamiast startować proces `Nginx`, wykonywane jest polecenie `exit 1`, które powoduje natychmiastowe zakończenie działania kontenera z błędem. W efekcie kontener przestaje działać zaraz po starcie i nie świadczy żadnych usług. Pełny Dockerfile dla wersji `v2` wyglądał tak:
+
+```
+FROM nginx:latest
+COPY index.html /usr/share/nginx/html/index.html
+CMD ["sh", "-c", "exit 1"]
+```
+
+Obraz zbudowałam i wypchnęłam do Docker Hub analogicznie jak w przypadku wersji `v1`.
+
+
+Po wdrożeniu obrazu `v2` Kubernetes uruchamia kontenery, ale proces w nich się natychmiast kończy z błędem. Kubernetes próbuje automatycznie restartować pod, ale ponieważ problem jest powtarzalny (kontener kończy się zawsze tym samym błędem), pod szybko przechodzi w stan `CrashLoopBackOff`. Oznacza to, że Kubernetes wielokrotnie próbuje uruchomić pod, ale ten ciągle się wyłącza, co skutkuje niestabilnym i niedostępnym środowiskiem.
+
+
+Kiedy wdrożyłam wadliwy obraz, zauważyłam, że pody nie uruchamiają się poprawnie. Sprawdziłam historię wdrożeń mojego deploymentu poleceniem:
+
+```
+kubectl rollout history deployment/moj-nginx
+```
+
+Widziałam tam kolejne rewizje deploymentu, dzięki czemu mogłam zidentyfikować, która wersja była stabilna (v1), a która wprowadziła problem (v2). Następnie wykonałam rollback do poprzedniej, działającej wersji komendą:
+
+```
+kubectl rollout undo deployment/moj-nginx
+```
+
+Zalogowałam się do dockerHuba, poprzez usluge docker login i otrzymalam informacje o prawildowym polaczeniu z moim urzadzeniem.
+![7.07.20]()
+![7.08.02]()
+
+Zbudowalam wersje v1 i v2:
+![]()
+
+  
+3. hjkl
+4. jkl;
+
+
 
