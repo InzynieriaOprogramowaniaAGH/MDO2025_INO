@@ -1,18 +1,5 @@
 # Sprawozdanie (Zadania 8-10)
 
-## Wprowadzenie
-
-Celem zadania było utworzenie źródła i instalacji nienadzorowanej dla systemu operacyjnego hostującego nasze oprogramowanie i przeprowadzenie instalacji systemu, który po uruchomieniu rozpocznie hostowanie naszego programu.
-
-## Zadanie 8: Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
-
-NA DEVOPS:
-zaczelam od zainstalwoania 
-sudo dnf install -y ansible        # instalacja ansible
-
-ssh-copy-id ansible@ansible-target   # przesyłasz klucz SSH
-
-
 
 ## Zadanie 9: Pliki odpowiedzi dla wdroźeń nienadzorowanych
 
@@ -244,7 +231,7 @@ Następnie sprawdziłam, jaki port został przypisany na węźle klastra poprzez
 ## Zadanie 11: Wdrażanie na zarządzalne kontenery: Kubernetes (2)
 
 
-1. **Przygotowanie nowego obrazu**
+1. **Przygotowanie nowego obrazu:**
 
 
 Stworzyłam dwa obrazy Docker, które opublikowałam na Docker Hub pod nazwą `malgorzatapalewicz/moje-nginx`. Pierwszy obraz, oznaczony jako `v1`, bazował na oficjalnym obrazie `nginx:latest`. Do tego obrazu dodałam jedynie mój własny plik `index.html`, który skopiowałam do katalogu `/usr/share/nginx/html/index.html`, aby Nginx serwował moją stronę. Dockerfile dla tej wersji był prosty i wyglądał tak:
@@ -256,6 +243,10 @@ COPY index.html /usr/share/nginx/html/index.html
 
 Obraz ten zbudowałam komendą `docker build -t malgorzatapalewicz/moje-nginx:v1 .` i opublikowałam go poleceniem `docker push malgorzatapalewicz/moje-nginx:v1`. Ta wersja działała prawidłowo i uruchamiała się bez problemów.
 
+![7.06.24](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-29%20at%207.06.24%E2%80%AFPM.png)
+
+![7.16.11](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-29%20at%207.16.11%E2%80%AFPM.png)
+
 Następnie przygotowałam drugi obraz, oznaczony jako `v2`. Bazą również był oficjalny obraz `nginx:latest`, a do niego skopiowałam ten sam plik `index.html`. Jednak tym razem dodałam do Dockerfile polecenie: `CMD ["sh", "-c", "exit 1"]`. To polecenie powoduje, że po uruchomieniu kontenera natychmiast wykonywane jest wyjście z kodem błędu 1. Oznacza to, że gdy kontener się uruchamia, zamiast startować proces `Nginx`, wykonywane jest polecenie `exit 1`, które powoduje natychmiastowe zakończenie działania kontenera z błędem. W efekcie kontener przestaje działać zaraz po starcie i nie świadczy żadnych usług. Pełny Dockerfile dla wersji `v2` wyglądał tak:
 
 ```
@@ -264,34 +255,169 @@ COPY index.html /usr/share/nginx/html/index.html
 CMD ["sh", "-c", "exit 1"]
 ```
 
-Obraz zbudowałam i wypchnęłam do Docker Hub analogicznie jak w przypadku wersji `v1`.
+Obraz zbudowałam i wypchnęłam do Docker Hub (do którego wcześniej się zalogowałam poprzez usługę `docker login` i otrzymałam informacje o prawidłowym połączeniu z moim urządzeniem) analogicznie jak w przypadku wersji `v1`.
+
+![8.51.33](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-31%20at%208.51.33%E2%80%AFPM.png)
+
+![7.07.20](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-29%20at%207.07.20%E2%80%AFPM.png)
+![7.08.02](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-29%20at%207.08.02%E2%80%AFPM.png)
 
 
-Po wdrożeniu obrazu `v2` Kubernetes uruchamia kontenery, ale proces w nich się natychmiast kończy z błędem. Kubernetes próbuje automatycznie restartować pod, ale ponieważ problem jest powtarzalny (kontener kończy się zawsze tym samym błędem), pod szybko przechodzi w stan `CrashLoopBackOff`. Oznacza to, że Kubernetes wielokrotnie próbuje uruchomić pod, ale ten ciągle się wyłącza, co skutkuje niestabilnym i niedostępnym środowiskiem.
+2. **Kontrola wdrożenia:**
+
+Wykonałam skalowanie wdrożenia poprzez modyfikację pola replicas w pliku YAML. Zwiększyłam liczbę replik do 8, następnie zmniejszyłam do 1, potem do 0, a finalnie przywróciłam 4 repliki.
+
+8 replik:
+![5.25.11](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-31%20at%205.25.11%E2%80%AFPM.png)
+1 replika:
+![5.28.03](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-31%20at%205.28.03%E2%80%AFPM.png)
+4 repliki:
+![5.28.58](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-31%20at%205.28.58%E2%80%AFPM.png)
 
 
-Kiedy wdrożyłam wadliwy obraz, zauważyłam, że pody nie uruchamiają się poprawnie. Sprawdziłam historię wdrożeń mojego deploymentu poleceniem:
+Zaktualizowałam również obraz kontenera na wersję `v2`, która zawierała błędną konfigurację (brak pliku `index.html`). Po wdrożeniu pojawił się błąd 404. Po wdrożeniu obrazu `v2` Kubernetes uruchamia kontenery, ale proces w nich się natychmiast kończy z błędem. Kubernetes próbuje automatycznie restartować pod, ale ponieważ problem jest powtarzalny (kontener kończy się zawsze tym samym błędem), pod szybko przechodzi w stan `CrashLoopBackOff`. Oznacza to, że Kubernetes wielokrotnie próbuje uruchomić pod, ale ten ciągle się wyłącza, co skutkuje niestabilnym i niedostępnym środowiskiem.
 
-```
-kubectl rollout history deployment/moj-nginx
-```
+![8.58.58](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-31%20at%208.58.58%E2%80%AFPM.png)
 
-Widziałam tam kolejne rewizje deploymentu, dzięki czemu mogłam zidentyfikować, która wersja była stabilna (v1), a która wprowadziła problem (v2). Następnie wykonałam rollback do poprzedniej, działającej wersji komendą:
+
+Kiedy wdrożyłam wadliwy obraz, zauważyłam, że pody nie uruchamiają się poprawnie. Widziałam, że wersja `v1` była stabilna, a która `v2` wprowadziła problem. Następnie wykonałam rollback do poprzedniej, działającej wersji komendą:
 
 ```
 kubectl rollout undo deployment/moj-nginx
 ```
+![9.01.21](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-31%20at%209.01.21%E2%80%AFPM.png)
 
-Zalogowałam się do dockerHuba, poprzez usluge docker login i otrzymalam informacje o prawildowym polaczeniu z moim urzadzeniem.
-![7.07.20]()
-![7.08.02]()
+![5.30.41](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-31%20at%205.30.41%E2%80%AFPM.png)
 
-Zbudowalam wersje v1 i v2:
-![]()
+
+Następnie sprawdziłam historie zmian poprzez komendę `kubectl rollout history deployment/moj-nginx`:
+![9.03.07](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-31%20at%209.03.07%E2%80%AFPM.png)
+
 
   
-3. hjkl
-4. jkl;
+3. **Strategie wdrożenia:**
+Po przywróceniu poprawnej wersji aplikacji za pomocą polecenia `kubectl rollout undo`, przeszłam do napisania skryptu weryfikującego, czy wdrożenie zakończyło się poprawnie w ciągu 60 sekund.
+
+Najpierw utworzyłam plik skryptu o nazwie `check_deployment.sh`, nadałam mu prawa do wykonania za pomocą komendy `chmod +x check_deployment.sh`, a następnie uruchomiłam go poleceniem `./check_deployment.sh`.
+
+Kod: 
+```
+#!/bin/bash
+
+DEPLOYMENT_NAME="moj-nginx"
+NAMESPACE="default"  
+TIMEOUT=60
+INTERVAL=5
+ELAPSED=0
+
+echo "Sprawdzam status rollout deploymentu $DEPLOYMENT_NAME co $INTERVAL sekund..."
+
+while [ $ELAPSED -lt $TIMEOUT ]; do
+    STATUS=$(kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE --timeout=1s 2>&1)
+
+    if echo "$STATUS" | grep -q "successfully rolled out"; then
+        echo "Deployment zakończył się sukcesem."
+        exit 0
+    fi
+
+    echo "Trwa wdrożenie... ($ELAPSED sekund)"
+    sleep $INTERVAL
+    ELAPSED=$((ELAPSED + INTERVAL))
+done
+
+echo "Timeout! Deployment nie zakończył się w ciągu $TIMEOUT sekund."
+exit 1
+```
+Kod został zastosowany to na wersji `v2`, więc prawidłowo wykrył, że deployment nie zakończył się:
+![9.12.35](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-31%20at%209.12.35%E2%80%AFPM.png)
+
+Następnie przeszłam do testowania i porównania trzech podstawowych strategii wdrożeń dostępnych w Kubernetesie: `Recreate`, `RollingUpdate` oraz `Canary Deployment`.
+
+### Strategia: Recreate
+
+Podczas wdrażania strategii `Recreate`, wszystkie istniejące pody są najpierw usuwane, zanim nowe zostaną utworzone. Skutkuje to krótką przerwą w dostępności aplikacji.
+
+Kod deploymentu:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moj-nginx-recreate
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: moj-nginx-recreate
+  template:
+    metadata:
+      labels:
+        app: moj-nginx-recreate
+    spec:
+      containers:
+      - name: nginx
+        image: malgorzatapalewicz/moje-nginx:v1
+        ports:
+        - containerPort: 80
+```
+Zastosowałam ten deployment w Kubernetesie poleceniem `kubectl apply -f moj-nginx-recreate.yaml`, a następnie sprawdziłam działające pody.
+
+![9.24.40](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-31%20at%209.24.40%E2%80%AFPM.png)
+
+*Wnioski:*
+
+- Strategia **Recreate** oznacza, że stare pody są najpierw całkowicie usuwane, zanim zostaną uruchomione nowe.
+- W praktyce oznacza to, że w trakcie rollout’u może wystąpić krótka przerwa w dostępności usługi — bo nie ma jednocześnie działających starych i nowych podów.
+- Z obserwacji wynika, że wszystkie repliki zostały utworzone poprawnie i działają (`READY=1/1`, `STATUS=Running`), co oznacza, że deployment zakończył się sukcesem.
+- Ponieważ replik jest 4, i wszystkie są jednocześnie uruchomione po `rollout`, oznacza to, że stare pody zostały usunięte zanim nowe zaczęły działać (typowe dla `Recreate`).
 
 
+### Strategia: Rolling Update
+
+W kolejnym kroku przetestowałam strategię `RollingUpdate`, z dodatkowymi parametrami `maxUnavailable` i `maxSurge`.
+
+Kod deploymentu:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moj-nginx-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2        
+      maxSurge: 20%            
+  selector:
+    matchLabels:
+      app: moj-nginx-rolling
+  template:
+    metadata:
+      labels:
+        app: moj-nginx-rolling
+    spec:
+      containers:
+      - name: nginx
+        image: malgorzatapalewicz/moje-nginx:v1
+        ports:
+        - containerPort: 80
+```
+
+Po uruchomieniu deploymentu poleceniem `kubectl apply -f moj-nginx-rolling.yaml`, sprawdziłam aktualny stan podów oraz przebieg rolloutu.
+
+![9.33.43](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie3/Screenshots/Screenshot%202025-05-31%20at%209.33.43%E2%80%AFPM.png)
+
+*Wnioski:*
+
+Podczas testowania strategii RollingUpdate, zauważyłam, że wszystkie pody zostały zaktualizowane bardzo szybko — wyglądało to, jakby zaktualizowały się prawie jednocześnie. Początkowo oczekiwałam bardziej widocznej, stopniowej wymiany podów.
+
+Po przeanalizowaniu parametrów użytych w konfiguracji (maxUnavailable: 2, maxSurge: 20%) zrozumiałam, że Kubernetes mógł usunąć do dwóch starych podów naraz oraz uruchomić jeden nowy pod dodatkowo. W przypadku 4 replik oznacza to, że w krótkim czasie mogły zostać wymienione aż 3 pody, co tłumaczy szybkość operacji.
+
+- Kubernetes wymienia pody stopniowo, nie wszystkie naraz. W moim przypadku dopuszczalne jest, by do 2 podów było niedostępnych jednocześnie (`maxUnavailable: 2`), a także, by powstał dodatkowy pod ponad docelową liczbę replik (`maxSurge: 20%` → 1 pod).
+- Dzięki parametrom update jest płynny i serwis pozostaje dostępny (nigdy nie powinno być sytuacji, gdzie wszystkie pody są niedostępne).
+- W `Recreate` najpierw są wyłączane wszystkie stare pody, potem tworzone nowe — tu serwis może być niedostępny na czas przełączania. `Rolling Update` minimalizuje takie ryzyko.
+
+Nie odnotowałam przerw w dostępności ani problemów ze stabilnością podów. Strategia ta jest odpowiednia do produkcyjnych wdrożeń, gdzie kluczowa jest ciągła dostępność usługi.
 
