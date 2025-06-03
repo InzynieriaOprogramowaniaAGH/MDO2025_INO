@@ -14,19 +14,23 @@ Dodatkowo wykonano migawkę maszyny oraz jej eksport.
 
 #### Instalacja Ansible
 Na głównej maszynie zainstalowano oprogramowanie Ansible.
+
 ![Opis obrazka](lab8/3.png)
 
 #### Wymieniono klucze SSH pomiędzy użytkownikami na maszynach, aby logowanie przez ssh nie wymagało wpisywania hasła.
+
 ![Opis obrazka](lab8/4.png)
 
 ### Inwentaryzacja
 #### Dokonano następującej inwentaryzacji systemów
 Po ustawieniu przewidywalnych nazw maszyn wirtualnych 'ansible-controller' oraz 'ansible-target' używając 'hostnamectl', wprowadzono nazwy DNS maszyn stosując 'etc/hosts' na obu maszynach.
+
 ![Opis obrazka](lab8/5.png)
 
 ![Opis obrazka](lab8/6.png)
 
 Działanie to umożliwia wywoływanie komputerów za pomocą nazw, a nie tylko wykorzystywaniu adresów IP. Zweryfikowano łączność używając wzajemny 'ping'.
+
 ![Opis obrazka](lab8/7.png)
 
 ![Opis obrazka](lab8/8.png)
@@ -40,6 +44,7 @@ ansible-controller ansible_host=10.0.2.15 ansible_user=cadmus
 ansible-target ansible_host=10.0.2.4 ansible_user=ansible
 ```
 Na testa wysłano żądanie 'ping' do wszystkich maszyn.
+
 ![Opis obrazka](lab8/9.png)
 
 ### Zdalne wywołanie procedur
@@ -72,15 +77,19 @@ Na testa wysłano żądanie 'ping' do wszystkich maszyn.
         - rngd
 ```
 Playbook wysyła kolejno żądanie 'ping' do wszystkich maszyn, kopiuje plik inwentaryzacji na maszynę 'ansible-target', aktualizuje pakiety w systemie oraz restartuje usługi sshd oraz rngd. Pierw zainstalowano narzędzie 'rngd'.
+
 ![Opis obrazka](lab8/10.png)
 
 Pierwsze uruchomienie playbooka:
+
 ![Opis obrazka](lab8/11.png)
 
 Drugie uruchomienie playbooka:
+
 ![Opis obrazka](lab8/12.png)
 
 Trzecie uruchomienie (z uprzednio wyłączonym serwerem SSH na maszynie 'ansible-target'):
+
 ![Opis obrazka](lab8/13.png)
 
 ![Opis obrazka](lab8/14.png)
@@ -88,6 +97,7 @@ Trzecie uruchomienie (z uprzednio wyłączonym serwerem SSH na maszynie 'ansible
 ### Zarządzanie stworzonym artefaktem
 #### Artefaktem poprzednich zajęć był kontener
 Pierw dodano obraz do repo na Docker Hub.
+
 ![Opis obrazka](lab8/15.png)
 
 Kolejno stworzono rolę 'app', strukturę katalogów i plików dla roli Ansible. Dodano kolejne zadania w folderze 'app/tasks/':
@@ -208,9 +218,11 @@ run_app.yaml - playbook
 Zadania w playbooku podzielono na moduły dzięki czemu kod jest bardziej przejrzysty i łatwiej go utrzymać. Instalacja zależności, jak python3-requests, została wyodrębniona, co zapobiega błędom związanym z brakującymi bibliotekami potrzebnymi do działania modułów Ansible. Sprawdzenie działania aplikacji przez test HTTP pozwala automatycznie potwierdzić sukces wdrożenia, a końcowe usunięcie kontenera utrzymuje porządek i oszczędza zasoby.
 
 Pierwsze uruchomienie (błedne) playbooka:
+
 ![Opis obrazka](lab8/16.png)
 
 Ostatnie (poprawne) uruchomienie playbooka:
+
 ![Opis obrazka](lab8/18.png)
 
 # Zajęcia 09
@@ -218,10 +230,12 @@ Ostatnie (poprawne) uruchomienie playbooka:
 Celem ćwiczenia było praktyczne opanowanie automatycznego instalowania Fedory za pomocą plików Kickstart. W trakcie zajęć stworzono i dostosowano plik odpowiedzi, który pozwala na bezobsługową instalację systemu, w tym konfigurację użytkowników, repozytoriów, partycjonowanie dysku oraz automatyczne uruchomienie kontenera Docker.
 
 ### Utworzono nową maszynę Fedora
+
 ![Opis obrazka](lab9/8.png)
 
 ### Plik 'anaconda-ks.cfg'
 Na starej maszynie pobrano ten plik odpowiedzi i nadano mu uprawnienia do odczytu.
+
 ![Opis obrazka](lab9/1.png)
 
 ### Edycja pliku odpowiedzi
@@ -273,9 +287,11 @@ firstboot --enable
 
 ### Przeprowadzenie instalacji
 Po wrzuceniu pliku odpowiedzi na soją gałąź w repozytorium przedmiotowym, uruchomiono nową maszynę z płyty ISO i po naciśnięciu klawisza 'e' na ekranie GRUB dokonano wpisu do używania pliku 'kickstart'. 
+
 ![Opis obrazka](lab9/2.png)
 
 Przebieg instalacji:
+
 ![Opis obrazka](lab9/3.png)
 
 ![Opis obrazka](lab9/4.png)
@@ -362,4 +378,5 @@ reboot
 Ten rozszerzony plik instalacyjny Fedora Kickstart umożliwia w pełni automatyczną, nienadzorowaną instalację systemu z konfiguracją sieciową, użytkownikami i repozytoriami niezbędnymi do działania projektu. Sekcja %packages dopina niezbędne pakiety, w tym Dockera, wget i curl, zapewniając pełne środowisko do późniejszego wdrożenia kontenera. W sekcji %post uruchamiane są skrypty powłoki, które konfigurują i uruchamiają usługę Dockera, dodają użytkownika cadmus do grupy docker oraz pobierają i uruchamiają kontener cadmusinho/nodedeploy:latest. Aby zapewnić automatyczny start aplikacji Node.js po restarcie systemu, tworzony jest i aktywowany systemdowy serwis nodedeploy.service, który zarządza cyklem życia kontenera. Dodatkowo otwierany jest port 3000 w firewallu, co umożliwia dostęp do aplikacji z zewnątrz. Całość kończy się poleceniem restartu systemu, które pozwala na pełne wdrożenie konfiguracji i uruchomienie środowiska produkcyjnego bez żadnej interakcji użytkownika.
 
 Weryfikacja działania:
+
 ![Opis obrazka](lab9/7.png)
