@@ -1,0 +1,5 @@
+FROM oceanbattle-build AS test
+
+WORKDIR /app
+
+CMD ["dotnet", "test"]

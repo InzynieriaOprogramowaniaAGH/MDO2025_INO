@@ -1,0 +1,108 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "kurowskitomek/webapi"
+        VERSION = "1.0.${BUILD_NUMBER}"
+    }
+
+    stages {
+
+        stage('Checkout'){
+            steps{
+                git branch: 'TK414543',
+                    url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('ITE/GCL04/TK414543/Sprawozdanie1/LAB3') {
+                    sh 'docker build --no-cache --pull -f Dockerfile.build -t oceanbattle-build .'
+                    sh 'docker run --rm oceanbattle-build'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('ITE/GCL04/TK414543/Sprawozdanie1/LAB3') {
+                    sh 'docker build -f Dockerfile.test -t oceanbattle-test .'
+                    sh 'docker run --rm oceanbattle-test'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('ITE/GCL04/TK414543/Sprawozdanie2/LAB6') {
+                    sh 'docker network inspect jenkins >/dev/null 2>&1 || docker network create jenkins'
+
+                    sh 'docker build -f Dockerfile.deploy -t ${IMAGE_NAME}:${VERSION} -t oceanbattle-deploy .'
+                    sh 'docker run --rm -d --name oceanbattle --network jenkins oceanbattle-deploy'
+
+                    script {
+                        def maxRetries = 20
+                        def delaySeconds = 5
+                        def success = false
+                        
+                        sleep delaySeconds
+
+                        for (int i = 0; i < maxRetries; i++) {
+                            def result = sh(
+                                script: 'docker run --rm --network jenkins curlimages/curl:8.8.0 -s -o /dev/null -w "%{http_code}" http://oceanbattle:80/api/auth/.well-known',
+                                returnStdout: true
+                                ).trim()
+                                
+                            if (result == '200') {
+                                echo "Container is responding with HTTP 200"
+                                success = true
+                                break
+                            }
+                                
+                            echo "Waiting for container... (attempt ${i + 1})"
+                            sleep delaySeconds                    
+                        }
+                        
+                        if (!success) {
+                            error("Container did not become healthy in time")
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        def versionTag = "${IMAGE_NAME}:${VERSION}"
+                        def latestTag = "${IMAGE_NAME}:latest"
+                        def builtImage = "oceanbattle-deploy"
+
+                        sh "docker tag ${builtImage} ${versionTag}"
+                        sh "docker tag ${builtImage} ${latestTag}"
+                    
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                        
+                        sh "docker push ${versionTag}"
+                        sh "docker push ${latestTag}"
+                    }
+                    
+                    sh 'docker save oceanbattle-deploy | gzip > oceanbattle-deploy.tar.gz'
+                    archiveArtifacts artifacts: 'oceanbattle-deploy.tar.gz', fingerprint: true
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+                echo 'Cleaning up workspace...'
+                sh 'docker rm -f oceanbattle || true'
+                sh 'docker stop $(docker ps -aq) || true'
+                sh 'docker system prune -a -f'
+                deleteDir() 
+        }
+    }
+}

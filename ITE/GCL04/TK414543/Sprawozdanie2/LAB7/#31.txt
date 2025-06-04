@@ -1,0 +1,664 @@
+Started by user Tomasz Kurowski
+Obtained ITE/GCL04/TK414543/Sprawozdanie2/LAB5/Jenkinsfile from git https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/OceanBattlePipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: git
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/OceanBattlePipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/TK414543^{commit} # timeout=10
+Checking out Revision aedbe80f009f813d3ff88580e13a3826b5f6c6cd (refs/remotes/origin/TK414543)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f aedbe80f009f813d3ff88580e13a3826b5f6c6cd # timeout=10
+Commit message: "TK414543 modified publish stage"
+ > git rev-list --no-walk aedbe80f009f813d3ff88580e13a3826b5f6c6cd # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] git
+The recommended git tool is: git
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/OceanBattlePipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/TK414543^{commit} # timeout=10
+Checking out Revision aedbe80f009f813d3ff88580e13a3826b5f6c6cd (refs/remotes/origin/TK414543)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f aedbe80f009f813d3ff88580e13a3826b5f6c6cd # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git checkout -b TK414543 aedbe80f009f813d3ff88580e13a3826b5f6c6cd # timeout=10
+Commit message: "TK414543 modified publish stage"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/OceanBattlePipeline/ITE/GCL04/TK414543/Sprawozdanie1/LAB3
+[Pipeline] {
+[Pipeline] sh
++ docker build --no-cache --pull -f Dockerfile.build -t oceanbattle-build .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.build
+#1 transferring dockerfile: 414B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for mcr.microsoft.com/dotnet/sdk:7.0
+#2 DONE 1.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.1s
+
+#4 [1/7] FROM mcr.microsoft.com/dotnet/sdk:7.0@sha256:d32bd65cf5843f413e81f5d917057c82da99737cb1637e905a1a4bc2e7ec6c8d
+#4 resolve mcr.microsoft.com/dotnet/sdk:7.0@sha256:d32bd65cf5843f413e81f5d917057c82da99737cb1637e905a1a4bc2e7ec6c8d 0.1s done
+#4 sha256:d32bd65cf5843f413e81f5d917057c82da99737cb1637e905a1a4bc2e7ec6c8d 1.79kB / 1.79kB done
+#4 sha256:a291948a5e5ceb50e3eaa75cb1e6377660146b385e475938d6855e220afaaeed 2.01kB / 2.01kB done
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 0B / 32.46MB 0.1s
+#4 sha256:ea4f5eec20952a885a89566fc35cf3295b3228375b715a0f1af9e5a3c0c2eebf 5.29kB / 5.29kB done
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 0B / 31.43MB 0.1s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 0B / 14.97MB 0.2s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 1.05MB / 14.97MB 1.1s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 2.10MB / 31.43MB 1.3s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 2.10MB / 32.46MB 1.7s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 2.10MB / 14.97MB 1.8s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 4.19MB / 32.46MB 2.4s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 4.19MB / 31.43MB 2.4s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 3.15MB / 14.97MB 2.8s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 6.29MB / 32.46MB 3.5s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 6.29MB / 31.43MB 3.7s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 4.19MB / 14.97MB 4.3s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 8.39MB / 32.46MB 4.7s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 8.39MB / 31.43MB 4.8s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 5.24MB / 14.97MB 5.5s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 10.49MB / 32.46MB 5.8s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 10.49MB / 31.43MB 5.8s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 6.29MB / 14.97MB 6.6s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 12.58MB / 31.43MB 7.0s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 12.58MB / 32.46MB 7.2s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 7.34MB / 14.97MB 7.2s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 8.39MB / 14.97MB 7.8s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 14.68MB / 31.43MB 8.0s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 9.44MB / 14.97MB 8.4s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 14.68MB / 32.46MB 8.9s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 16.78MB / 31.43MB 9.1s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 10.49MB / 14.97MB 9.3s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 16.78MB / 32.46MB 10.1s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 11.53MB / 14.97MB 10.1s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 18.87MB / 31.43MB 10.4s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 12.58MB / 14.97MB 10.6s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 18.87MB / 32.46MB 11.5s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 13.63MB / 14.97MB 11.5s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 20.97MB / 31.43MB 11.8s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 14.68MB / 14.97MB 12.0s
+#4 sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 14.97MB / 14.97MB 12.1s done
+#4 sha256:f1b39e168c1c776458e172f157167607b9fd3cc550af8e6ff0a7dd363c1e64ea 0B / 153B 12.2s
+#4 sha256:f1b39e168c1c776458e172f157167607b9fd3cc550af8e6ff0a7dd363c1e64ea 153B / 153B 12.3s done
+#4 sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 0B / 10.12MB 12.4s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 20.97MB / 32.46MB 12.8s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 23.07MB / 31.43MB 13.0s
+#4 sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 1.05MB / 10.12MB 13.4s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 23.07MB / 32.46MB 13.9s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 25.17MB / 31.43MB 13.9s
+#4 sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 2.10MB / 10.12MB 14.1s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 27.26MB / 31.43MB 14.8s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 25.17MB / 32.46MB 14.9s
+#4 sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 3.15MB / 10.12MB 15.4s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 29.36MB / 31.43MB 15.8s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 27.26MB / 32.46MB 16.3s
+#4 sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 4.19MB / 10.12MB 16.3s
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 31.43MB / 31.43MB 16.5s
+#4 extracting sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd
+#4 sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 31.43MB / 31.43MB 16.5s done
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 0B / 25.37MB 16.7s
+#4 sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 5.24MB / 10.12MB 17.0s
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 2.10MB / 25.37MB 17.7s
+#4 sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 6.29MB / 10.12MB 18.1s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 29.36MB / 32.46MB 18.3s
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 3.83MB / 25.37MB 18.8s
+#4 sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 7.34MB / 10.12MB 19.3s
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 5.24MB / 25.37MB 19.6s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 31.46MB / 32.46MB 20.0s
+#4 sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 8.39MB / 10.12MB 20.4s
+#4 sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 32.46MB / 32.46MB 20.5s done
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 7.34MB / 25.37MB 20.6s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 0B / 180.57MB 20.6s
+#4 extracting sha256:728328ac3bde9b85225b1f0d60f5c149f5635a191f5d8eaeeb00e095d36ef9fd 4.1s done
+#4 extracting sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc
+#4 sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 9.44MB / 10.12MB 21.4s
+#4 extracting sha256:82bb7a80de578404d92b5ae5e67f3de90eab30027694d2609be35ad25b09e3bc 0.7s done
+#4 extracting sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 9.44MB / 25.37MB 21.8s
+#4 sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 10.12MB / 10.12MB 22.0s done
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 0B / 13.99MB 22.1s
+#4 extracting sha256:534ba947de6ac79fd6168f4a93847954b23bab2782700bbfff7f31e61a03e8d4 1.3s done
+#4 extracting sha256:f1b39e168c1c776458e172f157167607b9fd3cc550af8e6ff0a7dd363c1e64ea
+#4 extracting sha256:f1b39e168c1c776458e172f157167607b9fd3cc550af8e6ff0a7dd363c1e64ea done
+#4 extracting sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 0.1s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 1.05MB / 13.99MB 23.2s
+#4 extracting sha256:f194078e85f8008c084163778aaf266434f7182e0d4f783646f41b388c88a13a 0.4s done
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 11.53MB / 25.37MB 23.9s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 2.10MB / 13.99MB 24.1s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 3.15MB / 13.99MB 24.9s
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 13.63MB / 25.37MB 25.5s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 7.34MB / 180.57MB 25.6s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 4.19MB / 13.99MB 25.8s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 5.24MB / 13.99MB 26.5s
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 15.73MB / 25.37MB 27.3s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 6.29MB / 13.99MB 27.4s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 7.34MB / 13.99MB 28.4s
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 17.83MB / 25.37MB 29.0s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 8.39MB / 13.99MB 29.4s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 16.78MB / 180.57MB 30.2s
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 19.92MB / 25.37MB 30.6s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 9.44MB / 13.99MB 30.8s
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 22.02MB / 25.37MB 32.0s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 10.49MB / 13.99MB 32.0s
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 24.12MB / 25.37MB 33.0s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 11.53MB / 13.99MB 33.2s
+#4 sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 25.37MB / 25.37MB 33.6s done
+#4 extracting sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 0.1s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 12.58MB / 13.99MB 34.1s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 13.63MB / 13.99MB 34.8s
+#4 sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 13.99MB / 13.99MB 34.9s done
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 24.12MB / 180.57MB 35.3s
+#4 extracting sha256:22689bb63f95af71c8c0079742ff0afa570fa6cfc30ecfa7873976890829a24d 3.1s done
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 33.55MB / 180.57MB 38.9s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 42.99MB / 180.57MB 41.8s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 52.43MB / 180.57MB 44.4s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 61.87MB / 180.57MB 47.4s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 71.30MB / 180.57MB 50.7s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 80.74MB / 180.57MB 53.2s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 90.18MB / 180.57MB 56.1s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 99.61MB / 180.57MB 59.6s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 109.05MB / 180.57MB 62.2s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 118.49MB / 180.57MB 64.8s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 127.93MB / 180.57MB 67.8s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 137.36MB / 180.57MB 70.2s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 146.80MB / 180.57MB 73.6s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 156.24MB / 180.57MB 76.5s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 165.68MB / 180.57MB 79.1s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 175.11MB / 180.57MB 81.5s
+#4 sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 180.57MB / 180.57MB 83.2s done
+#4 extracting sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4
+#4 extracting sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 5.1s
+#4 extracting sha256:5e263829ce76bc29ff631384bd5e93356d28625461ca507fadc46ec4ac549fb4 9.3s done
+#4 extracting sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e
+#4 extracting sha256:c549dbd140e5a09bcc7e4b1da89ed4b96a0340a730303fbe2e903d46cf06456e 0.9s done
+#4 DONE 94.8s
+
+#5 [2/7] WORKDIR /app
+#5 DONE 1.6s
+
+#6 [3/7] RUN apt update && apt install -y git
+#6 0.368 
+#6 0.368 WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+#6 0.368 
+#6 0.489 Get:1 http://deb.debian.org/debian bullseye InRelease [116 kB]
+#6 0.582 Get:2 http://deb.debian.org/debian-security bullseye-security InRelease [27.2 kB]
+#6 0.628 Get:3 http://deb.debian.org/debian bullseye-updates InRelease [44.1 kB]
+#6 0.812 Get:4 http://deb.debian.org/debian bullseye/main amd64 Packages [8066 kB]
+#6 2.880 Get:5 http://deb.debian.org/debian-security bullseye-security/main amd64 Packages [380 kB]
+#6 2.973 Get:6 http://deb.debian.org/debian bullseye-updates/main amd64 Packages [18.8 kB]
+#6 4.072 Fetched 8652 kB in 4s (2361 kB/s)
+#6 4.072 Reading package lists...
+#6 4.910 Building dependency tree...
+#6 5.086 Reading state information...
+#6 5.105 35 packages can be upgraded. Run 'apt list --upgradable' to see them.
+#6 5.112 
+#6 5.112 WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+#6 5.112 
+#6 5.130 Reading package lists...
+#6 5.912 Building dependency tree...
+#6 6.076 Reading state information...
+#6 6.267 Suggested packages:
+#6 6.267   gettext-base git-daemon-run | git-daemon-sysvinit git-doc git-el git-email
+#6 6.267   git-gui gitk gitweb git-cvs git-mediawiki git-svn
+#6 6.267 Recommended packages:
+#6 6.267   patch less ssh-client
+#6 6.327 The following packages will be upgraded:
+#6 6.329   git
+#6 6.418 1 upgraded, 0 newly installed, 0 to remove and 34 not upgraded.
+#6 6.418 Need to get 5566 kB of archives.
+#6 6.418 After this operation, 197 kB of additional disk space will be used.
+#6 6.418 Get:1 http://deb.debian.org/debian-security bullseye-security/main amd64 git amd64 1:2.30.2-1+deb11u4 [5566 kB]
+#6 8.082 debconf: delaying package configuration, since apt-utils is not installed
+#6 8.122 Fetched 5566 kB in 2s (3663 kB/s)
+#6 8.258 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 10158 files and directories currently installed.)
+#6 8.269 Preparing to unpack .../git_1%3a2.30.2-1+deb11u4_amd64.deb ...
+#6 8.427 Unpacking git (1:2.30.2-1+deb11u4) over (1:2.30.2-1+deb11u2) ...
+#6 9.715 Setting up git (1:2.30.2-1+deb11u4) ...
+#6 DONE 10.0s
+
+#7 [4/7] RUN git clone --recurse-submodules -j8 https://github.com/OceanBattle/OceanBattle.WebAPI.git .
+#7 0.436 Cloning into '.'...
+#7 1.413 Submodule 'OceanBattle.DataModel' (https://github.com/OceanBattle/OceanBattle.DataModel.git) registered for path 'OceanBattle.DataModel'
+#7 1.417 Cloning into '/app/OceanBattle.DataModel'...
+#7 2.377 Submodule path 'OceanBattle.DataModel': checked out 'b792371ecfb67c342343756dc57655b65928a235'
+#7 DONE 2.5s
+
+#8 [5/7] RUN dotnet restore
+#8 3.078   Determining projects to restore...
+#8 16.74   Restored /app/OceanBattle.DataModel/DataModel/OceanBattle.DataModel.csproj (in 12.68 sec).
+#8 21.09   Restored /app/OceanBattle.Jwks.Abstractions/OceanBattle.Jwks.Abstractions.csproj (in 17.06 sec).
+#8 21.11   Restored /app/OceanBattle.Jwks/OceanBattle.Jwks.csproj (in 17.06 sec).
+#8 21.12   Restored /app/OceanBattle.RefreshTokens.Abstractions/OceanBattle.RefreshTokens.Abstractions.csproj (in 4 ms).
+#8 28.35   Restored /app/OceanBattle.Game/OceanBattle.Game.csproj (in 24.31 sec).
+#8 30.51   Restored /app/OceanBattle.Jwt.Abstractions/OceanBattle.Jwt.Abstractions.csproj (in 2.15 sec).
+#8 31.30   Restored /app/OceanBattle.Game.Tests/OceanBattle.Game.Tests.csproj (in 14.54 sec).
+#8 31.32   Restored /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj (in 10.19 sec).
+#8 31.36   Restored /app/OceanBattle.RefreshTokens.DataModel/OceanBattle.RefreshTokens.DataModel.csproj (in 7 ms).
+#8 31.46   Restored /app/OceanBattle.RefreshTokens/OceanBattle.RefreshTokens.csproj (in 140 ms).
+#8 34.94   Restored /app/OceanBattle.Jwt/OceanBattle.Jwt.csproj (in 13.81 sec).
+#8 51.62   Restored /app/OceanBattle.WebAPI/OceanBattle.WebAPI.csproj (in 21.09 sec).
+#8 DONE 53.8s
+
+#9 [6/7] RUN dotnet build -c Debug
+#9 0.749 MSBuild version 17.7.6+77d58ec69 for .NET
+#9 3.445   Determining projects to restore...
+#9 5.008   All projects are up-to-date for restore.
+#9 11.20   OceanBattle.Jwks.Abstractions -> /app/OceanBattle.Jwks.Abstractions/bin/Debug/net7.0/OceanBattle.Jwks.Abstractions.dll
+#9 11.23   OceanBattle.Jwt.Abstractions -> /app/OceanBattle.Jwt.Abstractions/bin/Debug/net7.0/OceanBattle.Jwt.Abstractions.dll
+#9 11.47   OceanBattle.DataModel -> /app/OceanBattle.DataModel/DataModel/bin/Debug/net7.0/OceanBattle.DataModel.dll
+#9 11.58   OceanBattle.Jwks -> /app/OceanBattle.Jwks/bin/Debug/net7.0/OceanBattle.Jwks.dll
+#9 11.81   OceanBattle.RefreshTokens.DataModel -> /app/OceanBattle.RefreshTokens.DataModel/bin/Debug/net7.0/OceanBattle.RefreshTokens.DataModel.dll
+#9 13.16 /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/BattlefieldTests.cs(157,37): warning xUnit1026: Theory method 'GotHit_ShouldEmitOnNext' on test class 'BattlefieldTests' does not use parameter 'cells'. Use the parameter, or remove the parameter and associated data. (https://xunit.net/xunit.analyzers/rules/xUnit1026) [/app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj]
+#9 13.16 /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/BattlefieldTests.cs(245,29): warning xUnit1026: Theory method 'CanBeHit_ShouldBeTrue' on test class 'BattlefieldTests' does not use parameter 'prams'. Use the parameter, or remove the parameter and associated data. (https://xunit.net/xunit.analyzers/rules/xUnit1026) [/app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj]
+#9 13.16 /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/BattlefieldTests.cs(288,37): warning xUnit1026: Theory method 'CanPlaceShip_ShouldBeTrue' on test class 'BattlefieldTests' does not use parameter 'cells'. Use the parameter, or remove the parameter and associated data. (https://xunit.net/xunit.analyzers/rules/xUnit1026) [/app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj]
+#9 13.43   OceanBattle.DataModel.Tests -> /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/bin/Debug/net7.0/OceanBattle.DataModel.Tests.dll
+#9 13.49   OceanBattle.Game -> /app/OceanBattle.Game/bin/Debug/net7.0/OceanBattle.Game.dll
+#9 14.63   OceanBattle.Game.Tests -> /app/OceanBattle.Game.Tests/bin/Debug/net7.0/OceanBattle.Game.Tests.dll
+#9 14.65   OceanBattle.RefreshTokens.Abstractions -> /app/OceanBattle.RefreshTokens.Abstractions/bin/Debug/net7.0/OceanBattle.RefreshTokens.Abstractions.dll
+#9 15.04   OceanBattle.RefreshTokens -> /app/OceanBattle.RefreshTokens/bin/Debug/net7.0/OceanBattle.RefreshTokens.dll
+#9 15.55   OceanBattle.Jwt -> /app/OceanBattle.Jwt/bin/Debug/net7.0/OceanBattle.Jwt.dll
+#9 16.68 /app/OceanBattle.WebAPI/Controllers/GameController.cs(36,64): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread. [/app/OceanBattle.WebAPI/OceanBattle.WebAPI.csproj]
+#9 17.79   OceanBattle.WebAPI -> /app/OceanBattle.WebAPI/bin/Debug/net7.0/OceanBattle.WebAPI.dll
+#9 17.86 
+#9 17.86 Build succeeded.
+#9 17.86 
+#9 17.86 /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/BattlefieldTests.cs(157,37): warning xUnit1026: Theory method 'GotHit_ShouldEmitOnNext' on test class 'BattlefieldTests' does not use parameter 'cells'. Use the parameter, or remove the parameter and associated data. (https://xunit.net/xunit.analyzers/rules/xUnit1026) [/app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj]
+#9 17.86 /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/BattlefieldTests.cs(245,29): warning xUnit1026: Theory method 'CanBeHit_ShouldBeTrue' on test class 'BattlefieldTests' does not use parameter 'prams'. Use the parameter, or remove the parameter and associated data. (https://xunit.net/xunit.analyzers/rules/xUnit1026) [/app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj]
+#9 17.86 /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/BattlefieldTests.cs(288,37): warning xUnit1026: Theory method 'CanPlaceShip_ShouldBeTrue' on test class 'BattlefieldTests' does not use parameter 'cells'. Use the parameter, or remove the parameter and associated data. (https://xunit.net/xunit.analyzers/rules/xUnit1026) [/app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj]
+#9 17.86 /app/OceanBattle.WebAPI/Controllers/GameController.cs(36,64): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread. [/app/OceanBattle.WebAPI/OceanBattle.WebAPI.csproj]
+#9 17.86     4 Warning(s)
+#9 17.86     0 Error(s)
+#9 17.86 
+#9 17.86 Time Elapsed 00:00:16.88
+#9 DONE 18.1s
+
+#10 [7/7] RUN dotnet build -c Release -p:DebugType=None -p:DebugSymbols=false
+#10 0.709 MSBuild version 17.7.6+77d58ec69 for .NET
+#10 2.809   Determining projects to restore...
+#10 4.446   All projects are up-to-date for restore.
+#10 12.11   OceanBattle.Jwks.Abstractions -> /app/OceanBattle.Jwks.Abstractions/bin/Release/net7.0/OceanBattle.Jwks.Abstractions.dll
+#10 12.12   OceanBattle.Jwt.Abstractions -> /app/OceanBattle.Jwt.Abstractions/bin/Release/net7.0/OceanBattle.Jwt.Abstractions.dll
+#10 12.53   OceanBattle.Jwks -> /app/OceanBattle.Jwks/bin/Release/net7.0/OceanBattle.Jwks.dll
+#10 12.64   OceanBattle.DataModel -> /app/OceanBattle.DataModel/DataModel/bin/Release/net7.0/OceanBattle.DataModel.dll
+#10 13.05   OceanBattle.RefreshTokens.DataModel -> /app/OceanBattle.RefreshTokens.DataModel/bin/Release/net7.0/OceanBattle.RefreshTokens.DataModel.dll
+#10 14.45 /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/BattlefieldTests.cs(157,37): warning xUnit1026: Theory method 'GotHit_ShouldEmitOnNext' on test class 'BattlefieldTests' does not use parameter 'cells'. Use the parameter, or remove the parameter and associated data. (https://xunit.net/xunit.analyzers/rules/xUnit1026) [/app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj]
+#10 14.45 /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/BattlefieldTests.cs(245,29): warning xUnit1026: Theory method 'CanBeHit_ShouldBeTrue' on test class 'BattlefieldTests' does not use parameter 'prams'. Use the parameter, or remove the parameter and associated data. (https://xunit.net/xunit.analyzers/rules/xUnit1026) [/app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj]
+#10 14.45 /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/BattlefieldTests.cs(288,37): warning xUnit1026: Theory method 'CanPlaceShip_ShouldBeTrue' on test class 'BattlefieldTests' does not use parameter 'cells'. Use the parameter, or remove the parameter and associated data. (https://xunit.net/xunit.analyzers/rules/xUnit1026) [/app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj]
+#10 14.66   OceanBattle.DataModel.Tests -> /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/bin/Release/net7.0/OceanBattle.DataModel.Tests.dll
+#10 14.70   OceanBattle.Game -> /app/OceanBattle.Game/bin/Release/net7.0/OceanBattle.Game.dll
+#10 15.57   OceanBattle.Game.Tests -> /app/OceanBattle.Game.Tests/bin/Release/net7.0/OceanBattle.Game.Tests.dll
+#10 15.61   OceanBattle.RefreshTokens.Abstractions -> /app/OceanBattle.RefreshTokens.Abstractions/bin/Release/net7.0/OceanBattle.RefreshTokens.Abstractions.dll
+#10 16.06   OceanBattle.RefreshTokens -> /app/OceanBattle.RefreshTokens/bin/Release/net7.0/OceanBattle.RefreshTokens.dll
+#10 16.61   OceanBattle.Jwt -> /app/OceanBattle.Jwt/bin/Release/net7.0/OceanBattle.Jwt.dll
+#10 17.86 /app/OceanBattle.WebAPI/Controllers/GameController.cs(36,64): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread. [/app/OceanBattle.WebAPI/OceanBattle.WebAPI.csproj]
+#10 18.67   OceanBattle.WebAPI -> /app/OceanBattle.WebAPI/bin/Release/net7.0/OceanBattle.WebAPI.dll
+#10 18.74 
+#10 18.74 Build succeeded.
+#10 18.74 
+#10 18.74 /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/BattlefieldTests.cs(157,37): warning xUnit1026: Theory method 'GotHit_ShouldEmitOnNext' on test class 'BattlefieldTests' does not use parameter 'cells'. Use the parameter, or remove the parameter and associated data. (https://xunit.net/xunit.analyzers/rules/xUnit1026) [/app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj]
+#10 18.74 /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/BattlefieldTests.cs(245,29): warning xUnit1026: Theory method 'CanBeHit_ShouldBeTrue' on test class 'BattlefieldTests' does not use parameter 'prams'. Use the parameter, or remove the parameter and associated data. (https://xunit.net/xunit.analyzers/rules/xUnit1026) [/app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj]
+#10 18.74 /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/BattlefieldTests.cs(288,37): warning xUnit1026: Theory method 'CanPlaceShip_ShouldBeTrue' on test class 'BattlefieldTests' does not use parameter 'cells'. Use the parameter, or remove the parameter and associated data. (https://xunit.net/xunit.analyzers/rules/xUnit1026) [/app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/OceanBattle.DataModel.Tests.csproj]
+#10 18.74 /app/OceanBattle.WebAPI/Controllers/GameController.cs(36,64): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread. [/app/OceanBattle.WebAPI/OceanBattle.WebAPI.csproj]
+#10 18.74     4 Warning(s)
+#10 18.74     0 Error(s)
+#10 18.74 
+#10 18.74 Time Elapsed 00:00:17.83
+#10 DONE 19.1s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 7.8s done
+#11 writing image sha256:3fdc8b2802eb3750b68709f7cb565ef2cf993b48e31bdf40da87fa5ee4a5ef66 done
+#11 naming to docker.io/library/oceanbattle-build done
+#11 DONE 7.8s
+[Pipeline] sh
++ docker run --rm oceanbattle-build
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/OceanBattlePipeline/ITE/GCL04/TK414543/Sprawozdanie1/LAB3
+[Pipeline] {
+[Pipeline] sh
++ docker build -f Dockerfile.test -t oceanbattle-test .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.test
+#1 transferring dockerfile: 173B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/oceanbattle-build:latest
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context:
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/2] FROM docker.io/library/oceanbattle-build:latest
+#4 DONE 0.4s
+
+#5 [2/2] WORKDIR /app
+#5 DONE 0.2s
+
+#6 exporting to image
+#6 exporting layers 0.1s done
+#6 writing image sha256:450289f6c020be0fda44b82aa77ec78ead66ebc773f3313be336f47a92f07a59 0.0s done
+#6 naming to docker.io/library/oceanbattle-test 0.0s done
+#6 DONE 0.2s
+[Pipeline] sh
++ docker run --rm oceanbattle-test
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  OceanBattle.DataModel -> /app/OceanBattle.DataModel/DataModel/bin/Debug/net7.0/OceanBattle.DataModel.dll
+  OceanBattle.Game -> /app/OceanBattle.Game/bin/Debug/net7.0/OceanBattle.Game.dll
+  OceanBattle.DataModel.Tests -> /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/bin/Debug/net7.0/OceanBattle.DataModel.Tests.dll
+Test run for /app/OceanBattle.DataModel/OceanBattle.DataModel.Tests/bin/Debug/net7.0/OceanBattle.DataModel.Tests.dll (.NETCoreApp,Version=v7.0)
+Microsoft (R) Test Execution Command Line Tool Version 17.7.2 (x64)
+Copyright (c) Microsoft Corporation.  All rights reserved.
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    66, Skipped:     0, Total:    66, Duration: 85 ms - OceanBattle.DataModel.Tests.dll (net7.0)
+  OceanBattle.Game.Tests -> /app/OceanBattle.Game.Tests/bin/Debug/net7.0/OceanBattle.Game.Tests.dll
+Test run for /app/OceanBattle.Game.Tests/bin/Debug/net7.0/OceanBattle.Game.Tests.dll (.NETCoreApp,Version=v7.0)
+Microsoft (R) Test Execution Command Line Tool Version 17.7.2 (x64)
+Copyright (c) Microsoft Corporation.  All rights reserved.
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:    45, Skipped:     0, Total:    45, Duration: 157 ms - OceanBattle.Game.Tests.dll (net7.0)
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/OceanBattlePipeline/ITE/GCL04/TK414543/Sprawozdanie2/LAB6
+[Pipeline] {
+[Pipeline] sh
++ docker network inspect jenkins
++ docker network create jenkins
+f25dd3aa7baeb8d76f5b7c8bbde68ed4ed071e46df88126e9d524083940894dc
+[Pipeline] sh
++ docker build -f Dockerfile.deploy -t kurowskitomek/webapi:1.0.31 -t oceanbattle-deploy .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.deploy
+#1 transferring dockerfile:
+#1 transferring dockerfile: 608B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/oceanbattle-build:latest
+#2 DONE 0.0s
+
+#3 [internal] load metadata for mcr.microsoft.com/dotnet/runtime:7.0
+#3 DONE 0.8s
+
+#4 [internal] load .dockerignore
+#4 transferring context:
+#4 transferring context: 2B done
+#4 DONE 0.5s
+
+#5 [build 1/3] FROM docker.io/library/oceanbattle-build:latest
+#5 DONE 0.0s
+
+#6 [build 2/3] WORKDIR /app
+#6 CACHED
+
+#7 [runtime 1/3] FROM mcr.microsoft.com/dotnet/runtime:7.0@sha256:8cd26108e7a329458e5b84342816ae39b2b38bd041cfdc0b79b8cf1c0e0d376f
+#7 resolve mcr.microsoft.com/dotnet/runtime:7.0@sha256:8cd26108e7a329458e5b84342816ae39b2b38bd041cfdc0b79b8cf1c0e0d376f
+#7 resolve mcr.microsoft.com/dotnet/runtime:7.0@sha256:8cd26108e7a329458e5b84342816ae39b2b38bd041cfdc0b79b8cf1c0e0d376f 0.3s done
+#7 sha256:8cd26108e7a329458e5b84342816ae39b2b38bd041cfdc0b79b8cf1c0e0d376f 1.79kB / 1.79kB done
+#7 sha256:0908582d94f04fc7923e388bc582aa6fa1040f3b4df9674a73f842000db5ebeb 1.16kB / 1.16kB done
+#7 sha256:c95462acfb2e5a40ed2ae787ab293a230d7fdc362cfc87ce89c7a9a2440d11d5 1.91kB / 1.91kB done
+#7 DONE 0.6s
+
+#8 [build 3/3] RUN dotnet publish OceanBattle.WebAPI/OceanBattle.WebAPI.csproj   -c Release   -p:PublishSingleFile=true   -p:UseAppHost=true   -p:IncludeNativeLibrariesForSelfExtract=true   -p:PublishTrimmed=false   -p:DebugType=None   -p:DebugSymbols=false   --self-contained true   -o /app/publish
+#8 ...
+
+#9 [runtime 2/3] WORKDIR /app
+#9 DONE 0.2s
+
+#8 [build 3/3] RUN dotnet publish OceanBattle.WebAPI/OceanBattle.WebAPI.csproj   -c Release   -p:PublishSingleFile=true   -p:UseAppHost=true   -p:IncludeNativeLibrariesForSelfExtract=true   -p:PublishTrimmed=false   -p:DebugType=None   -p:DebugSymbols=false   --self-contained true   -o /app/publish
+#8 1.172 MSBuild version 17.7.6+77d58ec69 for .NET
+#8 2.306   Determining projects to restore...
+#8 19.45   Restored /app/OceanBattle.WebAPI/OceanBattle.WebAPI.csproj (in 14.23 sec).
+#8 19.46   9 of 10 projects are up-to-date for restore.
+#8 25.51   OceanBattle.Jwks.Abstractions -> /app/OceanBattle.Jwks.Abstractions/bin/Release/net7.0/OceanBattle.Jwks.Abstractions.dll
+#8 25.51   OceanBattle.Jwt.Abstractions -> /app/OceanBattle.Jwt.Abstractions/bin/Release/net7.0/OceanBattle.Jwt.Abstractions.dll
+#8 25.93   OceanBattle.Jwks -> /app/OceanBattle.Jwks/bin/Release/net7.0/OceanBattle.Jwks.dll
+#8 25.96   OceanBattle.DataModel -> /app/OceanBattle.DataModel/DataModel/bin/Release/net7.0/OceanBattle.DataModel.dll
+#8 26.41   OceanBattle.RefreshTokens.DataModel -> /app/OceanBattle.RefreshTokens.DataModel/bin/Release/net7.0/OceanBattle.RefreshTokens.DataModel.dll
+#8 26.89   OceanBattle.Game -> /app/OceanBattle.Game/bin/Release/net7.0/OceanBattle.Game.dll
+#8 27.16   OceanBattle.RefreshTokens.Abstractions -> /app/OceanBattle.RefreshTokens.Abstractions/bin/Release/net7.0/OceanBattle.RefreshTokens.Abstractions.dll
+#8 27.70   OceanBattle.RefreshTokens -> /app/OceanBattle.RefreshTokens/bin/Release/net7.0/OceanBattle.RefreshTokens.dll
+#8 28.28   OceanBattle.Jwt -> /app/OceanBattle.Jwt/bin/Release/net7.0/OceanBattle.Jwt.dll
+#8 29.49 /app/OceanBattle.WebAPI/Controllers/GameController.cs(36,64): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread. [/app/OceanBattle.WebAPI/OceanBattle.WebAPI.csproj]
+#8 31.01   OceanBattle.WebAPI -> /app/OceanBattle.WebAPI/bin/Release/net7.0/linux-x64/OceanBattle.WebAPI.dll
+#8 32.56   OceanBattle.WebAPI -> /app/publish/
+#8 DONE 32.9s
+
+#10 [runtime 3/3] COPY --from=build /app/publish .
+#10 DONE 0.2s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 0.8s done
+#11 writing image sha256:9de7fda492ae2e5a894816eb8d191c82feeb7d2c3e056ee5dcd5dddfb96c1681 done
+#11 naming to docker.io/kurowskitomek/webapi:1.0.31 done
+#11 naming to docker.io/library/oceanbattle-deploy done
+#11 DONE 0.8s
+[Pipeline] sh
++ docker run --rm -d --name oceanbattle --network jenkins oceanbattle-deploy
+b9a05b46b19e6d8fc9fbccafdc68db5f79764bf91d81165a61d1a52efaf0af2b
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sleep
+Sleeping for 5 sec
+[Pipeline] sh
++ docker run --rm --network jenkins curlimages/curl:8.8.0 -s -o /dev/null -w %{http_code} http://oceanbattle:80/api/auth/.well-known
+Unable to find image 'curlimages/curl:8.8.0' locally
+8.8.0: Pulling from curlimages/curl
+4abcf2066143: Pulling fs layer
+e52d86b3391d: Pulling fs layer
+4ca545ee6d5d: Pulling fs layer
+4ca545ee6d5d: Verifying Checksum
+4ca545ee6d5d: Download complete
+4abcf2066143: Verifying Checksum
+4abcf2066143: Download complete
+4abcf2066143: Pull complete
+e52d86b3391d: Verifying Checksum
+e52d86b3391d: Download complete
+e52d86b3391d: Pull complete
+4ca545ee6d5d: Pull complete
+Digest: sha256:73e4d532ea62d7505c5865b517d3704966ffe916609bedc22af6833dc9969bcd
+Status: Downloaded newer image for curlimages/curl:8.8.0
+[Pipeline] echo
+Container is responding with HTTP 200
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Publish)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $DOCKER_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ docker tag oceanbattle-deploy kurowskitomek/webapi:1.0.31
+[Pipeline] sh
++ docker tag oceanbattle-deploy kurowskitomek/webapi:latest
+[Pipeline] sh
++ echo ****
++ docker login -u kurowskitomek --password-stdin
+Login Succeeded
+[Pipeline] sh
++ docker push kurowskitomek/webapi:1.0.31
+The push refers to repository [docker.io/kurowskitomek/webapi]
+8018a3eaac86: Preparing
+e02ceb8e2dbb: Preparing
+4d29f6e29d10: Preparing
+b4ec6db9c251: Preparing
+ba941484fbe1: Preparing
+123eef91533f: Preparing
+123eef91533f: Waiting
+ba941484fbe1: Layer already exists
+123eef91533f: Layer already exists
+b4ec6db9c251: Layer already exists
+4d29f6e29d10: Layer already exists
+e02ceb8e2dbb: Pushed
+8018a3eaac86: Pushed
+1.0.31: digest: sha256:cb2e6dffcd12451b0ae084e2876fbeb72dffad436c12bb9abe7fc863ceb46c2c size: 1578
+[Pipeline] sh
++ docker push kurowskitomek/webapi:latest
+The push refers to repository [docker.io/kurowskitomek/webapi]
+8018a3eaac86: Preparing
+e02ceb8e2dbb: Preparing
+4d29f6e29d10: Preparing
+b4ec6db9c251: Preparing
+ba941484fbe1: Preparing
+123eef91533f: Preparing
+123eef91533f: Waiting
+ba941484fbe1: Layer already exists
+b4ec6db9c251: Layer already exists
+4d29f6e29d10: Layer already exists
+e02ceb8e2dbb: Layer already exists
+8018a3eaac86: Layer already exists
+123eef91533f: Layer already exists
+latest: digest: sha256:cb2e6dffcd12451b0ae084e2876fbeb72dffad436c12bb9abe7fc863ceb46c2c size: 1578
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] sh
++ docker save oceanbattle-deploy
++ gzip
+[Pipeline] archiveArtifacts
+Archiving artifacts
+Recording fingerprints
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+Cleaning up workspace...
+[Pipeline] sh
++ docker rm -f oceanbattle
+oceanbattle
+[Pipeline] sh
++ docker ps -aq
++ docker stop
+docker: 'docker stop' requires at least 1 argument
+
+Usage:  docker stop [OPTIONS] CONTAINER [CONTAINER...]
+
+See 'docker stop --help' for more information
++ true
+[Pipeline] sh
++ docker system prune -a -f
+Deleted Networks:
+jenkins
+
+Deleted Images:
+untagged: oceanbattle-test:latest
+deleted: sha256:450289f6c020be0fda44b82aa77ec78ead66ebc773f3313be336f47a92f07a59
+untagged: curlimages/curl:8.8.0
+untagged: curlimages/curl@sha256:73e4d532ea62d7505c5865b517d3704966ffe916609bedc22af6833dc9969bcd
+deleted: sha256:bef568b8a706b75bb4dd413b108d1f74219a26d2009782cc1dd6f99cfcda9213
+deleted: sha256:7654b85204c5edde47b45f990196d3472a76fb8a5246a86b07b2f76a9abbc329
+deleted: sha256:dca64b3646c69a63b204096a5953d4374fb6171a49e39fd998b1bbc1e12e91c6
+deleted: sha256:d4fc045c9e3a848011de66f34b81f052d4f2c15a17bb196d637e526349601820
+untagged: oceanbattle-build:latest
+deleted: sha256:3fdc8b2802eb3750b68709f7cb565ef2cf993b48e31bdf40da87fa5ee4a5ef66
+untagged: kurowskitomek/webapi:1.0.31
+untagged: kurowskitomek/webapi:latest
+untagged: kurowskitomek/webapi@sha256:cb2e6dffcd12451b0ae084e2876fbeb72dffad436c12bb9abe7fc863ceb46c2c
+untagged: oceanbattle-deploy:latest
+deleted: sha256:9de7fda492ae2e5a894816eb8d191c82feeb7d2c3e056ee5dcd5dddfb96c1681
+
+Deleted build cache objects:
+too47bcws401j4xy0ob5xetwv
+mzltv920f3c7qgkltrrik21m3
+ltf71do8dkiump9rnz8u9hm3y
+xpyi4nr2ej9jm4aoha0yraie2
+m38x426g3sw6i9en3dpz4grzl
+n7hf6n7d9ewad25qplnezqf59
+7cdjbl8pv9e01hprfsrcehf4k
+7ktjevtckaoe2x7ix30l9gyc9
+0crm0s621nvnbun73qdix2fy1
+vxf89u5ucix2cifhzli8urb0v
+8urnkg3rwz37o0zz2t0cereno
+mvqnototwcolcwi7ln16jw61l
+g6008p2ujwfd4y0qxoy0vriyt
+4btrexnrjrf934crxcuqm63c3
+lb8h1w9kxau6efmv0gy26qn9t
+evg5g9y8pnf2mi5ptiwclynmx
+s7ghygfacx8ra5te6vwbut7mj
+f9y45xdz484qhemwldm71cjr2
+vkqd30y3actamt3quxqv5af3q
+376ypuw94kqyzk9gkxysccnrz
+tmle3ru5qa4kz6oq401n29bm8
+u2hklykexo6x5lm2dmv60z1ku
+lmzjnyibroz822ngx3pkzx43f
+druztcuun4mzwahlpvihk2at8
+j65jm6z0y6i3edtbo8su9r1p3
+8pq3bqsvu4hfe4g6e2fnyerp0
+8c33lnxfgto62wo0kh57m3zn3
+zwn4ymfyqyc2107g0kt5vr3jo
+
+Total reclaimed space: 1.381GB
+[Pipeline] deleteDir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
