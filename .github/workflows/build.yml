@@ -1,4 +1,4 @@
-name: Node.js Build
+name: Node.js Dummy Check
 
 on:
   push:
@@ -22,13 +22,6 @@ jobs:
         run: npm install
         working-directory: ITE/GCL06/JP416100/Sprawozdanie2/node-js-dummy-test
 
-      - name: Build project
-        run: npm run build
-        working-directory: ITE/GCL06/JP416100/Sprawozdanie2/node-js-dummy-test
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-output
-          path: ITE/GCL06/JP416100/Sprawozdanie2/node-js-dummy-test/dist
+      - name: Dummy step
+        run: echo "✅ Wszystko działa!"
 
