@@ -25,7 +25,6 @@ spec:
             - containerPort: 80
 
 ---
-# Canary - Nowa wersja (1 replika)
 apiVersion: apps/v1
 kind: Deployment
 metadata:

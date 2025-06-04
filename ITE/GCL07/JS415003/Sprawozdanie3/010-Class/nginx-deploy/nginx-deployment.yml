@@ -18,12 +18,11 @@ spec:
     spec:
       containers:
         - name: moja-nginx-app
-          image: moja-nginx-app:v1.0  # Twój własny obraz
-          imagePullPolicy: Never  # Używaj lokalnego obrazu
+          image: moja-nginx-app:v1.0  
+          imagePullPolicy: Never  
           ports:
             - containerPort: 80
               name: http
-          # Healthcheck z Twojego Dockerfile
           livenessProbe:
             httpGet:
               path: /
