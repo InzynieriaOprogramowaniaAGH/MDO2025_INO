@@ -139,3 +139,223 @@ Efekt wdrożenia deploymentu.
 ![](010-Class/screens/lab10_16.png)
 ![](010-Class/screens/lab10_17.png)
 ![](010-Class/screens/lab10_18.png)
+
+## 011-Class
+Celem tego laboratorium było testowanie funkcji skalowania ilości podów i działania kubernees w przypadku błędnych implementacji oraz zastosowanie różnych strategii wdrożeń.
+
+Pierwsze kroki to implementacja dockerfile plików z czego w moim przypadku zrobiłem dwa, ponieważ nei miałem pojęcia co mam jeszcze dodać w nowym obrazie, ponieważ swoją własną implementację strony w nginx miałem już na poprzednie laboratoria więc mam podstawową wersję obrazu i wadliwą tylko.
+
+[Dockerfile.v1](010-Class/nginx-deploy/Dockerfile.v1)
+
+[Dockerfile.v2](010-Class/nginx-deploy/Dockerfile.v2)
+
+Utworzenie obrazów.
+![](011-Class/screens/lab11_1.png)
+
+Kolejne kroki to zwiększenie ilości replik do 8.
+![](011-Class/screens/lab11_2.png)
+![](011-Class/screens/lab11_3.png)
+
+Zmniejszenie do 1 repliki.
+![](011-Class/screens/lab11_4.png)
+
+Zmniejszenie do 0 replik.
+![](011-Class/screens/lab11_5.png)
+![](011-Class/screens/lab11_6.png)
+
+Przywrócenie do pierwotnego stanu 4 replik.
+![](011-Class/screens/lab11_7.png)
+![](011-Class/screens/lab11_8.png)
+
+Uruchomienie deploymentu z obrazem, który kończy się z błędem.
+![](011-Class/screens/lab11_10.png)
+![](011-Class/screens/lab11_9.png)
+
+Sprawdzenie czy wdrożenie zadziałało i przywrócenie stanu do poprzedniego działającego deploymentu.
+![](011-Class/screens/lab11_11.png)
+![](011-Class/screens/lab11_12.png)
+
+### Strategie wdrożeń
+
+Canary
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moja-nginx-app-canary
+  labels:
+    app: moja-nginx-app
+    track: canary
+    version: "1.0"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moja-nginx-app
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: moja-nginx-app
+        version: "1.0"
+        track: canary
+    spec:
+      containers:
+        - name: moja-nginx-app
+          image: moja-nginx-app:v1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+      restartPolicy: Always
+```
+
+Recreate
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moja-nginx-app-recreate
+  labels:
+    app: moja-nginx-app
+    strategy: recreate
+    version: "1.0"
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: moja-nginx-app
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: moja-nginx-app
+        version: "1.0"
+        strategy: recreate
+    spec:
+      containers:
+        - name: moja-nginx-app
+          image: moja-nginx-app:v1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+      restartPolicy: Always
+```
+
+Rolling Update
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moja-nginx-app-rolling
+  labels:
+    app: moja-nginx-app
+    strategy: rolling
+    version: "1.0"
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 25%
+  selector:
+    matchLabels:
+      app: moja-nginx-app
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: moja-nginx-app
+        version: "1.0"
+        strategy: rolling
+    spec:
+      containers:
+        - name: moja-nginx-app
+          image: moja-nginx-app:v1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+      restartPolicy: Always
+```
+
+Wdrożenie strategii
+![](011-Class/screens/lab11_13.png)
+
+Sprawdzenie czy wdrożenia przbiegły pomyślnie.
+![](011-Class/screens/lab11_14.png)
+![](011-Class/screens/lab11_15.png)
