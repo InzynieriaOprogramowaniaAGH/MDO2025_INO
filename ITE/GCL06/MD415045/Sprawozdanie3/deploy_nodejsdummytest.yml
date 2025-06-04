@@ -1,0 +1,88 @@
+---
+- name: Deploy node-js-dummy-test container with all required tools
+  hosts: Endpoints
+  become: true
+  vars:
+    app_dir: /opt/nodejs-dummy-test
+    docker_img: nodejs_dummy_img
+    docker_container: nodejs_dummy_test
+
+  tasks:
+    - name: Install Docker and Docker Compose
+      dnf:
+        name:
+          - moby-engine
+          - docker-compose
+          - git
+          - python3-pip
+        state: present
+
+    - name: Install Docker SDK for Python (required for Ansible Docker modules)
+      pip:
+        name: docker
+        executable: pip3
+
+    - name: Ensure Docker service is enabled and running
+      service:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Clone node-js-dummy-test repo
+      git:
+        repo: https://github.com/devenes/node-js-dummy-test.git
+        dest: "{{ app_dir }}"
+        version: master
+        force: yes
+
+    - name: Create Dockerfile for custom nodejs image
+      copy:
+        dest: "{{ app_dir }}/Dockerfile"
+        content: |
+          FROM node:16-alpine
+          WORKDIR /app
+          COPY package.json package-lock.json ./
+          RUN npm ci --only=production
+          COPY . .
+          EXPOSE 3000
+          CMD ["npm", "start"]
+
+    - name: Build custom Docker image for node-js-dummy-test
+      docker_image:
+        name: "{{ docker_img }}"
+        source: build
+        build:
+          path: "{{ app_dir }}"
+          dockerfile: Dockerfile
+
+    - name: Ensure old container is absent
+      docker_container:
+        name: "{{ docker_container }}"
+        state: absent
+        force_kill: yes
+
+    - name: Run node-js-dummy-test container
+      docker_container:
+        name: "{{ docker_container }}"
+        image: "{{ docker_img }}"
+        state: started
+        published_ports:
+          - "3000:3000"
+        env:
+          NODE_ENV: production
+        restart_policy: unless-stopped
+
+    - name: Verify Docker container is running
+      docker_container_info:
+        name: "{{ docker_container }}"
+      register: container_status
+
+    - name: Container is running ✔
+      debug:
+        msg: "Docker container is running"
+      when: container_status.container.State.Status == 'running'
+
+    - name: Container failed to start ⚠
+      debug:
+        msg: "Docker container failed to start"
+      when: container_status.container.State.Status != 'running'
