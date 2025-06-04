@@ -1,0 +1,19 @@
+---
+- name: Copy inventory file to Endpoints
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Ensure /etc/ansible directory exists
+      file:
+        path: /etc/ansible
+        state: directory
+        mode: '0755'
+
+    - name: Copy inventory.ini to /etc/ansible/
+      copy:
+        src: inventory.ini
+        dest: /etc/ansible/inventory.ini
+        owner: root
+        group: root
+        mode: '0644'
+

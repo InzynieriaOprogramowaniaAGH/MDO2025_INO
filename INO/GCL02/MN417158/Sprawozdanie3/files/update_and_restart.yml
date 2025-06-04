@@ -1,0 +1,27 @@
+---
+- name: Update packages and restart services
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Update all packages
+      dnf:
+        name: '*'
+        state: latest
+        update_cache: yes
+
+    - name: Restart sshd
+      service:
+        name: sshd
+        state: restarted
+
+    - name: Ensure rng-tools package is installed
+      dnf:
+        name: rng-tools
+        state: present
+
+    - name: Restart and enable rngd service
+      service:
+        name: rngd
+        state: restarted
+        enabled: yes
+
