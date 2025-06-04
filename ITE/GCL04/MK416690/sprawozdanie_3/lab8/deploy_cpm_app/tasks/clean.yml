@@ -1,0 +1,10 @@
+- name: Stop container
+  docker_container:
+    name: "{{ container_name }}"
+    state: stopped
+    force_kill: true
+
+- name: Remove container
+  docker_container:
+    name: "{{ container_name }}"
+    state: absent

@@ -1,0 +1,13 @@
+- name: Install Docker on target host
+  import_tasks: docker.yml
+
+- name: Install python3-requests on target host
+  import_tasks: requests.yml
+
+- name: Deploy container from tarball
+  import_tasks: container.yml
+
+- name: Clean up container
+  import_tasks: clean.yml
+
+

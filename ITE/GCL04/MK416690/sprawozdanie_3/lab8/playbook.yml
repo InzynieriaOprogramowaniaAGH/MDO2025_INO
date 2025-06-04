@@ -1,0 +1,26 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Ping machines
+      ping:
+
+    - name: Copy files
+      copy:
+        src: /home/marek/playbook.yml
+        dest: /home/ansible/
+      when: inventory_hostname == 'ansible-target'
+
+    - name: Update packages
+      package:
+        name: "*"
+        state: latest
+    
+    - name: Restart sshd
+      service:
+        name: sshd
+        state: restarted
+
+    - name: Restart rngd
+      service:
+        name: rngd
+        state: restarted

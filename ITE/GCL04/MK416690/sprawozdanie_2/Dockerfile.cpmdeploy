@@ -1,0 +1,10 @@
+FROM node:latest
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y curl
+RUN npm install -g serve
+
+COPY --from=cpm_build /app/frontend/dist ./dist
+
+CMD ["serve", "-s", "dist"]
