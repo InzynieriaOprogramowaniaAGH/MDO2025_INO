@@ -1,4 +1,5 @@
-FROM fedora:41
+FROM fedora:latest
+VOLUME /executable_vol
 
 RUN dnf install --assumeyes make
 RUN dnf install --assumeyes diff
