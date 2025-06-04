@@ -85,11 +85,57 @@ Tutaj pokazanie, że plik jest widziany przez maszynę docelową.
 ![](009-Class/screens/lab9_7.png)
 
 Tutaj jak podaję ścieżkie do pliku kickstart, ale rozmawiałem z panem i mi pan pomógł rozwiązać problem i tutaj jest po prostu zrzut ekranu co robiłem źle ponieważ ten parametr powinien być podawany po quiet.
+
 ![](009-Class/screens/lab9_5.png)
 
 Tutaj uruchomienie instalacji.
+
 ![](009-Class/screens/lab9_6.png)
 ![](009-Class/screens/lab9_9.png)
 
 System pomyślnie zainstalowany z podstawową konfiguracją.
+
 ![](009-Class/screens/lab9_10.png)
+
+## 010-Class
+
+Celem tych laboratoriów była instalacja kontenera kubernetes oraz wdrożenie kontenera z wybrana aplikacją na kubernetes w moim przypadku było to nginx.
+
+Pobrania kontenera minikube.
+![](010-Class/screens/lab10_1.png)
+
+Uruchomienie kontenera minikube za pomocą minikube start.
+![](010-Class/screens/lab10_2.png)
+
+Ustawienie aliasu.
+![](010-Class/screens/lab10_3.png)
+
+Uruchomienie dashboarda kubernetes.
+![](010-Class/screens/lab10_4.png)
+![](010-Class/screens/lab10_5.png)
+
+Plik dockerfile [Dockerfile.v1](010-Class/nginx-deploy/Dockerfile.v1) z moją aplikacją oraz po kolei kroki z załadowaniem obrazu aplikacji do kubernetes.
+
+![](010-Class/screens/lab10_7.png)
+![](010-Class/screens/lab10_8.png)
+
+Uruchomienie poda z aplikacją oraz port forwarding i efekt końcowy.
+![](010-Class/screens/lab10_9.png)
+![](010-Class/screens/lab10_10.png)
+![](010-Class/screens/lab10_11.png)
+![](010-Class/screens/lab10_12.png)
+![](010-Class/screens/lab10_13.png)
+
+Kolejnym krokiem były pliki wdrożenia napisane w yamlu do postawienia aplikacji. 
+
+[nginx-deployment.yml](010-Class/nginx-deploy/nginx-deployment.yml)
+
+[nginx-service.yml](010-Class/nginx-deploy/nginx-service.yml)
+
+![](010-Class/screens/lab10_14.png)
+![](010-Class/screens/lab10_15.png)
+
+Efekt wdrożenia deploymentu.
+![](010-Class/screens/lab10_16.png)
+![](010-Class/screens/lab10_17.png)
+![](010-Class/screens/lab10_18.png)
