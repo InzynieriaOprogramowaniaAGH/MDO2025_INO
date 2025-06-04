@@ -1,27 +1,79 @@
-name: Node.js Dummy Check
+name: Node.js Docker CI/CD
 
 on:
   push:
     branches:
       - ino_dev
 
+env:
+  IMAGE_NAME: node-js-dummy
+  TAG: v1.0
+  PATH_PREFIX: MDO2025_INO/ITE/GCL06/JP416100/Sprawozdanie2
+
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Remove old clone if exists
+        run: rm -rf MDO2025_INO
+
+      - name: Clone repo from specific branch
+        run: |
+          git clone -b JP416100 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+
+      - name: Docker Build (app)
+        run: |
+          docker build -t $IMAGE_NAME:build -f $PATH_PREFIX/Dockerfile.build.node $PATH_PREFIX
+
+      - name: Docker Build (test)
+        run: |
+          docker build -t $IMAGE_NAME:test -f $PATH_PREFIX/Dockerfile.test.node $PATH_PREFIX
+
+      - name: Run tests
+        run: |
+          docker run --rm $IMAGE_NAME:test npm test
+
+      - name: Docker Build (deploy)
+        run: |
+          docker build -t $IMAGE_NAME:deploy -f $PATH_PREFIX/Dockerfile.deploy.node $PATH_PREFIX
+
+      - name: Deploy container
+        run: |
+          docker network create ci || true
+          docker run -d --rm --network ci --name deploy -p 3000:3000 $IMAGE_NAME:deploy
+
+      - name: Test deployed container
+        run: |
+          sleep 5
+          docker run --rm --network ci curlimages/curl curl -s deploy:3000 || echo "curl failed"
+
+      - name: Archive project as tar.gz
+        run: |
+          cd $PATH_PREFIX/node-js-dummy-test
+          tar -czf ../../../node-js-dummy-test.tar.gz .
+        shell: bash
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          node-version: 18
+          name: node-js-dummy-project
+          path: MDO2025_INO/ITE/GCL06/node-js-dummy-test.tar.gz
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: ITE/GCL06/JP416100/Sprawozdanie2/node-js-dummy-test
+      - name: List Docker images
+        run: docker images
 
-      - name: Dummy step
-        run: echo "✅ Wszystko działa!"
+    # Cleanup always runs
+    timeout-minutes: 15
+    continue-on-error: false
+
+    # Post section: cleanup
+    steps:
+      - name: Cleanup
+        run: |
+          docker stop deploy || true
+          docker network rm ci || true
 
