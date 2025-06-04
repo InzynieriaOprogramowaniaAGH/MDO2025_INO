@@ -1,2 +1,2 @@
-FROM oliwiaaa333/next-deploy
+FROM oliwiaaa333/next-deploy:v1
 ENTRYPOINT ["/bin/false"]
