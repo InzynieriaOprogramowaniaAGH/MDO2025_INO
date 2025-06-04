@@ -66,14 +66,10 @@ jobs:
       - name: List Docker images
         run: docker images
 
-    # Cleanup always runs
-    timeout-minutes: 15
-    continue-on-error: false
+  - name: Cleanup
+    if: always()
+    run: |
+      docker stop deploy || true
+      docker network rm ci || true
 
-    # Post section: cleanup
-    steps:
-      - name: Cleanup
-        run: |
-          docker stop deploy || true
-          docker network rm ci || true
 
