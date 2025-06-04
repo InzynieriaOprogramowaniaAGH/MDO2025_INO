@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-production
+  labels:
+    app: moja-nginx-app
+    version: "v1"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moja-nginx-app
+      version: "v1"
+  template:
+    metadata:
+      labels:
+        app: moja-nginx-app
+        version: "v1"
+    spec:
+      containers:
+        - name: nginx
+          image: moja-nginx-app
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+
+---
+# Canary - Nowa wersja (1 replika)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-canary
+  labels:
+    app: moja-nginx-app
+    version: "v2"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moja-nginx-app
+      version: "v2"
+  template:
+    metadata:
+      labels:
+        app: moja-nginx-app
+        version: "v2"
+    spec:
+      containers:
+        - name: nginx
+          image: moja-nginx-app-broken
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80

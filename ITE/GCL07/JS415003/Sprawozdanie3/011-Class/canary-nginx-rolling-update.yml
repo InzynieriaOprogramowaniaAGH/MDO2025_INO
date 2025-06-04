@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moja-nginx-app-deployment
+  labels:
+    app: moja-nginx-app
+    version: "1.0"
+    deployment-strategy: rolling-update
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2  # > 1
+      maxSurge: 25%      # > 20%
+  selector:
+    matchLabels:
+      app: moja-nginx-app
+  template:
+    metadata:
+      labels:
+        app: moja-nginx-app
+        version: "1.0"
+        deployment-strategy: rolling-update
+    spec:
+      containers:
+        - name: moja-nginx-app
+          image: moja-nginx-app
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+      restartPolicy: Always
