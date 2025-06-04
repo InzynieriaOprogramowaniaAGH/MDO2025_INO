@@ -84,7 +84,7 @@ A następnie wstawić link do [Pliku odpowiedzi w wersji Raw na Github](https://
 
 6. Uruchomiłem instalację.
 
-![Zrzut12](screenshots/ZrzutFedora)
+![Zrzut12](screenshots/ZrzutFedora.png)
 
 7. Po zakończeniu instalacji edytowałem plik odpowiedzi aby ustawić automatyczne uruchomienie ponowne po instalacji. Na końcu pliku dodałem polecenie ```reboot```
 
@@ -166,6 +166,7 @@ Po uruchomieniu strony ```http://localhost:8082```
 
 
 **Otrzymałem widok własnej wersji strony tytułowej**
+
 ![Zrzut23](screenshots/Zrzut16.png)
 
 4. Kolejnym krokiem była edycja liczby replik w deploymencie. Można to zrobić na kilka sposobów:
