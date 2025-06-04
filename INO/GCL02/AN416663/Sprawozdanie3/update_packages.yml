@@ -1,0 +1,17 @@
+---
+- name: Aktualizacja pakietów na maszynach docelowych
+  hosts: Endpoints
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Aktualizacja pakietów z pozwoleniem na usunięcie konfliktów (dnf)
+      dnf:
+        name: "*"
+        state: latest
+        allowerasing: yes
+      when: ansible_os_family == "RedHat"
+
+    - name: Potwierdzenie zakończenia
+      debug:
+        msg: "Aktualizacja zakończona pomyślnie na {{ inventory_hostname }}"
