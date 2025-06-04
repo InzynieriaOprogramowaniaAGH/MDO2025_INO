@@ -1,3 +1,0 @@
-FROM nodebld
-
-RUN npm test

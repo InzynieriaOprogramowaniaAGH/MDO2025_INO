@@ -1,3 +1,0 @@
-FROM nodetest
-
-CMD ["npm", "start"]

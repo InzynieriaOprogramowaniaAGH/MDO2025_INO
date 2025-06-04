@@ -1,6 +1,0 @@
-FROM fedora:latest
-
-RUN dnf --assumeyes install git meson gcc glib2-devel openssl-devel utf8proc* ncurses* perl-Ext* cmake
-RUN git clone https://github.com/irssi/irssi
-WORKDIR /irssi/
-RUN meson Build
