@@ -1,31 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: moja-nginx-app-deployment
+  name: moja-nginx-app-rolling
   labels:
     app: moja-nginx-app
+    strategy: rolling
     version: "1.0"
-    deployment-strategy: rolling-update
 spec:
   replicas: 4
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 2  # > 1
-      maxSurge: 25%      # > 20%
+      maxUnavailable: 2
+      maxSurge: 25%
   selector:
     matchLabels:
       app: moja-nginx-app
+      version: "1.0"
   template:
     metadata:
       labels:
         app: moja-nginx-app
         version: "1.0"
-        deployment-strategy: rolling-update
+        strategy: rolling
     spec:
       containers:
         - name: moja-nginx-app
-          image: moja-nginx-app
+          image: moja-nginx-app:v1.0
           imagePullPolicy: Never
           ports:
             - containerPort: 80

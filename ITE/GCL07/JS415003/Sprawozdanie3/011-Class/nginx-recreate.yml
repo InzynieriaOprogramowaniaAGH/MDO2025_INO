@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: moja-nginx-app-deployment-recreate
+  name: moja-nginx-app-recreate
   labels:
     app: moja-nginx-app
+    strategy: recreate
     version: "1.0"
-    deployment-strategy: recreate
 spec:
   replicas: 4
   strategy:
@@ -13,17 +13,17 @@ spec:
   selector:
     matchLabels:
       app: moja-nginx-app
-      deployment-strategy: recreate
+      version: "1.0"
   template:
     metadata:
       labels:
         app: moja-nginx-app
         version: "1.0"
-        deployment-strategy: recreate
+        strategy: recreate
     spec:
       containers:
         - name: moja-nginx-app
-          image: moja-nginx-app
+          image: moja-nginx-app:v1.0
           imagePullPolicy: Never
           ports:
             - containerPort: 80
