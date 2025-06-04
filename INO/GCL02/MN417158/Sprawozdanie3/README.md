@@ -12,6 +12,7 @@ Następnie utworzyłem migawkę maszyny w oknie VirtualBoxa.
 ![Zrzut1](screenshots/Zrzut1.png)
 
 2. Przeprowadziłem instalację Ansible na głównej maszynie poleceniem ```sudo dnf install ansible```
+
 ![Zrzut2](screenshots/Zrzut2.png)
 
 3. Następnie poleceniem ```ssh-copy-id ansible@192.168.100.111```
@@ -32,16 +33,23 @@ wymieniłem klucze SSH pomiędzy użytkownikiem w głównej maszynie wirtualnej,
 
 ![Zrzut6](screenshots/Zrzut-A6.jpg)
 
+
 8. Ponownie przetestowałem połączenie korzystając z utworzonego pliku za pomocą polecenia ```ansible all -i inventory.ini -u ansible -m ping```
+
 ![Zrzut7](screenshots/Zrzut-A7.png)
  
+
 9. Następnie utworzyłem playbook Ansible [copy_inventory.yml](files/copy_inventory.yml)
+
 ![Zrzut8](screenshots/Zrzut-A8.png)
+
 I wykonałem polecenie ```ansible-playbook -i inventory.ini -u ansible --become copy_inventory.yml```
+
 **Wydruk ukazuje poprawne połączenie z maszyną ansible-target1, utworzenie katalogu i skopiowanie do niego pliku inwertaryzującego:**
 ![Zrzut9](screenshots/Zrzut-A9.png)
 
 10. W celu zaktualizowania pakietów i zrestartowania usług sshd oraz rngd utworzyłem nowy playbook [update_and_restart.yml](files/update_and_restart.yml)
+
 **Wydruk ukazuje poprawne zaktualizowanie pakietów, restart sshd oraz rngd**
 ![Zrzut10](screenshots/Zrzut-A10.png)
 
@@ -51,6 +59,7 @@ sudo systemctl stop sshd
 sudo systemctl disable sshd
 ```
 Wyłączyłem SSH. Następnie na maszynie dyrygencie uruchomiłem ponownie plik inwentaryzacyjny ```ansible -i inventory.ini -u ansible -m ping ansible-target1```
+
 **Błąd połączenia- komunikat UNREACHABLE**
 ![Zrzut11](screenshots/Zrzut-A11.png)
 
@@ -71,11 +80,11 @@ Utworzyłem nowego użytkownika i ustawiłem hostname.
 
 5. Po wysłaniu nowego pliku na github, uruchomiłem nową maszynę wirtualną. W ekranie wyboru sposobu instalacji nacisnąłem przycisk "e" na klawiaturze. Umożliwia to wskazanie instalatorowi pkiku odpowiedzi z którego zostanie przeprowadzona instalacja nienadzorowana.
 W pliku należy dopisać ```inst.ks=```
-A następnie wstawić link do [Pliku odpowiedzi w wersji Raw na Github](https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/MN417158/INO/GCL02/MN417158/Sprawozdanie3/anaconda-ks.cfg)
+A następnie wstawić link do [Pliku odpowiedzi w wersji Raw na Github](https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/MN417158/INO/GCL02/MN417158/Sprawozdanie3/files/anaconda-ks.cfg)
 
 6. Uruchomiłem instalację.
 
-![Zrzut12](screenshots/Zrzut ekranu 2025-05-13 175528.png)
+![Zrzut12](screenshots/ZrzutFedora)
 
 7. Po zakończeniu instalacji edytowałem plik odpowiedzi aby ustawić automatyczne uruchomienie ponowne po instalacji. Na końcu pliku dodałem polecenie ```reboot```
 
@@ -154,6 +163,7 @@ Utworzyłem nowy deployment
 3. Po przeprowadzeniu tunelowania ```kubectl port-forward deployment/nginx-deployment 8081:80```
 I w nowym terminalu:```ssh -L 8082:localhost:8081 Milosz@192.168.100.38```
 Po uruchomieniu strony ```http://localhost:8082```
+
 
 **Otrzymałem widok własnej wersji strony tytułowej**
 ![Zrzut23](screenshots/Zrzut16.png)
