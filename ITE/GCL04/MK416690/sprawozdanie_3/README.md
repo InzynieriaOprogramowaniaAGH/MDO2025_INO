@@ -343,7 +343,7 @@ repo --name=updates --baseurl=http://download.fedoraproject.org/pub/fedora/linux
 # Run the Setup Agent on first boot
 firstboot --enable
 # Do not configure the X Window System
-skipx
+# skipx
 
 # Generated using Blivet version 3.11.0
 ignoredisk --only-use=sda
