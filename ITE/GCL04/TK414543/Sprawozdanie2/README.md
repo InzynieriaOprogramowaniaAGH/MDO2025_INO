@@ -1,10 +1,6 @@
 # Sprawozdanie 2 - Tomasz Kurowski
-# LAB 5
 
-## Pipeline, Jenkins, izolacja etapów
-
-### Przygotowanie
-🌵 Utwórz instancję Jenkins
+## 🌵 Utworzenie instancji Jenkinsa
 * Upewniono się, że na pewno działają kontenery budujące i testujące, stworzone na poprzednich zajęciach
 
 ```
@@ -15,10 +11,15 @@ docker run --rm oceanbattle-test
 
 * Zapoznano się z instrukcją instalacji Jenkinsa: https://www.jenkins.io/doc/book/installing/docker/
 
+
+* Utworzono nową sięć Docker o nazwie jenkins
+
 ```
 docker network create jenkins
 ```
 ![Alt text](screenshots/LAB5/image2.png)
+
+* Uruchomiono kontener Docker-In-Docker, który będzie w poźniejszych etapach uzywany przez Jenkinsa w celu uruchamiania jego własnych podkontenerów.
 
 ```
 docker run \
@@ -37,6 +38,8 @@ docker run \
 ```
 ![Alt text](screenshots/LAB5/image3.png)
 
+* Stworzono [`Dockerfile.jenkins`](./LAB5/Dockerfile.jenkins) w celu uruchomienia Jenkinsa w kontenerze.
+
 ```Dockerfile
 FROM jenkins/jenkins:2.492.2-jdk17
 USER root
@@ -53,35 +56,42 @@ USER jenkins
 RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
 ```
 
+* Zbudowano obraz Dockera dla jenkinsa. Wykorzystano do tego umieszczony powyżej Dockerfile.jenkins
+
 ```
 docker build -f Dockerfile.jenkins -t myjenkins:2.492.2-1 .
 ```
 ![Alt text](screenshots/LAB5/image4.png)
+
+* Uruchomiono obraz Dockera który eksponuje środowisko zagnieżdżone. 
 
 ```
 docker run --name myjenkins --restart=on-failure --detach   --network jenkins --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1   --publish 8080:8080 --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins:2.492.2-1
 ```
 ![Alt text](screenshots/LAB5/image5.png)
 
+* Rezultatem powyższych działań są 2 działające kontenery.
 ```
 docker ps
 ```
 ![alt text](screenshots/LAB5/image6.png)
 
+* Hasło do wstępnego zalogowania sie do Jenkinsa pobrano z logów kontenera.
+
 ```
 docker exec myjenkins cat /var/jenkins_home/secrets/initialAdminPassword
 ```
-9b4a5c6d7f8d45acbf0500f0bce0e17d
+```
+> 9b4a5c6d7f8d45acbf0500f0bce0e17d
+```
 
-
-tkurowski
-.8La=&bZdw5!krd
+* Otworzono stronę http://172.21.216.230:8080 w celu wyświetlenia panelu, a następnie zalogowano się i skonfigurowano Jenkinsa. Nastęnie stworzone zostało również nowe konto admina.
 
 ![alt text](screenshots/LAB5/image7.png)
 
-http://172.21.216.230:8080/
-
 ![alt text](screenshots/LAB5/image8.png)
+
+* W celach testowych stworzono bardzo prosty pipeline którego jedynym zadaniem jest zaciąganie Dockerowego obrazu Fedory. Treść pipeline'u została wpisana bezpośrednio do obiektu, nie wykorzystano SCM.
 
 ```Groovy
 pipeline {
@@ -100,9 +110,17 @@ pipeline {
 
 ![alt text](screenshots/LAB5/image9.png)
 
-Zastosowane Dockerfile:
+## 🌵 Utworzenie Pipeline'u
 
-Dockerfile.build
+Stworzono pipeline o nazwie OceanBattlePipeline, jego zadaniem będzie przeprowadzenie procesu budującego, testującego a w kolejnych krokach także wdrażającego aplikację ASP .NET Core będącą backendem gry multiplayer. W ostanim kroku pipeline opublikuje artefakt w postaci obrazu Dockera na DockerHub oraz udostępni jego spakowaną formę w panelu Jenkinsa.
+
+Pierwszyn etapem pracy Pipeline'u będzie pobranie repozytorium przedmiotowego aby mieć dostęp do wymaganych plików Dockerfile. Następnie będzie on kolejno uruchamiał Dockerfile od Builda, Testów oraz Deploy. 
+Etap Deploy będzie polegał na stworzeniu pojedynczej binarki zawierającej od razu .net, wykorzystany zostanie do tego celu dotnet publish z opcjami single file oraz self contained. Zostanie ona ruchomiona w kontenerze i do jednego z jej endpointów zostanie wysłany HTTP Get request w celu sprawdzenia poprawnosci uruchomienia i działania.
+Ostatecznie w etapie Publish artefakt w postaci obrazu Dockera będzie udostępniony na Docker Hub oraz spakowany w panelu Jenkinsa.
+
+- ### Zastosowane Dockerfile:
+
+1. #### [`Dockerfile.build`](../Sprawozdanie1/LAB3/Dockerfile.build)
 ```Dockerfile
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 
@@ -114,8 +132,9 @@ RUN dotnet restore
 RUN dotnet build -c Debug
 RUN dotnet build -c Release -p:DebugType=None -p:DebugSymbols=false
 ```
+Jego celem jest przygotowanie kontenera (pobranie git'a i sklonowanie repo) a następnie zbudowanie aplikacji. Budujemy od razu konfiguracje Debug (do użycia przy testach) oraz Release (te biblioteki wykorzysta dotnet publish w kroku Deploy).
 
-Dockerfile.test
+2. #### [`Dockerfile.test`](../Sprawozdanie1/LAB3/Dockerfile.test)
 ```Dockerfile
 FROM oceanbattle-build AS test
 
@@ -123,8 +142,9 @@ WORKDIR /app
 
 CMD ["dotnet", "test"]
 ```
+Jego celem jest przeprowadzenie testów zawartych w projekcie.
 
-Dockerfile.deploy
+3. #### [`Dockerfile.deploy`](./LAB6/Dockerfile.deploy)
 ```Dockerfile
 FROM oceanbattle-build AS build
 
@@ -150,7 +170,11 @@ ENTRYPOINT ["./OceanBattle.WebAPI"]
 
 EXPOSE 80
 ```
+Przeprowadza on dwustopniowy proces który najpierw wykonuje dotnet publish w celu uzyskania pojedynczej, self-contained binarki a następnie kopiuje ją do finalnego runtimeowego kroku gdzie jest ona wystawiana na porcie 80. Dzięki temu w ostatecznym obrazie będącym artefaktem znajduje sie tylko binarka bez zbędnych narzędzi.
 
+- ### [`Jenkinsfile`](./LAB5/Jenkinsfile)
+
+1. #### Checkout
 ```Groovy
         stage('Checkout'){
             steps{
@@ -159,7 +183,9 @@ EXPOSE 80
             }
         }
 ```
+Ten krok odpowiada za pobranie repozytorium przedmiotowego na mojej gałęzi w celu uzyskania dostępu do wymaganych przez Pipeline plików.
 
+2. #### Build
 ```Groovy
         stage('Build') {
             steps {
@@ -170,7 +196,9 @@ EXPOSE 80
             }
         }
 ```
+Ten krok buduje obraz z dostarczonego buildowego Dockerfile'a i uruchamia kontener.
 
+3. #### Test
 ```Groovy
         stage('Test') {
             steps {
@@ -181,7 +209,9 @@ EXPOSE 80
             }
         }
 ```
+Ten krok buduje obraz z dostarczonego testowego Dockerfile'a i uruchamia kontener.
 
+4. #### Deploy
 ```Groovy
         stage('Deploy') {
             steps {
@@ -220,11 +250,16 @@ EXPOSE 80
             }
         }
 ```
+Ten etap jest najbardziej skomplikowany - najpierw buduje obraz z dostarczonego pliku Dockerfile.deploy, następnie uruchamia kontener z użyciem curl wykonuje HTTP request na jeden z endpointów aplikacji aby sprawdzić czy jest poprawnie uruchomiona i gotowa do działania.
+
+
+Aby wykonać ostatni krok - Publish, należy umożliwić Jenkisowi zalogowanie się do DockerHub. W tym celu dodano dane logowania w przedstawiony poniżej sposób.
 
 ![alt text](screenshots/LAB5/image10.png)
 ![alt text](screenshots/LAB5/image11.png)
 ![alt text](screenshots/LAB5/image12.png)
 
+5. #### Publish
 ```Groovy
         stage('Publish') {
             steps {
@@ -249,11 +284,18 @@ EXPOSE 80
             }
         }
 ```
+Ten krok wykorzystuje zapisane w Jenkinsie dane logowania do DockerHub i udostępnia tam obraz kontenera Docker, a także pakuje go i umożliwia jego pobranie z panelu Jenkinsa.
 
 ![alt text](screenshots/LAB5/image13.png)
-![alt text](screenshots/LAB5/image14.png)
-![alt text](screenshots/LAB5/image15.png)
+Cały pipeline wykonuje się poprawnie, potwierdza to [log z konsoli Jenkinsa](./LAB7/#31.txt).
 
+![alt text](screenshots/LAB5/image14.png)
+W panelu Jenkinsa dostępny jest do pobrania spakowany obraz kontenera Docker.
+
+![alt text](screenshots/LAB5/image15.png)
+Także w DockerHub można zobaczyć udostępnione tam obrazy.
+
+6. #### Czyszczenie
 ```Groovy
     post {
         always {
@@ -265,82 +307,7 @@ EXPOSE 80
         }
     }
 ```
+Ostatnim końcowym elementem Pipeline'u jest usunięcie kontenerów oraz plików tak aby bezproblemowo można go było uruchomić ponownie.
 
 ![alt text](screenshots/LAB5/image16.png)
-
-  * Uruchomiono obraz Dockera który eksponuje środowisko zagnieżdżone
-  * Przygotowano obraz blueocean na podstawie obrazu Jenkinsa (czym się różnią?)
-  * Uruchomiono Blueocean
-  * Zalogowano się i skonfigurowano Jenkins
-  * Zadbano o archiwizację i zabezpieczenie logów
-  
-### Zadanie wstępne: uruchomienie
-🌵 Zadanie do wykonania na ćwiczeniach
-* Konfiguracja wstępna i pierwsze uruchomienie
-  * Utwórz projekt, który wyświetla `uname`
-  * Utwórz projekt, który zwraca błąd, gdy... godzina jest nieparzysta
-  * Pobierz w projekcie obraz kontenera `ubuntu` (stosując `docker pull`)
-
-### Zadanie wstępne: obiekt typu pipeline
-🌵 Ciąg dalszy sprawozdania - zadanie do wykonania po wykazaniu działania Jenkinsa
-* Utwórz nowy obiekt typu `pipeline`
-* Wpisz treść *pipeline'u* bezpośrednio do obiektu (nie z SCM - jeszcze!)
-  * https://www.jenkins.io/doc/book/pipeline/syntax/
-  * https://www.jenkins.io/doc/pipeline/steps/git/
-  * https://www.jenkins.io/doc/pipeline/examples/#unstash-different-dir
-  * [https://www.jenkins.io/doc/book/pipeline/docker/](https://www.jenkins.io/doc/book/pipeline/docker/#building-containers)
-* Spróbuj sklonować repo przedmiotowe (`MDO2025_INO`)
-* Zrób *checkout* do swojego pliku Dockerfile (na osobistej gałęzi) właściwego dla *buildera* wybranego w poprzednim sprawozdaniu programu
-* Zbuduj Dockerfile
-* Uruchom stworzony *pipeline* drugi raz
- 
-### Opis celu
-Dla osób z wybranym projektem
-* Opracuj dokument z diagramami UML, opisującymi proces CI. Opisz:
-  * Wymagania wstępne środowiska
-  * Diagram aktywności, pokazujący kolejne etapy (collect, build, test, report)
-  * Diagram wdrożeniowy, opisujący relacje między składnikami, zasobami i artefaktami
-* Diagram będzie naszym wzrocem do porównania w przyszłości
-
-### Pipeline: składnia
-Zadanie do wykonania, jeżeli poprawnie działa obiekt *pipeline* i udało się odnaleźć dostęp do plików Dockerfile
-* Definiuj pipeline korzystający z kontenerów celem realizacji kroków `build -> test`
-* Może, ale nie musi, budować się na dedykowanym DIND, ale może się to dziać od razu na kontenerze CI. Należy udokumentować funkcjonalną różnicę między niniejszymi podejściami
-* Docelowo, `Jenkinsfile` definiujący *pipeline* powinien być umieszczony w repozytorium. Optymalnie: w *sforkowanym* repozytorium wybranego oprogramowania
-
-### Kompletny pipeline: wymagane składniki
-Kompletny *pipeline* (wprowadzenie) - do wykonania po ustaleniu kształu kroków `deploy` i `publish`
-*  Kontener Jenkins i DIND skonfigurowany według instrukcji dostawcy oprogramowania
-*  Pliki `Dockerfile` wdrażające instancję Jenkinsa załączone w repozytorium przedmiotowym pod ścieżką i na gałęzi według opisu z poleceń README
-*  Zdefiniowany wewnątrz Jenkinsa obiekt projektowy *pipeline*, realizujący następujące kroki:
-  * Kontener `Builder`, który powinien bazować na obrazie zawierającym dependencje (`Dependencies`), o ile stworzenie takiego kontenera miało uzasadnienie. Obrazem tym może być np. baza pobrana z Docker Hub (jak obraz node lub 
-dotnet) lub obraz stworzony samodzielnie i zarejestrowany/widoczny w DIND (jak np. obraz oparty o Fedorę, doinstalowujący niezbędne zależności, nazwany Dependencies). Jeżeli, jak często w przypadku Node, nie ma różnicy między runtimowym obrazem a obrazem z dependencjami, proszę budować się w oparciu nie o latest, ale o **świadomie wybrany tag z konkretną wersją**
-  * Obraz testujący, w ramach kontenera `Tester`
-    * budowany przy użyciu ww. kontenera kod, wykorzystujący w tym celu testy obecne w repozytorium programu
-    * Zadbaj o dostępność logów i możliwość wnioskowania jakie testy nie przechodzą
-  * `Deploy`
-    *  Krok uruchamiający aplikację na kontenerze docelowym
-    *  Jeżeli kontener buildowy i docelowy **wydają się być te same** - być może warto zacząć od kroku `Publish` poniżej
-    *  Jeżeli to kontener buildowy ma być wdrażany - czy na pewno nie trzeba go przypadkiem posprzątać?
-    *  Przeprowadź dyskusję dotyczącą tego, jak powinno wyglądać wdrożenie docelowe wybranej aplikacji. Odpowiedz (z uzasadnieniem i dowodem) na następujące kwestie:
-        * czy program powinien zostać *„zapakowany”* do jakiegoś przenośnego pliku-formatu (DEB/RPM/TAR/JAR/ZIP/NUPKG)
-        * czy program powinien być dystrybuowany jako obraz Docker? Jeżeli tak – czy powinien zawierać zawartość sklonowanego repozytorium, logi i artefakty z *builda*?
-        * Przypomnienie: czym się różni (i jakie ma zastosowanie) obraz `node` od `node-slim`
-    *  Proszę opisać szczegółowo proces który zostanie opisany jako `Deploy`, ze względu na mnogość podejść
-  * `Publish`
-    * Przygotowanie wersjonowanego artefaktu, na przykład:
-      * Instalator
-      * NuGet/Maven/NPM/JAR
-      * ZIP ze zbudowanym runtimem
-    * Opracuj odpowiednią postać redystrybucyjną swojego artefaktu i/lub obrazu (przygotuj instalator i/lub pakiet, ewentualnie odpowiednio uporządkowany obraz kontenera Docker)
-      * Musi powstać co najmniej jeden z tych elementów
-      * Jeżeli ma powstać artefakt, dodaj go jako pobieralny obiekt do rezultatów „przejścia” *pipeline’u* Jenkins (https://www.jenkins.io/doc/pipeline/steps/core/).
-    * Opcjonalnie, krok `Publish` (w przypadku podania parametru) może dokonywać promocji artefaktu na zewnętrzne *registry*
-#### Wskazówka
-Po opracowaniu formy redystrybucyjnej, stwórz obraz runtime’owy (bez dependencji potrzebnych wyłącznie do builda!), zasilony artefaktem, zainstaluj w nim program z niego i uruchom. Jeżeli formą redystrybucyjną jest kontener, uruchom kontener – w sposób nieblokujący: pozwól pipeline’owi kontynuować po uruchomieniu, ale wykaż, że program uruchomiony w owym kontenerze działa.
-
-
-
-# LAB 6
-# LAB 7
-# LAB 8
+Pipeline wykonuje się powtarzalnie, można uruchomić go kilkukrotnie, za każdym razem pobiera najnowsze repozytorium i nie wykorzystuje cache'u.
