@@ -1,0 +1,8 @@
+---
+# defaults file for supertux_in_docker
+
+local_package_path: ./supertux-build.tar.gz
+remote_package_path: /tmp/supertux-build.tar.gz
+container_image: peczyn/main-container:1.0
+container_name: supertux-container
+unpacked_dir: /supertux-build

@@ -2,7 +2,256 @@
 
 ## Ansible
 
+### Instalacja zarządcy Ansible
+
+Na potrzeby realizacji zadania przygotowano dwie maszyny wirtualne oparte na systemie Fedora Server w tej samej wersji.
+
+* Maszyna **zarządzająca**: `peczyn@fedora`
+* Maszyna **zarządzana**: `ansible@ansible-target`
+
+Na maszynie `ansible-target` podczas instalacji:
+
+* nadano hostname `ansible-target`
+* utworzono użytkownika `ansible`
+* zainstalowano niezbędne pakiety: `openssh-server` oraz `tar`
+
+Na maszynie `peczyn@fedora` zainstalowano Ansible z repozytorium:
+
+```bash
+sudo dnf install ansible -y
+```
+
+Następnie przeprowadzono wymianę kluczy SSH pomiędzy użytkownikiem `peczyn` a użytkownikiem `ansible`:
+
+```bash
+ssh-copy-id ansible@ansible-target
+```
+
+Dzięki temu możliwe było wykonywanie poleceń SSH bez konieczności podawania hasła.
+
+![alt text](ansible/ss/image-1.png)
+![alt text](ansible/ss/image.png)
+
 ---
+
+### Inwentaryzacja
+
+W pliku `inventory.ini` umieszczono następującą strukturę grup hostów:
+
+```ini
+[Orchestrators]
+peczyn@fedora 
+
+[Endpoints]
+ansible@ansible-target-1
+```
+
+Nazwa `ansible-target-1` została powiązana z adresem IP maszyny wirtualnej za pomocą wpisu w pliku `/etc/hosts`.
+
+![alt text](ansible/ss/image-7.png)
+
+---
+
+### Zdalne wywoływanie procedur
+
+Playbook do wykonywania podstawowych czynności administracyjnych na maszynach końcowych:
+
+```yaml
+- name: Tasks
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Ping machines
+      ansible.builtin.ping:
+
+    - name: Copy inventory file
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: ~/inventory.ini
+
+    - name: Update packages
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+        update_cache: yes
+
+    - name: Restart sshd and rngd
+      ansible.builtin.systemd:
+        name: "{{item}}"
+        state: restarted
+      loop:
+        - sshd
+        - rngd
+```
+
+Uruchomienie po raz pierwszy (pełna aktualizacja i restart usług):
+
+![alt text](ansible/ss/image-2.png)
+
+Uruchomienie drugi raz (niektóre kroki zamiast changed mają po prostu ok bo zostały już wcześniej wykonane i nie wymagały zmian):
+
+![alt text](ansible/ss/image-3.png)
+
+Próba wywołania przy wyłączonym SSH:
+
+![alt text](ansible/ss/image-4.png)
+
+Próba wywołania przy wyłączonej karcie sieciowej:
+
+![alt text](ansible/ss/image-5.png)
+
+Pomiędzy wyłączonym ssh, a karcie sieciowej różnica jest w outpucie błędu między `Connection refused`, a `Connection timed out`.
+
+---
+
+### Zarządzanie stworzonym artefaktem
+
+Dla potrzeb zadania przygotowano kontener zawierający aplikację **SuperTux**. W tym celu wykorzystano wcześniejszy pipeline, którego efektem był skompresowany katalog `supertux-build.tar.gz` (wyciągnąłem go z pliku .deb bo tak mi było wygodniej niż przerabiać go alienem na rpm).
+
+Do zarządzania artefaktem przygotowano rozszerzony playbook:
+
+```yaml
+- name: Tasks
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Ping machines
+      ansible.builtin.ping:
+
+    - name: Copy inventory file
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: ~/inventory.ini
+
+    - name: Update packages
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+        update_cache: yes
+
+    - name: Restart sshd and rngd
+      ansible.builtin.systemd:
+        name: "{{item}}"
+        state: restarted
+      loop:
+        - sshd
+        - rngd
+
+    - name: Remove the Supertux container
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: absent
+        force_kill: true
+```
+
+Kontener uruchomiono i przetestowano:
+
+![alt text](ansible/ss/image-6.png)
+
+Największe problemy były:
+* Brak dostępu do kontenera (permission denied) na co pomogło użycie: `security_opts: - label=disable`.
+* Problemy z błędem dostępu do biblioteki przez binarkę. (głupi problem z relacjami z cmakelista programu)
+
+Koniec końców wszystko `jakoś działa` i chociaż nie jest idealne to mnie zadowala.
+
+---
+
+### Ubranie wszystkiego w role
+
+Struktura roli utworzona przy pomocy `ansible-galaxy init supertux_in_docker`.
+
+![alt text](ansible/ss/image-9.png)
+![alt text](ansible/ss/image-10.png)
+
+Przeniosłem `supertux-build.tar.gz` do katalogu files a następnie, zmieniłem zmienną `local_package_path` na bezpośredni odwołanie do pliku w katalogu `files`.
+
+#### defaults/main.yml:
+
+```yaml
+local_package_path: ./supertux-build.tar.gz
+remote_package_path: /tmp/supertux-build.tar.gz
+container_image: peczyn/main-container:1.0
+container_name: supertux-container
+unpacked_dir: /supertux-build
+```
+
+#### tasks/main.yml:
+
+```yaml
+- name: Copy supertux package to remote host
+  ansible.builtin.copy:
+    src: supertux-build.tar.gz
+    dest: "{{ remote_package_path }}"
+    mode: '0644'
+
+- name: Install Docker
+  ansible.builtin.dnf:
+    name:
+      - docker
+    state: present
+    update_cache: yes
+
+- name: Start and enable Docker service
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Pull Docker image
+  community.docker.docker_image:
+    name: "{{ container_image }}"
+    source: pull
+
+- name: Create and start container with mounted package
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ container_image }}"
+    state: started
+    volumes:
+      - "{{ remote_package_path }}:{{ remote_package_path }}"
+    command: sleep infinity
+    detach: true
+    security_opts:
+      - label=disable
+
+- name: Execute commands in container (unpack and run supertux)
+  community.docker.docker_container_exec:
+    container: "{{ container_name }}"
+    command: >
+      sh -c "
+      mkdir -p {{ unpacked_dir }} &&
+      tar -xzf {{ remote_package_path }} -C / &&
+      cd /supertux/build &&
+      ./supertux2 --version
+      "
+  register: command_output
+
+- name: Display supertux version output
+  ansible.builtin.debug:
+    var: command_output.stdout
+
+- name: Remove the Supertux container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    state: absent
+    force_kill: true
+```
+
+#### Główny plik playbooka:
+
+```yaml
+- name: Run Supertux setup in Docker container
+  hosts: Endpoints
+  become: yes
+
+  roles:
+    - role: supertux_in_docker
+```
+
+![alt text](ansible/ss/image-8.png)
+
+---
+
 
 ## Instalacje nienadzorowane
 
