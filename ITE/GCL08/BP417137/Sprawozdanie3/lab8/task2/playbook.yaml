@@ -1,0 +1,70 @@
+- name: Express with Docker
+  hosts: Endpoints
+  become: yes
+  vars:
+    docker_img: "docker.io/bpajda/express-deploy-img"
+    container_name: "express-deploy"
+    app_port: 3000
+
+  tasks:
+    - name: Install Docker
+      become: true
+      command: dnf install -y docker
+      args:
+        creates: /usr/bin/docker
+
+    - name: Start Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull Docker image
+      ansible.builtin.docker_image:
+        name: "{{ docker_img }}"
+        tag: latest
+        source: pull
+
+    - name: Create and start Docker container
+      ansible.builtin.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ docker_img }}"
+        state: started
+        restart_policy: always
+        published_ports:
+          - "{{ app_port }}:{{ app_port }}"
+
+    - name: Test
+      ansible.builtin.uri:
+        url: "http://localhost:{{ app_port }}"
+        status_code: 200
+      register: app_status
+      until: app_status is success
+      retries: 5
+      delay: 10
+
+    - name: Status
+      ansible.builtin.debug:
+        msg: "Express application is running at http://{{ inventory_hostname }}:{{ app_port }}"
+      when: app_status is success
+
+    - name: Response
+      ansible.builtin.uri:
+        url: "http://localhost:{{ app_port }}"
+        return_content: yes
+      register: app_response
+      when: app_status is success
+    
+    - name: Response msg
+      ansible.builtin.debug:
+        msg: "Application response: {{ app_response.content }}"
+
+    - name: Stop container
+      ansible.builtin.docker_container:
+        name: "{{ container_name }}"
+        state: stopped
+
+    - name: Remove container
+      ansible.builtin.docker_container:
+        name: "{{ container_name }}"
+        state: absent
