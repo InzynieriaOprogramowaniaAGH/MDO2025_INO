@@ -142,10 +142,52 @@ Aby ukazać poprawne utworzenie 4 replik
 
 ## Zajęcia 11 Kubernetes cd.:
 
+1. Aby stworzyć własną konfigurację obrazu nginx utworzyłem pliki [index.html](files/index.html) oraz [nginx-configmap.yaml](files/nginx-configmap.yaml), które umożliwiają wyświetlenie na stronie własnego napisu zamiast tytułowej i oryginalnej strony nginx
 
+2. Poleceniami
+```
+kubectl apply -f nginx-configmap.yaml
+kubectl apply -f deployment.yaml
+```
+Utworzyłem nowy deployment
 
+3. Po przeprowadzeniu tunelowania ```kubectl port-forward deployment/nginx-deployment 8081:80```
+I w nowym terminalu:```ssh -L 8082:localhost:8081 Milosz@192.168.100.38```
+Po uruchomieniu strony ```http://localhost:8082```
 
-## Korzystanie z narzędzi AI podczas wykonywania zadań
+**Otrzymałem widok własnej wersji strony tytułowej**
+![Zrzut23](screenshots/Zrzut16.png)
 
-ChatGPT-4 w celu znalezienia najprostszego sposobu do wyświetlenia kolorowego napisu w konsoli Jenkinsa oraz do stworze>
+4. Kolejnym krokiem była edycja liczby replik w deploymencie. Można to zrobić na kilka sposobów:
+- Pierwszym jest edycja pliku [deployment.yaml](files/deployment.yaml) i zmiana linijki ```replicas: 1```
+Po jej zmianie na 8, zapisaniu pliku ponownie wczytałem plik wdrożenia ```kubectl apply -f deployment.yaml```
 
+**Efekt w dashboard:**
+![Zrzut24](screenshots/Zrzut17.png)
+
+- Drugim sposobem jest po prostu wpisanie komendy ```kubectl scale deployment nginx-deployment --replicas=0```
+**Efekt jest następujący. 0 podów natomiast deployment dalej działa:**
+![Zrzut25](screenshots/Zrzut18.png)
+
+- Ostatnim sposobem jest edytowanie pliku deploymentu poprzez dashboard. Należy przejść do zakładki z deploymentami, rozwinąć menu i kliknąć ```Edit```
+Następnie otrzymujemy nasz plik, w którym tak jak poprzednio zmieniamy linijkę ```replicas: 1```
+
+![Zrzut26](screenshots/Zrzut19.png)
+![Zrzut27](screenshots/Zrzut20.png)
+
+5. W celu uruchomienia innej wersji obrazu zmieniłem w deploymencie linijkę ```      containers:
+      - name: nginx
+        image: nginx:1.24```
+
+![Zrzut28](screenshots/Zrzut21.png)
+![Zrzut29](screenshots/Zrzut22.png)
+
+6. Następnie uruchomiłem wadliwą wersję
+
+![Zrzut30](screenshots/Zrzut23.png)
+![Zrzut31](screenshots/Zrzut24.png)
+
+7. W celu przywrócenia pierwotnej wersji użyłem polecenia ```kubectl rollout undo deployment/nginx-deployment --to-revision=1```
+
+![Zrzut32](screenshots/Zrzut25.png)
+![Zrzut33](screenshots/Zrzut26.png)
