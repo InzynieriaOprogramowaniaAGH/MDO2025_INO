@@ -326,41 +326,34 @@ anaconda-ks.cfg:
 #version=DEVEL
 
 # Keyboard layouts
-keyboard --vckeymap=us --xlayouts='us'
+keyboard --vckeymap=pl --xlayouts='pl'
 # System language
 lang pl_PL.UTF-8
 
-repo --name=fedora --baseurl=http://download.fedoraproject.org/pub/fedora/linux/releases/41/Everything/x86_64/os/
-repo --name=updates --baseurl=http://download.fedoraproject.org/pub/fedora/linux/updates/41/Everything/x86_64/
-
-
 %packages
 @^server-product-environment
-@^desktop-environment
+@kde-desktop
 
 %end
 
 # Run the Setup Agent on first boot
 firstboot --enable
-# Do not configure the X Window System
-# skipx
 
 # Generated using Blivet version 3.11.0
 ignoredisk --only-use=sda
-# System bootloader configuration
-bootloader --location=mbr --boot-drive=sda
 autopart
 # Partition clearing information
-clearpart --all --initlabel --drives=sda
+clearpart --all  --initlabel
+autopart
 
 # System timezone
 timezone Europe/Warsaw --utc
 
 network --hostname=rogal-ddl
 
-# Root password
-rootpw --iscrypted $y$j9T$b2DtvHN/QOO96Jm7qeNegaLP$T4zrpEVTg7itvAX6uYuf4/K3ytfS61TZ.4kba5SkUp5
-user --groups=wheel --name=marek --password=$y$j9T$Cr2SxBjChaLJAPgF0FBDbMWz$TujpGXLkHO4DXhZ7N0/aaa2zmFfJgxB6Mgcq4ZecEX/ --iscrypted
+#Root password
+rootpw --lock
+user --groups=wheel --name=cadmus --password=$y$j9T$1jYL4ytD050gFyYG9rFmnFNe$FHz/mlvsMtaON1Ul31paOJ0QxphttD/YamQjJwJIjr3 --iscrypted --gecos="Kacper Mierzwa"
 ```
 
 ## Lab 10
