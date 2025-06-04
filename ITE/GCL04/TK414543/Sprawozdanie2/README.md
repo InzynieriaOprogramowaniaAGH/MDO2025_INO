@@ -250,6 +250,10 @@ EXPOSE 80
         }
 ```
 
+![alt text](screenshots/LAB5/image13.png)
+![alt text](screenshots/LAB5/image14.png)
+![alt text](screenshots/LAB5/image15.png)
+
 ```Groovy
     post {
         always {
@@ -261,6 +265,8 @@ EXPOSE 80
         }
     }
 ```
+
+![alt text](screenshots/LAB5/image16.png)
 
   * Uruchomiono obraz Dockera który eksponuje środowisko zagnieżdżone
   * Przygotowano obraz blueocean na podstawie obrazu Jenkinsa (czym się różnią?)
