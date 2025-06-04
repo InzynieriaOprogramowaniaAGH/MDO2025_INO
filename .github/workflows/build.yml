@@ -1,18 +1,18 @@
-name: Node.js Docker CI/CD
+name: Node.js dummy Docker CI/CD
 
 on:
   push:
     branches:
       - ino_dev
 
-env:
-  IMAGE_NAME: node-js-dummy
-  TAG: v1.0
-  PATH_PREFIX: MDO2025_INO/ITE/GCL06/JP416100/Sprawozdanie2
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: node-js-dummy
+      TAG: v1.0
+      PATH_PREFIX: MDO2025_INO/ITE/GCL06/JP416100/Sprawozdanie2
 
     steps:
       - name: Checkout repo
@@ -66,10 +66,8 @@ jobs:
       - name: List Docker images
         run: docker images
 
-  - name: Cleanup
-    if: always()
-    run: |
-      docker stop deploy || true
-      docker network rm ci || true
-
-
+      - name: Cleanup
+        if: always()
+        run: |
+          docker stop deploy || true
+          docker network rm ci || true
