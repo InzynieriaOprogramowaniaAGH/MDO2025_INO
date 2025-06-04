@@ -66,3 +66,30 @@ Wszystkie kroki pomyślnie wykonane dla playbooka deploy_cjson.yml. [deploy_cjso
 ![](008-Class/screens/lab8_22.png)
 ![](008-Class/screens/lab8_23.png)
 ![](008-Class/screens/lab8_24.png)
+
+## 009-Class
+
+Celem tych zajęć było zainstalowanie nowej maszyny za pomocą odpowiednio napisanego pliku kickstart, aby znajdowały się na niej odpowiednie pliki z wcześniejszego pipelina.
+
+Skopiowanie pliku anaconda [anaconda-ks.cfg](009-Class/anaconda-ks.cfg) z maszyny głównej za pomocą komendy scp.
+![](009-Class/screens/lab9_1.png)
+![](009-Class/screens/lab9_2.png)
+
+Uruchomienie instalatora netinst dla fedory.
+![](009-Class/screens/lab9_3.png)
+
+Udostępnienie pliku kickstart [fedora-cjson-base-ks.cfg](009-Class/fedora-cjson-base-ks.cfg) przez serwer http. Dla portu 8000 musiałem również wyłączyć firewall aby móc uzyć pliku.
+![](009-Class/screens/lab9_4.png)
+
+Tutaj pokazanie, że plik jest widziany przez maszynę docelową.
+![](009-Class/screens/lab9_7.png)
+
+Tutaj jak podaję ścieżkie do pliku kickstart, ale rozmawiałem z panem i mi pan pomógł rozwiązać problem i tutaj jest po prostu zrzut ekranu co robiłem źle ponieważ ten parametr powinien być podawany po quiet.
+![](009-Class/screens/lab9_5.png)
+
+Tutaj uruchomienie instalacji.
+![](009-Class/screens/lab9_6.png)
+![](009-Class/screens/lab9_9.png)
+
+System pomyślnie zainstalowany z podstawową konfiguracją.
+![](009-Class/screens/lab9_10.png)
