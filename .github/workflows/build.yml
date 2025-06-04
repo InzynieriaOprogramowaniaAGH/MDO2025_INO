@@ -51,11 +51,11 @@ jobs:
           sleep 5
           docker run --rm --network ci curlimages/curl curl -s deploy:3000 || echo "curl failed"
 
-      - name: Archive project as tar.gz
-        run: |
-          cd $PATH_PREFIX/node-js-dummy-test
-          tar -czf ../../../node-js-dummy-test.tar.gz .
-        shell: bash
+- name: Upload artifact
+  uses: actions/upload-artifact@v4
+  with:
+    name: node-js-dummy
+    path: MDO2025_INO/ITE/GCL06/node-js-dummy.tar.gz
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
