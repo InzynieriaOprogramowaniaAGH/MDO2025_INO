@@ -414,7 +414,40 @@ Jak widać, playbook korzystający z roli przeszedł bez żadnych komplikacji, d
 
 ## Pliki odpowiedzi dla wdrożeń nienadzorowanych
 
-TODO
+W pierwszym kroku zainstalowałem nowy system Fedora w wersji 42. Z systemu skopiowałem plik `anaconda-ks.cfg` na serwer. Następnie wprowadziłem do niego kilka poprawek:
+
+- Zmieniłem `hostname`:
+
+```ini
+network --hostname=vbox-potezny
+```
+
+- Dodałem niezbędne repozytoria:
+
+```ini
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-42&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f42&arch=x86_64
+```
+
+- Dodałem opcję `reboot` na końcu tak, aby system automatycznie uruchomił się ponownie po instalacji.
+
+Uzupełniony plik `anaconda-ks.cfg` jest dostępny [tutaj](009-Class/anaconda-ks.cfg).
+
+Następnie plik ten dodałem do repozytorium przedmiotowego tak, aby możliwe było pobranie go. Korzystając z `tinyurl` wygenerowałem skróconą wersję [linku](https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/TO417248/ITE/GCL06/TO417248/Sprawozdanie3/009-Class/anaconda-ks.cfg) do pliku tak, aby uniknąć popełnienia błędu podczas późniejszego przepisywania:
+
+![](009-Class/ss/1.png)
+
+Mając wygenerowany link przeszedłem do instalacji nienadzorowanej. Utworzyłem nową maszynę wirtualną z obrazem ISO instalatora Fedory 42. Podczas rozruchu edytowałem opcję `Install Fedora 42` w grubie tak, aby instalator korzystal z pliku odpowiedzi. Zrealizowałem to poprzez dopisanie `inst.ks=link_do_pliku` w opcjach rozruchu:
+
+![](009-Class/ss/2.png)
+
+Po edycji wcisnąłem F10, a po chwili instalacja przebiegała automatycznie:
+
+![](009-Class/ss/3.png)
+
+Po ukończonej instalacji maszyna uruchomiła się ponownie, jednakże konieczne było usunięcie obrazu ISO z maszyny wirtualnej. Ręczne uruchomienie bez obrazu ISO uruchomiło system. Na poniższym zrzucie ekranu można zaobserwować, że logowanie odbyło się na użytkownika, którego zakładałem jeszcze wcześniej podczas ręcznej instalacji systemu, a do którego hasło jest dokładnie takie samo. Dodatkowo, widoczna jest zmieniona nazwa maszyny.
+
+![](009-Class/ss/4.png)
 
 
 
