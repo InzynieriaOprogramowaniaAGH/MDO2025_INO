@@ -1,0 +1,55 @@
+---
+- name: Basic operations
+  hosts: all
+  gather_facts: true
+  become: yes
+  vars:
+    inventory_owner: "{{ 'user' if inventory_hostname == 'ansible-main' else 'ansible' }}"
+
+  tasks:
+    - name: Send ping request
+      ping:
+
+    - name: Copy inventory file
+      ansible.builtin.copy:
+        src: ~/ansible/inventory.ini
+        dest: /tmp/inventory.ini
+        owner: "{{ inventory_owner }}"
+        group: "{{ inventory_owner }}"
+        mode: "0644"
+
+    - name: Update system packages
+      block:
+        - name: Update packages (skip kernel)
+          dnf:
+            name: "*"
+            state: latest
+            exclude: kernel*
+            update_cache: yes
+          register: update_result
+          notify: reboot_if_needed
+
+    - name: Restart services
+      service:
+        name: "{{ item }}"
+        state: restarted
+      loop:
+        - sshd
+        - rngd
+
+    - name: Skip message for control node
+      debug:
+        msg: "Skipping package updates on control node (ansible-main)"
+      when: inventory_hostname == 'ansible-main'
+
+  handlers:
+    - name: reboot_if_needed
+      ansible.builtin.reboot:
+        msg: "Reboot initiated by Ansible"
+        connect_timeout: 5
+        reboot_timeout: 600
+        pre_reboot_delay: 0
+        post_reboot_delay: 30
+      when:
+        - update_result.changed
+        - inventory_hostname != 'ansible-main'

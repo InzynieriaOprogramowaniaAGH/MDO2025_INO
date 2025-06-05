@@ -40,7 +40,7 @@
 
 ## 3. Zdalne wywoływanie procedur
 
-### Przygotowanie [ansible playbook](./1/remote-tasks.yml) <!-- TODO ADD FILE TO REPO -->
+### Przygotowanie [ansible playbook](./1/remote-tasks.yml)
 
 ### Wyłączenie `sshd`
 
@@ -50,7 +50,7 @@
 
 ![14](../reports/images/r8/14.png)
 
-### Przygotowanie [ansible playbook](./1/deploy.yml) do uruchomienia kontenera aplikacji <!-- TODO ADD FILE TO REPO -->
+### Przygotowanie [ansible playbook](./1/deploy.yml) do uruchomienia kontenera aplikacji
 
 ### Przeprowadzenie uruchomienia aplikacji poprzez ansible
 
@@ -58,9 +58,26 @@
 
 # CWL9
 
-## 1. Instalacja zarządcy Ansible
+## 1. Plik odpowiedzi
 
-<!-- TODO add pictures -->
+Pobranie pliku z jednej z VM korzystających z Fedory 41, dodanie:
+
+-   repozytoriów
+-   pobrania silnika dockera
+-   uruchomienia kontenera  
+    Plik jest umieszczony w [repozytorium](./2/anaconda-ks.cfg)
+
+### Wybranie sposobu instalacji przy użyciu pliku raw z githuba
+
+![1](../reports/images/r9/1.png)
+
+### Instalacja
+
+![2](../reports/images/r9/2.png)
+
+### Curl do uruchomionego kontenera
+
+![3](../reports/images/r9/3.png)
 
 # CWL10
 
@@ -181,10 +198,107 @@ Obrazy zostały przygotowane manualnie i wysłane na [dockerhub](https://hub.doc
 
 ![16](../reports/images/r11/16.png)
 
-## Skrypt weryfikujący wdrożenie
+### Skrypt weryfikujący wdrożenie
 
 ![17](../reports/images/r11/17.png)  
 ![18](../reports/images/r11/18.png)
 
-## Cofnięcie do specyficznej wersji oraz przetestowanie skyptu
+### Cofnięcie do specyficznej wersji oraz przetestowanie skyptu
+
 ![19](../reports/images/r11/19.png)
+
+### Przygotowanie plików wdrożeń z 3 różnymi strategiami
+
+### Canary
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: tla-canary
+spec:
+    replicas: 4
+    selector:
+        matchLabels:
+            app: tla-canary
+            version: v1
+    template:
+        metadata:
+            labels:
+                app: tla-canary
+                version: v1
+        spec:
+            containers:
+                - name: traffic-lights-app:latest
+                  image: docker.io/itscmd/traffic-lights-app:latest
+                  imagePullPolicy: Always
+```
+
+#### Recreate
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: tla-recreate
+spec:
+    replicas: 4
+    strategy:
+        type: Recreate
+    selector:
+        matchLabels:
+            app: tla-recreate
+            version: v1
+    template:
+        metadata:
+            labels:
+                app: tla-recreate
+                version: v1
+        spec:
+            containers:
+                - name: traffic-lights-app:latest
+                  image: docker.io/itscmd/traffic-lights-app:latest
+                  imagePullPolicy: Always
+```
+
+#### Rolling
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: tla-rolling
+spec:
+    replicas: 4
+    strategy:
+        type: RollingUpdate
+        rollingUpdate:
+            maxUnavailable: 2
+            maxSurge: 30%
+    selector:
+        matchLabels:
+            app: tla-rolling
+            version: v1
+    template:
+        metadata:
+            labels:
+                app: tla-rolling
+                version: v1
+        spec:
+            containers:
+                - name: traffic-lights-app:latest
+                  image: docker.io/itscmd/traffic-lights-app:latest
+                  imagePullPolicy: Always
+```
+
+### Załączenie nowych wdrożeń
+
+```sh
+kubectl apply -f depl-<strategy>.yaml
+```
+
+### Opis działania strategi:
+
+-   Canary - Strategia ta polega na udostępnieniu nowej wersji aplikacji tylko dla niewielkiej części ruchu, co pozwala na jej bezpieczne przetestowanie i manualne podjęcie decyzji o pełnym wdrożeniu.
+-   Recreate - Ta metoda polega na całkowitym usunięciu starych podów przed uruchomieniem nowych, co skutkuje chwilową, planowaną niedostępnością aplikacji podczas aktualizacji.
+-   Rolling - Jest to stopniowa i zautomatyzowana podmiana starych podów na nowe, która gwarantuje ciągłość działania aplikacji bez przerw w dostępie dla użytkowników.
