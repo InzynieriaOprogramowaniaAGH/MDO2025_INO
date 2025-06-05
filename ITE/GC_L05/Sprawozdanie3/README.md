@@ -83,6 +83,9 @@ Do pliku odpowiedzi kickstart dodano polecenie:
 network --bootproto=dhcp --hostname=fedora-test-host
 
 ```
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/network_ks.png?raw=true)
+
 Dzięki temu system po zakończonej instalacji automatycznie otrzymuje nazwę fedora-test-host, co ułatwia jego identyfikację w sieci oraz w środowiskach wirtualnych.
 
 ---
