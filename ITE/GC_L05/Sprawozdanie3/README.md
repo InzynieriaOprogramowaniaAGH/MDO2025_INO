@@ -261,6 +261,8 @@ Dzięki tej komendzie, port 80 aplikacji wewnątrz klastra został przekierowany
 kubectl port-forward service/nginx-service 4000:80
 ```
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/localhost4000-nginx.png?raw=true)
+
 ---
 
 # Zajęcia 11 - Wdrażanie na zarządzalne kontenery: Kubernetes (2)
