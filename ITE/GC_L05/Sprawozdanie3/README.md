@@ -37,10 +37,13 @@ Po ręcznej instalacji systemu Fedora plik odpowiedzi instalatora (/root/anacond
 Po zalogowaniu się do systemu, wykonałam polecenia:
 
 ```
-sudo cp /root/anaconda-ks.cfg /home/amelia/fedora-auto.ks
-sudo chown amelia:amelia /home/amelia/fedora-auto.ks
+cp /root/anaconda-ks.cfg /home/amelia/fedora-auto.ks
+chown amelia:amelia /home/amelia/fedora-auto.ks
 
 ```
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/root.png?raw=true)
+
 W celu dalszej edycji, skopiowano plik instalacyjny `anaconda-ks.cfg` z katalogu `/root` do katalogu domowego użytkownika `amelia` jako `fedora-auto.ks`. Następnie zmieniono właściciela pliku, aby użytkownik `amelia` mógł go modyfikować bez użycia uprawnień administratora.
 
 ####  Dodanie zdalnych repozytoriów pakietów
