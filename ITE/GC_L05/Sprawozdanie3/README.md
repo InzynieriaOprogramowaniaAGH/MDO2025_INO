@@ -106,6 +106,8 @@ java-11-openjdk
 
 ```
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/packages.png?raw=true)
+
 Pakiety te są automatycznie instalowane przez instalator systemu podczas procesu nienadzorowanej instalacji.
 
 #### Automatyczne pobieranie i uruchamianie aplikacji (%post)
