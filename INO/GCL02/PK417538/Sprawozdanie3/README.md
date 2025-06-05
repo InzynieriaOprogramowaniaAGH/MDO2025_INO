@@ -1,6 +1,11 @@
 
 
 
+
+
+
+
+
 # Raport laboratoryjny: Automatyzacja IT i orkiestracja kontenerów
 
 ## Laboratoria 8-11
@@ -437,3 +442,79 @@ Proces instalacji odbywał się automatycznie zgodnie ze skryptem. Nie była pot
 ![obraz](https://github.com/user-attachments/assets/58f65dc4-6658-4e76-a2ce-e7f3d4aea4a4)
 
 ----------
+# Lab 10 - Wprowadzenie do orkiestracji kontenerów
+
+## Zakres prac
+
+Laboratorium wprowadzało do zarządzania kontenerami w środowisku rozproszonym poprzez:
+
+-   Konfigurację lokalnego klastra orkiestracyjnego
+-   Wdrażanie pierwszej aplikacji kontenerowej
+-   Zapoznanie z podstawowymi obiektami orkiestracji
+-   Wykorzystanie interfejsu graficznego do zarządzania
+
+## Instalacja platformy orkiestracyjnej
+
+### Wybór technologii
+
+Wykorzystano Minikube - lokalną implementację Kubernetes, umożliwiającą pełne testowanie funkcjonalności bez infrastruktury chmurowej.
+
+### Pozyskanie i instalacja
+
+```bash
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+```
+```bash
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+minikube version
+```
+
+![obraz](https://github.com/user-attachments/assets/1bc460f4-c25f-4915-bc25-8afb12e0e6c8)
+
+### Inicjalizacja klastra
+
+```bash
+minikube start --driver=docker --cpus=2 --memory=2048
+```
+
+-   Sterownik Docker jako środowisko wykonawcze
+-   Alokacji 2 rdzeni CPU i 2GB pamięci RAM
+-   Automatyczne pobieranie obrazów systemowych
+
+![obraz](https://github.com/user-attachments/assets/e1392a81-af1d-4af6-aa25-8a68acb10818)
+
+### Weryfikacja środowiska
+
+```bash
+minikube kubectl -- get namespaces
+
+minikube kubectl -- get clusterrolebindings
+```
+
+![obraz](https://github.com/user-attachments/assets/dbbb2a99-1e92-49a4-979f-d31ec199508c)
+
+### Inspekcja certyfikatów bezpieczeństwa
+
+```bash
+minikube ssh
+
+ls /var/lib/minikube/certs/
+```
+
+
+![obraz](https://github.com/user-attachments/assets/f9353629-762d-4968-a410-f7550ca1e8fa)
+
+## Panel administracyjny
+
+### Uruchomienie interfejsu webowego
+
+```bash
+minikube dashboard
+```
+
+![obraz](https://github.com/user-attachments/assets/84c7359e-cab1-45b8-9c81-3e18e4f15279)
+
+### Interfejs zarządzania
+
+![obraz](https://github.com/user-attachments/assets/2a401952-e292-4076-a7ef-50d1c9ec83df)
+
