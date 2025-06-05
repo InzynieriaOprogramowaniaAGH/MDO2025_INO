@@ -1,0 +1,6 @@
+---
+- name: Deploy cjson
+  hosts: endpoints
+  become: true
+  roles:
+    - cjson

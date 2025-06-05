@@ -1,0 +1,51 @@
+---
+# tasks file for cjson
+- name: "Adding Docker repo"
+  get_url:
+    url: https://download.docker.com/linux/fedora/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+
+- name: "Installing Docker"
+  dnf:
+    name: docker-ce
+    state: present
+
+- name: "Startin Docker service"
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: "Installing Python3 required by ansible docker modules"
+  dnf:
+    name:
+      - python3-pip
+    state: present
+
+- name: "Installing Python modules"
+  pip:
+    name:
+      - packing
+      - docker
+      - requests
+
+- name: "Pulling app container image"
+  docker_image:
+    name: "{{ container_name }}"
+    image: "{{ dockerhub_image }}"
+    state: started
+
+- name: "Checking if containar is running"
+  command: docker ps -a
+  register: container_list
+
+- name: "Displaying containers"
+  debug:
+    var: container_list.stdout_lines
+
+- name: "Stopping and removing app container"
+  docker_container:
+    name: "{{ container_name }}"
+    state: absent
+
+

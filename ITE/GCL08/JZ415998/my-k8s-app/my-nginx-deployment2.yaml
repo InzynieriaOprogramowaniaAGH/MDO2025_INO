@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-deployment2
+  labels:
+    app: my-nginx-app
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: my-nginx-app #Etykieta dla serwisu #Dodatkowa etykieta dla rozróżnienia
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
+  template:
+    metadata:
+      labels:
+        app: my-nginx-app #Etykieta dla selektora serwisu
+    spec:
+      containers:
+        - name: my-custom-nginx-container
+          image: zboro02/my-custom-nginx:v1
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+

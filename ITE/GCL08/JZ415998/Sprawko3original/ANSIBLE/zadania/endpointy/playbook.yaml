@@ -1,0 +1,26 @@
+---
+- name: Zarządzanie maszyną końcową (endpoints)
+  hosts: endpoints
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Sprawdzane połaczenia (ping)
+      ansible.builtin.ping:
+
+    - name: Kopiowanie pliku hosts na maszynę docelową
+      ansible.builtin.copy:
+        src: /home/jzborowski/lab1/MDO2025_INO/ITE/GCL08/JZ415998/Sprawko3original/ANSIBLE/hosts.yaml
+        dest: /tmp/hosts.yaml
+        owner: ansible
+        group: ansible
+        mode: '0644'
+
+    -  name: Restart usługi sshd
+       ansible.builtin.service:
+         name: sshd
+         state: restarted
+
+    -  name: Restart usługi rngd
+       ansible.builtin.service:
+         name: rngd
+         state: restarted
