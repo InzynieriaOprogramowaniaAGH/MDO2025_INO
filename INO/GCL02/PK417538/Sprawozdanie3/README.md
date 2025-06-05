@@ -6,4 +6,333 @@
 ![obraz](https://github.com/user-attachments/assets/a1c054fe-f4f9-4817-9fb4-81bcc8d04f9c)
 ![obraz](https://github.com/user-attachments/assets/6c2f509c-7adc-45c3-937b-8a0079c28365)
 ![obraz](https://github.com/user-attachments/assets/63d901b1-bd9f-4ec1-8a50-c9bc293bca27)
+![obraz](https://github.com/user-attachments/assets/93acc993-296b-4f79-ac29-05b56aa1f9c6)
+![obraz](https://github.com/user-attachments/assets/10316474-3b64-49fd-b816-8e00e33db5a6)
 
+# Raport laboratoryjny: Automatyzacja IT i orkiestracja kontenerów
+
+## Laboratoria 8-11
+
+
+# Lab 08 - Zarządzanie infrastrukturą z Ansible
+
+## Zakres prac
+
+Laboratorium koncentrowało się na wdrożeniu systemu automatycznego zarządzania serwerami przy użyciu Ansible:
+
+-   Przygotowanie środowiska zarządzającego
+-   Konfiguracja komunikacji między maszynami
+-   Automatyzacja zadań administracyjnych
+-   Konteneryzacja aplikacji przy użyciu Docker
+
+## 1. Konfiguracja środowiska zarządzającego
+
+### Przygotowanie infrastruktury
+
+Zbudowano laboratoryjną infrastrukturę składającą się z dwóch maszyn wirtualnych:
+
+-   **serwer** - węzeł kontrolny z Ansible
+-   **ansible-target** - węzeł zarządzany
+
+### Konfiguracja węzła zarządzanego
+
+Skonfigurowano minimalną instalację Ubuntu 24.04 LTS z niezbędnymi usługami:
+
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y tar openssh-server
+sudo systemctl status ssh
+sudo systemctl enable ssh
+```
+
+### Instalacja narzędzia automatyzacji
+
+Na węźle kontrolnym zainstalowano Ansible:
+
+```bash
+sudo apt update && sudo apt install -y ansible
+ansible --version
+```
+
+### Bezpieczna autoryzacja
+
+Skonfigurowano uwierzytelnianie oparte na kluczach kryptograficznych:
+
+```bash
+ssh-keygen -t rsa -b 4096 -C "user@server"
+ssh-copy-id user@192.168.56.101
+ssh user@192.168.56.101
+```
+
+## 2. Rejestr hostów
+
+### Aktualizacja rozdzielczości nazw
+
+Zmodyfikowano lokalną bazę nazw w pliku `/etc/hosts`:
+
+```bash
+sudo nano /etc/hosts
+```
+
+### Test łączności
+
+Zweryfikowano komunikację sieciową między węzłami:
+
+```bash
+ping ansible-target
+ping serwer
+```
+
+### Definicja inwentarza
+
+Utworzono plik `inventory.ini` opisujący topologię infrastruktury:
+
+```ini
+[Orchestrators]
+serwer ansible_connection=local
+
+[Endpoints]
+ansible-target ansible_host=ansible-target ansible_user=user
+```
+
+### Weryfikacja dostępności
+
+Przetestowano komunikację z węzłami przez Ansible:
+
+```bash
+ansible -i inventory.ini all -m ping
+```
+
+## 3. Automatyzacja procedur
+
+### Podstawowy playbook testowy
+
+Stworzono `ping.yml` do weryfikacji połączeń:
+
+```yaml
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Test connection with ping module
+      ansible.builtin.ping:
+```
+
+Uruchomienie testu:
+
+```bash
+ansible-playbook -i inventory.ini ping.yml
+```
+
+### Dystrybucja plików
+
+Opracowano playbook do rozprowadzania konfiguracji:
+
+```yaml
+---
+- hosts: Endpoints
+	gather_facts: false
+	tasks:
+	- name: Copy inventory file to remote host
+		copy:
+			src: inventory.ini
+			dest: /tmp/inventory.ini
+			owner: user
+			group: user
+			mode: '0644'
+```
+
+Realizacja transferu:
+
+```bash
+ansible-playbook -i inventory.ini copy-inventory.yml
+```
+
+### Automatyzacja aktualizacji
+
+Przygotowano procedurę utrzymania systemu:
+
+```yaml
+---
+- hosts: Endpoints
+  become: true
+  tasks:
+    - name: Update APT package cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Upgrade all packages to latest version
+      apt:
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
+```
+
+Wykonanie aktualizacji:
+
+```bash
+ansible-playbook -i inventory.ini update-system.yml --ask-become-pass
+```
+
+### Zarządzanie usługami
+
+Stworzono procedurę kontroli usług systemowych:
+
+```yaml
+---
+- hosts: Endpoints
+  become: true
+  tasks:
+    - name: Restart SSH service
+      service:
+        name: ssh
+        state: restarted
+      notify: SSH restarted
+
+    - name: Restart rngd service (ignore if not present)
+      service:
+        name: rngd
+        state: restarted
+      ignore_errors: true
+      
+  handlers:
+    - name: SSH restarted
+      debug:
+        msg: "SSH service has been restarted"
+```
+
+Restart usług:
+
+```bash
+ansible-playbook -i inventory.ini restart-services.yml
+```
+
+### Symulacja awarii
+
+Sprawdzono zachowanie systemu podczas niedostępności węzła:
+
+```bash
+# Wyłączenie SSH na węźle docelowym
+sudo systemctl stop ssh.socket ssh
+
+# Test reakcji systemu
+ansible-playbook -i inventory.ini ping.yml
+```
+
+## 4. Konteneryzacja aplikacji
+
+### Struktura roli automatyzacji
+
+Utworzono wyspecjalizowaną rolę do zarządzania aplikacjami:
+
+```bash
+ansible-galaxy init manage_artifact
+```
+
+### Główna procedura wdrożenia
+
+Przygotowano `playbook.yml` wykorzystujący utworzoną rolę:
+
+```yaml
+---
+- hosts: Endpoints
+  become: true
+  roles:
+    - manage_artifact
+```
+
+### Logika roli zarządzającej
+
+W `roles/manage_artifact/tasks/main.yml` zdefiniowano kompletny proces:
+
+```yaml
+---
+- name: Install Docker dependencies
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: present
+    update_cache: yes
+
+- name: Add Docker GPG key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+
+- name: Install Docker
+  apt:
+    name: docker-ce
+    state: present
+    update_cache: yes
+
+- name: Start and enable Docker service
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Verify Docker installation
+  command: docker --version
+  register: docker_version
+
+- name: Display Docker version
+  debug:
+    var: docker_version.stdout
+
+- name: Create application directory
+  file:
+    path: /opt/myapp
+    state: directory
+    mode: '0755'
+
+- name: Copy application files
+  copy:
+    src: "{{ item }}"
+    dest: /opt/myapp/
+  with_items:
+    - app.py
+    - requirements.txt
+
+- name: Copy Dockerfile
+  copy:
+    src: Dockerfile
+    dest: /opt/myapp/Dockerfile
+
+- name: Build Docker image
+  docker_image:
+    name: myapp
+    tag: latest
+    source: build
+    build:
+      path: /opt/myapp
+
+- name: Run application container
+  docker_container:
+    name: myapp-container
+    image: myapp:latest
+    state: started
+    ports:
+      - "5000:5000"
+    restart_policy: always
+
+```
+
+### Realizacja wdrożenia
+
+Uruchomiono automatyczne wdrożenie konteneryzowanej aplikacji:
+
+```bash
+ansible-playbook -i inventory.ini playbook.yml
+```
+
+----------
