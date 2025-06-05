@@ -281,40 +281,47 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest
 sudo rpm -Uvh minikube-latest.x86_64.rpm
 ```
 
-![minikubeinstal]
+![minikubeinstal](./screenshots/minikubeinstal.png)
 
 Alias dla kubectl:
 ```
+alias kubectl="minikube kubectl --"
 ```
 
 Uruchomienie Kubernetesa
-![kubernetes]
-![kubersukces]
+![kubernetes](./screenshots/mkstart.png)
+![kubersukces](./screenshots/mkstatus.pngmi)
 
 Uruchomienie Kubernetes dashboard
-![dashboard]
+![dashboard](./screenshots/kubdash.png)
 
 Wyświetlenie dashboardu w oknie przeglądarki
-![dash-web]
+![dash-web](./screenshots/dashweb.png)
 
 
 
 ### Analiza posiadanego kontenera
 
-![analiz-kont]
+Sprawdzenie działanie obrazu programu `Redis` publikowanego na `DockerHub`
+![analiz-kont](./screenshots/dockerkontener.png)
 
 ### Uruchamianie oprogramowania
 
-![kubectl]
+Uruchomienie programu `Redis` i wykazanie działanie poprzez polecenie `kubectl get pods`:
+![kubectl](./screenshots/getpods.png)
 
+Alternatywnie na Dashboard
+![kube-dash](./screenshots/dash1.png)
 
-![kube-dash]
+Przekierowanie portu
+![port-forward](./screenshots/portforward.png)
 
-![port-forward]
-![redis-ping]
+Potwierdzenie połączenia przez `redis-cli`:
+![redis-ping](./screenshots/rediscli.png)
 
 ### Przekucie wdrożenia manualnego w plik wdrożenia
 
+Przygotowanie pliku wdrożenia `redis-deplyment.yaml`:
 ```
 apiVersion: apps/v1
 kind: Deployment
@@ -337,19 +344,25 @@ spec:
             - containerPort: 6379
 ```
 
-![newdeplo]
+Zwiększenie liczby replik w Deployment do 4 poprawia odporność aplikacji na awarie, zapewniając ciągłość działania. Dodatkowo umożliwia skalowanie i równoważenie obciążenia, rozkładając ruch użytkowników między wiele podów i zapobiegając przeciążeniu pojedynczych instancji.
 
-![standeplo]
+Nowy deployment:
+![newdeplo](./screenshots/nedeplo.png)
 
-![expoport]
+Sprawdzenie stanu (zakończony sukcesem):
+![standeplo](./screenshots/rollout.png)
 
-![port-forward-2]
+Eksportowanie portu, by program działał z zewnątrz:
+![expoport](./screenshots/expose.png)
 
-![redis-ping-2]
+Przekierowanie portu do serwisu
+![port-forward-2](./screenshots/portforward.png)
 
-![dashdeplo]
-![wdrozenia]
-![pody]
+Sprawdzenie działania poprzez polecenie `ping`:
+![redis-ping-2](./screenshots/rediscli.png)
+
+Utworzony Deployment w Dashboardzie (Workload Status, Deployments oraz Pods):
+![dashd2](./screenshots/dashwsdp.png)
 
 ### Przygotowanie nowego obrazu
 
@@ -425,5 +438,40 @@ Historia deploymentu po cofnięciu:
 
 ### Kontrola wdrożenia
 
+Informacje o konkretnym wdrożeniu:
+![kub-rollout-hist-3]()
+
+Skrypt weryfikujący czas wdrażania:
+```
+#!/bin/bash
+
+DEPLOY_NAME=$1
+TIMEOUT=60
+
+echo "Waiting for deployment $DEPLOY_NAME to be ready..."
+minikube kubectl -- wait --for=condition=available --timeout=${TIMEOUT}s deployment/${DEPLOY_NAME}
+if [ $? -ne 0 ]; then
+    echo "Deployment $DEPLOY_NAME did not become available within ${TIMEOUT} seconds."
+    exit 1
+fi
+echo "Deployment $DEPLOY_NAME is now available."
+```
+
+Sprawdzenie czasu wdrażania:
+![deploy-time]()
+
 
 ### Strategie wdrożenia
+
+Recreate
+
+Rolling Update
+
+Canary Deployment workload
+
+
+![canaryyaml]()
+
+
+bla bla
+![candash]
