@@ -1,0 +1,19 @@
+---
+- name: Deploy container from Docker Hub
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Pull image from Docker Hub
+      community.docker.docker_image:
+        name: oliwiaaa333/next-deploy
+        tag: 20250425-11
+        source: pull
+
+    - name: Run container
+      community.docker.docker_container:
+        name: next-deploy
+        image: oliwiaaa333/next-deploy:20250425-11
+        state: started
+        restart_policy: always
+        ports:
+          - "3000:3000"
