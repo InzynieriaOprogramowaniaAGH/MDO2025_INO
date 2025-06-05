@@ -395,6 +395,8 @@ user --groups=wheel --name=fedora --password=fedora --gecos="fedora"
 
 ![obraz](https://github.com/user-attachments/assets/d5830849-8967-42cf-94ab-36c533fbd031)
 
+![obraz](https://github.com/user-attachments/assets/a558e391-437b-4cdb-8954-e45b6eadfe9b)
+
 ## Realizacja instalacji automatycznej
 
 
