@@ -26,7 +26,7 @@ autopart
 timezone Europe/Warsaw --utc
 
 # Root password
-rootpw --isplain fedora
+rootpw fedora
 
 # User account
-user --groups=wheel --name=fedora --password=fedora --isplain --gecos="fedora"
+user --groups=wheel --name=fedora --password=fedora --gecos="fedora"
