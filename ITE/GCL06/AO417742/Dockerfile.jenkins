@@ -1,0 +1,10 @@
+FROM jenkins/jenkins:lts
+
+USER root
+
+# Instalujemy dockera wewnątrz kontenera
+RUN apt-get update && \
+    apt-get install -y docker.io && \
+    usermod -aG docker jenkins
+
+USER jenkins
