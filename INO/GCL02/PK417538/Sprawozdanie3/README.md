@@ -4,8 +4,6 @@
 
 
 
-
-
 # Raport laboratoryjny: Automatyzacja IT i orkiestracja kontenerów
 
 ## Laboratoria 8-11
@@ -518,3 +516,134 @@ minikube dashboard
 
 ![obraz](https://github.com/user-attachments/assets/2a401952-e292-4076-a7ef-50d1c9ec83df)
 
+
+
+
+## Pierwsze wdrożenie aplikacji
+
+### Utworzenie instancji kontenerowej
+
+```bash
+# Uruchomienie serwera nginx w kontenerze
+minikube kubectl -- run moja-aplikacja --image=nginx --port=80 --labels app=moja-aplikacja
+
+```
+
+### Monitorowanie stanu
+
+```bash
+# Sprawdzenie statusu kontenerów
+minikube kubectl -- get pods
+
+```
+Kontener został utworzony i znajduje się w stanie "Running", co oznacza poprawne działanie aplikacji nginx.
+
+### Udostępnienie aplikacji
+
+```bash
+# Przekierowanie ruchu sieciowego
+minikube kubectl -- port-forward pod/moja-aplikacja 8080:80
+
+```
+
+![obraz](https://github.com/user-attachments/assets/3849f6c0-d3d9-4ceb-966e-1577e456e54d)
+
+### Weryfikacja dostępności
+
+Aplikacja została przetestowana przez otwarcie adresu `http://localhost:8080`:
+
+Aplikacja nginx odpowiada poprawnie, potwierdzając funkcjonowanie przekierowania portów i komunikacji z kontenerem.
+
+![obraz](https://github.com/user-attachments/assets/999ec6af-9114-4e04-a8a5-feec1a7bd1fb)
+
+## Zaawansowane obiekty orkiestracji
+
+### Przygotowanie manifestu
+
+Stworzono plik `nginx-deployment.yml` definiujący zaawansowane wdrożenie:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+
+```
+
+### Aplikacja konfiguracji
+
+```bash
+minikube kubectl -- apply -f nginx-deployment.yml
+```
+Deployment i Service zostały pomyślnie utworzone, co potwierdza status "created".
+
+![obraz](https://github.com/user-attachments/assets/e0f7aa9b-4b08-49e2-83cc-453a1ffef71d)
+
+### Monitorowanie procesu wdrożenia
+
+```bash
+minikube kubectl -- rollout status deployment/nginx-deployment
+```
+Wdrożenie zakończono pomyślnie - wszystkie 4 repliki są funkcjonalne i gotowe do obsługi ruchu.
+
+![obraz](https://github.com/user-attachments/assets/824efa38-01f4-4441-b443-c02bda30f631)
+
+### Weryfikacja środowiska produkcyjnego
+
+```bash
+minikube kubectl -- get pods
+
+minikube kubectl -- get services
+
+minikube service nginx-service --url
+```
+-   Wszystkie 4 kontenery są aktywne
+-   Usługa nginx-service jest dostępna na porcie 30080
+-   Load balancer działa poprawnie między replikami
+
+![obraz](https://github.com/user-attachments/assets/b48d5609-a72f-4590-aeb0-489917f09f9e)
+
+### Test usługi load balancingowej
+
+Aplikacja jest osiągalna przez Service, co potwierdza poprawne funkcjonowanie rozproszenia ruchu między kontenerami.
+
+![obraz](https://github.com/user-attachments/assets/0c50a147-3e05-497f-b9ca-fa9077412157)
+
+----------
