@@ -58,6 +58,8 @@ repo --name=updates --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?re
 
 ```
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/add_comends.png?raw=true)
+
 Dyrektywa url wskazuje podstawowy mirror Fedory z pakietami instalacyjnymi, a repo --name=updates zapewnia dostęp do najnowszych aktualizacji. Umieszczenie tych wpisów w pliku kickstart pozwala instalatorowi automatycznie pobrać wszystkie wymagane pakiety z sieci, niezależnie od zawartości obrazu ISO. 
 
 #### Zapewnienie formatowania całego dysku – clearpart --all
