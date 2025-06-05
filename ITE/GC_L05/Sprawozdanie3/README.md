@@ -78,6 +78,67 @@ Dzięki temu system po zakończonej instalacji automatycznie otrzymuje nazwę fe
 
 ---
 
+####  Użycie pliku Kickstart do przeprowadzenia instalacji nienadzorowanej
+
+####  Rozszerzenie pliku Kickstart o oprogramowanie projektu
+
+W sekcji %packages pliku Kickstart umieszczono niezbędne pakiety potrzebne do działania aplikacji, w tym narzędzia do pobierania, rozpakowywania oraz środowisko wykonawcze Javy:
+
+```
+
+%packages
+wget
+unzip
+java-11-openjdk
+%end
+
+```
+
+Pakiety te są automatycznie instalowane przez instalator systemu podczas procesu nienadzorowanej instalacji.
+
+#### Automatyczne pobieranie i uruchamianie aplikacji (%post)
+
+W sekcji %post dodano skrypt, który pobiera aplikację z serwera HTTP, ustawia prawa do uruchomienia binarki i tworzy usługę systemd.
+
+```
+
+%post --log=/root/ks-post.log
+
+wget http://192.168.1.100/projekt.zip -O /tmp/app.zip
+unzip /tmp/app.zip -d /usr/local/bin/
+chmod +x /usr/local/bin/myapp
+
+cat <<EOF > /etc/systemd/system/myapp.service
+Description=Moja Aplikacja
+After=network.target
+ExecStart=/usr/local/bin/myapp
+Restart=always
+WantedBy=multi-user.target
+EOF
+systemctl enable myapp.service
+%end
+
+
+```
+
+####  Wyświetlanie komunikatów z sekcji %post na ekranie
+
+Dodano do sekcji %post poniższe opcje:
+
+```
+%post --interpreter=/bin/bash --log=/root/ks-post.log
+
+set -x  
+exec > /dev/tty3 2>&1  
+
+
+```
+
+#### Wskazanie pliku Kickstart z nośnika lub z sieci
+
+
+
+
 # Zajęcia 10 - Wdrażanie na zarządzalne kontenery: Kubernetes (1)
 
 ## Instalacja klastra Kubernetes
