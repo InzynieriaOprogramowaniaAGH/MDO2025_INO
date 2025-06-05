@@ -1,9 +1,3 @@
-
-
-
-
-
-
 # Raport laboratoryjny: Automatyzacja IT i orkiestracja kontenerów
 
 ## Laboratoria 8-11
@@ -222,10 +216,8 @@ ansible-playbook -i inventory.ini restart-services.yml
 Sprawdzono zachowanie systemu podczas niedostępności węzła:
 
 ```bash
-# Wyłączenie SSH na węźle docelowym
 sudo systemctl stop ssh.socket ssh
 
-# Test reakcji systemu
 ansible-playbook -i inventory.ini ping.yml
 ```
 
@@ -524,26 +516,20 @@ minikube dashboard
 ### Utworzenie instancji kontenerowej
 
 ```bash
-# Uruchomienie serwera nginx w kontenerze
 minikube kubectl -- run moja-aplikacja --image=nginx --port=80 --labels app=moja-aplikacja
-
 ```
 
 ### Monitorowanie stanu
 
 ```bash
-# Sprawdzenie statusu kontenerów
 minikube kubectl -- get pods
-
 ```
 Kontener został utworzony i znajduje się w stanie "Running", co oznacza poprawne działanie aplikacji nginx.
 
 ### Udostępnienie aplikacji
 
 ```bash
-# Przekierowanie ruchu sieciowego
 minikube kubectl -- port-forward pod/moja-aplikacja 8080:80
-
 ```
 
 ![obraz](https://github.com/user-attachments/assets/3849f6c0-d3d9-4ceb-966e-1577e456e54d)
@@ -647,3 +633,398 @@ Aplikacja jest osiągalna przez Service, co potwierdza poprawne funkcjonowanie r
 ![obraz](https://github.com/user-attachments/assets/0c50a147-3e05-497f-b9ca-fa9077412157)
 
 ----------
+# Lab 11 - Zaawansowane techniki deploymentu
+
+## Zakres prac
+
+Laboratorium koncentrowało się na zaawansowanych aspektach zarządzania aplikacjami:
+
+-   Kontrola wersji aplikacji w środowisku produkcyjnym
+-   Różne strategie aktualizacji systemów
+-   Mechanizmy przywracania poprzednich wersji
+-   Monitorowanie i diagnostyka wdrożeń
+
+## Przygotowanie repozytorium obrazów
+
+### Organizacja projektu
+
+```bash
+mkdir my-nginx && cd my-nginx
+mkdir my-custom-content
+```
+
+### Definicja kontenera
+
+Stworzono `Dockerfile` z niestandardową konfiguracją:
+
+```dockerfile
+FROM nginx:alpine
+
+COPY my-custom-content/ /usr/share/nginx/html/
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+
+```
+
+![obraz](https://github.com/user-attachments/assets/cbe9d9b3-f84c-4bf6-afda-4644453b8f6b)
+
+### Budowa wersji pierwszej
+
+```bash
+echo "<h1>Hello, this is my custom Nginx page - Version 1!</h1>" > my-custom-content/index.html
+
+docker build -t kefireczek/my-nginx:v1 .
+
+docker login
+
+docker push kefireczek/my-nginx:v1
+```
+
+![obraz](https://github.com/user-attachments/assets/5e637e67-5ff4-4087-a8df-731dcf18aba4)
+
+Pierwsza wersja aplikacji została pomyślnie zbudowana i opublikowana w Docker Hub.
+
+### Rozwój wersji drugiej
+
+```bash
+echo "<h1>Hello, this is my custom Nginx page - Version 2 (Updated)!</h1>" > my-custom-content/index.html
+
+docker build -t iogougou/my-nginx:v2 .
+docker push iogougou/my-nginx:v2
+```
+Druga wersja z zaktualizowaną zawartością została udostępniona w rejestrze.
+
+![obraz](https://github.com/user-attachments/assets/a125f159-13b2-41cd-b791-9891f514851b)
+
+### Symulacja wersji problemowej
+
+```bash
+echo "invalid_nginx_config_directive_error" > my-custom-content/nginx.conf
+
+docker build -t iogougou/my-nginx:v3 .
+docker push iogougou/my-nginx:v3
+```
+Trzecia wersja została celowo przygotowana z defektami do testowania procedur naprawczych.
+
+![obraz](https://github.com/user-attachments/assets/812524c8-83e9-42ac-986a-b1c5fcd753de)
+
+## Zarządzanie cyklem życia aplikacji
+
+### Manifest wdrożeniowy
+
+Przygotowano `nginx-deployment.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-deployment
+  labels:
+    app: my-nginx
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: my-nginx
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: iogougou/my-nginx:v1
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx-service
+spec:
+  selector:
+    app: my-nginx
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30081
+```
+
+### Inicjalne wdrożenie
+
+```bash
+kubectl apply -f nginx-deployment.yaml
+```
+
+![obraz](https://github.com/user-attachments/assets/77ac6f05-2d68-4fc8-85eb-dffaec03d1fb)
+
+### Aktualizacja do wersji stabilnej
+
+```bash
+kubectl set image deployment/my-nginx-deployment nginx=iogougou/my-nginx:v2
+
+kubectl rollout status deployment/my-nginx-deployment
+```
+
+Aktualizacja do drugiej wersji przebiegła pomyślnie z wykorzystaniem strategii stopniowej wymiany.
+
+### Test wdrożenia problematycznego
+
+```bash
+kubectl set image deployment/my-nginx-deployment nginx=iogougou/my-nginx:v3
+
+kubectl rollout status deployment/my-nginx-deployment
+```
+
+### Analiza historii wdrożeń
+
+```bash
+kubectl rollout history deployment/my-nginx-deployment
+```
+
+Historia dokumentuje wszystkie wykonane aktualizacje z możliwością powrotu do dowolnej wersji.
+
+### Procedura naprawcza
+
+```bash
+kubectl rollout undo deployment/my-nginx-deployment
+
+kubectl rollout status deployment/my-nginx-deployment
+```
+Procedura naprawcza przywróciła aplikację do stabilnej wersji v2, eliminując problemy z v3.
+
+![obraz](https://github.com/user-attachments/assets/17c7ab9c-c9cd-45c7-8cf2-2d4ef70d8081)
+
+## Operacje eksploatacyjne
+
+### Skalowanie aplikacji
+
+```bash
+kubectl scale deployment my-nginx-deployment --replicas=5
+
+kubectl get pods
+```
+
+![obraz](https://github.com/user-attachments/assets/a8e9b047-19c8-4591-a78e-759c1bf4b49f)
+![obraz](https://github.com/user-attachments/assets/5c13dc60-3759-4eda-9b05-7fc286b944fb)
+![obraz](https://github.com/user-attachments/assets/9bd81baa-8540-4f1a-bd86-d66fff0776da)
+
+### Skrypt do automatycznej kontroli wdrożenia
+
+Przygotowano plik verify-deployment.sh, który umożliwia szybkie i zautomatyzowane sprawdzenie, czy wszystkie zasoby aplikacji funkcjonują prawidłowo.
+
+```bash
+#!/bin/bash
+
+echo "1. Aktualny status Deploymentu:"
+kubectl get deployment my-nginx-deployment
+
+echo "2. Aktywne pody:"
+kubectl get pods -l app=my-nginx
+
+echo "3. Informacje o serwisie:"
+kubectl get service my-nginx-service
+
+echo "4. Test połączenia HTTP z aplikacją:"
+MINIKUBE_IP=$(minikube ip)
+SERVICE_PORT=$(kubectl get service my-nginx-service -o jsonpath='{.spec.ports[0].nodePort}')
+curl -s http://$MINIKUBE_IP:$SERVICE_PORT | head -1
+```
+
+```
+chmod +x verify-deployment.sh
+./verify-deployment.sh
+```
+
+![obraz](https://github.com/user-attachments/assets/afc2eced-ab3b-4e13-96ab-4f685716d69c)
+
+## Strategie wdrożenia
+
+### Strategia 1: Recreate
+Przygotowano plik `Recreate.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-recreate
+  labels:
+    app: nginx-recreate
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nginx-recreate
+  template:
+    metadata:
+      labels:
+        app: nginx-recreate
+    spec:
+      containers:
+      - name: nginx
+        image: iogougou/my-nginx:v1
+        ports:
+        - containerPort: 80
+```
+
+**Opis strategii Recreate**:
+- Zanim zostaną uruchomione nowe instancje aplikacji (pody), wszystkie dotychczasowe są najpierw całkowicie usuwane.
+- Nowe pody zostają utworzone dopiero po zakończeniu usuwania starych.
+- Może to skutkować chwilowym wyłączeniem dostępności aplikacji.
+- Dzięki temu unika się problemów związanych z jednoczesnym działaniem różnych wersji aplikacji.
+
+### Strategia 2: RollingUpdate
+Przygotowano plik `RollingUpdate.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-rolling-update
+  labels:
+    app: nginx-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: nginx-rolling
+  template:
+    metadata:
+      labels:
+        app: nginx-rolling
+    spec:
+      containers:
+      - name: nginx
+        image: iogougou/my-nginx:v1
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+```
+
+**Opis strategii RollingUpdate**:
+- Aktualizacja aplikacji odbywa się płynnie poprzez sukcesywne zastępowanie starych podów nowymi.
+- Aplikacja jest dostępna przez cały proces wdrażania.
+- Ustawienia maxUnavailable i maxSurge definiują, ile podów może być niedostępnych lub więcej niż zadeklarowano w czasie aktualizacji.
+- Jest to domyślny sposób wdrażania zmian w Kubernetes.
+
+### Strategia 3: Canary Deployment
+Przygotowano plik `Canary.yaml` z dwoma deploymentami:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-canary-main
+  labels:
+    app: nginx-canary
+    version: stable
+spec:
+  replicas: 9
+  selector:
+    matchLabels:
+      app: nginx-canary
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: nginx-canary
+        version: stable
+    spec:
+      containers:
+      - name: nginx
+        image: iogougou/my-nginx:v1
+        ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-canary-new
+  labels:
+    app: nginx-canary
+    version: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-canary
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: nginx-canary
+        version: canary
+    spec:
+      containers:
+      - name: nginx
+        image: iogougou/my-nginx:v2
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-canary-service
+spec:
+  selector:
+    app: nginx-canary
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30082
+```
+
+
+**Opis strategii Canary**:
+- Nowa wersja aplikacji jest wdrażana tylko dla wybranej części użytkowników.
+- Pozwala to na przetestowanie aktualizacji w środowisku produkcyjnym przy minimalnym ryzyku.
+- Gdy działanie nowej wersji okaże się stabilne, ruch użytkowników jest stopniowo kierowany do niej w coraz większym zakresie
+- Taki proces wymaga dodatkowej konfiguracji m.in. dla serwisów i trasowania ruchu.
+
+### Zastosowanie wszystkich strategii
+```bash
+kubectl apply -f Recreate.yaml
+
+kubectl apply -f RollingUpdate.yaml
+
+kubectl apply -f Canary.yaml
+
+kubectl get deployments -n default
+```
+
+![obraz](https://github.com/user-attachments/assets/8e1b01b6-343a-48a1-afdf-960089c16479)
+![obraz](https://github.com/user-attachments/assets/f859db56-d26a-4d03-86c4-880662869d75)
+
+| Strategia       | Opis                                                                 | Czas niedostępności | Bezpieczeństwo wdrożenia | Stopniowe wdrażanie | Cofnięcie zmian (Rollback) |
+|------------------|----------------------------------------------------------------------|----------------------|---------------------------|----------------------|-----------------------------|
+| **Recreate**     | Najpierw usuwa stare instancje, potem wdraża nowe                   | ✅ Tak               | ❌ Ryzykowne               | ❌ Nie               | ❌ Trudne lub niemożliwe     |
+| **RollingUpdate**| Stopniowo zastępuje stare instancje nowymi                         | ❌ Brak              | ✅ Umiarkowane              | ✅ Tak               | ✅ Możliwe                  |
+| **Canary**       | Wdraża nową wersję do części użytkowników, potem zwiększa udział    | ❌ Brak              | ✅ Wysokie                  | ✅ Tak               | ✅ Łatwe i bezpieczne       |
