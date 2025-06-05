@@ -1,0 +1,94 @@
+---
+- name: Manage Docker Application
+  hosts: Endpoints
+  become: yes
+
+  tasks:
+    - name: Install Docker and dependencies
+      block:
+        - name: Install Docker package from standard repo
+          ansible.builtin.dnf:
+            name: docker
+            state: latest
+            update_cache: yes
+
+        - name: Start and enable Docker service
+          ansible.builtin.systemd:
+            name: docker
+            state: started
+            enabled: yes
+            daemon_reload: yes
+
+        - name: Ensure group "docker" exists
+          ansible.builtin.group:
+            name: docker
+            state: present
+
+        - name: Add user 'ansible' to docker group
+          ansible.builtin.user:
+            name: ansible
+            groups: docker
+            append: yes
+
+        - name: Open port 8080 in firewalld
+          ansible.posix.firewalld:
+            port: 8080/tcp
+            permanent: yes
+            state: enabled
+          ignore_errors: yes
+          notify: Reload firewalld
+
+      rescue:
+        - name: Display error message if Docker installation fails
+          debug:
+            msg: "Failed to install Docker. Please check logs for details."
+          when: ansible_failed_task is defined
+
+    - name: Pull Docker image from Docker Hub
+      community.docker.docker_image:
+        name: itscmd/traffic-lights-app
+        tag: build-18
+        source: pull
+        state: present
+
+    - name: Run the Docker container
+      community.docker.docker_container:
+        name: traffic_lights_container
+        image: itscmd/traffic-lights-app:latest
+        state: started
+        ports:
+          - "8080:80"
+
+    - name: Verify connectivity to the container
+      ansible.builtin.uri:
+        url: http://{{ ansible_host }}:8080/
+        method: GET
+        status_code: 200
+      register: http_check_result
+      retries: 10
+      delay: 5
+
+    - name: Display connectivity check result
+      debug:
+        msg: "Container is reachable via HTTP: {{ http_check_result.status == 200 }}"
+
+    - name: Stop the container
+      community.docker.docker_container:
+        name: traffic_lights_container
+        state: stopped
+
+    - name: Remove the container
+      community.docker.docker_container:
+        name: traffic_lights_container
+        state: absent
+
+    - name: Remove the Docker image (optional)
+      community.docker.docker_image:
+        name: itscmd/traffic-lights-app
+        tag: build-18
+        state: absent
+
+  handlers:
+    - name: Reload firewalld
+      ansible.posix.firewalld:
+        state: reloaded
