@@ -1,3 +1,6 @@
+![obraz](https://github.com/user-attachments/assets/d5830849-8967-42cf-94ab-36c533fbd031)
+
+
 # Raport laboratoryjny: Automatyzacja IT i orkiestracja kontenerów
 
 ## Laboratoria 8-11
