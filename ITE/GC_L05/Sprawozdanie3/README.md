@@ -1,13 +1,23 @@
 # Zajęcia 08 - Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
 
-## Instalacja zarządcy Ansible
 
+## Przygotowanie maszyn wirtualnych
 
+Utworzono dwie maszyny wirtualne z systemem Fedora.
 
+Na drugiej maszynie nadano hostname: ansible-target, utworzono użytkownika: ansible, zainstalowano: openssh-server, tar i wykonano migawkę maszyny.
+
+## Instalacja Ansible i konfiguracja połączeń
+
+Zainstalowano dwa podstawowe pakiety: tar oraz openssh-server:
 
 ```
 sudo dnf -y install tar openssh-server
 ```
+
+## Uruchomienie i włączenie SSH
+
+Po instalacji, usługa SSH została aktywowana i ustawiona, by uruchamiała się automatycznie przy starcie systemu:
 
 ```
 systemctl status sshd
@@ -15,6 +25,7 @@ systemctl enable sshd
 ip a
 
 ```
+
 
 ---
 
