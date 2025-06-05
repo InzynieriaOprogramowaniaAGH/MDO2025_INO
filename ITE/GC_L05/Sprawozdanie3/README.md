@@ -204,6 +204,21 @@ kubectl get pods
 
 ```
 
+## Udostępnienie funkcjonalności za pomocą kubectl port-forward
+
+W celu przetestowania działania aplikacji uruchomionej w kontenerze, wykonano polecenie:
+
+```
+kubectl port-forward pod/nginx-test 8080:80
+
+```
+
+Dzięki temu aplikacja, która nasłuchuje wewnątrz klastra, została przekierowana na port lokalny maszyny deweloperskiej, umożliwiając bezpośredni dostęp z przeglądarki lub narzędzi typu curl, httpie, Postman itp.
+
+## Weryfikacja działania aplikacji
+
+## Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
+
 ---
 
 # Zajęcia 11 - Wdrażanie na zarządzalne kontenery: Kubernetes (2)
