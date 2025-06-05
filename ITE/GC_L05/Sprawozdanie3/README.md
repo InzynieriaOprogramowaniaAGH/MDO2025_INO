@@ -221,6 +221,9 @@ Dzięki temu aplikacja, która nasłuchuje wewnątrz klastra, została przekiero
 
 ## Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
 
+Utworzono plik nginx-deployment.yml:
+
+
 ---
 
 # Zajęcia 11 - Wdrażanie na zarządzalne kontenery: Kubernetes (2)
