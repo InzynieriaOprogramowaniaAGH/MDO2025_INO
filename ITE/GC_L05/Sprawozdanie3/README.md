@@ -44,11 +44,11 @@ chown amelia:amelia /home/amelia/fedora-auto.ks
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/root.png?raw=true)
 
-W celu dalszej edycji, skopiowano plik instalacyjny `anaconda-ks.cfg` z katalogu `/root` do katalogu domowego użytkownika `amelia` jako `fedora-auto.ks`. Następnie zmieniono właściciela pliku, aby użytkownik `amelia` mógł go modyfikować bez użycia uprawnień administratora.
+W celu dalszej edycji, skopiowano plik instalacyjny `anaconda-ks.cfg` z katalogu `/root` do katalogu domowego użytkownika `amelia` jako `fedora-auto.ks`. 
 
 ####  Dodanie zdalnych repozytoriów pakietów
 
-W pliku kickstart dodałem następujące dyrektywy, odpowiadające wersji Fedora 41:
+W pliku kickstart dodano następujące dyrektywy, odpowiadające wersji Fedora 41:
 
 ```
 url --mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
