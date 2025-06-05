@@ -213,11 +213,11 @@ kubectl port-forward pod/nginx-test 8080:80
 
 ```
 
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/localhost8080-Amelia-Nawrot.png?raw=true)
-
 Dzięki temu aplikacja, która nasłuchuje wewnątrz klastra, została przekierowana na port lokalny maszyny deweloperskiej, umożliwiając bezpośredni dostęp z przeglądarki lub narzędzi typu curl, httpie, Postman itp.
 
 ## Weryfikacja działania aplikacji
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/localhost8080-Amelia-Nawrot.png?raw=true)
 
 ## Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
 
