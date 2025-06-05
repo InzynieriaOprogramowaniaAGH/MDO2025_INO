@@ -225,6 +225,18 @@ Utworzono plik nginx-deployment.yml:
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/nginx-deploy.png?raw=true)
 
+Deployment uruchamia 4 repliki kontenera nginx nasłuchującego na porcie 80.
+
+Następnie wykonano polecenie:
+
+```
+kubectl apply -f nginx-deployment.yml
+
+```
+```
+kubectl rollout status deployment nginx-deployment
+```
+
 ---
 
 # Zajęcia 11 - Wdrażanie na zarządzalne kontenery: Kubernetes (2)
