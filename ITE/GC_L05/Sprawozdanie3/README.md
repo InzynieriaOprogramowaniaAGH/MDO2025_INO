@@ -227,14 +227,38 @@ Utworzono plik nginx-deployment.yml:
 
 Deployment uruchamia 4 repliki kontenera nginx nasłuchującego na porcie 80.
 
-Następnie wykonano polecenie:
+###  Wdrożenie zasobu Deployment
+
+Polecenie to zarejestrowało deployment w klastrze. Utworzony został zasób Deployment o nazwie nginx-deployment.
 
 ```
 kubectl apply -f nginx-deployment.yml
 
 ```
+
+###  Monitorowanie wdrożenia
+
+Komenda monitoruje postęp wdrażania zasobu Deployment, oczekując, aż wszystkie instancje zostaną uruchomione poprawnie. Po zakończeniu rollout'u otrzymano potwierdzenie, że wszystkie repliki działają.
+
 ```
 kubectl rollout status deployment nginx-deployment
+```
+
+### Ekspozycja aplikacji w postaci serwisu
+
+Ta komenda utworzyła zasób Service typu ClusterIP o nazwie nginx-service. Oznacza to, że aplikacja nginx stała się dostępna wewnątrz klastra Kubernetes, na porcie 80, przez nazwę DNS nginx-service.
+
+```
+kubectl expose deployment nginx-deployment --port=80 --target=80 --type=CluserIP --name=nginx-service
+
+```
+
+### Przekierowanie portu na maszynę lokalną
+
+Dzięki tej komendzie, port 80 aplikacji wewnątrz klastra został przekierowany na lokalny port 4000.
+
+```
+kubectl port-forward service/nginx-service 4000:80
 ```
 
 ---
