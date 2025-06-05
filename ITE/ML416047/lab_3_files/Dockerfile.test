@@ -1,0 +1,3 @@
+FROM makapaka-sds
+WORKDIR /dock
+CMD ["./sds-test"]

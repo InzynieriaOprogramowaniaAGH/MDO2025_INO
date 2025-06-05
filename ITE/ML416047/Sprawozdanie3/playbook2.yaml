@@ -1,0 +1,60 @@
+---
+- hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Install required system packages
+      ansible.builtin.dnf:
+        name:
+          - python3-packaging
+          - python3-pip
+          - docker
+          - redis
+        state: present
+        update_cache: yes
+
+    - name: Install Python 'requests'
+      ansible.builtin.pip:
+        name: requests
+        executable: pip3
+
+    - name: Start and enable Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Download Docker image from DockerHub
+      ansible.builtin.docker_image:
+        name: mlorenc4/pipeline-redis:latest
+        source: pull
+
+    - name: Run Docker container
+      ansible.builtin.docker_container:
+        name: pipeline-redis
+        image: mlorenc4/pipeline-redis:latest
+        state: started
+        ports:
+          - "6379:6379"
+
+    - name: Wait for the container to be ready
+      ansible.builtin.wait_for:
+        host: "ansible-target"
+        port: 6379
+        state: started
+        delay: 10
+        timeout: 60
+        msg: "Redis is not available on port 6379"
+
+    - name: Test connection to container
+      command: redis-cli -h ansible-target -p 6379 ping
+      register: redis_ping
+
+    - name: Show Redis response
+      debug:
+        msg: "{{ redis_ping.stdout }}"
+
+    - name: Stop and remove Docker container
+      ansible.builtin.docker_container:
+        name: pipeline-redis
+        state: absent
+        force_kill: yes

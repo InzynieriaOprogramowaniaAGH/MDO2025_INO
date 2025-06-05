@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Pobierz treść wiadomości commit
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Sprawdź, czy wiadomość zaczyna się od "ML416047"
+if ! echo "$COMMIT_MSG" | grep -qE '^ML416047'; then
+  echo "Błąd: Wiadomość commit musi zaczynać się od 'ML416047'."
+  exit 1
+fi
+
+exit 0
