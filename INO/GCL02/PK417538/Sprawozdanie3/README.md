@@ -1,8 +1,3 @@
-![obraz](https://github.com/user-attachments/assets/d5830849-8967-42cf-94ab-36c533fbd031)
-![f14bb030-73a2-4796-b82b-a471267a9775](https://github.com/user-attachments/assets/ac04c644-c200-4568-ac05-b6bf99e7e9b3)
-![obraz](https://github.com/user-attachments/assets/03214813-1488-4c03-9795-e1ecdc01c76a)
-![obraz](https://github.com/user-attachments/assets/28521a1f-93e2-4317-866d-251786b96fc6)
-![obraz](https://github.com/user-attachments/assets/58f65dc4-6658-4e76-a2ce-e7f3d4aea4a4)
 
 
 
@@ -398,6 +393,8 @@ rootpw fedora
 user --groups=wheel --name=fedora --password=fedora --gecos="fedora"
 ```
 
+![obraz](https://github.com/user-attachments/assets/d5830849-8967-42cf-94ab-36c533fbd031)
+
 ## Realizacja instalacji automatycznej
 
 
@@ -417,6 +414,8 @@ Link zoptymalizowany:
 https://tinyurl.com/mrstzyf2
 ```
 
+![obraz](https://github.com/user-attachments/assets/c6e3fb88-069f-4b51-abf3-68e46c8a35fd)
+
 ### Konfiguracja parametrów rozruchu
 
 W menu GRUB wprowadzono parametr wskazujący lokalizację skryptu:
@@ -425,8 +424,14 @@ W menu GRUB wprowadzono parametr wskazujący lokalizację skryptu:
 inst.ks=https://tinyurl.com/mrstzyf2
 ```
 
+![obraz](https://github.com/user-attachments/assets/03214813-1488-4c03-9795-e1ecdc01c76a)
+
 ### Przebieg instalacji nienadzorowanej
 
 Proces instalacji odbywał się automatycznie zgodnie ze skryptem. Nie była potrzebna ingerencja użytkownika, wszystkie parametry ustawiły się samoczynnie.
+
+![obraz](https://github.com/user-attachments/assets/28521a1f-93e2-4317-866d-251786b96fc6)
+
+![obraz](https://github.com/user-attachments/assets/58f65dc4-6658-4e76-a2ce-e7f3d4aea4a4)
 
 ----------
