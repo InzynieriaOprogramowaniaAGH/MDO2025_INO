@@ -1,0 +1,23 @@
+# deployment-canary.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-canary
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: my-nginx-app 
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: my-nginx-app 
+        version: canary   
+    spec:
+      containers:
+      - name: nginx-container
+        image: my-custom-nginx:v2.0 
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Never
