@@ -186,6 +186,50 @@ minikube dashboard
 
 ## Analiza posiadanego kontenera
 
+### Budowa obrazu kontenera
+
+Aplikacja została opakowana w kontener z wykorzystaniem pliku Dockerfile. 
+
+```
+docker build -t nginx-cust .
+```
+
+### Weryfikacja lokalna – analiza kontenera
+
+Po zbudowaniu obrazu, wykonano poniższe polecenia w celu weryfikacji jego istnienia oraz działania:
+
+```
+docker images
+docker run -d -p 8080:80 nginx-cust
+docker ps
+
+```
+
+### Przeniesienie kontenera do Minikube (Kubernetes)
+
+Aby umożliwić wdrożenie w Kubernetes, obraz został załadowany do klastra Minikube:
+
+```
+minikube image load nginx-cust
+
+```
+
+Sprawdzono dostępność obrazu:
+
+```
+minikube image ls | grep nginx-cust
+
+```
+
+W kolejnym kroku, uruchomiono kontener w Kubernetes jako pod:
+
+```
+kubectl run nginx-cust --image=nginx-cust --port=80 --labels app=nginx-cust
+kubectl get pods
+kubectl port-forward pod/nginx-cust 8080:80
+
+```
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/localhost8080-Amelia-Nawrot.png?raw=true)
 ---
 
 ## Uruchamianie oprogramowania
@@ -217,7 +261,7 @@ Dzięki temu aplikacja, która nasłuchuje wewnątrz klastra, została przekiero
 
 ## Weryfikacja działania aplikacji
 
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/localhost8080-Amelia-Nawrot.png?raw=true)
+
 
 ## Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
 
