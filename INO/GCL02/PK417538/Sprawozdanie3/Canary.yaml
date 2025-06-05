@@ -1,0 +1,65 @@
+# Główny deployment (90% ruchu)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-canary-main
+  labels:
+    app: nginx-canary
+    version: stable
+spec:
+  replicas: 9
+  selector:
+    matchLabels:
+      app: nginx-canary
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: nginx-canary
+        version: stable
+    spec:
+      containers:
+      - name: nginx
+        image: iogougou/my-nginx:v1
+        ports:
+        - containerPort: 80
+---
+# Canary deployment (10% ruchu)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-canary-new
+  labels:
+    app: nginx-canary
+    version: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-canary
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: nginx-canary
+        version: canary
+    spec:
+      containers:
+      - name: nginx
+        image: iogougou/my-nginx:v2
+        ports:
+        - containerPort: 80
+---
+# Wspólny serwis dla obu deploymentów
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-canary-service
+spec:
+  selector:
+    app: nginx-canary
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30082

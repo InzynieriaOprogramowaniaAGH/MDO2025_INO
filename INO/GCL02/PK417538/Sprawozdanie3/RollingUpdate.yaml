@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-rolling-update
+  labels:
+    app: nginx-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: nginx-rolling
+  template:
+    metadata:
+      labels:
+        app: nginx-rolling
+    spec:
+      containers:
+      - name: nginx
+        image: iogougou/my-nginx:v1
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
