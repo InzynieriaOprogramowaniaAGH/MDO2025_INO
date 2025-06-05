@@ -71,6 +71,8 @@ clearpart --all --initlabel
 
 ```
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/change_on_all.png?raw=true)
+
 Polecenie to wymusza usunięcie wszystkich istniejących partycji na wskazanym dysku oraz nadpisanie tablicy partycji (np. GPT lub MBR). 
 
 #### Ustawienie niestandardowej nazwy hosta
