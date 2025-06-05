@@ -490,7 +490,7 @@ Podałam skrócony adres do mojego pliku (wykorzystałam stronę tinyurl) znajdu
 Dzięki zautomatyzowaniu procesu wszystko "wyklikało się" samo i system pomyślnie został zainstalowany.
 ![alt text](lab9_ss/postep_instalacji.png)
 
-## ***2.Rozszerzenie pliku odpowiedzi o repozytoria i oprogramowanie potrzebne do uruchomienia programu, zbudowanego w ramach projektu pipeline'u*
+## ***2.Rozszerzenie pliku odpowiedzi o repozytoria i oprogramowanie potrzebne do uruchomienia programu, zbudowanego w ramach projektu pipeline'u**
 Wykorzystałam projekt, którego budowa i etapy tworzenia pipeline'u szczegółowo opisane są w [Sprawozdaniu 2](../Sprawozdanie2/README.md).
 Efektem działania pipeline'u jest obraz kontenera Dockera zawierający aplikację zbudowaną w oparciu o Next.js Boilerplate
 
