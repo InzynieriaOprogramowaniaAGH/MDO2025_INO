@@ -223,6 +223,7 @@ Dzięki temu aplikacja, która nasłuchuje wewnątrz klastra, została przekiero
 
 Utworzono plik nginx-deployment.yml:
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/nginx-deploy.png?raw=true)
 
 ---
 
