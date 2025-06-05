@@ -19,6 +19,6 @@ spec:
     spec:
       containers:
         - name: redis-container
-          image: mlorenc4/pipeline-redis:v1.0.30
+          image: mlorenc4/pipeline-redis:v1.0.18
           ports:
             - containerPort: 6379

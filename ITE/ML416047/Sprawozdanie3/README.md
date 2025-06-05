@@ -290,7 +290,7 @@ alias kubectl="minikube kubectl --"
 
 Uruchomienie Kubernetesa
 ![kubernetes](./screenshots/mkstart.png)
-![kubersukces](./screenshots/mkstatus.pngmi)
+![kubersukces](./screenshots/mkstatus.png)
 
 Uruchomienie Kubernetes dashboard
 ![dashboard](./screenshots/kubdash.png)
@@ -368,80 +368,66 @@ Utworzony Deployment w Dashboardzie (Workload Status, Deployments oraz Pods):
 
 Niedziałający `redis`:
 ```
-FROM redis-builder AS builder
-FROM ubuntu:latest
-
-RUN apt-get update && \
-    apt-get install -y libjemalloc2 && \
-    rm -rf /var/lib/apt/lists/*
-
-COPY --from=builder /app/redis/src/redis-server /usr/local/bin/
-COPY --from=builder /app/redis/src/redis-cli /usr/local/bin/
-
-EXPOSE 6379
-
-ENTRYPOINT ["/usr/bin/false"]
-CMD ["--protected-mode", "no"]
+FROM redis
+ENTRYPOINT ["false"]
 ```
 
-![damaged-version]
-![docker-login]
-![docker-push]
-![Dockerhub-images]
+![damaged-version](./screenshots/dmgcomp.png)
+![docker-login-push](./screenshots/dmgpush.png)
+![Dockerhub-images](./screenshots/dockerhubdmg.png)
 
 ### Zmiany w deploymencie
 
-Wprowadzanie zmian w deploymencie poprzez zmianę replik, zatwierdzane poleceniem:
-```
-kubectl apply -f redis-deployment.yaml
-```
+Wprowadzanie zmian w deploymencie poprzez Dashboard
 
 Zwiększenie liczby do 8:
-![8repl]
+![8repl](./screenshots/8repl.png)
 
 Zmniejszenie do 1:
-![1repl]
+![1repl](./screenshots/1repl.png)
 
 Zmniejszenie do 0:
-![0repl]
+![0repl](./screenshots/0repl.png)
 
-Zwiększenie do 4:
-![4repl]
+Zwiększenie do 4 (można zawuażyć, że kolejne repliki pojawiają się stopniowo, a nie od razu):
+![4repl](./screenshots/4repl.png)
 
 Zmniejszenie do 1:
-![4-1repl]
+![4-1repl](./screenshots/aga1repl.png)
 
 Starszy obraz w podzie:
-![old-pod]
+![old-pod](./screenshots/oldverim.png)
+![old-img](./screenshots/oldimgdash.png)
 
 Historia deploymentu:
-![kub-rollout]
+![kub-rollout](./screenshots/deplhist1.png)
+
+Wadliwy deplyoment:
+![dmg-depl](./screenshots/wadliwydeploy.png)
 
 Błąd deploymentu:
-![damaged]
+![damaged](./screenshots/bladdeploy.png)
 
 Porażka wdrożenia błędnego deployu:
-![damaged-deploy]
+![damaged-deploy](./screenshots/dmgdeploy.png)
 
 Przywrócenie poprzedniej działającej wersji komendą:
 ```
 kubectl rollout undo deployment/redis-app
 ```
 
-![rollout-undo]
+![rollout-undo](./screenshots/undo.png)
 
 Działanie podów na starej wersji:
-![old-pod-deploy]
+![old-pod-deploy](./screenshots/oldpoddeploy.png)
 
-Historia deploymentu po cofnięciu:
-![kub-rollout-hist-2]
 
 ### Kontrola wdrożenia
 
 Informacje o konkretnym wdrożeniu:
-![kub-rollout-hist-3]()
+![kub-rollout-hist-3](./screenshots/rollhist3.png)
 
-Skrypt weryfikujący czas wdrażania:
+Skrypt weryfikujący czas wdrażania, uruchamiany zaraz po `kubectl apply`:
 ```
 #!/bin/bash
 
@@ -458,20 +444,61 @@ echo "Deployment $DEPLOY_NAME is now available."
 ```
 
 Sprawdzenie czasu wdrażania:
-![deploy-time]()
+![deploy-time](./screenshots/depltime.png)
 
 
 ### Strategie wdrożenia
 
 Recreate
+Strategia Recreate polega na całkowitym usunięciu starej wersji aplikacji przed wdrożeniem nowej. W efekcie, przez krótki czas usługa jest niedostępna, ponieważ żadne pody nie działają. Ta metoda uniemożliwia współistnienie starych i nowych wersji, co może być przydatne w przypadku niezgodności między wersjami, ale powoduje krótką przerwę w działaniu. Żeby niej skorzystać trzeba w pliku `redis-deplyoment.yaml` dodać:
+
+```
+strategy:
+  type: Recreate
+```
 
 Rolling Update
 
+RollingUpdate to domyślna strategia wdrażania, w której nowe wersje podów są stopniowo uruchamiane, zastępując stare. Ta strategia minimalizuje przestoje, zachowując ciągłość działania usługi. Aby dostosować jej parametry, należy w konfiguracji Deploymentu określić:
+```
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 2  # Maksymalna liczba niedostępnych podów podczas aktualizacji  
+    maxSurge: 30%      # Maksymalny dodatkowy bufor podów powyżej docelowej liczby replik  
+```
+
 Canary Deployment workload
+Aby wdrożyć tę strategię, należy utworzyć nowy Deployment z zaktualizowaną wersją obrazu, ustawiając znacząco mniejszą liczbę replik niż w stabilnej wersji aplikacji. Takie podejście pozwala na stopniowe udostępnienie nowej funkcjonalności jedynie części użytkowników, umożliwiając wczesne wychwycenie potencjalnych problemów przed pełnym wdrożeniem. Warunkiem poprawnego działania jest nadanie obu Deploymentom wspólnej etykiety, co zapewni, że będą one współdzielić ten sam Service i ruch będzie automatycznie rozkładany między obie wersje aplikacji.
 
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-app-canary
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
+  selector:
+    matchLabels:
+      app: redis-app
+  template:
+    metadata:
+      labels:
+        app: redis-app
+    spec:
+      containers:
+        - name: redis-container
+          image: tomaszek03/redis-app:v1.0.30
+          ports:
+            - containerPort: 6379
+```
 
-![canaryyaml]()
+![canaryyaml](./screenshots/canary.png)
 
-
-bla bla
-![candash]
+W ramach jednego serwisu działają równolegle dwa deploymenty, gdzie 6 podów obsługuje starą wersję aplikacji, a 2 nowszą, co umożliwia stopniowe testowanie w środowisku produkcyjnym poprzez kierowanie około 25% ruchu na zaktualizowaną wersję. Taka strategia pozwala na wczesne wykrycie ewentualnych problemów przez ograniczoną grupę użytkowników pełniących rolę testerów, minimalizując ryzyko poważniejszych awarii przy pełnym wdrożeniu. Dzięki temu można bezpiecznie zweryfikować nową wersję w rzeczywistych warunkach przed jej ostatecznym wdrożeniem na pełną skalę.
+![candash](./screenshots/kanary.png)
