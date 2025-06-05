@@ -1,14 +1,3 @@
-![obraz](https://github.com/user-attachments/assets/920c590e-94c6-4861-8f1b-83b8e5ccec71)
-![obraz](https://github.com/user-attachments/assets/57cedd67-f022-4cd7-b998-795c3e1ecd06)
-![obraz](https://github.com/user-attachments/assets/65ed62fc-5388-4c60-b1e3-9265a7a1f7e4)
-![obraz](https://github.com/user-attachments/assets/85c0c75c-5b93-461b-94d6-34e4c81770bc)
-![obraz](https://github.com/user-attachments/assets/88956cc4-d7c5-4c38-9248-fb7328a8d22d)
-![obraz](https://github.com/user-attachments/assets/a1c054fe-f4f9-4817-9fb4-81bcc8d04f9c)
-![obraz](https://github.com/user-attachments/assets/6c2f509c-7adc-45c3-937b-8a0079c28365)
-![obraz](https://github.com/user-attachments/assets/63d901b1-bd9f-4ec1-8a50-c9bc293bca27)
-![obraz](https://github.com/user-attachments/assets/93acc993-296b-4f79-ac29-05b56aa1f9c6)
-![obraz](https://github.com/user-attachments/assets/10316474-3b64-49fd-b816-8e00e33db5a6)
-
 # Raport laboratoryjny: Automatyzacja IT i orkiestracja kontenerów
 
 ## Laboratoria 8-11
@@ -63,6 +52,9 @@ ssh-keygen -t rsa -b 4096 -C "user@server"
 ssh-copy-id user@192.168.56.101
 ssh user@192.168.56.101
 ```
+![obraz](https://github.com/user-attachments/assets/920c590e-94c6-4861-8f1b-83b8e5ccec71)
+
+![obraz](https://github.com/user-attachments/assets/57cedd67-f022-4cd7-b998-795c3e1ecd06)
 
 ## 2. Rejestr hostów
 
@@ -73,6 +65,7 @@ Zmodyfikowano lokalną bazę nazw w pliku `/etc/hosts`:
 ```bash
 sudo nano /etc/hosts
 ```
+![obraz](https://github.com/user-attachments/assets/65ed62fc-5388-4c60-b1e3-9265a7a1f7e4)
 
 ### Test łączności
 
@@ -82,6 +75,8 @@ Zweryfikowano komunikację sieciową między węzłami:
 ping ansible-target
 ping serwer
 ```
+
+![obraz](https://github.com/user-attachments/assets/85c0c75c-5b93-461b-94d6-34e4c81770bc)
 
 ### Definicja inwentarza
 
@@ -102,6 +97,8 @@ Przetestowano komunikację z węzłami przez Ansible:
 ```bash
 ansible -i inventory.ini all -m ping
 ```
+
+![obraz](https://github.com/user-attachments/assets/88956cc4-d7c5-4c38-9248-fb7328a8d22d)
 
 ## 3. Automatyzacja procedur
 
@@ -124,11 +121,13 @@ Uruchomienie testu:
 ansible-playbook -i inventory.ini ping.yml
 ```
 
+![obraz](https://github.com/user-attachments/assets/a1c054fe-f4f9-4817-9fb4-81bcc8d04f9c)
+
 ### Dystrybucja plików
 
 Opracowano playbook do rozprowadzania konfiguracji:
 
-```yaml
+```
 ---
 - hosts: Endpoints
 	gather_facts: false
@@ -147,6 +146,8 @@ Realizacja transferu:
 ```bash
 ansible-playbook -i inventory.ini copy-inventory.yml
 ```
+
+![obraz](https://github.com/user-attachments/assets/6c2f509c-7adc-45c3-937b-8a0079c28365)
 
 ### Automatyzacja aktualizacji
 
@@ -208,6 +209,8 @@ Restart usług:
 ansible-playbook -i inventory.ini restart-services.yml
 ```
 
+![obraz](https://github.com/user-attachments/assets/63d901b1-bd9f-4ec1-8a50-c9bc293bca27)
+
 ### Symulacja awarii
 
 Sprawdzono zachowanie systemu podczas niedostępności węzła:
@@ -220,6 +223,8 @@ sudo systemctl stop ssh.socket ssh
 ansible-playbook -i inventory.ini ping.yml
 ```
 
+![obraz](https://github.com/user-attachments/assets/93acc993-296b-4f79-ac29-05b56aa1f9c6)
+
 ## 4. Konteneryzacja aplikacji
 
 ### Struktura roli automatyzacji
@@ -229,6 +234,8 @@ Utworzono wyspecjalizowaną rolę do zarządzania aplikacjami:
 ```bash
 ansible-galaxy init manage_artifact
 ```
+
+![obraz](https://github.com/user-attachments/assets/10316474-3b64-49fd-b816-8e00e33db5a6)
 
 ### Główna procedura wdrożenia
 
