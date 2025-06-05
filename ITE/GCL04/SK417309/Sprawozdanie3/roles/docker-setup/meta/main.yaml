@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: Szczepan Kwaśny
+  description: Install and configure Docker on Fedora
+  company: AGH
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+    - name: Fedora
+      versions:
+        - all
+  galaxy_tags:
+    - docker
+    - fedora
+    - containers
+
+dependencies: []

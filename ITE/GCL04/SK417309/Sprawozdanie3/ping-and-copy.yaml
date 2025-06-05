@@ -1,0 +1,16 @@
+---
+- name: Ping all hosts and copy inventory
+  hosts: Endpoints
+  become: yes
+
+  tasks:
+    - name: Test SSH connectivity with ping
+      ansible.builtin.ping:
+
+    - name: Copy inventory file to remote hosts
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /home/ansible/inventory.ini
+        owner: ansible
+        group: ansible
+        mode: '0644'

@@ -1,0 +1,18 @@
+---
+- name: Deploy Spring Boot App with MySQL using Docker
+  hosts: Endpoints
+  become: yes
+  vars:
+    app_image: "sauer88/exam-seat-arrangement"
+    mysql_root_password: "rootpassword123"
+    mysql_database: "exam_db"
+    mysql_user: "app_user"
+    mysql_password: "app_password123"
+    app_port: "8080"
+    mysql_port: "3306"
+    docker_network: "app-network"
+
+  roles:
+    - docker-setup
+    - mysql-container
+    - spring-app
