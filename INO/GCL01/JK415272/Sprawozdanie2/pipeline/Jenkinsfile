@@ -20,12 +20,14 @@ pipeline {
                     env.GIT_COMMIT_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                     echo "Checked out commit: ${env.GIT_COMMIT_HASH}"
                 }
+                sh 'pwd'
+                sh 'ls -la'
             }
         }
 
         stage('Move to Pipeline Directory') {
             steps {
-                dir('MDO2025_INO/INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
+                dir('INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
                     echo "Changed to project pipeline directory."
                     sh 'ls -la'
                 }
@@ -34,7 +36,7 @@ pipeline {
 
         stage('Build Application') {
             steps {
-                dir('MDO2025_INO/INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
+                dir('INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
                     echo "Building 'builder' image: ${env.BUILD_IMAGE_NAME}"
                     sh "docker build -t ${env.BUILD_IMAGE_NAME} -f Dockerfile.build ."
                     echo "Builder image created."
@@ -44,7 +46,7 @@ pipeline {
 
         stage('Build Deploy Image') {
             steps {
-                dir('MDO2025_INO/INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
+                dir('INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
                     echo "Building 'deploy' image: ${env.DEPLOY_IMAGE_NAME}"
                     sh "docker build -t ${env.DEPLOY_IMAGE_NAME} -f Dockerfile.deploy ."
                     echo "Deploy image created."
@@ -63,15 +65,28 @@ pipeline {
             }
         }
 
-        stage('Verify Deployment (Smoke Test)') {
+        stage('Prepare Smoke Test Script') {
             steps {
-                dir('MDO2025_INO/INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
+                dir('INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
+                    echo "Fixing line endings in test script..."
+                    sh 'ls -la'
+                    sh "sed -i 's/\\r\$//' test/curl-test.sh"
+                }
+            }
+        }
+
+       stage('Verify Deployment (Smoke Test)') {
+            steps {
+                dir('INO/GCL01/JK415272/Sprawozdanie2/pipeline') {
                     echo "Building 'tester' image: ${env.TEST_IMAGE_NAME}"
                     sh "docker build -t ${env.TEST_IMAGE_NAME} -f test/Dockerfile.test ."
 
                     echo "Running smoke test..."
+                
                     sh "docker run --rm --network ${env.DOCKER_NETWORK} ${env.TEST_IMAGE_NAME} ${env.DEPLOY_CONTAINER_NAME}"
-                    echo "Smoke test passed!"
+
+                   
+                    echo "Smoke test passed!" 
                 }
             }
         }
