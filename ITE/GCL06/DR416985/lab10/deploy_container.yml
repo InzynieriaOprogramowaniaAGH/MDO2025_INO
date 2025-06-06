@@ -1,0 +1,27 @@
+# deploy_container.yml
+- hosts: Endpoints
+  become: true
+  tasks:
+    - name: Install Docker
+      package:
+        name: docker
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Pull container image
+      community.docker.docker_image:
+        name: nginx
+        source: pull
+
+    - name: Run nginx container
+      community.docker.docker_container:
+        name: my-nginx
+        image: nginx
+        state: started
+        ports:
+          - "8080:80"
