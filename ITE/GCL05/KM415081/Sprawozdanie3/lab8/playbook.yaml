@@ -1,0 +1,25 @@
+- hosts: all
+  become: true
+  tasks:
+    - name: Ping machines
+      ansible.builtin.ping:
+
+    - name: Copy inventory file (only to ansible-target)
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /tmp/inventory.ini
+      when: inventory_hostname == 'ansible-target'
+
+    - name: Update all packages
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+        update_cache: yes
+
+    - name: Restart sshd and rngd
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: restarted
+      loop:
+        - sshd
+        - rngd

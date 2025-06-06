@@ -1,0 +1,7 @@
+- name: Test HTTP
+  ansible.builtin.shell: "curl -s -o /dev/null -w '%{http_code}' http://localhost:3000"
+  register: curl_result
+
+- name: HTTP status code
+  ansible.builtin.debug:
+    var: curl_result.stdout

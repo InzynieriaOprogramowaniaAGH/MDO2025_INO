@@ -1,0 +1,18 @@
+---
+# tasks file for app
+
+- name: Install Docker on target host
+  import_tasks: install.yml
+
+- name: Install python3-requests on target
+  import_tasks: install_py.yml
+
+- name: Deploy container from Docker Hub
+  import_tasks: container.yml
+
+- name: Verify container
+  import_tasks: verify_container.yml
+
+- name: Clean container
+  import_tasks: clean.yml
+

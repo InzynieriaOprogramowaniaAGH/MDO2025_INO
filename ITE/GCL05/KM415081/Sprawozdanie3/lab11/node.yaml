@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node
+  labels:
+    app: node
+    environment: production
+
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: todo-app
+  template:
+    metadata:
+      labels:
+        app: todo-app
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: todo-container
+        image: cadmusinho/nodedeploy:latest
+        ports:
+          - containerPort: 3000
+            protocol: TCP
+        env:
+          - name: NODE_ENV
+            value: "production"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
