@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weatherforecast-api-canary
+  labels:
+    strategy: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weatherforecast-api
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: weatherforecast-api
+        version: canary
+    spec:
+      containers:
+      - name: weatherforecast-api
+        image: latawiecjakub/weatherforecast-api:v4
+        ports:
+        - containerPort: 5000

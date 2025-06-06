@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weatherforecast-api-recreate
+  labels:
+    strategy: recreate
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: weatherforecast-api
+  template:
+    metadata:
+      labels:
+        app: weatherforecast-api
+    spec:
+      containers:
+      - name: weatherforecast-api
+        image: latawiecjakub/weatherforecast-api:v2
+        ports:
+        - containerPort: 5000

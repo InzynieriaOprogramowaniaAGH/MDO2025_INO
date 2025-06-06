@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weatherforecast-api-rolling
+  labels:
+    strategy: rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 25%
+  selector:
+    matchLabels:
+      app: weatherforecast-api
+  template:
+    metadata:
+      labels:
+        app: weatherforecast-api
+    spec:
+      containers:
+      - name: weatherforecast-api
+        image: latawiecjakub/weatherforecast-api:v3
+        ports:
+        - containerPort: 5000
