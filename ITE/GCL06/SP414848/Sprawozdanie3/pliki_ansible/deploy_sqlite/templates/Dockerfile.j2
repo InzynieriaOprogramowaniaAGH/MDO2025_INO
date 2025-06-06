@@ -1,0 +1,14 @@
+FROM fedora:41
+
+RUN dnf -y update && \
+    dnf clean all
+
+RUN useradd -m appuser
+
+COPY sqlite3 /sqlite/sqlite3
+COPY smoke-test.sh /smoke-test.sh
+RUN chmod +x /sqlite/sqlite3 /smoke-test.sh
+
+USER appuser
+
+CMD ["./smoke-test.sh"]

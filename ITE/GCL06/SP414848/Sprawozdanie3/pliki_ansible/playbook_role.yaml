@@ -1,0 +1,7 @@
+- name: Deploy sqlite
+  hosts: Endpoints
+  become: yes
+  collections:
+    - community.docker
+  roles:
+    - deploy_sqlite
