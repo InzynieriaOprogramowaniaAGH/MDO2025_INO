@@ -742,22 +742,6 @@ curl http://localhost:8090
 
 Pomyślny wynik testu `curl` potwierdza, że aplikacja jest dostępna poprzez zdefiniowany Serwis.
 
-#### 5.3.4. Analiza Logów Poda z Deploymentu
-
-Sprawdzono również logi jednego z Podów zarządzanych przez `nginx-deployment`, aby upewnić się, że Nginx działa poprawnie i obsługuje żądania.
-
-```bash
-# Najpierw pobierz nazwę jednego z podów
-POD_NAME=$(kubectl get pods -l app=nginx -o jsonpath='{.items[0].metadata.name}')
-kubectl logs $POD_NAME
-```
-
-(Poniżej zrzut ekranu przedstawiający logi jednego z Podów Nginx z Deploymentu)
-
-![screen](screenshot/k17_kubectl_logs_nginx_deployment_pod.png)
-
-
-Logi potwierdziły, że serwer Nginx wewnątrz kontenera działał poprawnie i obsłużył przychodzące żądanie HTTP.
 
 ### 5.4. Wnioski z Wprowadzenia do Kubernetes
 
