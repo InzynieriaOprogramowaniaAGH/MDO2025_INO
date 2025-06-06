@@ -670,16 +670,300 @@ Cały ten zabieg z tworzeniem deploymentu i serwisu pozwala na rozwiązanie dwó
 
 ### Przygotowanie nowego obrazu
 
-TODO
+Ze względu na piękną pogodę za oknem i chęć wyjścia aby zaczerpnąć nieco słońca sprawozdanie będzie krótkie.
+
+W pierwszym kroku zostały utworzone dwa nowe pliki Dockerfile:
+
+- [Dockerfile.valid.older](011-Class/Dockerfile.valid.older) tworzący działający customowy obraz nginx w wersji 1.27.5:
+
+```Dockerfile
+FROM nginx:1.27.5
+
+COPY index.html /usr/share/nginx/html/index.html
+```
+
+- [Dockerfile.valid](011-Class/Dockerfile.valid) tworzący działający customowy obraz nginx w wersji 1.28:
+
+```Dockerfile
+FROM nginx:1.28
+
+COPY index.html /usr/share/nginx/html/index.html
+```
+
+- [Dockerfile.invalid](011-Class/Dockerfile.invalid) tworzący zepsuty customowy obraz nginx w wersji 1.28:
+
+```Dockerfile
+FROM nginx:1.28
+
+COPY index.html /usr/share/nginx/html/index.html
+
+CMD [ "/bin/false" ]
+```
+
+Sam plik [index.html](011-Class/index.html) prezentuje się następująco:
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Custon nginx</title>
+</head>
+<body>
+  <h1>Hello there</h1>
+  <p>This is a container based on custom nginx image.</p>
+</body>
+</html>
+```
+
+Obrazy te zostały kolejno zbudowane, a ich tagi wersje odpowiadają wersjom samego nginxa:
+
+![](011-Class/ss/1.png)
+
+![](011-Class/ss/2.png)
+
+![](011-Class/ss/3.png)
+
+Dla weryfikacji poprawności działania uruchomiłem kontener na podstawie obrazu `nginx-valid:1.28` przy użyciu poniższego polecenia:
+
+```bash
+docker run -d -p 8080:80 nginx-valid:1.28 
+```
+
+![](011-Class/ss/4.png)
+
+Sprawdziłem również failujący obraz - nie widać żadnych efektów, ale zauważyć można czerwony krzyżyk z lewej strony oznaczający, że polecenie zwróciło jakiś błąd:
+
+![](011-Class/ss/5.png)
+
+Obrazy dodałem do Kubernetesa i sprawdziłem, czy rzeczywiście zostały dodane:
+
+![](011-Class/ss/6.png)
 
 ### Zmiany w deploymencie
 
-TODO
+Na początek utworzyłem nowy plik (nginx-deploy.yaml)[] będący lekko zmodyfikowaną kopią pliku z poprzedniego laboratorium:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  labels:
+    app: nginx-custom
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx-custom
+  template:
+    metadata:
+      labels:
+        app: nginx-custom
+    spec:
+      containers:
+        - name: nginx-custom
+          image: nginx-valid:1.27.5
+          ports:
+            - containerPort: 80
+```
+
+Uruchomienie wdrożenia odbyło się tak samo jak ostatnim razem:
+
+![](011-Class/ss/8.png)
+
+![](011-Class/ss/7.png)
+
+Następnie modyfikowałem ten plik i obserwowałem efekty. Wywoływałem to samo polecenie, natomiast jako odpowiedź otrzymywałem `deployment.apps/nginx-deploy configured`:
+
+- zwiększenie liczby replik do 8:
+
+```yaml
+replicas: 8
+```
+![](011-Class/ss/9.png)
+
+- zmniejszenie liczby replik do 1:
+
+```yaml
+replicas: 1
+```
+
+![](011-Class/ss/10.png)
+
+![](011-Class/ss/11.png)
+
+- zmniejszenie liczby replik do 0:
+
+```yaml
+replicas: 0
+```
+
+![](011-Class/ss/12.png)
+
+- przeskalowanie w górę do 4 replik:
+
+```yaml
+replicas: 4
+```
+
+![](011-Class/ss/13.png)
+
+![](011-Class/ss/14.png)
+
+- zastosowanie nowej wersji obrazu:
+
+```yaml
+image: nginx-valid:1.28
+```
+
+![](011-Class/ss/15.png)
+
+![](011-Class/ss/16.png)
+
+- zastosowanie starszej wersji obrazu:
+
+```yaml
+image: nginx-valid:1.27.5
+```
+
+![](011-Class/ss/17.png)
+
+![](011-Class/ss/18.png)
+
+- zastosowanie wadliwego obrazu:
+
+```yaml
+image: nginx-invalid:1.28
+```
+
+![](011-Class/ss/19.png)
+
+![](011-Class/ss/20.png)
+
+Ostatnia, wadliwa wersja została cofnięta przy użyciu `kubectl rollout undo`:
+
+![](011-Class/ss/21.png)
+
+Jak widać, wdrożenie wróciło do ostatniej wersji sprzed wdrożenia wadliwego: 
+
+![](011-Class/ss/22.png)
 
 ### Kontrola wdrożenia
 
-TODO
+Warto przyjrzeć się jeszcze raz poprzedniemu zrzutowi ekranu:
+
+![](011-Class/ss/21.png)
+
+![](011-Class/ss/21.png)
+
+W poleceniu `kubectl rollout history` można zauważyć wpisy, gdzie zmieniany był obraz - revision 2 to zmiana na nowy obraz, revision 3 to zmiana na stary obraz, revision 4 to zmiana na obraz wadliwy.
+
+Jednakże, ponowne wywołanie `kubectl rollout history` sprawi, że revision 3 znika, a pojawia się revision 5.
+
+![](011-Class/ss/23.png)
+
+![](011-Class/ss/24.png)
+
+![](011-Class/ss/25.png)
+
+Nasuwa się pytanie - gdzie podział się revision 3 i dlaczego nie ma revision 1? Otóż revision 1 było tym samym co 3, więc zostało nadpisane - na początku wersja była ustawiona jako 1.27.5, w rewizji nr 3 tak samo. Analogicznie z revision 5 - gdy wykonałem `kubectl rollout undo` wróciłem do wersji obrazu z revision 3, dlatego też to znikło a pojawiło się nowe.
+
+Następnie należało napisać [skrypt](011-Class/verify.sh) weryfikujący, czy wdrożenie "zdążyło" się wdrożyć, jego treść wygląda następująco;
+
+```bash
+#!/bin/bash
+
+DEPLOY_NAME=$1
+TIMEOUT=60
+
+echo "Waiting for deployment ${DEPLOY_NAME}..."
+minikube kubectl -- wait --for=condition=available --timeout=${TIMEOUT}s deployment/${DEPLOY_NAME}
+if [ $? -ne 0 ]; then
+    echo "Deployment $DEPLOY_NAME did not become available within ${TIMEOUT} seconds"
+    exit 1
+fi
+echo "Deployment $DEPLOY_NAME is available"
+```
+
+Przy użyciu tego skryptu sprawdziłem następnie czy wdrożenie rzeczywiście zdążyło się wdrożyć w czasie poniżej 60 sekund. W tym celu ustawiłem stworzenie 16 dodatkowych replik (łącznie 20). Skrypt wywołałem również z poleceniem time aby sprawdzić ile czasu minęło:
+
+![](011-Class/ss/26.png)
 
 ### Strategie wdrożenia
 
-TODO
+- Recreate - wszystkie stare pody zostają zatrzymane, a następnie uruchamiane są nowe. Wadą tej strategii jest brak dostępności aplikacji przez chwilę zanim nastąpi wdrożenie, jednakże gwarantuje to tą samą wersję aplikacji dla wszystkich klientów:
+
+```yaml
+spec:
+  [...]
+  strategy:
+    type: Recreate
+  [...]
+```
+
+- Rolling Update - domyślna strategia wdrożenia która uruchamia nowe pody równolegle wyłączając stare. Gwarantuje to działanie co najmniej kilku działających podów. Parametr `maxUnavailable` służy do określenia maksymalnej liczby wyłączanych replik podczas aktualizowania, `maxSurge` z kolei określa ile podów ponad limit może być utworzonych:
+```yaml
+spec:
+  [...]
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 4
+      maxSurge: 25%
+  [...]
+```
+
+- Canary Deployment - nieco bardziej zaawansowana strategia. Polega ona na utworzeniu nowego wdrożenia z nowszą wersją aplikacji i z mniejszą liczbą podów. Pozwala to na udostępnienie nowszej wersji wdrożenia małemu gronu użytkowników (np. testerów) w celu przykładowo wykrycia przedwcześnie błędów. Należy pamiętać o przypisaniu takiej samej etykiety (`app`) jak w przypadku innego wdrożenia tak, aby serwis mógł odnosić się do obu wdrożeń:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy-canary
+  labels:
+    app: nginx-custom
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 25%
+  selector:
+    matchLabels:
+      app: nginx-custom
+  template:
+    metadata:
+      labels:
+        app: nginx-custom
+    spec:
+      containers:
+        - name: nginx-custom
+          image: nginx-valid:1.28
+          ports:
+            - containerPort: 80
+```
+
+Tak skonfigurowany deployment należy uruchomić:
+
+![](011-Class/ss/27.png)
+
+Następnie należy utworzyć [serwis](011-Class/nginx-service.yaml), który będzie operował na wszystkich podach o określonej etykiecie:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx-custom
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+```
+
+Plik ten wrzuciłem poprzez dashboard. Po chwili w informacjach o serwisie można zauważyć, że operuje on na podach z `nginx-deploy` oraz `nginx-deploy-canary`:
+
+![](011-Class/ss/28.png)
