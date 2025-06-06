@@ -1,0 +1,9 @@
+---
+app_tgz: calculator-app-1.0.0.tgz
+app_dir: /home/user/MDO2025_INO/ITE/GCL07/SS414718/lab8
+image_name: calculator-app:1.0.0
+container_name: calculator_app
+ports:
+  - "3001:3000"
+
+# defaults file for roles/tgz_deploy

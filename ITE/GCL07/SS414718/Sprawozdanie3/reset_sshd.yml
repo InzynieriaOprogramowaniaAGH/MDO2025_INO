@@ -1,0 +1,9 @@
+- name: restart ssh oraz rngd
+  hosts: all
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
