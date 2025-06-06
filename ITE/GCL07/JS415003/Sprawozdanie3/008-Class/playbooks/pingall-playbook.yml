@@ -1,0 +1,54 @@
+---
+- name: Ping all hosts BEFORE copying inventory
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Initial ping to all machines
+      ansible.builtin.ping:
+      register: initial_ping_result
+    
+    - name: Display initial ping results
+      debug:
+        msg: "Initial ping successful to {{ inventory_hostname }}"
+
+- name: Copy inventory file to endpoints
+  hosts: endpoints
+  remote_user: ansible
+  tasks:
+    - name: Copy inventory.yaml to ansible-target
+      copy:
+        src: /home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie3/008-Class/inventory.yaml
+        dest: /home/ansible/inventory.yaml
+        mode: '0644'
+    
+    - name: Verify file was copied
+      stat:
+        path: /home/ansible/inventory.yaml
+      register: file_check
+
+    - name: Confirm file exists
+      debug:
+        msg: "Inventory file successfully copied to {{ inventory_hostname }}"
+      when: file_check.stat.exists
+
+- name: Ping all hosts AFTER copying inventory using copied file
+  hosts: all
+  connection: local
+  tasks:
+    - name: Ping all hosts using the copied inventory file
+      shell: |
+        ansible all -i /home/jakub/MDO2025_INO/ITE/GCL07/JS415003/Sprawozdanie3/008-Class/inventory.yaml \
+        -m ping --ssh-common-args='-o StrictHostKeyChecking=no' \
+        -u ansible --private-key ~/.ssh/github_ed25519
+      register: ping_with_copied_inventory
+      ignore_errors: yes
+
+    - name: Display ping results using copied inventory
+      debug:
+        msg: "{{ ping_with_copied_inventory.stdout_lines }}"
+      when: ping_with_copied_inventory.stdout_lines is defined
+
+    - name: Display any errors
+      debug:
+        msg: "Error: {{ ping_with_copied_inventory.stderr }}"
+      when: ping_with_copied_inventory.stderr is defined and ping_with_copied_inventory.stderr != ""

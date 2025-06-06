@@ -1,0 +1,26 @@
+FROM fedora:42
+
+# Install build dependencies
+RUN dnf update -y && \
+    dnf install -y gcc glibc-devel && \
+    dnf clean all
+
+# Create application directory
+WORKDIR /app
+
+# Copy cJSON library files
+COPY {{ package_name }}/lib/libcjson.so* /usr/lib64/
+COPY {{ package_name }}/lib/libcjson.a /usr/lib64/
+COPY {{ package_name }}/include/cJSON.h /usr/include/
+
+# Update library cache
+RUN ldconfig
+
+# Copy example application
+COPY example.c /app/
+
+# Compile the application
+RUN gcc -o cjson-example example.c -lcjson
+
+# Set the command to run the application
+CMD ["./cjson-example"]

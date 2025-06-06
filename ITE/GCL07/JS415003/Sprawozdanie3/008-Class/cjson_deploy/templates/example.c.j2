@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "cJSON.h"
+
+int main() {
+    printf("=== cJSON Library Test ===\n");
+    
+    // Create a JSON object
+    cJSON *json = cJSON_CreateObject();
+    cJSON *name = cJSON_CreateString("cJSON");
+    cJSON *version = cJSON_CreateString("{{ cjson_version }}");
+    cJSON *status = cJSON_CreateString("deployed");
+    
+    // Add items to the JSON object
+    cJSON_AddItemToObject(json, "name", name);
+    cJSON_AddItemToObject(json, "version", version);
+    cJSON_AddItemToObject(json, "status", status);
+    
+    // Convert to string and print
+    char *json_string = cJSON_Print(json);
+    printf("Created JSON: %s\n", json_string);
+    
+    // Parse the JSON string back
+    cJSON *parsed_json = cJSON_Parse(json_string);
+    if (parsed_json == NULL) {
+        printf("Error parsing JSON\n");
+        return 1;
+    }
+    
+    cJSON *parsed_name = cJSON_GetObjectItemCaseSensitive(parsed_json, "name");
+    cJSON *parsed_version = cJSON_GetObjectItemCaseSensitive(parsed_json, "version");
+    cJSON *parsed_status = cJSON_GetObjectItemCaseSensitive(parsed_json, "status");
+    
+    printf("\nParsed values:\n");
+    printf("Library: %s\n", parsed_name->valuestring);
+    printf("Version: %s\n", parsed_version->valuestring);
+    printf("Status: %s\n", parsed_status->valuestring);
+    
+    printf("\n=== Test completed successfully! ===\n");
+    
+    // Cleanup
+    free(json_string);
+    cJSON_Delete(json);
+    cJSON_Delete(parsed_json);
+    
+    return 0;
+}

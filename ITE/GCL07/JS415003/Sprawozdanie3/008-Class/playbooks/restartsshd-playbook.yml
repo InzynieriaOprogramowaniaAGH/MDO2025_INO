@@ -1,0 +1,8 @@
+- name: Restart ssh deamon
+  hosts: endpoints
+  become: true
+  tasks:
+    - name: Use systemd to restart running sshd deamon
+      systemd:
+        name: sshd
+        state: restarted

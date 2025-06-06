@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moja-nginx-app-recreate
+  labels:
+    app: moja-nginx-app
+    strategy: recreate
+    version: "1.0"
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: moja-nginx-app
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        app: moja-nginx-app
+        version: "1.0"
+        strategy: recreate
+    spec:
+      containers:
+        - name: moja-nginx-app
+          image: moja-nginx-app:v1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+      restartPolicy: Always

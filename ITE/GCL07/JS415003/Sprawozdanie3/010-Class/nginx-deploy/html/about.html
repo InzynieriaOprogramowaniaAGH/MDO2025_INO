@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O aplikacji - Moja Aplikacja Nginx</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>📋 O aplikacji</h1>
+        <nav>
+            <a href="/">Strona główna</a>
+            <a href="/about">O aplikacji</a>
+            <a href="/api/status" target="_blank">API Status</a>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Szczegóły projektu</h2>
+            <p>Ta aplikacja demonstruje deploy do kontenera Docker z następującymi cechami:</p>
+            
+            <h3>Architektura:</h3>
+            <ul>
+                <li><strong>Base Image:</strong> nginx:alpine</li>
+                <li><strong>Własna konfiguracja:</strong> nginx.conf</li>
+                <li><strong>Statyczne pliki:</strong> HTML, CSS</li>
+                <li><strong>API endpoint:</strong> JSON response</li>
+            </ul>
+
+            <h3>Bezpieczeństwo:</h3>
+            <ul>
+                <li>Niestandardowe nagłówki HTTP</li>
+                <li>Blokowanie dostępu do plików konfiguracyjnych</li>
+                <li>Obsługa błędów</li>
+            </ul>
+
+            <h3>Wydajność:</h3>
+            <ul>
+                <li>Kompresja gzip</li>
+                <li>Optymalizacja TCP</li>
+                <li>Healthcheck</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p><a href="/">← Powrót do strony głównej</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moja Aplikacja Nginx</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>🚀 Moja Aplikacja Nginx Deploy</h1>
+        <nav>
+            <a href="/">Strona główna</a>
+            <a href="/about">O aplikacji</a>
+            <a href="/api/status" target="_blank">API Status</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Witaj w mojej aplikacji!</h2>
+            <p>Ta aplikacja została wdrożona do kontenera Docker z własną konfiguracją Nginx.</p>
+        </section>
+
+        <section class="features">
+            <h3>Funkcjonalności:</h3>
+            <ul>
+                <li>✅ Własna konfiguracja Nginx</li>
+                <li>✅ Niestandardowe nagłówki HTTP</li>
+                <li>✅ Kompresja gzip</li>
+                <li>✅ API endpoint (/api/status)</li>
+                <li>✅ Healthcheck kontenera</li>
+                <li>✅ Obsługa błędów 404/50x</li>
+            </ul>
+        </section>
+
+        <section class="info">
+            <h3>Informacje techniczne:</h3>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>Kontener</h4>
+                    <p>Docker + Nginx Alpine</p>
+                </div>
+                <div class="info-card">
+                    <h4>Port</h4>
+                    <p>80 (HTTP)</p>
+                </div>
+                <div class="info-card">
+                    <h4>Status</h4>
+                    <p id="status">Ładowanie...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Moja Aplikacja Deploy. Działa w kontenerze! 🐳</p>
+    </footer>
+
+    <script>
+        // Sprawdzenie statusu API
+        fetch('/api/status')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('status').textContent = 
+                    `${data.status.toUpperCase()} (v${data.version})`;
+            })
+            .catch(error => {
+                document.getElementById('status').textContent = 'ERROR';
+            });
+    </script>
+</body>
+</html>
