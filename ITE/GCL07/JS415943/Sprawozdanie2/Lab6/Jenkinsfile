@@ -24,7 +24,7 @@ pipeline {
                     sh '''
                         docker container ls -a -q | xargs -r docker rm -f
                         docker volume ls -q | xargs -r docker volume rm -f
-                        docker network ls -q --filter type=custom | xargs -r docker network rm
+                        docker network ls -q --filter type=custom | xargs -r docker network rm -f
                         docker builder prune --all --force
                         docker images -q | sort -u | grep -vE '^(node:22\\.10|node:22\\.10-slim)$' | xargs -r docker rmi -f
                     '''
@@ -34,7 +34,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
                     sh 'docker build -f Dockerfile.build -t $IMAGE_BUILD .'
                 }
             }
@@ -42,7 +42,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
                     sh 'docker build -f Dockerfile.test -t $IMAGE_TEST .'
                     sh 'docker run --rm $IMAGE_TEST > test-${VERSION}.log'
                     archiveArtifacts artifacts: "test-${VERSION}.log", onlyIfSuccessful: true
@@ -67,25 +67,18 @@ pipeline {
             }
         }
 
-        stage('SmokeTest') {
+        stage('Verify Deployment') {
             steps {
-                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
-                    sh '''
-                        docker network create ci || true
-                        docker run -dit --network ci --name deploy -p 3000:3000 $IMAGE_DEPLOY:$VERSION
-                        sleep 5
-                        docker run --rm --network ci curlimages/curl curl http://deploy:3000
-                        docker stop deploy
-                        docker rm deploy
-                        docker network rm ci
-                    '''
+                dir('ITE/GCL07/JS415943/Sprawozdanie3/lab11') {
+                    sh 'chmod +x check-deploy.sh'
+                    sh './check-deploy.sh'
                 }
             }
         }
 
         stage('Publish') {
             steps {
-                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh '''
                             docker run --rm -v $PWD:/app -w /app debian bash -c "apt-get update && apt-get install -y zip && zip -r ${ZIP_BASE}-${VERSION}.zip node_modules/ src/ views/ package.json"
