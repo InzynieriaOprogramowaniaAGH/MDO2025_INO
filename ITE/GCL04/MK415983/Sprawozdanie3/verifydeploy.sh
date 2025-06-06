@@ -1,5 +1,3 @@
-#!/bin/bash
-
 DEPLOYMENT="swiftcode-app-deployment"
 NAMESPACE="default"
 TIMEOUT=60

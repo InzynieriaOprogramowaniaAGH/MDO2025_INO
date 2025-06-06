@@ -23,7 +23,7 @@ spec:
     - ReadWriteOnce 
   resources:
     requests:
-      storage: 1Gi # Adjust storage size as needed
+      storage: 1Gi
 
 ---
 # --- MySQL Deployment (db service) ---
@@ -83,7 +83,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-service # This name will be used in the SPRING_DATASOURCE_URL
+  name: mysql-service
   labels:
     app: mysql
 spec:
@@ -92,7 +92,7 @@ spec:
       targetPort: 3306
   selector:
     app: mysql
-  type: ClusterIP # Exposes the service on an internal IP in the cluster
+  type: ClusterIP
 
 ---
 # --- Spring Boot App Deployment (app service) ---
@@ -103,7 +103,7 @@ metadata:
   labels:
     app: swiftcode-app
 spec:
-  replicas: 4 # Adjust as needed
+  replicas: 4
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -119,7 +119,7 @@ spec:
     spec:
       containers:
         - name: swiftcode-app-container
-          image: swift-code-application-app:v2 # Your custom image
+          image: swift-code-application-app:v2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -143,7 +143,7 @@ spec:
         - name: swift-codes-hostpath-volume
           hostPath:
             path: /data/swift_codes.csv
-            type: File # Specify that the hostPath is a file
+            type: File
 
 ---
 # --- Canary ---
@@ -170,7 +170,7 @@ spec:
     spec:
       containers:
         - name: swiftcode-app-container
-          image: swift-code-application-app:v2 # Your custom image
+          image: swift-code-application-app:v2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -194,7 +194,7 @@ spec:
         - name: swift-codes-hostpath-volume
           hostPath:
             path: /data/swift_codes.csv
-            type: File # Specify that the hostPath is a file
+            type: File
 
 ---
 # --- Spring Boot App Service (app service) ---
