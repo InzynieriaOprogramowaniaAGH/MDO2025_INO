@@ -1,0 +1,214 @@
+# kube-manifests.yaml
+
+# --- Secret for Database Credentials ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-credentials
+type: Opaque
+data:
+  MYSQL_ROOT_PASSWORD: "cm9vdA==" 
+  MYSQL_USER: "c3dpZnR1c2Vy"    
+  MYSQL_PASSWORD: "c3dpZnRwYXNz" 
+  MYSQL_DATABASE_NAME: "c3dpZnRwYXJzZXJkYg==" 
+
+---
+# --- PersistentVolumeClaim for MySQL Data ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce 
+  resources:
+    requests:
+      storage: 1Gi # Adjust storage size as needed
+
+---
+# --- MySQL Deployment (db service) ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: MYSQL_DATABASE_NAME
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: MYSQL_PASSWORD
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+
+---
+# --- MySQL Service (db service) ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service # This name will be used in the SPRING_DATASOURCE_URL
+  labels:
+    app: mysql
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+  selector:
+    app: mysql
+  type: ClusterIP # Exposes the service on an internal IP in the cluster
+
+---
+# --- Spring Boot App Deployment (app service) ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swiftcode-app-deployment
+  labels:
+    app: swiftcode-app
+spec:
+  replicas: 4 # Adjust as needed
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
+  selector:
+    matchLabels:
+      app: swiftcode-app
+  template:
+    metadata:
+      labels:
+        app: swiftcode-app
+    spec:
+      containers:
+        - name: swiftcode-app-container
+          image: swift-code-application-app:v2 # Your custom image
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql-service:3306/swiftparserdb"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: MYSQL_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: MYSQL_PASSWORD
+          volumeMounts:
+            - name: swift-codes-hostpath-volume
+              mountPath: /app/swift_codes.csv 
+      volumes:
+        - name: swift-codes-hostpath-volume
+          hostPath:
+            path: /data/swift_codes.csv
+            type: File # Specify that the hostPath is a file
+
+---
+# --- Canary ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swiftcode-app-canary
+  labels:
+    app: swiftcode-app
+spec:
+  replicas: 1 # dla testów
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
+  selector:
+    matchLabels:
+      app: swiftcode-app
+  template:
+    metadata:
+      labels:
+        app: swiftcode-app
+    spec:
+      containers:
+        - name: swiftcode-app-container
+          image: swift-code-application-app:v2 # Your custom image
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://mysql-service:3306/swiftparserdb"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: MYSQL_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: MYSQL_PASSWORD
+          volumeMounts:
+            - name: swift-codes-hostpath-volume
+              mountPath: /app/swift_codes.csv 
+      volumes:
+        - name: swift-codes-hostpath-volume
+          hostPath:
+            path: /data/swift_codes.csv
+            type: File # Specify that the hostPath is a file
+
+---
+# --- Spring Boot App Service (app service) ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: swiftcode-app-service
+  labels:
+    app: swiftcode-app
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: swiftcode-app
+
