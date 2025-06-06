@@ -322,4 +322,14 @@ autopart --type=lvm
 
 reboot
 ```
+## SPrawdzenie poprawnosci i dostepu do pliku: przy pomocy raw.githubusercontent
+https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/BP417137/ITE/GCL08/BP417137/Sprawozdanie3/lab9/anaconda-ks.cfg
 
+![alt text](ana2_5.png)
+
+
+## Instalacja nowej maszyny z ISo, po wejsciu do gruba klikamy e i wchodzimy w opcje, tam dodajemy init.ks=sciezka do anacondy
+
+![alt text](ana3.png)
+
+![alt text](ana4.png)
