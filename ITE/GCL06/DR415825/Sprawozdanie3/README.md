@@ -146,23 +146,23 @@ Kluczowym rezultatem jest znaczące uproszczenie zarządzania infrastrukturą ko
 ![anaconda-modify1](images/image-25.png)
 
 - ustawienie hostname
-![](images/image-26.png)
+![anaconda-modify2](images/image-26.png)
 
 - wzmianki o pakietach (dodanie dockera)
-![](images/image-27.png)
+![anaconda-modify3](images/image-27.png)
 
 - formatowanie dysku
-![](images/image-28.png)
+![anaconda-modify4](images/image-28.png)
 
 #### Sekcja %post
 
 W sekcji post odbywa sie inicjalizacja kontenera 
 
-![](images/image-29.png)
+![anaconda-modify5](images/image-29.png)
 
 #### Finalna wersja `anaconda-ks.cfg`
 
-![](images/image-30.png)
+![anaconda-final](images/image-30.png)
 
 #### Umieszczenie pliku na github
 
@@ -173,16 +173,16 @@ Plik umieściłem na github pod tym [linkiem](https://raw.githubusercontent.com/
 Podczas instalacji nacisnąłem klawisz `e`, żeby przejść do uzupełnienia zależności 
 Dopisanie `init.ks=https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/DR415825/ITE/GCL06/DR415825/Sprawozdanie3/anaconda-ks.cfg`
 
-![](images/image-31.png)
+![grub-install](images/image-31.png)
 
 #### Instalacja 
-![](images/image-32.png)
-![](images/image-33.png)
+![instalation1](images/image-32.png)
+![instalation2](images/image-33.png)
 
 Po zalogowaniu widać kontener irssi i podłączyć się do niego za pomocą `docker attach`
 
-![](images/image-34.png)
-![](images/image-35.png)
+![instalation3](images/image-34.png)
+![instalation4](images/image-35.png)
 
 
 Jak widać wszystko się uruchamia i działa poprawnie - ćwiczenie wykonane
@@ -205,45 +205,45 @@ Jeśli chodzi o plusy tego rozwiązania, to są następujące:
 
 Pobranie i zainstalowanie Minikube 
 
-![](images/image-36.png)
+![minicube-download](images/image-36.png)
 
 Dodanie aliasu do skrócenia polecenia `minikube kubectl --` na `kubectl` 
 
-![](images/image-37.png)
+![minicube-alias](images/image-37.png)
 
 Sprawdzenie minikube `minikube version`
 
-![](images/image-38.png)
+![minicube-version](images/image-38.png)
 
 Uruchomienie minikube `minikube start`
 
-![](images/image-39.png)
+![minicube-start](images/image-39.png)
 
 Uruchomienie dashboard'u `minikube dashboard`
 
-![](images/image-40.png)
-![](images/image-41.png)
+![minicube-dashboard-terminal](images/image-40.png)
+![minicube-dashboar-browser](images/image-41.png)
 
 #### Deployment i Service'y
 
 Stworzenie plików `depl-nginx.yaml` i `serv-nginx.yaml` w celu późniejszego apply'u aplikacji
-![](images/image-42.png)
-![](images/image-43.png)
+![deploy-file](images/image-42.png)
+![serv-file](images/image-43.png)
 
 Apply plików
 
-![](images/image-44.png)
+![files-apply](images/image-44.png)
 
 Weryfikacja czy pody i service'y zostały poprawnie utworzone
-![](images/image-45.png)
-![](images/image-46.png)
-![](images/image-47.png)
+![pod-list](images/image-45.png)
+![service-list](images/image-46.png)
+![dashboard-list](images/image-47.png)
 
 Port-forwarding z portu 8080 na localhost w celu ekspozycji aplikacji poza klaster
 
-![](images/image-48.png)
-![](images/image-49.png)
-![](images/image-50.png)
+![forward](images/image-48.png)
+![ports-vscode](images/image-49.png)
+![nginx-browser](images/image-50.png)
 
 ### Wdrażanie na zarządzalne kontenery (L11)
 
@@ -253,45 +253,45 @@ Stworzenie 3 różnych od siebie obrazów nginxa
 
 `Dockerfile1` - oryginalny obraz
 
-![](images/image-51.png)
+![dockerfile1](images/image-51.png)
 
 `Dockerfile2` - obraz ze zmienionym head'erem
 
-![](images/image-52.png)
+![dockerfile2](images/image-52.png)
 
 `DockerfileBad` - obraz, który zawsze zwróci błąd
 
-![](images/image-53.png)
+![dockerfilebad](images/image-53.png)
 
 #### Zbudowanie obrazów i publish
 
 Logowanie do dockerhuba `docker login`
 
-![](images/image-54.png)
+![docker-login](images/image-54.png)
 
 Zbudowanie obrazów `docker build`
 
-![](images/image-55.png)
+![docker-build](images/image-55.png)
 
 Push do dockerhuba `docker push`
 
-![](images/image-56.png)
+![docker-push](images/image-56.png)
 
 I tak dla wszystkich obrazów
 
-![](images/image-57.png)
+![docker-for-everyone](images/image-57.png)
 
 #### Zbudowanie deploymentu i service'ów dla obrazów
 
 Modyfikacja plików `depl-nginx.yaml` i `serv-nginx.yaml`
 
-![](images/image-58.png)
-![](images/image-59.png)
+![depl-mod](images/image-58.png)
+![serv-mod](images/image-59.png)
 
 Apply `kubectl apply`
 
-![](images/image-60.png)
-![](images/image-61.png)
+![depl-apply](images/image-60.png)
+![serv-apply](images/image-61.png)
 
 #### Zmiana ilości replik dla każdego deploymentu 
 
@@ -303,69 +303,69 @@ Uywane polecenia:
 Obrazy: 
 
 - `nginx-custom:v1`
-![](images/image-62.png)
-![](images/image-63.png)
+![nginx1-1](images/image-62.png)
+![nginx1-2](images/image-63.png)
 
 - `nginx-custom:v2` - zmiana obrazu i ilości replik 
-![](images/image-64.png)
-![](images/image-65.png)
-![](images/image-66.png)
+![nginx2-1](images/image-64.png)
+![nginx2-2](images/image-65.png)
+![nginx2-3](images/image-66.png)
 
 - `nginx-custom:bad` - zmiana obrazu
-![](images/image-67.png)
-![](images/image-68.png)
+![nginx3-1](images/image-67.png)
+![nginx3-2](images/image-68.png)
 
 - Powrót do poprzedniej wersji
-![](images/image-69.png)
-![](images/image-70.png)
+![nginx4-1](images/image-69.png)
+![nginx4-2](images/image-70.png)
 
 - Eventy
-![](images/image-71.png)
+![nginx5-1](images/image-71.png)
 
 #### Sprawdzenie statusu rolloutów i deploymentu 
 
 `kubectl rollout history` i `kubectl rollout status`
 
-![](images/image-72.png)
-![](images/image-73.png)
+![kubectl-history](images/image-72.png)
+![kubectl-status](images/image-73.png)
 
 #### Plik sprawdzający wykonanie deploymentu
 
 Utworzenie pliku `check_deployment.sh`
 
-![](images/image-74.png)
+![deployment-check-file](images/image-74.png)
 
 Nadanie mu uprawnień i wykonanie go
 
-![](images/image-75.png)
+![check-file-on](images/image-75.png)
 
 #### Zmiana strategii 
 
 - RollingUpdate
-![](images/image-76.png)
-![](images/image-77.png)
-![](images/image-78.png)
+![rolUp1](images/image-76.png)
+![rolUp2](images/image-77.png)
+![rolUp3](images/image-78.png)
 
 - Recreate
-![](images/image-79.png)
-![](images/image-80.png)
+![recr1](images/image-79.png)
+![recr2](images/image-80.png)
 
 #### Stworzenie wdrożenia Canary Deployment
 
 Utworzenie pliku `canary-nginx.yaml`
-![](images/image-81.png)
+![canary-nginx](images/image-81.png)
 
 Apply: 
 
-![](images/image-82.png)
+![canary-apply](images/image-82.png)
 
 Sprawdzenie działania wszystkich podów:
 
-![](images/image-83.png)
+![pods-chack](images/image-83.png)
 
 Deploymenty: 
 
-![](images/image-84.png)
+![depl-check](images/image-84.png)
 
 ### Wnioski
 
