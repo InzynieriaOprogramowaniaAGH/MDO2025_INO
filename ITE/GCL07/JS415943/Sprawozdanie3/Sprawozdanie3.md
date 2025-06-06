@@ -258,4 +258,127 @@ Po zbootowaniu systemu kontener jest już uruchomiony
 ![](/ITE/GCL07/JS415943/Sprawozdanie3/lab9/1.3-curl.png)
 
 
-## Laboratorium 10 - Ansible
+## Laboratorium 10 - Wdrażanie na zarządzalne kontenery: Kubernetes
+
+### Instalacja klastra Kubernetes
+
+Instalacja minikube
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/1.0-minikube.png)
+
+Dodanie aliasu do `.bashrc`
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/1.1-bashrc.png)
+
+Uruchimienie Kubernetesa
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/2.0-minikube-start.png)
+
+Sprawdzenie statusu
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/2.1-status.png)
+
+W dokumentacji widać że `minikube` wymaga:
+
+- RAM: min. 2 GB (zalecane 4+)
+- CPU: min. 2 vCPU (zalecane 4+)
+- Dysk: min. 20 GB
+
+U mnie widać że mam 19GB a lokalny klaster Kubernetesa na domyślnych ustawieniach uruchomił się z CPUs=2 i Memory=2200MB
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/3.0-df-h.png)
+
+Uruchomienie dashboardu
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/4.0-dashboard.png)
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/4.1-dashboard-web.png)
+
+### Analiza posiadanego kontenera
+
+```bash
+docker run -p 3000:3000 tygrysiatkomale/node-deploy:v3
+```
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/5.0-docker-run.png)
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/5.1-dummy.png)
+
+### Uruchamianie oprogramowania
+
+Uruchomienie kontenera aplikacji na stosie Kubernetesa
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/6.0-minikube-run.png)
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/6.1-web-pod.png)
+
+Wyprowadzenie portu celem eksponowania funkcjonalności
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/7.0-port-forward.png)
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/7.1-web.png)
+
+### Przekucie wdrożenia manualnego w plik wdrożenia
+
+Plik wdrożenia
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-deployment
+  labels:
+    app: todo-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: todo
+  template:
+    metadata:
+      labels:
+        app: todo
+    spec:
+      containers:
+      - name: todo-containers
+        image: tygrysiatkomale/node-deploy:v3
+        ports:
+          - containerPort: 3000
+            protocol: TCP
+```
+
+Uruchomienie
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/8.0-deployment.png)
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/8.1-deployment-web.png)
+
+Zbadanie stanu 
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/9.0-status.png)
+
+Wyeksponowanie wdrożenia jako serwis
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/10.0-service.png)
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/10.1-service-web.png)
+
+Przekierowanie portu do serwisu
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/11.0-forward.png)
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab10/11.1-forward-web.png)
+
+## Laboratorium 11 - Wdrażanie na zarządzalne kontenery: Kubernetes
+
+Wersje aplikacji
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/1.0-dockerhub.png)
+
+Przygotowanie nowych obrazów:
+ 
+- v3 - podstawowa wersja uzyskana na poprzednich laboratoriach
+- v5 - wersja aplikacji z pokazaną wersją
+- v6 - niedziałająca wersja w której w `Dockerfile.deploy` zmieniono `CMD ["npm", "start"]` na `CMD ["/bin/false"]`
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/1.1-v5.png)
