@@ -3,7 +3,7 @@
 DEPLOY_NAME="todo-deployment"
 NAMESPACE="default"
 TIMEOUT=60
-INTERVAL=5
+INTERVAL=1
 ELAPSED=0
 
 echo "Czekam na wdrożenie: $DEPLOY_NAME"

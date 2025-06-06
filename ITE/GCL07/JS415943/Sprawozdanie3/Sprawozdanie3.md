@@ -379,6 +379,147 @@ Przygotowanie nowych obrazów:
  
 - v3 - podstawowa wersja uzyskana na poprzednich laboratoriach
 - v5 - wersja aplikacji z pokazaną wersją
-- v6 - niedziałająca wersja w której w `Dockerfile.deploy` zmieniono `CMD ["npm", "start"]` na `CMD ["/bin/false"]`
+- v7 - niedziałająca wersja w której w `Dockerfile.deploy` zmieniono `CMD ["npm", "start"]` na `CMD ["/bin/false"]`
 
 ![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/1.1-v5.png)
+
+### Zmiany w deploymencie
+
+zwiększenie replik do 8 poprzez zmiane w `todo-deployment.yaml`
+
+```yaml
+spec:
+  replicas: 8
+```
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/2.1-pods-8.png)
+
+Zmniejszenie replik do 1
+
+```yaml
+spec:
+  replicas: 1
+```
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/3.1-pods-1.png)
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/3.1-terminal.png)
+
+Zmniejszenie replik do 0
+
+```yaml
+spec:
+  replicas: 0
+```
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/4.1-pods-0.png)
+
+Zwiększenie replik do 4
+```yaml
+spec:
+  replicas: 4
+```
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/5.1-pods-4.png)
+
+Zastosowanie nowej wersji obrazu
+
+```yaml
+spec:
+      containers:
+      - name: todo-containers
+        image: tygrysiatkomale/node-deploy:v5
+```
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/6.0-new.png)
+
+Przywrócenie poprzedniej wersji za pomocą poleceń
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/7.0-undo.png)
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/7.1-undo-web.png)
+
+### Kontrola wdrożenia
+
+Wyświetlenie listy rewizji oraz szczegółów konkretnej
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/8.0-history.png)
+
+Wyświetlenie szczegółowych informacji na temat aktualnie działającego wdrożenia
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/8.1-nwo.png)
+
+Skrypt weryfikujący wdrożenie 
+
+Skrypt sprawdzający czy wdrożenie zdążyło się zrobić w 60 sekund
+
+```sh
+#!/bin/bash
+
+DEPLOY_NAME="todo-deployment"
+NAMESPACE="default"
+TIMEOUT=60
+INTERVAL=1
+ELAPSED=0
+
+echo "Czekam na wdrożenie: $DEPLOY_NAME"
+
+while [ $ELAPSED -lt $TIMEOUT ]; do
+    if minikube kubectl -- rollout status deployment/$DEPLOY_NAME --namespace $NAMESPACE --timeout=5s; then
+        echo "Wdrożenie zakończyło się sukcesem w ${ELAPSED}s"
+        exit 0
+    fi
+    sleep $INTERVAL
+    ELAPSED=$((ELAPSED + INTERVAL))
+done
+
+echo "Wdrożenie NIE zakończyło się sukcesem w $TIMEOUT sekund"
+exit 1
+```
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/9.0-script.png)
+
+### Strategie wdrożenia
+
+### Recreate 
+
+Polega na tym że zanim uruchomią się nowe Pody to najpierw muszą usunąc się te stare
+
+```yaml
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+```
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/10.0-recreate.png)
+
+### Rolling Update
+
+Polega na stopniowej aktualizacji podów
+
+```yaml
+spec:
+  replicas: 8
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 25%
+```
+
+- type: RollingUpdate – aktualizacja będzie przebiegać stopniowo.
+
+- maxUnavailable: 2 – maksymalnie 2 Pody mogą być niedostępne w trakcie aktualizacji.
+
+- maxSurge: 25% – Kubernetes może dodać do 25% więcej Podów
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/10.1-rolling.png)
+
+### Canary Deployment
+
+Utworzono dwa pliki: `canary1.yaml` (nowa wersja) i `canary2.yaml` (stabilna wersja). Obie mają wspólną etykietę `app: todo`, ale różne `version` (`canary`, `stable`), dzięki czemu mogą współdzielić serwis `todo-service.yaml`. Serwis rozdziela ruch proporcjonalnie do liczby replik, co umożliwia stopniowe testowanie nowej wersji przy minimalnym ryzyku.
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/10.2-canary.png)
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab11/10.3-canary-pods.png)
