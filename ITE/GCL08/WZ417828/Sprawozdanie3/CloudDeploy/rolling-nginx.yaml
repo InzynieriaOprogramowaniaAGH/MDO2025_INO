@@ -6,7 +6,7 @@ metadata:
     app: nginx
     version: stable
 spec:
-  replicas: 5  # Liczba replik
+  replicas: 5  
   selector:
     matchLabels:
       app: nginx
@@ -19,15 +19,15 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: wojzacharski/nginx-app:1.0  # Wersja aplikacji
+        image: wojzacharski/nginx-app:1.0  
         ports:
         - containerPort: 80
   strategy:
-    type: RollingUpdate  # Typ strategii to RollingUpdate
+    type: RollingUpdate  
     rollingUpdate:
-      maxSurge: 30%      # Do 30% nowych podów może być uruchomionych w trakcie aktualizacji
-      maxUnavailable: 2  # Do 2 podów może być niedostępnych w trakcie aktualizacji
-  revisionHistoryLimit: 10  # Zachowanie historii poprzednich wdrożeń
+      maxSurge: 30%     
+      maxUnavailable: 2  
+  revisionHistoryLimit: 10  
 ---
 apiVersion: v1
 kind: Service

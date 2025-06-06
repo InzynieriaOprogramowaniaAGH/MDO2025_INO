@@ -508,16 +508,15 @@ Wynik działania<br>
 
 Przygotowanie pliku ``canary-nginx.yaml``<br>
 ````bash
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx--canary
+  name: nginx-canary
   labels:
     app: nginx
     version: canary
 spec:
-  replicas: 10
+  replicas: 2  
   selector:
     matchLabels:
       app: nginx
@@ -530,23 +529,29 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: wojzacharski/nginx-app:1.0
+        image: wojzacharski/nginx-app:1.0  
         ports:
         - containerPort: 80
-
+  strategy:
+    type: RollingUpdate  
+    rollingUpdate:
+      maxSurge: 25%    
+      maxUnavailable: 25%  
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-service
+  name: nginx-canary-service
 spec:
   selector:
     app: nginx
+    version: canary
   ports:
   - protocol: TCP
     port: 80
     targetPort: 80
   type: NodePort
+
 ````
 ![s1](../Sprawozdanie3/Sprawozdanie11_img/s11_19.png)
 
@@ -608,7 +613,7 @@ metadata:
     app: nginx
     version: stable
 spec:
-  replicas: 5  # Liczba replik
+  replicas: 5  
   selector:
     matchLabels:
       app: nginx
@@ -621,15 +626,15 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: wojzacharski/nginx-app:1.0  # Wersja aplikacji
+        image: wojzacharski/nginx-app:1.0  
         ports:
         - containerPort: 80
   strategy:
-    type: RollingUpdate  # Typ strategii to RollingUpdate
+    type: RollingUpdate  
     rollingUpdate:
-      maxSurge: 30%      # Do 30% nowych podów może być uruchomionych w trakcie aktualizacji
-      maxUnavailable: 2  # Do 2 podów może być niedostępnych w trakcie aktualizacji
-  revisionHistoryLimit: 10  # Zachowanie historii poprzednich wdrożeń
+      maxSurge: 30%     
+      maxUnavailable: 2  
+  revisionHistoryLimit: 10  
 ---
 apiVersion: v1
 kind: Service

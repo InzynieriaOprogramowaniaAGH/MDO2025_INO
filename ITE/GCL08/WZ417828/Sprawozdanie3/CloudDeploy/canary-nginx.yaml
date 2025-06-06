@@ -6,7 +6,7 @@ metadata:
     app: nginx
     version: canary
 spec:
-  replicas: 2  # Mniejsza liczba replik dla wersji canary
+  replicas: 2  
   selector:
     matchLabels:
       app: nginx
@@ -19,14 +19,14 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: wojzacharski/nginx-app:1.0  # Wersja canary aplikacji
+        image: wojzacharski/nginx-app:1.0  
         ports:
         - containerPort: 80
   strategy:
-    type: RollingUpdate  # Używamy RollingUpdate dla stopniowego wdrażania
+    type: RollingUpdate  
     rollingUpdate:
-      maxSurge: 25%    # 25% dodatkowych podów mogą zostać uruchomione podczas aktualizacji
-      maxUnavailable: 25%  # 25% dostępnych podów może zostać wyłączonych podczas aktualizacji
+      maxSurge: 25%    
+      maxUnavailable: 25%  
 ---
 apiVersion: v1
 kind: Service
