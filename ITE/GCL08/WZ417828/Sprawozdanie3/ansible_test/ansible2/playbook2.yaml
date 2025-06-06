@@ -1,0 +1,40 @@
+- name: Konfiguracja dockera i nginx
+  hosts: endpoints
+  become: true
+  tasks:
+    - name: Sprawdzenie, czy python3-dnf jest zainstalwoany
+      ansible.builtin.dnf:
+        name: python3-dnf
+        state: present
+
+    - name: Instalacja zależności Python
+      ansible.builtin.dnf:
+        name: python3-requests 
+        state: present
+
+    - name: Instalacja silnika Docker
+      ansible.builtin.dnf:
+        name: moby-engine
+        state: latest
+
+    - name: Włączenie i uruchomienie usługi docker
+      ansible.builtin.service:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Pobranie obrazu Docker
+      community.docker.docker_image:
+        name: wojzacharski/nginx-app:1.0
+        source: pull
+
+    - name: Utworzenie kontenera Docker
+      community.docker.docker_container:
+        name: nginx-app
+        image: wojzacharski/nginx-app:1.0
+        state: started
+
+    - name: Usunięcie kontenera Docker
+      community.docker.docker_container:
+        name: nginx-app
+        state: absent

@@ -1,0 +1,5 @@
+#!/bin/sh
+if ! grep -q "WZ417828" "$1"; then
+  echo "Commit message must start with WZ417828"
+  exit 1
+fi

@@ -1,0 +1,11 @@
+FROM gcc:12 AS cjson-test
+
+WORKDIR /app
+RUN git clone https://github.com/DaveGamble/cJSON
+COPY --from=cjson-build /app/cJSON/libcjson.so.1.7.18 /usr/lib/libcjson.so.1.7.18
+RUN ln -s /usr/lib/libcjson.so.1.7.18 /usr/lib/libcjson.so.1
+RUN ln -s /usr/lib/libcjson.so.1 /usr/lib/libcjson.so
+
+WORKDIR /app/cJSON
+RUN gcc -o test test.c -lcjson
+CMD ["./test"]

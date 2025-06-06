@@ -1,0 +1,240 @@
+LAST SEEN   TYPE      REASON              OBJECT                        MESSAGE
+10m         Normal    Scheduled           pod/nginx-5696bc6558-4fb6h    Successfully assigned default/nginx-5696bc6558-4fb6h to minikube
+10m         Normal    Pulled              pod/nginx-5696bc6558-4fb6h    Container image "wojzacharski/nginx-app:1.1" already present on machine
+10m         Normal    Created             pod/nginx-5696bc6558-4fb6h    Created container: nginx-app
+10m         Normal    Started             pod/nginx-5696bc6558-4fb6h    Started container nginx-app
+30m         Normal    Scheduled           pod/nginx-5696bc6558-4nk7d    Successfully assigned default/nginx-5696bc6558-4nk7d to minikube
+30m         Normal    Pulling             pod/nginx-5696bc6558-4nk7d    Pulling image "wojzacharski/nginx-app:1.1"
+29m         Normal    Pulled              pod/nginx-5696bc6558-4nk7d    Successfully pulled image "wojzacharski/nginx-app:1.1" in 2.267s (2.267s including waiting). Image size: 48240154 bytes.
+29m         Normal    Created             pod/nginx-5696bc6558-4nk7d    Created container: nginx-app
+29m         Normal    Started             pod/nginx-5696bc6558-4nk7d    Started container nginx-app
+28m         Normal    Killing             pod/nginx-5696bc6558-4nk7d    Stopping container nginx-app
+29m         Normal    Scheduled           pod/nginx-5696bc6558-6bs4c    Successfully assigned default/nginx-5696bc6558-6bs4c to minikube
+29m         Normal    Pulled              pod/nginx-5696bc6558-6bs4c    Container image "wojzacharski/nginx-app:1.1" already present on machine
+29m         Normal    Created             pod/nginx-5696bc6558-6bs4c    Created container: nginx-app
+29m         Normal    Started             pod/nginx-5696bc6558-6bs4c    Started container nginx-app
+28m         Normal    Killing             pod/nginx-5696bc6558-6bs4c    Stopping container nginx-app
+10m         Normal    Scheduled           pod/nginx-5696bc6558-75xm7    Successfully assigned default/nginx-5696bc6558-75xm7 to minikube
+10m         Normal    Pulled              pod/nginx-5696bc6558-75xm7    Container image "wojzacharski/nginx-app:1.1" already present on machine
+10m         Normal    Created             pod/nginx-5696bc6558-75xm7    Created container: nginx-app
+10m         Normal    Started             pod/nginx-5696bc6558-75xm7    Started container nginx-app
+29m         Normal    Scheduled           pod/nginx-5696bc6558-9hj6m    Successfully assigned default/nginx-5696bc6558-9hj6m to minikube
+29m         Normal    Pulled              pod/nginx-5696bc6558-9hj6m    Container image "wojzacharski/nginx-app:1.1" already present on machine
+29m         Normal    Created             pod/nginx-5696bc6558-9hj6m    Created container: nginx-app
+29m         Normal    Started             pod/nginx-5696bc6558-9hj6m    Started container nginx-app
+28m         Normal    Killing             pod/nginx-5696bc6558-9hj6m    Stopping container nginx-app
+25m         Normal    Scheduled           pod/nginx-5696bc6558-b4mhh    Successfully assigned default/nginx-5696bc6558-b4mhh to minikube
+25m         Normal    Pulled              pod/nginx-5696bc6558-b4mhh    Container image "wojzacharski/nginx-app:1.1" already present on machine
+25m         Normal    Created             pod/nginx-5696bc6558-b4mhh    Created container: nginx-app
+25m         Normal    Started             pod/nginx-5696bc6558-b4mhh    Started container nginx-app
+22m         Normal    Killing             pod/nginx-5696bc6558-b4mhh    Stopping container nginx-app
+25m         Normal    Scheduled           pod/nginx-5696bc6558-gjp5h    Successfully assigned default/nginx-5696bc6558-gjp5h to minikube
+25m         Normal    Pulled              pod/nginx-5696bc6558-gjp5h    Container image "wojzacharski/nginx-app:1.1" already present on machine
+25m         Normal    Created             pod/nginx-5696bc6558-gjp5h    Created container: nginx-app
+25m         Normal    Started             pod/nginx-5696bc6558-gjp5h    Started container nginx-app
+22m         Normal    Killing             pod/nginx-5696bc6558-gjp5h    Stopping container nginx-app
+25m         Normal    Scheduled           pod/nginx-5696bc6558-mh94g    Successfully assigned default/nginx-5696bc6558-mh94g to minikube
+25m         Normal    Pulled              pod/nginx-5696bc6558-mh94g    Container image "wojzacharski/nginx-app:1.1" already present on machine
+25m         Normal    Created             pod/nginx-5696bc6558-mh94g    Created container: nginx-app
+25m         Normal    Started             pod/nginx-5696bc6558-mh94g    Started container nginx-app
+22m         Normal    Killing             pod/nginx-5696bc6558-mh94g    Stopping container nginx-app
+10m         Normal    Scheduled           pod/nginx-5696bc6558-smsvp    Successfully assigned default/nginx-5696bc6558-smsvp to minikube
+10m         Normal    Pulled              pod/nginx-5696bc6558-smsvp    Container image "wojzacharski/nginx-app:1.1" already present on machine
+10m         Normal    Created             pod/nginx-5696bc6558-smsvp    Created container: nginx-app
+10m         Normal    Started             pod/nginx-5696bc6558-smsvp    Started container nginx-app
+10m         Normal    Scheduled           pod/nginx-5696bc6558-vrz97    Successfully assigned default/nginx-5696bc6558-vrz97 to minikube
+10m         Normal    Pulled              pod/nginx-5696bc6558-vrz97    Container image "wojzacharski/nginx-app:1.1" already present on machine
+10m         Normal    Created             pod/nginx-5696bc6558-vrz97    Created container: nginx-app
+10m         Normal    Started             pod/nginx-5696bc6558-vrz97    Started container nginx-app
+30m         Normal    Scheduled           pod/nginx-5696bc6558-xk5tj    Successfully assigned default/nginx-5696bc6558-xk5tj to minikube
+30m         Normal    Pulling             pod/nginx-5696bc6558-xk5tj    Pulling image "wojzacharski/nginx-app:1.1"
+29m         Normal    Pulled              pod/nginx-5696bc6558-xk5tj    Successfully pulled image "wojzacharski/nginx-app:1.1" in 1.202s (3.452s including waiting). Image size: 48240154 bytes.
+29m         Normal    Created             pod/nginx-5696bc6558-xk5tj    Created container: nginx-app
+29m         Normal    Started             pod/nginx-5696bc6558-xk5tj    Started container nginx-app
+28m         Normal    Killing             pod/nginx-5696bc6558-xk5tj    Stopping container nginx-app
+25m         Normal    Scheduled           pod/nginx-5696bc6558-z45rl    Successfully assigned default/nginx-5696bc6558-z45rl to minikube
+25m         Normal    Pulled              pod/nginx-5696bc6558-z45rl    Container image "wojzacharski/nginx-app:1.1" already present on machine
+25m         Normal    Created             pod/nginx-5696bc6558-z45rl    Created container: nginx-app
+25m         Normal    Started             pod/nginx-5696bc6558-z45rl    Started container nginx-app
+22m         Normal    Killing             pod/nginx-5696bc6558-z45rl    Stopping container nginx-app
+30m         Normal    SuccessfulCreate    replicaset/nginx-5696bc6558   Created pod: nginx-5696bc6558-4nk7d
+30m         Normal    SuccessfulCreate    replicaset/nginx-5696bc6558   Created pod: nginx-5696bc6558-xk5tj
+29m         Normal    SuccessfulCreate    replicaset/nginx-5696bc6558   Created pod: nginx-5696bc6558-9hj6m
+29m         Normal    SuccessfulCreate    replicaset/nginx-5696bc6558   Created pod: nginx-5696bc6558-6bs4c
+28m         Normal    SuccessfulDelete    replicaset/nginx-5696bc6558   Deleted pod: nginx-5696bc6558-9hj6m
+28m         Normal    SuccessfulDelete    replicaset/nginx-5696bc6558   Deleted pod: nginx-5696bc6558-4nk7d
+28m         Normal    SuccessfulDelete    replicaset/nginx-5696bc6558   Deleted pod: nginx-5696bc6558-6bs4c
+28m         Normal    SuccessfulDelete    replicaset/nginx-5696bc6558   Deleted pod: nginx-5696bc6558-xk5tj
+25m         Normal    SuccessfulCreate    replicaset/nginx-5696bc6558   Created pod: nginx-5696bc6558-z45rl
+25m         Normal    SuccessfulCreate    replicaset/nginx-5696bc6558   Created pod: nginx-5696bc6558-b4mhh
+25m         Normal    SuccessfulCreate    replicaset/nginx-5696bc6558   Created pod: nginx-5696bc6558-mh94g
+25m         Normal    SuccessfulCreate    replicaset/nginx-5696bc6558   Created pod: nginx-5696bc6558-gjp5h
+22m         Normal    SuccessfulDelete    replicaset/nginx-5696bc6558   Deleted pod: nginx-5696bc6558-z45rl
+22m         Normal    SuccessfulDelete    replicaset/nginx-5696bc6558   Deleted pod: nginx-5696bc6558-b4mhh
+22m         Normal    SuccessfulDelete    replicaset/nginx-5696bc6558   Deleted pod: nginx-5696bc6558-mh94g
+22m         Normal    SuccessfulDelete    replicaset/nginx-5696bc6558   Deleted pod: nginx-5696bc6558-gjp5h
+10m         Normal    SuccessfulCreate    replicaset/nginx-5696bc6558   Created pod: nginx-5696bc6558-smsvp
+10m         Normal    SuccessfulCreate    replicaset/nginx-5696bc6558   Created pod: nginx-5696bc6558-vrz97
+10m         Normal    SuccessfulCreate    replicaset/nginx-5696bc6558   Created pod: nginx-5696bc6558-75xm7
+10m         Normal    SuccessfulCreate    replicaset/nginx-5696bc6558   Created pod: nginx-5696bc6558-4fb6h
+22m         Normal    Scheduled           pod/nginx-6f7db544d7-2rw8c    Successfully assigned default/nginx-6f7db544d7-2rw8c to minikube
+22m         Normal    Pulled              pod/nginx-6f7db544d7-2rw8c    Container image "wojzacharski/nginx-app:1.0" already present on machine
+22m         Normal    Created             pod/nginx-6f7db544d7-2rw8c    Created container: nginx-app
+22m         Normal    Started             pod/nginx-6f7db544d7-2rw8c    Started container nginx-app
+10m         Normal    Killing             pod/nginx-6f7db544d7-2rw8c    Stopping container nginx-app
+38m         Normal    Scheduled           pod/nginx-6f7db544d7-54d9l    Successfully assigned default/nginx-6f7db544d7-54d9l to minikube
+38m         Normal    Pulled              pod/nginx-6f7db544d7-54d9l    Container image "wojzacharski/nginx-app:1.0" already present on machine
+38m         Normal    Created             pod/nginx-6f7db544d7-54d9l    Created container: nginx-app
+38m         Normal    Started             pod/nginx-6f7db544d7-54d9l    Started container nginx-app
+30m         Normal    Killing             pod/nginx-6f7db544d7-54d9l    Stopping container nginx-app
+44m         Normal    Scheduled           pod/nginx-6f7db544d7-6nmvw    Successfully assigned default/nginx-6f7db544d7-6nmvw to minikube
+44m         Normal    Pulled              pod/nginx-6f7db544d7-6nmvw    Container image "wojzacharski/nginx-app:1.0" already present on machine
+44m         Normal    Created             pod/nginx-6f7db544d7-6nmvw    Created container: nginx-app
+44m         Normal    Started             pod/nginx-6f7db544d7-6nmvw    Started container nginx-app
+40m         Normal    Killing             pod/nginx-6f7db544d7-6nmvw    Stopping container nginx-app
+38m         Normal    Scheduled           pod/nginx-6f7db544d7-76rkr    Successfully assigned default/nginx-6f7db544d7-76rkr to minikube
+38m         Normal    Pulled              pod/nginx-6f7db544d7-76rkr    Container image "wojzacharski/nginx-app:1.0" already present on machine
+38m         Normal    Created             pod/nginx-6f7db544d7-76rkr    Created container: nginx-app
+38m         Normal    Started             pod/nginx-6f7db544d7-76rkr    Started container nginx-app
+29m         Normal    Killing             pod/nginx-6f7db544d7-76rkr    Stopping container nginx-app
+28m         Normal    Scheduled           pod/nginx-6f7db544d7-8c4vn    Successfully assigned default/nginx-6f7db544d7-8c4vn to minikube
+28m         Normal    Pulled              pod/nginx-6f7db544d7-8c4vn    Container image "wojzacharski/nginx-app:1.0" already present on machine
+28m         Normal    Created             pod/nginx-6f7db544d7-8c4vn    Created container: nginx-app
+28m         Normal    Started             pod/nginx-6f7db544d7-8c4vn    Started container nginx-app
+25m         Normal    Killing             pod/nginx-6f7db544d7-8c4vn    Stopping container nginx-app
+22m         Normal    Scheduled           pod/nginx-6f7db544d7-cgb28    Successfully assigned default/nginx-6f7db544d7-cgb28 to minikube
+22m         Normal    Pulled              pod/nginx-6f7db544d7-cgb28    Container image "wojzacharski/nginx-app:1.0" already present on machine
+22m         Normal    Created             pod/nginx-6f7db544d7-cgb28    Created container: nginx-app
+22m         Normal    Started             pod/nginx-6f7db544d7-cgb28    Started container nginx-app
+19m         Normal    Killing             pod/nginx-6f7db544d7-cgb28    Stopping container nginx-app
+47m         Normal    Killing             pod/nginx-6f7db544d7-cggxg    Stopping container nginx-app
+28m         Normal    Scheduled           pod/nginx-6f7db544d7-cn2vh    Successfully assigned default/nginx-6f7db544d7-cn2vh to minikube
+28m         Normal    Pulled              pod/nginx-6f7db544d7-cn2vh    Container image "wojzacharski/nginx-app:1.0" already present on machine
+28m         Normal    Created             pod/nginx-6f7db544d7-cn2vh    Created container: nginx-app
+28m         Normal    Started             pod/nginx-6f7db544d7-cn2vh    Started container nginx-app
+25m         Normal    Killing             pod/nginx-6f7db544d7-cn2vh    Stopping container nginx-app
+44m         Normal    Scheduled           pod/nginx-6f7db544d7-d4z8t    Successfully assigned default/nginx-6f7db544d7-d4z8t to minikube
+44m         Normal    Pulled              pod/nginx-6f7db544d7-d4z8t    Container image "wojzacharski/nginx-app:1.0" already present on machine
+44m         Normal    Created             pod/nginx-6f7db544d7-d4z8t    Created container: nginx-app
+44m         Normal    Started             pod/nginx-6f7db544d7-d4z8t    Started container nginx-app
+40m         Normal    Killing             pod/nginx-6f7db544d7-d4z8t    Stopping container nginx-app
+28m         Normal    Scheduled           pod/nginx-6f7db544d7-d8s65    Successfully assigned default/nginx-6f7db544d7-d8s65 to minikube
+28m         Normal    Pulled              pod/nginx-6f7db544d7-d8s65    Container image "wojzacharski/nginx-app:1.0" already present on machine
+28m         Normal    Created             pod/nginx-6f7db544d7-d8s65    Created container: nginx-app
+28m         Normal    Started             pod/nginx-6f7db544d7-d8s65    Started container nginx-app
+25m         Normal    Killing             pod/nginx-6f7db544d7-d8s65    Stopping container nginx-app
+38m         Normal    Scheduled           pod/nginx-6f7db544d7-d9gq6    Successfully assigned default/nginx-6f7db544d7-d9gq6 to minikube
+38m         Normal    Pulled              pod/nginx-6f7db544d7-d9gq6    Container image "wojzacharski/nginx-app:1.0" already present on machine
+38m         Normal    Created             pod/nginx-6f7db544d7-d9gq6    Created container: nginx-app
+38m         Normal    Started             pod/nginx-6f7db544d7-d9gq6    Started container nginx-app
+29m         Normal    Killing             pod/nginx-6f7db544d7-d9gq6    Stopping container nginx-app
+41m         Normal    Scheduled           pod/nginx-6f7db544d7-hm9fj    Successfully assigned default/nginx-6f7db544d7-hm9fj to minikube
+41m         Normal    Pulled              pod/nginx-6f7db544d7-hm9fj    Container image "wojzacharski/nginx-app:1.0" already present on machine
+41m         Normal    Created             pod/nginx-6f7db544d7-hm9fj    Created container: nginx-app
+41m         Normal    Started             pod/nginx-6f7db544d7-hm9fj    Started container nginx-app
+40m         Normal    Killing             pod/nginx-6f7db544d7-hm9fj    Stopping container nginx-app
+47m         Normal    Killing             pod/nginx-6f7db544d7-jxx6v    Stopping container nginx-app
+47m         Normal    Killing             pod/nginx-6f7db544d7-l7kb2    Stopping container nginx-app
+47m         Normal    Killing             pod/nginx-6f7db544d7-ljxm6    Stopping container nginx-app
+44m         Normal    Scheduled           pod/nginx-6f7db544d7-m6dcb    Successfully assigned default/nginx-6f7db544d7-m6dcb to minikube
+44m         Normal    Pulled              pod/nginx-6f7db544d7-m6dcb    Container image "wojzacharski/nginx-app:1.0" already present on machine
+44m         Normal    Created             pod/nginx-6f7db544d7-m6dcb    Created container: nginx-app
+44m         Normal    Started             pod/nginx-6f7db544d7-m6dcb    Started container nginx-app
+40m         Normal    Killing             pod/nginx-6f7db544d7-m6dcb    Stopping container nginx-app
+38m         Normal    Scheduled           pod/nginx-6f7db544d7-pjtgx    Successfully assigned default/nginx-6f7db544d7-pjtgx to minikube
+38m         Normal    Pulled              pod/nginx-6f7db544d7-pjtgx    Container image "wojzacharski/nginx-app:1.0" already present on machine
+38m         Normal    Created             pod/nginx-6f7db544d7-pjtgx    Created container: nginx-app
+38m         Normal    Started             pod/nginx-6f7db544d7-pjtgx    Started container nginx-app
+29m         Normal    Killing             pod/nginx-6f7db544d7-pjtgx    Stopping container nginx-app
+41m         Normal    Scheduled           pod/nginx-6f7db544d7-qmdwc    Successfully assigned default/nginx-6f7db544d7-qmdwc to minikube
+41m         Normal    Pulled              pod/nginx-6f7db544d7-qmdwc    Container image "wojzacharski/nginx-app:1.0" already present on machine
+41m         Normal    Created             pod/nginx-6f7db544d7-qmdwc    Created container: nginx-app
+41m         Normal    Started             pod/nginx-6f7db544d7-qmdwc    Started container nginx-app
+40m         Normal    Killing             pod/nginx-6f7db544d7-qmdwc    Stopping container nginx-app
+44m         Normal    Scheduled           pod/nginx-6f7db544d7-rwvhq    Successfully assigned default/nginx-6f7db544d7-rwvhq to minikube
+44m         Normal    Pulled              pod/nginx-6f7db544d7-rwvhq    Container image "wojzacharski/nginx-app:1.0" already present on machine
+44m         Normal    Created             pod/nginx-6f7db544d7-rwvhq    Created container: nginx-app
+44m         Normal    Started             pod/nginx-6f7db544d7-rwvhq    Started container nginx-app
+40m         Normal    Killing             pod/nginx-6f7db544d7-rwvhq    Stopping container nginx-app
+44m         Normal    Scheduled           pod/nginx-6f7db544d7-v2xjs    Successfully assigned default/nginx-6f7db544d7-v2xjs to minikube
+44m         Normal    Pulled              pod/nginx-6f7db544d7-v2xjs    Container image "wojzacharski/nginx-app:1.0" already present on machine
+44m         Normal    Created             pod/nginx-6f7db544d7-v2xjs    Created container: nginx-app
+44m         Normal    Started             pod/nginx-6f7db544d7-v2xjs    Started container nginx-app
+39m         Normal    Killing             pod/nginx-6f7db544d7-v2xjs    Stopping container nginx-app
+22m         Normal    Scheduled           pod/nginx-6f7db544d7-wdj7h    Successfully assigned default/nginx-6f7db544d7-wdj7h to minikube
+22m         Normal    Pulled              pod/nginx-6f7db544d7-wdj7h    Container image "wojzacharski/nginx-app:1.0" already present on machine
+22m         Normal    Created             pod/nginx-6f7db544d7-wdj7h    Created container: nginx-app
+22m         Normal    Started             pod/nginx-6f7db544d7-wdj7h    Started container nginx-app
+10m         Normal    Killing             pod/nginx-6f7db544d7-wdj7h    Stopping container nginx-app
+47m         Normal    Killing             pod/nginx-6f7db544d7-wf2n5    Stopping container nginx-app
+22m         Normal    Scheduled           pod/nginx-6f7db544d7-wmtx8    Successfully assigned default/nginx-6f7db544d7-wmtx8 to minikube
+22m         Normal    Pulled              pod/nginx-6f7db544d7-wmtx8    Container image "wojzacharski/nginx-app:1.0" already present on machine
+22m         Normal    Created             pod/nginx-6f7db544d7-wmtx8    Created container: nginx-app
+22m         Normal    Started             pod/nginx-6f7db544d7-wmtx8    Started container nginx-app
+10m         Normal    Killing             pod/nginx-6f7db544d7-wmtx8    Stopping container nginx-app
+28m         Normal    Scheduled           pod/nginx-6f7db544d7-wqv82    Successfully assigned default/nginx-6f7db544d7-wqv82 to minikube
+28m         Normal    Pulled              pod/nginx-6f7db544d7-wqv82    Container image "wojzacharski/nginx-app:1.0" already present on machine
+28m         Normal    Created             pod/nginx-6f7db544d7-wqv82    Created container: nginx-app
+28m         Normal    Started             pod/nginx-6f7db544d7-wqv82    Started container nginx-app
+25m         Normal    Killing             pod/nginx-6f7db544d7-wqv82    Stopping container nginx-app
+41m         Normal    Scheduled           pod/nginx-6f7db544d7-xpl6b    Successfully assigned default/nginx-6f7db544d7-xpl6b to minikube
+41m         Normal    Pulled              pod/nginx-6f7db544d7-xpl6b    Container image "wojzacharski/nginx-app:1.0" already present on machine
+41m         Normal    Created             pod/nginx-6f7db544d7-xpl6b    Created container: nginx-app
+41m         Normal    Started             pod/nginx-6f7db544d7-xpl6b    Started container nginx-app
+40m         Normal    Killing             pod/nginx-6f7db544d7-xpl6b    Stopping container nginx-app
+44m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-m6dcb
+44m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-rwvhq
+44m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-d4z8t
+44m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-6nmvw
+44m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-v2xjs
+41m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-qmdwc
+41m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-xpl6b
+41m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-hm9fj
+40m         Normal    SuccessfulDelete    replicaset/nginx-6f7db544d7   Deleted pod: nginx-6f7db544d7-qmdwc
+40m         Normal    SuccessfulDelete    replicaset/nginx-6f7db544d7   Deleted pod: nginx-6f7db544d7-d4z8t
+40m         Normal    SuccessfulDelete    replicaset/nginx-6f7db544d7   Deleted pod: nginx-6f7db544d7-hm9fj
+40m         Normal    SuccessfulDelete    replicaset/nginx-6f7db544d7   Deleted pod: nginx-6f7db544d7-xpl6b
+40m         Normal    SuccessfulDelete    replicaset/nginx-6f7db544d7   Deleted pod: nginx-6f7db544d7-rwvhq
+40m         Normal    SuccessfulDelete    replicaset/nginx-6f7db544d7   Deleted pod: nginx-6f7db544d7-m6dcb
+40m         Normal    SuccessfulDelete    replicaset/nginx-6f7db544d7   Deleted pod: nginx-6f7db544d7-6nmvw
+39m         Normal    SuccessfulDelete    replicaset/nginx-6f7db544d7   Deleted pod: nginx-6f7db544d7-v2xjs
+38m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-76rkr
+38m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   (combined from similar events): Created pod: nginx-6f7db544d7-d9gq6
+30m         Normal    SuccessfulDelete    replicaset/nginx-6f7db544d7   Deleted pod: nginx-6f7db544d7-54d9l
+10m         Normal    SuccessfulDelete    replicaset/nginx-6f7db544d7   (combined from similar events): Deleted pod: nginx-6f7db544d7-wdj7h
+28m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-d8s65
+28m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-wqv82
+28m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-8c4vn
+28m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-cn2vh
+22m         Normal    SuccessfulCreate    replicaset/nginx-6f7db544d7   Created pod: nginx-6f7db544d7-2rw8c
+19m         Normal    Scheduled           pod/nginx-86cdfcdf8f-pd5wl    Successfully assigned default/nginx-86cdfcdf8f-pd5wl to minikube
+19m         Normal    Pulling             pod/nginx-86cdfcdf8f-pd5wl    Pulling image "wojzacharski/nginx-app:1.2"
+19m         Normal    Pulled              pod/nginx-86cdfcdf8f-pd5wl    Successfully pulled image "wojzacharski/nginx-app:1.2" in 2.124s (2.124s including waiting). Image size: 48240137 bytes.
+14m         Normal    Created             pod/nginx-86cdfcdf8f-pd5wl    Created container: nginx-app
+14m         Normal    Started             pod/nginx-86cdfcdf8f-pd5wl    Started container nginx-app
+14m         Normal    Pulled              pod/nginx-86cdfcdf8f-pd5wl    Container image "wojzacharski/nginx-app:1.2" already present on machine
+14m         Warning   BackOff             pod/nginx-86cdfcdf8f-pd5wl    Back-off restarting failed container nginx-app in pod nginx-86cdfcdf8f-pd5wl_default(e2b831fe-e0f7-46b8-9462-6054bc5c06da)
+19m         Normal    Scheduled           pod/nginx-86cdfcdf8f-svcsw    Successfully assigned default/nginx-86cdfcdf8f-svcsw to minikube
+19m         Normal    Pulling             pod/nginx-86cdfcdf8f-svcsw    Pulling image "wojzacharski/nginx-app:1.2"
+19m         Normal    Pulled              pod/nginx-86cdfcdf8f-svcsw    Successfully pulled image "wojzacharski/nginx-app:1.2" in 1.1s (3.198s including waiting). Image size: 48240137 bytes.
+14m         Normal    Created             pod/nginx-86cdfcdf8f-svcsw    Created container: nginx-app
+14m         Normal    Started             pod/nginx-86cdfcdf8f-svcsw    Started container nginx-app
+14m         Normal    Pulled              pod/nginx-86cdfcdf8f-svcsw    Container image "wojzacharski/nginx-app:1.2" already present on machine
+14m         Warning   BackOff             pod/nginx-86cdfcdf8f-svcsw    Back-off restarting failed container nginx-app in pod nginx-86cdfcdf8f-svcsw_default(1c865cea-4973-4305-984c-fc054ebdaea5)
+19m         Normal    SuccessfulCreate    replicaset/nginx-86cdfcdf8f   Created pod: nginx-86cdfcdf8f-pd5wl
+19m         Normal    SuccessfulCreate    replicaset/nginx-86cdfcdf8f   Created pod: nginx-86cdfcdf8f-svcsw
+10m         Normal    SuccessfulDelete    replicaset/nginx-86cdfcdf8f   Deleted pod: nginx-86cdfcdf8f-pd5wl
+10m         Normal    SuccessfulDelete    replicaset/nginx-86cdfcdf8f   Deleted pod: nginx-86cdfcdf8f-svcsw
+29m         Normal    Killing             pod/nginx-pod                 Stopping container nginx-pod
+44m         Normal    ScalingReplicaSet   deployment/nginx              Scaled up replica set nginx-6f7db544d7 from 0 to 5
+41m         Normal    ScalingReplicaSet   deployment/nginx              Scaled up replica set nginx-6f7db544d7 from 5 to 8
+40m         Normal    ScalingReplicaSet   deployment/nginx              Scaled down replica set nginx-6f7db544d7 from 8 to 1
+29m         Normal    ScalingReplicaSet   deployment/nginx              Scaled down replica set nginx-6f7db544d7 from 1 to 0
+38m         Normal    ScalingReplicaSet   deployment/nginx              Scaled up replica set nginx-6f7db544d7 from 0 to 4
+25m         Normal    ScalingReplicaSet   deployment/nginx              Scaled up replica set nginx-5696bc6558 from 0 to 1
+30m         Normal    ScalingReplicaSet   deployment/nginx              Scaled down replica set nginx-6f7db544d7 from 4 to 3
+30m         Normal    ScalingReplicaSet   deployment/nginx              Scaled up replica set nginx-5696bc6558 from 1 to 2
+25m         Normal    ScalingReplicaSet   deployment/nginx              Scaled down replica set nginx-6f7db544d7 from 3 to 2
+10m         Normal    ScalingReplicaSet   deployment/nginx              (combined from similar events): Scaled up replica set nginx-5696bc6558 from 0 to 2
+25m         Normal    ScalingReplicaSet   deployment/nginx              Scaled down replica set nginx-6f7db544d7 from 2 to 1
+22m         Normal    ScalingReplicaSet   deployment/nginx              Scaled up replica set nginx-6f7db544d7 from 0 to 1
