@@ -194,7 +194,7 @@ Edycja pliku `anaconda-ks.cfg` zgodnie z wymaganiami
 
 ```ini
 #version=DEVEL
-url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-38&arch=x86_64
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
 repo --name=updates --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f38&arch=x86_64
 
 lang en_US.UTF-8
@@ -205,7 +205,6 @@ timezone Europe/Warsaw --utc
 network --bootproto=dhcp --hostname=ansible-autoinstall
 
 # Partycjonowanie
-ignoredisk --only-use=sda
 clearpart --all --initlabel
 autopart --type=lvm
 
@@ -251,3 +250,12 @@ reboot
 Po umieszczeniu pliku kickstart w zdalnym repozytorium, na nowej maszynie wirtualnej — utworzonej na bazie tego samego obrazu ISO co maszyna bazowa — należy podczas uruchamiania instalatora przejść do edycji parametrów GRUB
 
 ![](/ITE/GCL07/JS415943/Sprawozdanie3/lab9/1.1-grub.png)
+
+Po zbootowaniu systemu kontener jest już uruchomiony
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab9/1.2-docker-ps.png)
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab9/1.3-curl.png)
+
+
+## Laboratorium 10 - Ansible
