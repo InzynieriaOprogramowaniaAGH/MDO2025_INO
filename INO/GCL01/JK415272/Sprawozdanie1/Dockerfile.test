@@ -1,0 +1,4 @@
+FROM my-node-app AS test-stage
+WORKDIR /app
+CMD ["npm", "test"]
+

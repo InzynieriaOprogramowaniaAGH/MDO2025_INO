@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mdoapp-stable-deployment 
+  labels:
+    app: mdoapp 
+    version: stable 
+spec:
+  replicas: 3 
+  selector:
+    matchLabels:
+      app: mdoapp
+      version: stable 
+  template:
+    metadata:
+      labels:
+        app: mdoapp 
+        version: stable 
+    spec:
+      imagePullSecrets: []
+      containers:
+      - name: mdoapp-container
+        image: mdoapp:1.0 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
