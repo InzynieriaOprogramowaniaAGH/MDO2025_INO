@@ -1,0 +1,32 @@
+ # Etap budowania (BUILDER)
+FROM node:18-alpine AS build
+
+# Instalacja git, jeśli potrzebny do klonowania repozytorium (opcjonalnie)
+RUN apk add --no-cache git
+
+WORKDIR /app
+
+
+RUN git clone https://github.com/copperhead143/AGH-Node-Calculator-DevOps.git repo
+WORKDIR /app/repo
+
+# Jeśli kod został już sklonowany przez Jenkinsa, kopiujemy pliki do obrazu
+COPY . .
+
+# Instalujemy zależności i budujemy aplikację
+RUN npm install
+RUN npm run build
+
+# Etap wdrożeniowy (DEPLOY)
+FROM node:18-alpine AS deploy
+
+WORKDIR /app
+
+# Kopiujemy wszystko z etapu build
+COPY --from=build /app .
+
+# Otwieramy port 3000
+EXPOSE 3000
+
+# Uruchamiamy aplikację – npm start (aplikacja ma być przygotowana do tego polecenia)
+CMD ["npm", "start"]

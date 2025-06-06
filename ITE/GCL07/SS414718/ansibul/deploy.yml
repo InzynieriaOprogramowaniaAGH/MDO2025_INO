@@ -1,0 +1,7 @@
+---
+- name: Deploy aplikacji z Docker Hub
+  hosts: Endpoints
+  become: yes
+
+  roles:
+    - role: node_app_deploy

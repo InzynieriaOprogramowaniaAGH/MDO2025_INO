@@ -1,0 +1,7 @@
+---
+- name: Deploy aplikacji z archiwum .tgz
+  hosts: Endpoints
+  become: yes
+
+  roles:
+    - tgz_deploy

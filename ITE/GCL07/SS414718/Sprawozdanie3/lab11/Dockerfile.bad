@@ -1,0 +1,4 @@
+# Dockerfile.bad
+FROM httpd:2.4
+LABEL version="bad"
+CMD ["sh","-c","exit 1"]
