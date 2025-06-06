@@ -34,7 +34,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('ITE/GCL07/WSZ417391/Sprawozdanie2') {
+                dir('ITE/GCL07/WSZ417391/Sprawozdanie2/Lab6') {
                     sh 'docker build -f Dockerfile.build -t $IMAGE_BUILD .'
                 }
             }
