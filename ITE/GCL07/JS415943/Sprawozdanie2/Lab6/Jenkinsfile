@@ -67,11 +67,18 @@ pipeline {
             }
         }
 
-        stage('Verify Deployment') {
+        stage('SmokeTest') {
             steps {
-                dir('ITE/GCL07/JS415943/Sprawozdanie3/lab11') {
-                    sh 'chmod +x check-deploy.sh'
-                    sh './check-deploy.sh'
+                dir('ITE/GCL07/JS415943/Sprawozdanie2/Lab6') {
+                    sh '''
+                        docker network create ci || true
+                        docker run -dit --network ci --name deploy -p 3000:3000 $IMAGE_DEPLOY:$VERSION
+                        sleep 5
+                        docker run --rm --network ci curlimages/curl curl http://deploy:3000
+                        docker stop deploy
+                        docker rm deploy
+                        docker network rm ci
+                    '''
                 }
             }
         }
