@@ -1,0 +1,33 @@
+* {
+    font-family: sans-serif, Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+body {
+    background: rgb(0, 0, 0);
+    color: #00ffbf;
+    margin-top: 20px;
+}
+
+.container {
+    display: block;
+    width: 400px;
+    margin: 0 auto;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+.button {
+    display: block;
+    width: 50%;
+    height: 30px;
+    background: #00ffbf;
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+    text-align: center;
+    line-height: 10px;
+    cursor: pointer;
+}

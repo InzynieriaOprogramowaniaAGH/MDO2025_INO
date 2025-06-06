@@ -1,0 +1,67 @@
+---
+# tasks file for roles/deploy_docker_app
+- name: Zainstaluj wymagane pakiety
+  dnf:
+    name:
+      - dnf-plugins-core
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    state: present
+
+- name: Dodaj repozytorium Dockera
+  get_url:
+    url: https://download.docker.com/linux/fedora/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+
+- name: Zainstaluj Dockera
+  dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: latest
+
+- name: Włącz i uruchom usługę Docker
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Zainstaluj zależności Pythona
+  package:
+    name:
+      - python3-pip
+      - python3-packaging
+    state: present
+
+- name: Zainstaluj moduły pip
+  pip:
+    name:
+      - docker
+      - requests
+    executable: pip3
+
+- name: Pobierz obraz Dockera
+  community.docker.docker_image:
+    name: "{{ docker_image }}"
+    source: pull
+
+- name: Uruchom kontener
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ docker_image }}"
+    state: started
+    restart_policy: always
+    published_ports:
+      - "{{ published_port }}:{{ container_port }}"
+
+- name: Poczekaj aż aplikacja odpowie
+  uri:
+    url: "http://localhost:{{ published_port }}/"
+    status_code: 200
+    timeout: 20
+  register: result
+  retries: 5
+  delay: 3
+  until: result.status == 200

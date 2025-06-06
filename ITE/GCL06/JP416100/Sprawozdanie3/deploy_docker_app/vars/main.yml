@@ -1,0 +1,6 @@
+---
+# vars file for roles/deploy_docker_app
+docker_image: httpd
+container_name: myweb
+container_port: 80
+published_port: 8080
