@@ -1,0 +1,11 @@
+#!/bin/bash
+
+EXPECTED_PREFIX="JS415943"
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(head -n 1 "$COMMIT_MSG_FILE")
+
+if [[ ! $COMMIT_MSG =~ ^$EXPECTED_PREFIX ]]; then
+    echo "ERROR: Commit message must start with '$EXPECTED_PREFIX'"
+    exit 1
+fi

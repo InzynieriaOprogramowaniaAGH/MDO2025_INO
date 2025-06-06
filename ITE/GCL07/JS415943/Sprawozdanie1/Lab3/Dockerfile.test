@@ -1,0 +1,5 @@
+FROM zlib-build
+
+WORKDIR /src/zlib
+
+RUN make test
