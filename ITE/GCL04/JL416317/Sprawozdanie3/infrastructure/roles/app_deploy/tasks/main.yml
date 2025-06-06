@@ -1,4 +1,3 @@
----
 - name: Create app directory
   file:
     path: "{{ app_remote_path }}"
@@ -20,7 +19,7 @@
     name: "{{ container_name }}"
     image: "{{ image_name }}"
     ports:
-      - "{{ app_port }}:5000"
+      - "{{ app_port }}:{{ app_port }}"
     restart_policy: always
     state: started
 

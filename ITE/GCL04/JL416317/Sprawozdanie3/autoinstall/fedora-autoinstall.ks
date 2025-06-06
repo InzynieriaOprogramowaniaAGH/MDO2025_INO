@@ -1,5 +1,5 @@
 #version=DEVEL
-# System language and keyboard
+
 lang en_US.UTF-8
 keyboard pl
 
@@ -7,7 +7,6 @@ network --bootproto=dhcp --hostname=fedora-deploy
 
 rootpw --iscrypted $6$7j0iWmtubLvk9.zk$mXT0qFhWW4QMQGWktIUvXvjOBZbifer/5P/d59Yk8z99L8vjoR8HUPUAWodBSnDtXWXGWhVocFBaHLQRB8iOm1
 
-# User account
 user --name=deploy_user --password=$6$7j0iWmtubLvk9.zk$mXT0qFhWW4QMQGWktIUvXvjOBZbifer/5P/d59Yk8z99L8vjoR8HUPUAWodBSnDtXWXGWhVocFBaHLQRB8iOm1 --iscrypted --gecos="Deploy User" --groups=wheel
 
 timezone Europe/Warsaw --isUtc

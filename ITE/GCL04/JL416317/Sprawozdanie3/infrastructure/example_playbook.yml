@@ -1,5 +1,5 @@
 - name: Ansible playbook
-  hosts: all
+  hosts: endpoints
   become: true
   tasks:
 
@@ -8,24 +8,20 @@
 
     - name: Copy
       copy:
-        src: inventory.ini
-        dest: /tmp/inventory.ini
-      when: "'endpoints' in group_names"
+        src: inventory.yml
+        dest: /tmp/inventory.yml
 
     - name: Update
       apt:
         update_cache: yes
         upgrade: dist
-      when: "'endpoints' in group_names"
 
     - name: SSH Restart
       service:
         name: ssh
         state: restarted
-      when: "'endpoints' in group_names"
 
     - name: RNGD Restart
       service:
         name: rngd
         state: restarted
-      when: "'endpoints' in group_names"
