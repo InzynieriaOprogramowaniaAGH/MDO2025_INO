@@ -514,25 +514,157 @@ Tak jak wcześniej, logowanie odbywa się na tego samego użytkownika. Hostname
 
 Ponieważ jest to biblioteka, nie da się jej uruchomić automatycznie wraz ze startem systemu. Niemniej jednak wykonalne byłoby tworzenie podczas instalacji dowolnego programu korzystającego z biblioteki i uruchamianie go, lecz ze względu na specyfikę projektu pominę ten krok.
 
+
+
 ## Wdrażanie na zarządzalne kontenery: Kubernetes (1)
 
 ### Instalacja klastra Kubernetes
 
-TODO
+Na samym początku zaopatrzyłem się w `minikube`:
+
+![](010-Class/ss/1.png)
+
+Następnie przeprowadziłem instalację:
+
+![](010-Class/ss/2.png)
+
+Po instalacji zaopatrzyłem się w polecenie `kubectl` poprzez utworzenie aliasu. Alias ten później umieszczę w pliku `.bashrc` bądź `.bash_profile` tak, aby nie musieć wpisywać aliasu po rozpoczynaniu nowej sesji terminala:
+
+![](010-Class/ss/3.png)
+
+Następnie uruchomiłem Kubernetesa (poniższy zrzut ekranu przedstawia kolejne uruchomienie zamiast pierwszego):
+
+![](010-Class/ss/3-5.png)
+
+Po chwili kontener powinien być uruchomiony:
+
+![](010-Class/ss/5.png)
+
+Po zweryfikowaniu działania kontenera możliwe jest uruchomienie dashboarda:
+
+![](010-Class/ss/4.png)
+
+Wpisanie powyższego polecenia automatycznie otworzyło kartę w przeglądarce z dashboardem:
+
+![](010-Class/ss/6.png)
 
 ### Analiza posiadanego kontenera
 
-TODO
+Ponieważ moja aplikacja nie nadawała się do pracy w kontenerze, wymieniłem projekt na obraz-gotowiec - `nginx`. Sprawdziłem jednak najpierw, czy aplikacja będzie działać sama w sobie jako kontener. Uruchomiłem ją więc w czystym dockerze:
+
+![](010-Class/ss/7.png)
+
+Wchodząc na adres `localhost:8080` widoczna była strona powitalna nginx, zatem kontener działa poprawnie. 
+
+![](010-Class/ss/8.png)
 
 ### Uruchamianie oprogramowania
 
-TODO
+Skoro kontener nginx oraz Kubernetes działają, można przejść od uruchomienia nginx na stosie k8s. Wykonane to zostało przy użyciu poniższego polecenia:
+
+```bash
+minikube kubectl run -- nginx-pod-single --image=nginx --port=80 --labels app=nginx-deploy-single
+```
+
+Na poniższym zrzucie ekranu popełniłem błąd - wpisałem port `8080` zamiast `80`, co później powodowało crash w przypadku wejścia na stronę. Niemniej jednak pozostawiam zrzut ekranu z błędnym portem:
+
+![](010-Class/ss/9.png)
+
+Po odświeżeniu strony dashboarda widoczny jest nowo powstały pod:
+
+![](010-Class/ss/10.png)
+
+Pod dostępny jest widoczny również przy wywołaniu polecenia `kubectl get pods`:
+
+![](010-Class/ss/12.png)
+
+Na sam koniec należało jeszcze wyeksponować port - na tym zrzucie ekranu poprzedni błąd występuje nadal. Poprawnym przekierowaniem portu powinno być np. `8080:80`:
+
+![](010-Class/ss/13.png)
+
+Mając na uwadze, że nginx pracuje domyślnie na porcie 80 i podmieniając błędne 8080 na 80 możliwe powinno być wejście na ekran powitalny nginx:
+
+![](010-Class/ss/14.png)
 
 ### Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
 
-TODO
+Ostatnim zadaniem tego laboratorium było utworzenie pliku YAML zawierającego wdrożenie. Deployment miał tworzyć 4 repliki kontenera:
 
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+```
 
+Plik został zapisany jako `nginx-deployment.yaml` oraz jest dostępny [tutaj](010-Class/nginx-deployment.yaml).
+
+Na podstawie pliku utworzyłem deployment:
+
+![](010-Class/ss/15.png)
+
+Następnie sprawdziłem stan wdrożenia:
+
+![](010-Class/ss/16.png)
+
+Również w dashboardzie można zaobserwować, że wdrożenie działa poprawnie:
+
+![](010-Class/ss/17.png)
+
+Deployment wzbogaciłem o 4 dodatkowe repliki, co łącznie da ich 5 (jeśli w pliku wdrożenia nie poda się ilości replik, to domyślnie przyjęta zostaje wartość 1). Zrealizowałem to poprzez dopisanie sekcji `replicas: 5` w pliku wdrożenia:
+
+```yaml
+[...]
+spec:
+  replicas: 5
+  selector:
+  [...]
+```
+
+Po wprowadzonej modyfikacji ponownie wywołałem polecenie `kubectl apply` oraz (w celu zbadania stanu) `kubectl rollout`. Tu zaobserwowałem w terminalu uruchamianie kolejnych replik:
+
+![](010-Class/ss/18.png)
+
+W dashboardzie również widoczne są wprowadzone zmiany:
+
+![](010-Class/ss/19.png)
+
+Ostatnim krokiem tego zadania było wyeksponowanie wdrożenia jako serwis i przekierowanie portu do serwisu. Najpierw eksponowanie, jako porty ustaliłem `80:80`:
+
+![](010-Class/ss/20.png)
+
+Następnie przekierowałem porty, tak jak w przypadku przypadku dla kontenera dockerowego, ustawiłem `8080:80`:
+
+![](010-Class/ss/21.png)
+
+W tym momencie możliwe powinno być wejście na stronę serwisu i sprawdzenie poprawności działania. Jak widać, udało się połączyć z którymś podem - nie wiadomo dokładnie z którym, lecz nie jest to dla użytkownika istotne:
+
+![](010-Class/ss/22.png)
+
+Również w dashboardzie można zauważyć, że serwis działa:
+
+![](010-Class/ss/23.png)
+
+Cały ten zabieg z tworzeniem deploymentu i serwisu pozwala na rozwiązanie dwóch problemów:
+
+1. W przypadku awarii jednej z replik, pozostałe nadal będą działać, dzięki czemu aplikacja powinna nadal poprawnie funkcjonować.
+2. Możliwość rozłożenia obciążenia w celu zapewnienia płynnego działania.
 
 ## Wdrażanie na zarządzalne kontenery: Kubernetes (2)
 
