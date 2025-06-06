@@ -1,0 +1,40 @@
+- name: Konfiguracja Dockera i kontenera irssi na Fedorze
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Upewnienie się, że zależności Ansible dla DNF są zainstalowane (python3-dnf)
+      ansible.builtin.dnf:
+        name: python3-dnf
+        state: present
+
+    - name: Instalacja zależności Python dla modułów Docker (python3-requests)
+      ansible.builtin.dnf:
+        name: python3-requests # Kluczowa zależność dla community.docker
+        state: present
+
+    - name: Instalacja silnika Docker (moby-engine)
+      ansible.builtin.dnf:
+        name: moby-engine
+        state: latest
+
+    - name: Włączenie i uruchomienie usługi docker
+      ansible.builtin.service:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Pobranie obrazu Docker
+      community.docker.docker_image:
+        name: reszczak123/irssi:1.4.5
+        source: pull
+
+    - name: Utworzenie kontenera Docker
+      community.docker.docker_container:
+        name: irssi
+        image: reszczak123/irssi:1.4.5
+        state: started
+
+    - name: Usunięcie kontenera Docker
+      community.docker.docker_container:
+        name: irssi
+        state: absent

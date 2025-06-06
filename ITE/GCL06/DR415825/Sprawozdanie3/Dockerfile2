@@ -1,0 +1,2 @@
+FROM nginx:stable
+RUN echo '<h1>Wersja 2 - Nowa funkcjonalność</h1>' > /usr/share/nginx/html/index.html
