@@ -929,4 +929,25 @@ Rozkład ruchu w tej konfiguracji powinien wynosić około 3:1 na korzyść wers
 
 
 
+### 7.0 Wykorzystanie Narzędzi AI
+
+Podczas realizacji zadań objętych niniejszym sprawozdaniem (obejmujących technologie Ansible, Kickstart oraz Kubernetes), narzędzia oparte na sztucznej inteligencji (takie jak modele językowe LLM) były wykorzystywane pomocniczo w następujących obszarach:
+
+1.  **Formułowanie i Weryfikacja Poleceń oraz Konfiguracji:**
+    *   **Ansible:** Pomoc w konstruowaniu składni modułów Ansible, struktury playbooków oraz zrozumieniu parametrów specyficznych dla zadań. Weryfikacja poprawności logicznej sekwencji zadań w playbookach.
+    *   **Kickstart:** Wsparcie w zrozumieniu struktury plików odpowiedzi Kickstart, znaczenia poszczególnych dyrektyw (np. `%packages`, `%post`, `network`, `clearpart`) oraz w formułowaniu skryptów dla sekcji `%post` (np. dotyczących instalacji Dockera i konfiguracji usług systemd).
+    *   **Kubernetes:** Pomoc w tworzeniu i rozumieniu plików manifestu YAML dla obiektów Kubernetes (Deployment, Service), konstruowaniu poleceń `kubectl` do zarządzania klastrem, obrazami i wdrożeniami (np. `kubectl apply`, `kubectl get`, `kubectl rollout`, `minikube image load`). Wsparcie w zrozumieniu koncepcji strategii wdrożeń (`Recreate`, `RollingUpdate`, `Canary`).
+
+2.  **Generowanie Szkiców Skryptów i Konfiguracji:**
+    *   Na podstawie opisu problemu lub oczekiwanego działania, LLM był wykorzystywany do generowania wstępnych wersji skryptów (np. skryptu Bash `check_deployment_status.sh` do weryfikacji stanu wdrożenia w Kubernetes) lub fragmentów plików konfiguracyjnych. Wygenerowany kod był następnie analizowany, modyfikowany i testowany w celu dostosowania do specyficznych wymagań zadania.
+
+3.  **Debugowanie i Rozwiązywanie Problemów:**
+    *   W przypadku napotkania błędów (np. problemy ze składnią w skryptach, błędy połączeń, niepoprawne działanie konfiguracji), LLM służył jako narzędzie do analizy komunikatów błędów, sugerowania potencjalnych przyczyn i możliwych rozwiązań. Przykładem może być diagnoza problemu z dostępnością polecenia `kubectl` w skrypcie Bash i identyfikacja konieczności użycia pełnej ścieżki lub aliasu.
+
+**Metoda Weryfikacji Odpowiedzi:**
+Każda informacja, fragment kodu czy konfiguracja uzyskana przy pomocy narzędzi AI była poddawana weryfikacji. Obejmowała ona:
+*   **Testowanie praktyczne:** Wszystkie polecenia, skrypty i konfiguracje były uruchamiane i testowane w rzeczywistym środowisku wirtualnym (maszyny wirtualne dla Ansible i Kickstart, klaster Minikube dla Kubernetes) w celu potwierdzenia ich poprawności działania i zgodności z oczekiwanymi rezultatami.
+*   **Analiza merytoryczna:** Porównywanie uzyskanych informacji z oficjalną dokumentacją używanych narzędzi (Ansible, Kickstart/Anaconda, Kubernetes, Docker) oraz z ogólnie przyjętymi najlepszymi praktykami.
+*   **Logiczne rozumowanie:** Sprawdzanie, czy sugerowane rozwiązania są logiczne i adekwatne do postawionego problemu.
+*   **Iteracyjne poprawki:** Dostosowywanie i modyfikowanie sugestii LLM w celu pełnego dopasowania do specyfiki zadania i środowiska.
 
