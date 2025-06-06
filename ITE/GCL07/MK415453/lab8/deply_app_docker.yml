@@ -1,0 +1,7 @@
+---
+- name: Uruchomienie aplikacji z Docker Hub node dummy
+  hosts: Endpoints
+  become: true
+
+  roles:
+    - deploy_docker_app
