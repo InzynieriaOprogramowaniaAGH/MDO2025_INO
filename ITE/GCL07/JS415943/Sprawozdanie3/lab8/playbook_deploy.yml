@@ -1,0 +1,62 @@
+- name: Instalacja i uruchomienie kontenera z Docker Huba
+  hosts: Endpoints
+  become: true
+  gather_facts: yes
+
+  vars:
+    image_name: tygrysiatkomale/node-deploy
+    image_tag: v3
+    container_name: node_app
+    port: 3000
+
+  tasks:
+    - name: Instalacja Dockera i docker-compose
+      ansible.builtin.package:
+        name:
+          - docker
+          - docker-compose
+        state: present
+
+    - name: Uruchomienie i włączenie usługi Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Pobranie obrazu z Docker Hub
+      community.docker.docker_image:
+        name: "{{ image_name }}"
+        tag: "{{ image_tag }}"
+        source: pull
+
+    - name: Uruchomienie kontenera
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}:{{ image_tag }}"
+        state: started
+        restart_policy: always
+        published_ports:
+          - "{{ port }}:3000"
+
+    - name: Weryfikacja działania aplikacji
+      ansible.builtin.uri:
+        url: "http://localhost:{{ port }}"
+        return_content: yes
+      register: response
+      retries: 5
+      delay: 3
+      until: response.status == 200
+
+    - name: Wyświetlenie odpowiedzi aplikacji
+      debug:
+        var: response.content
+
+    - name: Zatrzymanie kontenera
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: stopped
+
+    - name: Usunięcie kontenera
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: absent
