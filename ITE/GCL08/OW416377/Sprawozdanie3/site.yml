@@ -1,0 +1,6 @@
+---
+- name: Run full Docker deploy and cleanup role
+  hosts: Endpoints
+  become: yes
+  roles:
+    - docker_deploy

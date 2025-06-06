@@ -1,0 +1,14 @@
+---
+- name: Verify container application response
+  hosts: Endpoints
+  become: false
+  tasks:
+    - name: Send HTTP request to container app
+      ansible.builtin.uri:
+        url: http://localhost:3000    
+        return_content: yes
+      register: response
+
+    - name: Print HTTP response content
+      ansible.builtin.debug:
+        var: response.content

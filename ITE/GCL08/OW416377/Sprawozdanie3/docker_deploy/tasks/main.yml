@@ -1,0 +1,73 @@
+---
+# Install Docker
+- name: Install required packages
+  ansible.builtin.dnf:
+    name:
+      - dnf-plugins-core
+      - device-mapper
+      - lvm2
+      - yum-utils
+    state: present
+
+- name: Add Docker repo
+  ansible.builtin.command:
+    cmd: yum-config-manager --add-repo=https://download.docker.com/linux/fedora/docker-ce.repo
+  args:
+    creates: /etc/yum.repos.d/docker-ce.repo
+
+- name: Install Docker
+  ansible.builtin.dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: latest
+
+- name: Enable and start Docker
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes
+
+# Deploy container
+- name: Pull image from Docker Hub
+  community.docker.docker_image:
+    name: oliwiaaa333/next-deploy
+    tag: 20250425-11
+    source: pull
+
+- name: Run container
+  community.docker.docker_container:
+    name: next-deploy
+    image: oliwiaaa333/next-deploy:20250425-11
+    state: started
+    restart_policy: always
+    ports:
+      - "3000:3000"
+
+#  Wait before verifying
+- name: Wait for containerized app to be ready
+  ansible.builtin.pause:
+    seconds: 30
+
+# Verify application
+- name: Send HTTP request to container app
+  ansible.builtin.uri:
+    url: http://localhost:3000/
+    return_content: yes
+  register: response
+
+- name: Print HTTP response content
+  ansible.builtin.debug:
+    var: response.content
+
+# Optionally remove container
+- name: Stop container
+  community.docker.docker_container:
+    name: next-deploy
+    state: stopped
+
+- name: Remove container
+  community.docker.docker_container:
+    name: next-deploy
+    state: absent

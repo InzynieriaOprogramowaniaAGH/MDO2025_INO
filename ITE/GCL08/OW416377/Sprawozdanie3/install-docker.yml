@@ -1,0 +1,33 @@
+---
+- name: Install Docker on endpoint
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Install required packages
+      ansible.builtin.dnf:
+        name:
+          - dnf-plugins-core
+          - device-mapper
+          - lvm2
+          - yum-utils
+        state: present
+
+    - name: Add Docker repo
+      ansible.builtin.command:
+        cmd: yum-config-manager --add-repo=https://download.docker.com/linux/fedora/docker-ce.repo
+      args:
+        creates: /etc/yum.repos.d/docker-ce.repo
+
+    - name: Install Docker
+      ansible.builtin.dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: latest
+
+    - name: Enable and start Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes

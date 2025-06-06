@@ -1,0 +1,14 @@
+---
+- name: Stop and remove deployed container
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Stop container
+      community.docker.docker_container:
+        name: next-deploy
+        state: stopped
+
+    - name: Remove container
+      community.docker.docker_container:
+        name: next-deploy
+        state: absent
