@@ -1,0 +1,7 @@
+#vars/main.yml
+---
+docker_image: httpd
+container_name: myapp
+container_port: 80
+published_port: 80---
+# vars file for supertux_in_docker
