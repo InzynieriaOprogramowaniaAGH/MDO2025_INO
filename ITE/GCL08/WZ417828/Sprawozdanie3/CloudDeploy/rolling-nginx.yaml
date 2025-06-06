@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-rolling-update
+  labels:
+    app: nginx
+    version: stable
+spec:
+  replicas: 5  # Liczba replik
+  selector:
+    matchLabels:
+      app: nginx
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: stable
+    spec:
+      containers:
+      - name: nginx
+        image: wojzacharski/nginx-app:1.0  # Wersja aplikacji
+        ports:
+        - containerPort: 80
+  strategy:
+    type: RollingUpdate  # Typ strategii to RollingUpdate
+    rollingUpdate:
+      maxSurge: 30%      # Do 30% nowych podów może być uruchomionych w trakcie aktualizacji
+      maxUnavailable: 2  # Do 2 podów może być niedostępnych w trakcie aktualizacji
+  revisionHistoryLimit: 10  # Zachowanie historii poprzednich wdrożeń
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-rolling-update-service
+spec:
+  selector:
+    app: nginx
+    version: stable
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: NodePort

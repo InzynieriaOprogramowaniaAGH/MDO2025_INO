@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-canary
+  labels:
+    app: nginx
+    version: canary
+spec:
+  replicas: 2  # Mniejsza liczba replik dla wersji canary
+  selector:
+    matchLabels:
+      app: nginx
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: canary
+    spec:
+      containers:
+      - name: nginx
+        image: wojzacharski/nginx-app:1.0  # Wersja canary aplikacji
+        ports:
+        - containerPort: 80
+  strategy:
+    type: RollingUpdate  # Używamy RollingUpdate dla stopniowego wdrażania
+    rollingUpdate:
+      maxSurge: 25%    # 25% dodatkowych podów mogą zostać uruchomione podczas aktualizacji
+      maxUnavailable: 25%  # 25% dostępnych podów może zostać wyłączonych podczas aktualizacji
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-canary-service
+spec:
+  selector:
+    app: nginx
+    version: canary
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: NodePort
