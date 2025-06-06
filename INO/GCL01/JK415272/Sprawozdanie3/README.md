@@ -557,7 +557,7 @@ minikube start
 Minikube automatycznie wybrał sterownik `docker` i rozpoczął pobieranie niezbędnych obrazów oraz inicjalizację węzła kontrolnego (control-plane).
 
 ![screen](screenshot/zaj10.png)
-*Rys. 5.2. Proces uruchamiania lokalnego klastra Kubernetes za pomocą Minikube.*
+
 
 Po pomyślnym uruchomieniu sprawdzono status klastra oraz dostępność węzłów:
 ```bash
@@ -714,22 +714,15 @@ Kubernetes Dashboard również odzwierciedlił zwiększoną liczbę Podów zarz�
 
 #### 5.3.3. Wyeksponowanie Wdrożenia jako Serwis (Service)
 
-Aby zapewnić stabilny punkt dostępu do aplikacji Nginx (niezależnie od zmieniających się adresów IP Podów) oraz umożliwić potencjalne równoważenie obciążenia, Deployment został wyeksponowany jako Serwis Kubernetes typu `LoadBalancer` (w Minikube symulowany) lub `NodePort`. Utworzono plik definicji Serwisu `nginx-service.yaml` (nie pokazano na screenach, ale założono jego istnienie i zastosowanie lub użyto polecenia `kubectl expose`).
+Aby zapewnić stabilny punkt dostępu do aplikacji Nginx (niezależnie od zmieniających się adresów IP Podów) oraz umożliwić potencjalne równoważenie obciążenia, Deployment został wyeksponowany jako Serwis Kubernetes typu `LoadBalancer` (w Minikube symulowany) lub `NodePort`. Utworzono plik definicji Serwisu `nginx-service.yaml`.
 
 Alternatywnie, dla celów testowych w Minikube, można bezpośrednio otworzyć dostęp do serwisu:
 ```bash
-# Jeśli utworzono serwis np. o nazwie nginx-service
-# kubectl apply -f nginx-service.yaml
 # minikube service nginx-service
 ```
 W przypadku braku zdefiniowanego serwisu typu LoadBalancer lub NodePort, do testowania można nadal użyć `port-forward` bezpośrednio do jednego z Podów Deploymentu lub, jeśli istnieje serwis typu ClusterIP, do niego.
 
-Dla celów demonstracyjnych, jeśli nie utworzono jawnie Serwisu, można ponownie wykorzystać `port-forward` do jednego z Podów zarządzanych przez Deployment, lub, co byłoby bardziej zgodne z koncepcją Serwisu, utworzyć Serwis i przekierować port do niego. Załóżmy, że utworzono serwis `nginx-service`:
-
 ```bash
-# Przykładowe utworzenie serwisu, jeśli nie było pliku YAML
-# kubectl expose deployment nginx-deployment --type=NodePort --port=80 --name=nginx-service
-
 kubectl port-forward service/nginx-service 8090:80
 ```
 
@@ -745,7 +738,7 @@ curl http://localhost:8090
 (Poniżej zrzut ekranu przedstawiający wynik polecenia `curl` do serwisu)
 
 ![screen](screenshot/portforwardresult.png)
-*Rys. 5.16. Test dostępności aplikacji Nginx poprzez przekierowany port Serwisu.*
+
 
 Pomyślny wynik testu `curl` potwierdza, że aplikacja jest dostępna poprzez zdefiniowany Serwis.
 
@@ -762,7 +755,7 @@ kubectl logs $POD_NAME
 (Poniżej zrzut ekranu przedstawiający logi jednego z Podów Nginx z Deploymentu)
 
 ![screen](screenshot/k17_kubectl_logs_nginx_deployment_pod.png)
-*Rys. 5.17. Logi jednego z Podów Nginx zarządzanego przez `nginx-deployment`, pokazujące m.in. obsługę żądania GET.*
+
 
 Logi potwierdziły, że serwer Nginx wewnątrz kontenera działał poprawnie i obsłużył przychodzące żądanie HTTP.
 
@@ -770,16 +763,8 @@ Logi potwierdziły, że serwer Nginx wewnątrz kontenera działał poprawnie i o
 
 Ćwiczenie z wykorzystaniem Minikube pozwoliło na praktyczne zapoznanie się z podstawowymi koncepcjami Kubernetes, takimi jak Pody, Deploymenty i Serwisy. Zademonstrowano proces uruchamiania aplikacji kontenerowej, jej skalowania oraz udostępniania na zewnątrz klastra. Narzędzia takie jak `kubectl` i Kubernetes Dashboard okazały się efektywnymi środkami do interakcji z klastrem i monitorowania jego stanu. Uzyskane doświadczenie stanowi solidną podstawę do dalszej eksploracji bardziej zaawansowanych funkcji Kubernetes i jego zastosowań w produkcyjnych środowiskach.
 
----
 
-**Instrukcja:**
 
-1.  **Wstaw odpowiednie nazwy plików screenshotów** w miejscach `screenshot/kX_nazwa_screena.png`. Nadałem im robocze nazwy `k1` do `k17` – dopasuj je do swoich rzeczywistych plików.
-2.  **Dostosuj numery rysunków** (`Rys. 5.X`), aby były kontynuacją numeracji z poprzednich części sprawozdania.
-3.  **Sprawdź i dostosuj polecenia `kubectl`**, jeśli w Twoim przypadku były nieco inne (np. inne nazwy Podów, Deploymentów, portów).
-4.  **Fragment o tworzeniu Serwisu (5.3.3):** Dodałem tu pewne założenia, ponieważ screeny nie pokazywały jawnie tworzenia pliku `nginx-service.yaml` ani polecenia `kubectl expose deployment`. Jeśli masz screeny dokumentujące ten krok, możesz je dodać i rozwinąć ten opis. Jeśli użyłeś `minikube service nginx-service`, screen z otwartą przeglądarką i adresem IP klastra Minikube byłby tu odpowiedni.
-
-To rozszerzenie powinno dobrze wpisać się w strukturę Twojego sprawozdania.
 
 
 
