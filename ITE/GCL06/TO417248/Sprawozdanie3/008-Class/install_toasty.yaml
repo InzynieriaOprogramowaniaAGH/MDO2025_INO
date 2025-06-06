@@ -1,0 +1,7 @@
+---
+- name: Toasty installation in Docker containers
+  hosts: Endpoints
+  become: true
+
+  roles:
+    - role: install_toasty
