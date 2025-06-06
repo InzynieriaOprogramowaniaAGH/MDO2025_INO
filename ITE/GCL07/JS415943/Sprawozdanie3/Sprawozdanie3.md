@@ -182,3 +182,72 @@ Utworzenie nowego pliku `playbook_deploy.yml`
 
 ![](/ITE/GCL07/JS415943/Sprawozdanie3/lab8/11.0-deploy.png)
 
+
+
+## Laboratorium 9 Pliki odpowiedzi dla wdrożeń nienadzorowanych
+
+Skopiowanie i zmiana uprawnień pliku odpowiedzi
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab9/1.0-copy.png)
+
+Edycja pliku `anaconda-ks.cfg` zgodnie z wymaganiami
+
+```ini
+#version=DEVEL
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-38&arch=x86_64
+repo --name=updates --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f38&arch=x86_64
+
+lang en_US.UTF-8
+keyboard --vckeymap=us --xlayouts='us'
+timezone Europe/Warsaw --utc
+
+# Sieć
+network --bootproto=dhcp --hostname=ansible-autoinstall
+
+# Partycjonowanie
+ignoredisk --only-use=sda
+clearpart --all --initlabel
+autopart --type=lvm
+
+# Użytkownicy
+rootpw --lock
+user --groups=wheel --name=jakswie --password=$y$j9T$Mr0XK7071huZ9auLoqF71tE5$cG7Z/uXHucp8Mmc9B2sTxvMo6Zl.iQumpbaaYlH3Rl5 --iscrypted --gecos="jakswie"
+
+# Pakiety
+%packages
+@^server-product-environment
+docker
+wget
+%end
+
+# Konfiguracja po instalacji
+%post
+echo "=== Pobieram i uruchamiam kontener aplikacji ==="
+systemctl enable docker
+
+# Pobranie i uruchomienie kontenera po pierwszym uruchomieniu
+cat > /etc/systemd/system/node-app.service <<EOF
+[Unit]
+Description=Start Node.js To-Do App
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/bin/docker run --rm -p 3000:3000 tygrysiatkomale/node-deploy:v3
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl enable node-app
+%end
+
+# Autoreboot
+reboot
+
+```
+
+Po umieszczeniu pliku kickstart w zdalnym repozytorium, na nowej maszynie wirtualnej — utworzonej na bazie tego samego obrazu ISO co maszyna bazowa — należy podczas uruchamiania instalatora przejść do edycji parametrów GRUB
+
+![](/ITE/GCL07/JS415943/Sprawozdanie3/lab9/1.1-grub.png)
