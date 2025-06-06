@@ -900,8 +900,14 @@ Zaobserwowano, że wszystkie stare Pody zostały najpierw zatrzymane (`Terminati
 **6.5.2. Strategia `RollingUpdate` z niestandardowymi parametrami**
 Zmodyfikowano YAML, ustawiając `strategy: type: RollingUpdate` oraz `rollingUpdate: {maxUnavailable: 2, maxSurge: 1}`. Zmieniono obraz z `mdoapp:1.0` na `mdoapp:2.0`.
 ![screen](screenshot/zaj11_25.png)
+
+
 Zaobserwowano stopniową wymianę Podów. Dzięki `maxSurge: 1`, chwilowo mogło istnieć 5 Podów. Aplikacja pozostała dostępna przez cały czas aktualizacji.
+
+
 ![screen](screenshot/zaj11_26.png)
+
+
 **6.5.3. Symulacja Strategii `Canary Deployment`**
 Aby zasymulować wdrożenie kanarkowe:
 1.  Usunięto istniejący `mdoapp-deployment`.
