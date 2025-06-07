@@ -1,0 +1,6 @@
+---
+- name: Deploy Redis using Docker
+  hosts: Endpoints
+  become: true
+  roles:
+    - redis_deploy

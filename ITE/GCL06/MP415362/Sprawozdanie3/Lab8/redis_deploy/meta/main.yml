@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: Maciej Przysiezniak
+  description: Ansible role for Redis deployment using Docker
+  company: AGH
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+        - jammy
+  galaxy_tags:
+    - redis
+    - docker
+    - deployment
+dependencies: []

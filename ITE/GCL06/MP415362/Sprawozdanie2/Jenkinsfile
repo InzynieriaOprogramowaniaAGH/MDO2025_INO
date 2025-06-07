@@ -1,0 +1,129 @@
+pipeline {
+    agent any
+    
+    environment {
+        REDIS_VERSION = '7.2.4'
+        VERSION = "v${BUILD_NUMBER}"
+        IMAGE_BUILD = 'redisbuild'
+        IMAGE_TEST = 'redistest'
+        IMAGE_DEPLOY = 'redisdeploy'
+        DOCKER_REGISTRY = 'skoczeka8'
+        IMAGE_TAG = "${DOCKER_REGISTRY}/redisdeploy:${VERSION}"
+        PROJECT_PATH = 'ITE/GCL06/MP415362/Sprawozdanie2'
+    }
+    
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'MP415362', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+            }
+        }
+        
+        stage('Clean') {
+            steps {
+                dir("${PROJECT_PATH}") {
+                    sh '''
+                        docker container ls -a -q | xargs -r docker rm -f
+                        docker volume ls -q | xargs -r docker volume rm -f
+                        docker network ls -q --filter type=custom | xargs -r docker network rm -f
+                        docker builder prune --all --force
+                        docker images -q | sort -u | grep -vE '^(fedora:41)$' | xargs -r docker rmi -f
+                    '''
+                }
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                dir("${PROJECT_PATH}") {
+                    sh 'docker build -f Dockerfile.redisbuild -t ${IMAGE_BUILD} .'
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                dir("${PROJECT_PATH}") {
+                    sh 'docker build -f Dockerfile.redistest -t ${IMAGE_TEST} .'
+                    
+                    sh 'docker run --rm ${IMAGE_TEST} > test-${VERSION}.log 2>&1 || true'
+                    sh 'cat test-${VERSION}.log'
+
+                    archiveArtifacts artifacts: "test-${VERSION}.log", onlyIfSuccessful: false
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                dir("${PROJECT_PATH}") {
+                    sh 'docker build -f Dockerfile.redisdeploy -t ${IMAGE_DEPLOY}:${VERSION} .'
+
+                    sh 'docker save ${IMAGE_DEPLOY}:${VERSION} | gzip > redisdeploy-${VERSION}.tar.gz'
+                    archiveArtifacts artifacts: "redisdeploy-${VERSION}.tar.gz", onlyIfSuccessful: true
+                }
+            }
+        }
+        
+        stage('SmokeTest') {
+            steps {
+                dir("${PROJECT_PATH}") {
+                    sh '''
+                        docker network create ci || true
+                        docker run -dit --network ci --name redis-deploy -p 6379:6379 ${IMAGE_DEPLOY}:${VERSION}
+                        sleep 5
+
+                        docker run --rm --network ci redis:alpine redis-cli -h redis-deploy ping
+
+                        if [ $? -ne 0 ]; then
+                            echo "Smoke test failed!"
+                            exit 1
+                        fi
+                        
+                        docker stop redis-deploy
+                        docker rm redis-deploy
+                        docker network rm ci
+                    '''
+                }
+            }
+        }
+        
+        stage('Publish') {
+            steps {
+                dir("${PROJECT_PATH}") {
+                    sh '''
+                        docker create --name temp-build-container ${IMAGE_BUILD}
+                        mkdir -p redis-binaries
+                        docker cp temp-build-container:/build/src/redis-server redis-binaries/
+                        docker cp temp-build-container:/build/src/redis-cli redis-binaries/
+                        docker rm temp-build-container
+                        
+                        docker run --rm -v $PWD:/app -w /app debian bash -c "apt-get update && apt-get install -y zip && zip -r redis-${VERSION}.zip redis-binaries/"
+                        rm -rf redis-binaries
+                    '''
+                    
+                    archiveArtifacts artifacts: "redis-${VERSION}.zip", onlyIfSuccessful: true
+
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker tag ${IMAGE_DEPLOY}:${VERSION} ${IMAGE_TAG}
+                            docker push ${IMAGE_TAG}
+                        '''
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            dir("${PROJECT_PATH}") {
+                sh '''
+                    docker container ls -a -q | xargs -r docker rm -f
+                    docker image prune -f
+                '''
+            }
+        }
+    }
+}

@@ -1,0 +1,18 @@
+FROM fedora:41
+
+RUN dnf -y update && \
+    dnf -y install jemalloc && \
+    dnf clean all
+
+RUN useradd --system --user-group redis
+
+WORKDIR /redis
+COPY --from=redisbuild /build/src/redis-server /build/src/redis-cli /redis/
+
+RUN chown -R redis:redis /redis
+
+USER redis
+
+EXPOSE 6379
+
+CMD ["./redis-server"]

@@ -1,0 +1,53 @@
+---
+- name: Install Docker
+  ansible.builtin.package:
+    name:
+      - docker
+      - docker-compose
+    state: present
+
+- name: Start and enable Docker service
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Install python3-requests library
+  ansible.builtin.package:
+    name: python3-requests
+    state: present
+
+- name: Pull Redis image from Docker Hub
+  community.docker.docker_image:
+    name: "{{ redis_full_image }}"
+    source: pull
+
+- name: Start Redis container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ redis_full_image }}"
+    state: started
+    published_ports:
+      - "{{ redis_port }}:{{ redis_port }}"
+
+- name: Verify Redis container connectivity
+  ansible.builtin.command:
+    cmd: "docker exec {{ container_name }} /redis/redis-cli ping"
+  register: redis_ping
+  retries: 5
+  delay: 3
+  until: redis_ping.rc == 0
+
+- name: Display verification result
+  debug:
+    msg: "Redis response: {{ redis_ping.stdout }}"
+
+- name: Stop Redis container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    state: stopped
+
+- name: Remove Redis container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    state: absent

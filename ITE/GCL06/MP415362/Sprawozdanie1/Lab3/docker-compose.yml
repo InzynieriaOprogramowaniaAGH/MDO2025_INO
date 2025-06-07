@@ -1,0 +1,43 @@
+services:
+  # Irssi build
+  irssibuild:
+    image: irssi-build
+    build:
+      context: .
+      dockerfile: Dockerfile.irssibuild
+
+  # Irssi test
+  irssitest:
+    image: irssi-test
+    build:
+      context: .
+      dockerfile: Dockerfile.irssitest
+    depends_on:
+      - irssibuild
+
+  # Node.js build
+  nodebuild:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodebuild
+    image: nodebuild
+
+  # Node.js run
+  noderun:
+    build:
+      context: .
+      dockerfile: Dockerfile.noderun
+    image: noderun
+    ports:
+      - "3000:3000"
+    depends_on:
+      - nodebuild
+
+  # Node.js test
+  nodetest:
+    build:
+      context: .
+      dockerfile: Dockerfile.nodetest
+    image: nodetest
+    depends_on:
+      - nodebuild
