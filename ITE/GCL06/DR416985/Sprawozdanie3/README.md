@@ -248,6 +248,7 @@ Dokładniej mówiąc to przepisanie go bo wklejać się tam nie da
 ## 4.2 Udało się odaplić maszyny
 
 ![ss1](23.4.png)
+
 # LAB 10+11
 
 ##  1. Instalacja i uruchomienie Minikube
@@ -266,7 +267,7 @@ minikube status
 minikube dashboard
 ```
 
- **Screen 1:** Dashboard – pusta lista zasobów (brak podów, brak deploymentów)
+![ss1](1.png)
 
 ---
 
@@ -281,9 +282,7 @@ kubectl get pods
 kubectl port-forward pod/nginx-pod 8088:8080
 ```
 
- **Screen 2:** `kubectl get pods` – widać pod `nginx-pod` w stanie Running  
- **Screen 3:** Przeglądarka – działająca aplikacja pod `localhost:8088`  
- **Screen 4:** Dashboard – widoczny pod `nginx-pod`
+![ss1](2.png)
 
 ---
 
@@ -298,10 +297,11 @@ kubectl get deployments
 kubectl get pods
 ```
 
- **Screen 5:** `kubectl get deployments` i `kubectl get pods` – 4 pody  
- **Screen 6:** Dashboard – widoczny deployment i 4 działające pody
+![ss1](3.png)
 
----
+![ss1](4.png)
+
+
 
 ##  4. Skalowanie Deploymentu
 
@@ -314,9 +314,7 @@ kubectl scale deployment nginx-deployment --replicas=0
 kubectl scale deployment nginx-deployment --replicas=4
 ```
 
- **Screen 7:** Dashboard – np. 8 podów  
- **Screen 8:** Dashboard – 0 podów  
- **Screen 9:** Dashboard – z powrotem 4 pody
+![ss1](5.png)
 
 ---
 
@@ -336,9 +334,8 @@ kubectl get pods
 kubectl rollout undo deployment nginx-deployment
 ```
 
- **Screen 10:** Dashboard – pody z błędem `ErrImageNeverPull`  
- **Screen 11:** Dashboard – po rollbacku, wszystkie pody `Running`  
- **Screen 12:** Terminal – wynik `kubectl rollout undo`
+![ss1](10.png)
+![ss1](12.png)
 
 ---
 
@@ -357,7 +354,7 @@ strategy:
 kubectl apply -f nginx-deployment.yaml
 ```
 
- **Screen 13:** Dashboard – moment bez żadnych podów (`Terminating`, `Pending`)
+![ss1](6.png)
 
 ---
 
@@ -369,7 +366,7 @@ kubectl apply -f nginx-deployment.yaml
 #!/bin/bash
 timeout=60
 elapsed=0
-echo "⏳ Czekam na wdrożenie nginx-deployment..."
+echo " Czekam na wdrożenie nginx-deployment..."
 
 while [ $elapsed -lt $timeout ]; do
   ready=$(kubectl get deployment nginx-deployment -o jsonpath='{.status.readyReplicas}')
@@ -392,6 +389,6 @@ chmod +x check-rollout.sh
 ./check-rollout.sh
 ```
 
- **Screen 14:** Terminal – wynik działania skryptu
+![ss1](13.png)
 
 ---
