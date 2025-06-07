@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-html
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+      <head><title>Witaj!</title></head>
+      <body><h1>Test</h1></body>
+    </html>
+
