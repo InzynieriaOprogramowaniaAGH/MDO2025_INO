@@ -1,4 +1,4 @@
-#Sprawozdanie 1
+# Sprawozdanie 1
 
 # Lab 1
 
@@ -128,17 +128,52 @@
 
 ![14](Lab_3/screeny/14.png)
 
-### Budowa obrazu OpenCV-builder zakonczona pomyslnie
+### 15. Budowa obrazu OpenCV-builder zakonczona pomyslnie
 
 ![15](Lab_3/screeny/15.png)
 
 # Lab 4
 
+### 1. Przygotowywanie woluminow
 
+![1](Lab_4/screeny/1.png)
 
+### 2. Uruchomienie kontenera bazowego i sklonowanie repozytorium na wolumin wejsciowy za pomoca kontenera alpine
 
+![2](Lab_4/screeny/2.png)
 
+### 3. Wykonanie build w kontenerze
 
+![3](Lab_4/screeny/3.png)
 
+### 4. Uruchomienie testow jednostkowych
 
+![4](Lab_4/screeny/4.png)
 
+### 5. Sprawdzanie plikow wynikowych
+
+![5](Lab_4/screeny/5.png)
+
+### 6. Tworzenie sieci mostkowej (detykowanej)
+
+![6](Lab_4/screeny/6.png)
+
+### 7. Uruchomienie klienta iperf3
+
+![7](Lab_4/screeny/7.png)
+
+### 8. Wyniki testu przepustowosci z uzyciem iperf3
+
+![8](Lab_4/screeny/8.png)
+
+### 9. Uruchomienie kontenera Jenkins Docker-in-Docker pelniacego role hosta Jenkins
+
+![9](Lab_4/screeny/9.png)
+
+### 10.Uruchomienie kontenera Jenkins na dedykowanej sieci
+
+![10](Lab_4/screeny/10.png) 
+
+### 11. Dzialajacy Jenkins
+
+![11](Lab_4/screeny/11.png)
