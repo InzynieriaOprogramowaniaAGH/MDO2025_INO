@@ -1,0 +1,66 @@
+---
+- name: Deploy express app container on Fedora
+  hosts: all
+  become: true
+  vars:
+    container_name: express_app
+    image_name: lucyferryt/express-app
+    exposed_port: 3000
+
+  tasks:
+    - name: Zainstaluj Dockera (moby-engine + docker)
+      dnf:
+        name:
+          - moby-engine
+          - docker
+        state: present
+        update_cache: yes
+
+    - name: Uruchom i włącz usługę Docker
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Pobierz obraz z Docker Hub
+      community.docker.docker_image:
+        name: "{{ image_name }}"
+        source: pull
+
+    - name: Uruchom kontener z obrazem
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}"
+        state: started
+        restart_policy: always
+        published_ports:
+          - "{{ exposed_port }}:3000"
+
+    - name: Poczekaj na odpowiedź HTTP z kontenera
+      uri:
+        url: "http://localhost:{{ exposed_port }}/"
+        method: GET
+        return_content: yes
+        status_code: 200
+      register: result
+      retries: 10
+      delay: 3
+      until: result.status == 200
+
+    - name: Wyświetl status HTTP
+      debug:
+        msg: "HTTP status: {{ result.status }}"
+
+    - name: Wyświetl treść odpowiedzi HTTP (pierwsze 300 znaków)
+      debug:
+        msg: "{{ result.content[:300] }}"
+
+    - name: Zatrzymaj kontener
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: stopped
+
+    - name: Usuń kontener
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: absent
