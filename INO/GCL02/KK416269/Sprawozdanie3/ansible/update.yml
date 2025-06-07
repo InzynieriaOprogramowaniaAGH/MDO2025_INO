@@ -1,0 +1,10 @@
+- name: Update all packages on Endpoints
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Update all packages (safe way)
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+

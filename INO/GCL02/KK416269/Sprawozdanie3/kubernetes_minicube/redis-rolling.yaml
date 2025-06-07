@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 50%
+  selector:
+    matchLabels:
+      app: redis-rolling
+  template:
+    metadata:
+      labels:
+        app: redis-rolling
+    spec:
+      containers:
+      - name: redis
+        image: kaoina666/redis_runtime:3
+        ports:
+        - containerPort: 6379

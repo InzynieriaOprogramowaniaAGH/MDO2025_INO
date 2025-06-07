@@ -1,0 +1,6 @@
+- name: Manage Redis container artifact
+  hosts: Endpoints
+  become: true
+
+  roles:
+    - docker_artifact
