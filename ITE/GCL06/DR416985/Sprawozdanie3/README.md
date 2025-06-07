@@ -7,10 +7,12 @@ Nazwa hosta: ansible-target (u mnie początkowo ansible ale potem zmieniłem na 
 ```sh
 sudo hostnamectl set-hostname ansible-target
 ```
+![ss1](1.1.png)
 1.2 Zainstalowałem wymagane pakiety
 ```sh
 sudo dnf install tar openssh-server -y
 ```
+![ss1](1.2.png)
 1.3 Utwórzyłem użytkownika ansible
 
 ## 2. Instalacja Ansible na maszynie głównej
@@ -18,6 +20,7 @@ sudo dnf install tar openssh-server -y
 ```sh
 sudo dnf install ansible -y
 ```
+![ss1](2.1.png)
 w naszym przypadku już mamy ansible więc tylko sprawdzamy
 ```sh
 ansible --version
@@ -27,31 +30,38 @@ Kolejny krok to generowanie klucz lecz ponownie my już klucze mamy także robim
 ```sh
 ssh-copy-id ansible@ansible
 ```
+![ss1](2.2.png)
 2.3 Sprawdź połączenie:
 ```sh
 ssh ansible@ansible
 ```
+![ss1](2.3.png)
 2.4 Sprawdzenie połaczenia poprzez ping
 ```sh
 ping ansible-target
 ```
+![ss1](2.4.png)
 ## 3 Inwentaryzacja systemów
 3.1 Ustawienia hostname:
 Na każdej maszynie:
 ```sh
 hostnamectl set-hostname NAZWA
 ```
+![ss1](3.1.png)
+![ss1](3.11.png)
 3.2 Wprowadź wpisy DNS / hostów:
 Na każdej maszynie edytuj /etc/hosts:
-   
+![ss1](3.2.png)
 3.3 Skopiowanie klucza na nowej maszynie
 ```sh
 ssh-copy-id rusekdawid@server
 ```
+![ss1](3.3.png)
 3.4 Podłączenie się z głownej maszyny na nową 
 ```sh
 ssh rusekdawid@server
 ```
+![ss1](3.4.png)
 3.5 Plik inwentaryzacji (inventory.ini):
 ```sh
 [Orchestrators]
