@@ -1,0 +1,7 @@
+---
+docker_registry: "skoczeka8"
+redis_image: "redisdeploy"
+redis_version: "v8"
+redis_port: 6379
+container_name: "redis-deploy"
+redis_full_image: "{{ docker_registry }}/{{ redis_image }}:{{ redis_version }}"

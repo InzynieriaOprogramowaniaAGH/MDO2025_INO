@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-rolling
+  labels:
+    app: nginx-rolling
+    strategy: rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2      
+      maxSurge: 25%         
+  selector:
+    matchLabels:
+      app: nginx-rolling
+  template:
+    metadata:
+      labels:
+        app: nginx-rolling
+        strategy: rolling
+    spec:
+      containers:
+      - name: nginx
+        image: nginx-custom:1.0
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-rolling-service
+  labels:
+    strategy: rolling
+spec:
+  selector:
+    app: nginx-rolling
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
+
+---

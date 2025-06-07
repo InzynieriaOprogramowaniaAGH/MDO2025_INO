@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-stable
+  labels:
+    app: nginx-custom
+    version: stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-custom
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: nginx-custom
+        version: stable
+    spec:
+      containers:
+      - name: nginx
+        image: skoczeka8/nginx-custom:1.0
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-canary
+  labels:
+    app: nginx-custom
+    version: canary
+spec:
+  replicas: 1  # Tylko 1 replika dla canary (25% ruchu)
+  selector:
+    matchLabels:
+      app: nginx-custom
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: nginx-custom
+        version: canary
+    spec:
+      containers:
+      - name: nginx
+        image: skoczeka8/nginx-custom:2.0
+        ports:
+        - containerPort: 80
+
+---
+# Serwis dla canary deployment (obsługuje oba)
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-canary-service
+  labels:
+    app: nginx-custom
+spec:
+  selector:
+    app: nginx-custom  # Wybiera wszystkie pody z app=nginx-custom
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  type: ClusterIP
+
+---

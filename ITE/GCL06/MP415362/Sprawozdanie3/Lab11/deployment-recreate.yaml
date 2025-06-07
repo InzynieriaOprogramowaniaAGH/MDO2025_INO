@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-recreate
+  labels:
+    app: nginx-recreate
+    strategy: recreate
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nginx-recreate
+  template:
+    metadata:
+      labels:
+        app: nginx-recreate
+        strategy: recreate
+    spec:
+      containers:
+      - name: nginx
+        image: nginx-custom:1.0
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-recreate-service
+  labels:
+    strategy: recreate
+spec:
+  selector:
+    app: nginx-recreate
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
+
+---
