@@ -592,11 +592,191 @@ Usługa start-redis-container.service działała i zakończyła się sukcesem:
 _________________________________________________________________
 ## **LAB 10 Wdrażanie na zarządzalne kontenery: Kubernetes (1)**
 
-Cel - 
+Celem tych laboratoriów było zapoznanie się z podstawami działania Kubernetesa oraz nauczenie się, jak uruchamiać i zarządzać aplikacjami kontenerowymi w lokalnym klastrze za pomocą Minikube. W ramach ćwiczeń zainstalowałam Minikube, uruchomiłam Dashboard, wdrożyłam własny kontener oraz przygotowałam plik YAML opisujący deployment z replikacją. 
+     
+### Instalacja klastra Kubernetes
+- [x] **Zaopatrz się w implementację stosu k8s: minikube**
 
-### Zadanie
-- [x] **podpunkt**
-  - **podpunkt**
+Zainstalowałam Minikube, korzystając z wersji RPM package, zgodnie z instrukcją na stronie
+
+![image](https://github.com/user-attachments/assets/450d2659-a3fa-4d25-b80c-fb995d861c5f)
+
+- [x] **Przeprowadź instalację, wykaż poziom bezpieczeństwa instalacji**
+
+Aby zainstalować Minikube, wykonałam następujące komendy:
+
+```bash
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
+sudo rpm -Uvh minikube-latest.x86_64.rpm
+```
+
+![image](https://github.com/user-attachments/assets/226e2b91-e9ec-48f2-980a-fca29f9c259a)
+
+Po instalacji, aby sprawdzić stan klastra, użyłam komend:
+``` bash
+minikube kubectl -- get pods -A -o wide
+```
+Ta komenda pozwala uzyskać szczegółowe informacje o podach systemowych. Na podstawie wyników mogłam zweryfikować poprawność działania aplikacji na klastrze.
+![image](https://github.com/user-attachments/assets/3d61c98b-e8b6-4223-abba-4c1b46f0214b)
+
+Ponadto, aby uzyskać dodatkowe informacje o poszczególnych podach, skorzystałam z komendy:
+```bash
+minikube kubectl -- describe pod <nazwa> -n kube-system
+```
+Wynik tej komendy pozwolił mi upewnić się, że wszystkie pody działają zgodnie z oczekiwaniami.
+![image](https://github.com/user-attachments/assets/29ae13b2-ba75-4b09-8b63-41606c6d5f95)
+
+
+- [x] **Zaopatrz się w polecenie `kubectl` w wariancie minikube, może być alias `minikubctl`, jeżeli masz już "prawdziwy" `kubectl`**
+
+Zgodnie z instruckją na stornie 
+![image](https://github.com/user-attachments/assets/175523b4-6e8c-404b-b43a-ebdb1dc95872)
+
+Uruchomiłam dwie poniższe komendy aby używać narzędzia kubectl
+```bash
+minikube kubectl -- get po -A
+alias kubectl="minikube kubectl --"
+```
+
+![image](https://github.com/user-attachments/assets/b99989cb-7ccf-42ca-8ce9-e581879ef064)
+
+- [x] **Uruchom Kubernetes, pokaż działający kontener/worker**
+
+Aby uruchomić klaster Kubernetes, użyłam komendy
+```minikube start```
+
+![image](https://github.com/user-attachments/assets/627e5c21-b6ed-4b1c-8b8d-1401f539dc91)
+
+Po uruchomieniu klastra Minikube sprawdziłam jego stan komendą `minikube kubectl -- get nodes` 
+
+![image](https://github.com/user-attachments/assets/5b60c2a4-8442-410c-ad8b-7181b952a1a1)
+
+Wynik pokazuje, że węzeł o nazwie minikube ma status Ready, pełni rolę control-plane i działa od kilku minut, co potwierdza poprawne uruchomienie klastra Kubernetes. Następnie sprawdziłam działające pody systemowe w przestrzeni nazw kube-system, korzystając z polecenia `minikube kubectl -- get pods -A`.
+
+![image](https://github.com/user-attachments/assets/841c83ab-fa24-4ce5-ac4c-aed92b0cd0e5)
+
+Wszystkie pody są w stanie Running, co oznacza, że komponenty systemowe Kubernetesa działają poprawnie.
+
+- [x] **Zmityguj problemy wynikające z wymagań sprzętowych lub odnieś się do nich (względem dokumentacji)**
+
+Podczas uruchamiania klastra Minikube napotkałam na problem związany z pamięcią RAM. Minikube domyślnie przydziela określoną ilość pamięci wirtualnej maszynie, co może być niewystarczające w przypadku komputerów o ograniczonych zasobach. Aby rozwiązać ten problem, dostosowałam ilość przydzielonej pamięci, wykorzystując opcję --memory podczas uruchamiania klastra. Na przykład `minikube start --memory 4096`
+
+- [x] **Uruchom Dashboard, otwórz w przeglądarce, przedstaw łączność**
+
+Uruchomiłam Dashbord poleceniem `minikube dashboard`, co umożliwiło mi też zarządzanie prze zinterface webowy.
+![image](https://github.com/user-attachments/assets/0ccd28ea-92bd-4615-a372-ba7cef1437e9)
+
+- [x] **Zapoznaj się z koncepcjami funkcji wyprowadzanych przez Kubernetesa (*pod*, *deployment* itp)**
+
+  * Pod to najmniejsza jednostka w Kubernetes, która może zawierać jeden lub więcej kontenerów, działających w tym samym środowisku.
+  * Deployment umożliwia zarządzanie aplikacjami w Kubernetes, zapewniając skalowanie i aktualizowanie kontenerów w sposób automatyczny.
+  * Service pozwala na tworzenie stałych punktów dostępu do aplikacji działających w klastrze, umożliwiając komunikację z kontenerami.
+
+ 
+### Analiza posiadanego kontenera
+- [x] **Zdefiniuj krok "Deploy" swojego projektu jako "Deploy to cloud":**
+  - **Deploy zbudowanej aplikacji powinien się odbywać "na kontener"**
+  - **Przygotuj obraz Docker ze swoją aplikacją - sprawdź, że Twój kontener Deploy na pewno **pracuje**, a nie natychmiast kończy pracę! 😎**
+  - **Wykaż, że wybrana aplikacja pracuje jako kontener
+
+Ja miałam już gotowy ten etap dzieki wcześniejszym laboratoriom. Kontener z aplikacją Redis miałam już zdeployowany na DockerHubie (przygotowany obraz Docker kaoina666/redis_runtime:2).
+
+### Uruchamianie oprogramowania
+- [x] **Uruchom kontener ze swoją/wybraną aplikacją na stosie k8s**
+- [x] **Kontener uruchomiony w minikubie zostanie automatycznie "ubrany" w *pod*.**
+- [x] **```minikube kubectl run -- <nazwa-jednopodowego-wdrożenia> --image=<obraz-docker> --port=<wyprowadzany port> --labels app=<nazwa-jednopodowego-wdrożenia>```**
+
+Uruchomienie za pomocą `kubectl run redis-deployment --image=kaoina666/redis_runtime:2 --port=6379 --labels app=redis-deployment`. Kubectl run służy do uruchamiania pojedynczego poda z określonym obrazem Docker oraz konfiguracją portów i etykiet. 
+
+![image](https://github.com/user-attachments/assets/e2c0048a-29a1-46ec-9f38-ab0f6533e41d)
+
+- [x] **Przedstaw że *pod* działa (via Dashboard oraz `kubectl`)**
+
+dzięki `kubectl get pods` możemy w terminalu zoabczyć, że *redis-deployment* jest aktywnym podem
+![image](https://github.com/user-attachments/assets/f2271ddc-af73-4cd9-86a6-e1c6b7aa4843)
+
+również w webowej aplikacji widoczny będzie nasz pod
+
+![image](https://github.com/user-attachments/assets/4a631cd5-21d4-4a1c-bfc6-89e930523f74)
+
+  
+- [x] **Wyprowadź port celem dotarcia do eksponowanej funkcjonalności**
+- [x] **```kubectl port-forward pod/<nazwa-wdrożenia> <LO_PORT>:<PODMAIN_CNTNR_PORT> ```**
+
+`kubectl port-forward pod/redis-deployment 6379:6379`
+Komenda ta przekierowuje port 6379 z kontenera Redis (uruchomionego w podzie o nazwie redis-deployment) na lokalny port 6379 na maszynie. Przekierowanie portów pozwala na dostęp do usługi Redis, działającej wewnątrz klastra Kubernetes, poprzez lokalny port na komputerze użytkownika.
+
+Po wykonaniu komendy, terminal zwrócił komunikat: 
+![image](https://github.com/user-attachments/assets/48f9516a-2db5-4338-b6c3-f24a0c38b08c)
+
+- [x] **Przedstaw komunikację z eskponowaną funkcjonalnością**
+W celu weryfikacji poprawności działania, użyto klienta Redis, łącząc się za pomocą następującej komendy: `redis-cli -h 127.0.0.1 -p 6379`.
+
+![image](https://github.com/user-attachments/assets/25fb98d4-8e6e-4ca9-83e5-3f4247a5212e)
+
+Port forwarding działa poprawnie, a usługa Redis jest dostępna lokalnie na porcie 6379.
+
+
+### Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
+- [x] **Zapisz wdrożenie jako plik YML**
+- [x] **Przeprowadź próbne wdrożenie przykładowego *deploymentu***
+  - **Wykonaj ```kubectl apply``` na pliku**
+  - **Upewnij się, że posiadasz wdrożenie zapisane jako plik**
+  - **Wzbogać swój *deployment* o 4 repliki**
+  - **Rozpocznij wdrożenie za pomocą ```kubectl apply```**
+  - **Zbadaj stan za pomocą ```kubectl rollout status```**
+- [x] **Wyeksponuj wdrożenie jako serwis**
+- [x] **Przekieruj port do serwisu (tak, jak powyżej)**
+
+W ramach tego zadania stworzyłam plik redis.yaml, który umożliwia wdrożenie aplikacji Redis w Kubernetes. Celem tego wdrożenia było utworzenie instancji Redis, którą można będzie wystawić na zewnątrz klastra. Aby uruchomić to wdrożenie, użyłam komendy kubectl apply -f redis.yaml.
+
+Oto zawartość pliku redis.yaml:
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: kaoina666/redis_runtime:2
+        ports:
+        - containerPort: 6379
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  type: NodePort
+  ports:
+    - port: 6379
+      targetPort: 6379
+      nodePort: 30079
+```
+
+Po uruchomieniu tego pliku utworzyły się cztery pody, co mogłam zweryfikować, sprawdzając status wdrożenia (`kubectl get pods`)
+![image](https://github.com/user-attachments/assets/3ce1a97d-ae98-4f94-b245-5d97509009c0)
+
+Aby upewnić się, że wdrożenie poszło pomyślnie, użyłam komendy `kubectl rollout status deployment/redis-deployment`. Zgodnie z oczekiwaniami, proces zakończył się sukcesem, a wszystkie repliki zostały uruchomione:
+![image](https://github.com/user-attachments/assets/3950cd09-ecf5-4d30-9214-5e992918f858)
+
+Na końcu, zgodnie z planem, przekierowałam port do serwisu, używając komendy `kubectl port-forward svc/redis-service 6379:6379`. Aby sprawdzić, czy wszystko działa, połączyłam się z Redisem, używając *redis-cli* komendą `redis-cli -h localhost -p 6379`. Rezultat:
+
+![image](https://github.com/user-attachments/assets/7fb51887-a4fa-433c-847b-fe4febdb1bb9)
+
 _________________________________________________________________
 ## **LAB 11 Wdrażanie na zarządzalne kontenery: Kubernetes (2)**
 
