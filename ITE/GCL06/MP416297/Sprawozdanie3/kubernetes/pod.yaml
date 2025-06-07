@@ -1,0 +1,112 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2025-05-30T16:43:53Z"
+  labels:
+    app: nginx-custom-container
+  name: nginx-custom-container
+  namespace: default
+  resourceVersion: "81371"
+  uid: 708d7d3e-1c03-4b8a-8929-efe090997a7d
+spec:
+  containers:
+  - image: nginx-custom:1.0
+    imagePullPolicy: IfNotPresent
+    name: nginx-custom-container
+    ports:
+    - containerPort: 80
+      protocol: TCP
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-fvfk5
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: minikube
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: kube-api-access-fvfk5
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2025-05-30T16:43:54Z"
+    status: "True"
+    type: PodReadyToStartContainers
+  - lastProbeTime: null
+    lastTransitionTime: "2025-05-30T16:43:53Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2025-05-30T16:43:54Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2025-05-30T16:43:54Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2025-05-30T16:43:53Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://4688d628329b091d804ba0d788ae64297bf0e13d087c73388d802ed73608118f
+    image: nginx-custom:1.0
+    imageID: docker://sha256:64e1cb29c88b4662f40441ba3612117ea50e410718930e40da1506c6c13971b1
+    lastState: {}
+    name: nginx-custom-container
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2025-05-30T16:43:54Z"
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-fvfk5
+      readOnly: true
+      recursiveReadOnly: Disabled
+  hostIP: 192.168.49.2
+  hostIPs:
+  - ip: 192.168.49.2
+  phase: Running
+  podIP: 10.244.0.97
+  podIPs:
+  - ip: 10.244.0.97
+  qosClass: BestEffort
+  startTime: "2025-05-30T16:43:53Z"

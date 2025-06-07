@@ -1,0 +1,6 @@
+- name: Run Supertux setup in Docker container
+  hosts: Endpoints
+  become: yes
+
+  roles:
+    - role: supertux_in_docker

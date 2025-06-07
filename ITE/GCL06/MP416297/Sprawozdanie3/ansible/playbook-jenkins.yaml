@@ -1,0 +1,64 @@
+- name: Supertux in Docker
+  hosts: Endpoints
+  become: yes
+
+  vars:
+    local_package_path: ./supertux-build.tar.gz
+    remote_package_path: /tmp/supertux-build.tar.gz
+    container_image: peczyn/main-container:1.0
+    container_name: supertux-container
+    unpacked_dir: /supertux-build
+
+  tasks:
+    - name: Copy supertux package to remote host
+      ansible.builtin.copy:
+        src: "{{ local_package_path }}"
+        dest: "{{ remote_package_path }}"
+        mode: '0644'
+
+    - name: Install Docker
+      ansible.builtin.dnf:
+        name:
+          - docker
+        state: present
+        update_cache: yes
+
+    - name: Start and enable Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull Docker image
+      community.docker.docker_image:
+        name: "{{ container_image }}"
+        source: pull
+
+    - name: Create and start container with mounted package
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ container_image }}"
+        state: started
+        volumes:
+          - "{{ remote_package_path }}:{{ remote_package_path }}"
+        command: sleep infinity
+        detach : true
+        security_opts:
+          - label=disable
+
+
+    - name: Execute commands in container (unpack and run supertux)
+      community.docker.docker_container_exec:
+        container: "{{ container_name }}"
+        command: >
+          sh -c "
+          mkdir -p {{ unpacked_dir }} &&
+          tar -xzf {{ remote_package_path }} -C / &&
+          cd /supertux/build &&
+          ./supertux2 --version
+          "
+      register: command_output
+
+    - name: Display supertux version output
+      ansible.builtin.debug:
+        var: command_output.stdout

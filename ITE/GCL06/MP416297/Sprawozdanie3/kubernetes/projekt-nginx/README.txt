@@ -1,0 +1,1 @@
+Na potrzeby zmiany systemu plikow
