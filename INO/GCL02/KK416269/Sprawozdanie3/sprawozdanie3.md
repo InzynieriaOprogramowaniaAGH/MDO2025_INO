@@ -1,18 +1,11 @@
 # **Sprawozdanie 3** - Metodyki DevOps
-  kod:
-  ```bash
-  ```
-
-- [x] **podpunkt**
-  - **podpunkt**
-
 _________________________________________________________________________________________________________________________________________________________
 ## **LAB 8 - Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible** 
 
 Celem ćwiczeń było przygotowanie pliku odpowiedzi i wykorzystanie go do przeprowadzenia nienadzorowanej instalacji systemu Fedora. Podczas zajęć skonfigurowałam instalator tak, aby system po uruchomieniu automatycznie zawierał wymagane repozytoria, zależności oraz uruchamiał moje oprogramowanie. Dzięki temu udało się w pełni zautomatyzować proces instalacji i wdrożenia środowiska testowego.
 
 ### Instalacja zarządcy Ansible
-- [x] **🌵 Utwórz drugą maszynę wirtualną o **jak najmniejszym** zbiorze zainstalowanego oprogramowania**
+- [x] **Utwórz drugą maszynę wirtualną o **jak najmniejszym** zbiorze zainstalowanego oprogramowania**
   - **Zastosuj ten sam system operacyjny, co "główna" maszyna (najlepiej też w tej samej wersji)**
   - **Zapewnij obecność programu `tar` i serwera OpenSSH (`sshd`)**
 
@@ -43,7 +36,7 @@ Zaś aby wykonać jej eksport musiałabym tak jak poniżej na wyłączonej maszy
 
 ![image](https://github.com/user-attachments/assets/f42364e0-512b-49f5-a73b-abf3c1d259a0)
 
-- [x] **🌵 Na głównej maszynie wirtualnej, zainstaluj oprogramowanie Ansible**
+- [x] **Na głównej maszynie wirtualnej, zainstaluj oprogramowanie Ansible**
 
 Na maszynie "Fedora" pobrałam ansible `sudo dnf install ansible -y`
 
@@ -67,7 +60,7 @@ Rezultaty:
 ![image](https://github.com/user-attachments/assets/1347efd4-0cb9-4ee0-af5d-777b62c4ce67)
 
 ### Inwentaryzacja
-- [x] **🌵 Dokonaj inwentaryzacji systemów**
+- [x] **Dokonaj inwentaryzacji systemów**
   - **Ustal przewidywalne nazwy komputerów (maszyn wirtualnych) stosując `hostnamectl`, Unikaj `localhost`.**
 
 Na maszynie głównej uruchomiłam `hostnamectl set-hostname ansible-orchestrator`, a dla maszyny docelowej pozostała nazwa *ansible-target*
@@ -100,7 +93,7 @@ ansible-target ansible_user=ansible
 
 ```
 
-  - **🌵 Wyślij żądanie `ping` do wszystkich maszyn**
+  - **Wyślij żądanie `ping` do wszystkich maszyn**
 Aby to zrobić wykonałam polecenie `ansible all -i hosts.ini -m ping`. Polecenie to wykorzystuje Ansible do wysłania żądania ping do wszystkich hostów (all) zdefiniowanych w pliku hosts.ini. Dzięki temu mogłam upewnić się, że maszyny są dostępne przez SSH, poprawnie rozpoznają się po nazwach
 ![image](https://github.com/user-attachments/assets/ad665af3-a1dc-49a5-8f1f-faf7a26dbf70)
 
@@ -120,7 +113,7 @@ Aby upewnić się, że łączność SSH między maszynami nie wymaga podawania h
 
 ### Zdalne wywoływanie procedur
 Za pomocą playbooka Ansible:
-  - [x] **🌵 Wyślij żądanie `ping` do wszystkich maszyn**
+  - [x] **Wyślij żądanie `ping` do wszystkich maszyn**
   - [x] **Skopiuj plik inwentaryzacji na maszyny/ę `Endpoints`**
   - [x] **Ponów operację, porównaj różnice w wyjściu**
 
@@ -297,11 +290,305 @@ Po uruchomieniu playbook wykonał wszystkie zadania poprawnie: Redis został pob
 _______________________________________________________________________
 ## **LAB 9 Pliki odpowiedzi dla wdrożeń nienadzorowanych (Kickstart)** 
 
-Cel - 
+Tematem laboratorium było przygotowanie automatycznego źródła instalacji systemu operacyjnego Fedora z wykorzystaniem pliku odpowiedzi Kickstart. Celem było przeprowadzenie nienadzorowanej instalacji systemu oraz konfiguracja środowiska tak, aby po uruchomieniu system automatycznie uruchamiał nasze oprogramowanie. W ramach zadania należało także zadbać o odpowiednie repozytoria, zależności oraz sposób pobrania i instalacji aplikacji.
 
-### Zadanie
-- [x] **podpunkt**
-  - **podpunkt**
+### Zadania do wykonania
+Przeprowadź instalację nienadzorowaną systemu Fedora z pliku odpowiedzi z naszego repozytorium
+- [x] **Zainstaluj system Fedora**
+  * zastosuj instalator sieciowy (*Everything Netinst*) lub
+  * zastosuj instalator wariantu *Server* z wbudowanymi pakietami, przyjmujący plik odpowiedzi (dobra opcja dla osób z ograniczeniami transferu internetowego)
+
+- [x] **Pobierz plik odpowiedzi `/root/anaconda-ks.cfg`**
+
+Za pomocą polecenia cat wyciągnęłam zawartość pliku *anaconda-ks.cfg* i skopiowałam go
+
+![image](https://github.com/user-attachments/assets/cb34927f-e1a9-4e76-8548-76ab9bfd1b82)
+
+
+- [x] **Zapoznaj się z dokumentacją pliku odpowiedzi i zmodyfikuj swój plik:**
+  - **Plik odpowiedzi może nie zawierać wzmianek na temat potrzebnych repozytoriów. Jeżeli Twoja płyta instalacyjna nie zawiera pakietów, dodaj wzmiankę o repozytoriach skąd je pobrać. Na przykład, dla systemu Fedora 38:
+      * `url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-38&arch=x86_64`
+      * `repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f38&arch=x86_64`
+  - **Plik odpowiedzi może zakładać pusty dysk. Zapewnij, że zawsze będzie formatować całość, stosując `clearpart --all`**
+  - **Ustaw *hostname* inny niż domyślny `localhost`**
+  
+Na podstawie dokumentacji Kickstarta oraz wymagań zadania, wprowadziłam następujące zmiany w pliku anaconda-ks.cfg:
+
+  * Dodanie repozytoriów internetowych – umożliwia pobranie pakietów:
+```bash
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+```
+ 
+  * Ustawienie niestandardowej nazwy hosta
+```bash
+network --hostname=NowyHostKaoiny
+```
+(Uwaga: początkowo użyłam Nowy_host_Kaoiny, ale znak _ powodował błąd – został usunięty.)
+
+  * Dodanie wyczyszczenia wszystkich partycji – zapewnia, że instalator nadpisze cały dysk i nie zostaną żadne dane
+``` bash
+clearpart --all --initlabel
+```
+
+  * Dodanie automatycznego restartu systemu po instalacji:
+`reboot`
+
+
+```bash
+# Generated by Anaconda 41.35
+# Generated by pykickstart v3.58
+#version=DEVEL
+
+# Keyboard layouts
+keyboard --vckeymap=pl --xlayouts='pl'
+# System language
+lang pl_PL.UTF-8
+
+# Repozytoria i źródło instalacji
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+
+# Network information
+network  --bootproto=dhcp --device=eth0 --ipv6=auto --activate
+network  --hostname=Nowy_host_Kaoiny
+
+%packages
+@^server-product-environment
+
+%end
+
+# Run the Setup Agent on first boot
+firstboot --enable
+
+# Generated using Blivet version 3.11.0
+ignoredisk --only-use=sda
+# System bootloader configuration
+bootloader --location=mbr --boot-drive=sda
+# Partition clearing information
+clearpart --all --initlabel
+# Disk partitioning information
+part pv.159 --fstype="lvmpv" --ondisk=sda --size=8500
+part /boot --fstype="ext4" --ondisk=sda --size=1024
+part /boot/efi --fstype="efi" --ondisk=sda --size=600 --fsoptions="umask=0077,shortname=winnt"
+volgroup fedora_kaoinafedora --pesize=4096 pv.159
+logvol / --fstype="ext4" --grow --maxsize=71680 --size=1024 --name=root --vgname=fedora_kaoinafedora
+
+# System timezone
+timezone Europe/Warsaw --utc
+
+# Root password
+rootpw --lock
+user --groups=wheel --name=kaoina --password=$y$j9T$Za.bEcfmtiXOZcJwU4ZjeVc3$J1zgPRZWQk29WsCQCxdmuuGHUw3fkISdkP1RJfpqYQ6 --iscrypted --gecos="Kaoina"
+
+reboot
+```
+
+- [x] **Użyj pliku odpowiedzi do przeprowadzenia instalacji nienadzorowanej**
+  - **Uruchom nową maszynę wirtualną z płyty ISO i wskaż instalatorowi przygotowany plik odpowiedzi stosowną dyrektywą**
+
+W celu uruchomienia nienadzorowanej instalacji, przygotowany plik Kickstarta umieściłam w repozytorium GitHub, a następnie, podczas startu maszyny wirtualnej z obrazu ISO Fedory, nacisnęłam klawisz e w menu i dopisałam do linii startowej jądra parametr `inst.ks=<link_do_pliku_ks>`, gdzie <link_do_pliku_ks> wskazywał bezpośredni link do wersji Raw pliku Kickstarta w repozytorium.
+
+![image](https://github.com/user-attachments/assets/6171688c-1edb-4a48-bc6b-57f841c2b86f)
+
+Skąd link do pliku odpowiedzi(Raw File):
+
+![image](https://github.com/user-attachments/assets/7d857342-bfb3-42a5-aec8-13d8ef6776a7)
+
+Bład z powodu znaku "_":C
+
+![image](https://github.com/user-attachments/assets/195cdb53-f057-4808-8f05-42d6e47cffd6)
+
+
+Instalacja rozpoczęła się automatycznie i zakończyła sukcesem, bez konieczności dalszej ingerencji z mojej strony. Maszyna została poprawnie skonfigurowana, zainstalowana i zrestartowana – zgodnie z zawartością przygotowanego pliku .ks.
+
+![image](https://github.com/user-attachments/assets/f92c53fd-6fca-4fcc-9367-5ff64409687e)
+![image](https://github.com/user-attachments/assets/33e1a1be-e6e3-4c9b-9618-d72f555779b4)
+
+
+---
+- [x] **Rozszerz plik odpowiedzi o repozytoria i oprogramowanie potrzebne do uruchomienia programu, zbudowanego w ramach projektu - naszego *pipeline'u*.**
+  - **W przypadku kontenera, jest to po prostu Docker.
+      - **Utwórz w sekcji `%post` mechanizm umożliwiający pobranie i uruchomienie kontenera
+      - **Jeżeli efektem pracy pipeline'u nie był kontener, a aplikacja samodzielna - zainstaluj ją
+    - **Pamiętaj, że **Docker zadziała dopiero na uruchomionym systemie!** - nie da się wdać w interakcję z Dockerem z poziomu instalatora systemu: polecenia `docker run` nie powiodą się na tym etapie. Nie zadziała też `systemctl start` (ale `systemctl enable` już tak)
+
+W ramach poprzednich laboratoriów korzystałam z kontenera Dockera zawierającego Redis. W związku z tym, aby system po instalacji automatycznie pobierał i uruchamiał ten kontener, wykonałam następujące modyfikacje w pliku *anaconda*:
+
+  * Dodanie repozytorium Dockera – umożliwia instalację Dockera
+```bash
+repo --name=docker-ce --baseurl=https://download.docker.com/linux/fedora/41/x86_64/stable
+```
+  * Dodanie pakietów Dockera w sekcji %packages – wymagane komponenty do uruchamiania kontenerów
+```bash
+docker-ce
+docker-ce-cli
+containerd.io
+```
+  * Konfiguracja w sekcji %post
+
+    * Włączono usługę Docker przy starcie:
+      
+    ```bash
+    systemctl enable docker
+    ```
+    
+    * Utworzono katalog */opt/scripts* i plik *start-redis.sh*, który uruchamia kontener Redis:
+    
+    ```bash
+    cat > /opt/scripts/start-redis.sh << 'EOF'
+    #!/bin/bash
+    sleep 10
+    docker run -d --name redis --restart=always -p 6379:6379 kaoina666/redis_runtime:2
+    EOF
+
+    chmod +x /opt/scripts/start-redis.sh
+    ```
+    
+    * Utworzono usługę *systemd start-redis-container.service*, która uruchamia skrypt:
+  
+    ```bash
+    cat > /etc/systemd/system/start-redis-container.service << 'EOF'
+    [Unit]
+    Description=Start Redis container from Docker Hub
+    After=network-online.target docker.service
+    Wants=network-online.target
+
+    [Service]
+    Type=oneshot
+    ExecStart=/opt/scripts/start-redis.sh
+    RemainAfterExit=yes
+
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+
+    systemctl enable start-redis-container.service
+    ```
+
+
+
+Zmodyfikowany plik:
+```bash
+# Generated by Anaconda 41.35
+# Generated by pykickstart v3.58
+#version=DEVEL
+
+# Keyboard layouts
+keyboard --vckeymap=pl --xlayouts='pl'
+# System language
+lang pl_PL.UTF-8
+
+# Repozytoria i źródło instalacji
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+repo --name=docker-ce --baseurl=https://download.docker.com/linux/fedora/41/x86_64/stable
+
+# Network information
+network  --bootproto=dhcp --device=eth0 --ipv6=auto --activate
+network  --hostname=NowyHostKaoiny
+
+%packages
+@^server-product-environment
+docker-ce
+docker-ce-cli
+containerd.io
+%end
+
+%post --log=/root/ks-post.log
+# Docker do uruchamiania przy starcie
+systemctl enable docker
+
+# Pobranie i przygotowanie Redisa (własny kontener z Docker Huba)
+mkdir -p /opt/scripts
+
+cat > /opt/scripts/start-redis.sh << 'EOF'
+#!/bin/bash
+# Start dockera
+sleep 10
+# Uruchom kontener redis z dockerhub
+docker run -d --name redis --restart=always -p 6379:6379 kaoina666/redis_runtime:2
+EOF
+
+chmod +x /opt/scripts/start-redis.sh
+
+# Jednostka systemd do uruchamiania kontenera przy starcie
+cat > /etc/systemd/system/start-redis-container.service << 'EOF'
+[Unit]
+Description=Start Redis container from Docker Hub
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/scripts/start-redis.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Jednostka systemd
+systemctl enable start-redis-container.service
+%end
+
+# Run the Setup Agent on first boot
+firstboot --enable
+
+# Generated using Blivet version 3.11.0
+ignoredisk --only-use=sda
+# System bootloader configuration
+bootloader --location=mbr --boot-drive=sda
+# Partition clearing information
+clearpart --all --initlabel
+# Disk partitioning information
+part pv.159 --fstype="lvmpv" --ondisk=sda --size=8500
+part /boot --fstype="ext4" --ondisk=sda --size=1024
+part /boot/efi --fstype="efi" --ondisk=sda --size=600 --fsoptions="umask=0077,shortname=winnt"
+volgroup fedora_kaoinafedora --pesize=4096 pv.159
+logvol / --fstype="ext4" --grow --maxsize=71680 --size=1024 --name=root --vgname=fedora_kaoinafedora
+
+# System timezone
+timezone Europe/Warsaw --utc
+
+# Root password
+rootpw --lock
+user --groups=wheel --name=kaoina --password=$y$j9T$Za.bEcfmtiXOZcJwU4ZjeVc3$J1zgPRZWQk29WsCQCxdmuuGHUw3fkISdkP1RJfpqYQ6 --iscrypted --gecos="Kaoina"
+
+reboot
+```
+
+Uruchamianie i konfiguracja maszyny:
+
+![image](https://github.com/user-attachments/assets/0f83c469-8c14-4d7e-8474-c79c4c8adf37)
+
+
+- [x] **Zadbaj o automatyczne ponowne uruchomienie na końcu instalacji**
+
+Za automatyczny restart systemu po zakończeniu instalacji odpowiada ostatnia linijka w pliku: `reboot`
+
+- [x] **Zapewnij, by od razu po pierwszym uruchomieniu systemu, oprogramowanie zostało uruchomione (w dowolny sposób)**
+
+1. Czy Docker działa?
+`systemctl status docker`
+Docker.service ma status active (running)
+![image](https://github.com/user-attachments/assets/f7d7b1ec-a3eb-4768-af4e-ab4bae495930)
+
+2. Czy kontener Redis działa?
+`docker ps`
+Widoczny kontener Redis z STATUS: Up 
+![image](https://github.com/user-attachments/assets/c6712ff9-bff4-46a5-b805-66f7ee5ae659)
+
+3. Czy Redis nasłuchuje?
+`ss -lntp | grep 6379`
+Widoczny proces nasłuchujący na porcie 6379.
+![image](https://github.com/user-attachments/assets/944a4a2c-6e54-496a-b969-e96712b87f9b)
+
+4. Czy usługa systemd działa?
+`systemctl status start-redis-container.service`
+Usługa start-redis-container.service działała i zakończyła się sukcesem:
+![image](https://github.com/user-attachments/assets/f8fc7bc9-adc4-4801-a4ae-1941ea5247d0)
+
 _________________________________________________________________
 ## **LAB 10 Wdrażanie na zarządzalne kontenery: Kubernetes (1)**
 
