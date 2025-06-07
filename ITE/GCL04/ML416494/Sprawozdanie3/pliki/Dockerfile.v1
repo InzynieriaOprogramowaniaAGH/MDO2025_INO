@@ -1,0 +1,2 @@
+FROM httpd:2.4
+RUN echo "Wersja 1 serwera od stundeto" > /usr/local/apache2/htdocs/index.html

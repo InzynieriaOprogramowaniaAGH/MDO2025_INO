@@ -1,0 +1,31 @@
+---
+- name: Pull and run stundeto/test image
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Ensure Docker is installed
+      dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+      ignore_errors: true 
+
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Pull stundeto/test image from Docker Hub
+      community.docker.docker_image:
+        name: stundeto/test:v1.0.18
+        source: pull
+
+    - name: Run stundeto/test container
+      community.docker.docker_container:
+        name: stundeto-test
+        image: stundeto/test:v1.0.18
+        state: started
+        restart_policy: always
