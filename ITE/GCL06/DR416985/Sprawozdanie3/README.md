@@ -141,19 +141,19 @@ ansible-playbook -i inventory.ini ping.yml
         state: restarted
 ```
 
-LAB9
-Wdrożenia nienadzorowane
+# LAB9
+## Wdrożenia nienadzorowane
 
-1. Pierwszym krokiem było wyciągniecię pliki anaconda-ks.cfg z naszej głownej maszyny Fedora
+## 1. Pierwszym krokiem było wyciągniecię pliki anaconda-ks.cfg z naszej głownej maszyny Fedora
 ```sh
 sudo cp /root/anaconda-ks.cfg
 ```
 
-1.1 Plik został wrzucony na githuba aby potem móc pobrać link w wersja RAW
+## 1.1 Plik został wrzucony na githuba aby potem móc pobrać link w wersja RAW
 
-2. Tworzymy nową maszyne virtualną, ważne jest aby użyć tego samoego obrazu bo potem można spędzić 2h zasnataawiając się czemu nie działa 
+## 2. Tworzymy nową maszyne virtualną, ważne jest aby użyć tego samoego obrazu bo potem można spędzić 2h zasnataawiając się czemu nie działa 
 
-3. Modyfikacja pliku odpowiedzi
+## 3. Modyfikacja pliku odpowiedzi
 - dodano repozytoria Fedora,
 - włączono automatyczne czyszczenie dysku,
 - ustawiono hostname,
@@ -235,9 +235,16 @@ systemctl enable run-my-app-container.service
 
 %end
 ```
-4. Kolejnym krokiem jest pobranie linku raw i wklejeniu go podczas odpalania maszyny w linicje zaczynajacej sie od linux...
+## 4. Kolejnym krokiem jest pobranie linku raw i wklejeniu go podczas odpalania maszyny w linicje zaczynajacej sie od linux...
 Dokładniej mówiąc to przepisanie go bo wklejać się tam nie da
 
-4.1 Po zresetowaniu fedora się odapla i zaczyna instalować pakiety
+![ss1](23.1.png)
+![ss1](23.2.png)
 
-4.2 Udało się odaplić maszyny
+## 4.1 Po zresetowaniu fedora się odapla i zaczyna instalować pakiety
+
+![ss1](23.3.png)
+
+## 4.2 Udało się odaplić maszyny
+
+![ss1](23.4.png)
