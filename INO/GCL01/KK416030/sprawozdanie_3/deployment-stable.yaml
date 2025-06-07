@@ -1,0 +1,23 @@
+# deployment-stable.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-stable
+spec:
+  replicas: 3 
+  selector:
+    matchLabels:
+      app: my-nginx-app 
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: my-nginx-app 
+        version: stable   
+    spec:
+      containers:
+      - name: nginx-container
+        image: my-custom-nginx:v1.0 
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Never

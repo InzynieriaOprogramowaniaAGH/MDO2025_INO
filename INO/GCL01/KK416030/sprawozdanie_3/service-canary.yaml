@@ -1,0 +1,13 @@
+# service-canary.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx-service
+spec:
+  selector:
+    app: my-nginx-app 
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: NodePort
