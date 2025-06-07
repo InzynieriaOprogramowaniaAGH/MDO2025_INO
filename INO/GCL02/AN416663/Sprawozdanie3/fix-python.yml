@@ -1,0 +1,7 @@
+---
+- name: Napraw brakujące zależności do apt
+  hosts: all
+  become: true
+  tasks:
+    - name: Zainstaluj python3-apt
+      raw: apt update && apt install -y python3-apt

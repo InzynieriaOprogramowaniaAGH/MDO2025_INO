@@ -1,0 +1,59 @@
+---
+- name: Zainstaluj Dockera na Fedorze
+  become: true
+  ansible.builtin.dnf:
+    name: docker
+    state: present
+
+- name: Upewnij się, że Docker działa
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Skopiuj artefakt (plik binarny lub tar.gz)
+  copy:
+    src: xz.tar.gz
+    dest: /home/ansible/xz.tar.gz
+
+- name: Skopiuj deploy.c
+  copy:
+    src: deploy.c
+    dest: /home/ansible/deploy.c
+
+- name: Skopiuj Dockerfile
+  copy:
+    src: Dockerfile
+    dest: /home/ansible/Dockerfile
+
+- name: Zbuduj obraz Docker
+  community.docker.docker_image:
+    name: xz-runtime
+    tag: latest
+    source: build
+    build:
+      path: /home/ansible
+
+- name: Uruchom kontener
+  community.docker.docker_container:
+    name: xz-app
+    image: xz-runtime:latest
+    state: started
+
+- name: Zweryfikuj działanie kontenera
+  command: docker ps
+  register: docker_ps
+
+- name: Pokaż wynik
+  debug:
+    var: docker_ps.stdout_lines
+
+- name: Zatrzymaj kontener
+  community.docker.docker_container:
+    name: xz-app
+    state: stopped
+
+- name: Usuń kontener
+  community.docker.docker_container:
+    name: xz-app
+    state: absent

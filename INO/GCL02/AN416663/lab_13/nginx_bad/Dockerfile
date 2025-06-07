@@ -1,0 +1,2 @@
+FROM nginx
+CMD ["false"]

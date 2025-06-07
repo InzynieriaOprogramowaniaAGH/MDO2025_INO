@@ -1,0 +1,6 @@
+---
+- name: Zarządzanie artefaktem
+  hosts: ansible-target
+  become: yes
+  roles:
+    - manage_artifact
