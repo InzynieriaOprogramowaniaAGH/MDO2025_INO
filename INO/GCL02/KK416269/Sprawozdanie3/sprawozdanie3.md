@@ -780,8 +780,296 @@ Na końcu, zgodnie z planem, przekierowałam port do serwisu, używając komendy
 _________________________________________________________________
 ## **LAB 11 Wdrażanie na zarządzalne kontenery: Kubernetes (2)**
 
-Cel - 
+Celem tych laboratoriów było przygotowanie i zarządzanie wersjami obrazów kontenerów w Dockerze oraz wdrażanie w środowisku Kubernetes. W trakcie zajęć skoncentrowałam się na aktualizowaniu, skalowaniu oraz przywracaniu poprzednich wersji aplikacji, a także na monitorowaniu wdrożeń przy użyciu różnych strategii, takich jak Recreate, Rolling Update czy Canary Deployment. Dodatkowo, zapoznałam się z automatyzacją procesów za pomocą skryptów.
 
-### Zadanie
-- [x] **podpunkt**
-  - **podpunkt**
+### Przygotowanie nowego obrazu
+- [x] **Zarejestruj nową wersję swojego obrazu `Deploy`**
+- [x] **Upewnij się, że dostępne są dwie co najmniej wersje obrazu z wybranym programem**
+- [x] **Będzie to wymagać**
+  - **przejścia przez *pipeline* dwukrotnie**
+
+Aby uzyskać nową wersję mojego obrazu skorzystałam z mojego gotowego pipeline w Jenkinsie. Odpaliłam go po raz drugi i uzyskałam dzięki temu na DockerHubie oczekiwany efekt:
+
+![image](https://github.com/user-attachments/assets/76a4c835-a79e-4615-b84e-e2cc4d60331f)
+
+### Zmiany w deploymencie
+- [x] **Aktualizuj plik YAML z wdrożeniem i przeprowadzaj je ponownie po zastosowaniu następujących zmian:**
+  - **zwiększenie replik np. do 8**
+  - **zmniejszenie liczby replik do 1**
+  - **zmniejszenie liczby replik do 0**
+  - **ponowne przeskalowanie w górę do 4 replik (co najmniej)**
+  - **Zastosowanie nowej wersji obrazu**
+  - **Zastosowanie starszej wersji obrazu**
+  - **Zastosowanie "wadliwego" obrazu**
+- [x] **Przywracaj poprzednie wersje wdrożeń za pomocą poleceń**
+  - **```kubectl rollout history```**
+  - **```kubectl rollout undo```**
+     
+Aby wykonać tą cześć ćwiczenia korzystałam ze stworoznego przeze mnie pliku *redis-deploy.yaml*:
+
+```bash
+# redis-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis-container
+        image: kaoina666/redis_runtime:3 #zmiana z 2
+        ports:
+        - containerPort: 6379
+```
+
+W zarządzaniu zmianami pomagały komendy: 
+`kubectl rollout undo deployment redis-app` - cofnięcie do poprzedniej wersji	
+`kubectl rollout history deployment redis-app` - pokazuje historię rewizji przed rollbackiem, do śledzenia zmian
+
+![image](https://github.com/user-attachments/assets/3042b1a6-7d24-4faf-ad43-87c4692813d9)
+
+Jednym z zadań była kilkukrotna zmiana ilości replik naszej apliakcji. Aby zwiększyć bądź zmniejszyć ilość replik należało zmieniać parametr ` replicas: x` - w miejsce x wstawiałam odpowiednią ilość replik jaką należało uzyskać, a następnie aplikowałam zmiany przez `kubectl apply -f redis-deploy.yaml`. Ilość podów redis-app (ignorujmy te z 10 dni temu) sprawdzałam znanym dobrze `kubectl get pods`.
+
+8 podów:
+![image](https://github.com/user-attachments/assets/335fcbe6-0235-4b24-97cc-987596eaa8c1)
+
+1 pod:
+![image](https://github.com/user-attachments/assets/b4ed9eb1-5930-46b1-8311-677bee673a2f)
+
+0 podów: 
+![image](https://github.com/user-attachments/assets/58263ac8-a2ad-42ea-9540-38a9a2bd11f6)
+
+4 pody:
+![image](https://github.com/user-attachments/assets/9a2d24d6-2b1d-405c-871c-77bf2159d0d0)
+
+Kolejnym z zadań była zmiana wersji naszego obrazu, wystarczyło podmienić tag z `2` na `3`. Efekty były dobrze zauważalne np w dashbordzie:
+
+![image](https://github.com/user-attachments/assets/647f5fb4-d896-4cca-b971-847a8b97d35f)
+
+
+Aby cofnąć spowrotem do wersji tagu `2` cofnęłam się poleceniem `kubectl rollout undo deployment redis-app`, i wszystko jakby cofnęło się w czasie, co odnotowałam w dashbordzie jak poniżej:
+![image](https://github.com/user-attachments/assets/49b8f376-60ab-4230-ae18-1216fcc10d39)
+![image](https://github.com/user-attachments/assets/82d014d4-aae5-4a92-902d-914b5e218e8c)
+
+Kolejnym zadaniem była próba zastosowania wadliwego obrazu. w tym celu w pliku wdrożeniowym zamiast poprawnego tagu wybrałam taki który nie istnieje (w moim przypadku `:bad`).
+
+![image](https://github.com/user-attachments/assets/424baf2b-763c-4bb9-84f9-575874681cac)
+
+Jak widać odrazu po zmianie barw, wystąpiły błędy. Kubernetes spróbował wdrożyć nową wersję, ale rollout się nie powiódł. W takich przypadkach właśnie znowu przydaje się ‘kubectl rollout undo deployment redis-app’, dzięki czemu wszsytko spowrotem działa:
+
+![image](https://github.com/user-attachments/assets/9e9d443c-aa92-449d-8639-d69c73abcf27)
+![image](https://github.com/user-attachments/assets/0d63cd3e-c1b3-42ba-9413-b4f72d4555a7)
+
+
+
+### Kontrola wdrożenia
+- [x] **Zidentyfikuj historię wdrożenia i zapisane w niej problemy, skoreluj je z wykonywanymi czynnościami**
+
+Poleceniem `kubectl describe deployment redis-app` mogłam przejrzeć historię wdrożenia.
+
+![image](https://github.com/user-attachments/assets/909680fa-d735-49b1-ad54-9abefe9fa886)
+
+Widać, że obecna wersja (:2) działa poprawnie, wszystkie 4 Pody są gotowe . Były również przynajmniej 3 różne zestawy replik (czyli zmieniany był obraz lub konfiguracja). W zakładce events widzimy jak wyglądały momenty skalowania np. z 3 → 8 → 0 → 4 
+
+- [x] **Napisz skrypt weryfikujący, czy wdrożenie "zdążyło" się wdrożyć (60 sekund)**
+
+Utworzyłam skrypt check_deploy.sh, który automatycznie weryfikuje, czy wdrożenie aplikacji redis-app w Kubernetesie zostało zakończone pomyślnie w określonym czasie (60 sekund). Skrypt monitoruje liczbę gotowych replik aplikacji, porównując ją z liczbą replik określoną w specyfikacji wdrożenia. Jeśli liczba dostępnych replik równa się liczbie replik pożądanych i jest różna od pustej wartości, skrypt informuje o sukcesie wdrożenia. Jeśli po upływie 60 sekund wdrożenie nadal nie jest gotowe, skrypt wypisuje komunikat o przekroczeniu czasu oczekiwania.
+
+Przed uruchomieniem `./check_deploy.sh` nadałam prawa `chmod +x check_deploy.sh`.
+
+``` bash
+#!/bin/bash
+
+DEPLOYMENT_NAME="redis-app"
+NAMESPACE="default"
+TIMEOUT=60
+
+echo "Sprawdzam wdrożenie: $DEPLOYMENT_NAME (maksymalnie ${TIMEOUT}s)..."
+
+for ((i=1;i<=TIMEOUT;i++)); do
+  READY=$(minikube kubectl -- get deploy $DEPLOYMENT_NAME -n $NAMESPACE -o jsonpath='{.status.readyReplicas}')
+  DESIRED=$(minikube kubectl -- get deploy $DEPLOYMENT_NAME -n $NAMESPACE -o jsonpath='{.spec.replicas}')
+  
+  if [[ "$READY" == "$DESIRED" && "$READY" != "" ]]; then
+    echo "✅ Wdrożenie zakończone sukcesem: $READY/$DESIRED replik gotowych."
+    exit 0
+  fi
+
+  echo "⏳ [$i/$TIMEOUT] Czekam... ($READY/$DESIRED gotowych)"
+  sleep 1
+done
+
+echo "❌ Timeout: wdrożenie nie zakończone w $TIMEOUT sekund."
+exit 1
+```
+
+Działanie (W trakcie testu wdrożenie zakończyło się sukcesem w czasie poniżej 60 sekund.):
+
+![image](https://github.com/user-attachments/assets/50c9e204-32ab-4a9d-9655-2c669be3a102)
+
+ 
+### Strategie wdrożenia
+- [x] **Przygotuj wersje wdrożeń stosujące następujące strategie wdrożeń**
+  - **Recreate**
+  - **Rolling Update (z parametrami `maxUnavailable` > 1, `maxSurge` > 20%)**
+  - **Canary Deployment workload**
+- [x] **Zaobserwuj i opisz różnice**
+- [x] **Uzyj etykiet**
+
+1. Recreate strategy - wyłącza wszystkie stare Pody, dopiero potem uruchamia nowe (na raz). W rollingUpdate stare pody są usuwane i zasępowane **stopniowo** Aby to sprawdzić najpierw uruchomiłam plik z wersją tagu 2, a następnie 3. Po zmianie wersji obrazu wszystkie stare Pody zostały usunięte i dopiero wtedy zostały utworzone nowe. W dashboardzie obserwujemy tylko Pody z nowym obrazem, co potwierdza, że wdrożenie było "czyste", bez równoległego działania starych i nowych instancji. Strategia Recreate powoduje chwilową niedostępność usługi, ale wdrożenie jest proste i szybkie.
+
+Dla 2: 
+
+![image](https://github.com/user-attachments/assets/495932e9-4dcb-4405-9212-28b8ee699780)
+
+Dla 3:
+
+![image](https://github.com/user-attachments/assets/c783f4d3-0a75-4f15-b976-6464d68dfa0b)
+
+
+redis-recreate.yaml:
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-recreate
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: redis-recreate
+  template:
+    metadata:
+      labels:
+        app: redis-recreate
+    spec:
+      containers:
+      - name: redis
+        image: kaoina666/redis_runtime:3
+        ports:
+        - containerPort: 6379
+```
+
+2. RollingUpdate z parametrami (maxUnavailable: 2, maxSurge: 50%) - stopniowo podmienia Pody, z wyraźnymi ustawieniami, ile można mieć niedostępnych lub nadmiarowych jednocześnie
+
+Uruchomienie:
+![image](https://github.com/user-attachments/assets/4cfc2810-b9a5-4888-a72a-7206108f1d28)
+
+Podczas zmiany wersji obrazu wszystkie Pody były podmieniane stopniowo. Obserwacja kubectl get pods -w oraz dashboardu potwierdziła, że żadne Pody nie były jednocześnie w stanie niedostępności (Unavailable = 0). Wdrożenie zakończyło się sukcesem, a aplikacja nie była niedostępna ani przez moment.
+
+redis-rolling.yaml:
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 50%
+  selector:
+    matchLabels:
+      app: redis-rolling
+  template:
+    metadata:
+      labels:
+        app: redis-rolling
+    spec:
+      containers:
+      - name: redis
+        image: kaoina666/redis_runtime:2
+        ports:
+        - containerPort: 6379
+```
+
+3. Canary Deployment - uruchamia 2 równoległe wersje aplikacji (np. 90% stabilna, 10% testowa)
+
+W celu przetestowania stworzyam aż 3 pliki yaml:
+redis-canary-stable.yaml
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: redis
+        version: stable
+    spec:
+      containers:
+      - name: redis
+        image: kaoina666/redis_runtime:2
+        ports:
+        - containerPort: 6379
+```
+
+
+redis-canary-experimental.yaml
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: redis
+        version: canary
+    spec:
+      containers:
+      - name: redis
+        image: kaoina666/redis_runtime:3
+        ports:
+        - containerPort: 6379
+
+```
+
+redis-service.yaml
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  ports:
+  - protocol: TCP
+    port: 6379
+    targetPort: 6379
+```
+
+Wdrożyłam Canary Deployment poprzez utworzenie dwóch niezależnych Deploymentów: redis-stable (obraz :2, 3 repliki) oraz redis-canary (obraz :3, 1 replika). Oba posiadają wspólną etykietę app=redis, co umożliwia połączenie ich pod wspólnym Service. Dzięki temu 75% ruchu trafia do stabilnej wersji, a 25% do wersji eksperymentalnej. Pozwala to na testowanie nowej wersji aplikacji w środowisku produkcyjnym z minimalnym ryzykiem.
+
+Efekty:
+![image](https://github.com/user-attachments/assets/82f23937-a17c-45bf-b1fa-30b93b3c3ddf)
+
+
+
+
