@@ -1,0 +1,8 @@
+- name: Update packages on target system
+  hosts: endpoints
+  tasks:
+    - name: Upgrade all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+      become: true

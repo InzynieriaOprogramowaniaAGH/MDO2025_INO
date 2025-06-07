@@ -1,0 +1,26 @@
+---
+- name: Deploy cJSON library using Docker
+  hosts: endpoints
+  become: yes
+  vars:
+    cjson_version: "v33"  
+    package_name: "cjson-package-{{ cjson_version }}"
+    artifact_path: "/tmp/{{ package_name }}.tar.gz"
+    
+  roles:
+    - cjson_deploy
+
+  post_tasks:
+    - name: Display deployment summary
+      debug:
+        msg: |
+          ================================
+          cJSON Deployment Summary
+          ================================
+          Version: {{ cjson_version }}
+          Package: {{ package_name }}
+          Target: {{ inventory_hostname }}
+          Docker installed: ✓
+          Application deployed: ✓
+          Verification completed: ✓
+          ================================

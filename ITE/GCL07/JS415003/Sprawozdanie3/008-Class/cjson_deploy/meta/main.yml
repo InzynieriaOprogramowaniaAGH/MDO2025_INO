@@ -1,0 +1,17 @@
+galaxy_info:
+  author: DevOps Engineer
+  description: Deploy cJSON library using Docker containers
+  company: University
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+    - name: Fedora
+      versions:
+        - 42
+  galaxy_tags:
+    - development
+    - cjson
+    - docker
+    - deployment
+
+dependencies: []
