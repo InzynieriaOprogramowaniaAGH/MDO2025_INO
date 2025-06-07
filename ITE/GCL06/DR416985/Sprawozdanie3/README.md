@@ -248,3 +248,150 @@ Dokładniej mówiąc to przepisanie go bo wklejać się tam nie da
 ## 4.2 Udało się odaplić maszyny
 
 ![ss1](23.4.png)
+# LAB 10+11
+
+##  1. Instalacja i uruchomienie Minikube
+
+- Zainstalowano Minikube
+- Uruchomiono klaster
+
+```bash
+minikube start
+minikube status
+```
+
+- Uruchomiono Dashboard
+
+```bash
+minikube dashboard
+```
+
+ **Screen 1:** Dashboard – pusta lista zasobów (brak podów, brak deploymentów)
+
+---
+
+##  2. Ręczne uruchomienie PODa
+
+- Utworzono plik `nginx-pod.yaml`
+- Uruchomiono pod:
+
+```bash
+kubectl apply -f nginx-pod.yaml
+kubectl get pods
+kubectl port-forward pod/nginx-pod 8088:8080
+```
+
+ **Screen 2:** `kubectl get pods` – widać pod `nginx-pod` w stanie Running  
+ **Screen 3:** Przeglądarka – działająca aplikacja pod `localhost:8088`  
+ **Screen 4:** Dashboard – widoczny pod `nginx-pod`
+
+---
+
+##  3. Deployment z YAML i replikami
+
+- Utworzono `nginx-deployment.yaml`
+- Uruchomiono deployment:
+
+```bash
+kubectl apply -f nginx-deployment.yaml
+kubectl get deployments
+kubectl get pods
+```
+
+ **Screen 5:** `kubectl get deployments` i `kubectl get pods` – 4 pody  
+ **Screen 6:** Dashboard – widoczny deployment i 4 działające pody
+
+---
+
+##  4. Skalowanie Deploymentu
+
+- Skalowano liczbę replik:
+
+```bash
+kubectl scale deployment nginx-deployment --replicas=8
+kubectl scale deployment nginx-deployment --replicas=1
+kubectl scale deployment nginx-deployment --replicas=0
+kubectl scale deployment nginx-deployment --replicas=4
+```
+
+ **Screen 7:** Dashboard – np. 8 podów  
+ **Screen 8:** Dashboard – 0 podów  
+ **Screen 9:** Dashboard – z powrotem 4 pody
+
+---
+
+##  5. Błędna wersja obrazu i rollback
+
+- Zmieniono `image` w `nginx-deployment.yaml` na nieistniejący
+- Zastosowano:
+
+```bash
+kubectl apply -f nginx-deployment.yaml
+kubectl get pods
+```
+
+- Rollback:
+
+```bash
+kubectl rollout undo deployment nginx-deployment
+```
+
+ **Screen 10:** Dashboard – pody z błędem `ErrImageNeverPull`  
+ **Screen 11:** Dashboard – po rollbacku, wszystkie pody `Running`  
+ **Screen 12:** Terminal – wynik `kubectl rollout undo`
+
+---
+
+##  6. Strategia Recreate
+
+- Zmieniono strategię w YAML:
+
+```yaml
+strategy:
+  type: Recreate
+```
+
+- Wdrożono ponownie:
+
+```bash
+kubectl apply -f nginx-deployment.yaml
+```
+
+ **Screen 13:** Dashboard – moment bez żadnych podów (`Terminating`, `Pending`)
+
+---
+
+##  7. Skrypt sprawdzający rollout (60s)
+
+- Plik `check-rollout.sh`:
+
+```bash
+#!/bin/bash
+timeout=60
+elapsed=0
+echo "⏳ Czekam na wdrożenie nginx-deployment..."
+
+while [ $elapsed -lt $timeout ]; do
+  ready=$(kubectl get deployment nginx-deployment -o jsonpath='{.status.readyReplicas}')
+  if [ "$ready" == "4" ]; then
+    echo " Wdrożenie zakończone sukcesem."
+    exit 0
+  fi
+  sleep 5
+  elapsed=$((elapsed + 5))
+done
+
+echo " Wdrożenie NIE zakończyło się w 60 sekund."
+exit 1
+```
+
+- Uruchomienie:
+
+```bash
+chmod +x check-rollout.sh
+./check-rollout.sh
+```
+
+ **Screen 14:** Terminal – wynik działania skryptu
+
+---
