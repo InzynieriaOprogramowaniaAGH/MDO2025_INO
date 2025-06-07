@@ -170,7 +170,7 @@
 
 ![9](Lab_4/screeny/9.png)
 
-### 10.Uruchomienie kontenera Jenkins na dedykowanej sieci
+### 10. Uruchomienie kontenera Jenkins na dedykowanej sieci
 
 ![10](Lab_4/screeny/10.png) 
 
