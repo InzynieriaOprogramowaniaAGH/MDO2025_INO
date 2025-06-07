@@ -482,4 +482,110 @@ Uruchamiamy system po instalacji, logujemy się, jak widać w systemie jest już
 
 ## Lab 10
 
+Ćwiczenie polegało na zainstalowaniu aplikacji w lokalnym Kubernetesie przez Minikube. Skonfigurowaliśmy środowisko, przygotowaliśmy pliki do deployu, uruchomiliśmy kontenery i sprawdziliśmy usługi.
+
+### Instalacja klastra Kubernetes
+
+Instalujemy Kubernetesa, uruchamiamy go i sprawdzamy status usługi
+
+![](lab10/1.jpg)
+
+Dodajemy odpowiedni alias w systemie, aby łatwiej odpalać komendy
+
+![](lab10/2.jpg)
+
+Uruchamiamy dashboard
+
+![](lab10/3_1.jpg)
+
+![](lab10/3.jpg)
+
+### Uruchomienie oprogramowania
+
+Uruchamiamy kontener z naszego obrazu w Kubernetesie i wystawiamy port 3000, następnie wyświetlamy pod z ich aktualnym stanem
+
+![](lab10/4.jpg)
+
+Jak widać w dashboardzie, nasz kontener pracuje
+
+![](lab10/5.jpg)
+
+Również widać, że w przeglądarce mamy dostęp do naszej aplikacji bez żadnego problemu
+
+![](lab10/6.jpg)
+
+### Plik wdrożenia
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node
+  labels:
+    app: node
+    environment: production
+
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: CPM-App
+  template:
+    metadata:
+      labels:
+        app: CPM-App
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: cpm-app-container
+        image: mareczek02/devopsy:latest
+        ports:
+          - containerPort: 3000
+            protocol: TCP
+        env:
+          - name: NODE_ENV
+            value: "production"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+```
+
+Ten plik YAML definiuje Deployment w Kubernetes, który odpowiada za uruchomienie i skalowanie aplikacji w kontenerach.
+ - apiVersion: apps/v1 określa wersję API, której używamy do tworzenia Deploymentu.
+ - kind: Deployment wskazuje, że mamy do czynienia z zasobem, który zarządza replikami podów.
+ - Sekcja metadata zawiera podstawowe informacje o Deploymentcie, takie jak jego nazwa (node) oraz etykiety (app: node, environment: production), które pomagają w organizacji zasobów.
+ - spec.replicas: 4 oznacza, że będziemy uruchamiać cztery kopie poda.
+ - selector.matchLabels wskazuje, jakie etykiety muszą mieć pody, aby były częścią tego Deploymentu (tutaj app: CPM-App).
+ - template.metadata.labels to etykiety przypisywane tworzonym podom, które muszą być zgodne z selektorem, żeby wszystko działało poprawnie.
+ - template.spec określa szczegóły dotyczące każdego poda:
+ - restartPolicy: Always zapewnia, że kontener będzie automatycznie restartowany w razie problemów,
+ - containers zawiera listę kontenerów – w tym przypadku mamy jeden:
+ - name: cpm-app-container – nazwa kontenera,
+ - image: mareczek02/devopsy:latest – obraz Dockera, który uruchamiamy,
+ - ports otwiera port 3000 TCP,
+ - env ustawia zmienną środowiskową NODE_ENV na production,
+ - resources określa minimalne wymagania (requests) oraz limity zużycia CPU i pamięci RAM przez kontener.
+
+Wdrażamy nasze pody za pomocą powyższego pliku wdrożenia
+
+![](lab10/7.jpg)
+
+Jak widać, nowe pody zostały uruchomione i pojawiły się w dashboardzie 
+
+![](lab10/8.jpg)
+
+Zbadano stan oraz wyeksponowano wdrożenie jako serwis
+
+![](lab10/9.jpg)
+
+![](lab10/10.jpg)
+
+Przekierowano port do serwisu
+
+![](lab10/11.jpg)
+
 ## Lab 11
