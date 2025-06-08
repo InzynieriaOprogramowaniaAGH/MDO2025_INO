@@ -171,10 +171,7 @@ all:
     Endpoints:
       hosts:
         ansible-target:
-          ansible_host: 10.0.2.15
-          ansible_user: amelia
-        ansible-endpoint2:
-          ansible_host: 10.0.2.15
+          ansible_host: 192.168.1.64
           ansible_user: amelia
 
 ```
@@ -243,7 +240,7 @@ Playbook został uruchomiony z poleceniem
 ansible-playbook -i inventory.yml playbook.yaml --ask-become-pass
 
 ```
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/run-playbook.jpg?raw=true)
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ansible%20playbook.jpg?raw=true)
 
 
 Zainstalowano dodatkowo rngd na maszynach:
