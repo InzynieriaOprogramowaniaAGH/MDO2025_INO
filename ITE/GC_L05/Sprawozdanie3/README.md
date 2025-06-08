@@ -146,6 +146,8 @@ ping ansible-target
 
 ```
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ping%20ansible.jpg?raw=true)
+
 
 ## Playbook – aktualizacja systemu i restart usług
 
