@@ -188,6 +188,8 @@ ansible all -i inventory.yml -m ping
 
 ```
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ping%20inventory%20.jpg?raw=true)
+
 ## Wynik testu:
 
 Kontener działał prawidłowo
