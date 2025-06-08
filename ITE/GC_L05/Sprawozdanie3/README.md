@@ -145,7 +145,7 @@ ping ansible-target
 
 ```
 
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ping%20ansible.jpg?raw=true)
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ping%20192168164.jpg?raw=true)
 
 ## Tworzenie pliku inwentaryzacyjnego Ansible
 
