@@ -47,6 +47,8 @@ ssh amelia@10.0.2.15
 
 ```
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ssh%20amelia.jpg?raw=true)
+
 
 ## Konfiguracja nazw hostów
 
