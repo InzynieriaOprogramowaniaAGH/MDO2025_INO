@@ -20,12 +20,169 @@ sudo dnf -y install tar openssh-server
 Po instalacji, usługa SSH została aktywowana i ustawiona, by uruchamiała się automatycznie przy starcie systemu:
 
 ```
+systemctl start sshd
 systemctl status sshd
 systemctl enable sshd
 ip a
 
 ```
 
+## Wymiana kluczy SSH
+
+Na maszynie głównej (ansible) utworzono parę kluczy SSH i dokonano wymiany klucza publicznego:
+
+```
+ssh-keygen
+ssh-copy-id ansible@ansible-target
+
+```
+
+Połączenie z maszyną docelową działało bez konieczności podawania hasła:
+
+```
+ssh ansible@ansible-target
+
+```
+
+
+## Konfiguracja nazw hostów
+
+Dodano wpisy do pliku /etc/hosts w celu łatwiejszego łączenia się po nazwach:
+
+```
+192.168.122.10 ansible
+192.168.122.11 ansible-target
+
+```
+
+## Plik inwentaryzacji inventory.ini
+
+Utworzono plik:
+
+```
+[Orchestrators]
+ansible
+
+[Endpoints]
+ansible-target
+
+```
+
+## Test połączenia z Ansible
+
+Test z użyciem modułu ping:
+
+```
+ansible all -i inventory.ini -m ping
+
+```
+
+## Playbook – aktualizacja systemu i restart usług
+
+Utworzono plik playbook1.yaml:
+
+```
+---
+- name: Playbook 1 – aktualizacja systemu i restart usług
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ping test
+      ansible.builtin.ping:
+
+    - name: Kopiowanie pliku inventory.ini
+      copy:
+        src: ./inventory.ini
+        dest: /home/ansible/inventory.ini
+
+    - name: Aktualizacja pakietów
+      dnf:
+        name: '*'
+        state: latest
+
+    - name: Restart usługi sshd
+      service:
+        name: sshd
+        state: restarted
+
+    - name: Restart usługi rngd
+      service:
+        name: rngd
+        state: restarted
+
+```
+
+Uruchomienie:
+
+```
+ansible-playbook -i inventory.ini playbook1.yaml
+
+```
+
+## Test działania przy awarii
+
+Zatrzymano usługę sshd na maszynie ansible-target, aby sprawdzić reakcję Ansible:
+
+```
+sudo systemctl stop sshd
+
+```
+
+Podczas ponownego uruchomienia playbooka maszyna została oznaczona jako niedostępna (UNREACHABLE), a zadania nie zostały wykonane.
+
+## Playbook – uruchomienie kontenera Docker
+
+Stworzono playbook2.yaml, który:
+
+1. Instaluje Dockera
+
+2. Uruchamia kontener z obrazu nginx
+
+3. Sprawdza, czy kontener działa
+
+
+```
+---
+- name: Playbook 2 – kontener Docker
+  hosts: ansible-target
+  become: yes
+  tasks:
+    - name: Instalacja Dockera
+      dnf:
+        name: docker
+        state: present
+
+    - name: Start usługi Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pobranie obrazu nginx
+      docker_image:
+        name: nginx
+        source: pull
+
+    - name: Uruchomienie kontenera nginx
+      docker_container:
+        name: nginx-test
+        image: nginx
+        state: started
+        published_ports:
+          - "8080:80"
+
+    - name: Sprawdzenie działania kontenera
+      uri:
+        url: http://localhost:8080
+        return_content: yes
+
+```
+
+## Wynik testu:
+
+Kontener działał prawidłowo
+
+Strona NGINX była dostępna pod http://ansible-target:8080
 
 ---
 
