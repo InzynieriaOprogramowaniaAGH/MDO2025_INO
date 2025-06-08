@@ -1,0 +1,75 @@
+- name: Toasty installation in Docker containers
+  hosts: Endpoints
+  become: yes
+
+  tasks:
+    - name: Copy .deb package
+      ansible.builtin.copy:
+        src: "{{ local_deb_path }}"
+        dest: "{{ remote_deb_path }}"
+        mode: '0777'
+
+    - name: Install Docker and other packages
+      ansible.builtin.dnf:
+        name:
+          - docker
+          - python3-packaging
+          - python3-requests
+        state: present
+        update_cache: yes
+
+    - name: Start Docker services
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Download gcc Docker image
+      ansible.builtin.docker_image:
+        name: gcc:15.1
+        source: pull
+    
+    - name: Create gcc container
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: gcc:15.1
+        state: started
+        command: sleep infinity
+    
+    - name: Copy package to container
+      ansible.builtin.command:
+        cmd: "docker cp {{ remote_deb_path }} {{ container_name }}:{{ container_deb_path }}"
+    
+    - name: Install package in container
+      community.docker.docker_container_exec:
+        container: "{{ container_name }}"
+        command: >
+          bash -c "dpkg -i {{ container_deb_path }}"
+    
+    - name: Create test.c file on host
+      ansible.builtin.copy:
+        dest: "{{ remote_test_source }}"
+        content: |
+          #include <toasty.h>
+
+          TEST(test_example) {
+              TEST_ASSERT_EQUAL(4, 2 + 2);
+          }
+
+          int main() {
+              return RunTests();
+          }
+    
+    - name: Copy test.c to container
+      ansible.builtin.command:
+        cmd: "docker cp {{ remote_test_source }} {{ container_name }}:{{ container_test_source }}"
+
+    - name: Compile test.c
+      community.docker.docker_container_exec:
+        container: "{{ container_name }}"
+        command: gcc {{ container_test_source }} -ltoasty -o /test
+    
+    - name: Run test
+      community.docker.docker_container_exec:
+        container: "{{ container_name }}"
+        command: ./test
