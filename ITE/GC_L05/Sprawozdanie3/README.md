@@ -265,6 +265,7 @@ sudo systemctl stop sshd.service
 sudo systemctl disable sshd
 ```
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ansible%20playbook%20failed.jpg?raw=true)
 
 
 
