@@ -273,14 +273,79 @@ W pipeline’ie Jenkins tworzony był obraz kontenera z interpreterem mruby. Po 
 
 ### Struktura playbooka
 
--Przygotowany playbook Ansible automatyzuje:
+Przygotowany playbook Ansible automatyzuje:
+
 -Instalację Dockera i python3-docker
+
 -Pobranie obrazu amelia/mruby z Docker Hub
+
 -Przesłanie pliku script.rb z komendą puts "Hello world"
+
 -Uruchomienie kontenera z podmontowanym skryptem
+
 -Sprawdzenie logów z jego działania
+
 -Zatrzymanie i usunięcie kontenera
 
+```
+- hosts: Endpoints
+  become: yes
+  vars:
+    image_name: amelia/mruby
+    container_name: mruby-app
+    script_path: /tmp/script.rb
+
+  tasks:
+    - name: Instalowanie wymaganych pakietów
+      ansible.builtin.apt:
+        name:
+          - docker.io
+          - python3-pip
+          - python3-docker
+        state: present
+        update_cache: yes
+
+    - name: Uruchomienie i włączenie usługi Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pobranie obraz Dockera z DockerHub
+      ansible.builtin.docker_image:
+        name: "{{ image_name }}"
+        source: pull
+
+    - name: Skopiowanie pliku script.rb na zdalny host.
+      ansible.builtin.copy:
+        src: ./script.rb
+        dest: "{{ script_path }}"
+        mode: '0644'
+
+     - name: Uruchomienie kontenera 
+      ansible.builtin.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}"
+        state: started
+        volumes:
+          - "{{ script_path }}:/app/script.rb"
+        auto_remove: no
+        detach: no
+
+    - name: Wyświetlenie logów 
+      ansible.builtin.command: docker logs {{ container_name }}
+      register: container_logs
+
+    - name: Pokazanie wyniku
+      debug:
+        var: container_logs.stdout
+
+    - name: Usunięcie kontenera
+      ansible.builtin.docker_container:
+        name: "{{ container_name }}"
+        state: absent
+        force_kill: yes
+```
 
 ---
 
