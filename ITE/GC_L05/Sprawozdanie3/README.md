@@ -259,6 +259,20 @@ Po doinstalowaniu pakietu rngd:
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/trial%202.jpg?raw=true)
 
+Playbook został wykonany poprawnie na wszystkich maszynach.
+
+## Operacja względem maszyny z wyłączonym serwerem SSH i odłączoną kartą sieciową
+
+Wyłączenie serwera SSH Na maszynie ansible-target wykonano:
+
+```
+sudo systemctl stop ssh.socket
+sudo systemctl stop ssh
+
+```
+
+
+
 ---
 
 # Zajęcia 09 - Pliki odpowiedzi dla wdrożeń nienadzorowanych
