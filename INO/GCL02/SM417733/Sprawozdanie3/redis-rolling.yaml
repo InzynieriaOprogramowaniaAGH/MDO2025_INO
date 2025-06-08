@@ -9,8 +9,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 50%         # do 2 więcej niż 4
-      maxUnavailable: 2     # mogą być 2 niedostępne
+      maxSurge: 50%
+      maxUnavailable: 2 
   selector:
     matchLabels:
       app: redis
