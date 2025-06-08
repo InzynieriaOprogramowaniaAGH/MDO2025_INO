@@ -108,26 +108,13 @@ which sshd
 
 Na głównej maszynie zmieniono nazwę hosta na orchestrator
 
-Przed:
-
 ```
 sudo hostnamectl set-hostname orchestrator
-
-```
-
-Po:
-
-```
 exec bash
-
 ```
 
 Na dodatkowej maszynie hostname pozostał taki sam jak przy instalacji maszyny ansible
 
-```
-hostname
-
-```
 
 ## Playbook – aktualizacja systemu i restart usług
 
