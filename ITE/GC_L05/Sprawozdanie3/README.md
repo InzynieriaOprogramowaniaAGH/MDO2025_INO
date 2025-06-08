@@ -80,8 +80,11 @@ ssh amelia@ansible-target
 Na maszynie głównej zainstalowano Ansible
 
 ```
-sudo dnf install -y ansible 
+sudo dnf install -y ansible
+
 ```
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ansible%20install.jpg?raw=true)
 
 
 ## Playbook – aktualizacja systemu i restart usług
