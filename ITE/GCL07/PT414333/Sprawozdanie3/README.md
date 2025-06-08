@@ -177,3 +177,23 @@ Depoly aplikacji w kontenerze.
 ![alt text](class8/12.png)
 
 # Class 9
+
+1. Utworzenie pliku odpowiedi
+
+[Zawartość pliku](class9/anaconda-ks.cfg)
+
+Zadania:
+ - pobranie systemu Fedora 41
+ - aktualizacja repozytoriów
+ - instalacja docker'a
+ - uruchomienie kontenera
+
+Wybrałem sposób instalacji z raw plików GitHub'a jednak aby nie przepisywać długiego linku użyłem serwisu do ich skracania.
+
+![alt text](class9/1.png)
+
+Uruchomienie instalacji.
+![alt text](class9/2.png)
+
+Sprawdzenie dziłania stworzeonego kontenera.
+![alt text](class9/3.png)
