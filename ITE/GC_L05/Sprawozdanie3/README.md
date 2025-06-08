@@ -86,6 +86,18 @@ sudo dnf install -y ansible
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ansible%20install.jpg?raw=true)
 
+## Weryfikacja narzędzi
+
+Sprawdzono obecność wymaganych programów  tar oraz sshd
+
+```
+which tar
+which sshd
+
+```
+
+
+
 
 ## Playbook – aktualizacja systemu i restart usług
 
