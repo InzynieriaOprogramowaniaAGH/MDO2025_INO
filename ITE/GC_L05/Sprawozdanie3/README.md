@@ -86,6 +86,10 @@ sudo dnf install -y ansible
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ansible%20install.jpg?raw=true)
 
+Sprawdzenie wersji
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ansible%20version.jpg?raw=true)
+
 ## Weryfikacja narzędzi
 
 Sprawdzono obecność wymaganych programów  tar oraz sshd
