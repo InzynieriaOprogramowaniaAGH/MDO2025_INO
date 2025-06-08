@@ -240,8 +240,6 @@ Playbook został uruchomiony z poleceniem
 ansible-playbook -i inventory.yml playbook.yaml --ask-become-pass
 
 ```
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ansible%20playbook.jpg?raw=true)
-
 
 Zainstalowano dodatkowo rngd na maszynach:
 
@@ -254,7 +252,7 @@ sudo dnf install -y rng-tools
 
 Po doinstalowaniu pakietu rngd:
 
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/trial%202.jpg?raw=true)
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ansible%20playbook.jpg?raw=true)
 
 Playbook został wykonany poprawnie na wszystkich maszynach.
 
