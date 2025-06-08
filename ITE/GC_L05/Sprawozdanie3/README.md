@@ -197,6 +197,8 @@ ansible Endpoints -i inventory.yml -m ping
 
 ```
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ping%20endpoints.jpg?raw=true)
+
 ## Zdalne wykonywanie zadań systemowych z użyciem Ansible
 
 W ramach zadania wykorzystano narzędzie Ansible oraz uprzednio przygotowany plik inventory.ini. Wszystkie operacje były inicjowane z maszyny głównej (pełniącej rolę orchestratora) i obejmowały wszystkie zdefiniowane hosty w grupie all.
