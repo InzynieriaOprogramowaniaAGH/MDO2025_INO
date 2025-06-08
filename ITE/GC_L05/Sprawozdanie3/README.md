@@ -118,6 +118,34 @@ exec bash
 
 Na dodatkowej maszynie hostname pozostał taki sam jak przy instalacji maszyny ansible
 
+## Konfiguracja nazw DNS (plik /etc/hosts)
+
+Aby umożliwić rozpoznawianie nazw hostów zamiast korzystania z adresów IP
+
+Zmodyfikowano plik /etc/hosts
+
+```
+sudo nano /etc/hosts
+
+```
+
+Dodano wpisy przypisujące IP do nazw hostów
+
+```
+IP_address_1   orchestrator
+IP_address_2   ansible-target
+
+```
+
+### Weryfikacja łączności
+
+Sprawdzono możliwość komunikacji między naszynami za pomocą polecenia ping
+
+```
+ping ansible-target
+
+```
+
 
 ## Playbook – aktualizacja systemu i restart usług
 
