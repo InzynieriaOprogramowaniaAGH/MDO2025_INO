@@ -266,10 +266,11 @@ Playbook został wykonany poprawnie na wszystkich maszynach.
 Wyłączenie serwera SSH Na maszynie ansible-target wykonano:
 
 ```
-sudo systemctl stop ssh.socket
-sudo systemctl stop ssh
+sudo systemctl stop sshd.service
 
 ```
+
+
 
 
 
