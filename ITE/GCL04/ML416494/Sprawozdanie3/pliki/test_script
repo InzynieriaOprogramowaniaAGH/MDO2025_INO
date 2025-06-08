@@ -1,0 +1,11 @@
+#!/bin/bash
+DEPLOY=httpd-deployment
+TIMEOUT=60
+
+kubectl rollout status deployment/$DEPLOY --timeout=${TIMEOUT}s
+
+if [ $? -eq 0 ]; then
+  echo "Wdrożenie zakończone pomyślnie"
+else
+  echo "Wdrożenie NIE zakończone w $TIMEOUT sekund"
+fi
