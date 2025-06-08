@@ -1,0 +1,20 @@
+# redis-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-app
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis-container
+        image: kaoina666/redis_runtime:bad
+        ports:
+        - containerPort: 6379

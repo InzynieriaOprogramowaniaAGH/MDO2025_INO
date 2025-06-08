@@ -1,0 +1,45 @@
+---
+# tasks file for docker_artifact
+- name: Install Docker
+  ansible.builtin.dnf:
+    name: docker
+    state: present
+  become: true
+
+- name: Enable and start Docker
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+  become: true
+
+- name: Pull Redis image from Docker Hub
+  community.docker.docker_image:
+    name: kaoina666/redis_runtime
+    tag: "2"
+    source: pull
+
+- name: Run Redis container
+  community.docker.docker_container:
+    name: redis_test
+    image: kaoina666/redis_runtime:2
+    state: started
+    restart_policy: always
+    published_ports:
+      - "6380:6379"
+
+- name: Wait for Redis to respond on port 6380
+  ansible.builtin.wait_for:
+    host: "127.0.0.1"
+    port: 6380
+    timeout: 15
+
+- name: Stop Redis container
+  community.docker.docker_container:
+    name: redis_test
+    state: stopped
+
+- name: Remove Redis container
+  community.docker.docker_container:
+    name: redis_test
+    state: absent

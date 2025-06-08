@@ -1,0 +1,11 @@
+- name: Ping and copy inventory file
+  hosts: all
+  tasks:
+    - name: Ping each host
+      ansible.builtin.ping:
+
+    - name: Copy hosts.ini to endpoints
+      copy:
+        src: ./hosts.ini
+        dest: /tmp/hosts.ini
+      when: "'ansible-target' in inventory_hostname"

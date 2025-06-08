@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-recreate
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: redis-recreate
+  template:
+    metadata:
+      labels:
+        app: redis-recreate
+    spec:
+      containers:
+      - name: redis
+        image: kaoina666/redis_runtime:3
+        ports:
+        - containerPort: 6379
