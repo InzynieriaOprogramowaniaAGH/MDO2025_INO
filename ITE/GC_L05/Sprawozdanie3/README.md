@@ -52,11 +52,16 @@ ssh amelia@10.0.2.15
 
 ## Konfiguracja nazw hostów
 
-Dodano wpisy do pliku /etc/hosts w celu łatwiejszego łączenia się po nazwach:
+Edycja pliku /etc/hosts:
 
 ```
-192.168.122.10 ansible
-192.168.122.11 ansible-target
+sudo nano /etc/hosts
+```
+
+Dodanie wpisu:
+
+```
+IP_address   ansible-target
 
 ```
 
