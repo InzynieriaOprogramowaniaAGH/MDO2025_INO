@@ -190,6 +190,31 @@ ansible all -i inventory.yml -m ping
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ping%20inventory%20.jpg?raw=true)
 
+  Ping tylko do grupy Endpoints:
+
+```
+ansible Endpoints -i inventory.yml -m ping
+
+```
+
+## Zdalne wykonywanie zadań systemowych z użyciem Ansible
+
+W ramach zadania wykorzystano narzędzie Ansible oraz uprzednio przygotowany plik inventory.ini. Wszystkie operacje były inicjowane z maszyny głównej (pełniącej rolę orchestratora) i obejmowały wszystkie zdefiniowane hosty w grupie all.
+
+### Opis działania playbooka
+
+Stworzono plik playbook.yaml, którego celem było zautomatyzowanie podstawowych czynności administracyjnych na zdalnych systemach. Playbook realizował następujące operacje:
+
+1.Weryfikacja dostępności hostów przy pomocy modułu ping,
+
+2. Przesłanie lokalnego pliku inventory.ini do katalogu /tmp/ na każdej z maszyn zdalnych,
+
+3. Przeprowadzenie pełnej aktualizacji systemu przy użyciu menedżera pakietów dnf,
+
+4. Ponowne uruchomienie wybranych usług systemowych, takich jak sshd i rngd.
+
+
+
 ## Wynik testu:
 
 Kontener działał prawidłowo
