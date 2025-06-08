@@ -197,3 +197,50 @@ Uruchomienie instalacji.
 
 Sprawdzenie dziłania stworzeonego kontenera.
 ![alt text](class9/3.png)
+
+# Class 10
+
+1. Instalacja Kubernetes
+
+Z racji na mój system operacyjny (Arch Linux) zmuszony zostałem do instalacji binarnej.
+![alt text](class10/1.png)
+
+Aby uruchomić `minikube` musziałem zalogować jako zwykły użytkownik (nie root).
+![alt text](class10/2.png)
+
+Po uruchomieniu `minikube` możemy uruchomić jego dashboard
+![alt text](class10/3.png)
+
+Dzięki przekierowaniu portów przez VS Code mam dostęp do Dashbord'a po localhost
+![alt text](class10/4.png)
+
+2. Budowa obrazu
+
+Z racji fakt, iż aplikacja z poprzednich zajęć (`htop`) nie jest aplikacją ciągle działającą zmuszony zostałem do posłużenia się kontenerami uruchamiającymi `nginx`'a.
+
+[Dockerfile.v1](class10/deploy/Dockerfile.v1)
+
+![alt text](class10/5.png)
+![alt text](class10/6.png)
+
+3. Uruchamianie
+
+Stworzenie Pod'a
+![alt text](class10/7.png)
+![alt text](class10/8.png)
+
+Przekierowanie portów
+
+![alt text](class10/9.png)
+
+Test aplikacji
+
+![alt text](class10/10.png)
+
+
+4. Wykożystanie plików drożenia
+
+Uruchomienie na bazie [pliku wdrożenia](class10/deploy/deploy.yml)
+
+![alt text](class10/11.png)
+![alt text](class10/12.png)
