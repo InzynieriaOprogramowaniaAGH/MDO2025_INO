@@ -38,6 +38,8 @@ ssh-copy-id amelia@10.0.2.15
 
 ```
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ssh-copy-id.jpg?raw=true)
+
 Połączenie z maszyną docelową działało bez konieczności podawania hasła:
 
 ```
