@@ -267,7 +267,7 @@ Wyłączenie serwera SSH Na maszynie ansible-target wykonano:
 
 ```
 sudo systemctl stop sshd.service
-
+sudo systemctl disable sshd
 ```
 
 
