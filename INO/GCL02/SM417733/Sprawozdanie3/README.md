@@ -379,5 +379,297 @@ reboot
 Wynik:
 ![image](https://github.com/user-attachments/assets/c1b8969a-65b5-4049-9f2f-032013b3b091)
 
+## Wdrażanie na zarządzalne kontenery: Kubernetes (1)
 
+### Instalacja klastra Kubernetes
+
+Najpierw zaopatrzyłem się w `minikube`, korzystając z instrukcji dostępnej na oficjalnej stronie.
+
+![7](https://github.com/user-attachments/assets/26c96d7b-bf13-4e9c-8cb4-a64ff070b173)
+
+![8](https://github.com/user-attachments/assets/be3d92f3-1f5f-469f-ba08-b4897ecca3ae)
+
+Aby korzystać z polecenia `kubectl` używłem aliasu:
+
+```
+alias kubectl="minikube kubectl  --"
+```
+
+Następnie uruchomiłem `minikube` komendą `minikube start` i sprawdziłem czy działa:
+
+![10](https://github.com/user-attachments/assets/360d2f50-9a12-412b-b300-936f1f7f5a28)
+
+![11](https://github.com/user-attachments/assets/912d2cb2-219a-46d2-b8b3-f99945e0b727)
+
+![13](https://github.com/user-attachments/assets/908a5969-9437-4614-9244-3b819707d23f)
+
+![14](https://github.com/user-attachments/assets/96afb47a-bc61-4926-9d42-9433832f0287)
+
+Nastepnie uruchomiłem Dashboard:
+
+![15](https://github.com/user-attachments/assets/56dc3351-e264-4962-934b-528c0f7c2d44)
+
+### Analiza posiadanego kontenera
+
+Tą sekcję zrealizowałem już w ramach poprzedniego sprawozdania, ponieważ mój redis jest już w kontenerze na DockerHubie.
+
+### Uruchamianie oprogramowania
+
+Zaaplikowałem go komendą `kubectl run` i sprawdziłem czy poprawnie się uruchomił na dashboardzie i za pomocą kubectl:
+
+![image](https://github.com/user-attachments/assets/252b72df-877d-45ab-821e-49cf18e53568)
+
+![image](https://github.com/user-attachments/assets/980c2a5d-e913-4bc8-9987-331c5cd2dd63)
+
+Następnie wyprowadziłem port celem do eksponowania funkcjonalności:
+
+![18](https://github.com/user-attachments/assets/3d9b32f7-fc0e-49d4-aab1-b0887f22cecd)
+
+Aby przedstawić komunikację z redisem, musiałem najpierw uzyskać do niego dostęp nadając mu hasło dostępu:
+
+![19](https://github.com/user-attachments/assets/5bca9787-d07f-4091-a393-54a36fc36134)
+
+Po tym mogłem użyć `ping`:
+
+![20](https://github.com/user-attachments/assets/4a42233c-9a8f-4243-8e34-8b68d23c31f5)
+
+### Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
+
+Stworzyłem plik konfiguracyjny dla deploymentu i service redisa:
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-app2
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: pszemo6/redis_runtime:4
+          ports:
+            - containerPort: 6379
+```
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  type: NodePort
+  ports:
+    - port: 6379
+      targetPort: 6379
+      nodePort: 30079
+```
+
+Wdrożyłem te pliki za pomocą `kubectl apply`, a nastepnie zbadałem stan za pomocą `kubectl rollout status` i ponownie przekierowałem port i sprawdziłem działanie.
+
+![21](https://github.com/user-attachments/assets/54034365-9dd8-4a33-8ad1-cac52db7db5a)
+
+## Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+
+### Przygotowanie nowego obrazu
+
+Na poczatek zarejestrowałem dwie nowe wersje redisa, jedna działająca, a druga zwracająca błąd. Błąd wywołałem zwykłym `exit 1`. v1 to wersja działająca, v2 nie działająca.
+
+![image](https://github.com/user-attachments/assets/fa4229c8-8602-4e41-8852-68c6388645f8)
+
+### Zmiany w deploymencie
+
+W tej części sprawdzałem różne wersje przeskalowania: 8, 1, 0 i 4 repliki.
+
+![1](https://github.com/user-attachments/assets/dd6d8953-e570-41f7-8594-bb212fd83e30)
+
+![2](https://github.com/user-attachments/assets/02165a11-ba6c-40bd-8259-462fbe18f64d)
+
+![3](https://github.com/user-attachments/assets/95fa08a4-be09-44b8-a3fd-6c0b8d409bf9)
+
+![4](https://github.com/user-attachments/assets/11d3d01e-e522-4f6c-b090-f40e838c4beb)
+
+![5](https://github.com/user-attachments/assets/f50fa432-34e1-4a98-819a-47f177cc0161)
+
+![6](https://github.com/user-attachments/assets/c0326490-ce55-483c-bcc7-a395184c266b)
+
+![7](https://github.com/user-attachments/assets/49eb68e3-7a13-4ef2-809c-dd67401efa7b)
+
+Następnie zmieniłem wersję na wadliwą:
+
+![8](https://github.com/user-attachments/assets/d267e176-0d4d-4868-8869-0ba063ef0023)
+
+Wersja druga działająca:
+
+![9](https://github.com/user-attachments/assets/7c7e46f1-06e7-44fb-84c5-db3416014e62)
+
+Przywróciłem poprzednie wersje wdrożeń:
+
+![10](https://github.com/user-attachments/assets/79595b10-a598-45b6-8397-d05afd4b6248)
+
+![11](https://github.com/user-attachments/assets/913429ef-a315-4f29-a9dd-2d08eeb3a416)
+
+### Kontrola wdrożenia
+
+W tej części przeprowadziłem kontrolę wdrożenia, czyli skrypt, który sprawdza, czy wdrożenie zdążyło się wdrożyć w ciągu 60 sekund.
+
+`check-deployment.sh`:
+
+```
+#!/bin/bash
+
+DEPLOYMENT="xz-deployment"
+NAMESPACE="default"
+TIMEOUT=60
+INTERVAL=5
+elapsed=0
+
+while [ $elapsed -lt $TIMEOUT ]; do
+  status=$(kubectl rollout status deployment/$DEPLOYMENT -n $NAMESPACE --timeout=1s 2>&1)
+  if echo "$status" | grep -q "successfully rolled out"; then
+    echo "Deployment zakończony sukcesem."
+    exit 0
+  fi
+  sleep $INTERVAL
+  elapsed=$((elapsed + INTERVAL))
+done
+
+echo "Timeout: Deployment nie zakończył się w ciągu $TIMEOUT sekund."
+exit 1
+```
+
+![13](https://github.com/user-attachments/assets/f577f6ad-090c-4400-8217-6dd55fe83f91)
+
+### Strategie wdrożenia
+
+Ostatnim punktem było przygotowanie różnych wersji wdrożeń stosując nastepujące wersje wdrożeń: `Recreate`, `Rolling Update`, `Canary Deployment`. Dla każdego z nich zapisałem osobny plik `.yaml`, a przy wdrożeniu dla każdego korzystałem z `kubectl apply`. W większej ilości replik używałem `service`.
+
+`redis-recreate.yaml`:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-recreate
+  labels:
+    app: redis
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: pszemo6/redis_runtime:4
+          ports:
+            - containerPort: 6379
+```
+
+`redis-rolling.yaml`:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-rolling
+  labels:
+    app: redis
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 2 
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: pszemo6/redis_runtime:4
+          ports:
+            - containerPort: 6379
+```
+
+`redis-canary.yaml`:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-canary
+  labels:
+    version: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: redis
+        version: canary
+    spec:
+      containers:
+        - name: redis
+          image: pszemo6/redis_runtime:4
+          ports:
+            - containerPort: 6379
+```
+
+`redis-service.yaml`:
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+```
+
+![17](https://github.com/user-attachments/assets/e31bbc61-8378-4a6e-a80b-db65c4010129)
+
+![15](https://github.com/user-attachments/assets/778950c5-db2a-4959-a812-02b245d2f4f2)
+
+![18](https://github.com/user-attachments/assets/81241116-5cf9-47e8-9336-edde44157a98)
+
+Recreate:
+- w tej strategii stare pody są najpierw usuwane, a następnie tworzone są nowe
+- może to spowodować przerwę w funkcjonowaniu oprogramowania
+
+Rolling:
+- domyślna strategia
+- aktualizacja oprogramowania nastepuje stopniowo
+- maxUnavailible - ile podów może być niedostepnych w trakcie aktualizacji
+- maxSurge - ile podów może zostać tymczasowo dodatkowo uruchomionych
+
+Canary:
+- ta strategia zapewnia dwie wersje działające równolegle
+- jedna z nich jest bardziej eksperymentalna i działa dla mniejszej liczby użytkowników
+- druga jest stabilna i powszechnie dostępna
 
