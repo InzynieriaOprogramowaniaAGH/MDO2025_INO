@@ -205,15 +205,7 @@ W ramach zadania wykorzystano narzędzie Ansible oraz uprzednio przygotowany pli
 
 ### Opis działania playbooka
 
-Stworzono plik playbook.yaml, którego celem było zautomatyzowanie podstawowych czynności administracyjnych na zdalnych systemach. Playbook realizował następujące operacje:
-
-1.Weryfikacja dostępności hostów przy pomocy modułu ping,
-
-2. Przesłanie lokalnego pliku inventory.ini do katalogu /tmp/ na każdej z maszyn zdalnych,
-
-3. Przeprowadzenie pełnej aktualizacji systemu przy użyciu menedżera pakietów dnf,
-
-4. Ponowne uruchomienie wybranych usług systemowych, takich jak sshd i rngd.
+Stworzono plik playbook.yaml, którego celem było zautomatyzowanie podstawowych czynności administracyjnych na zdalnych systemach.
 
 ```
 - hosts: all
@@ -224,8 +216,8 @@ Stworzono plik playbook.yaml, którego celem było zautomatyzowanie podstawowych
 
     - name: Skopiowanie pliku inventory
       ansible.builtin.copy:
-        src: ./inventory.ini
-        dest: /tmp/inventory.ini
+        src: ./inventory.yml
+        dest: /tmp/inventory.yml
 
     - name: Aktualizacja wszystkich pakietów systemowych
       ansible.builtin.dnf:
@@ -237,9 +229,9 @@ Stworzono plik playbook.yaml, którego celem było zautomatyzowanie podstawowych
         name: "{{ item }}"
         state: restarted
         enabled: yes
-      loop:
-        - sshd
-        - rngd
+        loop:
+          - sshd
+          - rngd
 
 ```
 
@@ -248,10 +240,10 @@ Stworzono plik playbook.yaml, którego celem było zautomatyzowanie podstawowych
 Playbook został uruchomiony z poleceniem
 
 ```
-ansible-playbook -i inventory.ini playbook.yaml --ask-become-pass
+ansible-playbook -i inventory.yml playbook.yaml --ask-become-pass
 
 ```
-
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/run-playbook.jpg?raw=true)
 
 ---
 
