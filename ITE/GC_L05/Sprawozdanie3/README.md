@@ -75,27 +75,14 @@ ssh amelia@ansible-target
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/amelia%20ansible%20target.jpg?raw=true)
 
-## Plik inwentaryzacji inventory.ini
+##  Instalacja Ansible
 
-Utworzono plik:
-
-```
-[Orchestrators]
-ansible
-
-[Endpoints]
-ansible-target
+Na maszynie głównej zainstalowano Ansible
 
 ```
-
-## Test połączenia z Ansible
-
-Test z użyciem modułu ping:
-
+sudo dnf install -y ansible 
 ```
-ansible all -i inventory.ini -m ping
 
-```
 
 ## Playbook – aktualizacja systemu i restart usług
 
