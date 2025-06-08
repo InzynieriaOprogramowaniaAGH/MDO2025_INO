@@ -5,7 +5,8 @@
 
 Utworzono dwie maszyny wirtualne z systemem Fedora.
 
-Na drugiej maszynie nadano hostname: ansible-target, utworzono użytkownika: ansible, zainstalowano: openssh-server, tar i wykonano migawkę maszyny.
+Na pierwszej maszynie nadano hostname FEDORA, utworzono użytkownika amelia.
+Na drugiej maszynie nadano hostname: FEDORA_2 , utworzono użytkownika: amelia, zainstalowano: openssh-server, tar i wykonano migawkę maszyny.
 
 ## Instalacja Ansible i konfiguracja połączeń
 
@@ -33,14 +34,14 @@ Na maszynie głównej (ansible) utworzono parę kluczy SSH i dokonano wymiany kl
 
 ```
 ssh-keygen
-ssh-copy-id ansible@ansible-target
+ssh-copy-id amelia@10.0.2.15
 
 ```
 
 Połączenie z maszyną docelową działało bez konieczności podawania hasła:
 
 ```
-ssh ansible@ansible-target
+ssh amelia@10.0.2.15
 
 ```
 
