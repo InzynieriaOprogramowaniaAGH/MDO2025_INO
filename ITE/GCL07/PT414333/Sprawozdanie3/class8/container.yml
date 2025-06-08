@@ -1,0 +1,80 @@
+---
+- name: Manage Docker Application
+  hosts: Endpoints
+  gather_facts: true
+  become: yes
+  vars:
+    inventory_owner: "{{ 'devops' if inventory_hostname == 'ansible-main' else 'ansible' }}"
+
+  tasks:
+    - name: Install Docker and dependencies
+      block:
+        - name: Install Docker package from standard repo
+          ansible.builtin.package:
+            name: docker.io
+            state: latest
+            update_cache: yes
+
+        - name: Start and enable Docker service
+          ansible.builtin.systemd:
+            name: docker
+            state: started
+            enabled: yes
+            daemon_reload: yes
+
+        - name: Ensure group "docker" exists
+          ansible.builtin.group:
+            name: docker
+            state: present
+
+        - name: Add user 'ansible' to docker group
+          ansible.builtin.user:
+            name: ansible
+            groups: docker
+            append: yes
+
+        - name: Copy executable file
+          ansible.builtin.copy:
+            src: ~/ansible/app/
+            dest: /tmp/app/
+            owner: "{{ inventory_owner }}"
+            group: "{{ inventory_owner }}"
+            mode: "0755"
+      rescue:
+        - name: Display error message if Docker installation fails
+          debug:
+            msg: "Failed to install Docker. Please check logs for details."
+          when: ansible_failed_task is defined
+
+    - name: Build image
+      community.docker.docker_image:
+        name: htop
+        source: build
+        build:
+          path: /tmp/app
+
+    - name: Run container
+      community.docker.docker_container:
+        name: htop
+        image: htop
+        state: started
+            
+    - name: Stop the container
+      community.docker.docker_container:
+        name: htop
+        state: stopped
+
+    - name: Remove the container
+      community.docker.docker_container:
+        name: htop
+        state: absent
+
+    - name: Remove the Docker image (optional)
+      community.docker.docker_image:
+        name: htop
+        state: absent
+
+  handlers:
+    - name: Reload firewalld
+      ansible.posix.firewalld:
+        state: reloaded
