@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpm-2
+  labels:
+    role: todo
+    stage: stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      role: cpm
+      stage: stable
+  template:
+    metadata:
+      labels:
+        role: cpm
+        stage: stable
+    spec:
+      containers:
+        - name: cpm-app
+          image: mareczek02/cpm_deploy:1.0
+          ports:
+            - containerPort: 3000

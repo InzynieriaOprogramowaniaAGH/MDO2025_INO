@@ -589,3 +589,219 @@ Przekierowano port do serwisu
 ![](lab10/11.jpg)
 
 ## Lab 11
+
+W trakcie wykonywania ćwiczenia utworzono wersje obrazów, testowano skalowanie i aktualizowanie deploymentów, a także sprawdzano strategie takie jak Rolling Update, Recreate i Canary. Do tego ogarnięto automatyczne sprawdzanie, czy wszystko poszło zgodnie z planem.
+
+### Przygotowanie nowego obrazu
+
+Użytko trzech wersji obrazów:
+ - :latest – obraz aplikacji z pipeline’u Jenkins
+ - :1.0 – druga wersja obrazu, która działa poprawnie
+ - :0.9 – wadliwy obraz, w którym w polu command ustawiono wartość ["/bin/false"]
+
+![](lab11/1.jpg)
+
+W poprzednich labach użyto obrazu `mareczek02/devopsy:latest`, dlatego w pliku wdrożenia zmieniamy na nasz nowy obraz
+
+![](lab11/1_1.jpg)
+
+Jak widać, kontenery bez problemu zaktualizowały obrazy na których są odpalone
+
+![](lab11/1_2.jpg)
+
+### Zmiany w deploymencie
+
+Zwiększenie replik do 8
+
+![](lab11/2.jpg)
+
+![](lab11/2_1.jpg)
+
+Zmniejszenie replik do 1:
+
+![](lab11/3.jpg)
+
+![](lab11/3_1.jpg)
+
+Zmniejszenie replik do 0:
+
+![](lab11/4.jpg)
+
+![](lab11/4_1.jpg)
+
+Ponowne przeskalowanie do 4 replik:
+
+![](lab11/5.jpg)
+
+![](lab11/5_1.jpg)
+
+Zastosowanie obraz z tagiem :1.0 zamiast :latest
+
+![](lab11/6.jpg)
+
+![](lab11/6_1.jpg)
+
+Powrót do poprzedniej wersji:
+
+![](lab11/7.jpg)
+
+![](lab11/7_1.jpg)
+
+Zastosowanie "wadliwego" obrazu:
+
+![](lab11/8.jpg)
+
+![](lab11/8_1.jpg)
+
+Wyświetlenie historii wdrożeń dla deploymentu `node` oraz przywrócenie poprzedniej wersji tego wdrożenia:
+
+![](lab11/9.jpg)
+
+![](lab11/10.jpg)
+
+Wyświetlenie szczegółów czwartej wersji deploymentu `node`:
+
+![](lab11/11.jpg)
+
+Wyświetlenie szczegółów bieżącego deploymentu `node`:
+
+![](lab11/12.jpg)
+
+### Kontrola wdrożenia
+
+Skrypt weryfikujący, czy wdrożenie "zdążyło" się wdrożyć w 60 sekund
+
+```sh
+#!/bin/bash
+
+TARGET_DEPLOY="node"
+NS="default"
+MAX_WAIT=60
+CHECK_INTERVAL=5
+ELAPSED_TIME=0
+
+echo "lecimy z $TARGET_DEPLOY"
+
+while [ $ELAPSED_TIME -lt $MAX_WAIT ]; do
+    if minikube kubectl -- rollout status deployment/$TARGET_DEPLOY --namespace $NS --timeout=5s > /dev/null 2>&1; then
+        echo "sukces: ${ELAPSED_TIME}s"
+        exit 0
+    fi
+
+    sleep $CHECK_INTERVAL
+    ELAPSED_TIME=$((ELAPSED_TIME + CHECK_INTERVAL))
+    echo "ponowne sprawdzenie za ${CHECK_INTERVAL}s"
+
+done
+
+echo "wywalilo sie $MAX_WAIT sekundach"
+exit 1
+```
+
+Sprawdzenie działania skryptu, tutaj w wersji z wadliwym obrazem
+
+![](lab11/13.jpg)
+
+Ponowne sprawdzenie działania skryptu, tym razem używając poprawny obraz
+
+![](lab11/14.jpg)
+
+### Strategie wdrożenia
+
+Recreate - polega na tym, że Kubernetes najpierw usuwa wszystkie obecne instancje aplikacji, a następnie uruchamia nowe.
+
+![](lab11/15_1.jpg)
+
+![](lab11/15.jpg)
+
+RollingUpdate - strategia, w której nowe wersje aplikacji są wprowadzane stopniowo. Kubernetes aktualizuje jeden pod na raz, aby uniknąć przerwy w dostępności aplikacji.
+
+![](lab11/16.jpg)
+
+![](lab11/17.jpg)
+
+Canary Deployment - nowa wersja aplikacji jest wdrażana tylko dla małej grupy użytkowników. Jeśli wszystko działa poprawnie, stopniowo zwiększa się liczbę replik z nową wersją, a stare wersje są stopniowo usuwane.
+
+`canary1.yml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpm-1
+  labels:
+    role: cpm
+    stage: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: cpm
+      stage: canary
+  template:
+    metadata:
+      labels:
+        role: cpm
+        stage: canary
+    spec:
+      containers:
+        - name: cpm-app
+          image: mareczek02/cpm_deploy:latest
+          ports:
+            - containerPort: 3000
+```
+
+Nowe wdrożenie testowe aplikacji. Tworzy jeden pod z obrazem mareczek02/cpm_deploy:latest, oznaczony etykietami role: todo i stage: canary. Dzięki takiej konfiguracji nowa wersja aplikacji jest uruchamiana na ograniczonej liczbie replik, co minimalizuje ryzyko, a jednocześnie pozwala na równoczesne testowanie jej z działającą wersją stabilną.
+
+`canary2.yml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpm-2
+  labels:
+    role: todo
+    stage: stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      role: cpm
+      stage: stable
+  template:
+    metadata:
+      labels:
+        role: cpm
+        stage: stable
+    spec:
+      containers:
+        - name: cpm-app
+          image: mareczek02/cpm_deploy:1.0
+          ports:
+            - containerPort: 3000
+```
+
+Ten manifest konfiguruje stabilne wdrożenie aplikacji, uruchamiając trzy repliki kontenera z tego samego obrazu co poprzedni plik. Podobnie jak w przypadku canary, pody posiadają etykiety role: todo i stage: stable, co umożliwia rozróżnienie wersji.
+
+`service.yml`:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cpm-svc
+spec:
+  selector:
+    role: cpm
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: ClusterIP
+```
+
+Definicja usługi w Kubernetes, która łączy się z podami posiadającymi etykietę role: todo. Usługa nasłuchuje na porcie 80 i kieruje ruch na port 3000 w podach. Typ ClusterIP sprawia, że usługa jest dostępna jedynie wewnątrz klastra, co umożliwia łatwą komunikację pomiędzy poszczególnymi komponentami aplikacji.
+
+![](lab11/18.jpg)
+
+![](lab11/19.jpg)
