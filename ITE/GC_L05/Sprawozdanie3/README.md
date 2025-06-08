@@ -174,7 +174,7 @@ all:
           ansible_host: 10.0.2.15
           ansible_user: amelia
         ansible-endpoint2:
-          ansible_host: ansible-endpoint2
+          ansible_host: 10.0.2.15
           ansible_user: amelia
 
 ```
