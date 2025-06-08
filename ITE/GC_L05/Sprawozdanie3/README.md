@@ -65,7 +65,7 @@ IP_address   ansible-target
 
 ```
 
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/etc.jpg?raw=true)
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/etc%20hosts.jpg?raw=true)
 
 Test połączenia
 
