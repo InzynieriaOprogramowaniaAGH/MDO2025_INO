@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: tla-canary
+spec:
+    replicas: 4
+    selector:
+        matchLabels:
+            app: tla-canary
+            version: v1
+    template:
+        metadata:
+            labels:
+                app: tla-canary
+                version: v1
+        spec:
+            containers:
+                - name: my-nginx:latest
+                  image: docker.io/twarug/my-nginx:latest
+                  imagePullPolicy: Always

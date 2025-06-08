@@ -244,3 +244,55 @@ Uruchomienie na bazie [pliku wdrożenia](class10/deploy/deploy.yml)
 
 ![alt text](class10/11.png)
 ![alt text](class10/12.png)
+
+# Class 11
+
+1. Aktualizowanie deploymenyów 
+
+Utworzenie nowych wersji obrazu i umieszcenie ich na DockerHub
+(jedna z nich 'err' zawsze kończy z błędem)
+![alt text](class11/1.png)
+
+4 repliki => 8 replik (replicas)
+
+![alt text](class11/2.png)
+![alt text](class11/3.png)
+
+0 replik
+
+![alt text](class11/4.png)
+![alt text](class11/5.png)
+
+Nowy obraz
+
+![alt text](class11/6.png)
+![alt text](class11/7.png)
+
+Rollout undo
+
+![alt text](class11/8.png)
+![alt text](class11/9.png)
+
+Obraz z błędem
+
+![alt text](class11/10.png)
+
+
+2. Kontrola wrożenia
+
+Historia:
+
+![alt text](class11/11.png)
+
+
+Różne strategie wdrożania:
+
+- [Canary](class11/my-nginx-canary.yml) - Aktualizacja tylko części całego deploymentu w celu testów.
+- [Recreate](class11/my-nginx-recreate.yml) - Całkowite odtworzenie nowej wersji.
+- [Rolling Update](class11/my-nginx-rolling-update.yml) - Stopniowe i automatyczne aktualizowanie podów, bez przerw w dostępności serwisu.
+
+Uruchamiane poleceniem
+```sh
+kubectl apply -f depl-<strategy>.yml
+```
+
