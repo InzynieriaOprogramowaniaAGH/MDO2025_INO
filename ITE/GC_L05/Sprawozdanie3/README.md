@@ -34,11 +34,11 @@ Na maszynie głównej (ansible) utworzono parę kluczy SSH i dokonano wymiany kl
 
 ```
 ssh-keygen
-ssh-copy-id amelia@192.168.1.63
+ssh-copy-id amelia@192.168.1.62
 
 ```
 
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ssh-copy-id.jpg?raw=true)
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/b4ce00b8-32de-4f39-9eba-b9e06559e457.jfif)
 
 Połączenie z maszyną docelową działało bez konieczności podawania hasła:
 
