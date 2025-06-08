@@ -5,8 +5,8 @@
 
 Utworzono dwie maszyny wirtualne z systemem Fedora.
 
-Na pierwszej maszynie nadano hostname FEDORA, utworzono użytkownika amelia.
-Na drugiej maszynie nadano hostname: FEDORA_2 , utworzono użytkownika: amelia, zainstalowano: openssh-server, tar i wykonano migawkę maszyny.
+Pierwsza maszyna: 192.168.1.63
+Druga maszyna: 192.168.1.64 (ansible)
 
 ## Instalacja Ansible i konfiguracja połączeń
 
