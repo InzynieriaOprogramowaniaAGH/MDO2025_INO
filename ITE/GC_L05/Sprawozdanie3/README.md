@@ -6,6 +6,7 @@
 Utworzono dwie maszyny wirtualne z systemem Fedora.
 
 Pierwsza maszyna: 192.168.1.63
+
 Druga maszyna: 192.168.1.64 (ansible)
 
 ## Instalacja Ansible i konfiguracja połączeń
