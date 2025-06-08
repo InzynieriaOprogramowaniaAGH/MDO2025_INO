@@ -215,7 +215,42 @@ Stworzono plik playbook.yaml, którego celem było zautomatyzowanie podstawowych
 
 4. Ponowne uruchomienie wybranych usług systemowych, takich jak sshd i rngd.
 
+```
+- hosts: all
+  become: yes
+  tasks:
+    - name: Sprawdzenie dostępności maszyn
+      ansible.builtin.ping:
 
+    - name: Skopiowanie pliku inventory
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /tmp/inventory.ini
+
+    - name: Aktualizacja wszystkich pakietów systemowych
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+    - name: Restart usług sshd i rngd
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: restarted
+        enabled: yes
+      loop:
+        - sshd
+        - rngd
+
+```
+
+### Uruchomienie playbooka
+
+Playbook został uruchomiony z poleceniem
+
+```
+ansible-playbook -i inventory.ini playbook.yaml --ask-become-pass
+
+```
 
 ## Wynik testu:
 
