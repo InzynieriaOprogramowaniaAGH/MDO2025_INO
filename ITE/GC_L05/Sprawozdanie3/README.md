@@ -267,7 +267,19 @@ sudo systemctl disable sshd
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ansible%20playbook%20failed.jpg?raw=true)
 
+## Zarządzanie artefaktem
 
+W pipeline’ie Jenkins tworzony był obraz kontenera z interpreterem mruby. Po pomyślnych testach trafiał on na Docker Hub jako amelia/mruby:latest.
+
+### Struktura playbooka
+
+-Przygotowany playbook Ansible automatyzuje:
+-Instalację Dockera i python3-docker
+-Pobranie obrazu amelia/mruby z Docker Hub
+-Przesłanie pliku script.rb z komendą puts "Hello world"
+-Uruchomienie kontenera z podmontowanym skryptem
+-Sprawdzenie logów z jego działania
+-Zatrzymanie i usunięcie kontenera
 
 
 ---
