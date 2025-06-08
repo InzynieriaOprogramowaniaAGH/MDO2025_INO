@@ -252,6 +252,9 @@ Zainstalowano dodatkowo rngd na maszynach:
 sudo dnf install -y rng-tools 
 
 ```
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dnf%20install%20rng%20tools.jpg?raw=true)
+
 ---
 
 # Zajęcia 09 - Pliki odpowiedzi dla wdrożeń nienadzorowanych
