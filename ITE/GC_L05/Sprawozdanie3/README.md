@@ -58,13 +58,19 @@ Edycja pliku /etc/hosts:
 sudo nano /etc/hosts
 ```
 
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/etc.jpg?raw=true)
-
 Dodanie wpisu:
 
 ```
 IP_address   ansible-target
 
+```
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/etc.jpg?raw=true)
+
+Test połączenia
+
+```
+ssh amelia@ansible-target
 ```
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/amelia%20ansible%20target.jpg?raw=true)
