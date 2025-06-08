@@ -111,7 +111,10 @@ Na głównej maszynie zmieniono nazwę hosta na orchestrator
 ```
 sudo hostnamectl set-hostname orchestrator
 exec bash
+
 ```
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/hostname.jpg?raw=true)
 
 Na dodatkowej maszynie hostname pozostał taki sam jak przy instalacji maszyny ansible
 
