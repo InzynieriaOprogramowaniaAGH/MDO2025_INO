@@ -102,7 +102,32 @@ which sshd
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/which%20tar.jpg?raw=true)
 
+## Inwentaryzacja
 
+### Ustawienie nazw hostów
+
+Na głównej maszynie zmieniono nazwę hosta na orchestrator
+
+Przed:
+
+```
+sudo hostnamectl set-hostname orchestrator
+
+```
+
+Po:
+
+```
+exec bash
+
+```
+
+Na dodatkowej maszynie hostname pozostał taki sam jak przy instalacji maszyny ansible
+
+```
+hostname
+
+```
 
 ## Playbook – aktualizacja systemu i restart usług
 
