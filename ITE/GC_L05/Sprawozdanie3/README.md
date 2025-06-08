@@ -148,105 +148,43 @@ ping ansible-target
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ping%20ansible.jpg?raw=true)
 
+## Przygotowanie pliku inwentaryzacyjnego Ansible
 
-## Playbook – aktualizacja systemu i restart usług
+Utworzono plik inventory.yml z podziałem na grupy maszyn:
 
-Utworzono plik playbook1.yaml:
+Orchestrators - zawiera maszynę główną (zarządzającą)
+Endpoints - zawiera maszyny docelowe (zarządzane przez Ansible)
 
-```
----
-- name: Playbook 1 – aktualizacja systemu i restart usług
-  hosts: all
-  become: yes
-  tasks:
-    - name: Ping test
-      ansible.builtin.ping:
 
-    - name: Kopiowanie pliku inventory.ini
-      copy:
-        src: ./inventory.ini
-        dest: /home/ansible/inventory.ini
-
-    - name: Aktualizacja pakietów
-      dnf:
-        name: '*'
-        state: latest
-
-    - name: Restart usługi sshd
-      service:
-        name: sshd
-        state: restarted
-
-    - name: Restart usługi rngd
-      service:
-        name: rngd
-        state: restarted
+Zawartość pliku inventory.yml
 
 ```
 
-Uruchomienie:
+all:
+  children:
+    Orchestrators:
+      hosts:
+        orchestrator:
+          ansible_host: 127.0.0.1
+          ansible_user: ansible
+
+    Endpoints:
+      hosts:
+        ansible-target:
+          ansible_host: 192.168.56.102
+          ansible_user: ansible
+        ansible-endpoint2:
+          ansible_host: ansible-endpoint2
+          ansible_user: ansible
 
 ```
-ansible-playbook -i inventory.ini playbook1.yaml
+
+##  Test połączenia (Ansible ping)
+
+ Ping do wszystkich maszyn:
 
 ```
-
-## Test działania przy awarii
-
-Zatrzymano usługę sshd na maszynie ansible-target, aby sprawdzić reakcję Ansible:
-
-```
-sudo systemctl stop sshd
-
-```
-
-Podczas ponownego uruchomienia playbooka maszyna została oznaczona jako niedostępna (UNREACHABLE), a zadania nie zostały wykonane.
-
-## Playbook – uruchomienie kontenera Docker
-
-Stworzono playbook2.yaml, który:
-
-1. Instaluje Dockera
-
-2. Uruchamia kontener z obrazu nginx
-
-3. Sprawdza, czy kontener działa
-
-
-```
----
-- name: Playbook 2 – kontener Docker
-  hosts: ansible-target
-  become: yes
-  tasks:
-    - name: Instalacja Dockera
-      dnf:
-        name: docker
-        state: present
-
-    - name: Start usługi Docker
-      service:
-        name: docker
-        state: started
-        enabled: yes
-
-    - name: Pobranie obrazu nginx
-      docker_image:
-        name: nginx
-        source: pull
-
-    - name: Uruchomienie kontenera nginx
-      docker_container:
-        name: nginx-test
-        image: nginx
-        state: started
-        published_ports:
-          - "8080:80"
-
-    - name: Sprawdzenie działania kontenera
-      uri:
-        url: http://localhost:8080
-        return_content: yes
+ansible all -i inventory.yml -m ping
 
 ```
 
