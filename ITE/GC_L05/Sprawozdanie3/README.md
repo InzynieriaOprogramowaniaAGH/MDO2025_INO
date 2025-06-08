@@ -34,7 +34,7 @@ Na maszynie głównej (ansible) utworzono parę kluczy SSH i dokonano wymiany kl
 
 ```
 ssh-keygen
-ssh-copy-id amelia@10.0.2.15
+ssh-copy-id amelia@192.168.1.63
 
 ```
 
@@ -43,7 +43,7 @@ ssh-copy-id amelia@10.0.2.15
 Połączenie z maszyną docelową działało bez konieczności podawania hasła:
 
 ```
-ssh amelia@10.0.2.15
+ssh amelia@192.168.1.63
 
 ```
 
