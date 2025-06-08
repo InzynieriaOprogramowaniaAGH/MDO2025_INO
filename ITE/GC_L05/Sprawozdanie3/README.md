@@ -67,6 +67,8 @@ IP_address   ansible-target
 
 ```
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/amelia%20ansible%20target.jpg?raw=true)
+
 ## Plik inwentaryzacji inventory.ini
 
 Utworzono plik:
