@@ -166,16 +166,16 @@ all:
       hosts:
         orchestrator:
           ansible_host: 127.0.0.1
-          ansible_user: ansible
+          ansible_user: amelia
 
     Endpoints:
       hosts:
         ansible-target:
-          ansible_host: 192.168.56.102
-          ansible_user: ansible
+          ansible_host: 10.0.2.15
+          ansible_user: amelia
         ansible-endpoint2:
           ansible_host: ansible-endpoint2
-          ansible_user: ansible
+          ansible_user: amelia
 
 ```
 
