@@ -1,0 +1,7 @@
+FROM ubuntu:latest
+
+COPY --from=htop-build /app/htop.tar.gz /tmp/htop.tar.gz
+
+RUN tar -xzvf /tmp/htop.tar.gz -C /
+
+CMD ["htop", "--version"]

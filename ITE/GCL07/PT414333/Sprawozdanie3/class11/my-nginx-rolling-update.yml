@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: tla-rolling
+spec:
+    replicas: 4
+    strategy:
+        type: RollingUpdate
+        rollingUpdate:
+            maxUnavailable: 2
+            maxSurge: 30%
+    selector:
+        matchLabels:
+            app: tla-rolling
+            version: v1
+    template:
+        metadata:
+            labels:
+                app: tla-canary
+                version: v1
+        spec:
+            containers:
+                - name: my-nginx:latest
+                  image: docker.io/twarug/my-nginx:latest
+                  imagePullPolicy: Always
