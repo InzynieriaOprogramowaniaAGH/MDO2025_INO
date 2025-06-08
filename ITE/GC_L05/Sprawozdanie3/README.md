@@ -43,11 +43,11 @@ ssh-copy-id amelia@192.168.1.62
 Połączenie z maszyną docelową działało bez konieczności podawania hasła:
 
 ```
-ssh amelia@192.168.1.62
+ssh amelia@192.168.1.64
 
 ```
 
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ssh%20ansible.jpg?raw=true)
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ssh%20192168164.jpg?raw=true)
 
 
 ## Konfiguracja nazw hostów
