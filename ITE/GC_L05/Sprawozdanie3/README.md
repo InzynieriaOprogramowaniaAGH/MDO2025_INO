@@ -30,17 +30,18 @@ ip a
 
 ## Wymiana kluczy SSH
 
-Na maszynie głównej (ansible) utworzono parę kluczy SSH i dokonano wymiany klucza publicznego:
+Na maszynie głównej (ansible) wygenerowano parę kluczy SSH i przekazano klucz publiczny do zdalnych hostów.
 
 ```
 ssh-keygen
-ssh-copy-id amelia@192.168.1.62
+ssh-copy-id amelia@192.168.1.64
 
 ```
 
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/b4ce00b8-32de-4f39-9eba-b9e06559e457.jfif)
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ssh-copy-id%20192168164.jpg?raw=true)
 
-Połączenie z maszyną docelową działało bez konieczności podawania hasła:
+Połączenie z maszyną docelową odbywało się bez potrzeby wpisywania hasła.
+
 
 ```
 ssh amelia@192.168.1.64
@@ -52,13 +53,13 @@ ssh amelia@192.168.1.64
 
 ## Konfiguracja nazw hostów
 
-Edycja pliku /etc/hosts:
+Edytowano plik /etc/hosts:
 
 ```
 sudo nano /etc/hosts
 ```
 
-Dodanie wpisu:
+Poprzez dodanie wpisu:
 
 ```
 IP_address   ansible-target
@@ -106,7 +107,7 @@ which sshd
 
 ### Ustawienie nazw hostów
 
-Na głównej maszynie zmieniono nazwę hosta na orchestrator
+Ustawiono nazwę hosta na orchestrator
 
 ```
 sudo hostnamectl set-hostname orchestrator
@@ -119,8 +120,6 @@ exec bash
 Na dodatkowej maszynie hostname pozostał taki sam jak przy instalacji maszyny ansible
 
 ## Konfiguracja nazw DNS (plik /etc/hosts)
-
-Aby umożliwić rozpoznawianie nazw hostów zamiast korzystania z adresów IP
 
 Zmodyfikowano plik /etc/hosts
 
@@ -139,7 +138,7 @@ IP_address_2   ansible-target
 
 ### Weryfikacja łączności
 
-Sprawdzono możliwość komunikacji między naszynami za pomocą polecenia ping
+Zweryfikowano łączność między maszynami przy użyciu polecenia ping.
 
 ```
 ping ansible-target
@@ -148,12 +147,13 @@ ping ansible-target
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ping%20ansible.jpg?raw=true)
 
-## Przygotowanie pliku inwentaryzacyjnego Ansible
+## Tworzenie pliku inwentaryzacyjnego Ansible
 
-Utworzono plik inventory.yml z podziałem na grupy maszyn:
+Został utworzony plik inventory.yml, w którym zdefiniowano grupy hostów:
 
-Orchestrators - zawiera maszynę główną (zarządzającą)
-Endpoints - zawiera maszyny docelowe (zarządzane przez Ansible)
+Orchestrators – obejmuje maszynę zarządzającą (główną)
+
+Endpoints – zawiera maszyny, którymi zarządza Ansible
 
 
 Zawartość pliku inventory.yml
