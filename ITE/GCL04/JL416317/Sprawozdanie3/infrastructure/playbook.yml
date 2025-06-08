@@ -1,0 +1,11 @@
+- name: Docker setup
+  hosts: endpoints
+  become: true
+  roles:
+    - docker_setup
+
+- name: Weatherapp deploy
+  hosts: endpoints
+  become: true
+  roles:
+    - app_deploy

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weatherforecast-api-stable
+  labels:
+    strategy: stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: weatherforecast-api
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: weatherforecast-api
+        version: stable
+    spec:
+      containers:
+      - name: weatherforecast-api
+        image: latawiecjakub/weatherforecast-api:v3
+        ports:
+        - containerPort: 5000

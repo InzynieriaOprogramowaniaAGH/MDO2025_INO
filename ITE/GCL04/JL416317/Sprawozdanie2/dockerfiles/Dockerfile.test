@@ -1,0 +1,6 @@
+FROM weatherapp-build AS test
+
+WORKDIR /src/weatherapp-backend
+
+# Uruchomienie testów
+RUN dotnet test WeatherForecast.Tests

@@ -1,0 +1,167 @@
+pipeline {
+    agent any
+
+    environment {
+        //Dockerfiles
+        DOCKERFILES_PATH = 'ITE/GCL04/JL416317/Sprawozdanie2/dockerfiles'
+        DOCKERFILE_BUILD = 'Dockerfile.build'
+        DOCKERFILE_TEST = 'Dockerfile.test'
+        DOCKERFILE_DEPLOY = 'Dockerfile.deploy'
+        
+        //Images
+        IMAGE_BUILD = 'weatherapp-build'
+        IMAGE_TEST = 'weatherapp-test'
+        IMAGE_DEPLOY = 'weatherapp-deploy'
+        
+        //Containers
+        APP_CONTAINER = 'weatherapp'
+        
+        //Health check
+        API_HEALTHCHECK_URL = 'http://localhost:8080/api/apihealth'
+        
+        //Publish
+        ARTIFACTS_PATH = 'artifacts'
+
+        //Flags
+        DEBUG_FLAG = 'true'
+    }
+
+    stages {
+        stage('Workspace cleanup') {
+            steps {
+                echo 'Cleaning containers...'
+                sh """
+                    docker container prune -f
+                    docker rm -f ${APP_CONTAINER} || true
+                """
+                echo 'Cleaning images...'
+                sh """
+                    docker image prune -f
+                    docker rmi -f ${IMAGE_BUILD} ${IMAGE_TEST} ${IMAGE_DEPLOY} || true
+                """
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir("${DOCKERFILES_PATH}") {
+                    sh "docker build --no-cache -t ${IMAGE_BUILD} -f ${DOCKERFILE_BUILD} ."
+                }
+            }
+        }
+        
+        stage('[Debug]: Build') {
+            when {
+                expression { env.DEBUG_FLAG == 'true' }
+            }
+            steps {
+                sh 'docker images'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                 dir("${DOCKERFILES_PATH}") {
+                    sh "docker build --no-cache -t ${IMAGE_TEST} -f ${DOCKERFILE_TEST} ."
+                }
+            }
+        }
+
+        stage('[Debug]: Test') {
+            when {
+                expression { env.DEBUG_FLAG == 'true' }
+            }
+            steps {
+                sh 'docker images'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                dir("${DOCKERFILES_PATH}") {
+                    sh """
+                        docker build --no-cache -t ${IMAGE_DEPLOY} -f ${DOCKERFILE_DEPLOY} .
+                        docker run -d --name ${APP_CONTAINER} ${IMAGE_DEPLOY}
+                    """
+                }
+            }
+        }
+
+        stage('[Debug]: Deploy') {
+            when {
+                expression { env.DEBUG_FLAG == 'true' }
+            }
+            steps {
+                sh '''
+                    docker images
+                    docker ps -a
+                '''
+            }
+        }
+        
+
+        stage('App startup') {
+            steps {
+                sh '''
+                    for i in {1..30}; do
+                        STATUS=$(docker exec ${APP_CONTAINER} curl -s -o /dev/null -w "%{http_code}" ${API_HEALTHCHECK_URL})
+                        if [ "$STATUS" -eq 200 ]; then
+                            exit 0
+                        fi
+                        sleep 5
+                    done
+                    echo "Application is not running!"
+                    exit 1
+                '''
+            }
+            
+        }
+
+        stage('[Debug]: App startup') {
+            when {
+                expression { env.DEBUG_FLAG == 'true' }
+            }
+            steps {
+                sh "docker logs ${APP_CONTAINER}"
+            }
+        }
+        
+        stage('Health check') {
+            steps {
+                sh '''
+                    set -e
+                    STATUS=$(docker exec ${APP_CONTAINER} curl -s -o /tmp/response.txt -w "%{http_code}" ${API_HEALTHCHECK_URL})
+                    docker exec ${APP_CONTAINER} cat /tmp/response.txt
+                    [ "$STATUS" -eq 200 ]
+                '''
+            }
+        }
+        
+        stage('Publish') {
+            steps {
+                sh """
+                    mkdir -p ${ARTIFACTS_PATH}
+                    docker cp ${APP_CONTAINER}:/app ${ARTIFACTS_PATH}
+                """
+                archiveArtifacts artifacts: "${ARTIFACTS_PATH}/**", fingerprint: true
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Cleaning containers...'
+            sh """
+                docker container prune -f
+                docker rm -f ${APP_CONTAINER} || true
+            """
+            echo 'Cleaning images...'
+            sh """
+                docker image prune -f
+                docker rmi -f ${IMAGE_BUILD} ${IMAGE_TEST} ${IMAGE_DEPLOY} || true
+            """
+            echo 'Cleaning workspace...'
+            cleanWs()
+        }
+    }
+}

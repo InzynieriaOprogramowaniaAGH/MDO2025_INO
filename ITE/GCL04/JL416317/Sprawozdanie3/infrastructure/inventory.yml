@@ -1,0 +1,10 @@
+all:
+  children:
+    orchestrators:
+      hosts:
+        ubuntu-server:
+          ansible_user: jlatawiec
+    endpoints:
+      hosts:
+        ansible-target:
+          ansible_user: ansible
