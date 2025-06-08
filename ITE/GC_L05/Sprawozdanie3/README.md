@@ -245,6 +245,13 @@ ansible-playbook -i inventory.yml playbook.yaml --ask-become-pass
 ```
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/run-playbook.jpg?raw=true)
 
+
+Zainstalowano dodatkowo rngd na maszynach:
+
+```
+sudo dnf install -y rng-tools 
+
+```
 ---
 
 # Zajęcia 09 - Pliki odpowiedzi dla wdrożeń nienadzorowanych
