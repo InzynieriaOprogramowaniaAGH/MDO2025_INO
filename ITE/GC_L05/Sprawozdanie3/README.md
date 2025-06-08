@@ -252,11 +252,6 @@ ansible-playbook -i inventory.ini playbook.yaml --ask-become-pass
 
 ```
 
-## Wynik testu:
-
-Kontener działał prawidłowo
-
-Strona NGINX była dostępna pod http://ansible-target:8080
 
 ---
 
