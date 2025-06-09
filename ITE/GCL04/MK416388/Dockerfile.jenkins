@@ -1,10 +1,5 @@
-# Bazujemy na obrazie Jenkinsa
 FROM jenkins/jenkins:2.492.2-jdk17
-
-# Przechodzimy na użytkownika root, żeby zainstalować Docker
 USER root
-
-# Instalujemy Docker i niezbędne pakiety
 RUN apt-get update && apt-get install -y \
     lsb-release \
     ca-certificates \
@@ -17,16 +12,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get install -y docker-ce docker-ce-cli containerd.io \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-# Instalujemy pluginy Jenkins: Blue Ocean i Docker Workflow
 RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
-
-# Ustawiamy z powrotem użytkownika na jenkins
 USER jenkins
-
-# Włączamy porty potrzebne do Jenkinsa
 EXPOSE 8080
-EXPOSE 50000
-
-# Uruchamiamy Jenkinsa
+EXPOSE 5000 
 CMD ["/usr/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
