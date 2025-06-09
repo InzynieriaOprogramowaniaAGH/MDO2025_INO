@@ -1,0 +1,11 @@
+# playbooks/copy_inventory.yml
+- name: Copy inventory file
+  hosts: Endpoints
+  tasks:
+    - name: Copy inventory file
+      copy:
+        src: ../inventories/hosts
+        dest: /home/ansible/hosts
+        owner: ansible
+        group: ansible
+        mode: '0644'

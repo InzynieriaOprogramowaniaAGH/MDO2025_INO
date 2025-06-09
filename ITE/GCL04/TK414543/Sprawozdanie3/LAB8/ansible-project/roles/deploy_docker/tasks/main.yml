@@ -1,0 +1,14 @@
+---
+# tasks file for roles/deploy_docker
+- name: Install Docker
+  become: yes
+  dnf:
+    name: docker
+    state: present
+
+- name: Enable and start Docker
+  become: yes
+  systemd:
+    name: docker
+    enabled: true
+    state: started

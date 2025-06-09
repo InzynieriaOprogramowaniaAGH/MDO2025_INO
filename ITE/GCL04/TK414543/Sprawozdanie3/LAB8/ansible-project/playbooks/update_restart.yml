@@ -1,0 +1,18 @@
+# playbooks/update_restart.yml
+- name: Update system and restart services
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Update all packages
+      dnf:
+        name: "*"
+        state: latest
+    - name: Restart sshd
+      service:
+        name: sshd
+        state: restarted
+    - name: Restart rngd
+      service:
+        name: rngd
+        state: restarted
+      ignore_errors: yes  # jeśli nie zainstalowano rngd

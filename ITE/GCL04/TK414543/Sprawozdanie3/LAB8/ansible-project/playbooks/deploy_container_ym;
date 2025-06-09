@@ -1,0 +1,5 @@
+# playbooks/deploy_container.yml
+- name: Deploy docker container
+  hosts: Endpoints
+  roles:
+    - deploy_docker
