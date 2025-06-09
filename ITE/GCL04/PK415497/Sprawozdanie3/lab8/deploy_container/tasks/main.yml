@@ -1,0 +1,43 @@
+---
+- name: Install Docker
+  package:
+    name: docker
+    state: present
+
+- name: Ensure Docker service is running
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Pull the Docker image from Docker Hub
+  docker_image:
+    name: "{{ docker_image_name }}"
+    source: pull
+
+- name: Run the Docker container
+  docker_container:
+    name: "{{ docker_container_name }}"
+    image: "{{ docker_image_name }}:{{ docker_image_tag }}"
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "{{ host_port }}:{{ container_port }}"
+
+- name: Wait for the container to be ready
+  wait_for:
+    host: localhost
+    port: "{{ container_port }}"
+    delay: 5
+    timeout: 30
+
+- name: Verify that the application is running
+  uri:
+    url: http://localhost:{{ container_port }}
+    method: GET
+    status_code: 200
+
+- name: Stop and remove the container
+  docker_container:
+    name: "{{ docker_container_name }}"
+    state: absent

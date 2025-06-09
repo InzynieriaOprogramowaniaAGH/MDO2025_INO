@@ -1,0 +1,5 @@
+docker_image_name: "pawelk1234/nodeapp"
+docker_image_tag: "latest"
+docker_container_name: "nodeapp"
+host_port: "3000"
+container_port: "3000"

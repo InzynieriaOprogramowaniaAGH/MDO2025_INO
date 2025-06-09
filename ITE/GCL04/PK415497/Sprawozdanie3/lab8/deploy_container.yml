@@ -1,0 +1,52 @@
+---
+- name: Deploy Docker container on endpoints
+  hosts: Endpoints
+  become: yes
+  tasks:
+
+    - name: Install Docker
+      package:
+        name: docker
+        state: present
+
+    - name: Ensure Docker service is running
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+
+    - name: Pull the Docker image from Docker Hub
+      docker_image:
+        name: pawelk1234/nodeapp
+        source: pull
+
+
+    - name: Run the Docker container
+      docker_container:
+        name: nodeapp
+        image: pawelk1234/nodeapp:latest
+        state: started
+        restart_policy: unless-stopped
+        ports:
+          - "3000:3000"
+
+
+    - name: Wait for the container to be ready
+      wait_for:
+        host: localhost
+        port: 3000
+        delay: 5
+        timeout: 30
+
+    - name: Verify that the application is running
+      uri:
+        url: http://localhost:3000
+        method: GET
+        status_code: 200
+
+
+    - name: Stop and remove the container
+      docker_container:
+        name: nodeapp
+        state: absent

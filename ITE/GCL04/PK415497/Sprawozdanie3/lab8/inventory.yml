@@ -1,0 +1,10 @@
+Orchestrators:
+  hosts:
+    master:
+      ansible_user: pawel
+      ansible_connection: local
+
+Endpoints:
+  hosts:
+    ansible-target:
+      ansible_user: ansible

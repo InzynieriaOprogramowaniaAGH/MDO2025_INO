@@ -1,0 +1,34 @@
+---
+- name: Restarty
+  hosts: Endpoints
+  become: yes
+  tasks:
+
+    - name: Ping do maszyny (test łączności)
+      ansible.builtin.ping:
+
+    - name: Skopiuj plik inwentaryzacji na endpointy
+      ansible.builtin.copy:
+        src: ./inventory.yml
+        dest: /home/ansible/inventory.yml
+        owner: ansible
+        group: ansible
+        mode: '0644'
+
+    - name: Zaktualizuj pakiety systemowe
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Restartuj usługę sshd
+      ansible.builtin.systemd:
+        name: sshd
+        state: restarted
+        enabled: yes
+
+    - name: Restartuj usługę rngd
+      ansible.builtin.systemd:
+        name: rngd
+        state: restarted
+        enabled: yes
