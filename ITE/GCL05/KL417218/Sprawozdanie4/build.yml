@@ -1,0 +1,32 @@
+# Github Actions Redis Build
+name: build
+
+on:
+  push:
+    branches: [ino_dev]
+  workflow_dispatch:
+
+jobs:
+  build-redis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: make
+
+      - name: Verify
+        run: |
+          ./redis-server --version
+          ./redis-cli --version
+        working-directory: src
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: redis-binaries
+          path: |
+            ./src/redis-server
+            ./src/redis-cli
