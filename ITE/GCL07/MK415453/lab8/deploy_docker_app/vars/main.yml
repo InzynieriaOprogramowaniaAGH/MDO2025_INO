@@ -1,0 +1,6 @@
+---
+# vars file for deploy_docker_app
+docker_image: klocekk/node-deploy
+container_name: myapp
+container_port: 3000
+published_port: 3000
