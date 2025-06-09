@@ -1,0 +1,41 @@
+- name: Procedury zdalne
+  hosts: Endpoints
+  become: true
+
+  tasks:
+    - name: Test ping (czy host jest dostępny)
+      ansible.builtin.ping:
+
+    - name: Skopiuj plik inventory.ini na endpointy
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /home/ansible/inventory.ini
+        owner: ansible
+        group: ansible
+        mode: '0644'
+
+    - name: Wyświetl zawartość inventory.ini na zdalnej maszynie
+      ansible.builtin.command: cat /home/ansible/inventory.ini
+      register: inventory_cat
+
+    - name: Wypisz zawartość inventory.ini
+      ansible.builtin.debug:
+        var: inventory_cat.stdout_lines
+
+    - name: Aktualizuj wszystkie pakiety
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Restartuj usługę sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+        enabled: true
+
+    - name: Restartuj usługę rngd
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+        enabled: true
