@@ -1,0 +1,29 @@
+name: Build mruby with rake
+
+on:
+  push:
+    branches: [ "ino_dev" ]
+  pull_request:
+    branches: [ "ino_dev" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential bison
+
+      - name: Build with rake -m
+        run: rake -m
