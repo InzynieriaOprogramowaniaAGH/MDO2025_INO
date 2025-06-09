@@ -1,0 +1,30 @@
+# .github/workflows/simple-ci.yml
+
+name: Proste CI dla Express Fork
+
+on:
+  push:
+    branches:
+      - ino_dev
+  
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build i Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Klonowanie repozytorium
+        uses: actions/checkout@v4
+
+      - name: Ustawienie środowiska Node.js v20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Instalacja zależności (npm install)
+        run: npm install
+
+      - name: Uruchomienie testów
+        run: npm run test-ci
