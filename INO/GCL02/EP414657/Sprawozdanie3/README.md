@@ -385,7 +385,6 @@ Inżynieria Obliczeniowa
     ![4](screenshots/78.png)
     ![old](screenshots/79.png)
     ![broken](screenshots/80.png)
-    ![plik](screenshots/81.png)
     
 6. Po wykonaniu tych kroków sprawdziłam historię rolloutów:
 
