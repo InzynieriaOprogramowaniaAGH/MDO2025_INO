@@ -334,3 +334,295 @@ reboot
 
 ![](screenshoty/24.png)
 
+## Laboratorium 10
+
+Instalacja minikube zgodnie z dokumentacją, za pomocą RPM
+
+![](screenshoty/25.png)
+
+Uruchomienie minikube z ustawioną opcją driver na Dockera
+
+![](screenshoty/26.png)
+
+Dodanie aliasu dla ułatwienia
+
+![](screenshoty/27.png)
+
+Uruchomienie dashboarda, vscode automatycznie robi forwarding portu
+
+![](screenshoty/28.png)
+
+![](screenshoty/29.png)
+
+Uruchomienie konteneru z obrazu naszej apki, wyświetlenie poda i jego statusu
+
+![](screenshoty/30.png)
+
+Pod z kontenerem jest uruchomiony
+
+![](screenshoty/31.png)
+
+Aplikacja działająca na porcie 3000
+
+![](screenshoty/32.png)
+
+### Plik wdrożenia - deploy.yaml
+Plik yaml definiuje Deployment dla aplikacji Node.js w Kubernetes. Deployment nazywa się node-deployment i ma 4 repliki podów, które mają etykiety app: nodeapp i stage: production. Pody używają obrazu pawelk1234/nodeapp:latest, nasłuchują na porcie 3000 oraz ustawiają zmienną środowiskową NODE_ENV na production. Kontenery mają zdefiniowane minimalne zasoby 64Mi pamięci, 250m CPU oraz maksymalne limity 128Mi pamięci, 500m CPU. Polityka restartu jest ustawiona na Always, co oznacza, że pody będą zawsze restartowane po zakończeniu pracy.
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-deployment
+  labels:
+    app: node
+    environment: production
+
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nodeapp
+  template:
+    metadata:
+      labels:
+        app: nodeapp
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: nodeapp-container
+        image: pawelk1234/nodeapp:latest
+        ports:
+          - containerPort: 3000
+            protocol: TCP
+        env:
+          - name: NODE_ENV
+            value: "production"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+```
+Wdrożenie podów za pomocą naszego pliku
+
+![](screenshoty/33.png)
+
+Uruchomione pody pojawiły się na dashboardzie
+
+![](screenshoty/34.png)
+
+Sprawdzenie statusu i wyeksportowanie wdrożenia jako serwis
+
+![](screenshoty/35.png)
+
+![](screenshoty/36.png)
+
+Przekierowanie portu do serwisu
+
+![](screenshoty/37.png)
+
+## Laboratorium 11
+
+### Nowy obraz
+wersja latest - z pipeline'u
+
+:v2.0 - druga wersja, poprawna
+
+:v10.0 - wadliwy obraz, w którym w polu command ustawiono ["/bin/false"]
+
+![](screenshoty/38.png)
+
+Zaktualizowano odpowiednio plik deploy.yaml z poprzednich labów
+
+Zwiększenie liczby replik do 8
+
+![](screenshoty/39.png)
+
+![](screenshoty/40.png)
+
+Zmniejszenie liczby replik do 1
+
+![](screenshoty/41.png)
+
+![](screenshoty/42.png)
+
+Zmniejszenie liczby replik do 0
+
+![](screenshoty/43.png)
+
+![](screenshoty/44.png)
+
+Przeskalowanie do 4 replik
+
+![](screenshoty/45.png)
+
+![](screenshoty/46.png)
+
+Zastosowanie wersji obrazu :v2.0
+
+![](screenshoty/47.png)
+
+![](screenshoty/48.png)
+
+Powrót do starszej wersji obrazu
+
+![](screenshoty/49.png)
+
+![](screenshoty/50.png)
+
+Zastosowanie obrazu wadliwego :v10.0
+
+![](screenshoty/51.png)
+
+![](screenshoty/52.png)
+
+Sprawdzenie historii wdrożeń dla deploymentu node oraz przywrócenie poprzedniej wersji tego deploymentu
+
+![](screenshoty/53.png)
+
+![](screenshoty/54.png)
+
+![](screenshoty/55.png)
+
+![](screenshoty/56.png)
+
+Napisanie skryptu check.sh sprawdzającego czy wdrożyło się w czasie 60 sekund
+```
+#!/bin/bash
+
+TARGET_DEPLOY="node-deployment"
+NS="default"
+MAX_WAIT=60
+CHECK_INTERVAL=5
+ELAPSED_TIME=0
+
+echo "Checking status of deployment: $TARGET_DEPLOY"
+
+
+while [ $ELAPSED_TIME -lt $MAX_WAIT ]; do
+    if minikube kubectl -- rollout status deployment/$TARGET_DEPLOY --namespace $NS --timeout=5s > /dev/null 2>&1; then
+        echo "Deployment successful after ${ELAPSED_TIME}s"
+        exit 0
+    fi
+
+    sleep $CHECK_INTERVAL
+    ELAPSED_TIME=$((ELAPSED_TIME + CHECK_INTERVAL))
+    echo "Retrying in ${CHECK_INTERVAL}s..."
+done
+
+echo "Timeout reached after $MAX_WAIT seconds"
+exit 1
+
+```
+
+Weryfikacja działania skryptu
+
+![](screenshoty/57.png)
+
+![](screenshoty/58.png)
+
+### Recreate, Rolling update
+
+Strategia Recreate polega na usunięciu istniejących podów przed utworzeniem nowych, co powoduje przerwę w dostępności aplikacji
+
+![](screenshoty/59.png)
+
+![](screenshoty/60.png)
+
+Strategia RollingUpdate pozwala na stopniowe aktualizowanie aplikacji, usuwając i tworząc pody równocześnie, zapewniając ciągłość działania aplikacji
+
+![](screenshoty/61.png)
+
+![](screenshoty/62.png)
+
+Canary Deployment to strategia, która polega na wprowadzaniu nowych wersji aplikacji do małej części użytkowników, zanim zostaną wdrożone na całym środowisku produkcyjnym. Dzięki temu, można testować nową wersję na ograniczonej liczbie podów, minimalizując ryzyko wystąpienia problemów. 
+
+canary1.yaml:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeapp-canary
+  labels:
+    role: nodeapp
+    stage: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: nodeapp
+      stage: canary
+  template:
+    metadata:
+      labels:
+        role: nodeapp
+        stage: canary
+    spec:
+      containers:
+        - name: nodeapp-container
+          image: pawelk1234/nodeapp:latest
+          ports:
+            - containerPort: 3000
+```
+
+
+canary2.yaml:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeapp-production
+  labels:
+    role: nodeapp
+    stage: stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      role: nodeapp
+      stage: stable
+  template:
+    metadata:
+      labels:
+        role: nodeapp
+        stage: stable
+    spec:
+      containers:
+        - name: nodeapp-container
+          image: pawelk1234/nodeapp:v2.0
+          ports:
+            - containerPort: 3000
+```
+
+Ten manifest definiuje stabilne wdrożenie aplikacji, uruchamiając trzy repliki kontenera nodeapp:v2.0. Pody są oznaczone etykietami role: nodeapp i stage: stable, co pozwala łatwo rozróżnić wersje. Stabilna wersja obsługuje główny ruch, zapewniając ciągłość działania aplikacji, podczas gdy testowa wersja działa na ograniczonej liczbie replik, minimalizując ryzyko.
+
+my_service.yaml:
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodeapp-service
+spec:
+  selector:
+    role: nodeapp
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: ClusterIP
+```
+Plik my_service.yaml definiuje zasób Service dla aplikacji Node.js w Kubernetes. Zasób ten nazywa się nodeapp-service i będzie wykorzystywał selektor role: nodeapp, aby dopasować odpowiednie pody. W sekcji ports definiowane są porty: ruch przychodzący na porcie 80 jest przekierowywany na port 3000 kontenerów. Typ usługi to ClusterIP, co oznacza, że usługa będzie dostępna tylko wewnątrz klastra Kubernetes.
+
+![](screenshoty/63.png)
+
+![](screenshoty/64.png)
+
+
+
+
+
+
+
+
+
