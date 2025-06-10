@@ -1,0 +1,4 @@
+FROM bat_builder
+
+WORKDIR /usr/src/bat
+RUN cargo test

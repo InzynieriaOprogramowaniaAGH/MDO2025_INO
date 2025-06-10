@@ -1,0 +1,1 @@
+przykładowy tekst

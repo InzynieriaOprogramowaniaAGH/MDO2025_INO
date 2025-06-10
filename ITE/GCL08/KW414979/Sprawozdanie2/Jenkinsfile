@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+
+    environment {
+        REPO_URL = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+        BRANCH_NAME = 'KW414979_1'
+        DOCKERHUB_CREDENTIALS = 'ef0cacc9-7e4e-4ce1-8b92-60c79e6d5ea2'
+        DOCKERHUB_REPO = 'avokawo/bat_project'
+    }
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                git branch: "${BRANCH_NAME}",
+                    url: "${REPO_URL}"
+            }
+        }
+        stage('Build') {
+            steps {
+                script {
+                    dockerImage = docker.build("bat_builder", "-f ITE/GCL08/KW414979/Sprawozdanie2/Dockerfile.bat_builder .")
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    dockerImage = docker.build("bat_tester", "-f ITE/GCL08/KW414979/Sprawozdanie2/Dockerfile.bat_tester .")
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    dockerImage = docker.build("bat_deployer", "-f ITE/GCL08/KW414979/Sprawozdanie2/Dockerfile.bat_deployer .")
+                    sh """
+                    docker run --rm \
+                        -v \$(pwd)/ITE/GCL08/KW414979/Sprawozdanie2/bat_in:/vol/bat_in \
+                        -v \$(pwd)/ITE/GCL08/KW414979/Sprawozdanie2/bat_out:/vol/bat_out \
+                        bat_deployer
+                    """
+                }
+            }
+        }
+        stage('Publish') {
+            steps {
+                script {
+                    // Logowanie do DockerHuba
+                    withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]){
+                    // Logowanie bez interpolacji
+                        sh '''
+                            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        '''
+                    }
+                    // Tagowanie obrazu
+                    sh "docker tag bat_deployer ${DOCKERHUB_REPO}:latest"
+                    // Push na DockerHuba
+                    sh "docker push ${DOCKERHUB_REPO}:latest"
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+    }
+}
