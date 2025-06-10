@@ -1,0 +1,71 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_REPO = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+        BRANCH = 'AR417143'
+        DOCKERFILE_BUILD_PATH = 'ITE/GCL06/AR417143/006-Class/Dockerfile.build'
+        DOCKERFILE_TEST_PATH = 'ITE/GCL06/AR417143/006-Class/Dockerfile.test'
+        DOCKERFILE_DEPLOY_PATH = 'ITE/GCL06/AR417143/006-Class/Dockerfile.deploy'
+        DOCKERFILE_RUNTIME_PATH = 'ITE/GCL06/AR417143/006-Class/Dockerfile.runtime'
+        DOCKER_CONTEXT = 'ITE/GCL06/AR417143/006-Class'
+        DOCKER_IMAGE = 'irssibld'
+        DEPLOY_IMAGE = 'irssidep'
+        TEST_IMAGE = 'irssitest'
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: "${BRANCH}", url: "${GIT_REPO}"
+            }
+        }
+
+        stage('Check') {
+            steps {
+                sh "ls -la ${DOCKER_CONTEXT}"
+                sh "cat ${DOCKERFILE_BUILD_PATH}"
+            }
+        }
+
+        stage('Build Docker image') {
+            steps {
+                sh "docker build --no-cache -t ${DOCKER_IMAGE} -f ${DOCKERFILE_BUILD_PATH} ."
+            }
+        }
+
+        stage('Test irssi') {
+            steps {
+                sh "docker build --no-cache -t ${TEST_IMAGE} -f ${DOCKERFILE_TEST_PATH} ."
+            }
+        }
+        
+        stage('Deploy') {
+           steps {
+                sh "docker build --no-cache -t ${DEPLOY_IMAGE} -f ${DOCKERFILE_DEPLOY_PATH} ."   
+                sh "docker run -dit irssidep"
+            }
+        }
+        
+        
+        stage('Publish Runtime Image') {
+           steps {
+                sh 'docker cp $(docker ps -q --filter ancestor=irssidep | head -n 1):/usr/local/bin/irssi ${WORKSPACE}/irssi'
+                sh 'ls -la ${WORKSPACE}/irssi'
+                archiveArtifacts artifacts: 'irssi/irssi', allowEmptyArchive: false, fingerprint: true   
+            }
+        }
+    }
+
+    post {
+        always {
+                    sh 'docker ps -q --filter ancestor=irssidep | xargs docker stop | xargs docker rm'
+        }
+        success {
+            echo 'Succes.'
+        }
+        failure {
+            echo 'Pipeline error.'
+        }
+    }
+}
