@@ -1,0 +1,87 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                sh '''
+                #!/bin/bash
+                docker system prune -f
+                docker image prune -f
+                docker container prune -f
+                rm -rf ITE
+                '''
+                git branch: 'MK414948', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                dir('ITE/GCL04/MK414948/Sprawozdanie1/pliki/Dockerfiles') {
+                    script {
+                        docker.build('nodebld', '-f Dockerfile.nodebld .')
+                    }
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                dir('ITE/GCL04/MK414948/Sprawozdanie1/pliki/Dockerfiles') {
+                    script {
+                        docker.build('nodetest', '-f Dockerfile.nodetest .')
+                    }
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    // Tworzymy sieć do testu łączności
+                    sh 'docker network create deploy || true'
+
+                    // Uruchamiamy klienta z unikalną nazwą
+                    def node = docker.build('nodedeploy', '-f ITE/GCL04/MK414948/Sprawozdanie2/pliki/Dockerfile.nodedeploy .')
+                    def container = node.run("--rm -d -p 3000:3000 --network=deploy --name node")
+                    // Uruchamiamy kontener curla
+                    sh 'docker run --rm --network=deploy curlimages/curl:latest -L -v  http://node:3000'
+
+                    // Czyszczenie kontenera i sieci
+                    sh "docker stop node"
+                    sh 'docker network rm deploy'
+                    sh 'docker rmi nodedeploy'
+                }
+            }
+        }
+        stage('Publish') {
+            steps {
+                script {
+                    sh "docker network create publish || true"
+
+                    // Uruchamiamy verdaccio
+                    sh '''
+                    docker run --network=publish --name verdaccio -d -p 4873:4873 verdaccio/verdaccio || docker start verdaccio
+                    '''
+
+                    // Tworzymy obraz nodepublish
+                    def publishImg = docker.build('nodepublish', '-f ITE/GCL04/MK414948/Sprawozdanie2/pliki/Dockerfile.nodepublish .')
+
+                    // Uruchamiamy kontener z unikalną nazwą
+                    def container = publishImg.run("--network=publish --name node")
+                    sleep 5
+
+                    // Zatrzymanie kontenera i usunięcie sieci
+                    sh 'docker stop node'
+                    sh 'docker stop verdaccio'
+                    sh "docker network rm publish"
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Czyszczenie po zakończeniu
+            sh 'docker system prune -af'
+            sh 'rm -rf ITE'
+        }
+    }
+}

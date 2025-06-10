@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "test"
+        VERSION = "v1.0.${BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Clone') {
+            steps {
+                git branch: 'ML416494', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+            }
+        }
+
+        stage('Build Redis (Builder)') {
+            steps {
+                dir('ITE/GCL04/ML416494/Sprawozdanie2/jenkins') {
+                    script {
+                        docker.build("redis-builder", "-f Dockerfile.build .")
+                    }
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                dir('ITE/GCL04/ML416494/Sprawozdanie2/jenkins') {
+                    script {
+                        def redisTestImage = docker.build("redis-test", "-f Dockerfile.test .")
+                        sh "docker run --rm redis-test"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy and Check') {
+            steps {
+                sh """
+                    docker build --no-cache -t ${IMAGE_NAME}:${VERSION} -f ITE/GCL04/ML416494/Sprawozdanie2/jenkins/Dockerfile.deploy .
+
+                    docker network inspect network-testing >/dev/null 2>&1 || docker network create network-testing
+                    docker rm -f redis-deploy-test
+                    docker run -d --name redis-deploy-test --network network-testing ${IMAGE_NAME}:${VERSION}
+                    sleep 10
+                    
+                    docker run --rm --network network-testing redis redis-cli -h redis-deploy-test PING | grep PONG
+                    docker run --rm --network network-testing redis redis-cli -h redis-deploy-test SET testkey "Hello"
+                    docker run --rm --network network-testing redis redis-cli -h redis-deploy-test GET testkey | grep Hello
+
+                    docker stop redis-deploy-test
+                    docker rm redis-deploy-test
+                    docker network rm network-testing
+                """
+            }
+        }
+
+         stage('Publish') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'pass-dockhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                        docker tag ${IMAGE_NAME}:${VERSION} $DOCKER_USERNAME/${IMAGE_NAME}:${VERSION}
+                        docker push $DOCKER_USERNAME/${IMAGE_NAME}:${VERSION}
+                    '''
+                }
+            }
+        }
+    }
+}

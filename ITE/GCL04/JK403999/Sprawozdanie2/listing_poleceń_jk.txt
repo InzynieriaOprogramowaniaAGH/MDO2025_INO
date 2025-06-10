@@ -1,0 +1,522 @@
+    1  systemctl status sshd
+    2  ip a
+    3  exit
+    4  ps
+    5  ip a
+    6  exit
+    7  ls
+    8  pwd
+    9  scp doprzslania.txt jk@127.0.0.1:/home/jk
+   10  scp C:\Users\Kuba\doprzslania.txt jk@127.0.0.1:/home/jk
+   11  exit
+   12  ls
+   13  cat doprzslania.txt
+   14  touch rmot.txt
+   15  ls
+   16  scp rmot.txt jk@127.0.0.1:/home/jk/rmot.txt .
+   17  ls
+   18  scp -P 2222 jk@127.0.0.1:/home/jk/rmot.txt .
+   19  scp jk@127.0.0.1:/home/jk/rmot.txt .
+   20  scp jk@127.0.0.1:/home/jk/rmot.txt ~/Downloads/
+   21  scp -P 2222 jk@127.0.0.1:/home/jk/rmot.txt ~/Downloads/
+   22  scp -P 22 jk@127.0.0.1:/home/jk/rmot.txt ~/Downloads/
+   23  scp jk@127.0.0.1:/home/jk/rmot.txt .
+   24  scp -v jk@127.0.0.1:/home/jk/rmot.txt .
+   25  ls
+   26  scp -v jk@127.0.0.1:/home/jk/rmot.txt ~/Donwloads/
+   27  exit
+   28  git
+   29  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   30  sudo apt update
+   31  exit
+   32  git -v
+   33  ls
+   34  pwd
+   35  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   36  ls
+   37  cd MDO2025_INO/
+   38  ls
+   39  ls -a
+   40  
+   41  scp jk@127.0.0.1:/home/jk/rmot.txt ~/Downloads/
+   42  scp -P 2222 jk@127.0.0.1:/home/jk/rmot.txt ~/Downloads/
+   43  cat doprzslania.txt
+   44  ls
+   45  rm MDO2025_INO/
+   46  git config --global credential.helper
+   47  ls
+   48  cd MDO2025_INO/
+   49  ls
+   50  cd ,,
+   51  cd ..
+   52  rm -r MDO2025_INO/
+   53  ls
+   54  rmdir -r MDO2025_INO/
+   55  rm -r MDO2025_INO/
+   56  rm -rf MDO2025_INO/
+   57  ls
+   58  cls
+   59  clear
+   60  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   61  ssh-keygen -t ed25519 -C "jakub15000@gmail.com"
+   62  ls
+   63  ls -a
+   64  pwd
+   65  cd .ssh
+   66  ls -a
+   67  cat known_hosts
+   68  cd ..
+   69  ssh-keygen -t ed25519 -C "jakub15000@gmail.com"
+   70  ls -a
+   71  cat ops1.pub
+   72  ls -a
+   73  rm -rf MDO2025_INO/
+   74  ls
+   75  rm doprzslania.txt
+   76  rm rmot.txt
+   77  ls
+   78  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   79  ls
+   80  mv ops1 .ssh/
+   81  cd .ssh
+   82  ls
+   83  cd ..
+   84  mv ops1.pub ops2 ops2.pub .ssh
+   85  ls
+   86  ls -a
+   87  cd ssh
+   88  cd .ssh
+   89  ls -a
+   90  cd ..
+   91  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   92  eval "$(ssh-agent -s)"
+   93  ssh-add ~/.ssh/ops1
+   94  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+   95  ls
+   96  exit
+   97  git ls
+   98  ls
+   99  ls -a
+  100  rm -fr MDO2025_INO/
+  101  ls
+  102  git clon git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  103  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  104  ls
+  105  cd .ssh
+  106  ls -a
+  107  cd ..
+  108  eval "$(ssh-agent -s)"
+  109  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  110  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  111  ls
+  112  cd MDO2025_INO/
+  113  ls
+  114  ls -a
+  115  git branch
+  116  git checkout main
+  117  git branch
+  118  cd READMEs/
+  119  ls
+  120  cat 001-Class.md
+  121  git checkout GCL04
+  122  git branch
+  123  git branch -a
+  124  ls
+  125  cd ..
+  126  ls
+  127  cd READMEs/
+  128  cat 001-Class.md
+  129  cd ..
+  130  ls
+  131  cd MDO2025_INO/
+  132  git branch
+  133  git checkout -b JK403999
+  134  git branch
+  135  ls
+  136  cd READMEs/
+  137  ls
+  138  cd ..
+  139  cd ITE/
+  140  ls
+  141  cd GCL04/
+  142  ls
+  143  ls -a
+  144  mkdir JK403999
+  145  ls
+  146  git status
+  147  cd ..
+  148  ls
+  149  git status
+  150  ls -a
+  151  cd .git
+  152  ls -a
+  153  cd hooks
+  154  ls -a
+  155  cat pre-commit.sample
+  156  ls -a
+  157  cat commit-msg.sample
+  158  touch pre-commit-DEV-OPS
+  159  ls
+  160  count=$(grep -c '^JK403999' "$1")
+  161  if [ "$count" -ne 0 ]; then         echo >&2 Commit musi zaczynac sie od inicjałów i numeru albumu;         exit 1; cat pre-commit-DEV-OPS
+  162  ls
+  163  cat pre-commit-
+  164  cat pre-commit-DEV-OPS
+  165  ls
+  166  cat pre-commit-DEV-OPS
+  167  vim pre-commit-DEV-OPS
+  168  nano pre-commit-DEV-OPS
+  169  cat pre-commit-DEV-OPS
+  170  cp pre-commit-DEV-OPS ../../ITE/GCL04/JK40399/
+  171  ls
+  172  cp pre-commit-DEV-OPS ../../ITE/GCL04/JK40399/pre-commit-DEV-OPS
+  173  ls
+  174  cp pre-commit-DEV-OPS /../../ITE/GCL04/JK40399/
+  175  cd ..
+  176  ls
+  177  ls ITE/
+  178  cp pre-commit-DEV-OPS /../../ITE/GCL04/JK403999/
+  179  cd .git/hooks
+  180  cp pre-commit-DEV-OPS /../../ITE/GCL04/JK403999
+  181  cd ..
+  182  cd ITE/
+  183  cd GCL04/
+  184  ls
+  185  cd ..
+  186  cd .git
+  187  cd hooks
+  188  cp pre-commit-DEV-OPS ~/MDO2025_INO/ITE/GCL04/JK403999/
+  189  ls
+  190  cat pre-commit-DEV-OPS
+  191  cd ..
+  192   cd ..
+  193  ls
+  194  MDO2025_INO/
+  195  cd MDO2025_INO/
+  196  cd ITE/
+  197  cd GL
+  198  cd GCL04/
+  199  ls
+  200  cd JK403999/
+  201  ls
+  202  cd MDO2025_INO/
+  203  git status
+  204  git add ITE/GCL04/JK403999/
+  205  git status
+  206  cd ITE/GCL04/JK403999/
+  207  mkdir Sprawozdanie1
+  208  cd Sprawozdanie1/
+  209  touch README.md
+  210  ls
+  211  git sta
+  212  git status
+  213  cd ..
+  214  git status
+  215  git add .
+  216  git status
+  217  git commit -m "JK403999 Sprawozdanie 1"
+  218  git config --global user.email "jakub15000@gmail.com"
+  219  git config --global user.name elsharravy
+  220  git commit -m "JK403999 Sprawozdanie 1"
+  221  git history
+  222  git log
+  223  git push origin JK403999
+  224  yum install docker
+  225  exit
+  226  docker run hello-world
+  227  ls
+  228  systemctl enable --now docker
+  229  docker run hello-world
+  230  exit
+  231  ls
+  232  cd MDO2025_INO/
+  233  ls
+  234  ps
+  235  echo $0
+  236  ls
+  237  cd MDO2025_INO/
+  238  git status
+  239  git branch
+  240  git branch -a
+  241  git branch main
+  242  git checkout main
+  243  git branch
+  244  git checkout JK403999
+  245  git branch
+  246  git checkout main
+  247  git merge JK403999
+  248  git status
+  249  git merge --abort
+  250  git log
+  251  git reset --hard HEAD~1
+  252  git status
+  253  git checkout GCL04
+  254  git merge JK403999
+  255  git log
+  256  git checkout JK403999
+  257  git status
+  258  git checkout GCL403999
+  259  git checkout JK403999
+  260  git status
+  261  git checkout GCL04
+  262  git status
+  263  git checkout JK403999
+  264  git status
+  265  cd
+  266  cd MDO2025_INO/
+  267  cd .git/hooks
+  268  ls
+  269  mv pre-commit-DEV-OPS pre-commit
+  270  ls
+  271  vim pre-commit
+  272  nano pre-commit
+  273  ls
+  274  cd ..
+  275  git status
+  276  ls
+  277  touch jk.txt
+  278  ls
+  279  git status
+  280  git add jk.txt
+  281  git status
+  282  git commit -m "sprawdzenie hookea"
+  283  cd .git/hooks
+  284  ls
+  285  chmod +x pre-commit
+  286  git status
+  287  cd ..
+  288  git status
+  289  git log
+  290  git reset --hard HEAD~1
+  291  git log
+  292  git status
+  293  git commit -m "sprawdzenie hookea"
+  294  git log
+  295  ls
+  296  grep
+  297  count=$(grep -c '^JK403999' "$1")
+  298  cat .git/.hooks/pre-commit
+  299  cat /.git/.hooks/pre-commit
+  300  ls
+  301  cd ..
+  302  ls
+  303  cd MDO2025_INO/
+  304  ls
+  305  ls -a
+  306  ls
+  307  cd .git
+  308  ls -a
+  309  cd ..
+  310  cat .git/hooks/pre-commit
+  311  git log
+  312  git commit -m "Sprawdzenie hookea"
+  313  cat .git/hooks/pre-commit
+  314  git log
+  315  git commit -m "Sprawdzenie hookea"
+  316  git status
+  317  git add .
+  318  git status
+  319  git commit -m "Sprawdzenie hookea"
+  320  git commit -m "Poprawienie hookea"
+  321  git log
+  322  git branch
+  323  git commit -m "Poprawienie hookea"
+  324  git commit -m "JK403999 Poprawienie hookea"
+  325  git commit -m "Poprawienie hookea"
+  326  git commit -m "JK403999 Poprawienie hookea"
+  327  git commit -m "JK403999Poprawieniehookea"
+  328  git commit -m "JK403999 Poprawieniehookea"
+  329  git log
+  330  git commit -m "JK403999 Poprawieniehookea"
+  331  git log
+  332  git reset --hard HEAD~1
+  333  git log
+  334  git status
+  335  git add .
+  336  git status
+  337  git commit -m "   "
+  338  git commit -m "Sprawdzenie hookea"
+  339  git status
+  340  git reset --hard HEAD~1
+  341  git log
+  342  git status
+  343  git add .
+  344  git commit -m "Sprawdzenie hookea"
+  345  git commit -m "Sprawdzenie hook"
+  346  git commit -m "ggJK403999"
+  347  git commit -m "Poprawienie git hookea"
+  348  git commit -m "JK403999 Poprawienie git hookea"
+  349  git status
+  350  git reset --hard HEAD~1
+  351  git status
+  352  git add .
+  353  git commit -m "JK403999 Poprawienie git hookea"
+  354  git log
+  355  exit
+  356  cd MDO2025_INO/
+  357  git status
+  358  history
+  359  exit
+  360  cd MDO2025_INO/
+  361  ls
+  362  git status
+  363  cd ITE/GCL04/JK403999/Sprawozdanie1/Images/
+  364  ls
+  365  cd ..
+  366  cd ~/MDO2025_INO/
+  367  ls
+  368  ls -a
+  369  git status
+  370  git add .
+  371  git status
+  372  git checkout
+  373  git branch
+  374  git commit -m "JK403999 Sprawozdanie lab1"
+  375  git push
+  376  git push origin JK403999
+  377  git status
+  378  git add .
+  379  git status
+  380  git commit -m "JK403999 Poprawa drobnych błędów w sprawozdaniu"
+  381  git push origin JK403999
+  382  history
+  383  git status
+  384  git add .
+  385  git status
+  386  git commit -m "JK403999 Dodanie listingu polecen"
+  387  git push origin JK403999
+  388  exit
+  389  git status
+  390  exit
+  391  cd MDO2025_INO/
+  392  git status
+  393  git add .
+  394  git status
+  395  git commit -m "JK403999 Sprawozdanie lab2: screeny, dockerfile, listing polecen"
+  396  git push origin JK403999
+  397  git status
+  398  git add .
+  399  git commit -m
+  400  git commit -m "JK403999 Poprawa błędu w sprawozdaniu"
+  401  git push origin JK403999
+  402  exit
+  403  cd MDO2025_INO/
+  404  git status
+  405  git add .
+  406  git commit -m "JK403999 Dockerfile Build i Test do Irssi"
+  407  git push origin JK403999
+  408  exit
+  409  ls
+  410  git clone https://github.com/EvoSuite/evosuite.git
+  411  ls
+  412  cd evosuite
+  413  mvn compile
+  414  dnf
+  415  dnf --help
+  416  dnf install maven
+  417  exit
+  418  ls
+  419  cd evosuite/
+  420  mvn compile
+  421  ls
+  422  mvn test
+  423  ls
+  424  cd MDO2025_INO/
+  425  git status
+  426  git add .
+  427  git status
+  428  git commit -m "JK403999 Laboratorium numer 3"
+  429  git history
+  430  git log
+  431  git branch
+  432  exit
+  433  ls
+  434  cd MDO2025_INO/
+  435  git status
+  436  history
+  437  git status
+  438  git add .
+  439  git status
+  440  git commit -m "JK403999 Laboratorium 4"
+  441  git branch
+  442  git push origin JK403999
+  443  git status
+  444  git commit -m "JK403999 Fix, podmienilem nie ten readme.md"
+  445  git add .
+  446  git commit -m "JK403999 Fix, podmienilem nie ten readme.md"
+  447  git push origin JK403999
+  448  git status
+  449  git add .
+  450  git commit -m "JK403999 Fix, nie readme nie wczytal zdjec"
+  451  git push origin JK403999
+  452  git add .
+  453  git commit -m "JK403999 Fix, nie wczytalo zdjec 2"
+  454  git push origin JK403999
+  455  exit
+  456  cd MDO2025_INO/
+  457  git status
+  458  git add .
+  459  git commit -m "JK403999 Uzupelnienie sprawozdania"
+  460  git push origin JK403999
+  461  git status
+  462  git add .
+  463  git commit -m "JK403999 Naprawiono bledy wyswietlania"
+  464  git push origin JK403999
+  465  git status
+  466  git add .
+  467  git commit -m "JK403999 Naprawiono bledy wyswietlania v2"
+  468  git push origin JK403999
+  469  git status
+  470  git add .
+  471  git status
+  472  git push origin JK403999
+  473  git history
+  474  git log
+  475  git status
+  476  git add .
+  477  git commit -m "JK403999 Naprawiono bledy wyswietlania v3"
+  478  git push origin JK403999
+  479  git status
+  480  git add .
+  481  git commit -m "JK403999 Naprawiono bledy wyswietlania v4"
+  482  git push origin JK403999
+  483  git add .
+  484  git status
+  485  git commit -m "JK403999 Naprawiono bledy wyswietlania v5"
+  486  git push origin JK403999
+  487  exit
+  488  cd MDO2025_INO/
+  489  git status
+  490  cd ITE/GCL04/JK403999/Sprawozdanie2
+  491  git status
+  492  cd ..
+  493  git status
+  494  cd Sprawozdanie2
+  495  ls -a
+  496  cd ..
+  497  git add .
+  498  git status
+  499  git commit -m "JK403999 Sprawozdanie 2 i Jenkinsfile"
+  500  git branch
+  501  git push origin JK403999
+  502  ls -a
+  503  git status
+  504  cd MDO2025_INO/
+  505  git status
+  506  git add .
+  507  git status
+  508  git commit -m "JK403999 Uzupełniono Sprawozdanie2"
+  509  git push origin master
+  510  git branch
+  511  git push origin JK403999
+  512  git add .
+  513  git commit -m "JK403999 Uzupełniono Sprawozdanie2"
+  514  git push origin JK403999
+  515  git commit -m "JK403999 Update Sprawozdanie2"
+  516  git add .
+  517  git commit -m "JK403999 Update Sprawozdanie2"
+  518  git push origin JK403999
+  519  git add .
+  520  git commit -m "JK403999 Update Sprawozdanie2"
+  521  git push origin JK403999
+  522  history

@@ -1,0 +1,76 @@
+Z powodu wielokrotnych problemów z Fedorą, a także moich tragicznych pomyłek (np. sklonowania repo w repo) i długich prób napraw tychże błędów historia komend jest absurdalnie długa i bezużyteczna, dlatego postarałam się w miarę moich możliwości odzyskać chociaż część i odsiać ją do sensowniejszej formy. Większość poprawnych poleceń jest zawarta w sprawozdaniu i w zrzutach ekranu.
+
+
+sudo dnf install git
+sudo dnf install openssh-server
+-ssh -V
+git --version
+ls -l ~/.ssh/id_ed25519.pub
+ssh-keygen -t ed25519 -C "monikakrak@student.agh.edu.pl"
+cat ~/.ssh/id_ed25519.pub
+ssh -T git@github.com
+git clone https://github.com/InzynieriaOprogramowanai/MDO2025_INO.git
+git checkout main
+git checkout GCL04
+git checkout -b MK414948
+git branch
+mkdir -p GCL04/MK414928
+cd .git/hooks
+ls
+nano commit-msg
+chmod +x .git/hooks/commit-msg
+chmod +x commit-msg
+git commit --allow-empty -m "MK414948: TEST"
+git config --global user.email "monikakrak@student.agh.edu.pl"
+git config --global user.name "Monika Krakowska"
+touch README.md
+nano README.md 
+git add .
+git commit -m "MK414948: Dodano sprawozdanie"
+git push origin MK414948
+git checkout GCL04
+git merge MK414948
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo systemctl status docker
+docker run -it busybox
+sudo docker run -it busybox
+sudo docker run -it busybox sh
+sudo docker run -it ubuntu
+mkdir Dockerfiles
+touch Dockerfile.irssibld
+nano Dockerfile.irssibld
+git add Dockerfile.irssibld
+git commit -m "MK414948: Irssibld"
+git clone https://github.com/irssi/irssi.git
+meson Build
+ninja -C Build
+find . -name "irssi" -type f
+./Build/src/fe-text/irssi
+sudo docker build -t irssibld -f ./Dockerfile.irssibld .
+sudo docker build -t irssibld -f ./Dockerfile.irssibld .
+sudo docker volume create input_volume
+sudo docker volume create output_volume
+sudo usermod -aG docker monka
+groups
+sudo docker run --rm --interactive --tty fedora bash
+sudo docker run -p 5201:5201 -it ubuntu bash
+apt-get update && apt-get install -y iperf3
+iperf3 -s
+sudo docker network create jenkins
+sudo docker run -d --rm --name jenkins-docker \
+  --network jenkins --privileged \
+  -v jenkins-docker-certs:/certs/client \
+  -v jenkins-docker-data:/var/lib/docker \
+  -e DOCKER_TLS_CERTDIR=/certs \
+  docker:dind
+sudo docker run -d --rm --name jenkins \
+  --network jenkins \
+  -p 8080:8080 -p 50000:50000 \
+  -v jenkins-data:/var/jenkins_home \
+  -v jenkins-docker-certs:/certs/client:ro \
+  -e DOCKER_HOST=tcp://jenkins-docker:2376 \
+  -e DOCKER_CERT_PATH=/certs/client \
+  -e DOCKER_TLS_VERIFY=1 \
+  jenkins/jenkins:lts
+

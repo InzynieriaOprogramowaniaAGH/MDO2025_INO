@@ -1,0 +1,28 @@
+FROM weatherapp-build AS publish
+
+WORKDIR /src/weatherapp-backend
+
+RUN dotnet publish WeatherForecast.Api/WeatherForecast.Api.csproj \
+    -c Release \
+    -r linux-x64 \
+    --self-contained true \
+    -p:PublishSingleFile=true \
+    -p:IncludeNativeLibrariesForSelfExtract=true \
+    -p:PublishTrimmed=false \
+    -p:DebugType=none \
+    -o /app/publish
+
+FROM bitnami/minideb:bullseye AS runtime
+
+RUN install_packages curl libicu67
+
+WORKDIR /app
+
+COPY --from=publish /app/publish ./
+RUN rm -f appsettings.Development.json
+
+ENV ASPNETCORE_URLS=http://+:8080
+
+EXPOSE 8080
+
+ENTRYPOINT ["./WeatherForecast.Api"]

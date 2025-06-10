@@ -1,0 +1,5 @@
+FROM irssibld
+
+RUN ninja -C Build test
+
+CMD ["/bin/bash"]

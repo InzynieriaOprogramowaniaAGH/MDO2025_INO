@@ -1,0 +1,16 @@
+FROM node:22
+
+RUN apt-get install -y tzdata && dpkg-reconfigure -f noninteractive tzdata
+RUN apt-get update && apt-get install -y git
+
+VOLUME /mnt/input
+VOLUME /mnt/output
+
+RUN git clone https://github.com/devenes/node-js-dummy-test.git /mnt/input && \
+    cd /mnt/input && npm install && \
+    cp -r /mnt/input /mnt/output && \
+    echo "output: $(ls /mnt/output)"
+
+CMD ["node", "/mnt/input/src/index.js"]
+
+

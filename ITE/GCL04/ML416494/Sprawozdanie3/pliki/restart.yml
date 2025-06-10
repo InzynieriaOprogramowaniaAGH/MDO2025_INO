@@ -1,0 +1,14 @@
+- name: Update Fedora packages and restart services
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Update packages
+      dnf:
+        name: '*'
+        state: latest
+
+    - name: Restart sshd
+      service:
+        name: sshd
+        state: restarted
+

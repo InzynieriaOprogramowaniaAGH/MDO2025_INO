@@ -1,0 +1,523 @@
+    1  exit
+    2  ip a
+    3  exit
+    4  useradd -m jk
+    5  passwd jk
+    6  exit
+    7  ip a
+    8  ssh root@localhost
+    9  ssh root@10.200.8.252
+   10  sudo firewall-cmd --permanent --add-service=ssh
+   11  sudo firewall-cmd --reload
+   12  setenforce 0
+   13  ip a
+   14  exit
+   15  ip a
+   16  exit
+   17  sudo apt update
+   18  apt update
+   19  ls
+   20  apt
+   21  yum
+   22  pacman
+   23  yum install git -y
+   24  git --v
+   25  git -v
+   26  exit
+   27  yum install docker
+   28  exit
+   29  systemctl enable --now docker
+   30  ls
+   31  docker run hello-world
+   32  docker pull busybox
+   33  docker run busybox
+   34  docker run --tty --interactive busybox
+   35  docker pull fedora
+   36  docker run fedora
+   37  docker run --tty --interactive fedora
+   38  ps
+   39  docker run --tty --interactive fedora
+   40  exit
+   41  ls
+   42  whoami
+   43  pwd
+   44  cd ..
+   45  ls
+   46  ls -a
+   47  cd root
+   48  pwd
+   49  cd ..
+   50  cd jk
+   51  cd jk/
+   52  cd /jk/
+   53  ls -a
+   54  cd root
+   55  ls -a
+   56  docker
+   57  history
+   58  docker images
+   59  docker ps
+   60  docker ps -a
+   61  mkdir dcr
+   62  ls
+   63  ls -a
+   64  docker build -t fedora-git .
+   65  docker images
+   66  Set-ItemProperty -Path 'HKCU:\Console' -Name 'ScreenColors' -Value 0x1F
+   67  docker run -it fedora-git
+   68  docker ps -a
+   69  docker container prune
+   70  docker ps -a
+   71  docker images
+   72  docker image prune -f
+   73  docker images
+   74  docker image prune -af
+   75  docker images
+   76  exit
+   77  ps
+   78  ps -a
+   79  ps aux --forest
+   80  exot
+   81  exit
+   82  history
+   83  exit
+   84  git status
+   85  exit
+   86  docker images
+   87  exit
+   88  dnf install maven
+   89  ls
+   90  exit
+   91  ls
+   92  cd dcr
+   93  ls -a
+   94  cd ..
+   95  rmdir dcr
+   96  ls
+   97  ls -a
+   98  ls
+   99  cd lab3
+  100  ls
+  101  docker build -t evoBld -f ./Dockerfile.java11 .
+  102  docker build -t evobld -f ./Dockerfile.java11 .
+  103  ls
+  104  cd ..
+  105  ls
+  106  rmdir lab3
+  107  rmdir lab3 -f
+  108  rmdir lab3 -a
+  109  rmdir lab3 -help
+  110  rmdir lab3 --h
+  111  rmdir lab3 --r
+  112  git clone https://github.com/EvoSuite/evosuite.git
+  113  ls
+  114  cd evosuite/
+  115  docker build -t evobld -f ./Dockerfile.java11 .
+  116  docker images
+  117  docker ps
+  118  docker ps -a
+  119  ls
+  120  docker build -t evotest -f Dockerfile.test .
+  121  docker ps -a
+  122  docker build -t evotest -f Dockerfile.test .
+  123  docker images
+  124  docker run --rm evosuite-test
+  125  docker images
+  126  docker run --rm evotest
+  127  docker images
+  128  docker volume
+  129  cd lab4
+  130  ls
+  131  ls -a
+  132  docker volumes
+  133  docker volume
+  134  docker images
+  135  docker pull fedora
+  136  docker images
+  137  docker volume create wejsciowy
+  138  docker volume create wyjsciowy
+  139  docker volumes
+  140  docker volume
+  141  docker images
+  142  docker image
+  143  docker image rm evotest evobld
+  144  docker image
+  145  docker images
+  146  docker image ls
+  147  docker image ls -a
+  148  docker containers
+  149  docker container
+  150  docker container ls
+  151  docker container ls -a
+  152  docker run --tty --interactive fedora
+  153  ls -a
+  154  cd lab3
+  155  ls
+  156  docker image ps
+  157  docker image ls
+  158  docker build --help
+  159  docker build -t irssibld -f Dockerfile.bld .
+  160  docker images
+  161  history
+  162  docker build -t irssitest -f Dockerfile.test .
+  163  docker images
+  164  docker run --tty --interactive irssibld
+  165  exit
+  166  docker volume ps
+  167  docker volume ls
+  168  docker volume rm wejsciowy
+  169  docker volume ls
+  170  docker volume rm wyjsciowy
+  171  docker volume create vol_in
+  172  docker volume create vol_out
+  173  docker volume ls
+  174  docker containers
+  175  docker container ls
+  176  docker container ls -a
+  177  docker run irssibld
+  178  docker run --tty --interactive  irssibld
+  179  docker container ls -a
+  180  docker container rm ecstatic_mendel
+  181  docker container ls -a
+  182  docker container rm bold_raman
+  183  docker container ls -a
+  184  docker start jolly_volhard
+  185  docker start --tty --interactive jolly_volhard
+  186  docker start -it jolly_volhard
+  187  docker container ls -a
+  188  docker attach jolly_volhard
+  189  docker container ls -a
+  190  docker start
+  191  docker start jolly_volhard
+  192  docker attach jolly_volhard
+  193  docker container ls -a
+  194  docker -a start jolly_volhard
+  195  docker start -a jolly_volhard
+  196  docker container ls -a
+  197  docker start -a jolly_volhard
+  198  docker stop jolly_volhard
+  199  docker container ls -a
+  200  docker start -a jolly_volhard
+  201  docker stop jolly_volhard
+  202  docker start -a jolly_volhard
+  203  docker container ls -a
+  204  docker stop jolly_volhard
+  205  docker container ls -a
+  206  docker images
+  207  docker run irssibld
+  208  docker container ls -a
+  209  docker start -a funny_liskov
+  210  docker container ls -a
+  211  docker start funny_liskov
+  212  docker container ls -a
+  213  docker container rm jolly_volhard
+  214  docker container rm funny_liskov
+  215  docker run --tty --interactive irssibld
+  216  ls
+  217  docker ls
+  218  docker container ls -a
+  219  docker start -a affectionate_wescoff
+  220  history
+  221  docker container ls -a
+  222  docker start -a infallible_boyd
+  223  exit
+  224  docker ls -a
+  225  docker container ls -a
+  226  docker attach affectionate_wescoff
+  227  docker attach infallible_boyd
+  228  docker container ls -a
+  229  docker start -a affectionate_wescoff
+  230  docker attach affectionate_wescoff
+  231  exit
+  232  docker containers ls -a
+  233  docker container ls -a
+  234  docker start affectionate_wescoff
+  235  docker attach affectionate_wescoff
+  236  exit
+  237  docker container ls -a
+  238  docker start irssibld
+  239  docker start affectionate_wescoff
+  240  docker attach affectionate_wescoff
+  241  docker container ls -a
+  242  docker start affectionate_wescoff
+  243  docker attach affectionate_wescoff
+  244  docker volume ls -a
+  245  docker volume ls
+  246  docker volume inspect
+  247  docker volume inspect vol_in
+  248  docker inspect affectionate_wescoff
+  249  docker run -v vol_in:/in irssibld
+  250  docker container ls
+  251  docker container ls -a
+  252  docker start quirky_yonath
+  253  docker attach quirky_yonath
+  254  docker container rm quirky_yonath
+  255  docker ls -a
+  256  docker ls
+  257  docker container ls -a
+  258  docker container rm affectionate_wescoff
+  259  docker run --tty --interactive -v vol_in:/in irssibld
+  260  ls -a
+  261  cd ..
+  262  ls -a
+  263  cd var
+  264  cd lib
+  265  cd docker
+  266  ls -a
+  267  cd volumes
+  268  ls -a
+  269  cd vol_in
+  270  ls -a
+  271  cd data
+  272  cd _data
+  273  ls -a
+  274  cd ..
+  275  cd var
+  276  cd /var
+  277  cd ..
+  278  ls -a
+  279  cd root
+  280  ls -a
+  281  cd lab4
+  282  ls -a
+  283  docker inspect vol_in
+  284  git clone https://github.com/irssi/irssi.git
+  285  ls -a
+  286  docker cp irssi vol_in:/in
+  287  docker container ls -a
+  288  docker cp irssi upbeat_napier:/in
+  289  docker run --tty --interactive -v vol_in:/in vol_out:/out irssibld
+  290  docker run --tty --interactive -v vol_in:/in -v vol_out:/out irssibld
+  291  docker container ls -a
+  292  docker start upbeat_napier
+  293  docker attach upbeat_napier
+  294  docker container ls -a
+  295  docker start infallible_boyd
+  296  docker attach infallible_boyd
+  297  docker run --rm -dit --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  298  docker container ls -a
+  299  docker images
+  300  docker stop iperf-server
+  301  docker container ls -a
+  302  docker run --rm -d --name iperf-server -p 5201:5201 networkstatic/iperf3 -s
+  303  docker container ls -a
+  304  ip
+  305  ifconfig
+  306  docker run --rm networkstatic/iperf3 -c 172.17.0.1
+  307  docker container ls -a
+  308  docker network ls
+  309  docker container ls -a
+  310  docker stop iperf-server
+  311  docker network ls
+  312  docker network create -d bridge myBridgeNet
+  313  docker network ls
+  314  docker run --rm -d --name iperf-server --network myBridgeNet networkstatic/iperf3 -s
+  315  docker container ls -a
+  316  docker run --rm --network myBridgeNet networkstatic/iperf3 -c iperf-server
+  317  docker stop iperf-server
+  318  docker run --rm -d --name iperf-server --network myBridgeNet -p 5201:5201 networkstatic/iperf3 -s
+  319  docker container ls -a
+  320  iperf3 -c localhost
+  321  dnf install iperf3
+  322  iperf3 -c localhost
+  323  iperf3 -c 127.1.0.2
+  324  iperf3 -c 147.1.0.2
+  325  docker run --rm networkstatic/iperf3 -c iperf-server
+  326  docker container ls -a
+  327  docker run --rm -n myBridgeNet networkstatic/iperf3 -c iperf-server
+  328  docker run --rm --network myBridgeNet networkstatic/iperf3 -c iperf-server
+  329  docker network create jenkins
+  330  docker image pull docker:dind
+  331  docker run --name jenkins-docker --detach   --privileged --network jenkins --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind --storage-driver overlay2
+  332  docker container -ls
+  333  docker container ls -a
+  334  docker stop iperf-server
+  335  docker volume ls
+  336  cd ..
+  337  cd lab4Jenkins/
+  338  ls
+  339  docker build -t myjenkins-blueocean:2.492.2-1 .
+  340  docker run --name jenkins-blueocean --restart=on-failure --detach   --network jenkins --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1   --publish 8080:8080 --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.2-1
+  341  docker container ls -a
+  342  history
+  343  exit
+  344  docker container ls -a
+  345  docker start jenkins-docker
+  346  docker container ls -a
+  347  cd var/jenkins_home
+  348  cd /var/jenkins_home
+  349  ls -a
+  350  cd ..
+  351  ls -a
+  352  cd var
+  353  cd ..
+  354  ls -a
+  355  docker attach jenkins-blueocean
+  356  docker container ls -a
+  357  docker start jenkins-blueocean
+  358  docker attach jenkins-blueocean
+  359  exit
+  360  whoami
+  361  ls -a
+  362  docker images
+  363  docker network ls -a
+  364  docker network l
+  365  docker network ls
+  366  docker container ls -a
+  367  docker docker help start
+  368  docker help start
+  369  docker start jenkins-docker
+  370  docker container ls -a
+  371  uname
+  372  uname -a
+  373  docker container ls -a
+  374  exit
+  375  docker images
+  376  docker run --name postgresql docker run --name postgre   -e POSTGRES_USER=myuser   -e POSTGRES_PASSWORD=secret   -e POSTGRES_DB=mydb   -p 5432:5432 fdfds
+  377  docker images
+  378  docker container ls
+  379  docker container ls -a
+  380  docker pull postgres
+  381  docker run --help
+  382  docker images
+  383  docker run --name postgresql   -e POSTGRES_USER=swiftUser   -e POSTGRES_PASSWORD=swift   -e POSTGRES_DB=swiftDataDB   -p 5432:5432   -d postgres
+  384  container ls -a
+  385  docker container ls -a
+  386  docker container rm postgresql
+  387  docker container ls -a
+  388  docker run --name postgresql   -e POSTGRES_USER=swiftUser   -e POSTGRES_PASSWORD=swift   -e POSTGRES_DB=swiftDataDB   -p 5432:5432   -d postgres
+  389  docker container ls -a
+  390  ip a
+  391  ss -tunlp | grep 5432
+  392  sudo firewall-cmd --add-port=5432/tcp --permanent
+  393  sudo firewall-cmd --reload
+  394  sudo firewall-cmd --list-all
+  395  docker exec -it mypostgres bash
+  396  docker exec -it postgresql bash
+  397  docker container ls -a
+  398  docker logs postgresql
+  399  exit
+  400  docker images
+  401  sudo firewall-cmd --zone=public --add-port=2375/tcp --permanent
+  402  sudo firewall-cmd --reload
+  403  sudo systemctl start docker
+  404  systemctl status docker.service
+  405  ls -a
+  406  cd ..
+  407  ls -a
+  408  cd etc/docker
+  409  cat daemon.json
+  410  cd ..
+  411  cd var
+  412  cd ..
+  413  cd var
+  414  ls -a
+  415  cd run
+  416  ls -a
+  417  cat docker.sock
+  418  cd ..
+  419  cd etc/docker
+  420  rm daemon.json
+  421  ls -a
+  422  cd ..
+  423  sudo systemctl start docker
+  424  docker images
+  425  docker container ls -a
+  426  sudo netstat -lntp | grep dockerd
+  427  sudo systemctl edit docker.service
+  428  sudo systemctl daemon-reload
+  429  sudo systemctl restart docker.service
+  430  sudo netstat -lntp | grep dockerd
+  431  docker images
+  432  sudo systemctl edit docker.service
+  433  ls -a
+  434  nano etc/docker/daemon.json
+  435  systemctl restart docker
+  436  journalctl -xeu docker.service
+  437  cd etc/docker
+  438  rm daemon.json
+  439  cd ../,,
+  440  cd ../..
+  441  systemctl restart docker
+  442  docker images
+  443  sudo systemctl edit docker.service
+  444  sudo systemctl daemon-reload
+  445  sudo systemctl restart docker.service
+  446  sudo netstat -lntp | grep dockerd
+  447  docker images
+  448  sudo systemctl edit docker.service
+  449  sudo systemctl daemon-reload
+  450  sudo systemctl restart docker.service
+  451  sudo netstat -lntp | grep dockerd
+  452  docker images
+  453  sudo netstat -tuln | grep 2375
+  454  docker container ls -a
+  455  sudo systemctl edit docker.service
+  456  sudo systemctl daemon-reload
+  457  sudo systemctl restart docker.service
+  458  sudo netstat -tuln | grep 2375
+  459  sudo netstat -tuln | grep /var/run/docker.sock
+  460  sudo netstat -tuln
+  461  docker images
+  462  docker container ls -a
+  463  docker start postgresql
+  464  docker container ls -a
+  465  ss -lntp | grep dockerd
+  466  sudo systemctl stop firewalld
+  467  sudo systemctl start firewalld
+  468  docker container ls -a
+  469  docker start postgresql
+  470  docker containers
+  471  docker container ls -a
+  472  docker start jenkins-docker
+  473  docker container ls -a
+  474  docker images
+  475  docker container ls -a
+  476  docker run jenkins-docker
+  477  docker start jenkins-docker
+  478  docker container ls -a
+  479  docker start jovial_sutherland
+  480  docker exec -it jovial_sutherland
+  481  docker exec -it jovial_sutherland /bin/bash
+  482  container ls -a
+  483  docker container ls -a
+  484  docker start jenkins-docker docker start jenkins-docker
+  485  docker start jenkins-docker
+  486  docker container ls -a
+  487  docker start jovial_sutherland
+  488  docker attach jovial_sutherland
+  489  docker container ls -a
+  490  docker start jovial_sutherland
+  491  docker attach jovial_sutherland
+  492  docker container ls -a
+  493  docker attach jovial_sutherland
+  494  docker container ls -a
+  495  docker attach jenkins-docker
+  496  docker container ls -a
+  497  docker exec jenkins-docker docker ps
+  498  docker exec jenkins-docker docker images
+  499  docker exec jenkins-docker logs vigilant_goldberg
+  500  docker exec jenkins-docker docker logs vigilant_goldberg
+  501  docker ps
+  502  docker exec jenkins-docker docker container ls -a
+  503  docker exec jenkins-docker docker stop vigilant_goldberg
+  504  docker exec jenkins-docker docker container ls -a
+  505  docker exec jenkins-docker docker rm vigilant_goldberg
+  506  docker exec jenkins-docker docker container ls -a
+  507              steps {
+  508                  sh 'docker cp $(docker ps -q --filter ancestor=irssidep | head -n 1):/usr/local/bin/irssi ${WORKSPACE}/irssi'
+  509                  archiveArtifacts artifacts: 'irssi', allowEmptyArchive: false, fingerprint: true
+  510
+  511                  //archiveArtifacts artifacts: '/irssi/Build/src/fe-text/irssi', allowEmptyArchive: false, fingerprint: true
+  512                  //archiveArtifacts artifacts: 'irssidep:/usr/local/bin/irssi', allowEmptyArchive: false, fingerprint: true
+  513              }docker exec stupefied_pare ls -a /usr/local/bin/irssi
+  514  docker exec stupefied_pare ls -a /usr/local/bin/irssidocker exec jenkins-docke
+  515  docker exec jenkins-docker docker exec stupefied_pare ls -a /usr/local/bin/irssi
+  516  docker exec jenkins-docker docker container ls -a
+  517  docker container ls -a
+  518  docker start jenkins-docker
+  519  docker container ls -a
+  520  curl -X POST "http://localhost:8080/job/SCM_Pipeline/build?token=aaaa"
+  521  curl --user root:6d7608372f200c418c1bec54112072ad8b88b89d9d5528b38ab5ff69f9419153 "http://localhost:8080/job/SCM_Pipeline/build?token=aaaa"
+  522  curl --user root:11469012676db28798c339b8e446f24c8e "http://localhost:8080/job/SCM_Pipeline/build?token=aaaa"
+  523  history

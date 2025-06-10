@@ -1,0 +1,2 @@
+FROM irssibld
+RUN ninja -C Build test

@@ -1,0 +1,27 @@
+- name: Ansible playbook
+  hosts: endpoints
+  become: true
+  tasks:
+
+    - name: Ping
+      ansible.builtin.ping:
+
+    - name: Copy
+      copy:
+        src: inventory.yml
+        dest: /tmp/inventory.yml
+
+    - name: Update
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: SSH Restart
+      service:
+        name: ssh
+        state: restarted
+
+    - name: RNGD Restart
+      service:
+        name: rngd
+        state: restarted
