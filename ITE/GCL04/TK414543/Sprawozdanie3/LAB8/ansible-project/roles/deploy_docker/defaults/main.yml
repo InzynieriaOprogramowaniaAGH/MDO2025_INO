@@ -1,2 +1,3 @@
----
-# defaults file for roles/deploy_docker
+docker_image: kurowskitomek/webapi:latest
+container_name: webapi
+container_port: 8080

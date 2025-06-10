@@ -63,6 +63,13 @@ chmod 440 /etc/sudoers.d/ansible
 
 ![Alt text](LAB8/screenshots/image13.png)
 
+ansible-galaxy collection install community.docker
+
+![Alt text](LAB8/screenshots/image14.png)
+
+ansible-playbook -i inventories/hosts playbooks/deploy_container.yml
+
+![Alt text](LAB8/screenshots/image15.png)
 
 LAB9
 
