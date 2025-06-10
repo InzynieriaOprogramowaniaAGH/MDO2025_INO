@@ -1,0 +1,15 @@
+- name: Playbook
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+- name: Skopiuj plik inventory.ini na Endpoints
+  hosts: Endpoints
+  gather_facts: yes
+  tasks:
+    - name: Copy
+      ansible.builtin.copy:
+        src: Lab 8/inventory.ini
+        dest: /tmp/inventory.ini

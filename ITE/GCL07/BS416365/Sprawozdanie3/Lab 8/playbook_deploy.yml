@@ -1,0 +1,6 @@
+---
+- name: Deploy cURL artifact to Endpoints
+  hosts: Endpoints
+  become: yes
+  roles:
+    - devops
