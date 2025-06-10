@@ -1,18 +1,40 @@
 pipeline {
     agent any
+
+    environment {
+        GIT_REPO = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+        BRANCH_NAME = 'KK416776'  
+    }
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
+            steps {
+                git branch: "${BRANCH_NAME}", url: "${GIT_REPO}"
+            }
+        }
+
+        stage('Build Docker Image') {
             steps {
                 script {
-                    echo 'Building project...'
+                    sh "docker build -t my_image ."
                 }
             }
         }
-        stage('Test') {
+
+        stage('Run Container') {
             steps {
                 script {
-                    echo 'Running tests...'
+                    sh "docker run -d --name my_container my_image"
                 }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                sh "docker rm -f my_container || true"
+                sh "docker rmi my_image || true"
             }
         }
     }
