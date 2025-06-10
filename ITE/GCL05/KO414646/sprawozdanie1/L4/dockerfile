@@ -1,0 +1,5 @@
+FROM fedora:latest
+RUN dnf update -y && \
+    dnf install -y make && \
+    dnf install -y cc
+WORKDIR /v1/sds
