@@ -1,0 +1,105 @@
+pipeline {
+    agent any
+    stages {
+        stage('Collect') {
+            steps {
+                echo "🧹 Czyszczenie workspace..."
+                deleteDir()
+                echo "📥 Klonowanie aplikacji..."
+                sh 'git clone https://github.com/devenes/node-js-dummy-test app'
+                echo "📥 Klonowanie LAB_5 (dockerfiles)..."
+                sh 'git clone --depth 1 --branch JR414945 https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git temp'
+                sh 'cp -r temp/JR414945/LAB_5 ./LAB_5'
+                sh 'rm -rf temp'
+                echo "🧼 Usuwanie poprzednich obrazów..."
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                echo "🔨 Budowanie obrazu aplikacji..."
+                dir('app') {
+                    sh 'docker build -t nodeapp_builder -f ../LAB_5/Dockerfile.build .'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo "🧪 Uruchamianie testów..."
+                dir('app') {
+                    sh 'docker build -t nodeapp_tester -f ../LAB_5/Dockerfile.test .'
+                    sh 'docker run --rm nodeapp_tester'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "🚀 Deploy aplikacji..."
+                
+                // Tworzenie sieci pipeline_network
+                sh 'docker network create pipeline_network'
+
+                // Uruchamianie kontenera nodeapp (aplikacja nasłuchująca na porcie 3000)
+                sh 'docker run -d --name nodeapp --network pipeline_network -p 3000:3000 nodeapp_builder'
+                
+                // Uruchamianie tymczasowego kontenera testowego
+                sh 'docker run -d --name nodeapp_test_helper --network pipeline_network busybox sleep 3600'
+                
+                // Uruchamianie powłoki w kontenerze nodeapp_test_helper i sprawdzenie dostępności aplikacji
+                sh 'docker exec nodeapp_test_helper sh -c "wget -qO- http://nodeapp:3000"'
+                
+                
+                // Informacja, że aplikacja jest dostępna na porcie 3000
+                echo "✅ Aplikacja jest dostępna na porcie 3000."
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                echo "📦 Publikowanie obrazu Dockera..."
+
+                script {
+                    def IMAGE_NAME = 'janekrzodki/nodeapp' // <--- ZMIEŃ na swoją nazwę na Docker Hub
+                    def GIT_COMMIT = sh(script: 'cd app && git rev-parse --short HEAD', returnStdout: true).trim()
+                    def versionTag = "build-${env.BUILD_NUMBER}"
+                    def commitTag = "commit-${GIT_COMMIT}"
+
+                    echo "🏷️ Tagowanie obrazu jako: ${versionTag}, ${commitTag}, latest"
+
+                    sh "docker tag nodeapp_builder ${IMAGE_NAME}:${versionTag}"
+                    sh "docker tag nodeapp_builder ${IMAGE_NAME}:${commitTag}"
+                    sh "docker tag nodeapp_builder ${IMAGE_NAME}:latest"
+
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-cerds') {
+                        sh "docker push ${IMAGE_NAME}:${versionTag}"
+                        sh "docker push ${IMAGE_NAME}:${commitTag}"
+                        sh "docker push ${IMAGE_NAME}:latest"
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            
+            echo "📄 Archiwizacja logów..."
+            sh 'mkdir -p logs && docker logs nodeapp > logs/nodeapp.log || true'
+            archiveArtifacts artifacts: 'logs/*.log', fingerprint: true
+            
+            echo "🧹 Minimalne sprzątanie..."
+            // Usuwamy niepotrzebne kontenery i sieć po zakończeniu procesu
+            sh '''
+                docker stop nodeapp_test_helper || true
+                docker rm -f nodeapp_test_helper || true
+                docker rm -f nodeapp || true
+                docker rmi -f nodeapp_builder || true
+                docker rmi -f nodeapp_tester || true
+                docker network rm pipeline_network || true
+            '''
+            echo "✅ Sprzątanie zakończone. Kontener nodeapp_test_helper, nodeapp i sieć pipeline_network zostały usunięte."
+        }
+    }
+}

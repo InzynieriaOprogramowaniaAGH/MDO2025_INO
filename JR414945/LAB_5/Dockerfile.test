@@ -1,0 +1,9 @@
+FROM nodeapp_builder
+
+WORKDIR /app
+
+# Ustawiamy środowisko na testowe
+ENV NODE_ENV=test
+
+# Komenda uruchamiająca testy automatycznie
+CMD ["npm", "test"]

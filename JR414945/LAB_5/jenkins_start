@@ -1,0 +1,13 @@
+# Troubleshooting jenkinsa 
+1. Ma by ustawiona "Siec NAT"
+2. Ustawione przekierowanie portow
+*IP hosta ma byc z ethernet polaczonego do akademickiej sieci
+*IP goscia ma byc to pierwsze po wpisaniu hostname -I w VM
+* Z portu 8080 do 8080
+3. W przegladarce http://<IP hosta>:8080
+
+#Usuwanie kontenerow, woluminow i sieci
+1. docker compose down -v --remove-orphans
+
+#Uruchamianie
+1. docker compose up -d

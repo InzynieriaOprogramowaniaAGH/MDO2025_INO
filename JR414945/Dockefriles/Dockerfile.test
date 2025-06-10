@@ -1,0 +1,3 @@
+FROM building_img
+
+RUN cd maven-simple && mvn test
