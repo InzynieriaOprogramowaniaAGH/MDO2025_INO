@@ -1,0 +1,102 @@
+  406  git add .
+  407  cd MDO2025_INO/ITE/GCL08/LW417490
+  408  git add .
+  409  git commit LW417490 Lab5
+  410  git add .
+  411  git commit -m "LW417490 Lab5"
+  412  git push
+  413  ls -a
+  414  ps -a
+  415  docker ps -a
+  416  cd MDO2025_INO/ITE/GCL08/LW417490/Sprawozdanie2
+  417  cd MDO2025_INO/ITE/GCL08/LW417490/Sprawozdanie 2
+  418  cd MDO2025_INO/ITE/GCL08/LW417490
+  419  ls
+  420  cd Sprawozdanie2
+  421  ls
+  422  docker network create jenkins
+  423  docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+  424  docker run --name jenkins-docker --rm --detach   --privileged --network jenkins --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind --storage-driver overlay2
+  425  docker build -t Dockerfile.jen
+  426  docker build -t myjenkins-blueocean:2.492.2-1 .
+  427  docker build -t myjenkins-blueocean:2.492.2-1 -f Dockerfile.jen .
+  428  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.2-1
+  429  /var/jenkins_home/secrets/initialAdminPassword
+  430  docker exec 2ea358106c5f cat /var/jenkins_home/secrets/initialAdminPassword
+  431  docker ps -a
+  432  docker exec c8debe8ed6a7 cat /var/jenkins_home/secrets/initialAdminPassword
+  433  cd ..
+  434  docker ps -a
+  435  cd MDO2025_INO/ITE/GCL08/LW417490/Sprawozdanie2
+  436  git add .
+  437  git commit -m "LW417490 Sprawozdanie Lab5"
+  438  git push
+  439  git commit -m "LW417490 Sprawozdanie Lab5 - readme"
+  440  git add .
+  441  git commit -m "LW417490 Sprawozdanie Lab5 - readme"
+  442  git push
+  443  cd MDO2025_INO/ITE/GCL08/LW417490/Sprawozdanie2
+  444  docker-compose up
+  445  docker compose up
+  446  docker compose version
+  447  npm install docker compose
+  448  install docker compose
+  449  sudo apt update
+  450  sudo apt install docker.io -y
+  451  docker --version
+  452  docker-compose --version
+  453  node -v
+  454  npm -v
+  455  sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  456  sudo chmod +x /usr/local/bin/docker-compose
+  457  docker-compose --version
+  458  sudo dnf module enable nodejs:18 -y
+  459  sudo dnf install nodejs -y
+  460  node -v
+  461  npm -v
+  462  git add .
+  463  git commit -m "LW417490 Pot, kre i łzy lab6"
+  464  git push
+  465  docker build -t Dockerfile.jen
+  466  docker build -t myjenkins-blueocean:2.492.2-1 -f Dockerfile.jen .
+  467  cd MDO2025_INO/ITE/GCL08/LW417490/Sprawozdanie2
+  468  docker build -t Dockerfile.jen
+  469  docker build -t myjenkins-blueocean:2.492.2-1 -f Dockerfile.jen .
+  470  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.2-1
+  471  docker run --name jenkins-docker --rm --detach   --privileged --network jenkins --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind --storage-driver overlay2
+  472  docker build -t myjenkins-blueocean:2.492.2-1 -f Dockerfile.jen .
+  473  docker run   --name jenkins-blueocean   --restart=on-failure   --detach   --network jenkins   --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client   --env DOCKER_TLS_VERIFY=1   --publish 8080:8080   --publish 50000:50000   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro   myjenkins-blueocean:2.492.2-1
+  474  docker ps -a
+  475  docker up
+  476  docker start jenkins-blueocean
+  477  docker start jenkins-docker
+  478  docker run --name jenkins-docker --rm --detach   --privileged --network jenkins --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind --storage-driver overlay2
+  479  cd MDO2025_INO/ITE/GCL08/LW417490/Sprawozdanie2
+  480  git add .
+  481  git commit "LW417490 Poprawka dockerfile"
+  482  git commit -m "LW417490 Poprawka dockerfile"
+  483  git push
+  484  cd MDO2025_INO/ITE/GCL08/LW417490/Sprawozdanie2
+  485  docker ps -a
+  486  docker up
+  487  docker up c8debe8ed6a7
+  488  docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+  489  cd MDO2025_INO/ITE/GCL08/LW417490/Sprawozdanie2
+  490  git add .
+  491  git commit -m "LW417490 Publish"
+  492  git push
+  493  cd MDO2025_INO/ITE/GCL08/LW417490/Sprawozdanie2
+  494  docker run   --name jenkins-docker   --rm   --detach   --privileged   --network jenkins   --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind   --storage-driver overlay2
+  495  git add .
+  496  git commit -m "LW417490 SCM, testy"
+  497  git push
+  498  git add .
+  499  git commit -m "LW417490 test poprawki"
+  500  git push
+  501  git add .
+  502  git commit -m "LW417490 test poprawkiv2"
+  503  git push
+  504  git add .
+  505  git commit -m "LW417490 test poprawki v3"
+  506  git push
+  507  history

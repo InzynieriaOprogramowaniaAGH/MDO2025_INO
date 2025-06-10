@@ -1,0 +1,18 @@
+   1  apt update && apt install -y build-essential git meson ninja-build perl-ExtUtils-Embed glib2-devel openssl-devel ncurses-devel git
+    2  git clone https://github.com/irssi/irssi
+    3  apt update && apt install -y   build-essential   git   meson   ninja-build   libextutils-embed-perl   libglib2.0-dev   libssl-dev   libncurses-dev
+    4  git clone https://github.com/irssi/irssi
+    5  apt install git mason ninja-build
+    6  apt install git meson ninja-build
+    7  apt update && apt install -y   build-essential   git   meson   ninja-build   libglib2.0-dev   libssl-dev   libperl-dev   libncurses5-dev   pkg-config
+    8  git clone https://github.com/irssi/irssi
+    9  meson setup builddir
+   10  meson setup build
+   11  meson Build
+   12  ls
+   13  cd irssi/
+   14  meson Build
+   15  ninja -C Build
+   16  history
+   17  ninja -C Build test
+   18  history
