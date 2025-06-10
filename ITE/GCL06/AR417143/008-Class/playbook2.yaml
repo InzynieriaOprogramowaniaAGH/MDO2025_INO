@@ -1,0 +1,50 @@
+- name: Playbook irssi
+  hosts: Endpoints
+  vars:
+    remote_binary_path: ./irssi
+    container_name: irssiDep
+    docker_image: fedora:latest 
+  tasks:
+   - name: Instalacja Dockera
+     ansible.builtin.package:
+        name: docker
+        state: present
+     become: yes
+
+   - name: Włączenie i uruchomienie usługi Docker
+     ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+     become: yes
+
+   - name: Skopiowanie Binarki na maszyny
+     ansible.builtin.copy:
+        src: ./irssi
+        dest: "{{ remote_binary_path }}"
+        mode: '0755'
+     
+    
+   - name: Stworzenie kontenera
+     community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ docker_image }}"
+        state: started
+        tty: true
+        interactive: true
+        command: "./irssi"
+        volumes:
+          - "{{ remote_binary_path }}:/irssi"
+        restart_policy: unless-stopped
+     become: yes
+
+   - name: Pobranie listy procesów w dockerze ( w poszukiwaniu irssi )
+     community.docker.docker_container_exec:
+       container: "{{ container_name }}"
+       command: "sh -c 'ls -l /proc/*/exe 2>/dev/null || true'"
+     register: container_processes
+     become: yes
+
+   - name: Wypisanie procesów w dockerze ( w poszukiwaniu irssi )
+     debug:
+       var: container_processes.stdout_lines

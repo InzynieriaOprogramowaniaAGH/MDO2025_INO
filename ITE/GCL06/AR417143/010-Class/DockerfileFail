@@ -1,0 +1,4 @@
+FROM nginx:stable-alpine
+
+LABEL version="bad"
+CMD sh -c "echo 'Starting jknginx...' && exec nginxabcd -g 'daemon off;'"
