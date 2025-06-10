@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - ino_dev
+  pull_request:
+    branches:
+      - ino_dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build sqlite_builder image
+        run: |
+          docker build -t sqlite_builder -f Dockerfile.builder .
+
+      - name: Build sqlite_tester image
+        run: |
+          docker build -t sqlite_tester -f Dockerfile.tester .
+
+      - name: Archive build artifact
+        if: success()
+        run: |
+          mkdir -p artifacts
+          echo "Fake binary or export content" > artifacts/dummy_binary.txt
+
+      - name: Upload Artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: artifacts/
