@@ -1,4 +1,4 @@
-name: Build on ino_dev
+name: Build on FS417558
 
 on:
   push:
