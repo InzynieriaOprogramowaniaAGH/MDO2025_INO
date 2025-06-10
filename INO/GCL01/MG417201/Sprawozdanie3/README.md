@@ -314,21 +314,350 @@ Host endpoint3
     <img src="screens8/35.png">
 </div>
 
-##### Druga vm (endpoint1)
+##### endpoint1
 
 <div align="center"> 
     <img src="screens8/36.png">
 </div>
 
+##### endpoint2
+
+<div align="center"> 
+    <img src="screens8/37.png">
+</div>
+
+##### endpoint3
+
+<div align="center"> 
+    <img src="screens8/38.png">
+</div>
+
 #### Utworzenie pliku inwentaryzacji
+
+- Treść pliku:
+
+```ini
+[Orchestrators]
+orchestrator ansible_connection=local
+
+[Endpoints]
+endpoint1
+endpoint2
+endpoint3
+```
+
+#### Wysłanie żądania `ping` do wszystkich maszyn 
+
+<div align="center"> 
+    <img src="screens8/39.png">
+</div>
 
 ### Zdalne wywoływanie procedur
 
+#### Instalacja `rngd`
 
+- `sudo dnf install -y rng-tools`
+
+- `sudo systemctl enable --now rngd`
+
+#### Utworzenie playbooka
+
+- Treść playbooka:
+
+```yml
+---
+- name: 1. Ping wszystkich
+  hosts: all
+  gather_facts: false
+  ignore_unreachable: true
+  tasks:
+    - name: "Ping → sprawdzenie dostępu SSH"
+      ansible.builtin.ping:
+    
+    - name: "Usuń stan błędu hostów, by host offline znów był widoczny"
+      meta: clear_host_errors
+
+- name: 2. Kopiowanie pliku inventory na Endpoints (z diff)
+  hosts: Endpoints:!offline
+  gather_facts: true
+  tasks:
+    - name: "Kopiuj inventory.ini do {{ ansible_user_dir }}"
+      ansible.builtin.copy:
+        src: inventory.ini
+        dest: "{{ ansible_env.HOME }}/inventory.ini"
+        mode: '0644'
+      diff: yes
+
+- name: 3. Ponowny ping i debug wyników
+  hosts: all
+  gather_facts: false
+  ignore_unreachable: true
+  tasks:
+    - name: "Ping ponownie"
+      ansible.builtin.ping:
+      register: ping_results
+
+    - name: "Pokaż obiekt ping_results"
+      ansible.builtin.debug:
+        var: ping_results
+
+    - name: "Usuń stan błędu hostów, by host offline znów był widoczny"
+      meta: clear_host_errors
+
+- name: 4. Aktualizacja pakietów i restart usług
+  hosts: all
+  become: true
+  ignore_unreachable: true
+  tasks:
+    - name: "Aktualizuj wszystkie pakiety (package=generic)"
+      ansible.builtin.package:
+        name: "*"
+        state: latest
+
+    - name: "Restart sshd"
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+        enabled: true
+
+    - name: "Restart rngd"
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+        enabled: true
+
+    - name: "Usuń stan błędu hostów, by host offline znów był widoczny"
+      meta: clear_host_errors
+
+- name: 5. Próba działania na hoście offline
+  hosts: offline
+  gather_facts: false
+  ignore_unreachable: true
+  tasks:
+    - name: "Ping offline host"
+      ansible.builtin.ping:
+      ignore_unreachable: true
+
+```
+
+#### Odłączenie interfejsu sieciowego i wyłączenie ssh dla endpoint3
+
+<div align="center"> 
+    <img src="screens8/40.png">
+</div>
+
+#### Modyfikacja `inventory.ini`
+
+Treść pliku:
+
+```ini
+[Orchestrators]
+orchestrator ansible_connection=local
+
+[Endpoints]
+endpoint1
+endpoint2
+endpoint3
+
+[offline]
+endpoint3
+```
+
+#### Uruchomienie playbooka
+
+> Do uruchomienia playbooka użyłem polecenia: `ansible-playbook -i inventory.ini playbook1.yml --diff --ask-become-pass`
+
+>[output](logs/1.log)
 
 ### Zarządzanie stworzonym artefaktem
 
+#### Przygotowanie roli `ansible-galaxy`
 
+##### Utworzenie szkieletu roli
+
+<div align="center"> 
+    <img src="screens8/41.png">
+</div>
+
+##### Konfiguracja zmiennych domyślnych (plik `redis_binary/defaults/main.yml`)
+
+- Treść pliku:
+
+```yml
+---
+artifact_zip: "redis-1.0.zip"
+artifact_remote: "/tmp/{{ artifact_zip }}" 
+unpack_dir:     "/opt/redis"
+image_name:     "redis_binary"         
+image_tag:      "1.0"
+container_name: "redis_binary"
+container_port: 6379
+host_port:      6379
+```
+
+##### Skopiowanie artefaktów do katalogu `redis_binary/files`
+
+> Użyte polecenie: `cp ~/MDO2025_INO/INO/GCL01/MG417201/redis-ci-cd/output/redis-1.0.zip redis_binary/files/`
+
+##### Napisanie zadań (edycja pliku `redis_binary/tasks/main.yml`)
+
+- Treść pliku:
+
+```yml
+---
+- name: Install Docker
+  package:
+    name: docker
+    state: present
+
+- name: Start Docker service
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Copy Redis ZIP to remote
+  copy:
+    src: "{{ artifact_zip }}"
+    dest: "{{ artifact_remote }}"
+    mode: '0644'
+
+- name: Ensure unpack directory exists
+  file:
+    path: "{{ unpack_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Unpack Redis binaries
+  unarchive:
+    src: "{{ artifact_remote }}"
+    dest: "{{ unpack_dir }}"
+    remote_src: yes
+    creates: "{{ unpack_dir }}/redis-server"
+
+- name: Prepare Docker build context
+  file:
+    path: /tmp/redis-context
+    state: directory
+
+- name: Copy redis-server into build context
+  copy:
+    remote_src: yes
+    src: "{{ unpack_dir }}/redis-server"
+    dest: /tmp/redis-context/redis-server
+    mode: '0755'
+
+- name: Copy redis-cli into build context
+  copy:
+    remote_src: yes
+    src: "{{ unpack_dir }}/redis-cli"
+    dest: /tmp/redis-context/redis-cli
+    mode: '0755'
+
+- name: Create Dockerfile in build context
+  copy:
+    dest: /tmp/redis-context/Dockerfile.redis
+    content: |
+      FROM ubuntu:latest
+      RUN apt-get update && \
+          apt-get install -y --no-install-recommends ca-certificates && \
+          rm -rf /var/lib/apt/lists/*
+      COPY redis-server /usr/local/bin/redis-server
+      COPY redis-cli    /usr/local/bin/redis-cli
+      EXPOSE {{ container_port }}
+      CMD ["redis-server"]
+    mode: '0644'
+
+- name: Pull base image ubuntu:latest
+  community.docker.docker_image:
+    name: ubuntu
+    tag: latest
+    source: pull
+
+- name: Build Redis Docker image
+  community.docker.docker_image:
+    name: "{{ image_name }}"
+    tag: "{{ image_tag }}"
+    source: build
+    build:
+      path: /tmp/redis-context
+      dockerfile: Dockerfile.redis
+
+
+- name: Run Redis container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ image_name }}:{{ image_tag }}"
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "{{ host_port }}:{{ container_port }}"
+
+- name: Wait for Redis port
+  wait_for:
+    host: localhost
+    port: "{{ host_port }}"
+    timeout: 30
+
+- name: Verify Redis PING
+  command: docker exec {{ container_name }} redis-cli PING
+  register: ping
+  changed_when: false
+
+- name: Assert PONG
+  assert:
+    that:
+      - ping.stdout == "PONG"
+
+- name: Remove Redis container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    state: absent
+
+- name: Remove Redis image
+  community.docker.docker_image:
+    name: "{{ image_name }}"
+    tag: "{{ image_tag }}"
+    state: absent
+```
+
+##### Stworzenie inwentarza (`inventory.ini`)
+
+- Treść pliku:
+
+```ini
+[deploy]
+endpoint1
+endpoint2
+endpoint3
+```
+
+##### Stworzenie playbooka wywołującego role
+
+- Treść pliku:
+
+```yml
+---
+- name: Deploy Redis from binary artifact
+  hosts: deploy
+  become: true
+  roles:
+    - redis_binary
+```
+
+##### Struktura katalogów i plików po wykonaniu powyższych kroków
+
+<div align="center"> 
+    <img src="screens8/42.png">
+</div>
+
+#### Uruchomienie playbooka
+
+- Użyte polecenie: 
+
+`ansible-playbook -i inventory.ini deploy-binary.yml`
+
+>[output](logs/2.log)
 
 ## Zajęcia 9
 

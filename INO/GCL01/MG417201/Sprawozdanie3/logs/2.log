@@ -1,0 +1,108 @@
+[mati@orchestrator playbooks]$ ansible-playbook -i inventory.ini deploy-binary.yml --ask-become-pass
+BECOME password: 
+
+PLAY [Deploy Redis from binary artifact] ****************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************
+ok: [endpoint3]
+ok: [endpoint1]
+ok: [endpoint2]
+
+TASK [redis_binary : Install Docker] ********************************************************************************
+ok: [endpoint3]
+ok: [endpoint2]
+ok: [endpoint1]
+
+TASK [redis_binary : Start Docker service] **************************************************************************
+ok: [endpoint3]
+ok: [endpoint2]
+ok: [endpoint1]
+
+TASK [redis_binary : Copy Redis ZIP to remote] **********************************************************************
+ok: [endpoint3]
+ok: [endpoint2]
+ok: [endpoint1]
+
+TASK [redis_binary : Ensure unpack directory exists] ****************************************************************
+ok: [endpoint3]
+ok: [endpoint1]
+ok: [endpoint2]
+
+TASK [redis_binary : Unpack Redis binaries] *************************************************************************
+skipping: [endpoint3]
+skipping: [endpoint1]
+skipping: [endpoint2]
+
+TASK [redis_binary : Prepare Docker build context] ******************************************************************
+ok: [endpoint3]
+ok: [endpoint2]
+ok: [endpoint1]
+
+TASK [redis_binary : Copy redis-server into build context] **********************************************************
+ok: [endpoint3]
+ok: [endpoint2]
+ok: [endpoint1]
+
+TASK [redis_binary : Copy redis-cli into build context] *************************************************************
+ok: [endpoint3]
+ok: [endpoint1]
+ok: [endpoint2]
+
+TASK [redis_binary : Create Dockerfile in build context] ************************************************************
+ok: [endpoint3]
+ok: [endpoint1]
+ok: [endpoint2]
+
+TASK [redis_binary : Pull base image ubuntu:latest] *****************************************************************
+ok: [endpoint3]
+ok: [endpoint1]
+ok: [endpoint2]
+
+TASK [redis_binary : Build Redis Docker image] **********************************************************************
+ok: [endpoint3]
+ok: [endpoint1]
+ok: [endpoint2]
+
+TASK [redis_binary : Run Redis container] ***************************************************************************
+ok: [endpoint3]
+ok: [endpoint1]
+ok: [endpoint2]
+
+TASK [redis_binary : Wait for Redis port] ***************************************************************************
+ok: [endpoint3]
+ok: [endpoint2]
+ok: [endpoint1]
+
+TASK [redis_binary : Verify Redis PING] *****************************************************************************
+ok: [endpoint3]
+ok: [endpoint1]
+ok: [endpoint2]
+
+TASK [redis_binary : Assert PONG] ***********************************************************************************
+ok: [endpoint1] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [endpoint2] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [endpoint3] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [redis_binary : Remove Redis container] ************************************************************************
+changed: [endpoint3]
+changed: [endpoint2]
+changed: [endpoint1]
+
+TASK [redis_binary : Remove Redis image] ****************************************************************************
+changed: [endpoint3]
+changed: [endpoint1]
+changed: [endpoint2]
+
+PLAY RECAP **********************************************************************************************************
+endpoint1                  : ok=17   changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+endpoint2                  : ok=17   changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+endpoint3                  : ok=17   changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0

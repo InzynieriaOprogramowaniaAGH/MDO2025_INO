@@ -1,0 +1,108 @@
+ansible-playbook -i inventory.ini playbook1.yml --diff --ask-become-pass
+BECOME password: 
+
+PLAY [1. Ping wszystkich] *******************************************************************************************************************
+
+TASK [Ping → sprawdzenie dostępu SSH] *******************************************************************************************************
+ok: [orchestrator]
+fatal: [endpoint3]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ssh: connect to host 192.168.56.13 port 22: No route to host", "unreachable": true}
+...ignoring
+ok: [endpoint1]
+ok: [endpoint2]
+
+TASK [Usuń stan błędu hostów, by host offline znów był widoczny] ****************************************************************************
+
+PLAY [2. Kopiowanie pliku inventory na Endpoints (z diff)] **********************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************************************
+ok: [endpoint1]
+ok: [endpoint2]
+
+TASK [Kopiuj inventory.ini do /home/ansible] ************************************************************************************************
+ok: [endpoint1]
+ok: [endpoint2]
+
+PLAY [3. Ponowny ping i debug wyników] ******************************************************************************************************
+
+TASK [Ping ponownie] ************************************************************************************************************************
+ok: [orchestrator]
+ok: [endpoint1]
+ok: [endpoint2]
+fatal: [endpoint3]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ssh: connect to host 192.168.56.13 port 22: No route to host", "unreachable": true}
+...ignoring
+
+TASK [Pokaż obiekt ping_results] ************************************************************************************************************
+ok: [orchestrator] => {
+    "ping_results": {
+        "changed": false,
+        "failed": false,
+        "ping": "pong"
+    }
+}
+ok: [endpoint1] => {
+    "ping_results": {
+        "changed": false,
+        "failed": false,
+        "ping": "pong"
+    }
+}
+ok: [endpoint2] => {
+    "ping_results": {
+        "changed": false,
+        "failed": false,
+        "ping": "pong"
+    }
+}
+ok: [endpoint3] => {
+    "ping_results": {
+        "changed": false,
+        "msg": "Failed to connect to the host via ssh: ssh: connect to host 192.168.56.13 port 22: No route to host",
+        "unreachable": true
+    }
+}
+
+TASK [Usuń stan błędu hostów, by host offline znów był widoczny] ****************************************************************************
+
+PLAY [4. Aktualizacja pakietów i restart usług] *********************************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************************************
+ok: [orchestrator]
+fatal: [endpoint3]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ssh: connect to host 192.168.56.13 port 22: No route to host", "unreachable": true}
+...ignoring
+ok: [endpoint1]
+ok: [endpoint2]
+
+TASK [Aktualizuj wszystkie pakiety (package=generic)] ***************************************************************************************
+fatal: [endpoint3]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ssh: connect to host 192.168.56.13 port 22: No route to host", "unreachable": true}
+...ignoring
+ok: [endpoint1]
+ok: [orchestrator]
+ok: [endpoint2]
+
+TASK [Restart sshd] *************************************************************************************************************************
+changed: [orchestrator]
+fatal: [endpoint3]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ssh: connect to host 192.168.56.13 port 22: No route to host", "unreachable": true}
+...ignoring
+changed: [endpoint1]
+changed: [endpoint2]
+
+TASK [Restart rngd] *************************************************************************************************************************
+changed: [orchestrator]
+fatal: [endpoint3]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ssh: connect to host 192.168.56.13 port 22: No route to host", "unreachable": true}
+...ignoring
+changed: [endpoint1]
+changed: [endpoint2]
+
+TASK [Usuń stan błędu hostów, by host offline znów był widoczny] ****************************************************************************
+
+PLAY [5. Próba działania na hoście offline] *************************************************************************************************
+
+TASK [Ping offline host] ********************************************************************************************************************
+fatal: [endpoint3]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ssh: connect to host 192.168.56.13 port 22: No route to host", "unreachable": true}
+...ignoring
+
+PLAY RECAP **********************************************************************************************************************************
+endpoint1                  : ok=9    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+endpoint2                  : ok=9    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+endpoint3                  : ok=8    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=7   
+orchestrator               : ok=7    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
