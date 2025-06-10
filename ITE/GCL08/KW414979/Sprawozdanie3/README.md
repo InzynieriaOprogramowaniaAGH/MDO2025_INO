@@ -35,6 +35,66 @@ Ekran z postępem instalacji sugeruje, że instalacja przebiegła pomyślnie:
 ![](3_1_2.png)
 
 Dalej przystąpiłem do edytowania pliku `anaconda-ks.cfg` wg wytycznych i tak by pobierał kontener z Dockerhub, zamieszony w ramach projektu pipeline'owego.
+
+    url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+    repo --name=updates --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+
+    #version=DEVEL
+    # Keyboard layouts
+    keyboard --vckeymap=pl --xlayouts='pl'
+
+    # System language
+    lang pl_PL.UTF-8
+
+    # Host name
+    network --bootproto=dhcp --device=link --activate --hostname=kickstart.example.com
+
+    # System timezone
+    timezone Europe/Warsaw --utc
+
+    # Root password
+    rootpw --iscrypted --allow-ssh $y$j9T$iyCkDGXNeMxo.onIHwKHSF5w$Byz6BLs39SIg0ibbzU0bW5/7cwMmQpu33qRl8En5MX3
+    user --groups=wheel --name=kwoda --password=$y$j9T$TLLTaYiukfmpauwCCb5SxHLb$/XiNokf52CU3rOgoaeQYovHtbbPCTh84u2uj2uOeH40 --iscrypted --gecos="Karol Woda"
+
+    # Inne
+    firewall --enabled --service=ssh
+    selinux --enforcing
+    firstboot --disable
+    reboot
+
+    # Partycjonowanie
+    ignoredisk --only-use=sda
+    autopart
+    clearpart --all --initlabel
+
+    # Packages to install
+    %packages
+    @^custom-environment
+    docker
+    wget
+    cronie
+    %end
+
+    # Post installation
+    %post
+    systemctl enable docker
+    systemctl enable crond
+
+    mkdir -p /vol/bat_in
+    mkdir -p /vol/bat_out
+
+    echo "Przykładowy tekst 1" > /vol/bat_in/in.txt
+    echo "Przykładowy tekst 2" > /vol/bat_in/in2.txt
+
+    echo "@reboot /usr/bin/docker run --rm -v /vol/bat_in:/vol/bat_in -v /vol/bat_out:/vol/bat_out avokawo/bat_project" >> /var/spool/cron/root
+    %end
+
+System uruchomił się po wielokrotnych próbach dostosowywania pliku tak by nie uruchamiał się w trybie `emergency`. Ostatecznie katalogi jak i pliki zostały utworzone, a obraz został pobrany i wykonał swoje działanie, co stwierdzam na podstawie pliku wynikowego `out.txt` ze złączonym tekstem z 2 plików:
+
+![](3_1_3.png)
+
+![](3_1_4.png)
+
 ## Ansible
 
 Utworzyłem nową maszynę wirtualną i nazwałem ją `ansible-target`, podałem ISO `Fedora-Everything-netinst-x86_64-41-1.4`, system operacyjny Fedora, pamięć RAM i dysk zostawiłem bez zmian. Odpaloiłem instalację. Ustawiłem nazwę hosta na `ansible-target` 
