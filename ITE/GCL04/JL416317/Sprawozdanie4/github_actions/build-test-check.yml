@@ -1,0 +1,28 @@
+name: WeatherForecastApi Build & Test
+
+on:
+  pull_request:
+    branches:
+      - ino_dev
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore WeatherForecast.Api/WeatherForecast.Api.csproj
+
+      - name: Build
+        run: dotnet build WeatherForecast.Api/WeatherForecast.Api.csproj --no-restore -c Release
+
+      - name: Run tests
+        run: dotnet test WeatherForecast.Tests
