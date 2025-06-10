@@ -11,6 +11,3 @@ RUN autoreconf -fi
 RUN ./configure --with-openssl
 RUN make 
 RUN make install
-
-
-CMD ["/bin/bash"]
