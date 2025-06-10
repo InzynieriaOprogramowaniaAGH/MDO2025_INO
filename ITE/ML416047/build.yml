@@ -1,0 +1,32 @@
+name: Build and Test Redis
+
+on:
+  push:
+    branches:
+      - ino_dev
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Redis image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          tags: redis-builder:latest
+          push: false
+          load: true
+
+      - name: Run Redis tests
+        run: docker run --rm redis-builder:latest
