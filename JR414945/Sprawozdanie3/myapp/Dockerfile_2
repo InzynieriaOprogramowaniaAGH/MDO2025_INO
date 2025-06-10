@@ -1,0 +1,2 @@
+FROM nginx:latest
+COPY index2.html /usr/shar/nginx/html/index.html
