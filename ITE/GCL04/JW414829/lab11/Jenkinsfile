@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build image') {
+            steps {
+                sh 'docker build -t jakubwawrzyczek/apache:v3 -f Dockerfile.v3 .'
+                sh 'docker push jakubwawrzyczek/apache:v3'
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f apache-deployment.yaml'
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh './check-deployment.sh apache-deployment'
+            }
+        }
+    }
+}

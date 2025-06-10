@@ -1,0 +1,50 @@
+---
+- name: Install pip
+  package:
+    name: python3-pip
+    state: present
+
+- name: Install packaging module (required by Docker collection)
+  package:
+    name: python3-packaging
+    state: present
+
+- name: Install required Python packages (requests, docker)
+  pip:
+    name:
+      - requests
+      - docker
+    executable: pip3
+
+- name: Pull Apache image
+  community.docker.docker_image:
+    name: httpd
+    source: pull
+
+- name: Run Apache container
+  community.docker.docker_container:
+    name: apache
+    image: httpd
+    state: started
+    ports:
+      - "8080:80"
+
+- name: Wait for Apache to respond
+  uri:
+    url: http://localhost:8080
+    return_content: yes
+    status_code: 200
+  register: apache_response
+  retries: 5
+  delay: 2
+  until: apache_response.status == 200
+
+- name: Stop Apache container
+  community.docker.docker_container:
+    name: apache
+    state: stopped
+
+- name: Remove Apache container
+  community.docker.docker_container:
+    name: apache
+    state: absent
