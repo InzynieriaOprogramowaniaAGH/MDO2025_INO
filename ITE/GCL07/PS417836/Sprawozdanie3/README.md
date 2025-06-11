@@ -328,11 +328,6 @@ sudo chmod +777 anaconda-ks.cfg
 
 Modyfikacje:
 
-Usunięcie użytkownika:
-```bash
-user --groups=wheel --name=psocala --password=$y$j9T$DKKrBZ/DTxGfL3nY47qmyLG9$4SuT5/d/Fnol7AFh/LhKFTwQW7fVMY.bII6hFc6YK57 --iscrypted --gecos="Paweł Socała"
-```
-
 Dodanie repozytoriów Fedory:
 
 ```bash
@@ -391,3 +386,37 @@ timezone Europe/Warsaw --utc
 rootpw --iscrypted --allow-ssh $y$j9T$EdlH0qTbCbkj9gMAkuj5uRDm$IiKbwuXZzs4aMwX82qfx4BsD3c0HCTeK0YOtfNw8wy0
 ```
 
+<br>
+
+Po dodaniu pliku do repozytorium przedmiotowego znajdujemy go i kopiujemy jego link. Następnie za pomocą narzędzie tinyurl zmniejszamy go aby łatwiej było wpisać go w virtualbox'ie.
+
+```bash
+https://tinyurl.com/44f7zd8y
+```
+
+<br>
+
+---
+Proces instalacji systemu:
+
+Na początku standardowo rozpoczynamy instalacje maszyny z obrazem Fedory. Kolejno w oknie bootownia wybieramy klawisz e i wpisujemy skrócony link naszego pliku.
+
+![ansi](lab_anakonda/install1.png)
+
+<br>
+
+Ukończona instalacja systemu.
+
+![ansi](lab_anakonda/koniec.png)
+
+![alt text](lab_anakonda/login.png)
+
+<br>
+
+## Instalacja własnej aplikacji
+
+Podczas testowej próby instalacji mojej paczki irssi na głównej maszynie okazało się, że Fedora nie jest kompatybilna z potrzebną paczką ponieważ plik: /usr/lib64/libtinfo.so.6 istnieje, ale nie zawiera symbolu: NCURSES6_TINFO_5.0.19991023. Dlatego zdecydowałem się rozpakować paczkę .deb i sopiować pliki binarne do /usr/local/bin.
+
+![alt text](lab_anakonda/image.png)
+
+![alt text](lab_anakonda/image2.png)
