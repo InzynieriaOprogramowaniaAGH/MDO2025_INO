@@ -8,5 +8,4 @@ RUN git clone https://github.com/curl/curl.git
 WORKDIR /curl
 RUN ./buildconf && ./configure --with-openssl && make && make install
 
-#CMD ["/bin/bash"]
-CMD ["/bin/false"]
+CMD ["/bin/bash"]
