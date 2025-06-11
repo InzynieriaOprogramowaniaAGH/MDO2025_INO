@@ -661,7 +661,52 @@ endpoint3
 
 ## Zajęcia 9
 
+### Przygotowanie pliku odpowiedzi
 
+#### Skopiowanie pliku odpowiedzi `/root/anaconda-ks.cfg`, tak aby był dostępny z GitHub'a
+
+<div align="center"> 
+    <img src="screens9/1.png">
+</div>
+
+#### Modyfikacja pliku odpowiedzi
+
+- Zmodyfikowałem następujące rzeczy:
+
+  - Dodanie mirrorlist:
+  
+  ```cfg
+  repo --name=fedora \
+     --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+  repo --name=updates \
+     --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+  ```
+
+  - Dodanie paczek `tar` oraz `openssh-server`
+
+  ```cfg
+  %packages
+  @^server-product-environment
+  openssh-server 
+  tar 
+  %end
+  ```
+
+  - Zapewnienie formatowania dysku
+
+  ```cfg
+  clearpart --all --initlabel
+  ```
+
+  - Ustawienie hostname innego niż `localhost`
+
+  ```cfg
+  network  --hostname=ansible
+  ```
+
+>[Plik odpowiedzi po modyfikacji](anaconda-ks.cfg)
+
+#### 
 
 ## Zajęcia 10
 
