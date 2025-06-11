@@ -439,3 +439,171 @@ echo "Będzie dostępny na porcie 8080 hosta (mapowany na port 3000 kontenera)."
 
 %end
 ```
+![alt text](lab9/ana7.png)
+
+# ***LAB 10 i 11***
+# Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+## Instalacja klastra Kubernetes
+### Pobranie i instalacja minikube
+Instalacja przeprowadzona zgodnie z dokumentacja: https://minikube.sigs.k8s.io/docs/start/
+
+![alt text](lab10/inst2.png)
+
+```sh
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
+sudo rpm -Uvh minikube-latest.x86_64.rpm
+```
+
+![alt text](lab10/inst1.png)
+
+### uruchamiamy klasster
+
+polecenie doinstalowuje wszystkie potrzebne pakiety
+```sh
+minikube start
+```
+
+![alt text](lab10/inst3.png)
+
+### Pobranie kubectl
+
+```sh
+minikube kubectl -- get po -A
+```
+![alt text](lab10/inst4.png)
+
+### Dodanie aliasu dla ułatwienia pracy
+
+```sh
+alias kubectl="minikube kubectl --"
+```
+
+![alt text](lab10/inst5.png)
+
+### Uruchomienie panelu minikube
+```sh
+minikube dashboard
+```
+
+![alt text](lab10/inst6.png)
+
+Dzieki uzycia w VSC automatycznie przekierowano port i mozna wejsc w link
+
+![alt text](lab10/inst7.png)
+
+A owy link nas przekierowuje do panelu kubernetesa
+
+![alt text](lab10/inst8.png)
+
+## Uruchomienie posiadanego kontenera
+
+Przez wzglad na to ze moim kontenerem jest aplikacja webowa na kontenerze dockerowym najpierw trzeba:
+
+### Pobranie kontenera z dockera
+
+```sh
+docker pull bpajda/express-deploy-img
+```
+
+![alt text](lab10/kont1.png)
+
+### Stworzenie poda (musimy stworzyc poda na nasz kontener i podac mu port na ktorym bedzie sie komunikowac)
+
+```sh
+kubectl run express-single --image=docker.io/bpajda/express-deploy-img --port=3000 --labels app=express-single
+```
+
+![alt text](lab10/kont2.png)
+
+### Przekierowujemy port by mozna bylo sie komunikowac z podem wewnatrz maszyny
+
+```sh
+kubectl port-forward pod/express-single 3001:3000
+```
+
+![alt text](lab10/kont3.png)
+
+Dodajemy przekierowanie portu w vsc, by miec komunikacje z tym z poziomu komputera
+
+![alt text](lab10/kont4.png)
+
+![alt text](lab10/kont5.png)
+
+### W panelu pojawil sie wpis o nowym podzie
+
+![alt text](lab10/kont6.png)
+
+
+## Plik wdrozeniowy
+
+### Stworzenie wdrozenia na bazie obrazu expressa
+
+```sh
+kubectl create deployment express-depl --image=docker.io/bpajda/express-deploy-img
+```
+
+![alt text](lab10/wdr1.png)
+
+
+W panelu można zauwazyc nowy wpis o deploymencie
+![alt text](lab10/wdr2.png)
+
+### Wystawienie portu do komunikacji z wdrozeniem analogicznie jak wyzej
+
+```sh
+kubectl expose deployment express-depl --type=NodePort --port=3000
+```
+
+![alt text](lab10/wdr3.png)
+
+![alt text](lab10/wdr4.png)
+
+![alt text](lab10/wdr5.png)
+
+### skalowanie wdrozenia
+
+klikamy w przycisk scale przy deploymencie
+
+![alt text](lab10/wdr6.png)
+
+![alt text](lab10/wdr7.png)
+
+Po kliknieciu scale czekamy chwile i tworza nam sie dodatkowe pody
+
+![alt text](lab10/wdr8.png)
+
+### Przgotowanie yamla (pliku wdrozeniowego)
+
+Wszystko co do teraz zrobilismy na deploymencie jest w nim zapisane i gdy tak jak w przypadku scale klikniemy edit mamy dostep do calego pliku konfiguracyjnego.
+
+![alt text](lab10/wdr9.png)
+
+kopiujemy ten plik i wklejamy do pliku yaml stworzonego w repozytorium
+![alt text](lab10/wdr10.png)
+
+
+Z pliku trzeba usuną sekcje: status
+![alt text](lab10/wdr11.png)
+
+Dla pokazania różnicy zmienimy liczbe podow na 5
+![alt text](lab10/wdr12.png)
+
+### dodajemy konfiguracje w oparciu o plik yaml
+
+```sh
+kubectl apply -f ./ITE/GCL08/BP417137/Sprawozdanie3/lab10/express-depl.yaml
+```
+
+![alt text](lab10/wdr13.png)
+
+ilosc podow wzrosla
+
+![alt text](lab10/wdr14.png)
+
+# mozna sprawdzic status wdrozenia rolloutem
+
+```sh
+kubectl rollout status deployment/express-depl
+```
+
+![alt text](lab10/wdr15.png)
