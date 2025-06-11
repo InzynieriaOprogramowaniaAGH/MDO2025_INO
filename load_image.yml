@@ -1,7 +1,0 @@
----
-- name: Load Docker image on ansible-target
-  hosts: ansible-target
-  become: true
-  tasks:
-    - name: Load Docker image from tar file
-      command: docker load -i /tmp/ts-node-starter.tar

@@ -1,9 +1,0 @@
----
-- name: Stop and remove app container
-  hosts: ansible-target
-  tasks:
-    - name: Stop ts-app container
-      ansible.builtin.shell: docker stop ts-app || true
-
-    - name: Remove ts-app container
-      ansible.builtin.shell: docker rm ts-app || true
