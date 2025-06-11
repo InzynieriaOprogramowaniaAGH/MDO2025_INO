@@ -16,5 +16,5 @@ spec:
     spec:
       containers:
       - name: curl-container
-        image: bskubel/curl-final:v19
+        image: bskubel/curl-final:v20
         command: ["sleep", "infinity"]
