@@ -1,0 +1,10 @@
+Orchestrators:
+  hosts:
+    fedora:
+      ansible_user: twinkle
+      ansible_connection: local
+
+Endpoints:
+  hosts:
+    ansible-target:
+      ansible_user: ansible

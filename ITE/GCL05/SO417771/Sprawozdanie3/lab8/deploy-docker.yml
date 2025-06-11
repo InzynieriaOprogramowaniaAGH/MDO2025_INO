@@ -1,0 +1,11 @@
+- name: Deploy Docker container on endpoints
+  hosts: Endpoints
+  become: yes
+  vars:
+    docker_image_name: "szyocie2/node-app"
+    docker_image_tag: "latest"
+    docker_container_name: "node-app"
+    host_port: "3000"
+    container_port: "3000"
+  roles:
+    - deploy-container
