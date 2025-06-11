@@ -277,7 +277,10 @@ ansible-galaxy init cjson
 ### Uruchomienie playbooka
 
 ```bash
-asnible-playbook -i inventory.ini playbook-cjson.yaml
+asnible-playbook -i inventory.ini playbook-cjson.yaml --ask-become-pass
 ```
 
 ![13](screeny/8-13.png)
+
+# Dziewiąte zajęcia - Pliki odpowiedzi dla wdrożeń nienadzorowanych
+
