@@ -1,0 +1,13 @@
+---
+- name: Copy Docker image to remote machine
+  copy:
+    src: ts-node-starter.tar
+    dest: /tmp/ts-node-starter.tar
+
+- name: Load Docker image
+  become: true
+  command: docker load -i /tmp/ts-node-starter.tar
+
+- name: Run application container
+  become: true
+  shell: docker run -d --rm --name ts-app -p 3000:3000 ts-node-starter:ci-1

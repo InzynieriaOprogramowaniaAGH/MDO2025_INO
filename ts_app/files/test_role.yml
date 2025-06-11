@@ -1,0 +1,6 @@
+---
+- name: Test ts_app role
+  hosts: ansible-target
+  become: true
+  roles:
+    - ts_app
