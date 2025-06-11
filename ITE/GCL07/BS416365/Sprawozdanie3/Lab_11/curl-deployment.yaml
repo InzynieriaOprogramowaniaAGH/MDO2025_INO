@@ -6,6 +6,12 @@ metadata:
     app: curl
 spec:
   replicas: 4
+  strategy:
+    #type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 25%
   selector:
     matchLabels:
       app: curl
@@ -16,5 +22,4 @@ spec:
     spec:
       containers:
       - name: curl-container
-        image: bskubel/curl-final:v20
-        command: ["sleep", "infinity"]
+        image: bskubel/curl-final:v22
