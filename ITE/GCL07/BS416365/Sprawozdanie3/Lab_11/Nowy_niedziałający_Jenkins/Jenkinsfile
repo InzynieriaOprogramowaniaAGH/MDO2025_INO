@@ -43,10 +43,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                dir('MDO2025_INO/ITE/GCL07/BS416365/curl') {
+                dir('MDO2025_INO/ITE/GCL07/BS416365/Sprawozdanie3/Lab_11') {
                     sh '''
-                        docker build -f Dockerfile.curlfinal -t ${IMAGE_CURL_FINAL}:${VERSION} .
-                        sed -i "s/Curl API Client/Curl API Client - Version v2/" index.html
+                        docker build -f Dockerfile.curlexit -t ${IMAGE_CURL_FINAL}:${VERSION} .
                         docker run --rm ${IMAGE_CURL_FINAL}:${VERSION} curl --version
                     '''
                 }
