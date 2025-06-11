@@ -1,0 +1,5 @@
+---
+docker_image_name: "twoj_uzytkownik/nazwa_obrazu"
+docker_container_name: "moja_aplikacja"
+app_port: 3000
+host_port: 3000

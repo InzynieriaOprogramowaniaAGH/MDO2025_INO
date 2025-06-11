@@ -1,0 +1,14 @@
+all:
+  children:
+    orchestrators:
+      hosts:
+        orchestrator1:
+          ansible_host: 192.168.0.105
+          ansible_user: ansible
+
+    endpoints:
+      hosts:
+        ansible-target:
+          ansible_host: 192.168.0.105
+          ansible_user: ansible
+
