@@ -375,15 +375,304 @@ EOF
 
 systemctl enable node-js-dummy-test.service
 firewall-cmd --add-port=3000/tcp --permanent
-firewall-cmd --reload
+firewall-cmd --reloadms
+```
+## Zajecia 10
 
-echo "deployment complete."
-%end
 
-reboot
+1.Instalacja Minikube zgodnie z dokumentacją, przy użyciu paczki RPM
+
+![](ScreenySprawozdanie3/29.jpg)
+
+2.Uruchomienie Minikube z konfiguracją sterownika ustawioną na Dockera
+
+![](ScreenySprawozdanie3/30.jpg)
+
+3.Stworzenie aliasu w celu uproszczenia operacji
+
+![](ScreenySprawozdanie3/31.jpg)
+
+4.Włączenie dashboarda, z automatycznym przekierowaniem portu przez VS Code
+
+![](ScreenySprawozdanie3/32.jpg)
+
+5.Ukazanie działającego Dashboarda
+
+![](ScreenySprawozdanie3/33.jpg)
+
+6.Uruchomienie konteneru z obrazu aplikacji 
+
+![](ScreenySprawozdanie3/34.jpg)
+
+7.Kontener z podem został uruchumiony
+
+![](ScreenySprawozdanie3/35.jpg)
+
+8.Działająca aplikacja
+
+![](ScreenySprawozdanie3/36.jpg)
+
+9.deploy.yaml
+
+Plik wdrożenia - deploy.yaml
+
+Ten plik definiuje Deployment dla aplikacji Node.js w Kubernetes. Deployment nosi nazwę node-js-dummy-deployment i składa się z 4 replik podów, które mają etykiety app: node-js-dummy oraz environment: production. Pody działają na obrazie pyonaaa/node-js-dummy-test:latest, nasłuchują na porcie 3000 i ustawiły zmienną środowiskową NODE_ENV na production. Kontenery mają przypisane minimalne zasoby: 64Mi pamięci oraz 250m CPU, a maksymalne limity to 128Mi pamięci i 500m CPU. Polityka restartu została ustawiona na Always, co oznacza, że pody będą automatycznie restartowane, gdy zakończą działanie
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-js-dummy-deployment
+  labels:
+    app: node-js-dummy
+    environment: production
+
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate 
+  selector:
+    matchLabels:
+      app: node-js-dummy-app
+  template:
+    metadata:
+      labels:
+        app: node-js-dummy-app
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: node-js-dummy-container
+        image: pyonaaa/node-js-dummy-test:latest
+        ports:
+          - containerPort: 3000
+            protocol: TCP
+        env:
+          - name: NODE_ENV
+            value: "production"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+ cpu: "500m"
+
+  ```
+
+ 10.Wdrozenie podów 
+
+ ![](ScreenySprawozdanie3/37.jpg)
+
+ 11.Pody zostały wyświetlone na dashboardzie po uruchomieniu
+
+ ![](ScreenySprawozdanie3/38.jpg)
+
+ 12.Sprawdzenie statusu
+
+![](ScreenySprawozdanie3/39.jpg)
+
+13.wyeksportowanie wdrożenia jako serwis
+
+![](ScreenySprawozdanie3/40.jpg)
+
+![](ScreenySprawozdanie3/41.jpg)
+
+14.Przekierowanie portu do serwisu
+
+![](ScreenySprawozdanie3/42.jpg)
+
+
+## Zajecia 11
+
+1.wersja latest - z pipeline'u
+
+v2.0 - wadliwa
+
+1.1 - poprawna
+
+![](ScreenySprawozdanie3/43.jpg)
+
+2.Plik deploy.yaml został odpowiednio zmodyfikowany z zajęć 10
+
+3.8 replik
+
+![](ScreenySprawozdanie3/44.jpg)
+
+![](ScreenySprawozdanie3/45.jpg)
+
+4.1 replika
+
+![](ScreenySprawozdanie3/46.jpg)
+
+![](ScreenySprawozdanie3/47.jpg)
+
+5.0 replik
+
+![](ScreenySprawozdanie3/48.jpg)
+
+![](ScreenySprawozdanie3/49.jpg)
+
+6.4 repliki 
+
+![](ScreenySprawozdanie3/50.jpg)
+
+![](ScreenySprawozdanie3/51.jpg)
+
+7.Zastosowanie wersji 1.1
+
+![](ScreenySprawozdanie3/52.jpg)
+
+![](ScreenySprawozdanie3/53.jpg)
+
+8.Powrót do wczesniejszej wersji obrazu
+
+![](ScreenySprawozdanie3/54.jpg)
+
+![](ScreenySprawozdanie3/55.jpg)
+
+9.Zastosowanie obrazu wadliwego
+
+![](ScreenySprawozdanie3/56.jpg)
+
+![](ScreenySprawozdanie3/57.jpg)
+
+10.Weryfikacja historii wdrożeń dla deploymentu node oraz rollback do poprzedniej wersji
+
+![](ScreenySprawozdanie3/58.jpg)
+
+
+![](ScreenySprawozdanie3/59.jpg)
+
+
+![](ScreenySprawozdanie3/60.jpg)
+
+![](ScreenySprawozdanie3/61.jpg)
+
+![](ScreenySprawozdanie3/62.jpg)
+
+![](ScreenySprawozdanie3/63.jpg)
+
+11.Stworzenie skryptu checking.sh, który weryfikuje, czy wdrożenie zakończyło się w ciągu 60 sekund
+
+```
+#!/bin/bash
+
+TARGET_DEPLOY="node-deployment"
+NS="default"
+MAX_WAIT=60
+CHECK_INTERVAL=5
+ELAPSED_TIME=0
+
+echo "Checking status of deployment: $TARGET_DEPLOY"
+
+
+while [ $ELAPSED_TIME -lt $MAX_WAIT ]; do
+    if minikube kubectl -- rollout status deployment/$TARGET_DEPLOY --namespace $NS --timeout=5s > /dev/null 2>&1; then
+        echo "Deployment successful after ${ELAPSED_TIME}s"
+        exit 0
+    fi
+
+    sleep $CHECK_INTERVAL
+    ELAPSED_TIME=$((ELAPSED_TIME + CHECK_INTERVAL))
+    echo "Retrying in ${CHECK_INTERVAL}s..."
+done
+
+echo "Timeout reached after $MAX_WAIT seconds"
+exit 1
 ```
 
-![](ScreenySprawozdanie3/27.jpg)
+![](ScreenySprawozdanie3/64.jpg)
 
-![](ScreenySprawozdanie3/28.jpg)
+![](ScreenySprawozdanie3/65.jpg)
 
+12.Strategia Recreate polega na usunięciu starych podów przed utworzeniem nowych, co skutkuje chwilową niedostępnością aplikacji
+
+![](ScreenySprawozdanie3/67.jpg)
+
+![](ScreenySprawozdanie3/66.jpg)
+
+13.Strategia RollingUpdate umożliwia stopniową aktualizację aplikacji, usuwając i tworząc pody jednocześnie, co zapewnia nieprzerwaną dostępność aplikacji
+
+![](ScreenySprawozdanie3/68.jpg)
+
+![](ScreenySprawozdanie3/69.jpg)
+
+14.Canary Deployment to strategia polegająca na wdrażaniu nowych wersji aplikacji tylko dla części użytkowników, zanim zostaną one udostępnione na całym środowisku produkcyjnym. Umożliwia to testowanie nowej wersji na ograniczonej liczbie podów, co pomaga zminimalizować ryzyko problemów
+
+canary1.yaml
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-js-dummy-deployment
+  labels:
+    app: node-js-dummy
+    environment: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-js-dummy-app
+  template:
+    metadata:
+      labels:
+        app: node-js-dummy-app
+    spec:
+      containers:
+        - name: node-js-dummy-container
+          image: pyonaaa/node-js-dummy-test:latest
+          ports:
+          containerPort: 3000  
+          
+
+```
+canary2.yaml
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-js-dummy-deployment
+  labels:
+    app: node-js-dummy
+    environment: production
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: node-js-dummy-app
+  template:
+    metadata:
+      labels:
+        app: node-js-dummy-app
+    spec:
+      containers:
+        - name: node-js-dummy-container
+          image: pyonaaa/node-js-dummy-test:latest
+          ports:
+            - containerPort: 3000
+```
+
+
+my_service.yaml
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-js-dummy-service
+spec:
+  selector:
+    app: node-js-dummy-app
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: ClusterIP
+```
+
+15.„Plik my_service.yaml tworzy zasób Service dla aplikacji Node.js w Kubernetes. Zasób ten nosi nazwę node-js-dummy-service i używa selektora app: node-js-dummy-app do łączenia z odpowiednimi podami. W sekcji ports określono, że ruch przychodzący na porcie 80 będzie przekierowywany na port 3000 w kontenerach. Typ usługi to ClusterIP, co oznacza, że będzie ona dostępna tylko wewnątrz klastra Kubernete
+
+
+![](ScreenySprawozdanie3/70.jpg)
+
+![](ScreenySprawozdanie3/71.jpg)
