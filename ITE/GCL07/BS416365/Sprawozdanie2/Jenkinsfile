@@ -46,7 +46,8 @@ pipeline {
                 dir('MDO2025_INO/ITE/GCL07/BS416365/curl') {
                     sh '''
                         docker build -f Dockerfile.deploy -t ${IMAGE_CURL_FINAL}:${VERSION} .
-                        docker run --rm ${IMAGE_CURL_FINAL}:${VERSION}                    '''
+                        docker run --rm ${IMAGE_CURL_FINAL}:${VERSION} curl --version
+                    '''
                 }
             }
         }
@@ -55,7 +56,9 @@ pipeline {
             steps {
                 echo 'Smoke test do www.metal.agh.edu.pl'
                 sh '''
-                    docker run --rm ${IMAGE_CURL_FINAL}:${VERSION}
+                    docker run --rm ${IMAGE_CURL_FINAL}:${VERSION} curl -s --fail http://www.metal.agh.edu.pl \
+                        && echo "SMOKE TEST PASSED" \
+                        || echo "SMOKE TEST FAILED"
                 '''
             }
         }
