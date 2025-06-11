@@ -97,7 +97,7 @@ ssh ansible@ansible-target
 ![ansi](lab_ansible/ssh_copy.png)
 ![ansi](lab_ansible/połączenie.png)
 
-
+<br>
 
 ## Inwentaryzacja
 
@@ -111,5 +111,205 @@ exec bash
 ```
 ![ansi](lab_ansible/nazwa.png)
 
+<br>
+
 Kolejno dodano jeszcze adres maszyny fedora-main do pliku `/etc/hosts`.
 
+![ansi](lab_ansible/etc_3.png)
+
+<br>
+
+---
+Utworzenie pliku inwetnaryzacji `inventory.ini`:
+
+```bash
+touch inventory.ini
+nano inventory.ini
+```
+
+![ansi](lab_ansible/inventory.png)
+
+Następnie wysłano ping do wszystkich hostów z pliku inventory.ini za pomocą modułu ping z ansible. Żądanie wyoknało się prawidłowo.
+
+![ansi](lab_ansible/all.png)
+
+
+<br>
+
+## Zdalne wywoływanie procedur
+
+
+<br>
+
+Kolejnym etapem było utworzenie pliku `playbook.yml`.
+
+```bash
+touch playbook.yml
+nano playbook.yml
+```
+
+<br>
+
+
+![ansi](lab_ansible/playbook.png)
+
+<br>
+
+Piewrsze uruchomienie playbooka- błąd przy aktualizacji ponieważ sudo wymaga hasła.
+
+```bash
+ansible-playbook -i inventory.ini playbook.yml
+```
+
+![ansi](lab_ansible/run.png)
+
+<br>
+
+Drugie uruchomienie - dodano flagę -K, przez którą wpisujemy hasło do hosta na początku wykonania oraz zainstalowano pakiet rng na ansible-target.
+
+```bash
+ansible-playbook -i inventory.ini playbook.yml -K
+```
+
+![ansi](lab_ansible/drugie1.png)
+
+<br>
+
+Test maszyny z wyłączoną kartą sieciową na maszynie ansible-target. Ansible nie był w stanie nawiązać połączenia.
+
+```bash
+sudo systemctl stop sshd
+ansible-playbook -i inventory.ini playbook.yml -K
+
+sudo systemctl start sshd # ponowne włączenie sshd na ansible-target
+```
+![ansi](lab_ansible/stop.png)
+
+![ansi](lab_ansible/stop_ssh.png)
+
+
+
+<br>
+
+## Zarządzanie stworzonym artefaktem
+
+<br>
+
+Moja aplikacja to irssi. Artefakt to paczka .deb.
+
+Struktura plików .yml:
+
+```
+install_irssi/
+├── playbook.yml
+└── roles/
+    ├── install_docker/
+    │   └── tasks/
+    │       └── main.yml
+    └── install_irssi/
+        └── tasks/
+            └── main.yml
+```
+
+<br>
+
+Install docker `main.yml`:
+
+Ten playbook sprawdza, czy Docker jest zainstalowany na maszynie docelowej, wykonując polecenie which docker. Jeśli Docker nie jest znaleziony (kod wyjścia różny od 0), to instaluje wymagane pakiety dnf-plugins-core i docker za pomocą menedżera pakietów dnf. Następnie niezależnie od tego, czy Docker był wcześniej zainstalowany, upewnia się, że usługa Docker jest uruchomiona i włączona do autostartu. Na koniec wykonuje polecenie docker --version, aby potwierdzić poprawną instalację i działanie Dockera.
+
+```bash
+- name: Check if Docker is installed
+  command: which docker
+  register: docker_check
+  ignore_errors: true
+
+- name: Install Docker on Fedora
+  block:
+    - name: Install required packages
+      dnf:
+        name:
+          - dnf-plugins-core
+          - docker
+        state: present
+        update_cache: true
+  when: docker_check.rc != 0
+
+- name: Ensure Docker service is started and enabled
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Verify Docker installation
+  command: docker --version
+
+```
+
+<br>
+
+Install irssi `main.yml`:
+
+Ten playbook kopiuje pakiet irssi na maszynę zdalną, usuwa istniejący kontener o nazwie irssi-cont, a następnie tworzy nowy kontener z obrazem Ubuntu, w którym instaluje aplikację z przesłanego pakietu .deb. Po instalacji sprawdza, czy program działa poprawnie, wywołując jego wersję. Dzięki temu irssi jest uruchomione w środowisku kontenera Docker.
+
+```bash
+- name: Send .deb application to remote
+  copy:
+    src: irssi_1.0-1_amd64.deb
+    dest: /tmp/irssi_1.0-1_amd64.deb
+
+- name: Remove existing container if exists
+  shell: docker rm -f irssi-cont || true
+
+- name: Create container
+  command: docker run -dit --name irssi-cont ubuntu:latest sleep infinity
+
+- name: Update apt
+  command: docker exec irssi-cont apt-get update
+
+
+- name: Copy .deb file into the container
+  command: docker cp /tmp/irssi_1.0-1_amd64.deb irssi-cont:/tmp/app.deb
+
+
+- name: Install .deb app inside the container
+  command: docker exec irssi-cont bash -c "dpkg -i /tmp/app.deb || apt-get install -f -y"
+
+
+- name: Run application
+  command: docker exec irssi-cont irssi --version
+  register: app_status
+  failed_when: app_status.rc != 0
+  changed_when: false
+```
+
+
+Główny plik `playbook.yml`:
+
+Ten playbook uruchamia zadania na grupie hostów Endpoints, wykonując je z podwyższonymi uprawnieniami (become: yes). Korzysta z kolekcji community.docker, co umożliwia używanie modułów związanych z Dockerem. Playbook wywołuje dwie role: install_docker oraz install_irssi. Dzięki temu cały proces wdrożenia Dockera oraz aplikacji jest zautomatyzowany i uporządkowany.
+
+```bash
+- name: Deploy docker and irssi
+  hosts: Endpoints
+  become: yes
+  collections:
+    - community.docker
+  roles:
+    - install_docker
+    - install_irssi
+```
+
+<br>
+
+Uruchomienie playbooka:
+
+```bash
+ansible-playbook -i inventory.ini install_irssi/playbook.yml -K
+```
+
+![ansi](lab_ansible/irssi.png)
+
+<br>
+<br>
+
+# Lab 9 - Pliki odpowiedzi dla wdrożeń nienadzorowanych
+<br>
