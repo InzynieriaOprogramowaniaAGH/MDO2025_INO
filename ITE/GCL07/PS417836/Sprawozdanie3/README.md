@@ -468,25 +468,22 @@ firstboot --enable
 set -x
 exec > /root/postinstall.log 2>&1
 
-# Pobranie pliku .deb z Jenkinsa
+dnf install -y binutils
+
 curl -u psocala123:117ce25d6ce85c17ed3126f230f30e9d6a \
   -o /tmp/irssi.deb \
   "http://192.168.0.25:8080/job/irssi_pipeline_v2/lastSuccessfulBuild/artifact/irssi_6.0.0-1_amd64.deb"
 
-# Utworzenie katalogu tymczasowego i rozpakowanie paczki
 mkdir -p /tmp/irssi-deb
 cd /tmp/irssi-deb
 ar x /tmp/irssi.deb
 
-# Rozpakowanie plików danych do systemu (tu zakładam data.tar.xz, dopasuj jeśli masz gzip)
 tar -xf data.tar.xz -C /
 
-# Czyszczenie
 cd /
 rm -rf /tmp/irssi-deb
 rm -f /tmp/irssi.deb
 
-# Dodanie autostartu irssi w .bash_profile użytkownika
 mkdir -p /home/psocala
 echo 'irssi' >> /home/psocala/.bash_profile
 chown psocala:psocala /home/psocala/.bash_profile
