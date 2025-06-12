@@ -676,10 +676,8 @@ endpoint3
   - Dodanie mirrorlist:
   
   ```cfg
-  repo --name=fedora \
-     --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
-  repo --name=updates \
-     --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+  repo --name=fedora --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+  repo --name=updates --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
   ```
 
   - Dodanie paczek `tar` oraz `openssh-server`
@@ -706,7 +704,21 @@ endpoint3
 
 >[Plik odpowiedzi po modyfikacji](anaconda-ks.cfg)
 
-#### 
+>Plik odpowiedzi został umieszczony na mojej gałęzi w ścieżce `MG417201/Sprawozdanie3`, dzięki czemu po zrobieniu commita i pusha jest on widoczny na GitHubie.
+
+### Instalacja systemu z pliku odpowiedzi
+
+<div align="center"> 
+    <img src="screens9/2.png">
+</div>
+
+<div align="center"> 
+    <img src="screens9/3.png">
+</div>
+
+<div align="center"> 
+    <img src="screens9/4.png">
+</div>
 
 ## Zajęcia 10
 
