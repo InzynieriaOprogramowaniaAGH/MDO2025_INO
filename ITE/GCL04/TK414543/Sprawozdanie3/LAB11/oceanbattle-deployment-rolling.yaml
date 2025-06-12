@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oceanbattle-webapi-rolling
+  labels:
+    app: oceanbattle-webapi
+    strategy: rolling
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  replicas: 4
+  selector:
+    matchLabels:
+      app: oceanbattle-webapi
+      strategy: rolling
+  template:
+    metadata:
+      labels:
+        app: oceanbattle-webapi
+        strategy: rolling
+    spec:
+      containers:
+      - name: oceanbattle-webapi
+        image: docker.io/kurowskitomek/webapi:latest
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oceanbattle-rolling-service
+  labels:
+    app: oceanbattle-webapi
+    strategy: rolling
+spec:
+  selector:
+    app: oceanbattle-webapi
+    strategy: rolling
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

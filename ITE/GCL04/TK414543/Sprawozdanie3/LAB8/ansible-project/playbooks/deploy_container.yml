@@ -1,0 +1,5 @@
+- name: Deploy container artifact from Docker Hub
+  hosts: Endpoints
+  become: true
+  roles:
+    - deploy_docker

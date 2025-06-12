@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oceanbattle-webapi
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: oceanbattle-webapi
+  template:
+    metadata:
+      labels:
+        app: oceanbattle-webapi
+    spec:
+      containers:
+      - name: moja-apka
+        image: docker.io/kurowskitomek/webapi:latest
+        ports:
+        - containerPort: 80

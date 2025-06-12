@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oceanbattle-webapi-recreate
+  labels:
+    app: oceanbattle-webapi
+    strategy: recreate
+spec:
+  strategy:
+    type: Recreate
+  replicas: 4
+  selector:
+    matchLabels:
+      app: oceanbattle-webapi
+      strategy: recreate
+  template:
+    metadata:
+      labels:
+        app: oceanbattle-webapi
+        strategy: recreate
+    spec:
+      containers:
+      - name: oceanbattle-webapi
+        image: docker.io/kurowskitomek/webapi:latest
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oceanbattle-recreate-service
+  labels:
+    app: oceanbattle-webapi
+    strategy: recreate
+spec:
+  selector:
+    app: oceanbattle-webapi
+    strategy: recreate
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
