@@ -1,0 +1,17 @@
+FROM ubuntu:latest
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && \
+    apt-get install -y \
+    git \
+    make \
+    gcc \
+    tcl \
+    build-essential \
+    libc6-dev \
+    libjemalloc-dev \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+RUN git clone https://github.com/redis/redis.git redis
+WORKDIR /app/redis
+RUN make -j$(nproc)
+ENV PATH="/app/redis/src:${PATH}"

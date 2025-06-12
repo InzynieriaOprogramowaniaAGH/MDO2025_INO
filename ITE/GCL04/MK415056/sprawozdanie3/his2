@@ -1,0 +1,1000 @@
+   45  sudo docker run -it --rm networkstatic/iperf3 -c $SIP
+   46  sudo docker stop iperf3-s
+   47  sudo docker run -it --rm -v entry:/entry -v exit:/exit --name build build
+   48  mkdir bridge
+   49  touch Dockerfile
+   50  ls
+   51  nano Dockerfile 
+   52  cd bridge/
+   53  ls
+   54  touch Dockerfile
+   55  nano Dockerfile 
+   56  sudo docker build -t iperf-b
+   57  sudo docker build -t iperf-b .
+   58  nano Dockerfile 
+   59  sudo docker build -t iperf-b .
+   60  sudo docker network create --driver bridge iperf-n
+   61  sudo docker build -t iperf3-i
+   62  sudo docker build -t iperf3-i .
+   63  sudoe docker rm iperf3-i
+   64  sudo docker rm iperf3-i
+   65  sudo docker ps -a
+   66  sudo docker run -d --name iperf-s --network iperf-n iperf3-i iperf3 -s
+   67  sudo docker run -it --name iperf-c --network iperf-n iperf3-i iperf3 -c iperf -s
+   68  sudo docker run -it --name iperf-c --network iperf-n iperf3-i iperf3 -c iperf-s
+   69  sudo docker rm iperf-c
+   70  sudo docker run -it --name iperf-c --network iperf-n iperf3-i iperf3 -c iperf-s
+   71  sudo docker volume create iperf-s-l
+   72  sudo docker volume create iperf-c-l
+   73  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/var/log iperf3-i
+   74  sudo docker rename iperf-s iperf-s-old
+   75  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/var/log iperf3-i
+   76  sudo docker run -it --name iperf-c --network iperf-n -v iperf-c-l:/var/log iperf3-i bash -c "iperf3 -c iperf-s -t 30 -i 5 -b 0 &> /var/log/iperf-client.log"
+   77  sudo docker rename iperf-c iperf-c-old
+   78  sudo docker run -it --name iperf-c --network iperf-n -v iperf-c-l:/var/log iperf3-i bash -c "iperf3 -c iperf-s -t 30 -i 5 -b 0 &> /var/log/iperf-client.log"
+   79  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/logs iperf-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+   80  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+   81  docker ps
+   82  sudo docker ps
+   83  sudo docker renam iperf-s iperf-s-o2
+   84  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+   85  sudo docker rename iperf-s iperf-s-o2
+   86  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+   87  sudo docker run -d --name iperf-c --network iperf-n -v iperf-s-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+   88  sudo docker rename iperf-c iperf-c-o1
+   89  sudo docker run -d --name iperf-c --network iperf-n -v iperf-s-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+   90  sudo docker run --rm -v iperf-s-l:/logs alpine cat /logs/iperf-server.log
+   91  sudo docker run --rm -v iperf-s-l:/logs alpine cat /logs/iperf-s.log
+   92  sudo docker run --rm -v iperf-s-l:/logs alpine cat /logs/iperf-c.log
+   93  sudo docker run --rm -v iperf-s-l:/logs alpine cat /logs/iperf3-c.log
+   94  ls
+   95  sudo docker run iper
+   96  sudo docker run --rm -v iperf-c-l:/logs alpine cat /logs/iperf3-c.log
+   97  sudo docker run --rm -v iperf-c-l:/logs alpine cat /logs/iperf-c.log
+   98  sudo docker run -d --name iperf-c --network iperf-n -v iperf-c-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+   99  sudo docker rename iperf-c iperf-c-o2
+  100  sudo docker run -d --name iperf-c --network iperf-n -v iperf-c-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+  101  sudo docker run --rm -v iperf-c-l:/logs alpine cat /logs/iperf-c.log
+  102  sudo docker rename iperf-c iperf-c-o3
+  103  sudo docker run -d --name iperf-c --network iperf-n -v iperf-c-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-c.log 2>&1"
+  104  sudo docker run --rm -v iperf-c-l:/logs alpine cat /logs/iperf-c.log
+  105  sudo docker run --rm -v iperf-c-l:/logs cat /logs/iperf-c.log
+  106  sudo docker rename iperf-s iperf-s-o3
+  107  sudo docker run -d --name iperf3-s -p 5201:5201 networstatistic/iperf3 -s
+  108  sudo docker run -d --name iperf3-s -p 5201:5201 networstatic/iperf3 -s
+  109  sudo docker run -d --name iperf3-s -p 5201:5201 networkstatic/iperf3 -s
+  110  sudo docker rename iperf-s iperf-s-o4
+  111  sudo docker rename iperf3-s iperf3-s-o4
+  112  sudo docker run -d --name iperf3-s -p 5201:5201 networkstatic/iperf3 -s
+  113  sudo docker run -d --name iperf-s --network iperf-n -v iperf-s-l:/logs iperf3-i bash -c "iperf3 -s > /logs/iperf-s.log 2>&1"
+  114  sudo docker run --rm -v iperf-s-l:/logs alpine cat /logs/iperf-s.log
+  115  SIP=$(sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' iperf3-s)
+  116  echo "Server IP: $SIP"
+  117  sudo docker run -it --rm networkstatic/iperf3 -c $SIP
+  118  sudo docker run -d --name iperf-s --network iperf-n iperf3-i iperf3 -s
+  119  sudoe docker rename iperf-s iperfs-s-o5
+  120  sudo docker rename iperf-s iperfs-s-o5
+  121  sudo docker run -d --name iperf-s --network iperf-n iperf3-i iperf3 -s
+  122  sudo hostname -l | awk '{print $1}'
+  123  sudo hostname -I | awk '{print $1}'
+  124  sudo yum install iperf3
+  125  iperf3 -c 127.0.0.1
+  126  sudo docker network create jenkins-net
+  127  sudo docker run --name jenkins-d
+  128  sudo docker run --name jenkins-d -rm --detach --privileged --network jenkins-net --network-alias docker --env DOCKER_TLS_CERTDIR="" -p 2374:2375 docker:dind
+  129  sudo docker run --name jenkins-d --rm --detach --privileged --network jenkins-net --network-alias docker --env DOCKER_TLS_CERTDIR="" -p 2374:2375 docker:dind
+  130  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-idk11
+  131  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-idk17
+  132  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:idk11
+  133  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-jdk11
+  134  a4
+  135  sudo docker run --name jenkins-d --rm --detach --privileged --network jenkins-net --network-alias docker --env DOCKER_TLS_CERTDIR="" -p 2376:2376 docker:dind
+  136  docker rename jenkins-d jenkins-d-01
+  137  sudo docker rename jenkins-d jenkins-d-01
+  138  sudo docker run --name jenkins-d --rm --detach --privileged --network jenkins-net --network-alias docker --env DOCKER_TLS_CERTDIR="" -p 2376:2376 docker:dind
+  139  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-jdk11
+  140  sudo docker rename jenkins   jenkins-o1
+  141  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-jdk11
+  142  sudo docker rm jenkins-o1
+  143  sudo docker stop jenkins-o1
+  144  sudo docker rm jenkins-o1
+  145  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-jdk11
+  146  sudo docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+  147  sudo docker ps
+  148  sudo docker stop jenkins-d-01
+  149  sudo docker ps
+  150  ls
+  151  cd git2/MDO2025_INO/ITE/MK415056/
+  152  ls
+  153  cd sprawozdanie1/
+  154  ls
+  155  cd zaj4
+  156  ls
+  157  history > z4txt
+  158  ls
+  159  cd ..
+  160  cd..
+  161  cd ..
+  162  ls
+  163  cd ..
+  164  ls
+  165  cd GCL04/
+  166  ls
+  167  cd .
+  168  cd ..
+  169  cd MK415056/
+  170  k
+  171  ls
+  172  cd sprawozdanie1/
+  173  ls
+  174  cd ..
+  175  ls
+  176  nano README
+  177  nano READMEs
+  178  cd READMEs/
+  179  ls
+  180  cd ..
+  181  cd ITE/
+  182  ls
+  183  mv MK415056 GCL04/
+  184  ls
+  185  cd GCL04/
+  186  ls
+  187  cd MK415056/
+  188  ls
+  189  cd sprawozdanie1/
+  190  ls
+  191  mkdir screanshots
+  192  cd screanshots/
+  193  ls
+  194  mkdir z1 z2 z3 z4
+  195  ls
+  196  cd ..
+  197  cd..
+  198  cd ..
+  199  ls
+  200  c .. ..
+  201  c ..
+  202  ls
+  203   cd ..
+  204  l
+  205  ls
+  206  git commit
+  207  git restore commit_hook
+  208  git restore MK415056/commit_hook
+  209  ls
+  210  git restore MK415056/commit_hook
+  211  cd M
+  212  cd MK415056/
+  213  ls
+  214  cd ..
+  215  ls
+  216  git commit
+  217  cd GCL04/
+  218  git add MK415056/
+  219  cd ..
+  220  ls
+  221  git commit
+  222  git push --set-upstream origin MK415056
+  223  ls
+  224  cdG
+  225  cd GCL04/
+  226  ls
+  227   cd MK415056/
+  228  ls
+  229   cd sprawozdanie1/
+  230  ls
+  231  git add screanshots/
+  232  ls
+  233  git commit
+  234  ls
+  235  cd git2
+  236  ls
+  237  cd MDO2025_INO/
+  238  ls
+  239  cd ITE/
+  240  ls
+  241  cd GCL04/MK415056/sprawozdanie1
+  242  l
+  243  ls
+  244  cd zaj4
+  245  cd ..
+  246  cd zaj3
+  247  ls
+  248  cd d-b
+  249  ls
+  250  nano Dockerfile 
+  251  cd ..
+  252  cd d-t
+  253  ls
+  254  nono Dockerfile 
+  255  nano Dockerfile 
+  256  ls
+  257  cd ..
+  258  cd zaj4
+  259  ls
+  260  cd bridge/
+  261  ls
+  262  sudo docker run --name jenkins-docker --rm --detach   --privileged --network jenkins --network-alias docker   --env DOCKER_TLS_CERTDIR=/certs   --volume jenkins-docker-certs:/certs/client   --volume jenkins-data:/var/jenkins_home   --publish 2376:2376   docker:dind --storage-driv
+  263  docker ps -a
+  264  sudo docker ps -a
+  265  sudo docker ps 
+  266  sudo docker run -d --name iperf-s --network iperf-net iperf3-i iperf3-s
+  267  sudo docker rename iperf-s iperf-s-o6
+  268  sudo docker run -d --name iperf-s --network iperf-net iperf3-i iperf3-s
+  269  sudo docker run -d --name iperf-s --network iperf-n iperf3-i iperf3-s
+  270  sudo docker rename iperf-s iperf-s-o7
+  271  sudo docker run -d --name iperf-s --network iperf-n iperf3-i iperf3-s
+  272  sudo docker rm iperf-s-*
+  273  sudo docker rm iperf-s-0*
+  274  sudo docker rm iperf-s-o*
+  275  sudo docker rm iperf-s
+  276  sudo docker run -d --name iperf-s --network iperf-n iperf3-i iperf3 -s
+  277  sudo docker rm iperf-c
+  278  sudo docker run -it --name iperf-c --network iperf-n iperf3-i iperf3 -c iperf-s
+  279  sudo docker volume rm iperf-s-l
+  280  iperf3 -c 127.0.0.1
+  281  sudo docker ps
+  282  sudo docker run --name jenkins --rm --detach --network jenkins-n --env DOCKER_HOST=tcp//docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins/jenkins:lts-jdk11
+  283  sudo docker run --name jenkins --rm --detach --network jenkins-n --env DOCKER_HOST=tcp//docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins/jenkins:lts-jdk11 .
+  284  sudo docker run --name jenkins --rm --detach --network jenkins-n --env DOCKER_HOST=tcp//docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins/jenkins:lts-jdk11 
+  285  sudo docker run --name jenkins --rm --detach --network jenkins-n --env DOCKER_HOST=tcp//docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-jdk11 
+  286  sudo docker run --name jenkins --rm --detach --network jenkins-net --env DOCKER_HOST=tcp//docker:2376 --env DOCKER_TLS_VERIFY=0 -p 8080:8080 -p 50000:50000 -v jenkins-data:/var/jenkins_home jenkins/jenkins:lts-jdk11 
+  287  sudo docker ps
+  288  cd /var/jenkins_home/secrets/initialAdminPassword
+  289  journalctl -u jenkins.service
+  290  sudo docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+  291  sudo docker volume ps
+  292  sudo docker volume ls
+  293  cd ..
+  294   cd ..
+  295  cd ..
+  296  ls
+  297   cd ..
+  298  cd GCL04/MK415056/
+  299  ls
+  300  nano commit_hook 
+  301  cd ..
+  302   cd..
+  303   cd ..
+  304  cd ..
+  305  ls
+  306  mkdir git3
+  307  ls
+  308  cd git3
+  309  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  310  cd ..
+  311  c d..
+  312  cd ..
+  313  ls
+  314  cd markubi/
+  315  ls
+  316  nano zaj1
+  317  ls
+  318  cdcd git3
+  319  cd git3
+  320  ls
+  321  rm -r MDO2025_INO/
+  322  rm -r -f MDO2025_INO/
+  323  ls
+  324  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  325  ls
+  326  rm -r -f MDO2025_INO/
+  327  ls
+  328   cd ..
+  329  ls
+  330  cd git
+  331  ls
+  332  git switch main
+  333  cd ..
+  334  cd git3
+  335  git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  336  git switch main
+  337  cd ..
+  338  cd git3
+  339  ls
+  340  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  341  rm -r -f MDO2025_INO/
+  342  git clone git@github.com:InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+  343  git switch main
+  344  git branch -a
+  345  cd MDO2025_INO/
+  346  git switch main
+  347  git switch GCL04
+  348  git checkout MK415056
+  349  yum install git ssh
+  350  sudo yum install git ssh
+  351  exit
+  352  ls
+  353  cd ..
+  354  ls
+  355  cd ..
+  356  ls
+  357  cd root
+  358  sudo cd root
+  359  ls
+  360  ls -a
+  361  sudo cd root
+  362  ls
+  363  cd ..
+  364  ls
+  365  ls root
+  366  sudo ls root
+  367  cd home/
+  368  ls
+  369  cd markubi/
+  370  ls
+  371  cd git2
+  372  ls
+  373  cd MDO2025_INO/
+  374  ls
+  375  cd ITE/
+  376  ls
+  377  cd MK415056/
+  378  ls
+  379  cd ..
+  380  cd GCL04/
+  381  ls
+  382  cd MK415056/
+  383  ls
+  384  cd sprawozdanie1/
+  385  ls
+  386  cd ..
+  387  touch sprawozdanie2
+  388  touch sprawozdanie3
+  389  ls
+  390  rm sprawozdanie2 sprawozdanie3
+  391  mkdir sprawozdanie2
+  392  mkdir sprawozdanie3
+  393  cd sprawozdanie3
+  394  ls
+  395  cd root
+  396  cd home
+  397  cd ..
+  398  ls
+  399  sudo ls root
+  400  cd root/anaconda-ks.c
+  401  cd home/
+  402  ls
+  403  cd ..
+  404  cd home/
+  405  cd markubi/
+  406  ls
+  407  cd ..
+  408   cd ..
+  409  ls
+  410  cp root/anaconda-ks.cfg home/markubi/git2/MDO2025_INO/ITE/GCL04/MK415056/sprawozdanie3
+  411  sudo cp root/anaconda-ks.cfg home/markubi/git2/MDO2025_INO/ITE/GCL04/MK415056/sprawozdanie3
+  412  ls
+  413  cd home/markubi/git2/MDO2025_INO/ITE/GCL04/MK415056/sprawozdanie3
+  414  ls
+  415  nano anaconda-ks.cfg 
+  416  sudo nano anaconda-ks.cfg 
+  417  cd ..
+  418  ls
+  419  sudo cd root
+  420  ls
+  421  a]
+  422  ls
+  423  cd git2
+  424  cd MDO2025_INO/
+  425  cd ITE/
+  426  cd MK415056/
+  427  ls
+  428  cd ..
+  429  ls
+  430  cd GCL04/
+  431  ls
+  432  cd MK415056/
+  433  ls
+  434  cd sprawozdanie3
+  435  ls
+  436  rm anaconda-ks.cfg 
+  437  ls
+  438  cd ..
+  439  rm sprawozdanie3
+  440  rm dri sprawozdanie3
+  441  rmdir sprawozdanie3
+  442  ls
+  443  cd sprawozdanie2
+  444  ls
+  445   cd ..
+  446  cd sprawozdanie1
+  447  ls
+  448  cd ..
+  449  cd sprawozdanie3
+  450  cd sprawozdanie2
+  451  ls
+  452  mkdir zaj5
+  453  ls
+  454  cd zaj5/
+  455  ls
+  456  touch Dockerfile
+  457  ls
+  458  nano Dockerfile 
+  459  sudo docker build -t sds-b .
+  460  sudo docker network create jenkins
+  461  sudo docker run --name jenkins-docker --rm --detach --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home --publish 2376:2376 docker:dind --storage-driver overlay2
+  462  sudo docker run --name jenkins-docker --rm --detach --privileged --networ jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home --publish 2376:2376 docker:dind --storage-driver overlay2
+  463  sudo docker run --name jenkins-docker --rm --detach --privileged --network jenkins --network-alias docker --env DOCKER_TLS_CERTDIR=/certs --volume jenkins-docker-certs:/certs/client --volume jenkins-data:/var/jenkins_home --publish 2376:2376 docker:dind --storage-driver overlay2
+  464  cat Dockerfile 
+  465  nano Dockerfile 
+  466  sudo docker build -t myjenkins-blueocean:2.492.3-1
+  467  sudo docker build -t myjenkins-blueocean:2.492.3-1 .
+  468  nano Dockerfile 
+  469  sudo docker build -t myjenkins-blueocean:2.492.3-1 .
+  470  nano Dockerfile 
+  471  sudo docker build -t myjenkins-blueocean:2.492.3-1 .
+  472  nano Dockerfile 
+  473  sudo docker build -t myjenkins-blueocean:2.492.3-1 .
+  474  nano Dockerfile 
+  475  sudo docker build -t myjenkins-blueocean:2.492.3-1 .
+  476  nano Dockerfile 
+  477  sudo docker build -t myjenkins-blueocean:2.492.3-1 .
+  478  nano Dockerfile 
+  479  sudo docker run\ --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jeknins-docker-certs:/certs/cient:ri myjenkins-blueocean:2.492.3-1
+  480  sudo docker run --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jeknins-docker-certs:/certs/cient:ri myjenkins-blueocean:2.492.3-1
+  481  sudo docker run --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jeknins-docker-certs:/certs/cient:ro myjenkins-blueocean:2.492.3-1
+  482  git status
+  483  git branch
+  484  cd git2/MDO2025_INO/ITE/GCL04/MK415056/sprawozdanie2/zaj5/
+  485  ls
+  486  cd ..\..\..
+  487  cd ../../..
+  488  ls
+  489  cd ..
+  490  ls
+  491  cd ..
+  492  ls
+  493  cd var
+  494  ls
+  495  ls -a
+  496  cd ..
+  497  ls
+  498  cd home/markubi/
+  499  cd git2/MDO2025_INO/ITE/GCL04/MK415056/sprawozdanie2/zaj5/
+  500  ls
+  501  sudo docker logs jenkins-blueocean
+  502  cd..\..\..\..\..\..
+  503  cd ../../../../../../../../..
+  504  ls
+  505  cd var
+  506  ls
+  507  cd jenkins_home
+  508  cd home/markubi/git2/MDO2025_INO/ITE/GCL04/MK415056/sprawozdanie3
+  509  cd home/markubi/git2/MDO2025_INO/ITE/GCL04/MK415056/sprawozdanie2
+  510  ls
+  511  cd git2/MDO2025_INO/ITE/GCL04/MK415056/sprawozdanie2
+  512  ls
+  513  cd zaj5/
+  514  ls
+  515  sudo docker run --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish:8080:8080 --publish50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro myjenkins-blueocean:2.492.3-1
+  516  sudo docker run --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro myjenkins-blueocean:2.492.3-1
+  517  sudo docker rm jenkins-blueocean
+  518  sudo docker stop jenkins-blueocean
+  519  sudo docker rm jenkins-blueocean
+  520  sudo docker run --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376 --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1 --publish 8080:8080 --publish 50000:50000 --volume jenkins-data:/var/jenkins_home --volume jenkins-docker-certs:/certs/client:ro myjenkins-blueocean:2.492.3-1
+  521  sudo docker logs jenkins-blueocean
+  522  cd..
+  523  cd ..
+  524  cd sprawozdanie1
+  525  ls
+  526  cd zaj4
+  527  ls
+  528  cd ..
+  529  cd zaj3
+  530  ls
+  531  cd 1
+  532  ls
+  533  cd ..
+  534  cd 1
+  535  ls
+  536  cd ..
+  537  ls
+  538  docker build help
+  539  docker build 
+  540  docker build  --help
+  541  docker ps -a
+  542  sudo docker ps -a
+  543  ls
+  544  nano d-b
+  545  cd d-b
+  546  ls
+  547  nano 
+  548  nano Dockerfile 
+  549  cd ..
+  550  ls
+  551  cd test/
+  552  ls
+  553  cd sds/
+  554  ls
+  555  cd ..
+  556  ls
+  557  cd d-b
+  558  ls
+  559  nano Dockerfile 
+  560  ls
+  561  cd git2
+  562  cd MDO2025_INO/ITE/GCL04/MK415056/sprawozdanie2
+  563  ls
+  564  mkdir red
+  565  cd red
+  566  touch Dockerfile
+  567  touch Dockerfile_jenkins
+  568  touch Dockerfile_test
+  569  ls
+  570  cd git2/MDO2025_INO/ITE/GCL04/MK415056/sprawozdanie2/zaj5/
+  571  ls
+  572  nano Dockerfile 
+  573  cd ..
+  574  cd red/
+  575  ls
+  576  rm Dockerfile_jenkins 
+  577  ls
+  578  nano Dockerfile_test 
+  579  nano Dockerfile
+  580  ls
+  581  cd git2
+  582  ls
+  583  cd MDO2025_INO/
+  584  ls
+  585  git add all
+  586  git add
+  587  git add .
+  588  git ad -A
+  589  git add -A
+  590  git add --all
+  591  git comit
+  592  git commit
+  593  cd .
+  594  ls
+  595  cd ITE/
+  596  ls
+  597  cd GCL04/
+  598  ls
+  599  cd MK415056/
+  600  ls
+  601  git add sprawozdanie2
+  602  ls
+  603  cd sprawozdanie2
+  604  ls
+  605  cd zaj5/
+  606  ls
+  607  cd ..
+  608  ls
+  609  git add -f --all
+  610  ls
+  611  git commit
+  612  git push
+  613  git pull
+  614  git status
+  615  git pull --rebase
+  616  ls
+  617  cd sprawozdanie
+  618  cd sprawozdanie2
+  619  ls
+  620  cd ..
+  621  cd sprawozdanie1
+  622  ls
+  623  cd ..
+  624  git push
+  625  ls
+  626  cd sprawozdanie2
+  627  ls
+  628  cd zaj5/
+  629  ls
+  630  nano Dockerfile 
+  631  touch Jenkinsfile
+  632  ls
+  633  touch Dockerfile_dep
+  634  n
+  635  nano Dockerfile_dep 
+  636  git commit
+  637  git add --all
+  638  git commit
+  639  git push
+  640  git pull --rebase
+  641  git push
+  642  ls
+  643  nano Dockerfile
+  644  ls
+  645  cat Jenkinsfile 
+  646  ls
+  647  nano Dockerfile_dep 
+  648  cd ..
+  649  ls
+  650  cd red/
+  651  ls
+  652  na
+  653  nano Dockerfile_test 
+  654  nono Dockerfile
+  655  ls
+  656  nano Dockerfile 
+  657  ls
+  658  nano Dockerfile_test 
+  659  ls
+  660  cd ..
+  661  cd zaj5/
+  662  ls
+  663  nano Dockerfile
+  664  nano Dockerfile_dep 
+  665  ls
+  666  nano Jenkinsfile 
+  667  git pull
+  668  ls
+  669  nano Jenkinsfile 
+  670  git add --all
+  671  git push
+  672  ls
+  673  git add Jenkinsfile 
+  674  git push
+  675  git commit
+  676  git push
+  677  nano Jenkinsfile 
+  678  git commit
+  679  git add Jenkinsfile 
+  680  git push
+  681  git pull --rebase
+  682  git stash
+  683  git pull --rebase
+  684  git stash pop
+  685  nano Jenkinsfile 
+  686  git add Jenkinsfile 
+  687  git commit
+  688  git push
+  689  sudo docker pull marekkubi/pipeline-redis:latest
+  690  sudo docker run -it marekkubi/pipeline-redis/latest
+  691  sudo docker run -it marekkubi/pipeline-redis:latest
+  692  touch history
+  693  history > history 
+  694  nano history 
+  695  git pull
+  696  git add history 
+  697  git push
+  698  git commit
+  699  git pull 
+  700  git psh
+  701  git push
+  702  git pull
+  703  l
+  704  ls
+  705  cd git2
+  706  ls
+  707  cd MDO2025_INO/
+  708  ls
+  709  cd ITE/
+  710  ls
+  711  cd GCL04/MK415056/
+  712  ls
+  713  mkdir sprawozdanie3
+  714  ls
+  715  cd sprawozdanie3
+  716  ls
+  717  curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
+  718  sudo rpm -Uvh minikube-latest.x86_64.rpm
+  719  kubect1
+  720  minikube start
+  721  sudo usermod -aG docker $USER && newgrp docker
+  722  minikube start
+  723  minikube start --driver=hiperv
+  724  minikube start --driver=hyperv
+  725  minikube start --driver=docker
+  726  minikube start --driver=hyperv
+  727  minikube start 
+  728  docker help
+  729  docker start
+  730  minikube start
+  731  docker service
+  732  minikube start --driver=docker
+  733  alias kubectl="minikube kubectl --"
+  734  kubectl get po -A
+  735  minikube kubectl -- get po -A
+  736  minikube dashboard
+  737  kubectl create deployment nginx-dep -port=80
+  738  kubectl create deployment nginx-dep --port=80
+  739  kubectl create deployment nginx-dep --image=ngix --port=80
+  740  kubectl expose deployment ngix-dep --port=80
+  741  kubectl expose deployment nginx-dep --port=80
+  742  kubectl port-forward service/ngix-dep
+  743  minikube dashboard --url
+  744  minikube dashboard 
+  745  kubectl port-forward service/ngix-dep 8080:80
+  746  kubectl port-forward service/nginx-dep 8080:80
+  747  kubectl expose deployment ngix-dep --type=NodePort --port=80 --targe-port=8080
+  748  kubectl expose deployment ngix-dep --type=NodePort --port=80 --target-port=8080
+  749  kubectl create deployment nginx-dep --image=nginx --port=80
+  750  kubectl expose deployment nginx-dep --type=NodePort --port=80 --target-port=8080
+  751  kubectl port-forward service/nginx-dep 8080:80
+  752  kubectl help
+  753  kubectl run nginx-dep
+  754  kubectl create deployment nginx-dep2 --image=nginx --port=80
+  755  kubectl run nginx-dep2
+  756  kubectl run nginx-dep --image=nginx
+  757  kubectl expose deployment nginx-dep --type=NodePort --port=80 --target-port=8080
+  758  kubectl port-forward service/nginx-dep 8080:80
+  759  kubectl port-forward nginx-dep 8080:80
+  760  minicube dashboard --url
+  761  minikube dashboard --url
+  762  minikube addons list
+  763  minikube dashboard --url
+  764  minikube dashboard --port 69
+  765  minikube
+  766  cat ssh-copy-id
+  767  ssh-copy-id > cat
+  768  cat ~/.ssh/id_rsa.pub.
+  769  cat ~/.ssh/id_rsa.pub..
+  770  cat ~/.ssh/id_rsa.pub
+  771  cd ..
+  772  cat ~/.ssh/id_rsa.pub
+  773  cd ..
+  774  cat ~/.ssh/id_rsa.pub
+  775  cd ..
+  776  cat ~/.ssh/id_rsa.pub
+  777  ls
+  778  cd home
+  779  ls
+  780  cd markubi/
+  781  ssh-agent sh -c ‘ssh-add; ssh-add -L’
+  782  ls
+  783  cd git
+  784  la
+  785  ls
+  786  cat key.c
+  787  ssh-copy-id -f ansible-user@ansible-target
+  788  ssh 'ansible-user@ansible-target'
+  789  kubectl expose deployment nginx-dep --type=NodePort --port=80 --target-port=8080
+  790  kubectl port-forward nginx-dep 8080:80
+  791  minikube
+  792  minikube dashboard --port 69
+  793  minikube start
+  794  minikube start --memory=1977mb
+  795  kubectl create deployment nginx-dep --image=nginx --port=80
+  796  minikube dashboard
+  797  minikube dashboard --port 42
+  798  minikube dashboard --port 88
+  799  alias kubectl="minikube kubectl --"
+  800  kubectl create deployment nginx-dep --image=nginx --port=80
+  801  kubectl create deployment nginx-dep3 --image=nginx --port=80
+  802  kubectl expose deployment ngix-dep3 --type=NodePort --port=80 --targe-port=8080
+  803  kubectl expose deployment ngix-dep3 --type=NodePort --port=80 --target-port=8080
+  804  kubectl expose deployment nginx-dep3 --type=NodePort --port=80 --target-port=8080
+  805  kubectl run nginx-dep3 --image=nginx
+  806  systemd-resolved
+  807  minikube dashboard --url
+  808  minicube stop
+  809  minicube exit
+  810  minikube stop
+  811  minikube start --driver=hyperv --hyperv-virtual-switch=minikube
+  812  minicube delete
+  813  minikube delete
+  814  minikube start --driver=hyperv --hyperv-virtual-switch=minikube
+  815  minikube start --hyperv-virtual-switch=minikube
+  816  alias kubectl="minikube kubectl --"
+  817  minikube dashboard --url
+  818  minikube dashboard 
+  819  minikube dashboard --url
+  820  kubectl proxy --address='0.0.0.0' --disable-filter=true
+  821  minikube dashboard --url
+  822  minikube dashboard 
+  823  minikube dashboard help
+  824  minikube dashboard man
+  825  minikube dashboard a
+  826  kubectl get po -A
+  827  minikube dashboard
+  828  xdg-mime default org.mozilla.firefox.desktop     text/html x-scheme-handler/http x-scheme-handler/https
+  829  minikube dashboard
+  830  cd ..
+  831  xdg-mime default org.mozilla.firefox.desktop     text/html x-scheme-handler/http x-scheme-handler/https
+  832  sudo dnf install hyperv-tools xrdp xrdp-selinux
+  833  xdg-mime default org.mozilla.firefox.desktop     text/html x-scheme-handler/http x-scheme-handler/https
+  834  minikube dashboard
+  835  sudo systemctl enable --now xrdp
+  836  sudo firewall-cmd --add-port=3389/tcp --permanent
+  837  xdg-mime default org.mozilla.firefox.desktop     text/html x-scheme-handler/http x-scheme-handler/https
+  838  minikube dashboard
+  839      xdg-settings set DEFAULT_WEB_BROWSER firefox.desktop
+  840  minikube dashboard
+  841  xdg-settings get default-web-browser
+  842  xdg-settings set default-web-browser firefox.desktop
+  843  xdg-settings get default-web-browser
+  844  minikube dashboard
+  845  xdg-open
+  846  xdg-open --manual
+  847  exit
+  848  minikube dashboard
+  849  minikube dashboard &
+  850  kubectl get po -A
+  851  alias kubectl="minikube kubectl --"
+  852  kubectl get po -A
+  853  kubectl create deployment nginx-dep4 --image=nginx --port=80
+  854  kubectl expose deployment nginx-dep4 --type=NodePort --port=80 --target-port=8080
+  855  kubectl run nginx-dep4 --image=nginx
+  856  ls
+  857  cd git2
+  858  ls
+  859  cd MDO2025_INO/
+  860  cd ITE/GCL04/MK415056/sprawozdanie3/
+  861  ls
+  862  nano minikube-latest.x86_64.rpm 
+  863  kubectl port-forward pod/ngnix4 
+  864  kubectl port-forward pod/ngnix-dep4 127.0.0.1:43007 
+  865  kubectl port-forward pod/nginx-dep4 127.0.0.1:43007 
+  866  kubectl port-forward pod/nginx-dep4 127.000.000.001:43007 
+  867  kubectl port-forward nginx-dep4 127.8080:43007 
+  868  kubectl port-forward nginx-dep4 8080:43007 
+  869  kubectl port-forward nginx-dep4 8042:43007 
+  870  history > his1
+  871  ls
+  872  cat his1
+  873  hostname
+  874  ls
+  875  exit
+  876  ansible
+  877  sudo dnf install ansible -y
+  878  ls
+  879  mkdir g_action
+  880  ls
+  881  cd g_action/
+  882  ls
+  883  git fork https://github.com/redis/redis
+  884  git clone https://github.com/MarekKubi/redis/tree/unstable
+  885  git clone https://github.com/MarekKubi/redis.git
+  886  ls
+  887  cd redis/
+  888  ls
+  889  cd .github
+  890  ;s
+  891  ls
+  892  cd workflows/
+  893  ls
+  894  rm *
+  895  ls
+  896  git commit
+  897  git commit -a
+  898  ls
+  899  git push
+  900  cd ..
+  901  ls
+  902  cd git
+  903  ls
+  904  cd ..
+  905  cd git
+  906  cd markubi/
+  907  cd git
+  908  ls
+  909  ssh-copy-id -i key.c.pub ansible-user@ansible-target
+  910  ssh -i ./key.c 'ansible-user@ansible-target
+  911  ssh -i ./key.c 'ansible-user@ansible-target
+  912  ssh -i ./key.c 'ansible-user@ansible-target
+  913  a
+  914  ls
+  915  cd
+  916  ssh ansible-user@ansible-target
+  917  ping 172.18.249.141
+  918  ls
+  919  cd ..
+  920  cd git2
+  921  ls
+  922  cd MDO2025_INO/ITE/GCL04/MK415056/sprawozdanie3
+  923  ls
+  924  sudo hostnamectl set-hostname GHost
+  925  ls
+  926  ansible all -i inventory.ini -m ping
+  927  touch inventory.ini
+  928  nano inventory.ini 
+  929  ansible all -i inventory.ini -m ping
+  930  ls
+  931  nano inventory.ini
+  932  nano inventory.inies
+  933  nano inventory.ini
+  934  rm inventory.inies 
+  935  ansible all -i inventory.ini -m ping
+  936  nano inventory.ini
+  937  ansible all -i inventory.ini -m ping
+  938  nano inventory.ini
+  939  ansible all -i inventory.ini -m ping
+  940  ansible all -i inventory.ini -u ansible -m ping
+  941  nano inventory.ini
+  942  ansible all -i inventory.ini -u ansible -m ping
+  943  nano inventory.ini
+  944  hostname
+  945  nano inventory.ini
+  946  ansible all -i inventory.ini -u ansible -m ping
+  947  nano inventory.ini
+  948  ansible all -i inventory.ini -m ping
+  949  hostname
+  950  nano inventory.ini
+  951  ansible all -i inventory.ini -m ping
+  952  nano inventory.ini
+  953  touch playbook.yaml
+  954  nano playbook.yaml 
+  955  ansible-playbook -i inventory.ini playbook.yaml  --ask-become-pass --private-key=~/.ssh/ansible_key
+  956  ansible-playbook -i inventory.ini playbook.yaml  --ask-become-pass --private-key=~/git/key.c
+  957  sudo dnf install rng-tools
+  958  ansible-playbook -i inventory.ini playbook.yaml  --ask-become-pass --private-key=~/git/key.c
+  959  nano inventory.ini 
+  960  ansible all -i inventory.ini -m ping
+  961  nano inventory.ini 
+  962  ansible all -i inventory.ini -m ping
+  963  nano inventory.ini 
+  964  ansible all -i inventory.ini -m ping
+  965  hostname
+  966  ssh ansible-target@ansible-user
+  967  ssh ansible-user@ansible-target
+  968  hostnamectl
+  969  nano /etc/hostname
+  970  ansible all -i inventory.ini -m ping
+  971  $ eval `ssh-agent`
+  972  $ ssh-add /path/to/your/private/key
+  973  $ eval `ssh-agent`
+  974  eval `ssh-agent`$ ssh-add /path/to/your/private/key
+  975  eval `ssh-agent`
+  976  ssh-add /path/to/your/private/key
+  977  ssh-add git/key.c
+  978  cd ..
+  979  c d..
+  980   cd ..
+  981  cd ..
+  982  ls
+  983  cd git
+  984  ls
+  985  cd ..
+  986  ssh-add git/key.c
+  987  cd git2/MDO2025_INO/ITE/GCL04/MK415056/sprawozdanie3
+  988  ls
+  989  ansible all -i inventory.ini -m ping
+  990  ansible all -i inventory.ini -m ping --ask-pass
+  991  ls
+  992  hostname
+  993  sudo hostnamectl set-hostname ghost
+  994  exit
+  995  ls
+  996  cd git2
+  997  ls
+  998  cd MDO2025_INO/ITE/MK415056/
+  999  ls
+ 1000  cd ..
+ 1001  cd ls
+ 1002  ls
+ 1003  cd GCL04/MK415056/sprawozdanie3
+ 1004  ls
+ 1005  ansible all -i inventory.ini -m ping --ask-pass
+ 1006  ansible all -i inventory.ini -m ping
+ 1007  nano inventory.ini 
+ 1008  ansible all -i inventory.ini -m ping
+ 1009  nano inventory.ini 
+ 1010  ansible-playbook -i inventory.ini playbook.yaml  --ask-become-pass --private-key=~/git/key.c
+ 1011  sudo systemctl stop sshd
+ 1012  ansible-playbook -i inventory.ini playbook.yaml  --ask-become-pass --private-key=~/git/key.c
+ 1013  sshd
+ 1014  ansible-playbook -i inventory.ini playbook.yaml  --ask-become-pass --private-key=~/git/key.c
+ 1015  sudo systemctl start sshd
+ 1016  nano inventory.ini 
+ 1017  touch playbookart.yaml
+ 1018  nano playbookart.yaml 
+ 1019  ansible-playbook -i inventory.ini playbookart.yaml  --ask-become-pass --private-key=~/git/key.c
+ 1020  nano playbookart.yaml 
+ 1021  ansible-playbook -i inventory.ini playbookart.yaml  --ask-become-pass --private-key=~/git/key.c
+ 1022  ansible-galaxy init deploy_container
+ 1023  touch play.yaml
+ 1024  nano play.yaml 
+ 1025  ansible-playbook -i inventory.ini playbookart.yaml  --ask-become-pass --private-key=~/git/key.c
+ 1026  ansible-playbook -i inventory.ini play.yaml  --ask-become-pass --private-key=~/git/key.c
+ 1027  nono playbookart.yaml 
+ 1028  nano playbookart.yaml 
+ 1029  ls
+ 1030  cd deploy_container/
+ 1031  ls
+ 1032  cd defaults/m
+ 1033  cd defaults/
+ 1034  ls
+ 1035  nano main.yml 
+ 1036  cd ..
+ 1037  ls
+ 1038  cd t
+ 1039  cd tasks/
+ 1040  ls
+ 1041  nano main.yml 
+ 1042  cd ..
+ 1043  ansible-playbook -i inventory.ini play.yaml  --ask-become-pass --private-key=~/git/key.c
+ 1044  history >> his2
