@@ -1,0 +1,37 @@
+---
+- name: Ping my hosts
+  ansible.builtin.ping:
+
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: ./inventory.ini
+    dest: /home/ansible/inventory.ini
+    owner: ansible
+    group: ansible
+    mode: u=rw,g=r,o=r
+
+- name: Upgrade all packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+
+- name: Zrestartuj usługę SSH
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+
+- name: Pobierz Docker
+  ansible.builtin.dnf:
+    name: docker
+    state: latest
+
+- name: Aktywuj docker
+  ansible.builtin.service:
+    name: docker
+    state: started
+
+- name: Pull obraz
+  command: docker pull natbal/takenotepipline
+
+- name: Run obraz
+  command: docker run -d -p 5000:5000 --name=appp natbal/takenotepipline

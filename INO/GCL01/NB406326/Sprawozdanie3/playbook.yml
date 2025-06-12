@@ -1,0 +1,6 @@
+- name: My playbook
+  hosts: Endpoints
+  remote_user: ansible
+  become: yes
+  roles:
+    - my_role
