@@ -457,9 +457,8 @@ wget
 curl
 flatpak
 systemd
-tar
 binutils
-ar
+tar
 %end
 
 firstboot --enable
