@@ -767,6 +767,12 @@ endpoint3
 
 - Utworzyłem kolejną vm w dokładnie ten sam sposób, jak poprzednią
 
+- Poniżej widoczne są opcje bootowania po edycji
+
+<div align="center"> 
+    <img src="screens9/11.png">
+</div>
+
 ## Zajęcia 10
 
 ### Instalacja klastra Kubernetes
