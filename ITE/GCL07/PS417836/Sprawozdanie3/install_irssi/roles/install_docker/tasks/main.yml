@@ -1,0 +1,24 @@
+- name: Check if Docker is installed
+  command: which docker
+  register: docker_check
+  ignore_errors: true
+
+- name: Install Docker on Fedora
+  block:
+    - name: Install required packages
+      dnf:
+        name:
+          - dnf-plugins-core
+          - docker
+        state: present
+        update_cache: true
+  when: docker_check.rc != 0
+
+- name: Ensure Docker service is started and enabled
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Verify Docker installation
+  command: docker --version
