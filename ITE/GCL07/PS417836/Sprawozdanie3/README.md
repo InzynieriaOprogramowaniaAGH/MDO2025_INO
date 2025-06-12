@@ -420,7 +420,7 @@ Ukończona instalacja systemu.
 
 Opis zmian pliku anaconda-ks:
 
-Plik Kickstart automatyzuje instalację systemu Fedora 41, ustawiając polskie środowisko, sieć i użytkownika psocala z odpowiednimi uprawnieniami. Po zainstalowaniu podstawowych pakietów, w tym flatpak, pobiera on z serwera Jenkins plik instalacyjny Irssi w formacie Flatpak, wykorzystując do tego uwierzytelnienie loginem i tokenem API. Następnie instaluje ten pakiet oraz dodaje do pliku startowego użytkownika polecenie automatycznego uruchamiania Irssi po zalogowaniu. Całość kończy się automatycznym restartem systemu, co pozwala na szybkie i powtarzalne wdrożenie gotowego środowiska z preinstalowanym i działającym programem Irssi.
+Plik Kickstart automatyzuje instalację systemu Fedora 41 w środowisku wirtualnym. Skrypt konfiguruje kluczowe parametry systemu, takie jak układ klawiatury (polski), język, strefa czasowa (Warszawa), użytkownik i hasło roota. Wykorzystuje oficjalne repozytoria Fedory oraz definiuje użytkownika psocala z uprawnieniami administracyjnymi. W sekcji %post skrypt pobiera z serwera Jenkins zbudowany pakiet .deb z aplikacją irssi, instaluje go przy użyciu dnf, a następnie dodaje jego automatyczne uruchamianie po zalogowaniu użytkownika. Cały proces kończy się automatycznym restartem systemu. Plik umożliwia pełną automatyzację i testowanie procesu wdrażania oraz konfiguracji oprogramowania w środowisku testowym.
 
 <br>
 
@@ -457,6 +457,9 @@ wget
 curl
 flatpak
 systemd
+tar
+binutils
+ar
 %end
 
 firstboot --enable
@@ -465,24 +468,28 @@ firstboot --enable
 set -x
 exec > /root/postinstall.log 2>&1
 
-# Dodanie repozytorium Flathub (opcjonalne, można usunąć jeśli niepotrzebne)
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-
 # Pobranie pliku .deb z Jenkinsa
 curl -u psocala123:117ce25d6ce85c17ed3126f230f30e9d6a \
   -o /tmp/irssi.deb \
   "http://192.168.0.25:8080/job/irssi_pipeline_v2/lastSuccessfulBuild/artifact/irssi_6.0.0-1_amd64.deb"
 
-# Instalacja pakietu .deb
-dnf install -y /tmp/irssi.deb
+# Utworzenie katalogu tymczasowego i rozpakowanie paczki
+mkdir -p /tmp/irssi-deb
+cd /tmp/irssi-deb
+ar x /tmp/irssi.deb
+
+# Rozpakowanie plików danych do systemu (tu zakładam data.tar.xz, dopasuj jeśli masz gzip)
+tar -xf data.tar.xz -C /
+
+# Czyszczenie
+cd /
+rm -rf /tmp/irssi-deb
+rm -f /tmp/irssi.deb
 
 # Dodanie autostartu irssi w .bash_profile użytkownika
 mkdir -p /home/psocala
 echo 'irssi' >> /home/psocala/.bash_profile
 chown psocala:psocala /home/psocala/.bash_profile
-
-# Usunięcie pobranego pliku
-rm -f /tmp/irssi.deb
 
 %end
 
