@@ -439,8 +439,6 @@ Plik anaconda-ks.cfg po modyfikacjach:
 keyboard --vckeymap=pl --xlayouts='pl'
 lang pl_PL.UTF-8
 
-network --bootproto=dhcp --device=eth0 --ipv6=auto --activate --hostname=host-p-odpowiedzi
-
 url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
 repo --name=updates --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
 
@@ -448,21 +446,21 @@ ignoredisk --only-use=sda
 clearpart --all --initlabel
 autopart
 
+network  --hostname=anacondatest
+
 timezone Europe/Warsaw --utc
 
 rootpw --iscrypted --allow-ssh $y$j9T$EdlH0qTbCbkj9gMAkuj5uRDm$IiKbwuXZzs4aMwX82qfx4BsD3c0HCTeK0YOtfNw8wy0
 user --groups=wheel --name=psocala --password=$y$j9T$DKKrBZ/DTxGfL3nY47qmyLG9$4SuT5/d/Fnol7AFh/LhKFTwQW7fVMY.bII6hFc6YK57 --iscrypted --gecos="Paweł Socała"
 
 %packages
-@^custom-environment
-ncurses-compat-libs
-binutils
-tar
-wget
-xz
-gzip
-zstd
+@^server-product-environment
 flatpak
+xdg-utils
+dbus
+fuse
+wget
+systemd
 %end
 
 firstboot --enable
@@ -473,21 +471,22 @@ set -x
 # Dodanie repozytorium Flathub
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-# Pobieranie pliku .flatpak z Jenkinsa za pomocą loginu i tokena API
-wget --auth-no-challenge \
-  --user psocala123 \
-  --password 117ce25d6ce85c17ed3126f230f30e9d6a \
-  "http://192.168.0.25:8080/job/irssi_pipeline_v2/lastSuccessfulBuild/artifact/irssi-23.flatpak" \
-  -O /tmp/irssi.flatpak
+# Pobranie pliku flatpak z Jenkins 
+curl -u psocala123:117ce25d6ce85c17ed3126f230f30e9d6a \
+  -o /tmp/irssi.flatpak \
+  "http://192.168.0.25:8080/job/irssi_pipeline_v2/lastSuccessfulBuild/artifact/irssi-23.flatpak"
 
 # Instalacja flatpaka
 flatpak install --noninteractive -y /tmp/irssi.flatpak
 
-# Autostart irssi przez wpis do .bash_profile użytkownika psocala
-echo 'flatpak run org.irssi.Irssi' >> /home/psocala/.bash_profile
+# Dodanie autostartu irssi w .bash_profile użytkownika psocala
+cat << 'EOF' >> /home/psocala/.bash_profile
+flatpak run com.example.irssi
+EOF
+
 chown psocala:psocala /home/psocala/.bash_profile
 
-# Sprzątanie
+# Usunięcie pobranego pliku
 rm -f /tmp/irssi.flatpak
 
 %end
@@ -496,13 +495,242 @@ reboot
 ```
 
 <br>
-
-Aplikacja irssi po zalogowaniu:
-
-
-
-<br>
 <br>
 
 # Lab 10 - Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+<br>
+
+## Instalacja klastra Kubernetes
+
+Na początku pobrano implementacje minikube oraz przeprowadzono instalację. 
+
+```bash
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+
+sudo dpkg -i minikube_latest_amd64.deb
+```
+
+![alt text](lab_kubernetes_1/curl2.png)
+
+<br>
+
+---
+Następnie uruchomiono minikube oraz zainstalowano klienta kubernetes.
+
+```bash
+minikube start --driver=docker
+```
+![alt text](lab_kubernetes_1/start.png)
+
+![alt text](lab_kubernetes_1/klient.png)
+
+<br>
+
+---
+
+Kolejnym krokiem było uruchomineie dashboard w przeglądarce.
+
+```bash
+minikube dashboard
+```
+
+![alt text](lab_kubernetes_1/dash.png)
+
+<br>
+
+Możemy zauważyć że polecenie dashboard powoduje automatyzczne przekierowanie portu.
+
+![alt text](lab_kubernetes_1/port.png)
+
+![alt text](lab_kubernetes_1/first.png)
+
+<br>
+
+---
+
+Kolejnym krokiem było utworzenie pod'a nginx ponieważ moją wybraną aplikacją było irssi która nie posiada interfejsu graficznego.
+
+```bash
+kubectl run nginx-pod --image=nginx --port=80 --labels app=nginx-pod
+```
+
+![alt text](lab_kubernetes_1/pod.png)
+
+<br>
+
+Teraz po uruchomieniu dashboarda widać nasz pod nginx. Można go zoabczyć równieć po wpisaniu polecenia poniżej.
+
+```bash
+kubectl get pods
+```
+
+![alt text](lab_kubernetes_1/pod2.png)
+
+![alt text](lab_kubernetes_1/kube.png)
+
+<br>
+
+## Wyprowadzenie portu
+
+Kolejnym krokiem było uworzenie tunelu przekierowując porty. Po ucuhomieniu poniższego polecenia dodano port w visual studio oraz uruchomiono nginx w przeglądarce.
+
+```bash
+minikube kubectl -- port-forward pod/nginx-pod 3000:80
+```
+
+![alt text](lab_kubernetes_1/w.png)
+
+![alt text](lab_kubernetes_1/3000.png)
+
+![alt text](lab_kubernetes_1/ng.png)
+
+
+## Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
+
+Na początku stworzono plik wdrożenia `nginx-deploy.yaml`, a następnie wdrożono plik.
+
+```bash
+#plik
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+
+# wdrożenie
+kubectl apply -f ./nginx-deploy.yaml
+```
+
+![alt text](lab_kubernetes_1/d.png)
+
+<br>
+
+---
+Sprawdzenie deploymentu:
+
+1) Za pomocą polecenia:
+```bash
+kubectl get deployments
+```
+
+![alt text](lab_kubernetes_1/p.png)
+
+<br>
+
+2) W dashboard
+
+![alt text](lab_kubernetes_1/deploy_das.png)
+
+<br>
+
+## Deployment 4 replik
+
+Aby zmienić ilość replik wystarczy zmienić wartość w linii: replicas: 4 oraz nazwę wdrożenia. 
+
+Poprawiony plik .yaml:
+
+```bash
+# plik
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment-2
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+
+# wdrożenie
+kubectl apply -f ./nginx-deploy.yaml
+```
+
+![alt text](lab_kubernetes_1/dep2.png)
+
+<br>
+
+---
+ 
+Sprawdzenie stanu nowego wdrożenia za pomocą rollout status oraz sprawdzenie dashboard.
+
+```bash
+kubectl rollout status deployment/nginx-deployment-2
+```
+
+![alt text](lab_kubernetes_1/rol.png)
+
+![alt text](lab_kubernetes_1/dash3.png)
+
+<br>
+
+## Wyeksportowanie wdrożenia jako serwis
+
+W tym etapie tworzymy serwis z naszego wdrożenia, aby uzyskąć uniwersalny interfejs.
+
+```bash
+kubectl expose deployment nginx-dep --port=3001 --target-port=80
+```
+
+![alt text](lab_kubernetes_1/serwis.png)
+
+<br>
+
+Teraz za pomocą polecenia sprawdzamy czy seriws jest uruchomiony.
+
+```bash
+kubectl get service
+```
+
+![alt text](lab_kubernetes_1/s.png)
+
+<br>
+
+---
+Teraz eksponujemy serwis za pomocą port-forwarding. Po uruchomieniu polecenia dodajemy port w visual studio oraz sprawdzamy czy adres działa w przeglądarce.
+
+```bash
+kubectl port-forward service/nginx-dep 3002:3001
+```
+
+![alt text](lab_kubernetes_1/eks.png)
+
+![alt text](lab_kubernetes_1/kub2.png)
+
+![alt text](lab_kubernetes_1/kub.png)
+
+
+<br>
+<br>
+
+# Lab 11 - Wdrażanie na zarządzalne kontenery: Kubernetes (2)
 <br>
