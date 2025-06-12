@@ -1,0 +1,32 @@
+---
+- name: Wszytskie polecenia 
+  hosts: all
+  become: yes 
+  tasks:
+   - name: Ping maszyn
+     ansible.builtin.ping:
+
+   - name: Print message
+     ansible.builtin.debug:
+       msg: Ping wykonany
+
+   - name: Skopiowanie pliku inventory.ini na maszynę
+     copy:
+       src: /home/pszlachta/MDO2025_INO/INO/GCL02/PS417478/Sprawozdanie3/ansible/inventory.ini
+       dest: /home/ansible/ 
+       mode: '0644'
+
+   - name: Zaktualizuj pakiety w systemie
+     ansible.builtin.dnf:
+       name: '*'
+       state: latest
+
+   - name: Zrestartuj usługi sshd
+     ansible.builtin.systemd:
+       name: sshd
+       state: restarted
+
+   - name: Zrestartuj usługi rngd
+     ansible.builtin.systemd:
+       name: rngd
+       state: restarted
