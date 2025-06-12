@@ -249,7 +249,7 @@ inst.ks=https://tinyurl.com/pszlachtaaa
 ```
 ![zdj](screenshots3/36.png)
 
-Po chwili, ukazał się klsyczniklasyczny instalator w formie graficznej, z niektórymi wygaszonymi polami ze względu na to, że wartości te zostały już określone w pliku, który tam przesyłaliśmy:
+Po chwili, ukazał się klsyczniklasyczny instalator w formie graficznej, z niektórymi wygaszonymi polami ze względu na to, że wartości te zostały już określone w pliku, który tam przesyłałam:
 ![zdj](screenshots3/40.png)
 ![zdj](screenshots3/38.png)
 ![zdj](screenshots3/39.png)
