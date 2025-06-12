@@ -202,3 +202,30 @@ Uruchomienie playbooka:
 ```bash
 asnible-playbook -i inventory.ini cjson.yaml
 ```
+
+# lab 9
+
+### Instalacja Fedory
+
+Przgotowanie pliku `anaconda-ks.cfg`
+
+Plik znajdował się w lokalizacji `/root/anaconda-ks.cfg`. Utworzyłem jego kopię oraz rozpocząłem uzupełnianie go o potrzebne rzeczy.
+
+```kickstart
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+```
+
+Po dopisaniu mirrora i repozytorium plik zpushowałem na githuba.
+
+### Instalacja z wykorzystaniem pliku konfiguracyjnego
+
+Z racji że ten link jest zbyt długi, żeby go przepisywać, a w VirtualBox jest prolem z wklejaniem tego to skróciłem go.
+```url
+https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/KB415987/INO/GCL01/KB415987/Sprawozdanie3/anaconda-rs.cfg
+```
+
+```url
+https://tinyurl.com/konrad1337
+```
+
