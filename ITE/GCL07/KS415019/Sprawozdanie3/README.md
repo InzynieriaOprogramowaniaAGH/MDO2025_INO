@@ -350,49 +350,41 @@ innej maszynie, co sugeruje problem lokalny ze środowiskiem VM:
 
 ![Powłoka anaconda root (tryb ratunkowy)](Zrzuty/LAB9/3.png)
 
-Po odtworzeniu instalacji na innym host-hypervisorze (oraz po
-zweryfikowaniu sumy kontrolnej ISO) — proces przeszedł poprawnie.
+Po odtworzeniu instalacji na innym host-hypervisorze — proces przeszedł poprawnie.
 
 
 # LAB 10 – Wdrażanie aplikacji w Minikube
 
 ---
 
-## 1  Uruchomienie klastra
+## 1. Uruchomienie klastra
 
 ```bash
 minikube start --driver=docker
 ```
-
-![Log z `minikube start`](Zrzuty/LAB10/1.png)
-
+![Start](Zrzuty/LAB10/3.png)
 ---
 
-## 2  Konfiguracja aliasu *minikubectl*
+## 2. Konfiguracja aliasu *minikubectl*
 
 ```bash
 alias minikubectl="minikube kubectl --"
-minikubectl version --client
 ```
 
-![Pobranie binarki kubectl](Zrzuty/LAB10/2.png)
+## 3. Dashboard i stan klastra
+
+```bash
+minikube dashboard 
+```
+
+![Dashboard – Nodes](Zrzuty/LAB10/6.png)
 
 ---
 
-## 3  Dashboard i stan klastra
+## 4. Jednopodowe wdrożenie (app-pod)
 
 ```bash
-minikube dashboard --url
-```
-
-![Dashboard – Nodes](Zrzuty/LAB10/3.png)
-
----
-
-## 4  Jednopodowe wdrożenie (app-pod)
-
-```bash
-minikubectl run app-pod \
+minikube kubectl run app-pod \
   --image=kstarzec/node_deploy:v2 \
   --port=3000 \
   --labels=app=app-pod
@@ -403,7 +395,7 @@ minikubectl run app-pod \
 ### 4.1  Sprawdzenie statusu
 
 ```bash
-minikubectl get pods
+minikube kubectl -- get pods
 ```
 
 ![ContainerCreating → Running](Zrzuty/LAB10/10.png)
@@ -411,7 +403,7 @@ minikubectl get pods
 ### 4.2  Logi aplikacji
 
 ```bash
-minikubectl logs pod/app-pod
+minikube kubectl -- logs pod/app-pod
 ```
 
 ![Log – „server is running on port 3000”](Zrzuty/LAB10/11.png)
@@ -419,7 +411,7 @@ minikubectl logs pod/app-pod
 ### 4.3  Udostępnienie aplikacji (port-forward)
 
 ```bash
-minikubectl port-forward pod/app-pod 5000:3000
+minikube kubectl -- port-forward pod/app-pod 5000:3000
 ```
 
 ![Port-forward 5000→3000](Zrzuty/LAB10/21.png)
@@ -438,7 +430,7 @@ Po zweryfikowaniu aplikacji Node przechodzimy do demonstracyjnego wdrożenia **N
 
 ---
 
-## 5  Deployment + Service (NGINX)
+## 5. Deployment + Service (NGINX)
 
 ### 5.1  Plik `nginx-deployment.yaml` (4 repliki)
 
@@ -468,15 +460,15 @@ spec:
 ### 5.2  Utworzenie pierwszego deploymentu (4 repliki)
 
 ```bash
-minikubectl apply -f nginx-deployment.yaml
+minikube kubectl apply -f nginx-deployment.yaml
 ```
 
 ![apply configured](Zrzuty/LAB10/12.png)
 
 ```bash
-minikubectl get deployments
-minikubectl get pods
-minikubectl rollout status deployment/nginx-deployment
+minikube kubectl -- get deployments
+minikube kubectl -- get pods
+minikube kubectl --  rollout status deployment/nginx-deployment
 ```
 
 ![4 pody + rollout OK](Zrzuty/LAB10/13.png)  
@@ -485,12 +477,9 @@ minikubectl rollout status deployment/nginx-deployment
 ### 5.3  `replicas: 0` – wyzerowanie deploymentu
 
 ```bash
-spec:
-  replicas: 0
-
-minikubectl apply -f nginx-deployment.yaml
-minikubectl get deployments
-minikubectl rollout status deployment/nginx-deployment
+minikube kubectl -- get deployments
+minikube kubectl -- get pods
+minikube kubectl --  rollout status deployment/nginx-deployment
 ```
 
 ![CLI – READY 0/0](Zrzuty/LAB10/31.png)
@@ -504,9 +493,9 @@ minikubectl rollout status deployment/nginx-deployment
 ### 5.4  `replicas: 1` 
 
 ```bash
-spec:
-  replicas: 1
-minikubectl apply -f nginx-deployment.yaml
+minikube kubectl -- get deployments
+minikube kubectl -- get pods
+minikube kubectl --  rollout status deployment/nginx-deployment
 ```
 
 ![CLI – READY 1/1](Zrzuty/LAB10/29.png)
@@ -520,11 +509,9 @@ minikubectl apply -f nginx-deployment.yaml
 ### 5.5  `replicas: 4` – stan bazowy (testowy)
 
 ```bash
-spec:
-  replicas: 4
-minikubectl apply -f nginx-deployment.yaml
-minikubectl get deployments
-minikubectl rollout status deployment/nginx-deployment  
+minikube kubectl -- get deployments
+minikube kubectl -- get pods
+minikube kubectl --  rollout status deployment/nginx-deployment 
 ```
 
 ![CLI – READY 4/4](Zrzuty/LAB10/13.png)  
@@ -540,12 +527,9 @@ minikubectl rollout status deployment/nginx-deployment
 
 
 ```bash
-spec:
-  replicas: 8
-
-minikubectl apply -f nginx-deployment.yaml
-minikubectl get deployments
-minikubectl rollout status deployment/nginx-deployment  
+minikube kubectl -- get deployments
+minikube kubectl -- get pods
+minikube kubectl --  rollout status deployment/nginx-deployment
 ```
 
 ![CLI – READY 8/8](Zrzuty/LAB10/26.png)
@@ -559,7 +543,7 @@ minikubectl rollout status deployment/nginx-deployment
 ### 6. Histroia wdrożeń 
 
 ```bash
-minikubectl -- rollout history deployment/nginx-deployment
+minikube kubectl -- rollout history deployment/nginx-deployment
 ```
 ![Rollout](Zrzuty/LAB10/37.png)
 
@@ -583,7 +567,7 @@ docker build -t nginx:broken -f Dockerfile .
 Następnie zastosowano nowy Deployment `nginx-broken.yaml` z 2 replikami:
 
 ```bash
-minikubectl apply -f nginx-broken.yaml
+minikube kubectl -- apply -f nginx-broken.yaml
 ```
 
 #### Dashboard – natychmiastowa awaria
@@ -644,8 +628,8 @@ spec:
 ```
 
 ```bash
-minikubectl apply -f nginx-deployment-v1.yaml
-minikubectl apply -f nginx-deployment-v2.yaml
+minikube kubectl -- apply -f nginx-deployment-v1.yaml
+minikube kubectl -- apply -f nginx-deployment-v2.yaml
 ```
 
 ---
