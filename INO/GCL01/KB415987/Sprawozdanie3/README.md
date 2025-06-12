@@ -224,7 +224,7 @@ Z racji że ten link jest zbyt długi, żeby go przepisywać, a w VirtualBox jes
 ```url
 https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/KB415987/INO/GCL01/KB415987/Sprawozdanie3/anaconda-rs.cfg
 ```
-
+Do takiej postaci.
 ```url
 https://tinyurl.com/konrad1337
 ```
@@ -236,6 +236,8 @@ Po uruchomieniu maszyny i naciśnięciu `e` wpisałem w Grubie polecenie `inst.k
 Następnie instalator uruchomił się i proces instalacji nastąpił automatycznie.
 
 ![](resources/201.png)
+
+Instalacja....
 
 ![](resources/301.png)
 
@@ -249,10 +251,14 @@ Po dodaniu tych opcji oraz uruchomieniu sprawdziłem czy to działa.
 
 ### Instalacja cJson z .rpm
 
-poleceniem:
-````sudo dnf install -y httpd createrepo````
+Poleceniem:
+```bash
+sudo dnf install -y httpd createrepo
+```
+
 ![](resources/501.png)
 
+zainstalowałem pakiety `httpd` - Apache HTTP Server oraz `createrepo` - do obsługi rpm.
 
 Tworzenie katalogu `repo_cjson`, kopiowanie tam rpmki oraz indeksacja rpmki.
 
@@ -273,6 +279,7 @@ sudo firewall-cmd --reload
 ```
 
 Następnie należało zmodyfikować plik `httpd.conf` w konfiguracji Apache.
+
 ![](resources/1010.png)
 
 *Pozwala to na wyświetlanie katalogu w przeglądarce, blokuje możliwości nadpisywania ustawień za pomocą plików .htaccess, oraz pozwala wszystkim userom korzystać bez przeszkód z zawartości folderu.*
@@ -374,6 +381,210 @@ Logi z wykonania skryptu:
 Jak widać skrypt wykonał się poprawnie.
 
 
-# Kubernetes - 1
+# Lab 10
 
-tu cos bedzie niedlugo 
+## Kubernetes - 1
+
+### Instalacja
+
+Na początku przystąpiłem do instalacji minikube wg oficjalnej
+[instrukcji instalacji minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download).
+
+Wersja na Linux x86_64 jako paczka rpm.
+
+![](resources/a.png)
+
+W zasadzie już miałem minikuba to się tylko zupdatował `:)` .
+
+Wpisuje kolejne komendy z dokumentacji:
+
+![](resources/b.png)
+
+
+Jeśli chodzi o minimalne wymagania minikube to 
+
+![](resources/d.png)
+
+z racji że nie są to wymagania zbyt wygórowane, konfiguracja na jakiej pracuję spełnia te wymagania.
+
+Po wykonaniu kilku kroków uruchomiłem dashboard
+
+![](resources/c.png)
+
+
+#### Podstawy kubernetesowe:
+
+     Pod - jednostka w kubernetesie która może zawierac kilka kontenerów dzielących między siebie zasoby, 
+    
+     Service - zapewnia komunikacje między podami na zewnątrz, jest to taki stabilny punkt dostępu
+
+     Deployment - zarządzanie podami, skalowanie, rollbacki, aktualizacje itp.
+
+     Ingress - zarządzanie dostępem do usług w klastrze z zewnątrz.
+
+### Analiza posiadanego kontenera
+
+#### Przgotowanie
+Zamiast cJsona skorzystamy z Nginx z lekkim tweakiem.
+
+`nginx.conf`:
+```ps
+events {}
+
+http {
+    server {
+        listen 80;
+        location / {
+            return 200 'Siemanko\n';
+        }
+    }
+}
+```
+
+`Dockerfile`:
+```Dockerfile
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+```
+
+Budowanie obrazu
+```bash
+docker build -t nginx123 .
+```
+
+Obraz się buduje...
+
+![](resources/e.png)
+
+Utworzenie kontenera zawierającego wcześniej zbudowany obraz
+
+![](resources/g.png)
+
+Sprawdzenie działania w przeglądarce:
+
+![](resources/f.png)
+
+Działa.
+
+#### Obraz w Docker Hub
+
+No to nadajemy taga i wysyłamy.
+
+```bash
+docker tag nginx123 konradb8/nginx123
+```
+Przed pushem jeszcze musiałem potwierdzić urządzenie.
+
+![](resources/i.png)
+
+Pushowanie:
+```bash
+docker push konradb8/nginx123
+```
+
+![](resources/h.png)
+
+Mój nginx znajduje się na Docker Hub.
+
+![](resources/j.png)
+
+### Uruchomienie oprogramowania
+
+Tworzenie opiektu deployment
+
+```bash
+ kubectl create deployment nginx123-deploy --image=konradb8/nginx123
+ ```
+
+Eksponowanie wdrożenia nginx123 jako usługi.
+ ```bash
+ kubectl expose deployment nginx123 --type=LoadBalancer --port=80
+ ```
+
+![](resources/k.png)
+
+Pod jest running
+
+![](resources/l.png)
+
+#### Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
+
+`nginx-deployment.yaml`
+
+```yaml
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+```
+
+Wdrożenie konfiguracji:
+
+```bash
+kubectl apply -f nginx-deployment.yaml
+```
+Po uruchomieniu rollout'u pojawiają się działające pody.
+```bash
+ kubectl rollout status deployment/nginx-deployment
+ ```
+
+ ![](resources/m.png)
+
+Widok z Kubernetesowego dashboardu:
+
+ ![](resources/n.png)
+
+
+### Wdrożenie serwisu
+
+`nginx-service.yaml`:
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+```
+
+Tworzenie serwisu na podstawie pliku `nginx-service.yaml`
+```bash
+kubectl apply -f nginx-service.yaml
+```
+Tworzenie tunelu sieciowego, aby zapewnić dostęp do środka.
+```bash
+minikube tunnel
+```
+Usługi `service` i `deploy` działają bez zarzutów:
+
+ ![](resources/o.png)
+
+Jest to przykład *IaC* - pliki yaml, które w razie potrzeby można szybko zmienić.
+
+# Lab 11
+ uff...
