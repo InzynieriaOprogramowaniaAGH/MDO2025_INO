@@ -1,14 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment-2
+  name: nginx-dep-canary
   labels:
     app: nginx
-    strategy: recreate
+    track: canary
 spec:
-  replicas: 4
-  strategy:
-    type: Recreate
+  replicas: 1
   selector:
     matchLabels:
       app: nginx
@@ -18,7 +16,7 @@ spec:
         app: nginx
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.27.5
-        ports:
-        - containerPort: 80
+        - name: nginx
+          image: nginx:1.27.5
+          ports:
+          - containerPort: 80

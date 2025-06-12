@@ -3,6 +3,7 @@
 **System:** Fedora  
 **Wirtualizacja** VirtualBox
 
+*Wszystkie stworzone pliki znajdują się w folderze Sprawozdanie3.
 <br>
 <br>
 
@@ -734,3 +735,273 @@ kubectl port-forward service/nginx-dep 3002:3001
 
 # Lab 11 - Wdrażanie na zarządzalne kontenery: Kubernetes (2)
 <br>
+
+## Stworzenie nowych kontenerów
+
+Na początku tworzymy dockera, który nie będzie działał prawidłowo: plik Dockerfile.bad.
+
+```bash
+FROM nginx:latest
+
+ENTRYPOINT ["false"]
+```
+
+<br>
+
+Kolejno budujemy obraz oraz wgrywamy go do minikube. Kolejno sprawdzamy czy obraz znajduje się w minikube.
+
+```bash
+docker build -t nginx:bad -f Dockerfile.bad .
+
+minikube image load nginx:bad
+
+minikube ssh
+crictl images
+```
+
+![alt text](lab_kubernetes_2/1.png)
+
+![alt text](lab_kubernetes_2/2.png)
+
+<br>
+
+## Zmiany w deploymencie
+
+Zamian dokonywano z poziomu dashboarda modyfikując deployment z poprzednich laboratoriów.
+
+1) Zwiększenie replik do 8
+
+![alt text](lab_kubernetes_2/3.png)
+
+![alt text](lab_kubernetes_2/4.png)
+
+![alt text](lab_kubernetes_2/5.png)
+
+<br>
+
+2) Zmniejszenie replik do 1 
+
+Z czasem pody oznaczone na biało znikają i zostaje tylko 1.
+
+![alt text](lab_kubernetes_2/6.png)
+
+<br>
+
+3) Zmniejszenie replik do 0
+
+![alt text](lab_kubernetes_2/7.png)
+
+<br>
+
+4) Ponowne przeskalowanie do 4
+
+![alt text](lab_kubernetes_2/8.png)
+
+<br>
+
+5) Zmiana wersji obrazu - nowa wersja 1.27.5
+
+![alt text](lab_kubernetes_2/9.png)
+
+![alt text](lab_kubernetes_2/10.png)
+
+<br>
+
+6) Zmiana wersji obrazu - stara wersja 1.14.2
+
+![alt text](lab_kubernetes_2/11.png)
+
+<br>
+
+7) Zmiana obrazu na nginx:bad, który stworzono na początku zajęć.
+
+Widać, że pody nie działają.
+
+![alt text](lab_kubernetes_2/13.png)
+
+![alt text](lab_kubernetes_2/12.png)
+
+<br>
+
+## Przywrócenie poprzednich wersji deploymentu
+
+```bash
+kubectl rollout undo deployment nginx-deployment-2
+```
+
+![alt text](lab_kubernetes_2/14.png)
+
+<br>
+
+Po rolloucie pody powróciły do poprzedniego stanu.
+
+![alt text](lab_kubernetes_2/15.png)
+
+<br>
+
+## Kontrola wdrożenia
+
+W tym kroku utworzono skrypt `deploy.sh`.
+
+```bash
+#!/bin/bash
+echo "Wdrozenie w trakcie dzialania"
+
+if minikube kubectl -- rollout status deployment nginx-deploy -n default --timeout=60s; then
+  echo "Wdrozenie zakonczone prawidlowo."
+else
+  echo "Wdrozenie nie powiodlo sie."
+  exit 1
+fi
+```
+
+<br>
+
+Aby móc przetestować skrypt użyto polecenia chmod.
+
+```bash
+chmod +x deploy.sh
+kubectl apply -f ./nginx-deploy.yaml
+./deploy.sh
+```
+
+![alt text](lab_kubernetes_2/16.png)
+
+<br>
+
+## Różne strategie wdrożenia
+
+1) Strategia recreate
+
+Strategia ta usuwa wszystkie kontenery w tym samym czasie i tworzy nowe. W pliku .yaml zmieniono wersję nginx:1.27.5
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment-2
+  labels:
+    app: nginx
+    strategy: recreate
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.27.5
+        ports:
+        - containerPort: 80
+```
+<br>
+
+Działąjące pody ze zmienioną wersją:
+
+![alt text](lab_kubernetes_2/17.png)
+
+<br>
+
+---
+
+2) Strategia Rolling Update
+
+Nowe pody powstają seriami. Zmieniono werjsję nginx na 1.26.0
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment-2
+  labels:
+    app: nginx
+    strategy: recreate
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 25%
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.26.0
+        ports:
+        - containerPort: 80
+```
+
+
+![alt text](lab_kubernetes_2/18.png)
+
+<br>
+
+---
+
+3) Strategia Canary Deployment workload
+
+Przy tej strategii tworzymy nowy plik: `nginx-canary.yaml`. W pliku dodajemy label "track: canry"
+
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-dep-canary
+  labels:
+    app: nginx
+    track: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27.5
+          ports:
+          - containerPort: 80
+```
+<br>
+
+Pod canary działa oraz widać jego wdrożenie.
+
+![alt text](lab_kubernetes_2/19.png)
+
+![alt text](lab_kubernetes_2/20.png)
+
+<br>
+
+Jednak gdy wejdziemy w zakładkę Service, zauważymy, że jest tam nadal jeden serwis, ze wszystkimi naszymi podami. Jest tak, ponieważ serwis filtruje pody na podstawie labeli (w tym przypadku label app: nginx).
+
+![alt text](lab_kubernetes_2/21.png)
+
+<br>
+
+---
+
+**Podsumowanie strategii:**
+
+Recreate to najprostsza strategia, w której wszystkie stare Pody są najpierw usuwane, a następnie tworzone są nowe. Powoduje to krótką przerwę w działaniu aplikacji, ponieważ przez pewien czas żaden Pod nie jest dostępny. 
+
+Rolling Update to domyślna i najczęściej używana strategia w Kubernetes. Polega na stopniowym zastępowaniu starych Podów nowymi. Dzięki temu aplikacja zachowuje ciągłość działania. 
+
+Canary Deployment to bardziej zaawansowana strategia wdrożeniowa, w której nowa wersja aplikacji jest wdrażana tylko do części użytkowników, np. 5–10% ruchu. Pozwala to na bezpieczne testowanie nowej wersji w rzeczywistym środowisku bez wpływu na wszystkich użytkowników. 
