@@ -395,7 +395,7 @@ Zmniejszenie do 0:
 
 ![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/a3a84e17b85b6f556a1f0859a857c017f523225b/ITE/GCL04/MK415056/sprawozdanie3/screanshots/k22.png)
 
-Zwiększenie do 4 (można zawuażyć, że kolejne repliki pojawiają się stopniowo, a nie od razu):
+Zwiększenie do 4:
 
 ![Alt text](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/a3a84e17b85b6f556a1f0859a857c017f523225b/ITE/GCL04/MK415056/sprawozdanie3/screanshots/k29.png)
 
