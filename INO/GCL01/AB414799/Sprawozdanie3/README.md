@@ -445,3 +445,407 @@ chmod +x /etc/profile.d/run_example.sh
 ![10](screeny/9-10.png)
 
 # Dziesiąte zajęcia - Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+
+## Instalacja klastra Kubernetes
+
+### Instalacja minikube
+
+### Minikube został zainstalowany zgodnie z wytycznymi zawartymi w oficjalnej dokumentacji dostępnej pod adresem: `https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download`
+
+### Wybrałem pakiet `.rpm` przeznaczony dla systemów Linux z architekturą x86-64.
+
+![1](screeny/10-1.png)
+
+### Instalacja kubectl
+
+### Zgodnie z oficjalnymi wytycznymi dotyczącymi Minikube, przełączyłem się na dokumentację Kubernetes, aby zainstalować narzędzie kubectl, korzystając z instrukcji dostępnych pod adresem: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+```
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+```
+![2](screeny/10-2.png)
+
+### Następnie pobrałem plik, aby zweryfikować integralność pobranej binarki, i przeprowadziłem jej sprawdzenie pod kątem poprawności.
+
+![3](screeny/10-3.png)
+
+### Instalacja `kubectl`:
+
+```
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
+
+![4](screeny/10-4.png)
+
+### Start minikube za pomocą komendy:
+
+```
+minikube start
+```
+
+![5](screeny/10-5.png)
+
+### Dashboard
+
+Do uruchomienia wykorzystałem komendę:
+
+```
+minikube dashboard
+```
+### W terminalu pojawił się adres URL w który wszedłem i ukazała się strona
+
+![6](screeny/10-6.png)
+
+### Kluczowe Obiekty Kubernetes
+
+#### Pod – podstawowa jednostka uruchomieniowa w Kubernetes, zawierająca jeden lub więcej współdzielących zasoby kontenerów (takie jak sieć i system plików).
+
+#### Deployment – kontroler odpowiadający za tworzenie, zarządzanie i utrzymywanie pożądanej liczby replik podów. Umożliwia łatwe wdrażanie zmian, skalowanie oraz cofanie aktualizacji.
+
+#### Service – komponent zapewniający spójny sposób komunikacji z podami. Umożliwia stabilny dostęp za pomocą wirtualnego IP i DNS, obsługując zarówno ruch wewnątrz klastra, jak i połączenia z zewnątrz.
+
+## Analiza posiadanego kontenera
+
+### W poprzednich zadaniach pracowałem z biblioteką cJSON, którą kompilowałem i przygotowywałem jako pakiet `.rpm`. Tym razem, na potrzeby kolejnego etapu, postanowiłem wykorzystać serwer NGINX, wprowadzając do niego własne zmiany konfiguracyjne. W tym celu stworzyłem katalog nginx, w którym umieściłem pliki: `nginx.conf` i `Dockerfile`.
+
+### `nginx.conf`:
+
+```yaml
+events {}
+
+http {
+    server {
+        listen 80;
+        location / {
+            return 200 'Hello from my custom NGINX config!\n';
+        }
+    }
+}
+```
+
+### `Dockerfile`:
+
+```Dockerfile
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+```
+
+![7](screeny/10-7.png)
+
+### Zbudowałem przygotowany obraz i uruchomiłem go lokalnie, przekierowując port 8081.
+
+![8](screeny/10-8.png)
+
+### Działanie mojej konfiguracji:
+
+![9](screeny/10-9.png)
+
+
+### Obraz w Docker Hubie
+
+### Po testach lokalnych przeszedłem do etapu przygotowania obrazu do wdrożenia w Kubernetesie. W tym celu opublikowałem go w publicznym repozytorium Docker Hub, co umożliwia jego pobranie bezpośrednio z klastra.
+
+```bash
+docker tag my-nginx-custom walker70/nginx-custom
+```
+
+Następnie przesłałem obraz do Docker Hub za pomocą polecenia `docker push`:
+
+```bash
+docker push walker70/nginx-custom
+```
+
+![10](screeny/10-10.png)
+
+### Obecność repozytorium, obrazu na Docker Hub, poprzez logowanie przez przeglądarkę:
+
+![11](screeny/10-11.png)
+
+## Uruchamianie oprogramowania
+
+```bash
+kubectl create deploymentnginx-deploy --image=walker70/nginex-custom
+```
+
+### Kolejnym krokiem było utworzenie zasobu Service o typie LoadBalancer, który zapewnia zewnętrzny punkt dostępu do aplikacji, przekierowując ruch sieciowy na port 80 bezpośrednio do odpowiednich podów.
+
+```bash
+kubectl expose deployment my-nginx-deploy --type=LoadBalancer --port=80
+```
+
+![12](screeny/10-12.png)
+
+### Działanie poda
+
+![13](screeny/10-13.png)
+
+## Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
+
+### Konfiguracja dla aplikacji NGINX
+
+### Plik `nginx-deployment.yaml`:
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+```
+
+### Do wdrożenia konfiguracji wykorzystałem polecenie kubectl apply, które pozwala w sposób deklaratywny tworzyć lub aktualizować zasoby w klastrze Kubernetes, na podstawie przygotowanych plików YAML.
+
+```bash
+kubectl apply -f nginx-deployment.yaml
+```
+
+### Sprawdzenie stanu wdrożenia
+
+```bash
+kubectl rollout status deployment/nginx-deployment
+```
+
+![14](screeny/10-14.png)
+
+### Widok dashboardu kubernetesa
+
+![15](screeny/10-15.png)
+
+### Wdrożenie service
+
+### W podobny sposób jak we wcześniejszych krokach, przygotowałem plik `nginx-service.yaml`, definiujący zasób Service typu LoadBalancer. Usługa udostępnia aplikację na porcie 80 i korzysta z etykiety `app: nginx`.
+
+### Plik `nginx-service.yaml`:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+```
+
+### Polecenie użyte do wdrożenia:
+
+```bash
+kubectl apply -f nginx-service.yaml
+```
+
+![16](screeny/10-16.png)
+
+### Cała konfiguracja wdrożenia została ujęta w plikach YAML, a aplikacja została uruchomiona w klastrze Kubernetes w sposób wyjaśniający za pomocą komendy `kubectl apply`.
+
+# Jedenaste zajęcia - Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+
+## Przygotowanie nowego obrazu
+
+### Zadanie polegało na przygotowaniu obrazu w co najmniej trzech wariantach. Zdecydowałem się kontynuować pracę z obrazem NGINX, stopniowo go modyfikując.
+
+### Kolejno Dockerfile.v1 Dcokerfile.v2 Dockerfile.v3
+
+### V1 - `my-nginx:v1`: Bazowy obraz `nginx:alpine`.
+
+```Dockerfile
+FROM nginx:alpine
+```
+
+### V2 – `my-nginx:v2`: Obraz z własną konfiguracją NGINX - zmieniona strona startowa przez `nginx.conf`.
+
+```Dockerfile
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+```
+
+### V3 – `my-nginx:v3`: Obraz, który po uruchomieniu natychmiast kończy działanie z błędem- komenda `false`.
+
+```Dockerfile
+FROM alpine
+CMD ["false"]
+```
+
+### Wszystkie obrazy zostały zbudowane i wrzucone na Docker Hub
+
+```bash
+docker build -t walker70/nginx:v1 -f Dockerfile.v1 .
+docker push walker70/nginx:v1
+
+docker build -t walker70/nginx:v2 -f Dockerfile.v2 .
+docker push walker70/nginx:v2
+
+docker build -t walker70/nginx:v3 -f Dockerfile.v3 .
+docker push walker70/nginx:v3
+```
+![17](screeny/10-17.png)
+
+## Zmiany w deploymencie
+
+### Modyfikacja liczby replik
+
+#### W pierwszym kroku zmodyfikowałem istniejący deployment, wskazując jako obraz `walker70/nginx:v1`, który został zbudowany na bazie standardowego obrazu NGINX.
+
+![18](screeny/10-18.png)
+
+#### Zmiana liczby replik na 8, Kubernetes dopiero tworzy te pody.
+
+![19](screeny/10-19.png)
+
+#### Zmiana replik na 1, Kubernetes stopniowo usuwa pody.
+
+![20](screeny/10-20.png)
+
+#### Znowu 4 repliki.
+
+![21](screeny/10-21.png)
+
+#### Zmiana do 0 replik.
+
+![22](screeny/10-22.png)
+
+#### Ostateczny powrót do 4 replik
+
+![23](screeny/10-23.png)
+
+### Zmiana wersji obrazu
+
+### Aktualizacja obrazu kontenera do wersji `walker70/nginx:v2`
+
+![24](screeny/10-24.png)
+
+### Następnie podmieniłem obraz na `walker70/nginx:v3` — celowo błędną wersję kontenera, która kończy działanie zaraz po uruchomieniu, co pozwalało przetestować reakcję klastra na awarię. Deployment nie został pomyślnie uruchomiony, tak jak oczekiwano.
+
+![25](screeny/10-25.png)
+
+### Przywracanie poprzednich wersji wdrożeń
+
+### Komenda sprawdzająca historię zmian deploymentu:
+
+```
+kubectl rollout history deployment my-nginx-deploy
+```
+
+![26](screeny/10-26.png)
+
+### Aby cofnąć się do stabilnej wersji użyłem komendy
+
+```
+kubectl rollout undo deployment my-nginx-deploy
+```
+
+### I to jest poprzednia wersja
+
+![27](screeny/10-27.png)
+
+## Kontrola wdrożenia
+
+### Indentyfikacja historii wdrożeń
+(revision 2)
+![28](screeny/10-28.png)
+
+(revision 4)
+![29](screeny/10-29.png)
+
+### Skrypt w Bashu, który weryfikuje, czy proces rolloutu zakończył się sukcesem w ciągu 60 sekund.
+
+### Plik `check_rollout.sh`:
+```bash
+#!/bin/bash
+
+DEPLOYMENT_NAME="my-nginx-deploy"
+NAMESPACE="default"
+TIMEOUT=60
+
+echo "Czekam aż wdrożenie \"$DEPLOYMENT_NAME\" się zakończy..."
+
+kubectl rollout status deployment/"$DEPLOYMENT_NAME" --namespace="$NAMESPACE" --timeout=${TIMEOUT}s
+
+if [ $? -eq 0 ]; then
+    echo "Sukces!"
+else
+    echo "Timeout."
+    exit 1
+fi
+```
+
+### Dla nginx:v2 skrypt się zakończył sukcesem
+![30](screeny/10-30.png)
+
+## Strategie wdrożenia
+
+### W tej części zadania przeprowadziłem testy różnych strategii wdrażania aplikacji w Kubernetesie. Skorzystałem z własnych obrazów umieszczonych w rejestrze Docker Hub i sprawdziłem ich zachowanie w kontekście strategii Recreate, RollingUpdate oraz symulacji podejścia typu Canary.
+
+### 1. Strategia `Recreate` - w tym podejściu zastosowałem tą strategię, która polega na zatrzymaniu wszystkich istniejących podów przed uruchomieniem nowych:
+
+```yaml
+strategy:
+  type: Recreate
+```
+
+### Takie podejście skutkuje chwilową niedostępnością aplikacji, ale gwarantuje, że wszystkie instancje zostaną wymienione jednocześnie, co zapewnia spójność środowiska
+
+### 2. Strategia `RollingUpdate` - ta strategia umożliwia stopniowe zastępowanie podów nową wersją, bez przerywania dostępności usługi.
+
+```yaml
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 2
+    maxSurge: 30%
+```
+
+### Dzięki tym ustawieniom Kubernetes mógł tymczasowo zwiększyć liczbę podów ponad zdefiniowaną wartość (maxSurge) oraz tolerować jednoczesną niedostępność maksymalnie dwóch z nich (maxUnavailable).
+
+### 3. Canary Deployment - definicje zostały opatrzone wspólną etykietą `app: my-nginx-deploy`, co pozwala im być obsługiwanym przez ten sam obiekt Service. Różnica między nimi polega na dodatkowej etykiecie `track`, która umożliwia rozróżnienie wariantów wdrożenia.
+
+```yaml
+# Stable:
+labels:
+  app: my-nginx-deploy
+  track: stable
+
+# Canary:
+labels:
+  app: my-nginx-deploy
+  track: canary 
+```
+
+### Etykiety
+
+### Każdy z deploymentów oraz odpowiadające im pody zostały oznaczone odpowiednimi etykietami (app, track), co zapewnia:
+
+#### Możliwość wygodnego filtrowania zasobów w interfejsie dashboarda Kubernetes,
+
+#### Precyzyjne sterowanie ruchem przy użyciu obiektów Service, które mogą kierować zapytania do konkretnych grup podów,
+
+#### Większą elastyczność i kontrolę podczas rolloutów oraz testów nowych wersji aplikacji, np. w scenariuszach canary deployment.
+
+### Serwis
+
+### We wszystkich strategiach wdrożeniowych wykorzystałem wspólny obiekt Service typu LoadBalancer, skonfigurowany tak, aby kierował ruch do podów oznaczonych etykietą `app: my-nginx-deploy`. Pozwoliło to zachować niezmienioną konfigurację sieci, mimo że działały równolegle dwa niezależne deploymenty
+
+## Wykorzystanie AI
+
+### Na potrzeby tego projektu sięgałem po wsparcie modelu językowego ChatGPT 4o. Pomagał mi on zarówno w interpretacji dokumentacji, jak i w opracowywaniu poprawnych konfiguracji czy skryptów automatyzujących. Dzięki temu proces wdrażania i testowania środowiska przebiegał sprawniej, a potencjalne błędy mogłem szybciej diagnozować i rozwiązywać.
