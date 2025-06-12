@@ -1,0 +1,2 @@
+FROM alpine:latest
+CMD ["sh", "-c", "echo 'Start exception'; exit 1"]
