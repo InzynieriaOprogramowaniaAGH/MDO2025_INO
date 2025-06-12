@@ -390,3 +390,47 @@ Ponownie wypchnełam plik i przeprowadziłam instalacje, sprawdziłam poprawnoś
 
 
 ### Wdrażanie na zarządzalne kontenery: Kubernetes (1)
+
+Instalacje minikube zaczęłam od pobrania:
+```bash 
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
+```
+A następnie:
+```bash
+sudo rpm -Uvh minikube-latest.x86_64.rpm
+```
+
+![zdj](screenshots3/50.png)
+
+Nie było żadnych błędów poprawnosci. Następnie pobrałam:
+```bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+```
+Oraz plik kontrolny:
+```bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+```
+Sprawdziłam jego poprawność, a nastepnie zainstalowałam kubectl
+
+![zdj](screenshots3/52.png)
+
+Polecenie do uruchomienia klastra Kubernetes:
+
+![zdj](screenshots3/53.png)
+
+Minikube uruchomił się w kontenerze docker:
+
+![zdj](screenshots3/54.png)
+
+Uruchomiłam dashboard
+
+![zdj](screenshots3/55.png)
+
+Następnie uruchomiłam w przeglądarce link, który dostałam w terminalu:
+
+![zdj](screenshots3/56.png)
+
+
+
+
+
