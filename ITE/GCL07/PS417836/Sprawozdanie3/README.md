@@ -489,4 +489,6 @@ rm -rf /tmp/irssi-deb
 reboot
 ```
 
+<br>
+
 Aplikacja irssi po zalogowaniu:
