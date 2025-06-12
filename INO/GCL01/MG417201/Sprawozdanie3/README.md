@@ -708,6 +708,8 @@ endpoint3
 
 ### Instalacja systemu z pliku odpowiedzi
 
+- Utworzenie nowej maszyny wirtualnej
+
 <div align="center"> 
     <img src="screens9/2.png">
 </div>
@@ -716,9 +718,54 @@ endpoint3
     <img src="screens9/3.png">
 </div>
 
+- Po utworzeniu vm należy zamontować iso systemu, dodałem też drugi adapter sieciowy `host-only`
+
 <div align="center"> 
     <img src="screens9/4.png">
 </div>
+
+- Następnie uruchomiłem vm i wybierając opcję `Install Fedora 41`, nacisnąłem `e`, aby dokonać edycji opcji bootowania
+
+<div align="center"> 
+    <img src="screens9/5.png">
+</div>
+
+- Poniżej widoczne są opcje bootowania przed edycją
+
+<div align="center"> 
+    <img src="screens9/6.png">
+</div>
+
+- Poniżej widoczne są opcje bootowania po edycji
+
+>Oprócz odniesienia do pliku kickstart, określiłem, z którego interfejsu sieciowego (NAT) system ma korzystać podczas instalacji
+
+<div align="center"> 
+    <img src="screens9/7.png">
+</div>
+
+- Następnie wyświetlił się GUI do instalacji systemu, w którym były już wprowadzone wszystkie zmiany z pliku kickstart, dlatego nie należało nic tam edytować, a system po wykryciu źródła instalacji przeszedł samodzielnie do instalacji
+
+- Screeny z progresu instalacji
+
+<div align src="screens9/8.png">
+</div>
+
+<div align="center"> 
+    <img src="screens9/9.png">
+</div>
+
+- System po uruchomieniu
+
+<div align="center"> 
+    <img src="screens9/10.png">
+</div>
+
+### Rozszerzenie pliku odpowiedzi o repozytoria i oprogramowanie potrzebne do uruchomienia programu zbudowanego podczas pipeline'u  (wraz z zakresem rozszerzonym)
+
+>[Treść nowego pliku odpowiedzi](anaconda-ks1.cfg), opatrzyłem go komentarzami dotyczącymi dodanych rzeczy, w tym definicji redisa jako usługi systemowej
+
+- Utworzyłem kolejną vm w dokładnie ten sam sposób, jak poprzednią
 
 ## Zajęcia 10
 
