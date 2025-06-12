@@ -1,0 +1,17 @@
+---
+- name: Zainstaluj bibliotekę requests (Python 3)
+  hosts: all
+  become: true
+  tasks:
+    - name: Install python3-requests
+      ansible.builtin.package:
+        name: python3-requests
+        state: present
+        
+- name: Deploy
+  hosts: all
+  become: true
+  collections:
+    - community.docker
+  roles:
+    - kstarzec
