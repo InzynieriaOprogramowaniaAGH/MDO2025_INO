@@ -587,4 +587,129 @@ Usługi `service` i `deploy` działają bez zarzutów:
 Jest to przykład *IaC* - pliki yaml, które w razie potrzeby można szybko zmienić.
 
 # Lab 11
- uff...
+ 
+### Przygotowanie nowego obrazu
+
+Wykorzystamy trzy warianty
+
+- bazowy obraz nginx, 
+- obraz nginx z własną konfiguracją
+- obraz, po którego uruchomieniu wywala błąd
+
+są to kolejno, Dockerfile.(1,2,3)
+
+Tak dla wszyskich trzech wersji:
+```bash
+ docker build -t konradb8/nginx:v1 -f Dockerfile.1 .
+docker push konradb8/nginx:v1
+```
+Obrazy zostały zbudowane i wypchnięte na Docker Hub'a.
+
+ ![](resources/r.png)
+
+ ### Zmiany w deploymencie
+
+ #### Zabawa z liczbą replik
+
+8 replik
+
+ ![](resources/s.png)
+
+1 replika
+
+ ![](resources/t.png)
+
+widok logów z terminala
+ ![](resources/u.png)
+
+
+4 repliki
+
+ ![](resources/w.png)
+
+0 replik
+
+ ![](resources/x.png)
+
+4 repliki
+
+ ![](resources/y.png)
+
+
+Zmiana obrazu na wersję drugą.
+
+ ![](resources/z.png)
+
+Zmiana obrazu na wersję która wyrzuca błąd.
+
+ ![](resources/zz.png)
+
+### Przywracanie poprzednich wdrożeń
+
+Polecenie pokazującę historię wdrożeń
+```bash
+kubectl rollout history deployment nginx-deployment
+```
+Rollout, przywraca ostanią wersję wdrożenia która nie kończyła się błędem.
+
+```bash
+kubectl rollout undo deployment nginx-deployment
+```
+Przywrócona ostatnia stabilna wersja wdrożenia:
+
+ ![](resources/zzz.png)
+
+### Kontrola wdrożenia
+
+Historia wdrożeń
+
+flaga `--revision` pozwala na identyfikację różnić między wdrożeniami.
+
+ ![](resources/zzzz.png)
+
+
+Skrypt sprawdzający czy wdrożenie zdążyło się wdrożyć w 60 sekund.
+
+```bash
+#!/bin/bash
+
+DEPLOYMENT_NAME="nginx-deployment"
+NAMESPACE="default"
+TIMEOUT=60
+
+echo "Watin for \"$DEPLOYMENT_NAME\"."
+
+kubectl rollout status deployment/"$DEPLOYMENT_NAME" --namespace="$NAMESPACE" --timeout=${TIMEOUT}s
+
+if [ $? -eq 0 ]; then
+    echo "Deployment has ended in 60s timeframe."
+else
+    echo "Error: Deployment was being proceeded longer than 60s."
+    exit 1
+fi
+```
+
+Dla osataniej stabilnej wersji czyli tej drugiej, skrypt kończy się bez błędów.
+ 
+ ![](resources/zzzzz.png)
+
+Dla wersji która powoduje błąd, skrypt zwrócił również błąd, ponieważ czas wykonania jest większy niz 60 sekund. W zasadzie to wdrożenie się nigdy nie wdroży bo zawiera obraz który powoduje błąd.
+
+ ![](resources/zzzzzz.png)
+
+### Strategie wdrożenia
+Omówienie różnych strategi wdrożenia
+
+- *Recreate*
+
+Powoduje ona zatrzymanie starych podów przed uruchomieniem nowych.
+Dzięki temu spójność usługi jest zachowana, lecz wymagana jest przerwa techniczna, na wdrożenie z powodu chwilowej niedostępności.
+
+- *RollingUpdate*
+
+Ta strategia pozwala na aktualizacje wersji danej usługi bez przew technicznych, daje też możliwość na określenie parametrów updatowania, takich jak maksymalna liczba chwilowo niedostępnych podów czy liczba podów które można dodatkowo uruchomić na poczet akutalizacji, aby zapewnić ciągłość w dostarczaniu usługi.
+
+- *Canary*
+
+W tej strategii chodzi o to, aby wdrożyć nową wersję tylko dla części użytkowników i monitorowanie jej zachowania oraz zwiększanie zakresu użytkowników korzystających z tej nowej wersji.
+Jeżeli wszystko gra to nowa wersja zastępuje starą, jeśli nie to wracamy do ostatniej stabilnej wersji.
