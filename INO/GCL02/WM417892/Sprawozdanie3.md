@@ -1,3 +1,232 @@
+
+# Sprawozdanie z zajęć 10: Wdrażanie na zarządzalne kontenery - Kubernetes (1)
+
+## Wstęp
+
+Celem niniejszego sprawozdania jest przedstawienie procesu instalacji i konfiguracji lokalnego klastra Kubernetes z wykorzystaniem narzędzia Minikube oraz wdrożenia przykładowej aplikacji kontenerowej. Dokument zawiera opis kolejnych kroków, takich jak uruchomienie klastra, instalacja Dashboardu, wdrożenie aplikacji w kontenerze, a także utworzenie i zastosowanie pliku manifestu YAML do zarządzania zasobami Kubernetes. Sprawozdanie ukazuje również komunikację z aplikacją przez odpowiednio przekierowane porty oraz omówienie podstawowych obiektów Kubernetes takich jak pod, deployment czy service.
+
+W kolejnych sekcjach do dokumentu będą dodawane zrzuty ekranu oraz ich opisy, prezentujące wykonane etapy zadania.
+
+---
+
+## Instalacja Minikube
+
+Do instalacji Minikube wykorzystano oficjalne źródło udostępniane przez Google. Proces składał się z następujących kroków:
+
+1. Pobranie pliku binarnego Minikube:
+
+   ```bash
+   curl -Lo minikube-linux-amd64 https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+   ```
+2. Nadanie uprawnień wykonywalnych:
+
+   ```bash
+   chmod +x minikube-linux-amd64
+   ```
+3. Przeniesienie pliku do katalogu binarnego systemu:
+
+   ```bash
+   sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+   ```
+4. Sprawdzenie wersji zainstalowanego Minikube:
+
+   ```bash
+   minikube version
+   ```
+
+![Instalacja Minikube](3.1.png)
+
+## Instalacja kubectl
+
+W celu zarządzania klastrem Kubernetes należy zainstalować klienta `kubectl`. Proces wyglądał następująco:
+
+1. Ustawienie zmiennej środowiskowej z wersją:
+
+   ```bash
+   export KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
+   ```
+2. Pobranie odpowiedniej wersji klienta:
+
+   ```bash
+   curl -LO https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl
+   ```
+3. Nadanie uprawnień i przeniesienie pliku:
+
+   ```bash
+   chmod +x kubectl
+   sudo mv kubectl /usr/local/bin/
+   ```
+4. Weryfikacja instalacji:
+
+   ```bash
+   kubectl version --client
+   ```
+
+![Instalacja kubectl](3.2.png)
+
+## Uruchomienie klastra Minikube
+
+Następnie uruchomiono lokalny klaster Minikube z wykorzystaniem sterownika Docker i przypisanymi zasobami CPU oraz RAM:
+
+```bash
+minikube start --driver=docker --cpus=2 --memory=2048
+```
+
+Minikube pobrał obraz bazowy, zainicjował kontroler i przygotował potrzebne komponenty Kubernetes, w tym RBAC, certyfikaty oraz CNI.
+
+![Uruchomienie klastra](3.3.png)
+
+## Weryfikacja działania klastra i bezpieczeństwa
+
+Po starcie klastra sprawdzono jego status oraz stan węzła:
+
+1. Polecenie sprawdzające status:
+
+   ```bash
+   minikube status
+   ```
+2. Informacje o węzłach:
+
+   ```bash
+   kubectl get nodes -o wide
+   ```
+
+![Status klastra i node](3.4.png)
+
+Dodatkowo dokonano weryfikacji obecności certyfikatów wykorzystywanych do zabezpieczenia komunikacji wewnętrznej:
+
+```bash
+minikube ssh
+ls /var/lib/minikube/certs/
+```
+
+![Certyfikaty bezpieczeństwa](3.5.png)
+
+## Uruchomienie Dashboardu Kubernetes
+
+Dashboard został uruchomiony z wykorzystaniem polecenia:
+
+```bash
+minikube dashboard --url
+```
+
+Dostęp do panelu możliwy był lokalnie poprzez adres URL wskazany przez Minikube.
+
+![Uruchomienie Dashboardu](3.6.png)
+
+## Uruchomienie aplikacji jako kontenera (pod)
+
+Kolejnym krokiem było uruchomienie aplikacji kontenerowej `nginx` w postaci pojedynczego podu:
+
+```bash
+kubectl run moja-aplikacja \
+  --image=nginx \
+  --port=80 \
+  --labels app=moja-aplikacja
+```
+
+Sprawdzono poprawność działania poleceniem:
+
+```bash
+kubectl get pods
+```
+
+![Uruchomienie podu nginx](3.8.png)
+
+## Przekierowanie portu i test komunikacji
+
+W celu przetestowania działania aplikacji przekierowano port z lokalnego hosta na port kontenera `nginx`:
+
+```bash
+kubectl port-forward pod/moja-aplikacja 8080:80
+```
+
+![Port forwarding](3.9.png)
+
+Następnie wykonano zapytanie HTTP na przekierowany port, aby upewnić się, że aplikacja działa poprawnie:
+
+```bash
+curl http://127.0.0.1:8080
+```
+
+![Test zapytania curl](3.10.1__.png)
+
+Działanie aplikacji zostało także potwierdzone przez przeglądarkę:
+
+![Działająca aplikacja w przeglądarce](3.10.png)
+
+## Monitoring działania i przygotowanie deploymentu
+
+Aplikacja kontynuuje działanie, co potwierdzono obserwując stan podu oraz ponownie przekierowując port:
+
+![Pod gotowy i aktywne przekierowanie](3.11.png)
+
+## Tworzenie pliku deploymentu YAML
+
+Na potrzeby trwałego zarządzania zasobami klastra przygotowano plik `nginx-deployment.yml`, zawierający:
+
+* deployment z 4 replikami kontenera nginx,
+* serwis typu NodePort eksponujący port 30080.
+
+Plik został utworzony i zapisany w edytorze tekstowym:
+
+![Plik deploymentu YAML](3.12.png)
+
+## Wdrożenie z pliku YAML i rollout
+
+Po utworzeniu pliku YAML wdrożenie zostało zrealizowane za pomocą:
+
+```bash
+kubectl apply -f nginx-deployment.yml
+```
+
+Stan rollout został sprawdzony za pomocą:
+
+```bash
+kubectl rollout status deployment/nginx-deployment
+```
+
+![Rollout deploymentu](3.13.png)
+
+## Weryfikacja działania wdrożenia i usługi
+
+Sprawdzono działające pody:
+
+```bash
+kubectl get pods
+```
+
+oraz utworzony serwis:
+
+```bash
+kubectl get svc nginx-service
+```
+
+Następnie wywołano polecenie:
+
+```bash
+minikube service nginx-service --url
+```
+
+w celu uzyskania adresu URL.
+
+![Działające pody i serwis](3.14.png)
+
+## Wizualizacja wdrożenia w Dashboardzie
+
+Status wdrożenia oraz liczba aktywnych replik została zweryfikowana w Dashboardzie:
+
+![Dashboard – wizualizacja wdrożenia](3.16.png)
+
+## Test końcowy – dostępność aplikacji
+
+Ostatecznie sprawdzono dostępność aplikacji `nginx` za pomocą przeglądarki internetowej, używając podanego portu NodePort:
+
+![Końcowy test w przeglądarce](3.17.png)
+
+
+
+
 # Sprawozdanie – Zajęcia 11: Kubernetes (2)
 
 Celem zajęć było praktyczne pogłębienie wiedzy z zakresu zarządzania kontenerami w środowisku Kubernetes. W ramach ćwiczeń wykonano szereg operacji związanych z wdrażaniem aplikacji, ich wersjonowaniem, kontrolą stanu wdrożeń oraz testowaniem mechanizmów rollbacku. Dodatkowo przeanalizowano różne strategie wdrażania – w tym Recreate, Rolling Update oraz Canary Deployment. Wszystkie działania zostały przeprowadzone z wykorzystaniem własnych obrazów Docker, opublikowanych na prywatnym koncie Docker Hub.
