@@ -2,55 +2,69 @@
 ## Lab 8-11
 ### Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
 Utworzyłam nową - drugą maszynę fedora dokładnie na takich samych ustawieniach jak dotychczasowa fedora główna. Urzytkownik - ansible, hostname - ansible-target. Reszta instalacji klasycznie, bez zmian.
+
 ![zdj](screenshots3/1.png)
 ![zdj](screenshots3/4.png)
 
 Na maszynie zainstalowałam i sprawdziłam czy jest tar i sshd:
+
 ![zdj](screenshots3/2.png)
 
 NAstępnie wykonałam migawkę nowej maszyny: (maszyna - narzędzia - migawki):
+
 ![zdj](screenshots3/5.png)
 ![zdj](screenshots3/6.png)
 
 Zainstalowałam ansible na głównenj maszynie:
+
 ![zdj](screenshots3/7.png)
 ![zdj](screenshots3/8.png)
 
 Sprawdziłam ip mojej nowej maszyny:
+
 ![zdj](screenshots3/9.png)
 
 Po to aby w pliku /etc/hosts móc je wpisac w celu umożliwienia między nimi komunikacji: 
+
 ![zdj](screenshots3/10.png)
 
 Skopiowałam klucz publiczny z maszyny głównej na drugą maszynę ansible-target.
+
 ![zdj](screenshots3/11.png)
 
 Nastepnie sprawdziłam ping, czy maszyny sa połączone
+
 ![zdj](screenshots3/12.png)
 ![zdj](screenshots3/13.png)
 
 Należało stworzyć plik inwentaryzacji inventory.ini, który u mnie wygląda nastepująco:
+
 ![zdj](screenshots3/16.png)
 
 Plik odpaliłam polecenim:
+
 ![zdj](screenshots3/17.png)
 ![zdj](screenshots3/15.png)
 ![zdj](screenshots3/20.png)
 
 Wszytskie pliki utworzyłam w katalogu ansible, dla przejszystości plików.
 Nastepnie tworzyłam Playbooki. Pierwszy `playbook.yaml` stworzyłam do pingowania maszyn i uruchomiłam poleceniem: (na końcu każdego polecenia urzywałam -K aby podawać hasło przed rozpoczęciem działania pliku)
+
 ![zdj](screenshots3/19.png)
 ![zdj](screenshots3/18.png)
 
 Kolejnym Playbookiem `playbook-endpoints.yml` kopiowałam plik `inventory.ini` na drugą maszynę ansible-target:
+
 ![zdj](screenshots3/22.png)
 ![zdj](screenshots3/23.png)
 
 Następnym `playbook-aktualizacja.yml` Aktualizowałam pakiety w systemie:
+
 ![zdj](screenshots3/24.png)
 ![zdj](screenshots3/25.png)
 
 Zaś `playbook-restart.yml` restartował usługii sshd i rngd: 
+
 ![zdj](screenshots3/27.png)
 ![zdj](screenshots3/26.png)
 
@@ -93,11 +107,14 @@ Na koniec połączyłam wszytskie powyższe playbooki w jeden `playbook-wszytsko
 ![zdj](screenshots3/30.png)
 
 NAstępnym krokiem było sprawdzenie jak działa główny playbook po wyłączeniu serwera ssh i z odpiętą kartą sieciową. Po odpaleniu wyników, znowu te opcje włączyłam (dwie ostatnie linijki):
+
 ![zdj](screenshots3/32.png)
 ![zdj](screenshots3/31.png)
+
 Jak widac prawidłowo "nie zadziałały" polecenia na drugiej maszynie
 
 Dalszym krokiem było utworzenie struktury roli do moich plików - moim artefaktem w projecie z poprzednich zajęć jest kontener. Utworzyłam cjson-role poleceniem:
+
 ![zdj](screenshots3/33.png)
 
 Następnie skopiowałam swoje pliki `main.c`, `cjson.rpm`, oraz edytowałam plik `main.yaml` z folderu /cjson/tasks, aby wyglądał następująco:
@@ -184,6 +201,7 @@ Do tego utworzyłam playbooka `playbook-cjson.yaml`, aby móc poprawnie uruchomi
   roles:
     - cjson-role
 ```
+
 ![zdj](screenshots3/34.png)
 
 
@@ -247,9 +265,11 @@ W menu startowym instalatora, po kliknięciu `e` należało go wpisać komendą:
 ```bash
 inst.ks=https://tinyurl.com/pszlachtaaa
 ```
+
 ![zdj](screenshots3/36.png)
 
 Po chwili, ukazał się klasyczny instalator w formie graficznej, z niektórymi wygaszonymi polami ze względu na to, że wartości te zostały już określone w pliku, który tam przesyłałam:
+
 ![zdj](screenshots3/40.png)
 ![zdj](screenshots3/38.png)
 ![zdj](screenshots3/39.png)
@@ -321,6 +341,7 @@ Następnie poleceniami, utworzyłam katalog  i nadałam kontekst SELinux, oraz o
 sudo mkdir -p /var/www/html/cjson
 sudo cp cjson.rpm /var/www/html/cjson/
 ```
+
 ![zdj](screenshots3/46.png)
 ![zdj](screenshots3/49.png)
 
@@ -470,6 +491,7 @@ W Kubernetes pojawił sie deployment, sprawdziłam działanie poda:
 ![zdj](screenshots3/63.png)
 
 Sprawdziłam port. Z racji iż nie mogłam sobie poradzić z formą "kubectl port-forward pod/my-nginx-deploy-7f787969cc-wdbgt 8080:80", zrobiłam to inaczej: Pobieram zawartość strony interntowej uruchomionej na localhost i wyświetlam go:
+
 ![zdj](screenshots3/64.png)
 
 Utworzyłam plik `nginx-deployment.yaml`, na podstawie dokumentacji z deploymentów w Kubernetes:
@@ -497,6 +519,7 @@ spec:
         - containerPort: 80
 ```
 Wdrożyłamzasoby w klastrze i sprawdziłam stan wdrożenia:
+
 ![zdj](screenshots3/65.png)
 ![zdj](screenshots3/66.png)
 
@@ -519,6 +542,7 @@ spec:
     nodePort: 30080
 ```
 Do wdrożenia podobnie jak poprzednio polecenia:
+
 ![zdj](screenshots3/67.png)
 ![zdj](screenshots3/68.png)
 
@@ -562,34 +586,42 @@ docker build -t kryniaaaaa/my-nginx3 -f Dockerfile3 .
 docker push kryniaaaaa/my-nginx3
 ```
 W Docker Hub:
+
 ![zdj](screenshots3/71.png)
 
 Zmiany w deploymencie - Odpowiednio zmieniałam sekcję "replicas:" w pliku `nginx-deployment.yaml` na różne wartości odpoweidnio według wariantu. Wszytskie zmiany zatwierdzałam poleceniem `kubectl apply -f nginx-deployment.yaml`:
 Przy każdej zmianie tworzenie/usuwanie (w zależności od wariantu) podów, było rozkłądane w czasie - chwilę trwało, stąd na niektórych zrzutach, niepełna wersja.
 
 8:
+
 ![zdj](screenshots3/72.png)
 
 1:
+
 ![zdj](screenshots3/73.png)
 
 0:
+
 ![zdj](screenshots3/74.png)
 
 znowu 4:
+
 ![zdj](screenshots3/75.png)
 
 Następnie zmieniłam wersje obrazu na inne warianty w tym miejscu:
 drugi:
+
 ![zdj](screenshots3/76.png)
 ![zdj](screenshots3/77.png)
 
 trzeci - deploy nie zadziałał - pody nie przechodziły running i operacja była zaznaczona na czerwono
+
 ![zdj](screenshots3/78.png)
 
 Przywracanie poprzednich wersji wdrożeń poleceniem:
 `kubectl rollout undo deployment my-nginx-deploy`
 Przywrócone wersje:
+
 ![zdj](screenshots3/79.png)
 
 Skrypt weryfikujący czy wdrożenie "zdążyło" się wdrożyć (60 sekund):
