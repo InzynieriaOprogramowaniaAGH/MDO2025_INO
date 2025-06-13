@@ -8,19 +8,21 @@ Celem niniejszego sprawozdania jest przedstawienie procesu instalacji, konfigura
 
 Na maszynie głównej zainstalowano Ansible w wersji `2.16.3`, co zostało potwierdzone za pomocą polecenia `ansible --version`. Dodatkowo przedstawiono lokalizacje modułów, plików konfiguracyjnych oraz wersję Pythona i bibliotek pomocniczych.
 
-![Wersja Ansible](./1.png)
+
+![1](https://github.com/user-attachments/assets/be6b7622-f4f4-4349-8899-180f39b29dc1)
 
 ### Generowanie klucza SSH
 
 Następnie wygenerowano parę kluczy SSH (RSA 4096 bitów) dla użytkownika `Wojtek`, umożliwiając bezhasłowe logowanie się do zdalnych maszyn. Klucz zapisano w domyślnej lokalizacji `/home/Wojtek/.ssh/id_rsa`.
 
-![Generowanie klucza SSH](./2.png)
+![2](https://github.com/user-attachments/assets/9701c3bd-4cce-4f4d-b72d-6c1be0c5b028)
 
 ### Wymiana kluczy SSH
 
 Za pomocą polecenia `ssh-copy-id`, klucz publiczny został przesłany na maszynę docelową (adres IP `192.168.100.27`), gdzie zalogowano się na użytkownika `ansible`. Po zakończeniu operacji możliwe było nawiązywanie połączeń SSH bez potrzeby podawania hasła.
 
-![Wymiana kluczy SSH](./3.png)
+![3](https://github.com/user-attachments/assets/3bbe7421-fca7-417e-ba0e-a89775a79ae5)
+
 
 ## Weryfikacja połączenia i inwentaryzacja systemów
 
@@ -28,7 +30,8 @@ Za pomocą polecenia `ssh-copy-id`, klucz publiczny został przesłany na maszyn
 
 Po skonfigurowaniu kluczy SSH wykonano próbę połączenia z maszyną `ansible-target` z poziomu maszyny zarządzającej. Logowanie odbyło się poprawnie bez potrzeby podawania hasła, co potwierdza prawidłową wymianę kluczy i działający serwer SSH.
 
-![Połączenie SSH](./4.png)
+![4](https://github.com/user-attachments/assets/50767955-7877-49ca-ba1e-750d3acca759)
+
 
 ### Plik inwentaryzacji Ansible
 
@@ -39,7 +42,8 @@ Został utworzony plik `hosts.ini`, zawierający sekcję `[targets]`, w której 
 ansible-target ansible_host=192.168.100.27 ansible_user=ansible
 ```
 
-![hosts.ini](./5.png)
+![5](https://github.com/user-attachments/assets/399a22ec-50ef-4167-a244-354738582e35)
+
 
 ### Weryfikacja łączności – moduł ping
 
@@ -51,7 +55,8 @@ ansible -i hosts.ini targets -m ping
 
 Zwrócona odpowiedź `pong` oznacza, że komunikacja przebiega prawidłowo i maszyna jest gotowa do dalszych operacji z użyciem Ansible.
 
-![ping](./6.png)
+![6](https://github.com/user-attachments/assets/5ba82f9b-a740-4933-ad61-15d245e24a35)
+
 
 ### Informacje systemowe i hostname
 
@@ -59,25 +64,30 @@ Polecenie `hostnamectl` zostało użyte do potwierdzenia nazw hostów i konfigur
 
 **Maszyna główna – Wojtek2**
 
-![hostnamectl Wojtek2](./7.1.png)
+![7 1](https://github.com/user-attachments/assets/100b44dc-fe95-4f65-bc58-dbfeb91fb55d)
+
 
 **Maszyna docelowa – ansible-target**
 
-![hostnamectl ansible-target](./7.2.png)
+![7 2](https://github.com/user-attachments/assets/a4fe0996-6aa2-4b62-bda9-22a02b773433)
+
 
 ### Ustawienie aliasów nazw w pliku /etc/hosts
 
 W celu uproszczenia komunikacji sieciowej, w plikach `/etc/hosts` na obu maszynach zdefiniowano odpowiednie aliasy nazwowe dla adresów IP maszyn. Dzięki temu możliwa jest komunikacja za pomocą nazw hostów zamiast adresów IP.
 
-![Plik hosts na obu maszynach](./8.png)
+![8](https://github.com/user-attachments/assets/63fd70e6-8f0e-44bf-b7ac-772d4dc15c3c)
+
 
 ### Testy łączności nazwowej (ping po hostname)
 
 Przeprowadzono testy połączeń ICMP (`ping`) przy użyciu zdefiniowanych nazw hostów. Potwierdzono poprawne działanie komunikacji dwustronnej zarówno z `Wojtek2` do `ansible-target`, jak i odwrotnie.
 
-![ping z Wojtek2](./9.1.png)
+![9 1](https://github.com/user-attachments/assets/366a3383-6a0f-4442-b658-15795038b4b4)
 
-![ping z ansible-target](./9.2.png)
+![9 2](https://github.com/user-attachments/assets/9b3242d8-d802-4d56-b829-e42d7f888551)
+
+
 
 ### Rozszerzony plik inwentaryzacji z podziałem na grupy
 
@@ -91,7 +101,8 @@ wojtek2 ansible_host=wojtek2 ansible_user=Wojtek
 ansible-target ansible_host=ansible-target ansible_user=ansible
 ```
 
-![inventory.ini](./10.png)
+![10](https://github.com/user-attachments/assets/94d998bd-092a-46d8-bb2a-f6107a1cfd60)
+
 
 ## Zdalne wywoływanie procedur
 
@@ -99,7 +110,8 @@ ansible-target ansible_host=ansible-target ansible_user=ansible
 
 Wykonano zdalne polecenie `ping` dla wszystkich maszyn zadeklarowanych w pliku `inventory.ini`, co potwierdziło gotowość środowiska do dalszych zautomatyzowanych działań.
 
-![ansible all -m ping](./11.png)
+![11](https://github.com/user-attachments/assets/8e7504e4-43ce-4e81-b94d-e1b3bd3da6b6)
+
 
 ### Ping wszystkich maszyn – playbook YAML
 
@@ -113,7 +125,8 @@ Utworzono playbook `ping.yml`, którego celem było wysłanie polecenia `ping` d
       ansible.builtin.ping:
 ```
 
-![ping.yml](./12.1.png)
+![12 1](https://github.com/user-attachments/assets/cfda2029-4398-451b-ae36-3681681adfe5)
+
 
 ### Uruchomienie playbooka
 
@@ -125,7 +138,8 @@ ansible-playbook -i inventory.ini ping.yml
 
 Zadanie zakończyło się sukcesem dla obu maszyn – `wojtek2` i `ansible-target`.
 
-![wynik playbooka](./12.2.png)
+![12 2](https://github.com/user-attachments/assets/614d0cae-e681-4438-8b16-5ef5164fce1e)
+
 
 ### Skopiowanie pliku inwentaryzacji na maszynę docelową
 
@@ -141,7 +155,8 @@ Utworzono playbook `copy_inventory.yml`, którego zadaniem było przesłanie pli
         dest: /tmp/inventory.ini
 ```
 
-![copy\_inventory.yml](./13.1.png)
+![13 1](https://github.com/user-attachments/assets/9085e5e6-305c-46da-8a2f-9c874e78fca0)
+
 
 Uruchomienie playbooka zakończyło się sukcesem:
 
@@ -149,13 +164,15 @@ Uruchomienie playbooka zakończyło się sukcesem:
 ansible-playbook -i inventory.ini copy_inventory.yml
 ```
 
-![wynik copy\_inventory.yml](./13.2.png)
+
+![13 2](https://github.com/user-attachments/assets/08bd4c4b-a206-440f-b7b6-29dce9a45cde)
 
 ### Powtórne wykonanie playbooka ping po skopiowaniu inwentaryzacji
 
 Po przesłaniu pliku inwentaryzacji ponownie wykonano `ping.yml`, aby sprawdzić, czy środowisko działa bez zmian.
 
-![ponowny ping](./14.png)
+![14](https://github.com/user-attachments/assets/f8959560-f290-4e9e-82ad-844248fa20e1)
+
 
 ### Aktualizacja pakietów w systemie
 
@@ -174,8 +191,8 @@ Został przygotowany playbook `upgrade.yml`, który aktualizuje listę pakietów
       apt:
         upgrade: dist
 ```
+![15 1](https://github.com/user-attachments/assets/889c3d2d-fc69-42e6-bc7e-51fc6fe77a6e)
 
-![upgrade.yml](./15.1.png)
 
 Uruchomienie aktualizacji:
 
@@ -185,7 +202,8 @@ ansible-playbook -i inventory.ini upgrade.yml
 
 Zakończone powodzeniem:
 
-![wynik upgrade.yml](./15.2.png)
+![15 2](https://github.com/user-attachments/assets/43aad8c9-5341-46a0-9cdb-c6bf4490de00)
+
 
 ### Restart usług sshd i rngd
 
@@ -208,7 +226,8 @@ Utworzono playbook `restart_services.yml`, który restartuje usługę `sshd` ora
       ignore_errors: true
 ```
 
-![restart\_services.yml](./16.1.png)
+![16 1](https://github.com/user-attachments/assets/b2015be4-0242-4abd-8359-bcfb2a9d274a)
+
 
 Uruchomienie:
 
@@ -216,17 +235,20 @@ Uruchomienie:
 ansible-playbook -i inventory.ini restart_services.yml
 ```
 
-![wynik restart\_services.yml](./16.2.png)
+
+![16 2](https://github.com/user-attachments/assets/eb05066a-d608-43a4-9e33-467ebbc8a51e)
 
 ### Symulacja niedostępności hosta (wyłączony sshd)
 
 W celu przetestowania zachowania systemu w przypadku niedostępności, ręcznie zatrzymano i wyłączono usługę `ssh` na maszynie `ansible-target`, używając `systemctl` lub `sysv-init`, zależnie od dostępności polecenia:
 
-![wyłączenie ssh](./17.1.png)
+![17 1](https://github.com/user-attachments/assets/b1c1ef26-734f-42cf-8a4f-decb13dd7c09)
+
 
 Ponowne uruchomienie playbooka `ping.yml` spowodowało błąd łączności z `ansible-target`, zgodnie z oczekiwaniami:
 
-![brak łączności z hostem](./17.2.png)
+![17 2](https://github.com/user-attachments/assets/82060cd9-9f4e-4146-bb9c-6741741a6c24)
+
 
 ### Wdrożenie aplikacji z wykorzystaniem Dockera
 
@@ -236,73 +258,86 @@ W kolejnym etapie przeprowadzono wdrożenie kontenera Docker zawierającego apli
 
 W pierwszej kolejności przygotowano playbook `install_docker.yml`, którego zadaniem była instalacja Dockera na maszynie docelowej `ansible-target`. W playbooku znalazły się kroki aktualizacji cache, instalacji zależności, dodania repozytorium Dockera oraz uruchomienia usługi Docker.
 
-![install\_docker.yml](./18.1.png)
+![18 1](https://github.com/user-attachments/assets/f0b525a2-9e87-434d-a43d-dfa8e29019fd)
+
 
 Uruchomienie playbooka zakończyło się sukcesem, co potwierdziło poprawne działanie wszystkich zadań.
 
-![Wynik uruchomienia](./18.2.png)
+![18 2](https://github.com/user-attachments/assets/66bd355f-42fc-43ff-9103-b53ee1136e24)
+
 
 ### Wysyłka obrazu Docker (plik tar) na maszynę docelową
 
 Następnie utworzono playbook `send_image.yml`, którego zadaniem było przesłanie obrazu Docker (plik `.tar`) na maszynę docelową do katalogu `/tmp`.
 
-![send\_image.yml](./19.1.png)
+![19 1](https://github.com/user-attachments/assets/7031ddd2-b4c6-4c08-bd75-d732a07c639b)
+
 
 Operacja zakończyła się poprawnie:
 
-![wynik send\_image.yml](./19.2.png)
+![19 2](https://github.com/user-attachments/assets/277fe0ea-72c2-4b43-8688-b96048cf9422)
 
 ### Załadowanie obrazu do Dockera na maszynie zdalnej
 
 Ostatnim krokiem było załadowanie przesłanego obrazu do lokalnego rejestru Docker na `ansible-target` za pomocą polecenia `docker load`. W tym celu przygotowano playbook `load_image.yml`.
 
-![load\_image.yml](./20.1.png)
+![20 1](https://github.com/user-attachments/assets/d597e59e-95b7-4c96-b4c9-113aca85aba6)
+
 
 Uruchomienie zakończyło się sukcesem, obraz został poprawnie załadowany do Dockera:
 
-![wynik load\_image.yml](./20.2.png)
+![20 2](https://github.com/user-attachments/assets/44077109-5ae5-4c59-a8c5-4bedb3a45ea2)
+
 
 ### Uruchomienie kontenera z aplikacją
 
 W kolejnym kroku utworzono playbook `run_container.yml`, który umożliwił uruchomienie aplikacji z załadowanego obrazu. W przypadku istniejącego kontenera o nazwie `ts-app`, został on najpierw zatrzymany i usunięty.
 
-![run\_container.yml](./21.1.png)
+![21 1](https://github.com/user-attachments/assets/5bf0da45-eb61-4e79-a35b-45dfa5fac771)
+
 
 Playbook zakończył się sukcesem, potwierdzając uruchomienie nowego kontenera:
 
-![wynik run\_container.yml](./21.2.png)
+![21 2](https://github.com/user-attachments/assets/041d14a5-3b7e-43d5-8bb1-48897facc2f8)
+
 
 ### Weryfikacja działania aplikacji
 
 Po zalogowaniu się na maszynę `ansible-target` poleceniem `docker ps` potwierdzono, że kontener `ts-app` jest aktywny i nasłuchuje na porcie 3000.
 
-![docker ps](./22.png)
+![22](https://github.com/user-attachments/assets/f3610cb4-7c72-468c-b404-7b82d2242dcd)
+
 
 ### Zatrzymanie i usunięcie kontenera
 
 Na potrzeby testów przygotowano playbook `cleanup_container.yml`, który odpowiada za zatrzymanie oraz usunięcie uruchomionego kontenera aplikacji.
 
-![cleanup\_container.yml](./23.1.png)
+![23 1](https://github.com/user-attachments/assets/c127f4e2-d221-47dd-bf51-4620cea8baa4)
+
 
 Playbook wykonano z powodzeniem:
 
-![wynik cleanup\_container.yml](./23.2.png)
+![23 2](https://github.com/user-attachments/assets/e092b12a-fc79-4f8b-bc53-9d4ad069b5d4)
+
 
 ### Utworzenie roli Ansible dla aplikacji
 
 Za pomocą polecenia `ansible-galaxy init ts_app` wygenerowano szkielet roli. Plik obrazu aplikacji został umieszczony w katalogu `files`, a główna logika operacji w pliku `tasks/main.yml`. Rola zawiera kolejno: kopiowanie obrazu, jego załadowanie do Dockera oraz uruchomienie kontenera.
 
-![main.yml](./24.1.png)
+![24 1](https://github.com/user-attachments/assets/6a535022-321d-4633-834c-1686309d3506)
 
-![struktura roli](./24.2.png)
+![24 2](https://github.com/user-attachments/assets/46d6a7b3-65a5-4d16-94d2-103974aa5a35)
 
-![plik tar w katalogu files](./24.3.png)
+![24 3](https://github.com/user-attachments/assets/5d197a88-365d-4929-a458-b4f71adf1d25)
+
 
 ### Test roli aplikacyjnej
 
 Na koniec przygotowano playbook `test_role.yml`, w którym przypisano rolę `ts_app` do hosta `ansible-target`. Test wykonano z sukcesem, co potwierdza poprawność działania roli.
 
-![test\_role.yml](./25.png)
+![25](https://github.com/user-attachments/assets/a79ed647-a511-4a74-b413-942179072d5a)
+
+
 
 ## Podsumowanie i wnioski
 
