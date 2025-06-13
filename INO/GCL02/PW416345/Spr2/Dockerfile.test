@@ -1,0 +1,6 @@
+FROM local-node-ci-app-build
+
+WORKDIR /app
+
+RUN npm run cover
+RUN npm test

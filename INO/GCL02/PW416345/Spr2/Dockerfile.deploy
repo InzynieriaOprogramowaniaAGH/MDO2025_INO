@@ -1,0 +1,11 @@
+FROM node:10
+
+WORKDIR /app
+
+COPY reports /app/reports
+
+RUN npm install -g http-server@0.12.3
+
+EXPOSE 8000
+
+CMD ["http-server", "reports/coverage/lcov-report", "-p", "8000"]
