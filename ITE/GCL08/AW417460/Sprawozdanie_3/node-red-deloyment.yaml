@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-red-ci
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: node-red-ci
+  template:
+    metadata:
+      labels:
+        app: node-red-ci
+    spec:
+      containers:
+        - name: node-red-container
+          image: nacymon/node-red-ci
+          ports:
+            - containerPort: 3000
+

@@ -1,0 +1,79 @@
+---
+- hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Install required system packages
+      ansible.builtin.dnf:
+        name:
+          - python3-packaging
+          - python3-pip
+          - docker
+        state: present
+        update_cache: yes
+
+    - name: Install Python 'requests'
+      ansible.builtin.pip:
+        name: requests
+        executable: pip3
+
+    - name: Start and enable Docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create Docker network CI (if not exists)
+      shell: docker network create CI || true
+      ignore_errors: true
+
+    - name: Pull Docker image
+      community.docker.docker_image:
+        name: nacymon/node-red-ci:latest
+        source: pull
+
+    - name: Stop and remove existing container (if exists)
+      community.docker.docker_container:
+        name: RED
+        state: absent
+        force_kill: true
+
+    - name: Remove any container using port 3000
+      shell: |
+        for id in $(docker ps -q --filter "publish=3000"); do docker rm -f $id; done
+      ignore_errors: true
+
+    - name: Run Node-RED container in CI network
+      community.docker.docker_container:
+        name: RED
+        image: nacymon/node-red-ci:latest
+        state: started
+        restart_policy: unless-stopped
+        networks:
+          - name: CI
+        published_ports:
+          - "3000:3000"
+
+    - name: Wait for the container to be ready
+      wait_for:
+        port: 3000
+        host: "localhost"
+        state: started
+        delay: 5
+        timeout: 60
+        msg: "Node-RED is not available on port 3000"
+
+    - name: Test HTTP response from container
+      uri:
+        url: http://localhost:3000
+        return_content: yes
+      register: http_response
+
+    - name: Show HTTP response status
+      debug:
+        msg: "Node-RED HTTP status: {{ http_response.status }}"
+
+    - name: Stop and remove Docker container
+      community.docker.docker_container:
+        name: RED
+        state: absent
+        force_kill: true
