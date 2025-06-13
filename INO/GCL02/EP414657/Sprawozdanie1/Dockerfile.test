@@ -1,0 +1,3 @@
+FROM myapp
+
+RUN npm test

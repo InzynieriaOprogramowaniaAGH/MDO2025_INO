@@ -1,0 +1,5 @@
+FROM zlib-build
+
+WORKDIR /app
+
+CMD ["make", "test"]

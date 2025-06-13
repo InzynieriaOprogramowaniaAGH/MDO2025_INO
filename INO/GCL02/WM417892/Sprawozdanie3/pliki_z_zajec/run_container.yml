@@ -1,0 +1,10 @@
+---
+- name: Run application container on ansible-target
+  hosts: ansible-target
+  become: true
+  tasks:
+    - name: Stop existing ts-app container if exists
+      shell: docker rm -f ts-app || true
+
+    - name: Run ts-node-starter container
+      shell: docker run -d --name ts-app -p 3000:3000 ts-node-starter:ci-1

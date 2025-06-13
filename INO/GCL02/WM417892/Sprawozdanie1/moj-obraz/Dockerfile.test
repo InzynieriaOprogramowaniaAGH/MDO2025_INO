@@ -1,0 +1,9 @@
+FROM python:3.10-slim
+
+WORKDIR /app/CSOM
+
+COPY . .
+
+RUN pip install -r requirements.txt
+
+CMD ["sh", "-c", "mkdir -p logs && pytest > logs/test_results.log || true && cat logs/test_results.log"]

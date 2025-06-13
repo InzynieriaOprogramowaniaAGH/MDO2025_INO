@@ -1,0 +1,16 @@
+FROM ubuntu:22.04
+
+WORKDIR /app
+
+RUN apt-get update && \
+    apt-get install -y git make gcc autoconf automake libtool
+
+RUN git clone https://github.com/yaml/libyaml.git
+
+WORKDIR /app/libyaml
+
+RUN ./bootstrap && \
+    ./configure && \
+    make
+
+CMD ["/bin/bash"]

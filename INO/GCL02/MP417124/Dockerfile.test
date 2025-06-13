@@ -1,0 +1,9 @@
+FROM libyaml-build
+
+WORKDIR /app/libyaml
+
+RUN mkdir -p /app/libyaml/logs
+
+RUN make test > /app/libyaml/logs/test_results.log
+
+CMD ["/bin/bash"]

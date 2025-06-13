@@ -1,0 +1,19 @@
+Connecting to host iperf-server, port 5201
+[  5] local 172.19.0.3 port 54240 connected to 172.19.0.2 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec   574 MBytes  4.82 Gbits/sec    1   1.74 MBytes       
+[  5]   1.00-2.00   sec   550 MBytes  4.61 Gbits/sec    0   1.88 MBytes       
+[  5]   2.00-3.00   sec   588 MBytes  4.91 Gbits/sec  707   1.97 MBytes       
+[  5]   3.00-4.00   sec   540 MBytes  4.54 Gbits/sec    1   1.97 MBytes       
+[  5]   4.00-5.00   sec   626 MBytes  5.25 Gbits/sec    0   1.97 MBytes       
+[  5]   5.00-6.00   sec   559 MBytes  4.68 Gbits/sec    0   1.97 MBytes       
+[  5]   6.00-7.00   sec   530 MBytes  4.45 Gbits/sec    0   1.97 MBytes       
+[  5]   7.00-8.00   sec   786 MBytes  6.61 Gbits/sec    0   1.97 MBytes       
+[  5]   8.00-9.00   sec  1.16 GBytes  9.94 Gbits/sec    0   1.97 MBytes       
+[  5]   9.00-10.00  sec   939 MBytes  7.87 Gbits/sec    1   1.97 MBytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  6.72 GBytes  5.77 Gbits/sec  710             sender
+[  5]   0.00-10.01  sec  6.71 GBytes  5.76 Gbits/sec                  receiver
+
+iperf Done.

@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build test image') {
+            steps {
+                dir('INO/GCL02/WM417892/Sprawozdanie1/moj-obraz') {
+                    sh 'docker build -t cj-test -f Dockerfile.test .'
+                }
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                dir('INO/GCL02/WM417892/Sprawozdanie1/moj-obraz') {
+                    sh 'docker run --rm cj-test'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'INO/GCL02/WM417892/Sprawozdanie1/moj-obraz/logs/test_results.log', allowEmptyArchive: true
+        }
+    }
+}
