@@ -306,12 +306,14 @@ Zmieniłąm strategię wdrażania na Recreate poleceniem `kubectl apply -f nginx
 
 Przy tej strategii nie ma przerwy w działaniu.
 
+## Canary
+To strategia, gdzie nowa wersja aplikacji jest najpierw wdrażana na małej części podów, aby przetestować ją przed pełnym uruchomieniem. 
+W przeciwieństwie do Recreate, gdzie stare pody są usuwane od razu, Canary pozwala na stopniowe i bezpieczniejsze wprowadzenie zmian.
 
-
-## Skrypt rollout
-
-
+## Rollout
 Zastosowałam rollout aby sprawdzić, czy deployment nginx-deployment uruchomił wszystkie repliki w czasie nie dłuższym niż 60 sekund.
 
 
 ![alt text](<part5/Zrzut ekranu 2025-06-13 203749.png>)
+
+Strategie wdrożeń różnią się sposobem wymiany podów: Recreate usuwa wszystkie naraz, Canary wprowadza zmiany stopniowo, a Rolling Update aktualizuje je etapami, kontrolując dostępność aplikacji.
