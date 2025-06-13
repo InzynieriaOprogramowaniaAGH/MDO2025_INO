@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-rolling
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 50%
+  selector:
+    matchLabels:
+      app: nginx
+      version: rolling
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: rolling
+    spec:
+      containers:
+        - name: nginx
+          image: kacper1130/nginx-dzialajacy
+          ports:
+            - containerPort: 80
