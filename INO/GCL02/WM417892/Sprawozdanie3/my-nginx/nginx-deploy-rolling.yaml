@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-rolling
+spec:
+  replicas: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2       # pozwól na wyłączenie 2 podów naraz
+      maxSurge: 50%           # uruchomisz do 50% (≈3) nowych podów ponad 5
+  selector:
+    matchLabels:
+      app: my-nginx-rolling
+  template:
+    metadata:
+      labels:
+        app: my-nginx-rolling
+        version: v1
+    spec:
+      containers:
+      - name: nginx
+        image: wojtek2004/my-nginx:v1
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-rolling
+spec:
+  selector:
+    app: my-nginx-rolling
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30083

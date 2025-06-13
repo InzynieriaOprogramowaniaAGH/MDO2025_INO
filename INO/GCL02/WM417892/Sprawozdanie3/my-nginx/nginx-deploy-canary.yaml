@@ -1,0 +1,61 @@
+# Stable
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-stable
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: my-nginx-canary
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: my-nginx-canary
+        version: stable
+    spec:
+      containers:
+      - name: nginx
+        image: wojtek2004/my-nginx:v1
+        ports:
+        - containerPort: 80
+
+# Canary
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-nginx-canary
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: my-nginx-canary
+        version: canary
+    spec:
+      containers:
+      - name: nginx
+        image: wojtek2004/my-nginx:v2
+        ports:
+        - containerPort: 80
+
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-canary
+spec:
+  type: NodePort
+  selector:
+    app: my-nginx-canary
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30084

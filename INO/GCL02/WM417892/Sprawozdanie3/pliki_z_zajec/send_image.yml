@@ -1,0 +1,8 @@
+---
+- name: Send Docker image to ansible-target
+  hosts: ansible-target
+  tasks:
+    - name: Copy image tar file
+      copy:
+        src: /home/Wojtek/MDO2025_INO/INO/GCL02/WM417892/Sprawozdanie2/TypeScript-Node-Starter/ts-node-starter.tar
+        dest: /tmp/ts-node-starter.tar
