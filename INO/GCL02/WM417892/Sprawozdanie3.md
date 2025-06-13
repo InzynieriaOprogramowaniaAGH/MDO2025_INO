@@ -34,7 +34,8 @@ Do instalacji Minikube wykorzystano oficjalne źródło udostępniane przez Goog
    minikube version
    ```
 
-![Instalacja Minikube](3.1.png)
+![3 1](https://github.com/user-attachments/assets/6f65ea6c-820a-4407-8e9f-0e7d5e9fe105)
+
 
 ## Instalacja kubectl
 
@@ -62,7 +63,8 @@ W celu zarządzania klastrem Kubernetes należy zainstalować klienta `kubectl`.
    kubectl version --client
    ```
 
-![Instalacja kubectl](3.2.png)
+![3 2](https://github.com/user-attachments/assets/97f22e24-990a-4432-93c9-45f73c71c5c7)
+
 
 ## Uruchomienie klastra Minikube
 
@@ -74,7 +76,8 @@ minikube start --driver=docker --cpus=2 --memory=2048
 
 Minikube pobrał obraz bazowy, zainicjował kontroler i przygotował potrzebne komponenty Kubernetes, w tym RBAC, certyfikaty oraz CNI.
 
-![Uruchomienie klastra](3.3.png)
+![3 3](https://github.com/user-attachments/assets/65ede70c-c5a1-4ee1-b281-b61b468638e4)
+
 
 ## Weryfikacja działania klastra i bezpieczeństwa
 
@@ -90,8 +93,10 @@ Po starcie klastra sprawdzono jego status oraz stan węzła:
    ```bash
    kubectl get nodes -o wide
    ```
+   
+![3 4](https://github.com/user-attachments/assets/d8e0d19d-418e-4f70-abae-7640cac777fd)
 
-![Status klastra i node](3.4.png)
+
 
 Dodatkowo dokonano weryfikacji obecności certyfikatów wykorzystywanych do zabezpieczenia komunikacji wewnętrznej:
 
