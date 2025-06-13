@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Zadanie') {
+            steps {
+                echo 'Klonowanie repozytorium przedmiotowego'
+                sh 'git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                dir('MDO2025_INO') {
+                    sh 'git checkout BS416365'
+                }
+                dir('MDO2025_INO/ITE/GCL07/BS416365/curl') {
+                    sh '''
+                    docker build -f ./Dockerfile.curlbld -t curl-build .
+                    docker run --rm curl-build bash -c "curl --version"
+                    '''
+                }
+            }
+        }
+    }
+}

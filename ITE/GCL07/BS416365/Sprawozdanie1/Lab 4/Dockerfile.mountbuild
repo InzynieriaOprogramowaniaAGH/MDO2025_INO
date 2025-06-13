@@ -1,0 +1,11 @@
+FROM fedora:41
+
+RUN dnf -y update && \
+    dnf -y install meson ninja-build gcc glib2-devel openssl-devel ncurses-devel utf8proc-devel perl-ExtUtils-* cmake libgcrypt-devel git
+WORKDIR /irssi
+RUN git clone https://github.com/irssi/irssi.git .
+RUN --mount=type=cache,target=/var/cache/dnf \
+    meson setup Build && \
+    ninja -C Build
+RUN --mount=type=bind,target=/mnt/vout,rw \
+    cp -r Build /mnt/vout/

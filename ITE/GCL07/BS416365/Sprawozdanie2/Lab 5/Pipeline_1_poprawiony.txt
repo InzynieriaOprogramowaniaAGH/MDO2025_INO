@@ -1,0 +1,156 @@
+Started by user DevOps - BS
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/Pipeline_Sprawdzanie_wykonywania_2_razy
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Zadanie)
+[Pipeline] echo
+Czyszczenie i klonowanie repozytorium przedmiotowego
+[Pipeline] sh
++ rm -rf MDO2025_INO
++ git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+Cloning into 'MDO2025_INO'...
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/Pipeline_Sprawdzanie_wykonywania_2_razy/MDO2025_INO
+[Pipeline] {
+[Pipeline] sh
++ git checkout BS416365
+Switched to a new branch 'BS416365'
+branch 'BS416365' set up to track 'origin/BS416365'.
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/Pipeline_Sprawdzanie_wykonywania_2_razy/MDO2025_INO/ITE/GCL07/BS416365/curl
+[Pipeline] {
+[Pipeline] sh
++ echo Czyszczenie dockerowych śmieci
+Czyszczenie dockerowych śmieci
++ docker container prune -f
+Deleted Containers:
+4815f60123ac87b51e9b2b71174dba5cb9f4be6188944961e004f059d1ed39cd
+c6fe664537cf97ff78dc70db0ea97c7a1a5d818abb83739d5dc4ad99648952b0
+283201abbc69e23cd3cf4552d7fcc900a70302c02dad7dc625bc409f5684fb3e
+449766ee80d552449a25e652987fb2bb79e3088070af52c2d88718a963638e85
+a7f4780a435341012cc8f84b4427b55932bbbf04afedf543c1d444b2d4a7698a
+580c0cfe5604e62298de21394494989e04a0e191c7c30f378adf3d60ebfeced7
+f7a6a9b984794c26db4edf1202793e385f1fa69fdeaa98d88c010ad49308a064
+
+Total reclaimed space: 81.13kB
++ docker builder prune -f
+ID						RECLAIMABLE	SIZE		LAST ACCESSED
+gx6wq4xffahh7u6jgeos4d85b*              	true 		0B        	4 weeks ago
+efl8ykbtyb3fr33gh0w5yewcs*              	true 	0B        	5 days ago
+nbswfttwkn5nyonfada2eoleo*              	true 	51B       	4 weeks ago
+tlelhybooa85v0bgn6mr36b7w               	true 	0B        	4 weeks ago
+pqqnueszi704x8pujlyn3uz10*              	true 	317B      	19 minutes ago
+0lmt8lgf9s2si7w48q9jpxeig*              	true 	0B        	5 days ago
+6roikbkpykjfobq1k1aureshx*              	true 	553B      	5 days ago
+nob01qm8rmx9kjd9oo8b670hx*              	true 	553B      	5 days ago
+01clnhskxihq5eqh3dz4ogasd               	true 	50.1MB    	4 weeks ago
+a6ejspo3nsnq37ukyldny31kz               	true 	0B        	4 weeks ago
+lagsvi5sp2odenzuvwg2z05ta               	true 	0B        	Less than a second ago
+d26cjvpevwug19yoyqi1hi5ja*              	true 	8.891kB   	4 weeks ago
+br84se4q0ftazja30585bw9do*              	true 	0B        	19 minutes ago
+vlmgw9vgxwscv36uhvy4n8iif*              	true 	0B        	5 days ago
+k2ph1mqn16mxmsvsn0ubl2q72               	true 	0B        	Less than a second ago
+nwj1nudwws01sl07p1vkwffjy*              	true 	0B        	4 weeks ago
+raso5zawnovin7vcsx05uyrr9*              	true 	317B      	12 minutes ago
+uywke0chuy3ls3vqyu0shod65*              	true 	0B        	12 minutes ago
+wb02s5ntlg5o0dj4ouq9oygqv*              	true 	0B        	4 weeks ago
+raostz60vvtzkyoq7e78y0ys3               	true 	0B        	Less than a second ago
+j7i9a2d3mwuto1p8gpig3ojxp               	true 	0B        	Less than a second ago
+8zs7jytl508kxpr90rdy1u1jy               	true 	363.4MB   	Less than a second ago
+xgplbhri7lkh2wpgcc3h2wure               	true 	0B        	Less than a second ago
+ohmohvhs65qyfd8m98pznbqte               	true 	0B        	Less than a second ago
+pxd3f4kicsfcxippvezxz41hf               	true 	0B        	Less than a second ago
+jkmxfqozp1j3njxm1no8dw4qr               	true 	0B        	Less than a second ago
+s2a7941d58wgn60c8lkgxplko               	true 	0B        	Less than a second ago
+uqatrt3bn5dexkipkbc9z3wd3               	true 	0B        	Less than a second ago
+vhuj8ebo37u4kqo4h0mmcx7jn               	true 	0B        	Less than a second ago
+2qe70ph51n1c1s2mo3xb718m4               	true 	0B        	Less than a second ago
+bx0rvfm7i0axpxx473t2nnqgp               	true 	0B        	Less than a second ago
+3k1krtk9e62cf4szl1hnwvg47               	true 	0B        	Less than a second ago
+syqp8pa3emdj38b58d9wv91vi               	true 	0B        	Less than a second ago
+4olir9iqjl7cq2kjbb3i6hfx3               	true 	0B        	Less than a second ago
+y9adm0efdvcvvgbi9px0aem2j               	true 	0B        	Less than a second ago
+dc394mm4p53nst0tebxz6nsd0               	true 	0B        	Less than a second ago
+81yrz70njd4fi19suvde08uwr               	true 	0B        	Less than a second ago
+z2a1skhv8emzqsvwlmtxxngpt               	true 	0B        	Less than a second ago
+yvqz13fp4klimib2gskjmo82m               	true 	0B        	Less than a second ago
+gx4egzhgelpqxera6j8je28e5               	true 	0B        	Less than a second ago
+Total:	413.5MB
++ docker image prune -f
+Deleted Images:
+deleted: sha256:2e6eb800daf48827b73b8f9b44cc2504779cf35bca08125303fc01f65fdca13c
+untagged: jenkins/jenkins@sha256:01ccf53ac68037a1dc5aff50bf2336e6a672532cbe2536dcb91ccb86447894ad
+deleted: sha256:6a44d1dd2d60fa22c4602bf9e05a97bb70f8590bd03a3b4f2f377aae4255ddb8
+deleted: sha256:18895d38bd967f0b70ab2724978052ed8cf1d6ccc40e49013448bc232f658242
+deleted: sha256:83fe9f08cd8f4b591f0fb33eb95ed6ea2e0ef91ff5f30effb027c2ca48377f97
+deleted: sha256:96cfbe197b6ed10806945acf26445d494e279643613293dda4f20ed512987c2a
+deleted: sha256:402e7c6d05e786a31b71768c31d43c03c550d99fc6db9ad36155547bfb027f33
+deleted: sha256:7aee1e0a046317f4633292e43aef4b54705a6a29d304176359c17b83636208f8
+deleted: sha256:9e01f4c2283c8c1a87f0ddb83f8484340408bcadcd09ed8ecc7255d29ed69548
+deleted: sha256:9f4c69b560acf823ae5a23058966ae28cce05b5b8a4f96bd24578cde87374a37
+deleted: sha256:fd1bb6468fec97bd7d0fdef33b3d93a7bbd2dabf3f2d26762098ba8f5d6c027f
+deleted: sha256:33b57b9d5b739217636334259e95f6383e166d7ba185fb4ba7e1a78350632f24
+deleted: sha256:268f61dd1d6d4e5c5d7397b58d20c2f7ec93a7807ea662597d4fc063f7cb741c
+deleted: sha256:e7435c4f25167531e16434378b3a4e1e84cc50b51fa965cd6a5af5fab4d5f50a
+deleted: sha256:91b542912d126a7516f2371a25a8b1f865f327cd8bd079f23d057d9945f7d02d
+deleted: sha256:7a4eb4e603b68b8439cc797217c7dae08eb9d5d94851423061a6a84ad8f73bf0
+untagged: ubuntu@sha256:72297848456d5d37d1262630108ab308d3e9ec7ed1c3286a32fe09856619a782
+deleted: sha256:a04dc4851cbcbb42b54d1f52a41f5f9eca6a5fd03748c3f6eb2cbeb238ca99bd
+deleted: sha256:4b7c01ed0534d4f9be9cf97d068da1598c6c20b26cb6134fad066defdb6d541d
+
+Total reclaimed space: 546.1MB
++ echo Budowanie obrazu curl-build
+Budowanie obrazu curl-build
++ docker build -f ./Dockerfile.curlbld -t curl-build .
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.curlbld
+#1 transferring dockerfile: 424B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/fedora:41
+#2 DONE 1.3s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.1s
+
+#4 [1/5] FROM docker.io/library/fedora:41@sha256:e10efcce862bea890d8d2fe6eeeb78d7b67aa1301280bd7853b4184acf5ec148
+#4 DONE 0.0s
+
+#5 [4/5] WORKDIR /curl
+#5 CACHED
+
+#6 [2/5] RUN dnf -y update &&     dnf -y install gcc make openssl-devel libcurl-devel zlib-devel     autoconf automake libtool git wget &&     dnf clean all
+#6 CACHED
+
+#7 [3/5] RUN git clone https://github.com/curl/curl.git
+#7 CACHED
+
+#8 [5/5] RUN ./buildconf && ./configure --with-openssl && make && make install
+#8 CACHED
+
+#9 exporting to image
+#9 exporting layers done
+#9 writing image sha256:558669173b55c2e8aad0893aa00e3362198f879363c7f1ea9901106e99162f95 done
+#9 naming to docker.io/library/curl-build done
+#9 DONE 0.0s
++ echo Testowanie wersji curl wewnątrz kontenera
+Testowanie wersji curl wewnątrz kontenera
++ docker run --rm curl-build bash -c curl --version
+curl 8.14.0-DEV (x86_64-pc-linux-gnu) libcurl/8.14.0-DEV OpenSSL/3.2.4 zlib/1.3.1.zlib-ng brotli/1.1.0 libidn2/2.3.8 libpsl/0.21.5 nghttp2/1.62.1
+Release-Date: [unreleased]
+Protocols: dict file ftp ftps gopher gophers http https imap imaps ipfs ipns mqtt pop3 pop3s rtsp smb smbs smtp smtps telnet tftp ws wss
+Features: alt-svc AsynchDNS brotli HSTS HTTP2 HTTPS-proxy IDN IPv6 Largefile libz NTLM PSL SSL threadsafe TLS-SRP UnixSockets
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

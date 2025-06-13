@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curl-canary-v1
+  labels:
+    app: curl
+    version: v1
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: curl
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: curl
+        version: v1
+    spec:
+      containers:
+      - name: curl
+        image: bskubel/curl-final:v12
+        command: ["sleep", "infinity"]
