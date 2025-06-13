@@ -105,7 +105,8 @@ minikube ssh
 ls /var/lib/minikube/certs/
 ```
 
-![Certyfikaty bezpieczeństwa](3.5.png)
+![3 5](https://github.com/user-attachments/assets/c9679dc9-0f48-4c48-891a-d97e64629d03)
+
 
 ## Uruchomienie Dashboardu Kubernetes
 
@@ -117,7 +118,7 @@ minikube dashboard --url
 
 Dostęp do panelu możliwy był lokalnie poprzez adres URL wskazany przez Minikube.
 
-![Uruchomienie Dashboardu](3.6.png)
+![3 6](https://github.com/user-attachments/assets/9955a7cc-237b-4ead-94e2-6f4129e42f6f)
 
 ## Uruchomienie aplikacji jako kontenera (pod)
 
@@ -136,7 +137,8 @@ Sprawdzono poprawność działania poleceniem:
 kubectl get pods
 ```
 
-![Uruchomienie podu nginx](3.8.png)
+![3 8](https://github.com/user-attachments/assets/c15849f2-1b0e-4343-ab98-51d7da5a82c1)
+
 
 ## Przekierowanie portu i test komunikacji
 
@@ -146,7 +148,8 @@ W celu przetestowania działania aplikacji przekierowano port z lokalnego hosta 
 kubectl port-forward pod/moja-aplikacja 8080:80
 ```
 
-![Port forwarding](3.9.png)
+![3 9](https://github.com/user-attachments/assets/52442134-dd06-4c81-b6fd-d95026db8f9a)
+
 
 Następnie wykonano zapytanie HTTP na przekierowany port, aby upewnić się, że aplikacja działa poprawnie:
 
@@ -154,17 +157,20 @@ Następnie wykonano zapytanie HTTP na przekierowany port, aby upewnić się, że
 curl http://127.0.0.1:8080
 ```
 
-![Test zapytania curl](3.10.1__.png)
+![3 10 1__](https://github.com/user-attachments/assets/522a8d61-8781-4e1f-b2f6-184ae315f665)
+
 
 Działanie aplikacji zostało także potwierdzone przez przeglądarkę:
 
-![Działająca aplikacja w przeglądarce](3.10.png)
+![3 10](https://github.com/user-attachments/assets/476b0e47-2991-4df6-b65e-55749c25b2bb)
+
 
 ## Monitoring działania i przygotowanie deploymentu
 
 Aplikacja kontynuuje działanie, co potwierdzono obserwując stan podu oraz ponownie przekierowując port:
 
-![Pod gotowy i aktywne przekierowanie](3.11.png)
+![3 11](https://github.com/user-attachments/assets/fd64aa60-1797-4f35-b9ed-89f2723c5bb4)
+
 
 ## Tworzenie pliku deploymentu YAML
 
@@ -175,7 +181,8 @@ Na potrzeby trwałego zarządzania zasobami klastra przygotowano plik `nginx-dep
 
 Plik został utworzony i zapisany w edytorze tekstowym:
 
-![Plik deploymentu YAML](3.12.png)
+![3 12](https://github.com/user-attachments/assets/2366f165-6c0b-46ab-bfbe-5866361c015d)
+
 
 ## Wdrożenie z pliku YAML i rollout
 
@@ -191,7 +198,8 @@ Stan rollout został sprawdzony za pomocą:
 kubectl rollout status deployment/nginx-deployment
 ```
 
-![Rollout deploymentu](3.13.png)
+![3 13](https://github.com/user-attachments/assets/a80ffc34-ff00-4044-9e1b-f19ad8f5a5c8)
+
 
 ## Weryfikacja działania wdrożenia i usługi
 
@@ -215,19 +223,22 @@ minikube service nginx-service --url
 
 w celu uzyskania adresu URL.
 
-![Działające pody i serwis](3.14.png)
+![3 14](https://github.com/user-attachments/assets/d93e08ec-cfd6-487d-bf33-3a56e217154d)
+
 
 ## Wizualizacja wdrożenia w Dashboardzie
 
 Status wdrożenia oraz liczba aktywnych replik została zweryfikowana w Dashboardzie:
 
-![Dashboard – wizualizacja wdrożenia](3.16.png)
+![3 16](https://github.com/user-attachments/assets/a15960c5-e0e6-4849-90e3-abdb8c11c106)
+
 
 ## Test końcowy – dostępność aplikacji
 
 Ostatecznie sprawdzono dostępność aplikacji `nginx` za pomocą przeglądarki internetowej, używając podanego portu NodePort:
 
-![Końcowy test w przeglądarce](3.17.png)
+
+![3 17](https://github.com/user-attachments/assets/39e2f5fd-ef81-4e14-b403-ed45a27fb99a)
 
 
 
