@@ -1,0 +1,49 @@
+- name: Deploy kontenera FFmpeg na maszynie docelowej
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Zainstaluj Dockera (dla Fedory/RedHat)
+      ansible.builtin.yum:
+        name: docker
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Upewnij się, że usługa Docker działa i jest włączona
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Prześlij plik ffmpeg-builder.tar na maszynę docelową
+      ansible.builtin.copy:
+        src: /tmp/ffmpeg-builder.tar
+        dest: /tmp/ffmpeg-builder.tar
+        mode: '0644'
+
+    - name: Załaduj obraz dockera z pliku
+      ansible.builtin.command: docker load -i /tmp/ffmpeg-builder.tar
+      register: load_image
+      changed_when: "'Loaded image' in load_image.stdout"
+
+    - name: Uruchom kontener z obrazem
+      ansible.builtin.docker_container:
+        name: ffmpeg-prod
+        image: ffmpeg-builder-image
+        state: started
+        restart_policy: unless-stopped
+        detach: true
+
+    - name: Sprawdź, czy kontener działa
+      ansible.builtin.shell: docker ps -f name=ffmpeg-prod --format '{{ "{{.Names}}" }}'
+      register: running_containers
+
+
+    - name: Wypisz uruchomione kontenery o nazwie ffmpeg-prod
+      ansible.builtin.debug:
+        msg: "{{ running_containers.stdout_lines }}"
+
+    - name: Zatrzymaj i usuń kontener ffmpeg-prod
+      ansible.builtin.docker_container:
+        name: ffmpeg-prod
+        state: absent

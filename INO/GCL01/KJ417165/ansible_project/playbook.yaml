@@ -1,0 +1,37 @@
+- name: Kompleksowy playbook do zarządzania maszynami
+  hosts: all
+  become: true
+  tasks:
+
+    - name: Ping do wszystkich hostów
+      ansible.builtin.ping:
+
+    - name: Skopiuj plik hosts.ini na zdalne maszyny
+      ansible.builtin.copy:
+        src: ./hosts.ini
+        dest: /home/ansible/hosts.ini
+      when: inventory_hostname == 'ansible-target'
+
+
+    - name: Wypisz wiadomość po skopiowaniu
+      ansible.builtin.debug:
+        msg: "Plik hosts.ini został skopiowany do /home/ansible/hosts.ini"
+
+    - name: Zaktualizuj pakiety (Fedora / RedHat only)
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat"
+
+    - name: Restart usługi sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+      when: ansible_os_family == "RedHat"
+
+    - name: Restart usługi rngd (jeśli jest zainstalowana)
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+      ignore_errors: true
+      when: ansible_os_family == "RedHat"
