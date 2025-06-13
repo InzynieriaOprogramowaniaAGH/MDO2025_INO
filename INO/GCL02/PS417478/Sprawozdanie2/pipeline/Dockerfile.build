@@ -1,0 +1,17 @@
+FROM fedora:41
+
+RUN dnf install -y git cmake gcc gcc-c++ make ruby ruby-devel rpm-build rubygems && \
+    gem install --no-document fpm
+
+WORKDIR /app
+
+RUN git clone https://github.com/DaveGamble/cJSON.git .
+
+RUN mkdir build && cd build && \
+    cmake .. && make && make DESTDIR=/tmp/install install
+
+RUN fpm -s dir -t rpm \
+    -n mycjson \
+    -v 1.7.15 \
+    -C /tmp/install \
+    -p /app/mycjson.rpm

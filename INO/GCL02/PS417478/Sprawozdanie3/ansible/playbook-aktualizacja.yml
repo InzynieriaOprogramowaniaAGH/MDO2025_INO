@@ -1,0 +1,9 @@
+---
+- name: Zaktualizuj pakiety w systemie
+  hosts: all
+  become: yes
+  tasks:
+    - name: Zaktualizuj pakiety w systemie
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest

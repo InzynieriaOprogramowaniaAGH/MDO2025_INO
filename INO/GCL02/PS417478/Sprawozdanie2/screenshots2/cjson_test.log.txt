@@ -1,0 +1,43 @@
+Test project /app/build
+      Start  1: cJSON_test
+ 1/19 Test  #1: cJSON_test .......................   Passed    0.02 sec
+      Start  2: parse_examples
+ 2/19 Test  #2: parse_examples ...................   Passed    0.15 sec
+      Start  3: parse_number
+ 3/19 Test  #3: parse_number .....................   Passed    0.12 sec
+      Start  4: parse_hex4
+ 4/19 Test  #4: parse_hex4 .......................   Passed    0.07 sec
+      Start  5: parse_string
+ 5/19 Test  #5: parse_string .....................   Passed    0.01 sec
+      Start  6: parse_array
+ 6/19 Test  #6: parse_array ......................   Passed    0.06 sec
+      Start  7: parse_object
+ 7/19 Test  #7: parse_object .....................   Passed    0.17 sec
+      Start  8: parse_value
+ 8/19 Test  #8: parse_value ......................   Passed    0.01 sec
+      Start  9: print_string
+ 9/19 Test  #9: print_string .....................   Passed    0.02 sec
+      Start 10: print_number
+10/19 Test #10: print_number .....................   Passed    0.01 sec
+      Start 11: print_array
+11/19 Test #11: print_array ......................   Passed    0.01 sec
+      Start 12: print_object
+12/19 Test #12: print_object .....................   Passed    0.01 sec
+      Start 13: print_value
+13/19 Test #13: print_value ......................   Passed    0.02 sec
+      Start 14: misc_tests
+14/19 Test #14: misc_tests .......................   Passed    0.03 sec
+      Start 15: parse_with_opts
+15/19 Test #15: parse_with_opts ..................   Passed    0.01 sec
+      Start 16: compare_tests
+16/19 Test #16: compare_tests ....................   Passed    0.01 sec
+      Start 17: cjson_add
+17/19 Test #17: cjson_add ........................   Passed    0.04 sec
+      Start 18: readme_examples
+18/19 Test #18: readme_examples ..................   Passed    0.02 sec
+      Start 19: minify_tests
+19/19 Test #19: minify_tests .....................   Passed    0.02 sec
+
+100% tests passed, 0 tests failed out of 19
+
+Total Test time (real) =   0.95 sec

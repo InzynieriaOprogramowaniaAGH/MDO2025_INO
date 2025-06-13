@@ -1,0 +1,9 @@
+- name: Playbook
+  hosts: all
+  tasks:
+   - name: Ping maszyn
+     ansible.builtin.ping:
+
+   - name: Print message
+     ansible.builtin.debug:
+       msg: Ping wykonany
