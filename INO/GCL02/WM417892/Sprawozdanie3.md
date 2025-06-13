@@ -1,1 +1,313 @@
+# Sprawozdanie – Zajęcia 11: Kubernetes (2)
+
+Celem zajęć było praktyczne pogłębienie wiedzy z zakresu zarządzania kontenerami w środowisku Kubernetes. W ramach ćwiczeń wykonano szereg operacji związanych z wdrażaniem aplikacji, ich wersjonowaniem, kontrolą stanu wdrożeń oraz testowaniem mechanizmów rollbacku. Dodatkowo przeanalizowano różne strategie wdrażania – w tym Recreate, Rolling Update oraz Canary Deployment. Wszystkie działania zostały przeprowadzone z wykorzystaniem własnych obrazów Docker, opublikowanych na prywatnym koncie Docker Hub.
+
+W kolejnych sekcjach zamieszczono zrzuty ekranu oraz opisy kroków wykonanych podczas zajęć.
+
+## Etap 1: Przygotowanie własnego obrazu Docker – Wersja v1
+
+### Tworzenie katalogu i plików
+
+Na pierwszym etapie utworzono strukturę katalogów potrzebną do budowy własnego obrazu Docker:
+
+```bash
+mkdir my-nginx && cd my-nginx
+mkdir my-custom-content
+```
+
+Następnie przygotowano plik `index.html`, który stanowił zawartość strony serwowanej przez kontener Nginx:
+
+```bash
+echo '<h1>Hello, this is my custom Nginx page – Version 1!</h1>' > my-custom-content/index.html
+```
+
+![4 1](https://github.com/user-attachments/assets/6aa25456-f801-4c30-a783-9801ea38478e)
+
+
+---
+
+### Tworzenie pliku `Dockerfile`
+
+Został utworzony plik `Dockerfile` zawierający instrukcje budowy obrazu:
+
+```Dockerfile
+FROM nginx:alpine
+
+# Kopiowanie niestandardowej zawartości
+COPY my-custom-content/ /usr/share/nginx/html/
+
+# Ekspozycja portu
+EXPOSE 80
+
+# Komenda startowa
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+Obraz bazuje na lekkiej wersji Nginx (`nginx:alpine`), a zawartość statyczna kopiowana jest do katalogu domyślnego Nginx (`/usr/share/nginx/html/`).
+
+![4 2](https://github.com/user-attachments/assets/e51dee51-df54-4fc1-a815-61fb35670790)
+
+
+---
+
+### Budowanie obrazu i logowanie do Docker Hub
+
+Po przygotowaniu plików zbudowano obraz z tagiem `v1`:
+
+```bash
+docker build -t wojtek2004/my-nginx:v1 .
+```
+
+
+![4 3](https://github.com/user-attachments/assets/b24f4adc-b864-4d6c-b4e0-5c44b5de2851)
+
+Następnie wykonano logowanie do Docker Hub za pomocą polecenia:
+
+```bash
+docker login -u wojtek2004
+```
+
+Proces logowania zakończył się sukcesem.
+
+![4 4](https://github.com/user-attachments/assets/f8331a63-0c39-402d-afc8-c186d5f60007)
+
+---
+
+### Publikacja obrazów Docker na Docker Hub
+
+Po zbudowaniu obrazu wersji `v1`, `v2` i `v3`, przesłano je do zewnętrznego rejestru Docker Hub.
+
+#### Wersja v1:
+
+```bash
+docker push wojtek2004/my-nginx:v1
+```
+
+![4 5](https://github.com/user-attachments/assets/2cdea8c9-69e0-4db7-b833-e96c8d7b2b34)
+
+
+#### Wersja v2:
+
+Po modyfikacji zawartości strony (zaktualizowany tekst), zbudowano nową wersję obrazu i przesłano ją do rejestru:
+
+```bash
+echo '<h1>Hello, this is my custom Nginx page – Version 2 (Updated)!</h1>' > my-custom-content/index.html
+docker build -t wojtek2004/my-nginx:v2 .
+docker push wojtek2004/my-nginx:v2
+```
+![4 6](https://github.com/user-attachments/assets/9d87fa84-4714-4eac-aa99-feb03a695ea4)
+
+#### Wersja v3 (wadliwa):
+
+W celu przetestowania mechanizmów rollbacku, przygotowano wersję obrazu z celowo wadliwą konfiguracją nginx.conf:
+
+Zmieniono `Dockerfile`, dodając kopiowanie pliku konfiguracyjnego do katalogu `/etc/nginx/conf.d/`:
+
+```Dockerfile
+COPY my-custom-content/nginx.conf /etc/nginx/conf.d/default.conf
+```
+
+![4 8](https://github.com/user-attachments/assets/bc946c8c-4155-4894-839e-ccc92ef9e6f4)
+
+
+
+
+Obraz zbudowano i opublikowano:
+
+```bash
+docker build -t wojtek2004/my-nginx:v3 .
+docker push wojtek2004/my-nginx:v3
+```
+
+
+![4 9](https://github.com/user-attachments/assets/d2459d6c-98fe-4098-9005-3a909d10bba3)
+
+---
+
+## Etap 2: Tworzenie i zastosowanie deploymentu
+
+### Przygotowanie pliku `nginx-deployment.yaml`
+
+Stworzono plik manifestu YAML zawierający definicję `Deployment` i `Service`. W pliku ustalono strategię aktualizacji jako `RollingUpdate` oraz początkową liczbę replik jako 3:
+
+![4 10](https://github.com/user-attachments/assets/7ebe77d6-ee0d-4634-b837-02e3f77f41ff)
+
+
+### Zastosowanie deploymentu
+
+Plik YAML został zastosowany w klastrze:
+
+```bash
+kubectl apply -f nginx-deployment.yaml
+```
+
+
+![4 11](https://github.com/user-attachments/assets/3776f12f-1b75-4cb1-a9df-6fb02c366bfe)
+
+Początkowo kontenery miały status `ContainerCreating`, po chwili ich stan zmienił się na `Running`, co oznaczało poprawne wdrożenie.
+
+---
+
+### Skalowanie deploymentu
+
+#### Zwiększenie liczby replik do 8:
+
+```bash
+kubectl scale deployment my-nginx-deployment --replicas=8
+```
+
+![4 12](https://github.com/user-attachments/assets/76b38e4f-7c4b-4c2c-ba88-c143aecd77fb)
+
+#### Zmniejszenie liczby replik do 1:
+
+```bash
+kubectl scale deployment my-nginx-deployment --replicas=1
+```
+
+![4 13](https://github.com/user-attachments/assets/73421619-330b-4659-9413-811c45c16eed)
+
+
+#### Zmniejszenie liczby replik do 0:
+
+```bash
+kubectl scale deployment my-nginx-deployment --replicas=0
+```
+![4 14](https://github.com/user-attachments/assets/638bf5b6-7f35-4998-b7e4-9d8e320f278a)
+
+
+#### Przywrócenie liczby replik do 4:
+
+```bash
+kubectl scale deployment my-nginx-deployment --replicas=4
+```
+
+Po kilku sekundach wszystkie nowe Pody osiągnęły status `Running`.
+
+![4 15](https://github.com/user-attachments/assets/05b5a090-adbd-404c-b1f2-5a46697d3ce7)
+
+
+---
+
+## Etap 3: Zarządzanie wersjami obrazu
+
+### Aktualizacja do wersji v2
+
+Przeprowadzono aktualizację obrazu w deploymentcie do wersji `v2`:
+
+```bash
+kubectl set image deployment/my-nginx-deployment nginx=wojtek2004/my-nginx:v2
+kubectl rollout status deployment/my-nginx-deployment
+```
+
+Nowe Pody zostały wdrożone, stare usunięte, a cała operacja zakończyła się sukcesem.
+
+![4 16](https://github.com/user-attachments/assets/0ed3bf61-b98e-4eb9-a6a6-816119648429)
+
+
+### Aktualizacja do wersji v1
+
+Kolejno przywrócono obraz do wcześniejszej, stabilnej wersji `v1`:
+
+```bash
+kubectl set image deployment/my-nginx-deployment nginx=wojtek2004/my-nginx:v1
+kubectl rollout status deployment/my-nginx-deployment
+```
+
+![4 17](https://github.com/user-attachments/assets/18ca4c3d-cc63-4d65-938c-607f41ae2c0a)
+
+
+### Aktualizacja do wadliwej wersji v3
+
+Na potrzeby testów wykonano aktualizację deploymentu do wersji `v3`, zawierającej błędny plik konfiguracyjny:
+
+```bash
+kubectl set image deployment/my-nginx-deployment nginx=wojtek2004/my-nginx:v3
+kubectl rollout status deployment/my-nginx-deployment --timeout=60s
+```
+
+Nowe Pody nie mogły zostać uruchomione poprawnie — uzyskały status `Error`. Po osiągnięciu limitu czasu rollout zakończył się błędem.
+
+![4 18](https://github.com/user-attachments/assets/9dad6abe-e016-4514-b3bb-7b368442271a)
+
+
+---
+
+## Etap 4: Rollback do poprzedniej wersji
+
+Po nieudanej aktualizacji do wersji `v3` przywrócono wcześniejszy stabilny stan deploymentu:
+
+```bash
+kubectl rollout history deployment/my-nginx-deployment
+kubectl rollout undo deployment/my-nginx-deployment
+kubectl rollout status deployment/my-nginx-deployment
+```
+
+Stare działające Pody zostały przywrócone i deployment osiągnął stan `Running`.
+
+![4 19](https://github.com/user-attachments/assets/2197cdd3-1543-44c2-9b81-ee893ff098f0)
+
+
+---
+
+## Etap 5: Weryfikacja rolloutu – skrypt automatyczny
+
+W celu automatycznej weryfikacji, czy rollout zakończył się w ciągu 60 sekund, utworzono skrypt `check-rollout.sh`:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+DEPLOY=my-nginx-deployment
+TIMEOUT=60s
+
+echo "Waiting up to ${TIMEOUT} for ${DEPLOY} to finish rollout…"
+if kubectl rollout status deployment/${DEPLOY} --timeout=${TIMEOUT}; then
+  echo "✅ Deployment ${DEPLOY} finished within ${TIMEOUT}."
+  exit 0
+else
+  echo "❌ Deployment ${DEPLOY} did NOT finish within ${TIMEOUT}." >&2
+  exit 1
+fi
+```
+![4 20](https://github.com/user-attachments/assets/e389c038-a192-4ee1-9034-61da96c2e875)
+
+Skrypt wykonano po wdrożeniu działającej i wadliwej wersji:
+
+* Przypadek udany zakończył się statusem `0`.
+* Przypadek błędny zakończył się błędem `1`.
+![4 21](https://github.com/user-attachments/assets/dfd7785d-e60d-463e-8ea3-59aeed71ca2f)
+
+![4 22](https://github.com/user-attachments/assets/e60d18f1-2e10-4c6c-b531-f4af2ba60ff4)
+
+---
+
+## Etap 6: Strategie wdrażania (Recreate, RollingUpdate, Canary)
+
+### Strategia Recreate
+
+Przygotowano i zastosowano plik `nginx-deploy-recreate.yaml` zawierający strategię `Recreate`. Zastosowanie nowego obrazu `v2` powodowało usunięcie wszystkich starych Podów przed uruchomieniem nowych:
+
+![4 23](https://github.com/user-attachments/assets/b968a4e1-5d90-4a19-9d00-24c6202f7ab4)
+
+### Strategia Rolling Update z parametrami
+
+Utworzono plik `nginx-deploy-rolling.yaml`, ustawiając `maxUnavailable=2`, `maxSurge=20%`. Wdrożenie odbywało się stopniowo, jednocześnie tworząc i usuwając Pody zgodnie z tymi ograniczeniami.
+
+
+![4 24](https://github.com/user-attachments/assets/607b6d46-abc9-45b2-b152-b6304fac7870)
+
+
+### Strategia Canary Deployment
+
+W tej metodzie wydzielono dwie wersje deploymentu: `my-nginx-stable` i `my-nginx-canary`. Wersja `canary` odpowiadała tylko za część ruchu (pojedynczy Pod). Pozwoliło to na bezpieczne testowanie nowej wersji przed pełnym wdrożeniem.
+
+![4 25](https://github.com/user-attachments/assets/d8161062-4e14-4f74-bf71-90536a77824e)
+
+---
+
+## Podsumowanie
+
+W ramach ćwiczenia przygotowano trzy wersje własnego obrazu Nginx, skonfigurowano deployment z różnymi strategiami wdrażania, przetestowano mechanizmy rollbacku oraz stworzono automatyczny skrypt do weryfikacji rolloutu.
+
+
 
