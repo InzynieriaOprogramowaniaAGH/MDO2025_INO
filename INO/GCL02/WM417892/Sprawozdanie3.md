@@ -1,6 +1,331 @@
+# Sprawozdanie 8 – Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
 
+Celem niniejszego sprawozdania jest przedstawienie procesu instalacji, konfiguracji oraz praktycznego zastosowania narzędzia Ansible do automatyzacji zadań administracyjnych w środowisku złożonym z wielu maszyn wirtualnych. W ramach ćwiczenia utworzono infrastrukturę składającą się z maszyny głównej pełniącej rolę zarządcy oraz co najmniej jednej maszyny docelowej. Następnie zrealizowano kolejne etapy, takie jak konfiguracja dostępu SSH, utworzenie pliku inwentaryzacji, testowanie łączności, uruchamianie zdalnych poleceń oraz wdrażanie aplikacji lub kontenerów z użyciem playbooków. Poniższe sekcje dokumentują wykonane działania i ich rezultaty.
 
+## Instalacja Ansible oraz konfiguracja połączenia SSH
 
+### Wersja Ansible
+
+Na maszynie głównej zainstalowano Ansible w wersji `2.16.3`, co zostało potwierdzone za pomocą polecenia `ansible --version`. Dodatkowo przedstawiono lokalizacje modułów, plików konfiguracyjnych oraz wersję Pythona i bibliotek pomocniczych.
+
+![Wersja Ansible](./1.png)
+
+### Generowanie klucza SSH
+
+Następnie wygenerowano parę kluczy SSH (RSA 4096 bitów) dla użytkownika `Wojtek`, umożliwiając bezhasłowe logowanie się do zdalnych maszyn. Klucz zapisano w domyślnej lokalizacji `/home/Wojtek/.ssh/id_rsa`.
+
+![Generowanie klucza SSH](./2.png)
+
+### Wymiana kluczy SSH
+
+Za pomocą polecenia `ssh-copy-id`, klucz publiczny został przesłany na maszynę docelową (adres IP `192.168.100.27`), gdzie zalogowano się na użytkownika `ansible`. Po zakończeniu operacji możliwe było nawiązywanie połączeń SSH bez potrzeby podawania hasła.
+
+![Wymiana kluczy SSH](./3.png)
+
+## Weryfikacja połączenia i inwentaryzacja systemów
+
+### Test połączenia SSH
+
+Po skonfigurowaniu kluczy SSH wykonano próbę połączenia z maszyną `ansible-target` z poziomu maszyny zarządzającej. Logowanie odbyło się poprawnie bez potrzeby podawania hasła, co potwierdza prawidłową wymianę kluczy i działający serwer SSH.
+
+![Połączenie SSH](./4.png)
+
+### Plik inwentaryzacji Ansible
+
+Został utworzony plik `hosts.ini`, zawierający sekcję `[targets]`, w której określono maszynę docelową wraz z jej adresem IP i użytkownikiem Ansible. Dzięki temu możliwe było wykonywanie poleceń zdalnych z użyciem aliasów zamiast adresów IP.
+
+```ini
+[targets]
+ansible-target ansible_host=192.168.100.27 ansible_user=ansible
+```
+
+![hosts.ini](./5.png)
+
+### Weryfikacja łączności – moduł ping
+
+W celu sprawdzenia komunikacji pomiędzy maszyną zarządzającą a docelową, użyto polecenia:
+
+```bash
+ansible -i hosts.ini targets -m ping
+```
+
+Zwrócona odpowiedź `pong` oznacza, że komunikacja przebiega prawidłowo i maszyna jest gotowa do dalszych operacji z użyciem Ansible.
+
+![ping](./6.png)
+
+### Informacje systemowe i hostname
+
+Polecenie `hostnamectl` zostało użyte do potwierdzenia nazw hostów i konfiguracji maszyn wirtualnych. Obie maszyny działają pod kontrolą systemu Ubuntu 24.04.2 LTS w środowisku VirtualBox, co zapewnia spójność środowiska testowego.
+
+**Maszyna główna – Wojtek2**
+
+![hostnamectl Wojtek2](./7.1.png)
+
+**Maszyna docelowa – ansible-target**
+
+![hostnamectl ansible-target](./7.2.png)
+
+### Ustawienie aliasów nazw w pliku /etc/hosts
+
+W celu uproszczenia komunikacji sieciowej, w plikach `/etc/hosts` na obu maszynach zdefiniowano odpowiednie aliasy nazwowe dla adresów IP maszyn. Dzięki temu możliwa jest komunikacja za pomocą nazw hostów zamiast adresów IP.
+
+![Plik hosts na obu maszynach](./8.png)
+
+### Testy łączności nazwowej (ping po hostname)
+
+Przeprowadzono testy połączeń ICMP (`ping`) przy użyciu zdefiniowanych nazw hostów. Potwierdzono poprawne działanie komunikacji dwustronnej zarówno z `Wojtek2` do `ansible-target`, jak i odwrotnie.
+
+![ping z Wojtek2](./9.1.png)
+
+![ping z ansible-target](./9.2.png)
+
+### Rozszerzony plik inwentaryzacji z podziałem na grupy
+
+Stworzono plik `inventory.ini` zawierający grupy `Orchestrators` oraz `Endpoints`, w których przypisano odpowiednie maszyny. Pozwala to na bardziej przejrzyste i modularne zarządzanie zasobami z poziomu Ansible.
+
+```ini
+[Orchestrators]
+wojtek2 ansible_host=wojtek2 ansible_user=Wojtek
+
+[Endpoints]
+ansible-target ansible_host=ansible-target ansible_user=ansible
+```
+
+![inventory.ini](./10.png)
+
+## Zdalne wywoływanie procedur
+
+### Ping wszystkich maszyn – komenda `ansible`
+
+Wykonano zdalne polecenie `ping` dla wszystkich maszyn zadeklarowanych w pliku `inventory.ini`, co potwierdziło gotowość środowiska do dalszych zautomatyzowanych działań.
+
+![ansible all -m ping](./11.png)
+
+### Ping wszystkich maszyn – playbook YAML
+
+Utworzono playbook `ping.yml`, którego celem było wysłanie polecenia `ping` do wszystkich hostów.
+
+```yaml
+- name: Ping all hosts
+  hosts: all
+  tasks:
+    - name: Ping host
+      ansible.builtin.ping:
+```
+
+![ping.yml](./12.1.png)
+
+### Uruchomienie playbooka
+
+Playbook został wykonany za pomocą polecenia:
+
+```bash
+ansible-playbook -i inventory.ini ping.yml
+```
+
+Zadanie zakończyło się sukcesem dla obu maszyn – `wojtek2` i `ansible-target`.
+
+![wynik playbooka](./12.2.png)
+
+### Skopiowanie pliku inwentaryzacji na maszynę docelową
+
+Utworzono playbook `copy_inventory.yml`, którego zadaniem było przesłanie pliku `inventory.ini` do katalogu `/tmp` na maszynie z grupy `Endpoints`.
+
+```yaml
+- name: Copy inventory file to Endpoints
+  hosts: Endpoints
+  tasks:
+    - name: Copy inventory.ini to /tmp
+      copy:
+        src: inventory.ini
+        dest: /tmp/inventory.ini
+```
+
+![copy\_inventory.yml](./13.1.png)
+
+Uruchomienie playbooka zakończyło się sukcesem:
+
+```bash
+ansible-playbook -i inventory.ini copy_inventory.yml
+```
+
+![wynik copy\_inventory.yml](./13.2.png)
+
+### Powtórne wykonanie playbooka ping po skopiowaniu inwentaryzacji
+
+Po przesłaniu pliku inwentaryzacji ponownie wykonano `ping.yml`, aby sprawdzić, czy środowisko działa bez zmian.
+
+![ponowny ping](./14.png)
+
+### Aktualizacja pakietów w systemie
+
+Został przygotowany playbook `upgrade.yml`, który aktualizuje listę pakietów oraz wykonuje pełną aktualizację systemu na maszynach `Endpoints`.
+
+```yaml
+- name: Update all packages
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+```
+
+![upgrade.yml](./15.1.png)
+
+Uruchomienie aktualizacji:
+
+```bash
+ansible-playbook -i inventory.ini upgrade.yml
+```
+
+Zakończone powodzeniem:
+
+![wynik upgrade.yml](./15.2.png)
+
+### Restart usług sshd i rngd
+
+Utworzono playbook `restart_services.yml`, który restartuje usługę `sshd` oraz próbnie usługę `rngd`. W przypadku jej braku błąd jest ignorowany.
+
+```yaml
+- name: Restart services
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Restart sshd
+      service:
+        name: ssh
+        state: restarted
+
+    - name: Restart rngd
+      service:
+        name: rngd
+        state: restarted
+      ignore_errors: true
+```
+
+![restart\_services.yml](./16.1.png)
+
+Uruchomienie:
+
+```bash
+ansible-playbook -i inventory.ini restart_services.yml
+```
+
+![wynik restart\_services.yml](./16.2.png)
+
+### Symulacja niedostępności hosta (wyłączony sshd)
+
+W celu przetestowania zachowania systemu w przypadku niedostępności, ręcznie zatrzymano i wyłączono usługę `ssh` na maszynie `ansible-target`, używając `systemctl` lub `sysv-init`, zależnie od dostępności polecenia:
+
+![wyłączenie ssh](./17.1.png)
+
+Ponowne uruchomienie playbooka `ping.yml` spowodowało błąd łączności z `ansible-target`, zgodnie z oczekiwaniami:
+
+![brak łączności z hostem](./17.2.png)
+
+### Wdrożenie aplikacji z wykorzystaniem Dockera
+
+W kolejnym etapie przeprowadzono wdrożenie kontenera Docker zawierającego aplikację przygotowaną we wcześniejszych zajęciach. Cały proces został zautomatyzowany z użyciem trzech oddzielnych playbooków.
+
+### Instalacja Dockera za pomocą Ansible
+
+W pierwszej kolejności przygotowano playbook `install_docker.yml`, którego zadaniem była instalacja Dockera na maszynie docelowej `ansible-target`. W playbooku znalazły się kroki aktualizacji cache, instalacji zależności, dodania repozytorium Dockera oraz uruchomienia usługi Docker.
+
+![install\_docker.yml](./18.1.png)
+
+Uruchomienie playbooka zakończyło się sukcesem, co potwierdziło poprawne działanie wszystkich zadań.
+
+![Wynik uruchomienia](./18.2.png)
+
+### Wysyłka obrazu Docker (plik tar) na maszynę docelową
+
+Następnie utworzono playbook `send_image.yml`, którego zadaniem było przesłanie obrazu Docker (plik `.tar`) na maszynę docelową do katalogu `/tmp`.
+
+![send\_image.yml](./19.1.png)
+
+Operacja zakończyła się poprawnie:
+
+![wynik send\_image.yml](./19.2.png)
+
+### Załadowanie obrazu do Dockera na maszynie zdalnej
+
+Ostatnim krokiem było załadowanie przesłanego obrazu do lokalnego rejestru Docker na `ansible-target` za pomocą polecenia `docker load`. W tym celu przygotowano playbook `load_image.yml`.
+
+![load\_image.yml](./20.1.png)
+
+Uruchomienie zakończyło się sukcesem, obraz został poprawnie załadowany do Dockera:
+
+![wynik load\_image.yml](./20.2.png)
+
+### Uruchomienie kontenera z aplikacją
+
+W kolejnym kroku utworzono playbook `run_container.yml`, który umożliwił uruchomienie aplikacji z załadowanego obrazu. W przypadku istniejącego kontenera o nazwie `ts-app`, został on najpierw zatrzymany i usunięty.
+
+![run\_container.yml](./21.1.png)
+
+Playbook zakończył się sukcesem, potwierdzając uruchomienie nowego kontenera:
+
+![wynik run\_container.yml](./21.2.png)
+
+### Weryfikacja działania aplikacji
+
+Po zalogowaniu się na maszynę `ansible-target` poleceniem `docker ps` potwierdzono, że kontener `ts-app` jest aktywny i nasłuchuje na porcie 3000.
+
+![docker ps](./22.png)
+
+### Zatrzymanie i usunięcie kontenera
+
+Na potrzeby testów przygotowano playbook `cleanup_container.yml`, który odpowiada za zatrzymanie oraz usunięcie uruchomionego kontenera aplikacji.
+
+![cleanup\_container.yml](./23.1.png)
+
+Playbook wykonano z powodzeniem:
+
+![wynik cleanup\_container.yml](./23.2.png)
+
+### Utworzenie roli Ansible dla aplikacji
+
+Za pomocą polecenia `ansible-galaxy init ts_app` wygenerowano szkielet roli. Plik obrazu aplikacji został umieszczony w katalogu `files`, a główna logika operacji w pliku `tasks/main.yml`. Rola zawiera kolejno: kopiowanie obrazu, jego załadowanie do Dockera oraz uruchomienie kontenera.
+
+![main.yml](./24.1.png)
+
+![struktura roli](./24.2.png)
+
+![plik tar w katalogu files](./24.3.png)
+
+### Test roli aplikacyjnej
+
+Na koniec przygotowano playbook `test_role.yml`, w którym przypisano rolę `ts_app` do hosta `ansible-target`. Test wykonano z sukcesem, co potwierdza poprawność działania roli.
+
+![test\_role.yml](./25.png)
+
+## Podsumowanie i wnioski
+
+Zrealizowane ćwiczenie potwierdziło skuteczność i elastyczność narzędzia Ansible jako platformy do automatyzacji zadań administracyjnych w środowisku wielomaszynowym. W trakcie pracy przeprowadzono pełny cykl konfiguracji i zarządzania systemem zdalnym — od podstawowej konfiguracji po wdrożenie kontenera aplikacyjnego.
+
+### Kluczowe osiągnięcia:
+- **Bezhasłowa łączność SSH** została pomyślnie skonfigurowana, co umożliwiło całkowicie automatyczne wykonywanie poleceń na maszynie docelowej.
+- Utworzono i skutecznie przetestowano **własne pliki inwentaryzacji**, zarówno w wersji uproszczonej, jak i zorganizowanej w grupy logiczne (`Orchestrators`, `Endpoints`), co ułatwiło zarządzanie infrastrukturą.
+- **Zdalne wykonywanie poleceń** zostało zrealizowane poprzez zastosowanie modułów Ansible oraz dedykowanych playbooków YAML, które uruchamiały zadania w sposób powtarzalny i czytelny.
+- Z sukcesem przeprowadzono **wdrożenie aplikacji kontenerowej z użyciem Dockera**, w tym:
+  - Instalacja Dockera przy pomocy Ansible,
+  - Transfer lokalnego obrazu `.tar` na maszynę zdalną,
+  - Załadowanie i uruchomienie kontenera,
+  - Weryfikacja działania i zarządzanie cyklem życia kontenera.
+- **Testy awaryjności** (np. symulacja wyłączenia usługi `sshd`) umożliwiły weryfikację reakcji systemu na brak łączności oraz poprawność obsługi błędów w playbookach.
+- Ostatecznym krokiem było utworzenie **roli Ansible (`ts_app`)** w zgodzie z dobrymi praktykami strukturyzowania kodu. Rola ta może być z łatwością wielokrotnie wykorzystywana lub modyfikowana, np. w dalszym ciągu pipeline’u CI/CD.
+
+### Wnioski:
+- Ansible to potężne narzędzie do automatyzacji, które przy relatywnie niskim progu wejścia pozwala na znaczne usprawnienie zarządzania środowiskami serwerowymi.
+- Automatyzacja nawet prostych zadań (jak aktualizacja pakietów czy restart usług) zapewnia oszczędność czasu, powtarzalność i minimalizację błędów ludzkich.
+- Użycie playbooków YAML w połączeniu z modularnym podejściem (role) pozwala na tworzenie skalowalnych i czytelnych rozwiązań do zarządzania aplikacjami i infrastrukturą.
+- Praca z kontenerami w środowisku Ansible umożliwia przygotowanie niezależnych, przenośnych artefaktów aplikacyjnych, które mogą być wdrażane nawet w środowiskach bez dostępu do internetu (np. poprzez transfer `.tar`).
+- Wiedza zdobyta podczas realizacji zadania jest nie tylko przydatna dydaktycznie, ale stanowi również solidną podstawę pod realne wdrożenia w projektach DevOps i administracji systemami.
 
 
 
