@@ -50,10 +50,17 @@ url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch
 repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
 ```
 
-zmieniłem także `clearpart --none` na `clearpart --all` w celu umożliwienia zakładania psutego dysku przez plik odpowiedzi oraz zmieniłem hostname na `hostname=fedora.kickstart`.
+zmieniłem także `clearpart --none` na `clearpart --all` w celu umożliwienia zakładania psutego dysku przez plik odpowiedzi oraz zmieniłem hostname na `hostname=fedora.kickstart`. Powstały plik zpushowałem na githuba.
 
+Następnie przystąpiłem do instalacji nienadzorawnej. W menu GRUB dodałem parametr z lokalizacją zpushowanego na githuba wcześniej pliku `anaconda-ks.cfg`.
+![](zrzuty_ekranu/31.png)
 
+Proces instalacji rozpoczął się samodzielnie
+![](zrzuty_ekranu/32.png)
 
+Po instalacji zalogowałem się tymi samymi danymi co na głównej maszynie, co potwierdza poprawność instalacji
+
+![](zrzuty_ekranu/33.png)
 
 
 # Zajęcia 10
