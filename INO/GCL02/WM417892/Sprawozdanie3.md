@@ -1,4 +1,9 @@
 
+
+
+
+
+
 # Sprawozdanie z zajęć 10: Wdrażanie na zarządzalne kontenery - Kubernetes (1)
 
 ## Wstęp
