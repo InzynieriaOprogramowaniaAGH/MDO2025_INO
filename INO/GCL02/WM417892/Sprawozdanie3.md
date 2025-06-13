@@ -240,6 +240,21 @@ Ostatecznie sprawdzono dostępność aplikacji `nginx` za pomocą przeglądarki 
 
 ![3 17](https://github.com/user-attachments/assets/39e2f5fd-ef81-4e14-b403-ed45a27fb99a)
 
+## Podsumowanie i wnioski
+
+W trakcie realizacji zadania zapoznałem się z pełnym cyklem wdrażania aplikacji kontenerowej w środowisku Kubernetes, korzystając z lokalnego klastra Minikube. Pozwoliło mi to zrozumieć zarówno techniczne aspekty konfiguracji klastra, jak i koncepcje architektoniczne leżące u podstaw zarządzania kontenerami w K8s.
+
+Nauczyłem się:
+
+- jak zainstalować i skonfigurować narzędzia `minikube` oraz `kubectl`,
+- w jaki sposób uruchomić lokalny klaster Kubernetes i monitorować jego stan,
+- jak działają podstawowe obiekty Kubernetes: Pod, Deployment, Service,
+- jak wykorzystywać port forwarding oraz typ `NodePort` do wystawiania usług na zewnątrz klastra,
+- jak zbudować i zastosować plik YAML w celu deklaratywnego zarządzania zasobami,
+- jak używać `kubectl` do kontrolowania cyklu życia aplikacji i rolloutów,
+- w jaki sposób korzystać z Kubernetes Dashboard w celu wizualizacji i nadzorowania zasobów klastra.
+
+Zajęcia te ugruntowały moją wiedzę na temat konteneryzacji i orkiestracji aplikacji. Zrozumiałem, że Kubernetes nie tylko automatyzuje uruchamianie i skalowanie aplikacji, ale też zapewnia elastyczne, bezpieczne i powtarzalne środowisko do ich utrzymania. Dzięki zdobytej wiedzy czuję się pewniej w zakresie zarządzania usługami w środowisku chmurowym oraz jestem gotowy do dalszej nauki i pracy z bardziej zaawansowanymi funkcjonalnościami K8s, takimi jak load balancing, persistent storage czy konfiguracja CI/CD.
 
 
 
