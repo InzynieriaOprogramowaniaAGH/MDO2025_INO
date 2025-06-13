@@ -1,0 +1,26 @@
+- name: ThePlay
+  hosts: all
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+- name: TheCopyAndResets
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Copy
+      ansible.builtin.copy:
+        src: inventory.ini
+        dest: /home/ansible
+    - name: Update Packages
+      ansible.builtin.apt:
+        name: "*"
+        state: latest
+    - name: Restart sshd
+      ansible.builtin.service:
+        name: ssh
+        state: restarted
+    - name: restart rngd
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+      

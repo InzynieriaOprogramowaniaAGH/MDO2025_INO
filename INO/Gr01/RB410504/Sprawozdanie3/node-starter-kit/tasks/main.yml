@@ -1,0 +1,67 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Install deps
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - gnupg
+      - lsb-release
+      - curl
+    state: present
+    update_cache: yes
+- name: Add Gpg key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+- name: Add docker repository
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release }} stable"
+    state: present
+- name: Install docker engine
+  apt:
+    name: docker-ce
+    state: latest
+    update_cache: yes
+- name: Start and enable
+  become: yes
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+- name: Add to docker group
+  user:
+    name: ansible
+    groups: docker
+    append: yes
+- name: Pull image from docker
+  community.docker.docker_image:
+    name: "{{docker_image}}"
+    source: pull
+- name: Run Docker container
+  community.docker.docker_container:
+    name: "{{container_name}}"
+    image: "{{docker_image}}"
+    state: started
+    restart_policy: always
+    published_ports:
+      - "{{host_port}}:{{container_port}}"
+- name: Wait till up
+  uri:
+    url: "http://ansible:{{host_port}}"
+    status_code: 200
+  register: result
+  retries: 5
+  delay: 3
+  until: result.status==200
+
+- name: Stop the container
+  community.docker.docker_container:
+    name: "{{container_name}}"
+    state: stopped
+- name: Remove the container
+  community.docker.docker_container:
+    name: "{{ container_name}}"
+    state: absent
+
+# tasks file for node-starter-kit

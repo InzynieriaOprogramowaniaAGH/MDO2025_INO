@@ -1,0 +1,10 @@
+- name: Deploy node in container
+  hosts: Endpoints
+  become: true
+  vars:
+    docker_image: "radbran/kriadep"
+    container_name: "kriadep"
+    container_port: 8080
+    host_port: 8090
+  roles:
+    - node-starter-kit
