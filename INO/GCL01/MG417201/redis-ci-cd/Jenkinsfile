@@ -50,14 +50,14 @@ pipeline {
       when { expression { params.PUBLISH } }
       steps {
         withCredentials([usernamePassword(
-          credentialsId: 'docker-hub-creds',
-          usernameVariable: 'mihlsap',
-          passwordVariable: '92gD36$9O'
+          credentialsId: 'docker-hub-credentials',
+          usernameVariable: 'DOCKER_USER',
+          passwordVariable: 'DOCKER_PASS'
         )]) {
           sh '''
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            docker tag redis_runtime1.0 yourdockerhubuser/redis_runtime1.0
-            docker push yourdockerhubuser/redis_runtime1.0
+            docker tag redis_runtime1.0 mihlsap/redis_runtime1.0
+            docker push mihlsap/redis_runtime1.0
           '''
         }
       }
@@ -66,12 +66,16 @@ pipeline {
     stage('Deploy to cloud') {
       when { expression { params.PUBLISH } }
       steps {
-        sshagent (credentials: ['orchestrator']) {
+        withCredentials([usernamePassword(
+          credentialsId: 'docker-hub-credentials',
+          usernameVariable: 'DOCKER_USER',
+          passwordVariable: 'DOCKER_PASS'
+        )]) {
           sh '''
-            ssh -o StrictHostKeyChecking=no mati@orchestrator << 'EOF'
-              docker pull yourdockerhubuser/redis_runtime1.0
+              echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin              
+              docker pull mihlsap/redis_runtime1.0
               docker rm -f redis-runtime || true
-              docker run -d --name redis-runtime -p 6379:6379 yourdockerhubuser/redis_runtime1.0
+              docker run -d --name redis-runtime -p 6379:6379 mihlsap/redis_runtime1.0
               sleep 3
               docker exec redis-runtime redis-cli PING
             EOF
