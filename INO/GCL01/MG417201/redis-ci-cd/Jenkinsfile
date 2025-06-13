@@ -78,7 +78,6 @@ pipeline {
               docker run -d --name redis-runtime -p 6379:6379 mihlsap/redis_runtime1.0
               sleep 3
               docker exec redis-runtime redis-cli PING
-            EOF
           '''
         }
       }
