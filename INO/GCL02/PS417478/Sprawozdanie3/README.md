@@ -430,7 +430,203 @@ Następnie uruchomiłam w przeglądarce link, który dostałam w terminalu:
 
 ![zdj](screenshots3/56.png)
 
+Na potrzeby mojego zadania aplikacji nginx z dorzuconą własną konfiguracją, utworzyłam dockerfile:
+```bash
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+```
+
+Oraz plik nginx.conf
+```bash
+events {}
+
+http {
+    server {
+        listen 80;
+        location / {
+            return 200 'Hello!!!\n';
+        }
+    }
+}
+```
+
+Zbudowałam obraz, dla sprawdzenia poprawności działania uruchomiłam lokalnie przekierowaniem portu 8080:
+
+![zdj](screenshots3/57.png)
+![zdj](screenshots3/58.png)
+
+Następnie chcąc przygotować obraz wdrożenia w środkowisku Kubernetes, potrzebowałam umieścić go w dockerhub. Nadałam tag, i przesłałam, oraz sprawdziłam dla potwierdzenia na przeglądarce:
+
+![zdj](screenshots3/59.png)
+![zdj](screenshots3/60.png)
+
+Nastepnie chcąc wykonać deployment należało użyć poleceń. Utworzyłam obiekt service typu LoadBalancer, dla możliwego dostępu do aplikacji na porcie 80:
+
+![zdj](screenshots3/61.png)
+
+W Kubernetes pojawił sie deployment, sprawdziłam działanie poda:
+
+![zdj](screenshots3/62.png)
+![zdj](screenshots3/63.png)
+
+Sprawdziłam port. Z racji iż nie mogłam sobie poradzić z formą "kubectl port-forward pod/my-nginx-deploy-7f787969cc-wdbgt 8080:80", zrobiłam to inaczej: Pobieram zawartość strony interntowej uruchomionej na localhost i wyświetlam go:
+![zdj](screenshots3/64.png)
+
+Utworzyłam plik `nginx-deployment.yaml`, na podstawie dokumentacji z deploymentów w Kubernetes:
+```bash
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+```
+Wdrożyłamzasoby w klastrze i sprawdziłam stan wdrożenia:
+![zdj](screenshots3/65.png)
+![zdj](screenshots3/66.png)
+
+NAstepnie utworzyłam plik `nginx-service.yaml`, podobnie jak poprzedmio. 
+Dla poprawnego połączenia usługi z podami zastosowałam app: nginx:
+```bash
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+```
+Do wdrożenia podobnie jak poprzednio polecenia:
+![zdj](screenshots3/67.png)
+![zdj](screenshots3/68.png)
+
+Na koniec przekierowałam port 8080 do 80 aby móc ją wyświetlić w przeglądarce:
+
+![zdj](screenshots3/70.png)
+![zdj](screenshots3/69.png)
 
 
+### Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+
+Kontynuując poprzednie labolatoria, utworzyłam kolejne pliki dockerfile:
+
+`Dockerfile1`:
+```bash
+FROM nginx:alpine
+```
+
+`Dockerfile2`:
+```bash
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+```
+
+`Dockerfile3`:
+```bash
+FROM alpine
+CMD ["false"]
+```
+1 - bazowy obraz, 2 - obraz z moją konfiguracja z poprzednich zajęć, 3 - obraz kończący działanie natychmiast(błąd)
+Zbudowałam je i dodałam do dockerhuba:
+
+```bash
+docker build -t kryniaaaaa/my-nginx1 -f Dockerfile1 .
+docker push kryniaaaaa/my-nginx1
+
+docker build -t kryniaaaaa/my-nginx2 -f Dockerfile2 .
+docker push kryniaaaaa/my-nginx2
+
+docker build -t kryniaaaaa/my-nginx3 -f Dockerfile3 .
+docker push kryniaaaaa/my-nginx3
+```
+W Docker Hub:
+![zdj](screenshots3/71.png)
+
+Zmiany w deploymencie - Odpowiednio zmieniałam sekcję "replicas:" w pliku `nginx-deployment.yaml` na różne wartości odpoweidnio według wariantu. Wszytskie zmiany zatwierdzałam poleceniem `kubectl apply -f nginx-deployment.yaml`:
+Przy każdej zmianie tworzenie/usuwanie (w zależności od wariantu) podów, było rozkłądane w czasie - chwilę trwało, stąd na niektórych zrzutach, niepełna wersja.
+
+8:
+![zdj](screenshots3/72.png)
+
+1:
+![zdj](screenshots3/73.png)
+
+0:
+![zdj](screenshots3/74.png)
+
+znowu 4:
+![zdj](screenshots3/75.png)
+
+Następnie zmieniłam wersje obrazu na inne warianty w tym miejscu:
+drugi:
+![zdj](screenshots3/76.png)
+![zdj](screenshots3/77.png)
+
+trzeci - deploy nie zadziałał - pody nie przechodziły running i operacja była zaznaczona na czerwono
+![zdj](screenshots3/78.png)
+
+Przywracanie poprzednich wersji wdrożeń poleceniem:
+`kubectl rollout undo deployment my-nginx-deploy`
+Przywrócone wersje:
+![zdj](screenshots3/79.png)
+
+Skrypt weryfikujący czy wdrożenie "zdążyło" się wdrożyć (60 sekund):
+```bash
+#!/bin/bash
+
+DEPLOYMENT_NAME="my-nginx-deploy"
+NAMESPACE="default"
+TIMEOUT=60
+
+echo "Czy wdrozenie \"$DEPLOYMENT_NAME\" się zrobi?"
+
+kubectl rollout status deployment/"$DEPLOYMENT_NAME" --namespace="$NAMESPACE" --timeout=${TIMEOUT}s
+
+if [ $? -eq 0 ]; then
+    echo "TAK!"
+else
+    echo "Nie, przekroczono $TIMEOUT sekund."
+    exit 1
+fi
+```
+
+Dla poprawnej wersji:
+
+![zdj](screenshots3/81.png)
+
+Dla błędnej:
+
+![zdj](screenshots3/82.png)
+
+Strategie wdrożeń:
+`Recreate`- najpierw usuwa wszystkie stare pody z aktualnego wdrożenia, a dopiero później uruchamia nowe z nową wersją obrazu.
+
+`Rolling Update (z parametrami maxUnavailable > 1, maxSurge > 20%)`- wymienia pody stopniowo, po kolei – jednocześnie usuwa stare i uruchamia nowe, zachowując działającą aplikację podczas całego procesu. Parametry oznaczają np. maxUnavailable=2 – maksymalnie 2 pody mogą być niedostępne w czasie aktualizacji. MaxSurge: 25% – może być uruchomionych do 25% więcej podów niż początkowo, by przyspieszyć wdrożenie bez przerywania działania usługi.
+
+`Canary Deployment workload`- Wdraża nową wersję aplikacji tylko dla niewielkiej części np. 1 z 4 replik.
 
 
+--- 
+Do pomocy korzystałam ze sztucznej inteligencji takej jak Chat GPT, DeepSeak, oraz Perplexity.ai, każdorazowo starając się weryfikować informacje w róznych źródłach. AI pomogło mi w niektórych momentach ze zrozumieniem poszczególnych zagadnień, czy też przy pisaniu niektórych plików, ale przede wszystkim w rozwiązywaniu problemów, na które już nie miałam sama pomysłu.
