@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    docker {                       
+    docker {
       image 'docker:20.10-dind'
       args  '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
     }
@@ -9,19 +9,22 @@ pipeline {
     booleanParam(name: 'PUBLISH', defaultValue: false, description: 'Push artifact/image?')
   }
   stages {
-    stage('Checkout') { steps { checkout scm } }                 
+    stage('Checkout') {
+      steps { checkout scm }
+    }
+
     stage('Build') {
       steps {
         dir('INO/GCL01/MG417201/redis-ci-cd') {
-          sh 'docker build -t redis_build:1.0 -f Dockerfile.build.redis .' 
+          sh 'docker build -t redis_build:1.0 -f Dockerfile.build.redis .'
         }
       }
     }
+
     stage('Test') {
       steps {
         dir('INO/GCL01/MG417201/redis-ci-cd') {
           sh 'docker build -t redis_test:1.0 -f Dockerfile.test.redis .'
-
           sh '''
             mkdir -p logs
             docker run --rm redis_test:1.0 > logs/test.log 2>&1
@@ -29,38 +32,58 @@ pipeline {
         }
       }
       post {
-        always { archiveArtifacts artifacts: 'INO/GCL01/MG417201/redis-ci-cd/logs/*.log', fingerprint: true}
+        always {
+          archiveArtifacts artifacts: 'INO/GCL01/MG417201/redis-ci-cd/logs/*.log', fingerprint: true
+        }
       }
     }
 
-    stage('Deploy') {
+    stage('Package Runtime') {
       steps {
         dir('INO/GCL01/MG417201/redis-ci-cd') {
-          sh 'docker build -t redis_runtime:1.0 -f Dockerfile.runtime .'
-          sh 'docker run -d --name redis-runtime redis_runtime:1.0'
+          sh 'docker build -t redis_runtime1.0 -f Dockerfile.runtime .'
         }
       }
     }
-    stage('Publish') {
+
+    stage('Push to Docker Hub') {
       when { expression { params.PUBLISH } }
       steps {
-        script {
+        withCredentials([usernamePassword(
+          credentialsId: 'docker-hub-creds',
+          usernameVariable: 'mihlsap',
+          passwordVariable: '92gD36$9O'
+        )]) {
           sh '''
-            docker create --name tmp redis_runtime:1.0
-            docker cp tmp:/usr/local/bin ./redis-binaries
-            docker rm tmp
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+            docker tag redis_runtime1.0 yourdockerhubuser/redis_runtime1.0
+            docker push yourdockerhubuser/redis_runtime1.0
           '''
-
-          sh 'apk add --no-cache zip'
-
-          sh 'zip -j redis-1.0.zip redis-binaries/*'
-
-          archiveArtifacts artifacts: 'redis-1.0.zip', fingerprint: true
         }
       }
     }
+
+    stage('Deploy to cloud') {
+      when { expression { params.PUBLISH } }
+      steps {
+        sshagent (credentials: ['ssh-credentials-id']) {
+          sh '''
+            ssh -o StrictHostKeyChecking=no mati@orchestrator << 'EOF'
+              docker pull yourdockerhubuser/redis_runtime1.0
+              docker rm -f redis-runtime || true
+              docker run -d --name redis-runtime -p 6379:6379 yourdockerhubuser/redis_runtime1.0
+              sleep 3
+              docker exec redis-runtime redis-cli PING
+            EOF
+          '''
+        }
+      }
+    }
+
   }
+
   post {
-    success { echo 'Pipeline zakończony – artefakt gotowy do pobrania.' }
+    success { echo 'Pipeline zakończony – artefakt gotowy i wdrożony.' }
+    failure { echo 'Coś poszło nie tak w pipeline.' }
   }
 }

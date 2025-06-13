@@ -765,19 +765,130 @@ endpoint3
 
 >[Treść nowego pliku odpowiedzi](anaconda-ks1.cfg), opatrzyłem go komentarzami dotyczącymi dodanych rzeczy, w tym definicji redisa jako usługi systemowej
 
-- Utworzyłem kolejną vm w dokładnie ten sam sposób, jak poprzednią
+- Utworzyłem kolejną vm w dokładnie ten sam sposób, jak poprzednią, poniżej widać podsumowanie instalacji
+
+<div align="center"> 
+    <img src="screens9/11.png">
+</div>
 
 - Poniżej widoczne są opcje bootowania po edycji
 
 <div align="center"> 
-    <img src="screens9/11.png">
+    <img src="screens9/12.png">
+</div>
+
+- Próbowałem wyświetlić działania z sekcji `%post` w trakcie instalacji, ale nie powiodło mi się to, nic nie wyświetlało się ani na głównym terminalu, ani na TTY2, a plik `ks-post.log` nie był dostępny
+
+<div align="center"> 
+    <img src="screens9/13.png">
+</div>
+
+- Podsumowanie instalacji
+
+<div align="center"> 
+    <img src="screens9/14.png">
+</div>
+
+- Logi z sekcji `%post`
+
+<div align="center"> 
+    <img src="screens9/15.png">
+</div>
+
+- Wykazanie działania oprogramowania i usługi
+
+<div align="center"> 
+    <img src="screens9/16.png">
+</div>
+
+- Stworzenie skryptu automatyzującego tworzenie VM
+
+```ps1
+$vmName   = "FedoraKS"
+$isoPath  = "C:\ISOs\fedora-ks.iso"
+$vmFolder = "$env:USERPROFILE\VirtualBox VMs\$vmName"
+$vdiPath  = Join-Path $vmFolder "$vmName.vdi"
+
+VBoxManage.exe createvm --name $vmName --ostype Fedora_64 --register
+
+VBoxManage.exe modifyvm $vmName --memory 2048 --vram 16 --nic1 nat
+
+VBoxManage.exe createhd --filename $vdiPath --size 20000
+VBoxManage.exe storagectl $vmName --name "SATA" --add sata --controller IntelAHCI
+VBoxManage.exe storageattach $vmName --storagectl "SATA" --port 0 --device 0 `
+  --type hdd --medium $vdiPath
+
+VBoxManage.exe storageattach $vmName --storagectl "SATA" --port 1 --device 0 `
+  --type dvddrive --medium $isoPath
+
+VBoxManage.exe modifyvm $vmName --natpf1 "ssh,tcp,,2222,,22"
+
+VBoxManage.exe startvm $vmName --type headless
+
+Write-Host "VM $vmName should start now..." -ForegroundColor Green
+```
+
+- Uruchomienie skryptu
+
+<div align="center"> 
+    <img src="screens9/17.png">
+</div>
+
+<div align="center"> 
+    <img src="screens9/18.png">
 </div>
 
 ## Zajęcia 10
 
 ### Instalacja klastra Kubernetes
 
+#### Instalacja minicube
 
+<div align="center"> 
+    <img src="screens10/1.png">
+</div>
+
+#### Wykazanie poziomu bezpieczeństwa instalacji (sprawdzenie certów i użytkowników)
+
+<div align="center"> 
+    <img src="screens10/2.png">
+</div>
+
+#### Instalacja `kubectl`
+
+<div align="center"> 
+    <img src="screens10/3.png">
+</div>
+
+#### Aliasowanie `kubectl`
+
+<div align="center"> 
+    <img src="screens10/4.png">
+</div>
+
+<div align="center"> 
+    <img src="screens10/5.png">
+</div>
+
+#### Pokazanie statusu minikube oraz działających podów
+
+<div align="center"> 
+    <img src="screens10/6.png">
+</div>
+
+#### Mitygacja wymagań sprzętowych
+
+>Mój system spełnia wszystkie minimalne wymagania systemowe kubernetes, dlatego nie konfigurowałem minikube w żaden sposób.
+
+#### Uruchomienie dashboardu
+
+<div align="center"> 
+    <img src="screens10/7.png">
+</div>
+
+<div align="center"> 
+    <img src="screens10/8.png">
+</div>
 
 ### Analiza posiadanego kontenera
 
