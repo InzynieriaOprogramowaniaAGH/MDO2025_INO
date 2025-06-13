@@ -1,0 +1,6 @@
+FROM build-image
+
+WORKDIR /app
+
+# Uruchomienie testów
+CMD ["npm", "test"]
