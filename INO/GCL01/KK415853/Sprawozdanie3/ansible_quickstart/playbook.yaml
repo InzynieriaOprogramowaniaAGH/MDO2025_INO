@@ -1,0 +1,32 @@
+- name: Realizacja zadania Ansible
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: 🔹 Ping wszystkich hostów
+      ansible.builtin.ping:
+
+    - name: 🔹 Skopiuj plik inventory.ini na endpointy
+      ansible.builtin.copy:
+        src: inventory.ini
+        dest: /home/ansible/inventory.ini
+
+    - name: 🔹 Zaktualizuj pakiety (dnf upgrade)
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: true
+
+    - name: 🔹 Restartuj usługę sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+    - name: 🔹 Restartuj usługę rngd (opcjonalna)
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+      ignore_errors: true
+
+
