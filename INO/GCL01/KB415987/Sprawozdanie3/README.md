@@ -1,0 +1,715 @@
+# Sprawozdanie 3
+
+## Lab 8
+
+Program tar oraz usługa OpenSSH są obecne.
+![](resources/s1.png)
+
+
+ustawienie `hostname` na `ansible-target`, niestety nie zrobiłem tego przy instalacji.
+![](resources/s2.png)
+
+Ansible zainstalowany:
+```bash
+sudo dnf install ansible -y 
+```
+![](resources/s3.png)
+
+Utworzenie oraz skopiowanie klucza ssh na maszyne `ansible-target`.
+```bash
+ssh-copy-id -i ~/.ssh/id_ansible.pub ansible@10.0.2.15
+```
+![](resources/s4.png)
+
+Zapisałem stan maszyny ansible-target
+
+### Inwentaryzacja
+Wprowadzenie nazw DNS maszyn wirtualnych do katalogu `/etc/hosts`
+
+![](resources/s5.png)
+
+Sprawdzenie łączności 
+
+![](resources/s6.png)
+
+Inventory.ini:
+
+```ini
+[Orchestrators]
+fedora ansible_connection=local
+
+[Endpoints]
+ansible-target
+```
+![](resources/s7.png)
+
+### Zdalne wywołanie procedur
+
+Pierwszy playbook testujący połączenie: 
+
+```yaml
+- name: Playbook1
+  hosts: all
+  become: true
+  tasks:
+   - name: Ping my hosts
+     ansible.builtin.ping:
+
+   - name: Print message
+     ansible.builtin.debug:
+       msg: Hello world!
+```
+Komenda do uruchomienia playbooka:
+
+```bash
+ansible-playbook -i inventory.ini playbook.yaml
+```
+![](resources/s8.png)
+
+
+Playbook zawierający resztę wymaganych rzeczy:
+```yaml
+- name: Playbook1
+  hosts: all
+  become: true
+  tasks:
+   - name: Ping my hosts
+     ansible.builtin.ping:
+
+   - name: Copy inventory to Endpoint
+     ansible.builtin.copy:
+      src: inventory.ini
+      dest: /home/ansible/inventory_copied
+     when: "'ansible-target' in inventory_hostname"
+
+   - name: Ping after copy
+     ansible.builtin.ping:
+
+   - name: Update system packages
+     ansible.builtin.dnf:
+      name: "*"
+      state: latest
+     when: "'ansible-target' in inventory_hostname"
+
+   - name: Restart sshd
+     ansible.builtin.service:
+      name: sshd
+      state: restarted
+     when: "'ansible-target' in inventory_hostname"
+
+   - name: Restart rngd
+     ansible.builtin.service:
+      name: rngd
+      state: restarted
+     ignore_errors: true
+     when: "'ansible-target' in inventory_hostname"
+
+```
+
+Po uruchomieniu tą samą komendą:
+![](resources/s9.png)
+
+### Zarządzanie stworzonym artefaktem
+
+```bash
+ansible-galaxy init cjson
+```
+![](resources/s10.png)
+
+```yaml
+- name: Create artifacts directory
+  become: true
+  file:
+    path: /home/ansible/cjson
+    state: directory
+    owner: ansible
+    group: ansible
+    mode: '0755'
+
+- name: Copy artifacts to target
+  copy:
+    src: "{{ item }}"
+    dest: /home/ansible/cjson/
+    mode: '0644'
+  loop:
+    - files/cjson.rpm
+    - files/main.c
+
+- name: Install python3-requests
+  ansible.builtin.dnf:
+    name: python3-requests
+    state: present
+
+- name: Install Docker
+  become: true
+  dnf:
+    name: docker
+    state: present
+  
+- name: Ensure Docker is started
+  become: true
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Add ansible to docker group
+  user:
+    name: ansible
+    groups: docker
+    append: true
+
+- name: Start fedora container
+  community.docker.docker_container:
+    name: cjson
+    image: fedora:41
+    state: started
+    command: sleep infinity
+    volumes:
+      - /home/ansible/cjson:/tmp:z
+
+- name: Install gcc, cjson and tools
+  community.docker.docker_container_exec:
+    container: cjson
+    command: dnf install -y gcc make /tmp/cjson.rpm
+
+- name: Compile source file
+  community.docker.docker_container_exec:
+    container: cjson
+    command: gcc -o /tmp/example /tmp/main.c -lcjson
+
+- name: Run program
+  community.docker.docker_container_exec:
+    container: cjson
+    command: bash -c "LD_LIBRARY_PATH=/usr/local/lib64 /tmp/example"
+  register: result
+
+- name: Print the result of the program
+  debug:
+    var: result.stdout
+```
+
+Playbook uruchamiający rolę
+
+```yaml
+- name: Deploy CJSON in container
+  hosts: ansible-target
+  become: true
+  roles:
+    - cjson
+```
+Uruchomienie playbooka:
+```bash
+asnible-playbook -i inventory.ini cjson.yaml
+```
+
+# Lab 9
+
+### Instalacja Fedory
+
+Przgotowanie pliku `anaconda-ks.cfg`
+
+Plik znajdował się w lokalizacji `/root/anaconda-ks.cfg`. Utworzyłem jego kopię oraz rozpocząłem uzupełnianie go o potrzebne rzeczy.
+
+```kickstart
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+```
+
+Po dopisaniu mirrora i repozytorium plik zpushowałem na githuba.
+
+### Instalacja z wykorzystaniem pliku konfiguracyjnego
+
+Z racji że ten link jest zbyt długi, żeby go przepisywać, a w VirtualBox jest prolem z wklejaniem tego to skróciłem go.
+```url
+https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/KB415987/INO/GCL01/KB415987/Sprawozdanie3/anaconda-rs.cfg
+```
+Do takiej postaci.
+```url
+https://tinyurl.com/konrad1337
+```
+
+Po uruchomieniu maszyny i naciśnięciu `e` wpisałem w Grubie polecenie `inst.ks=https://tinyurl.com/konrad1337`
+
+![](resources/101.png)
+
+Następnie instalator uruchomił się i proces instalacji nastąpił automatycznie.
+
+![](resources/201.png)
+
+Instalacja....
+
+![](resources/301.png)
+
+Instalacja zakończona.
+
+Nastęnie dodałem do pliku kickstart opcję `reboot`, ustawiłem nazwę hosta `fedora.test`, i opcje czyszczenia partycji przed instalacją oraz automatyczne tworzenie nowych.
+
+Po dodaniu tych opcji oraz uruchomieniu sprawdziłem czy to działa.
+
+![](resources/401.png)
+
+### Instalacja cJson z .rpm
+
+Poleceniem:
+```bash
+sudo dnf install -y httpd createrepo
+```
+
+![](resources/501.png)
+
+zainstalowałem pakiety `httpd` - Apache HTTP Server oraz `createrepo` - do obsługi rpm.
+
+Tworzenie katalogu `repo_cjson`, kopiowanie tam rpmki oraz indeksacja rpmki.
+
+```bash
+sudo mkdir -p /var/www/html/repo_cjson
+sudo cp cjson.rpm /var/www/html/repo_cjson/
+cd /var/www/html/repo_cjson
+sudo createrepo .
+```
+
+![](resources/901.png)
+
+
+Dodanie serwisu http do zapory.
+```bash
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --reload
+```
+
+Następnie należało zmodyfikować plik `httpd.conf` w konfiguracji Apache.
+
+![](resources/1010.png)
+
+*Pozwala to na wyświetlanie katalogu w przeglądarce, blokuje możliwości nadpisywania ustawień za pomocą plików .htaccess, oraz pozwala wszystkim userom korzystać bez przeszkód z zawartości folderu.*
+
+
+Po przekierowaniu portów (bo pracuję na tej nieszczęsnej sieci NAT) repo znajduje się pod:
+```bash
+http://localhost:8081/repo_cjson/
+```
+
+Po przejściu pod powyższe hiperłącze:
+
+![](resources/701.png)
+
+`anaconda-ks.cfg`, po uzupełnieniu o skrypt uruchamiajacy sie po zalogowaniu.
+
+```ps 
+# Generated by Anaconda 41.35
+# Generated by pykickstart v3.58
+#version=DEVEL
+
+# Keyboard layouts
+keyboard --vckeymap=pl --xlayouts='pl'
+# System language
+lang pl_PL.UTF-8
+
+# Network information
+network --hostname=fedora.test
+
+%post --log=/tmp/postinstall.log --interpreter /bin/bash
+exec > /dev/tty3 2>&1
+chvt 3
+echo "Postinstall procedure has started..."
+mkdir -p /opt/example
+
+chown konrad:konrad /opt/example
+
+curl -o /opt/example/main.c https://raw.githubusercontent.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/refs/heads/KB415987/INO/GCL01/KB415987/Sprawozdanie2/jenkinsfile/main.c
+
+# skrypt który uruchamia się po zalogowaniu
+cat << 'EOF' > /etc/profile.d/run_example.sh
+#!/bin/bash
+if [ ! -f /opt/example/.compiled ]; then
+    echo "Compilation..." >> /opt/example/autostart.log
+    gcc /opt/example/main.c -o /opt/example/example -lcjson -I/usr/local/include/cjson -L/usr/local/lib64
+    if [ -f /opt/example/example ]; then
+        echo "Running..." >> /opt/example/autostart.log
+        LD_LIBRARY_PATH=/usr/local/lib64 /opt/example/example >> /opt/example/autostart.log 2>&1
+    else
+        echo "Compilation failed." >> /opt/example/autostart.log
+    fi
+    touch /opt/example/.compiled
+fi
+EOF
+
+chmod +x /etc/profile.d/run_example.sh
+%end
+
+repo --name=repo_cjson --baseurl=http://10.0.2.4:8080/repo_cjson/
+
+%packages
+@^custom-environment
+cjson
+gcc
+glibc
+curl
+%end
+
+# Run the Setup Agent on first boot
+firstboot --enable
+
+url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+
+# Generated using Blivet version 3.11.0
+ignoredisk --only-use=sda
+
+# Partition clearing information
+bootloader --location=mbr --boot-drive=sda
+clearpart --all --initlabel
+autopart
+
+# System timezone
+timezone Europe/Warsaw --utc
+
+# Root password
+rootpw --iscrypted --allow-ssh $y$j9T$C6I/uESBu5.30kK66yX6dhDb$sWS8Z2IlL6v9tcF7A6lkhwJ2cb7k31ZhWL/etSxlZs7
+user --groups=wheel --name=konrad --password=konrad --gecos="konrad"
+
+reboot
+###
+
+```
+
+Logi z wykonania skryptu:
+
+![](resources/801.png)
+
+Jak widać skrypt wykonał się poprawnie.
+
+
+# Lab 10
+
+## Kubernetes - 1
+
+### Instalacja
+
+Na początku przystąpiłem do instalacji minikube wg oficjalnej
+[instrukcji instalacji minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download).
+
+Wersja na Linux x86_64 jako paczka rpm.
+
+![](resources/a.png)
+
+W zasadzie już miałem minikuba to się tylko zupdatował `:)` .
+
+Wpisuje kolejne komendy z dokumentacji:
+
+![](resources/b.png)
+
+
+Jeśli chodzi o minimalne wymagania minikube to 
+
+![](resources/d.png)
+
+z racji że nie są to wymagania zbyt wygórowane, konfiguracja na jakiej pracuję spełnia te wymagania.
+
+Po wykonaniu kilku kroków uruchomiłem dashboard
+
+![](resources/c.png)
+
+
+#### Podstawy kubernetesowe:
+
+     Pod - jednostka w kubernetesie która może zawierac kilka kontenerów dzielących między siebie zasoby, 
+    
+     Service - zapewnia komunikacje między podami na zewnątrz, jest to taki stabilny punkt dostępu
+
+     Deployment - zarządzanie podami, skalowanie, rollbacki, aktualizacje itp.
+
+     Ingress - zarządzanie dostępem do usług w klastrze z zewnątrz.
+
+### Analiza posiadanego kontenera
+
+#### Przgotowanie
+Zamiast cJsona skorzystamy z Nginx z lekkim tweakiem.
+
+`nginx.conf`:
+```ps
+events {}
+
+http {
+    server {
+        listen 80;
+        location / {
+            return 200 'Siemanko\n';
+        }
+    }
+}
+```
+
+`Dockerfile`:
+```Dockerfile
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/nginx.conf
+```
+
+Budowanie obrazu
+```bash
+docker build -t nginx123 .
+```
+
+Obraz się buduje...
+
+![](resources/e.png)
+
+Utworzenie kontenera zawierającego wcześniej zbudowany obraz
+
+![](resources/g.png)
+
+Sprawdzenie działania w przeglądarce:
+
+![](resources/f.png)
+
+Działa.
+
+#### Obraz w Docker Hub
+
+No to nadajemy taga i wysyłamy.
+
+```bash
+docker tag nginx123 konradb8/nginx123
+```
+Przed pushem jeszcze musiałem potwierdzić urządzenie.
+
+![](resources/i.png)
+
+Pushowanie:
+```bash
+docker push konradb8/nginx123
+```
+
+![](resources/h.png)
+
+Mój nginx znajduje się na Docker Hub.
+
+![](resources/j.png)
+
+### Uruchomienie oprogramowania
+
+Tworzenie opiektu deployment
+
+```bash
+ kubectl create deployment nginx123-deploy --image=konradb8/nginx123
+ ```
+
+Eksponowanie wdrożenia nginx123 jako usługi.
+ ```bash
+ kubectl expose deployment nginx123 --type=LoadBalancer --port=80
+ ```
+
+![](resources/k.png)
+
+Pod jest running
+
+![](resources/l.png)
+
+#### Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
+
+`nginx-deployment.yaml`
+
+```yaml
+apiVersion: app/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+```
+
+Wdrożenie konfiguracji:
+
+```bash
+kubectl apply -f nginx-deployment.yaml
+```
+Po uruchomieniu rollout'u pojawiają się działające pody.
+```bash
+ kubectl rollout status deployment/nginx-deployment
+ ```
+
+ ![](resources/m.png)
+
+Widok z Kubernetesowego dashboardu:
+
+ ![](resources/n.png)
+
+
+### Wdrożenie serwisu
+
+`nginx-service.yaml`:
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+```
+
+Tworzenie serwisu na podstawie pliku `nginx-service.yaml`
+```bash
+kubectl apply -f nginx-service.yaml
+```
+Tworzenie tunelu sieciowego, aby zapewnić dostęp do środka.
+```bash
+minikube tunnel
+```
+Usługi `service` i `deploy` działają bez zarzutów:
+
+ ![](resources/o.png)
+
+Jest to przykład *IaC* - pliki yaml, które w razie potrzeby można szybko zmienić.
+
+# Lab 11
+ 
+### Przygotowanie nowego obrazu
+
+Wykorzystamy trzy warianty
+
+- bazowy obraz nginx, 
+- obraz nginx z własną konfiguracją
+- obraz, po którego uruchomieniu wywala błąd
+
+są to kolejno, Dockerfile.(1,2,3)
+
+Tak dla wszyskich trzech wersji:
+```bash
+ docker build -t konradb8/nginx:v1 -f Dockerfile.1 .
+docker push konradb8/nginx:v1
+```
+Obrazy zostały zbudowane i wypchnięte na Docker Hub'a.
+
+ ![](resources/r.png)
+
+ ### Zmiany w deploymencie
+
+ #### Zabawa z liczbą replik
+
+8 replik
+
+ ![](resources/s.png)
+
+1 replika
+
+ ![](resources/t.png)
+
+widok logów z terminala
+ ![](resources/u.png)
+
+
+4 repliki
+
+ ![](resources/w.png)
+
+0 replik
+
+ ![](resources/x.png)
+
+4 repliki
+
+ ![](resources/y.png)
+
+
+Zmiana obrazu na wersję drugą.
+
+ ![](resources/z.png)
+
+Zmiana obrazu na wersję która wyrzuca błąd.
+
+ ![](resources/zz.png)
+
+### Przywracanie poprzednich wdrożeń
+
+Polecenie pokazującę historię wdrożeń
+```bash
+kubectl rollout history deployment nginx-deployment
+```
+Rollout, przywraca ostanią wersję wdrożenia która nie kończyła się błędem.
+
+```bash
+kubectl rollout undo deployment nginx-deployment
+```
+Przywrócona ostatnia stabilna wersja wdrożenia:
+
+ ![](resources/zzz.png)
+
+### Kontrola wdrożenia
+
+Historia wdrożeń
+
+flaga `--revision` pozwala na identyfikację różnić między wdrożeniami.
+
+ ![](resources/zzzz.png)
+
+
+Skrypt sprawdzający czy wdrożenie zdążyło się wdrożyć w 60 sekund.
+
+```bash
+#!/bin/bash
+
+DEPLOYMENT_NAME="nginx-deployment"
+NAMESPACE="default"
+TIMEOUT=60
+
+echo "Watin for \"$DEPLOYMENT_NAME\"."
+
+kubectl rollout status deployment/"$DEPLOYMENT_NAME" --namespace="$NAMESPACE" --timeout=${TIMEOUT}s
+
+if [ $? -eq 0 ]; then
+    echo "Deployment has ended in 60s timeframe."
+else
+    echo "Error: Deployment was being proceeded longer than 60s."
+    exit 1
+fi
+```
+
+Dla osataniej stabilnej wersji czyli tej drugiej, skrypt kończy się bez błędów.
+ 
+ ![](resources/zzzzz.png)
+
+Dla wersji która powoduje błąd, skrypt zwrócił również błąd, ponieważ czas wykonania jest większy niz 60 sekund. W zasadzie to wdrożenie się nigdy nie wdroży bo zawiera obraz który powoduje błąd.
+
+ ![](resources/zzzzzz.png)
+
+### Strategie wdrożenia
+Omówienie różnych strategi wdrożenia
+
+- *Recreate*
+
+Powoduje ona zatrzymanie starych podów przed uruchomieniem nowych.
+Dzięki temu spójność usługi jest zachowana, lecz wymagana jest przerwa techniczna, na wdrożenie z powodu chwilowej niedostępności.
+
+- *RollingUpdate*
+
+Ta strategia pozwala na aktualizacje wersji danej usługi bez przew technicznych, daje też możliwość na określenie parametrów updatowania, takich jak maksymalna liczba chwilowo niedostępnych podów czy liczba podów które można dodatkowo uruchomić na poczet akutalizacji, aby zapewnić ciągłość w dostarczaniu usługi.
+
+- *Canary*
+
+W tej strategii chodzi o to, aby wdrożyć nową wersję tylko dla części użytkowników i monitorowanie jej zachowania oraz zwiększanie zakresu użytkowników korzystających z tej nowej wersji.
+Jeżeli wszystko gra to nowa wersja zastępuje starą, jeśli nie to wracamy do ostatniej stabilnej wersji.
