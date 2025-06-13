@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weechat-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weechat
+  template:
+    metadata:
+      labels:
+        app: weechat
+    spec:
+      containers:
+        - name: weechat
+          image: gyzmaul/weechat_rpm:weechat_rpm
+          command: ["/bin/sh", "-c"]
+          args: ["while true; do sleep 3600; done"]
+          ports:
+            - containerPort: 3000
