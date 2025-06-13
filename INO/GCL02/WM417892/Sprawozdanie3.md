@@ -363,6 +363,124 @@ Zrealizowane ćwiczenie potwierdziło skuteczność i elastyczność narzędzia 
 - Wiedza zdobyta podczas realizacji zadania jest nie tylko przydatna dydaktycznie, ale stanowi również solidną podstawę pod realne wdrożenia w projektach DevOps i administracji systemami.
 
 
+## Sprawozdanie 9: Instalacja nienadzorowana systemu Fedora
+
+### Wstęp
+
+Celem niniejszego zadania było przygotowanie oraz przeprowadzenie nienadzorowanej instalacji systemu Fedora w środowisku maszyn wirtualnych lub fizycznych. Proces ten został zautomatyzowany za pomocą pliku odpowiedzi (Kickstart), umożliwiającego instalację systemu bez interwencji użytkownika. W ramach instalacji, środowisko zostało również przygotowane do hostowania aplikacji powstałej w trakcie wcześniejszych etapów projektu, zarówno w kontenerze Docker, jak i jako samodzielny program. W sprawozdaniu przedstawione zostaną etapy konfiguracji pliku odpowiedzi, modyfikacje nośnika instalacyjnego, sposób integracji artefaktów z pipeline'u oraz rezultaty końcowe instalacji.
+
+### Tworzenie maszyny wirtualnej
+
+Na pierwszym etapie procesu została utworzona nowa maszyna wirtualna w środowisku VirtualBox. Nadano jej nazwę `Fedora-Unattended`, wskazano folder docelowy oraz załadowano obraz ISO instalatora Fedora Server (wersja `Fedora-Server-dvd-x86_64-42-1.1.iso`).
+
+![2 1](https://github.com/user-attachments/assets/ff129ab0-f276-4411-8893-6b30a59591c3)
+
+VirtualBox automatycznie wykrył typ systemu jako Fedora 64-bit, jednak pojawił się komunikat, że ten typ systemu nie wspiera w pełni wbudowanej instalacji nienadzorowanej, co oznaczało konieczność ręcznego wskazania pliku odpowiedzi podczas rozruchu.
+
+### Ekran podsumowania instalacji
+
+Po uruchomieniu instalatora Fedora Server, system przeszedł do ekranu podsumowania instalacji. W tym miejscu użytkownik może skonfigurować źródło instalacji, wybór oprogramowania, lokalizację oraz ustawienia użytkownika. Automatycznie zostały wykryte ustawienia klawiatury, języka, strefy czasowej i sieci. Instalator domyślnie zastosował automatyczne partycjonowanie dysku.
+
+![2 2](https://github.com/user-attachments/assets/56be2215-319d-4c66-9147-f58e93c1dc76)
+
+
+Warto zwrócić uwagę, że konto roota było wyłączone, a żaden użytkownik nie został utworzony – są to elementy wymagające uwzględnienia w pliku odpowiedzi, aby możliwa była w pełni nienadzorowana instalacja.
+
+### Pobranie i edycja pliku Kickstart
+
+Kolejnym krokiem było pobranie wygenerowanego przez instalator pliku Kickstart z maszyny testowej. Operacja została wykonana przy użyciu polecenia `scp`, umożliwiającego skopiowanie pliku `anaconda-ks.cfg` z katalogu `/root/` na maszynie zdalnej do lokalnego folderu `Documents`, pod nazwą `ks-fedora.cfg`.
+
+![2 3](https://github.com/user-attachments/assets/ac9d7965-296b-4fe5-8bfe-9bef208ca581)
+
+Po pobraniu, plik został otwarty w edytorze Visual Studio Code:
+
+![2 4](https://github.com/user-attachments/assets/639099dc-d82f-476f-abc3-4bac3437f955)
+
+
+Początkowa wersja pliku zawierała podstawowe informacje, takie jak układ klawiatury, język systemu, środowisko docelowe oraz dane o partycjonowaniu. Istotnym elementem była również zdefiniowana strefa czasowa oraz zaszyfrowane hasło użytkownika root.
+
+![2 5_przed_zmianami](https://github.com/user-attachments/assets/1e787e41-26ab-4144-a479-19c80837b732)
+
+### Modyfikacja pliku Kickstart
+
+Aby umożliwić pełną instalację nienadzorowaną, plik został rozbudowany o dodatkowe sekcje:
+
+* dodano konfigurację repozytoriów z wykorzystaniem mirrorów Fedory (wersja 42),
+* określono sposób partycjonowania dysku oraz wyczyszczenie zawartości (`clearpart --all`),
+* dodano konfigurację sieci wraz z nazwą hosta,
+* pozostawiono zdefiniowane wcześniej hasło root,
+* opcjonalnie wyłączono kreator pierwszego uruchomienia (`firstboot`).
+
+Efekt końcowy prezentuje poniższy zrzut ekranu:
+
+![2 6_pozmianach](https://github.com/user-attachments/assets/24369bff-ccf3-44c1-bda5-5a9cd81e215f)
+
+
+### Udostępnienie pliku Kickstart przez HTTP
+
+Aby instalator Fedora mógł pobrać plik Kickstart z sieci, konieczne było jego udostępnienie przez lokalny serwer HTTP. W tym celu użyto prostego serwera wbudowanego w Pythona, uruchomionego poleceniem:
+
+```bash
+python -m http.server 8000
+```
+
+Serwer udostępnia plik `ks-fedora.cfg` pod adresem `http://<adres_IP>:8000/ks-fedora.cfg`.
+
+![2 7](https://github.com/user-attachments/assets/872c180b-4879-4d48-aa19-48750cd3e765)
+
+Plik został przetestowany lokalnie w przeglądarce, co potwierdziło jego dostępność:
+
+
+### Uruchomienie instalacji nienadzorowanej
+
+W celu wykorzystania pliku Kickstart, podczas uruchamiania instalatora Fedora Server edytowano wpis GRUB, dodając parametr:
+
+```bash
+inst.ks=http://192.168.100.19:8000/ks-fedora.cfg
+```
+
+![2 9](https://github.com/user-attachments/assets/65f319dc-afc1-492d-9e11-53fe3d9a885c)
+
+### Rozszerzenie konfiguracji: Docker i automatyczne uruchamianie aplikacji
+
+W końcowej wersji pliku Kickstart dodano repozytorium Dockera oraz niezbędne pakiety, takie jak `docker-ce`, `docker-ce-cli` i `containerd.io`:
+
+![2 11 1](https://github.com/user-attachments/assets/0fe2e43c-3587-4b5f-abb5-43278f132de1)
+
+
+W sekcji `%post` uwzględniono polecenia uruchamiane po instalacji systemu:
+
+1. Włączenie usługi Dockera przy starcie systemu,
+2. Stworzenie i zarejestrowanie własnego serwisu systemd, który uruchamia kontener z aplikacją pipeline,
+3. Załadowanie konfiguracji systemd i aktywacja serwisu.
+
+![2 11 2](https://github.com/user-attachments/assets/76c6f894-429d-47d4-9c12-54c11f48c73f)
+
+
+### Postęp instalacji
+
+Instalacja przebiegała automatycznie z wykorzystaniem wskazanej konfiguracji Kickstart, co potwierdza zrzut przedstawiający pasek postępu instalatora Fedora:
+
+![2 12](https://github.com/user-attachments/assets/d7b858a4-3157-4e3a-ad30-7634e7b56684)
+
+
+### Efekt końcowy
+
+Po zakończeniu procesu instalacji system Fedora Server 42 uruchomił się automatycznie. Wszystkie zaplanowane składniki – w tym Docker oraz uruchomiona aplikacja kontenerowa – zostały wdrożone zgodnie z założeniami:
+
+![2 13](https://github.com/user-attachments/assets/a185019a-9d88-4cbe-9852-57c1f398c57d)
+
+
+
+##Podsumowanie
+
+Zadanie pozwoliło na praktyczne poznanie i wykorzystanie narzędzi służących do automatyzacji instalacji systemów operacyjnych przy użyciu pliku Kickstart. Proces ten znacząco przyspiesza i upraszcza konfigurację wielu maszyn testowych lub serwerowych, eliminując konieczność ręcznego przechodzenia przez kolejne etapy instalatora. Dzięki wprowadzeniu automatycznego partycjonowania, repozytoriów sieciowych oraz sekcji post-install, możliwe było pełne przygotowanie środowiska zarówno dla aplikacji hostowanych bezpośrednio, jak i w kontenerze Docker.
+
+Dodatkowym atutem było zastosowanie systemd do stworzenia własnej jednostki uruchamiającej aplikację jako usługę systemową – co zapewnia automatyczne uruchamianie wraz ze startem systemu oraz odporność na błędy. W rezultacie stworzono w pełni samowystarczalny obraz systemu, który po zainstalowaniu jest od razu gotowy do pracy z naszym oprogramowaniem.
+
+
+
+
 
 # Sprawozdanie z zajęć 10: Wdrażanie na zarządzalne kontenery - Kubernetes (1)
 
