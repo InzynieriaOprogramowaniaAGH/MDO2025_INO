@@ -304,6 +304,131 @@ W tej metodzie wydzielono dwie wersje deploymentu: `my-nginx-stable` i `my-nginx
 ![4 25](https://github.com/user-attachments/assets/d8161062-4e14-4f74-bf71-90536a77824e)
 
 ---
+## Pliki YAML: Strategie wdrażania w Kubernetes
+
+### `nginx-deploy-recreate.yaml`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-recreate
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: my-nginx
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: wojtek2004/my-nginx:v1
+        ports:
+        - containerPort: 80
+```
+
+### `nginx-deploy-rolling.yaml`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-rolling
+spec:
+  replicas: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 2
+  selector:
+    matchLabels:
+      app: my-nginx
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: wojtek2004/my-nginx:v1
+        ports:
+        - containerPort: 80
+```
+
+### `nginx-deploy-canary.yaml`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-stable
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: my-nginx
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+        version: stable
+    spec:
+      containers:
+      - name: nginx
+        image: wojtek2004/my-nginx:v1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx-canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-nginx
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+        version: canary
+    spec:
+      containers:
+      - name: nginx
+        image: wojtek2004/my-nginx:v2
+```
+
+## Porównanie strategii wdrażania
+
+### 1. Recreate
+
+* W tej strategii wszystkie stare instancje są najpierw usuwane, a dopiero później uruchamiane są nowe.
+* Powoduje to chwilową niedostępność aplikacji.
+* Jest prosta, ale nie nadaje się do środowisk produkcyjnych wymagających wysokiej dostępności.
+
+### 2. RollingUpdate (z `maxUnavailable=2`, `maxSurge=2`)
+
+* Stare wersje są zastępowane nowymi w sposób stopniowy.
+* Parametry `maxUnavailable` i `maxSurge` określają ilu podów może być niedostępnych lub ponad plan w trakcie aktualizacji.
+* Zapewnia większą dostępność aplikacji podczas aktualizacji, ale wymaga więcej zasobów.
+
+### 3. Canary
+
+* Wdrażana jest nowa wersja tylko w jednej instancji (np. 1 replika), obok stabilnych.
+* Pozwala na testowanie nowej wersji przy minimalnym ryzyku.
+* W przypadku błędów łatwo jest usunąć wdrożenie canary bez wpływu na działające środowisko.
+* Wymaga dodatkowego zarządzania (np. routing ruchem, metryki).
+
+Każda z tych strategii ma swoje zastosowania zależnie od środowiska i poziomu ryzyka akceptowalnego podczas aktualizacji aplikacji.
+
+ 
 
 ## Podsumowanie
 
