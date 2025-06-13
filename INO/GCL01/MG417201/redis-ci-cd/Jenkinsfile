@@ -66,7 +66,7 @@ pipeline {
     stage('Deploy to cloud') {
       when { expression { params.PUBLISH } }
       steps {
-        sshagent (credentials: ['ssh-credentials-id']) {
+        sshagent (credentials: ['orchestrator']) {
           sh '''
             ssh -o StrictHostKeyChecking=no mati@orchestrator << 'EOF'
               docker pull yourdockerhubuser/redis_runtime1.0
