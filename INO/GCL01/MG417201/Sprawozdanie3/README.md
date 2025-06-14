@@ -1491,16 +1491,6 @@ spec:
 ```
 
 - Wdrożenie i obserwacja
-```bash
-minikube kubectl -- apply -f redis-service.yaml
-minikube kubectl -- apply -f redis-deploy-stable.yaml
-minikube kubectl -- get pods -l track=stable
-
-# gdy stable już działa, wyrzuć canary:
-minikube kubectl -- apply -f redis-deploy-canary.yaml
-minikube kubectl -- get pods -l track=canary
-
-```
 
 ##### Canary
 
@@ -1532,17 +1522,7 @@ spec:
 ```
 
 - Wdrożenie i obserwacja
------> KOMENDY <-----
-```bash
-minikube kubectl -- apply -f redis-service.yaml
-minikube kubectl -- apply -f redis-deploy-stable.yaml
-minikube kubectl -- get pods -l track=stable
 
-# gdy stable już działa, wyrzuć canary:
-minikube kubectl -- apply -f redis-deploy-canary.yaml
-minikube kubectl -- get pods -l track=canary
-
-```
 ##### Service
 
 ```yaml
@@ -1563,11 +1543,10 @@ spec:
 
 - Wdrożenie i obserwacja
 
-```bash
-minikube kubectl -- patch svc redis-svc \
-  -p '{"spec":{"selector":{"app":"redis","track":"canary"}}}'
-# albo oba tracki (zamiast nadpisania, użyj label union):
-minikube kubectl -- patch svc redis-svc \
-  -p '{"spec":{"selector":{"app":"redis"}}}'  # usuń track
-
-```
++ chmod +x minikube
++ mv minikube /usr/local/bin/
++ minikube start --driver=docker
+* minikube v1.36.0 on Ubuntu 24.04 (docker/amd64)
+* Using the docker driver based on user configuration
+* The "docker" driver should not be used with root privileges. If you wish to continue as root, use --force.
+* If you are running minikube within a VM, consider using --driver=none:

@@ -29,7 +29,7 @@ pipeline {
           chmod +x minikube
           mv minikube /usr/local/bin/
 
-          minikube start --driver=docker
+          minikube start --driver=none
 
           minikube status
         '''
