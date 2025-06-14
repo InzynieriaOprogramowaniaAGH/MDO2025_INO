@@ -1075,4 +1075,46 @@ status: {}
     <img src="screens10/19.png">
 </div>
 
+<div align="center"> 
+    <img src="screens10/20.png">
+</div>
+
+<div align="center"> 
+    <img src="screens10/21.png">
+</div>
+
+#### Zwiększenie liczby replik
+
+- Zmiana wartości replicas na 4 w pliku `nginx-deplou.yaml`
+
+<div align="center"> 
+    <img src="screens10/22.png">
+</div>
+
+- Rozpoczęcie wdrożenia
+
+<div align="center"> 
+    <img src="screens10/23.png">
+</div>
+
+- Zbadanie stanu
+
+<div align="center"> 
+    <img src="screens10/24.png">
+</div>
+
+<div align="center"> 
+    <img src="screens10/25.png">
+</div>
+
+#### Wyeksponowanie wdrożenia jako serwis i przekierowanie portu
+
+<div align="center"> 
+    <img src="screens10/26.png">
+</div>
+
+<div align="center"> 
+    <img src="screens10/27.png">
+</div>
+
 ## Zajęcia 11
