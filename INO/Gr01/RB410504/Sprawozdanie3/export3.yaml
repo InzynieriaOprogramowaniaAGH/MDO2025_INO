@@ -11,11 +11,11 @@ metadata:
     app: my-dep
   name: my-dep
   namespace: default
-  resourceVersion: "4595"
+  resourceVersion: "4660"
   uid: e6c39b5a-6c04-4e29-8ada-4240e4b07d51
 spec:
   progressDeadlineSeconds: 600
-  replicas: 3
+  replicas: 4
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -52,8 +52,8 @@ status:
     reason: NewReplicaSetAvailable
     status: "True"
     type: Progressing
-  - lastTransitionTime: "2025-06-14T20:39:19Z"
-    lastUpdateTime: "2025-06-14T20:39:19Z"
+  - lastTransitionTime: "2025-06-14T20:40:40Z"
+    lastUpdateTime: "2025-06-14T20:40:40Z"
     message: Deployment has minimum availability.
     reason: MinimumReplicasAvailable
     status: "True"

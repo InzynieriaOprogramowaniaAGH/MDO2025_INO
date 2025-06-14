@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DEPLOYMENT_NAME="nazwa-deploymentu"
-NAMESPACE="default"  # Zmień, jeśli używasz innego namespace
+DEPLOYMENT_NAME="my-dep"
+NAMESPACE="default" 
 TIMEOUT=60
 
 echo "⏳ Oczekiwanie na rollout deploymentu: $DEPLOYMENT_NAME (timeout: $TIMEOUT sekund)..."
