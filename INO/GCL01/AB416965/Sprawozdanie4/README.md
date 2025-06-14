@@ -222,3 +222,7 @@ Dzięki temu możliwe jest:
 - testowanie zbudowanych paczek na innych systemach,
 - przechowywanie buildów historycznych,
 - integracja z kolejnymi etapami (np. testowaniem, wdrażaniem).
+
+## Wykorzystanie sztucznej inteligencji
+
+Podczas realizacji zadania wspierałem się modelem ChatGPT 4o jako wsparcia w zrozumieniu zagadnień, rozwiązywaniu problemów technicznych oraz redakcji sprawozdania, traktując ją jako narzędzie wspomagające naukę i automatyzację pracy.
