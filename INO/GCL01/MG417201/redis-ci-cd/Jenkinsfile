@@ -1,8 +1,8 @@
 pipeline {
   agent {
     docker {
-      image 'docker:20.10-dind-bullseye'
-    args  '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+      image 'ubuntu:latest'
+      args '--privileged'
     }
   }
   parameters {
