@@ -1,37 +1,34 @@
 pipeline {
   agent {
     docker {
-      image 'ubuntu:latest'
-      args '--privileged'
+      image 'mihlsap/my-ci-image:minikube'
+      args '--privileged --tmpfs /tmp --tmpfs /run --mount type=tmpfs,destination=/var/lib/docker'
     }
   }
+
+  environment {
+    KUBECONFIG = '/root/.kube/config'
+  }
+
   parameters {
     booleanParam(name: 'PUBLISH', defaultValue: true, description: 'Push artifact/image?')
     booleanParam(name: 'DEPLOY_K8S', defaultValue: true, description: 'Deploy to Minikube?')
   }
+
   stages {
+
     stage('Checkout') {
-      steps { checkout scm }
+      steps {
+        checkout scm
+      }
     }
 
     stage('Init Kubernetes CLI') {
       steps {
         sh '''
           set -eux
-
-          apt-get update && apt-get install -y curl conntrack socat
-
-          curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.27.3/bin/linux/amd64/kubectl
-          chmod +x kubectl
-          mv kubectl /usr/local/bin/
-
-          curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          chmod +x minikube
-          mv minikube /usr/local/bin/
-
-          minikube start --driver=docker --force
-
-          minikube status
+          minikube start --driver=none --container-runtime=docker --kubernetes-version=v1.27.3 --force
+          kubectl get nodes
         '''
       }
     }
@@ -70,7 +67,9 @@ pipeline {
     }
 
     stage('Push to Docker Hub') {
-      when { expression { params.PUBLISH } }
+      when {
+        expression { params.PUBLISH }
+      }
       steps {
         withCredentials([usernamePassword(
           credentialsId: 'docker-hub-credentials',
@@ -87,7 +86,9 @@ pipeline {
     }
 
     stage('Deploy to cloud') {
-      when { expression { params.PUBLISH } }
+      when {
+        expression { params.PUBLISH }
+      }
       steps {
         withCredentials([usernamePassword(
           credentialsId: 'docker-hub-credentials',
@@ -95,36 +96,43 @@ pipeline {
           passwordVariable: 'DOCKER_PASS'
         )]) {
           sh '''
-              echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin              
-              docker pull mihlsap/redis_runtime2.0
-              docker rm -f redis-runtime || true
-              docker run -d --name redis-runtime -p 6379:6379 mihlsap/redis_runtime2.0
-              sleep 3
-              docker exec redis-runtime redis-cli PING
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin              
+            docker pull mihlsap/redis_runtime2.0
+            docker rm -f redis-runtime || true
+            docker run -d --name redis-runtime -p 6379:6379 mihlsap/redis_runtime2.0
+            sleep 3
+            docker exec redis-runtime redis-cli PING
           '''
         }
       }
     }
 
     stage('Deploy to Kubernetes') {
-      when { expression { params.DEPLOY_K8S } }
+      when {
+        expression { params.DEPLOY_K8S }
+      }
       steps {
-        sh 'minikube kubectl -- apply -f redis-deploy.yaml'
+        sh 'kubectl apply -f redis-deploy.yaml'
       }
     }
 
     stage('Verify K8s Rollout') {
-      when { expression { params.DEPLOY_K8S } }
+      when {
+        expression { params.DEPLOY_K8S }
+      }
       steps {
         sh 'chmod +x check-rollout.sh'
         sh './check-rollout.sh redis-deploy 60'
       }
     }
-
   }
 
   post {
-    success { echo 'Pipeline zakończony – artefakt gotowy i wdrożony.' }
-    failure { echo 'Coś poszło nie tak w pipeline.' }
+    success {
+      echo 'Pipeline zakończony – artefakt gotowy i wdrożony.'
+    }
+    failure {
+      echo 'Coś poszło nie tak w pipeline.'
+    }
   }
 }

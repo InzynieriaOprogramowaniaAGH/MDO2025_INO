@@ -1543,10 +1543,3 @@ spec:
 
 - Wdrożenie i obserwacja
 
-+ chmod +x minikube
-+ mv minikube /usr/local/bin/
-+ minikube start --driver=docker
-* minikube v1.36.0 on Ubuntu 24.04 (docker/amd64)
-* Using the docker driver based on user configuration
-* The "docker" driver should not be used with root privileges. If you wish to continue as root, use --force.
-* If you are running minikube within a VM, consider using --driver=none:
