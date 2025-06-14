@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'mihlsap/my-ci-image:minikube'
-      args '--privileged --tmpfs /tmp --tmpfs /run --mount type=tmpfs,destination=/var/lib/docker'
+      args '--privileged --entrypoint="" --tmpfs /tmp --tmpfs /run --mount type=tmpfs,destination=/var/lib/docker'
     }
   }
 
@@ -27,7 +27,7 @@ pipeline {
       steps {
         sh '''
           set -eux
-          minikube start --driver=none --container-runtime=docker --kubernetes-version=v1.27.3 --force
+          minikube start --driver=none --force --container-runtime=docker --kubernetes-version=v1.27.3
           kubectl get nodes
         '''
       }
