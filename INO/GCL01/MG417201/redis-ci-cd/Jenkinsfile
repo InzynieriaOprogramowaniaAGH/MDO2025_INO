@@ -27,8 +27,18 @@ pipeline {
       steps {
         sh '''
           set -eux
-          minikube start --driver=none --force --container-runtime=docker --kubernetes-version=v1.27.3
-          kubectl get nodes
+
+          minikube start \
+            --driver=none \
+            --force \
+            --container-runtime=containerd \
+            --kubernetes-version=v1.27.3minikube start \
+            --driver=none \
+            --force \
+            --container-runtime=containerd \
+            --kubernetes-version=v1.27.3
+            
+            kubectl get nodes
         '''
       }
     }
