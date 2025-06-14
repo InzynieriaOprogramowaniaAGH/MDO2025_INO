@@ -1371,5 +1371,9 @@ done
     <img src="screens11/24.png">
 </div>
 
+#### Zakres rozszerzony: Ujmij skrypt w pipeline Jenkins
+
+
+
 ### Strategie wdrożenia
 

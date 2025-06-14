@@ -7,10 +7,31 @@ pipeline {
   }
   parameters {
     booleanParam(name: 'PUBLISH', defaultValue: false, description: 'Push artifact/image?')
+    booleanParam(name: 'DEPLOY_K8S', defaultValue: true, description: 'Deploy to Minikube?')
   }
   stages {
     stage('Checkout') {
       steps { checkout scm }
+    }
+
+    stage('Init Kubernetes CLI') {
+      steps {
+        sh '''
+          set -eux
+
+          curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.27.3/bin/linux/amd64/kubectl
+          chmod +x kubectl
+          mv kubectl /usr/local/bin/
+
+          curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          chmod +x minikube
+          mv minikube /usr/local/bin/
+
+          minikube start --driver=docker
+
+          minikube status
+        '''
+      }
     }
 
     stage('Build') {
@@ -41,7 +62,7 @@ pipeline {
     stage('Package Runtime') {
       steps {
         dir('INO/GCL01/MG417201/redis-ci-cd') {
-          sh 'docker build -t redis_runtime1.0 -f Dockerfile.runtime .'
+          sh 'docker build -t redis_runtime2.0 -f Dockerfile.runtime .'
         }
       }
     }
@@ -56,8 +77,8 @@ pipeline {
         )]) {
           sh '''
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            docker tag redis_runtime1.0 mihlsap/redis_runtime1.0
-            docker push mihlsap/redis_runtime1.0
+            docker tag redis_runtime2.0 mihlsap/redis_runtime2.0
+            docker push mihlsap/redis_runtime2.0
           '''
         }
       }
@@ -73,13 +94,28 @@ pipeline {
         )]) {
           sh '''
               echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin              
-              docker pull mihlsap/redis_runtime1.0
+              docker pull mihlsap/redis_runtime2.0
               docker rm -f redis-runtime || true
-              docker run -d --name redis-runtime -p 6379:6379 mihlsap/redis_runtime1.0
+              docker run -d --name redis-runtime -p 6379:6379 mihlsap/redis_runtime2.0
               sleep 3
               docker exec redis-runtime redis-cli PING
           '''
         }
+      }
+    }
+
+    stage('Deploy to Kubernetes') {
+      when { expression { params.DEPLOY_K8S } }
+      steps {
+        sh 'minikube kubectl -- apply -f redis-deploy.yaml'
+      }
+    }
+
+    stage('Verify K8s Rollout') {
+      when { expression { params.DEPLOY_K8S } }
+      steps {
+        sh 'chmod +x check-rollout.sh'
+        sh './check-rollout.sh redis-deploy 60'
       }
     }
 
