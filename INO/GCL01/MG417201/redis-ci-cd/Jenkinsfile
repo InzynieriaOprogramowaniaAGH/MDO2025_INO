@@ -30,6 +30,7 @@ pipeline {
 
           minikube start \
             --driver=docker \
+            --force \
             --container-runtime=containerd \
             --kubernetes-version=v1.27.3
 
