@@ -1118,3 +1118,258 @@ status: {}
 </div>
 
 ## Zajęcia 11
+
+### Przygotowanie nowego obrazu
+
+#### Zbudowanie drugiej wersji oprogramowania i wypchnięcie jej na DockerHub
+
+<div align="center"> 
+    <img src="screens11/1.png">
+</div>
+
+<div align="center"> 
+    <img src="screens11/2.png">
+</div>
+
+#### Zbudowanie trzeciej niedziałającej wersji oprogramowania i wypchnięcie jej na DockerHub
+
+- Utworzenie `Dockerfile.fail`
+
+```Dockerfile
+FROM mihlsap/redis_runtime1.0:1.0
+CMD ["/bin/false"]
+```
+
+- Zbudowanie obrazu
+
+<div align="center"> 
+    <img src="screens11/3.png">
+</div>
+
+- Wypchnięcie
+
+<div align="center"> 
+    <img src="screens11/4.png">
+</div>
+
+- Weryfikacja jego działania
+
+<div align="center"> 
+    <img src="screens11/5.png">
+</div>
+
+#### Wersje obrazu na DockerHub 
+
+<div align="center"> 
+    <img src="screens11/6.png">
+</div>
+
+### Zmiany w deploymencie
+
+#### Utworzenie pliku `redis-deploy.yaml`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deploy
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: mihlsap/redis_runtime1.0:latest
+        ports:
+        - containerPort: 6379
+```
+
+#### Wdrożenie deploymentu
+
+<div align="center"> 
+    <img src="screens11/7.png">
+</div>
+
+#### Zwiększenie replik do 8
+
+- Modyfikacja liczby replik w pliku `redis-deploy.yaml`: `replicas: 8`
+
+- Zastosowanie zmiany
+
+<div align="center"> 
+    <img src="screens11/8.png">
+</div>
+
+#### Zmniejszenie liczby replik do 1
+
+- Modyfikacja liczby replik w pliku `redis-deploy.yaml`: `replicas: 1`
+
+- Zastosowanie zmiany
+
+<div align="center"> 
+    <img src="screens11/9.png">
+</div>
+
+#### Zmniejszenie liczby replik do 0
+
+- Modyfikacja liczby replik w pliku `redis-deploy.yaml`: `replicas: 0`
+
+- Zastosowanie zmiany
+
+<div align="center"> 
+    <img src="screens11/10.png">
+</div>
+
+#### Ponowne przeskalowanie w górę do 4 replik
+
+- Modyfikacja liczby replik w pliku `redis-deploy.yaml`: `replicas: 4`
+
+- Zastosowanie zmiany
+
+<div align="center"> 
+    <img src="screens11/11.png">
+</div>
+
+#### Zastosowanie nowej wersji obrazu
+
+- Modyfikacja obrazu w pliku `redis-deploy.yaml`: `image: mihlsap/redis_runtime1.0:1.0`
+
+- Zastosowanie zmiany
+
+<div align="center"> 
+    <img src="screens11/12.png">
+</div>
+
+#### Zastosowanie starszej wersji obrazu
+
+- Modyfikacja obrazu w pliku `redis-deploy.yaml`: `image: mihlsap/redis_runtime1.0:latest`
+
+- Zastosowanie zmiany
+
+<div align="center"> 
+    <img src="screens11/13.png">
+</div>
+
+#### Zastosowanie "wadliwego" obrazu
+
+- Modyfikacja obrazu w pliku `redis-deploy.yaml`: `image: mihlsap/redis_runtime1.0:2.0-fail`
+
+- Zastosowanie zmiany
+
+<div align="center"> 
+    <img src="screens11/14.png">
+</div>
+
+<div align="center"> 
+    <img src="screens11/15.png">
+</div>
+
+>Próba zastosowania wadliwego obrazu zakończyła się zawieszeniem przy poleceniu `minikube kubectl -- rollout status deployment/redis-deploy`, ponieważ żaden pod nigdy nie wejdzie w stan Ready. Jak widać na drugim screenie dwa pody miały status `CrashLoopBackOff`, co oznacza, że nie uruchomiły się prawidłowo.
+
+#### Przywracanie poprzednich wersji wdrożeń
+
+- Wyświetlenie historii rewizji
+
+<div align="center"> 
+    <img src="screens11/16.png">
+</div>
+
+- Cofnięcie do poprzedniej rewizji
+
+<div align="center"> 
+    <img src="screens11/17.png">
+</div>
+
+- Cofnięcie do konkretnej (drugiej) rewizji
+
+<div align="center"> 
+    <img src="screens11/18.png">
+</div>
+
+<div align="center"> 
+    <img src="screens11/19.png">
+</div>
+
+### Kontrola wdrożenia
+
+#### Weryfikacja historii wdrożeń
+
+- `revision=4` - niedziałający obraz
+
+<div align="center"> 
+    <img src="screens11/20.png">
+</div>
+
+- `revision=5` - działający obraz
+
+<div align="center"> 
+    <img src="screens11/21.png">
+</div>
+
+- `revision=6` - działający obraz
+
+<div align="center"> 
+    <img src="screens11/22.png">
+</div>
+
+#### Utworzenie skryptu weryfikującego, czy wdrożenie "zdążyło" się wdrożyć (60 sekund)
+
+- Treść skryptu
+
+```sh
+#!/usr/bin/env bash
+# check-rollout.sh <deployment-name> [timeout-seconds]
+set -euo pipefail
+
+DEPLOY="${1:-}"
+TIMEOUT="${2:-60}"
+
+if [[ -z "$DEPLOY" ]]; then
+  echo "Usage: $0 <deployment-name> [timeout-seconds]" >&2
+  exit 2
+fi
+
+END=$(( SECONDS + TIMEOUT ))
+echo "Waiting up to $TIMEOUT s for rollout of deployment/$DEPLOY ..."
+
+while true; do
+  DESIRED=$(kubectl get deploy "$DEPLOY" -o jsonpath='{.spec.replicas}')
+  UPDATED=$(kubectl get deploy "$DEPLOY" -o jsonpath='{.status.updatedReplicas}')
+  AVAILABLE=$(kubectl get deploy "$DEPLOY" -o jsonpath='{.status.availableReplicas}')
+
+  if [[ "$UPDATED" == "$DESIRED" && "$AVAILABLE" == "$DESIRED" ]]; then
+    echo "Rollout of $DEPLOY succeeded: $AVAILABLE/$DESIRED replicas available."
+    exit 0
+  fi
+
+  if (( SECONDS >= END )); then
+    echo "Timeout after $TIMEOUT s: only $AVAILABLE/$DESIRED replicas available."
+    exit 1
+  fi
+
+  sleep 2
+done
+```
+
+- Działanie skryptu dla poprawnego obrazu
+
+<div align="center"> 
+    <img src="screens11/23.png">
+</div>
+
+- Działanie skryptu dla wadliwego obrazu
+
+<div align="center"> 
+    <img src="screens11/24.png">
+</div>
+
+### Strategie wdrożenia
+
