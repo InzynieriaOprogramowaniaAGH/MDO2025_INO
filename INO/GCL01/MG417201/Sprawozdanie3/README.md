@@ -892,14 +892,187 @@ Write-Host "VM $vmName should start now..." -ForegroundColor Green
 
 ### Analiza posiadanego kontenera
 
+- W celu przygotowania obrazu Dockera z redisem, zmodyfikowałem używanego podczas poprzedniego sprawozdania pipeline'a.
 
+>[Jenkinsfile](../redis-ci-cd/Jenkinsfile)
+
+- Dockerfile's pozostały bez zmian względem poprzedniego sprawozdania
+
+>[Dockerfile.build.redis](../redis-ci-cd/Dockerfile.build.redis)
+
+>[Dockerfile.test.redis](../redis-ci-cd/Dockerfile.test.redis)
+
+>[Dockerfile.runtime](../redis-ci-cd/Dockerfile.runtime)
+
+- Stage view
+
+<div align="center"> 
+    <img src="screens10/9.png">
+</div>
+
+>[logi](../redis-ci-cd/output/logs1.log)
+
+- Udowadnienie, że kontener pracuje i nie wyłącza się od razu:
+
+  - Fragment logów
+
+  ```log
+  + docker run -d --name redis-runtime -p 6379:6379 mihlsap/redis_runtime1.0
+  b3e9d946fa2bd9476e557bc89a21be461b463850e9850eabc44dccbaa8689724
+  + sleep 3
+  + docker exec redis-runtime redis-cli PING
+  PONG
+  ```
+
+  - Screen
+
+  <div align="center"> 
+      <img src="screens10/10.png">
+  </div>
 
 ### Uruchamianie oprogramowania
 
+#### Uruchomienie oprogramowania na stosie k8s
 
+<div align="center"> 
+    <img src="screens10/11.png">
+</div>
+
+#### Sprawdzenie działania
+
+<div align="center"> 
+    <img src="screens10/12.png">
+</div>
+
+<div align="center"> 
+    <img src="screens10/13.png">
+</div>
+
+- Sprawdzenie szczegółów
+
+```bash
+[mati@orchestrator home]$ minikube kubectl -- describe pod -l app=redis-single
+Name:             redis-single
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.58.2
+Start Time:       Sat, 14 Jun 2025 14:57:28 +0200
+Labels:           app=redis-single
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.14
+IPs:
+  IP:  10.244.0.14
+Containers:
+  redis-single:
+    Container ID:   docker://7e7d582af7bf4776bec637608f0a77203968b1e9b4369da1dac5582c125d1ef1
+    Image:          mihlsap/redis_runtime1.0
+    Image ID:       docker-pullable://mihlsap/redis_runtime1.0@sha256:58bf1f4ad6e9c9e22dd0c962974760e86573f1bc1bb0bf4af884c8537f70840b
+    Port:           6379/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Sat, 14 Jun 2025 14:58:22 +0200
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-sktnz (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-sktnz:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  3m3s   default-scheduler  Successfully assigned default/redis-single to minikube
+  Normal  Pulling    2m58s  kubelet            Pulling image "mihlsap/redis_runtime1.0"
+  Normal  Pulled     2m17s  kubelet            Successfully pulled image "mihlsap/redis_runtime1.0" in 41.313s (41.314s including waiting). Image size: 107579739 bytes.
+  Normal  Created    2m10s  kubelet            Created container: redis-single
+  Normal  Started    2m7s   kubelet            Started container redis-single
+```
+
+#### Wyprowadzene portu
+
+<div align="center"> 
+    <img src="screens10/14.png">
+</div>
+
+#### Komunikacja z eksponowaną funkcjonalnością
+
+<div align="center"> 
+    <img src="screens10/15.png">
+</div>
+
+#### Zatrzymanie przekierowywania portu
+
+<div align="center"> 
+    <img src="screens10/16.png">
+</div>
+
+#### Próba komunikacji z eksponowaną funkcjonalnością po zatrzyamniu przekierowywania portu
+
+<div align="center"> 
+    <img src="screens10/17.png">
+</div>
 
 ### Przekucie wdrożenia manualnego w plik wdrożenia (wprowadzenie)
 
+#### Wygenerowanie początkowego pliku deploymentu
 
+<div align="center"> 
+    <img src="screens10/18.png">
+</div>
+
+- Treść pliku:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx-deploy
+  name: nginx-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-deploy
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx-deploy
+    spec:
+      containers:
+      - image: nginx:latest
+        name: nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+status: {}
+```
+
+#### Wdrożenie deploymentu
+
+<div align="center"> 
+    <img src="screens10/19.png">
+</div>
 
 ## Zajęcia 11
