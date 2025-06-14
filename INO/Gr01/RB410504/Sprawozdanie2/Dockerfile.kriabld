@@ -1,0 +1,9 @@
+FROM node
+
+RUN git clone -o seed https://github.com/kriasoft/node-starter-kit
+WORKDIR /node-starter-kit
+RUN yarn set version latest
+RUN yarn install
+RUN yarn build
+
+EXPOSE 8080
