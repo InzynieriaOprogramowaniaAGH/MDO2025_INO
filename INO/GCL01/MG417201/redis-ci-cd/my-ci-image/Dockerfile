@@ -1,7 +1,7 @@
-FROM docker:20.10.24-dind-rootless
+FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y \
-    curl bash conntrack socat iptables gnupg ca-certificates util-linux
+    curl bash conntrack socat iptables gnupg ca-certificates util-linux docker.io
 
 ENV KUBECTL_VERSION=v1.27.3
 ENV MINIKUBE_VERSION=v1.33.1
