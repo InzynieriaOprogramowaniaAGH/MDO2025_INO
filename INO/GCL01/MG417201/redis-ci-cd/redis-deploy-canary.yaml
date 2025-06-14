@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-canary
+  labels:
+    app: redis
+    track: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+      track: canary
+  template:
+    metadata:
+      labels:
+        app: redis
+        track: canary
+    spec:
+      containers:
+      - name: redis
+        image: mihlsap/redis_runtime1.0:2.0-fail
+        ports:
+        - containerPort: 6379

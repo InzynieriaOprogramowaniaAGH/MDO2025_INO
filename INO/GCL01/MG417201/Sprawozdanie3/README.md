@@ -1377,3 +1377,195 @@ done
 
 ### Strategie wdrożenia
 
+#### Recreate
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-recreate
+  labels:
+    app: redis
+    strategy: recreate
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis
+      strategy: recreate
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: redis
+        strategy: recreate
+    spec:
+      containers:
+      - name: redis
+        image: mihlsap/redis_runtime1.0:latest
+        ports:
+        - containerPort: 6379
+```
+- Wdrożenie i obserwacja
+
+```bash
+minikube kubectl -- apply -f redis-deploy-recreate.yaml
+minikube kubectl -- rollout status deployment/redis-recreate
+watch -n1 "minikube kubectl -- get pods -l strategy=recreate"
+```
+
+#### Rolling Upgrade
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-rolling
+  labels:
+    app: redis
+    strategy: rolling
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis
+      strategy: rolling
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 25%
+  template:
+    metadata:
+      labels:
+        app: redis
+        strategy: rolling
+    spec:
+      containers:
+      - name: redis
+        image: mihlsap/redis_runtime1.0:latest
+        ports:
+        - containerPort: 6379
+```
+
+- Wdrożenie i obserwacja
+
+```bash
+minikube kubectl -- apply -f redis-deploy-rolling.yaml
+minikube kubectl -- rollout status deployment/redis-rolling
+watch -n1 "minikube kubectl -- get pods -l strategy=rolling"
+```
+
+#### Canary Deployment Workload
+
+##### Stable
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-stable
+  labels:
+    app: redis
+    track: stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis
+      track: stable
+  template:
+    metadata:
+      labels:
+        app: redis
+        track: stable
+    spec:
+      containers:
+      - name: redis
+        image: mihlsap/redis_runtime1.0:latest
+        ports:
+        - containerPort: 6379
+```
+
+- Wdrożenie i obserwacja
+```bash
+minikube kubectl -- apply -f redis-service.yaml
+minikube kubectl -- apply -f redis-deploy-stable.yaml
+minikube kubectl -- get pods -l track=stable
+
+# gdy stable już działa, wyrzuć canary:
+minikube kubectl -- apply -f redis-deploy-canary.yaml
+minikube kubectl -- get pods -l track=canary
+
+```
+
+##### Canary
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-canary
+  labels:
+    app: redis
+    track: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+      track: canary
+  template:
+    metadata:
+      labels:
+        app: redis
+        track: canary
+    spec:
+      containers:
+      - name: redis
+        image: mihlsap/redis_runtime1.0:2.0-fail
+        ports:
+        - containerPort: 6379
+```
+
+- Wdrożenie i obserwacja
+-----> KOMENDY <-----
+```bash
+minikube kubectl -- apply -f redis-service.yaml
+minikube kubectl -- apply -f redis-deploy-stable.yaml
+minikube kubectl -- get pods -l track=stable
+
+# gdy stable już działa, wyrzuć canary:
+minikube kubectl -- apply -f redis-deploy-canary.yaml
+minikube kubectl -- get pods -l track=canary
+
+```
+##### Service
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-svc
+spec:
+  selector:
+    app: redis
+    # na start tylko wskaż „stable”:
+    track: stable
+  ports:
+  - port: 6379
+    targetPort: 6379
+  type: ClusterIP
+```
+
+- Wdrożenie i obserwacja
+
+```bash
+minikube kubectl -- patch svc redis-svc \
+  -p '{"spec":{"selector":{"app":"redis","track":"canary"}}}'
+# albo oba tracki (zamiast nadpisania, użyj label union):
+minikube kubectl -- patch svc redis-svc \
+  -p '{"spec":{"selector":{"app":"redis"}}}'  # usuń track
+
+```

@@ -19,8 +19,11 @@ pipeline {
         sh '''
           set -eux
 
-          apk add --no-cache curl
-          apk add --no-cache libc6-compat
+          apk add --no-cache curl wget ca-certificates libc6-compat
+
+          wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+          wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.36-r0/glibc-2.36-r0.apk
+          apk add glibc-2.36-r0.apk
 
           curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.27.3/bin/linux/amd64/kubectl
           chmod +x kubectl
