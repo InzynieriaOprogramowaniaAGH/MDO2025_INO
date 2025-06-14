@@ -6,7 +6,7 @@ pipeline {
     }
   }
   parameters {
-    booleanParam(name: 'PUBLISH', defaultValue: false, description: 'Push artifact/image?')
+    booleanParam(name: 'PUBLISH', defaultValue: true, description: 'Push artifact/image?')
     booleanParam(name: 'DEPLOY_K8S', defaultValue: true, description: 'Deploy to Minikube?')
   }
   stages {
@@ -29,7 +29,7 @@ pipeline {
           chmod +x minikube
           mv minikube /usr/local/bin/
 
-          minikube start --driver=none
+          minikube start --driver=docker --force
 
           minikube status
         '''
