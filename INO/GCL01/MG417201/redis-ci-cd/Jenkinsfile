@@ -32,10 +32,6 @@ pipeline {
             --driver=none \
             --force \
             --container-runtime=containerd \
-            --kubernetes-version=v1.27.3minikube start \
-            --driver=none \
-            --force \
-            --container-runtime=containerd \
             --kubernetes-version=v1.27.3
             
             kubectl get nodes
