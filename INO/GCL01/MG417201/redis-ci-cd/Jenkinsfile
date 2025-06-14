@@ -29,11 +29,10 @@ pipeline {
           set -eux
 
           minikube start \
-            --driver=none \
-            --force \
+            --driver=docker \
             --container-runtime=containerd \
             --kubernetes-version=v1.27.3
-            
+
             kubectl get nodes
         '''
       }
