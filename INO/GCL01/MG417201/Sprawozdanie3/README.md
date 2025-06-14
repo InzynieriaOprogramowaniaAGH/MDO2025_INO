@@ -1409,11 +1409,13 @@ spec:
 ```
 - Wdrożenie i obserwacja
 
-```bash
-minikube kubectl -- apply -f redis-deploy-recreate.yaml
-minikube kubectl -- rollout status deployment/redis-recreate
-watch -n1 "minikube kubectl -- get pods -l strategy=recreate"
-```
+<div align="center"> 
+    <img src="screens11/24.png">
+</div>
+
+<div align="center"> 
+    <img src="screens11/24.png">
+</div>
 
 #### Rolling Upgrade
 
@@ -1454,7 +1456,7 @@ spec:
 ```bash
 minikube kubectl -- apply -f redis-deploy-rolling.yaml
 minikube kubectl -- rollout status deployment/redis-rolling
-watch -n1 "minikube kubectl -- get pods -l strategy=rolling"
+minikube kubectl -- get pods -l strategy=rolling
 ```
 
 #### Canary Deployment Workload
