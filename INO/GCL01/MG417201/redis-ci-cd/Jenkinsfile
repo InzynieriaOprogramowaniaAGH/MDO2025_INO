@@ -2,16 +2,14 @@ pipeline {
   agent {
     docker {
       image 'mihlsap/my-ci-image:minikube'
-      args '''
-        --privileged
-        --entrypoint=""
-        --volume=/var/run/docker.sock:/var/run/docker.sock
-        --volume=/home/mati/.kube:/root/.kube
+      args """
+        --privileged 
+        --entrypoint="" 
+        --volume=/var/run/docker.sock:/var/run/docker.sock 
+        --volume=/home/mati/.kube:/root/.kube 
         --volume=/home/mati/.minikube:/root/.minikube
-        --tmpfs /tmp
-        --tmpfs /run
-        --mount type=tmpfs,destination=/var/lib/docker
-      '''
+      """
+
     }
   }
 
@@ -34,24 +32,13 @@ pipeline {
     stage('Init Kubernetes CLI') {
       steps {
         sh '''
-          set -eux
-          echo "Sprawdzam czy Minikube już działa..."
+          echo "Sprawdzam status Minikube na hoście..."
           if ! minikube status >/dev/null 2>&1; then
-            echo "Minikube nieaktywny – próbuję uruchomić."
-            minikube start \
-              --driver=docker \
-              --force \
-              --container-runtime=containerd \
-              --kubernetes-version=v1.32.0 \
-              --cpus=2 \
-              --memory=2200mb \
-              --interactive=false \
-              --wait=all \
-              --wait-timeout=10m
-          else
-            echo "Minikube już działa"
+            echo "Minikube nieaktywny! Zaloguj się na hosta i uruchom: minikube start"
+            exit 1
           fi
 
+          echo "Minikube aktywny. Gotowe do działania."
           kubectl get nodes
         '''
       }
