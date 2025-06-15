@@ -3,10 +3,11 @@ pipeline {
     docker {
       image 'mihlsap/my-ci-image:minikube'
       args """
-        --privileged 
-        --entrypoint="" 
-        --volume=/var/run/docker.sock:/var/run/docker.sock 
-        --volume=/home/mati/.kube:/root/.kube 
+        --privileged
+        --network=host
+        --entrypoint=""
+        --volume=/var/run/docker.sock:/var/run/docker.sock
+        --volume=/home/mati/.kube:/root/.kube
         --volume=/home/mati/.minikube:/root/.minikube
       """
 
