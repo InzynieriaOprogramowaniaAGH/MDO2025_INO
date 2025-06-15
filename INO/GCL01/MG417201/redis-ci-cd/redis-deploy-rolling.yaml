@@ -6,11 +6,10 @@ metadata:
     app: redis
     strategy: rolling
 spec:
-  replicas: 3
+  replicas: 4
   selector:
     matchLabels:
       app: redis
-      strategy: rolling
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -20,10 +19,9 @@ spec:
     metadata:
       labels:
         app: redis
-        strategy: rolling
     spec:
       containers:
-      - name: redis
-        image: mihlsap/redis_runtime1.0:latest
-        ports:
-        - containerPort: 6379
+        - name: redis
+          image: mihlsap/redis_runtime2.0:latest
+          ports:
+            - containerPort: 6379

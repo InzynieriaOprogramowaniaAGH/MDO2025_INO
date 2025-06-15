@@ -19,11 +19,11 @@ Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MD
  > git --version # 'git version 2.39.5'
  > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO +refs/heads/*:refs/remotes/origin/* # timeout=10
  > git rev-parse refs/remotes/origin/MG417201^{commit} # timeout=10
-Checking out Revision cf6c3c8a70eb0070665a9e54ccab1525bca4b047 (refs/remotes/origin/MG417201)
+Checking out Revision 69758b9d4fbd726ec7dc954604c349dc320700cf (refs/remotes/origin/MG417201)
  > git config core.sparsecheckout # timeout=10
- > git checkout -f cf6c3c8a70eb0070665a9e54ccab1525bca4b047 # timeout=10
+ > git checkout -f 69758b9d4fbd726ec7dc954604c349dc320700cf # timeout=10
 Commit message: "MG417201: report 3 modification"
- > git rev-list --no-walk baa140a53be8b0bb9cc86854fe080ee813bb701e # timeout=10
+ > git rev-list --no-walk cf6c3c8a70eb0070665a9e54ccab1525bca4b047 # timeout=10
 [Pipeline] }
 [Pipeline] // stage
 [Pipeline] withEnv
@@ -39,7 +39,7 @@ Commit message: "MG417201: report 3 modification"
 [Pipeline] withDockerContainer
 Jenkins seems to be running inside container 1e8a41a9dde20b8e56044c54e51b6c2bd743609409106dbdfc3881b48d8f954a
 $ docker run -t -d -u 0:0 --privileged --network=host --entrypoint= --volume=/var/run/docker.sock:/var/run/docker.sock --volume=/home/mati/.kube:/root/.kube --volume=/home/mati/.minikube:/root/.minikube -w /var/jenkins_home/workspace/redis-ci-cd-pipeline --volumes-from 1e8a41a9dde20b8e56044c54e51b6c2bd743609409106dbdfc3881b48d8f954a -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** mihlsap/my-ci-image:minikube cat
-$ docker top 63db622d2015ed85ed166fa865469f56a1ad61d951019a16de16675cf829f32f -eo pid,comm
+$ docker top 1eba6c59177cc281f27b8bbb7b92a134cbcf72a6e2a746122e64c85393ee117c -eo pid,comm
 [Pipeline] {
 [Pipeline] withEnv
 [Pipeline] {
@@ -48,7 +48,7 @@ $ docker top 63db622d2015ed85ed166fa865469f56a1ad61d951019a16de16675cf829f32f -e
 [Pipeline] checkout
 The recommended git tool is: git
 No credentials specified
-Warning: JENKINS-30600: special launcher org.jenkinsci.plugins.docker.workflow.WithContainerStep$Decorator$1@40c4d797; decorates hudson.Launcher$LocalLauncher@19d2bf will be ignored (a typical symptom is the Git executable not being run inside a designated container)
+Warning: JENKINS-30600: special launcher org.jenkinsci.plugins.docker.workflow.WithContainerStep$Decorator$1@e8ddf19; decorates hudson.Launcher$LocalLauncher@3ad85146 will be ignored (a typical symptom is the Git executable not being run inside a designated container)
  > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/redis-ci-cd-pipeline/.git # timeout=10
 Fetching changes from the remote Git repository
  > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO # timeout=10
@@ -57,9 +57,9 @@ Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MD
  > git --version # 'git version 2.39.5'
  > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO +refs/heads/*:refs/remotes/origin/* # timeout=10
  > git rev-parse refs/remotes/origin/MG417201^{commit} # timeout=10
-Checking out Revision cf6c3c8a70eb0070665a9e54ccab1525bca4b047 (refs/remotes/origin/MG417201)
+Checking out Revision 69758b9d4fbd726ec7dc954604c349dc320700cf (refs/remotes/origin/MG417201)
  > git config core.sparsecheckout # timeout=10
- > git checkout -f cf6c3c8a70eb0070665a9e54ccab1525bca4b047 # timeout=10
+ > git checkout -f 69758b9d4fbd726ec7dc954604c349dc320700cf # timeout=10
 Commit message: "MG417201: report 3 modification"
 [Pipeline] }
 [Pipeline] // stage
@@ -77,7 +77,7 @@ Sprawdzam status Minikube na hoście...
 Minikube aktywny. Gotowe do działania.
 + kubectl get nodes
 NAME       STATUS   ROLES           AGE     VERSION
-minikube   Ready    control-plane   5h54m   v1.32.0
+minikube   Ready    control-plane   7h30m   v1.32.0
 [Pipeline] }
 [Pipeline] // stage
 [Pipeline] stage
@@ -203,8 +203,8 @@ Successfully tagged redis_runtime2.0:latest
 Masking supported pattern matches of $DOCKER_PASS
 [Pipeline] {
 [Pipeline] sh
-+ docker login -u mihlsap --password-stdin
 + echo ****
++ docker login -u mihlsap --password-stdin
 
 WARNING! Your credentials are stored unencrypted in '/root/.docker/config.json'.
 Configure a credential helper to remove this warning. See
@@ -225,10 +225,10 @@ b3ee05f07cbc: Preparing
 95c2cef1b2a5: Waiting
 8901a649dd5a: Waiting
 51be8d6101cc: Layer already exists
-0964e85b1d2b: Layer already exists
+b3ee05f07cbc: Layer already exists
 0b8b9f9796dc: Layer already exists
 05563e6a7458: Layer already exists
-b3ee05f07cbc: Layer already exists
+0964e85b1d2b: Layer already exists
 95c2cef1b2a5: Layer already exists
 8901a649dd5a: Layer already exists
 latest: digest: sha256:332f2215d7308067d7c9dab2e04f19092e60d268cd08410411ddd5cad0228293 size: 1785
@@ -237,13 +237,13 @@ latest: digest: sha256:332f2215d7308067d7c9dab2e04f19092e60d268cd08410411ddd5cad
 [Pipeline] }
 [Pipeline] // stage
 [Pipeline] stage
-[Pipeline] { (Deploy to cloud)
+[Pipeline] { (Deploy to local Docker runtime (test))
 [Pipeline] withCredentials
 Masking supported pattern matches of $DOCKER_PASS
 [Pipeline] {
 [Pipeline] sh
-+ echo ****
 + docker login -u mihlsap --password-stdin
++ echo ****
 Login Succeeded
 + docker pull mihlsap/redis_runtime2.0
 Using default tag: latest
@@ -254,7 +254,7 @@ docker.io/mihlsap/redis_runtime2.0:latest
 + docker rm -f redis-runtime
 redis-runtime
 + docker run -d --name redis-runtime -p 6379:6379 mihlsap/redis_runtime2.0
-efdc386cd6026067b523ed8d6c25b697756d36c8391c73108fa11b9eb004d2b2
+692212234e703f149d71c93bb64a305a48dbf4d92d6b4b34c8e4f03ba51e32c5
 + sleep 3
 + docker exec redis-runtime redis-cli PING
 PONG
@@ -273,10 +273,10 @@ deployment "redis-deploy" successfully rolled out
 [Pipeline] sh
 + kubectl get pods
 NAME                            READY   STATUS    RESTARTS   AGE
-redis-deploy-577579bbcf-gstx4   1/1     Running   0          4h
-redis-deploy-577579bbcf-pznvc   1/1     Running   0          4h
-redis-deploy-577579bbcf-tqs29   1/1     Running   0          4h
-redis-deploy-577579bbcf-wcsrs   1/1     Running   0          4h
+redis-deploy-577579bbcf-gstx4   1/1     Running   0          5h35m
+redis-deploy-577579bbcf-pznvc   1/1     Running   0          5h35m
+redis-deploy-577579bbcf-tqs29   1/1     Running   0          5h35m
+redis-deploy-577579bbcf-wcsrs   1/1     Running   0          5h35m
 [Pipeline] }
 [Pipeline] // stage
 [Pipeline] stage
@@ -303,8 +303,8 @@ Pipeline zakończony – artefakt gotowy i wdrożony.
 [Pipeline] }
 [Pipeline] // withEnv
 [Pipeline] }
-$ docker stop --time=1 63db622d2015ed85ed166fa865469f56a1ad61d951019a16de16675cf829f32f
-$ docker rm -f --volumes 63db622d2015ed85ed166fa865469f56a1ad61d951019a16de16675cf829f32f
+$ docker stop --time=1 1eba6c59177cc281f27b8bbb7b92a134cbcf72a6e2a746122e64c85393ee117c
+$ docker rm -f --volumes 1eba6c59177cc281f27b8bbb7b92a134cbcf72a6e2a746122e64c85393ee117c
 [Pipeline] // withDockerContainer
 [Pipeline] }
 [Pipeline] // withEnv

@@ -4,21 +4,21 @@ metadata:
   name: redis-stable
   labels:
     app: redis
-    track: stable
+    version: stable
 spec:
   replicas: 3
   selector:
     matchLabels:
       app: redis
-      track: stable
+      version: stable
   template:
     metadata:
       labels:
         app: redis
-        track: stable
+        version: stable
     spec:
       containers:
-      - name: redis
-        image: mihlsap/redis_runtime1.0:latest
-        ports:
-        - containerPort: 6379
+        - name: redis
+          image: mihlsap/redis_runtime2.0:latest
+          ports:
+            - containerPort: 6379

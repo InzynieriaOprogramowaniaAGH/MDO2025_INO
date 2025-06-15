@@ -5,8 +5,6 @@ metadata:
 spec:
   selector:
     app: redis
-    track: stable
   ports:
-  - port: 6379
-    targetPort: 6379
-  type: ClusterIP
+    - port: 6379
+      targetPort: 6379

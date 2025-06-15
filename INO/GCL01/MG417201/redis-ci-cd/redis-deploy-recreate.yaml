@@ -6,21 +6,19 @@ metadata:
     app: redis
     strategy: recreate
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: redis
-      strategy: recreate
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: redis
-        strategy: recreate
     spec:
       containers:
-      - name: redis
-        image: mihlsap/redis_runtime1.0:latest
-        ports:
-        - containerPort: 6379
+        - name: redis
+          image: mihlsap/redis_runtime2.0:latest
+          ports:
+            - containerPort: 6379

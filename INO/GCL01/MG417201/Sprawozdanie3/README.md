@@ -1472,13 +1472,13 @@ RUN apt-get update && apt-get install -y \
     - Sprawdzone zostało działanie wypchniętego obrazu
 
     ```log
-        [Pipeline] { (Deploy to cloud)
+        [Pipeline] { (Deploy to local Docker runtime (test))
         [Pipeline] withCredentials
         Masking supported pattern matches of $DOCKER_PASS
         [Pipeline] {
         [Pipeline] sh
-        + echo ****
         + docker login -u mihlsap --password-stdin
+        + echo ****
         Login Succeeded
         + docker pull mihlsap/redis_runtime2.0
         Using default tag: latest
@@ -1489,7 +1489,7 @@ RUN apt-get update && apt-get install -y \
         + docker rm -f redis-runtime
         redis-runtime
         + docker run -d --name redis-runtime -p 6379:6379 mihlsap/redis_runtime2.0
-        efdc386cd6026067b523ed8d6c25b697756d36c8391c73108fa11b9eb004d2b2
+        692212234e703f149d71c93bb64a305a48dbf4d92d6b4b34c8e4f03ba51e32c5
         + sleep 3
         + docker exec redis-runtime redis-cli PING
         PONG
@@ -1536,167 +1536,100 @@ RUN apt-get update && apt-get install -y \
 
 #### Recreate
 
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: redis-recreate
-  labels:
-    app: redis
-    strategy: recreate
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: redis
-      strategy: recreate
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        app: redis
-        strategy: recreate
-    spec:
-      containers:
-      - name: redis
-        image: mihlsap/redis_runtime1.0:latest
-        ports:
-        - containerPort: 6379
-```
-- Wdrożenie i obserwacja
-
-<div align="center"> 
-    <img src="screens11/24.png">
-</div>
-
-<div align="center"> 
-    <img src="screens11/24.png">
-</div>
+>[redis-deploy-recreate.yaml](../redis-ci-cd/redis-deploy-recreate.yaml)
 
 #### Rolling Upgrade
 
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: redis-rolling
-  labels:
-    app: redis
-    strategy: rolling
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: redis
-      strategy: rolling
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 2
-      maxSurge: 25%
-  template:
-    metadata:
-      labels:
-        app: redis
-        strategy: rolling
-    spec:
-      containers:
-      - name: redis
-        image: mihlsap/redis_runtime1.0:latest
-        ports:
-        - containerPort: 6379
-```
-
-- Wdrożenie i obserwacja
-
-```bash
-minikube kubectl -- apply -f redis-deploy-rolling.yaml
-minikube kubectl -- rollout status deployment/redis-rolling
-minikube kubectl -- get pods -l strategy=rolling
-```
+>[redis-deploy-rolling.yaml](../redis-ci-cd/redis-deploy-rolling.yaml)
 
 #### Canary Deployment Workload
 
-##### Stable
+>[redis-deploy-stable.yaml](../redis-ci-cd/redis-deploy-stable.yaml)
 
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: redis-stable
-  labels:
-    app: redis
-    track: stable
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: redis
-      track: stable
-  template:
-    metadata:
-      labels:
-        app: redis
-        track: stable
-    spec:
-      containers:
-      - name: redis
-        image: mihlsap/redis_runtime1.0:latest
-        ports:
-        - containerPort: 6379
-```
+>[redis-deploy-canary.yaml](../redis-ci-cd/redis-deploy-canary.yaml)
 
-- Wdrożenie i obserwacja
+>Wspólny service dla powyższych dwóch deploymentów:
 
-##### Canary
+>[redis-service.yaml](../redis-ci-cd/redis-service.yaml)
 
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: redis-canary
-  labels:
-    app: redis
-    track: canary
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: redis
-      track: canary
-  template:
-    metadata:
-      labels:
-        app: redis
-        track: canary
-    spec:
-      containers:
-      - name: redis
-        image: mihlsap/redis_runtime1.0:2.0-fail
-        ports:
-        - containerPort: 6379
-```
+#### Wdrożenie i obserwacja
 
-- Wdrożenie i obserwacja
+- Poniższe 3 screeny przedstawiają etap wdrożenia
 
-##### Service
+<div align="center"> 
+    <img src="screens11/30.png">
+</div>
 
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: redis-svc
-spec:
-  selector:
-    app: redis
-    # na start tylko wskaż „stable”:
-    track: stable
-  ports:
-  - port: 6379
-    targetPort: 6379
-  type: ClusterIP
-```
+<div align="center"> 
+    <img src="screens11/31.png">
+</div>
 
-- Wdrożenie i obserwacja
+<div align="center"> 
+    <img src="screens11/32.png">
+</div>
 
+- Poniższe 3 screeny przedstawiają wynik polecenia `describe` dla wdrożeń `recreate`, `rolling` oraz `canary`
+
+<div align="center"> 
+    <img src="screens11/33.png">
+</div>
+
+<div align="center"> 
+    <img src="screens11/34.png">
+</div>
+
+<div align="center"> 
+    <img src="screens11/35.png">
+</div>
+
+- Następnie zmieniłem obraz używany przez te wdrożenia, aby zobaczyć, jak zostanie przeprowadzona jego aktualizacja
+
+<div align="center"> 
+    <img src="screens11/36.png">
+</div>
+
+- Poniższe 3 screeny przedstawiają wynik polecenia `describe` dla wdrożeń `recreate`, `rolling` oraz `canary` po zmianie używanego obrazu
+
+<div align="center"> 
+    <img src="screens11/37.png">
+</div>
+
+> Podczas aktualizacji strategii recreate następuje pełne usunięcie starych podów, zanim pojawią się nowe. Można to zaobserwować w sekcji events na powyższym screenie: najpierw zaszło scale up do 2 podczas wdrożenia, potem po zmianie obrazu scale down do 0 (czyli stare pody zostały usunięte), a następnie scale up nowe z 0 do 2. Wiąże się to z ryzykiem downtime'u, jeśli nowe pody długo się startują.
+
+<div align="center"> 
+    <img src="screens11/38.png">
+</div>
+
+>Nowe pody pojawiały się stopniowo, równocześnie z usunięciem starych, co można zaobserwować w sekcji events na powyższym screenie. Dzięki maxUnavailable=2, do 2 podów mogło być niedostępnych w trakcie aktualizacji. Ponieważ `replicas=4`, to `maxSurge=25%` pozwolił na tymczasowe przekroczenie limitu liczby replik o 1 pod w trakcie wdrażania nowych podów. Strategia ta zapewnia zero downtime (jeśli działa mechanizm readinessProbe, oznaczający pody jako gotowe do użycia). Jest najlepszą strategią dla aplikacji produkcyjnych wymagających ciągłego zachowania dostępności.
+
+<div align="center"> 
+    <img src="screens11/39.png">
+</div>
+
+>Canary deployment to oddzielne wdrożenie, a nie strategia wdrożenia, w którym równolegle istnienie `redis-stable` i `redis-canary`, co pozwala rozdzielać ruch pomiędzy stabilną i testową wersję oprogramowania. Ruch sterowany jest przez serwis. W moim przypadku miałem trzy repliki stable i jedną canary, co daje 25% testów na nowej wersji. Możliwość rozdzielenia ruchu między różne wersje oprogramowania sprawia, że canary deployment jest idealne do testów nowych wersji na wybranej części użytkowników.
+
+#### Porównanie strategii wdrożenia
+
+- Strategia Recreate polega na pełnym zatrzymaniu aktualnie działających instancji aplikacji, zanim zostaną uruchomione nowe. Kubernetes usuwa wszystkie stare pody i dopiero wtedy tworzy nowe z nowym obrazem kontenera. Ten sposób wdrożenia jest prosty, ale wiąże się z chwilową niedostępnością aplikacji, ponieważ przez pewien czas żadna instancja nie jest aktywna. Znajduje swoje zastosowanie:
+    
+    - Dla aplikacji niekrytycznych lub wewnętrznych
+
+    - Gdy nie można mieć dwóch wersji uruchomionych równocześnie (np. bazy danych z konfliktem locków)
+
+    - Jako testowe środowiska
+
+- Rolling Update to domyślna i najczęściej stosowana strategia wdrażania w Kubernetesie. Polega na stopniowej wymianie podów ze starą wersją aplikacji na nowe, zgodnie z ustawieniami maxUnavailable i maxSurge. Dzięki temu wdrożenie odbywa się bez przerywania działania aplikacji – nowe instancje uruchamiane są, zanim stare zostaną usunięte. Pozwala to zachować wysoką dostępność podczas aktualizacji. Zastosowanie:
+
+    - Produkcyjne systemy wymagające ciągłej dostępności
+
+    - Mikroserwisy i fronty użytkowe
+
+    - Scenariusze CI/CD
+
+- Strategia Canary polega na wdrożeniu nowej wersji aplikacji w sposób równoległy do wersji obecnej (tzw. „stable”). Nowa wersja uruchamiana jest w postaci osobnego deploymentu z mniejszą liczbą replik – np. 1 z 4. Ruch użytkowników jest rozdzielany między obie wersje, zwykle przez wspólny serwis. Dzięki temu tylko część użytkowników korzysta z nowej wersji, co pozwala wykryć ewentualne błędy przed pełnym rolloutem. Zastosowanie:
+
+    - A/B testy i eksperymenty
+
+    - Stopniowe przejmowanie ruchu przez nową wersję
+
+    - Minimalizacja ryzyka wrażliwych aktualizacji
