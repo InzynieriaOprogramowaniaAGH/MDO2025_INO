@@ -127,7 +127,7 @@ pipeline {
         expression { params.DEPLOY_K8S }
       }
       steps {
-        sh 'kubectl apply -f redis-deploy.yaml'
+        sh 'kubectl apply -f INO/GCL01/MG417201/redis-ci-cd/redis-deploy.yaml'
       }
     }
 
@@ -136,8 +136,9 @@ pipeline {
         expression { params.DEPLOY_K8S }
       }
       steps {
-        sh 'chmod +x check-rollout.sh'
-        sh './check-rollout.sh redis-deploy 60'
+        sh 'chmod +x INO/GCL01/MG417201/redis-ci-cd/check-rollout.sh'
+        sh 'cd INO/GCL01/MG417201/redis-ci-cd/'
+        sh '.check-rollout.sh redis-deploy 60'
       }
     }
   }
