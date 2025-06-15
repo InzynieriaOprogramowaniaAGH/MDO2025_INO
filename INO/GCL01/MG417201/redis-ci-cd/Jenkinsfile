@@ -127,8 +127,9 @@ pipeline {
         expression { params.DEPLOY_K8S }
       }
       steps {
-        sh 'kubectl apply -f INO/GCL01/MG417201/redis-ci-cd/redis-deploy.yaml'
-        sh 'kubectl -- rollout status deployment/redis-deploy'
+        sh 'minikube kubectl apply -f INO/GCL01/MG417201/redis-ci-cd/redis-deploy.yaml'
+        sh 'minikube kubectl -- rollout status deployment/redis-deploy'
+        sh 'minikube kubectl -- get pods'
       }
     }
 
