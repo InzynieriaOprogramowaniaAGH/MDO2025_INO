@@ -21,7 +21,7 @@ pipeline {
             steps {
                 dir(env.APP_DIR){
                     catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                        sh 'docker build -t node-builder -f Dockerfile.build. . > logs/build.log 2>&1'
+                        sh 'docker build -t node-builder -f Dockerfile.build . > logs/build.log 2>&1'
                     }
                 }
             }
@@ -31,7 +31,7 @@ pipeline {
             steps {
                 dir(env.APP_DIR) {
                     catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                        sh 'docker build -t node-tester -f Dockerfile.test. . > logs/test.log 2>&1'
+                        sh 'docker build -t node-tester -f Dockerfile.test . > logs/test.log 2>&1'
                         sh 'docker run --rm node-tester >> logs/test.log 2>&1'
                     }
                 }
@@ -42,7 +42,7 @@ pipeline {
             steps {
                 dir(env.APP_DIR) {
                     sh '''
-                        docker build -t node-deploy -f Dockerfile.deploy. .
+                        docker build -t node-deploy -f Dockerfile.deploy .
                         docker run -d --name node-deploy-p node-deploy
                         sleep 5
                     '''
