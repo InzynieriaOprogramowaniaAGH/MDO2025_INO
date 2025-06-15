@@ -55,9 +55,9 @@ pipeline {
             steps {
                 dir('MDO2025_INO/ITE/GCL04/KK416776/sprawozdanie_2') {
                     sh '''
-                        docker rmi -f opencv-builder || true
+                        docker rmi -f node-builder || true
                         docker builder prune --force --all || true
-                        docker build -t opencv-builder -f Dockerfile.build .
+                        docker build -t node-builder -f Dockerfile.build .
                     '''
                 }
             }
@@ -67,8 +67,8 @@ pipeline {
             steps {
                 dir('MDO2025_INO/ITE/GCL04/KK416776/sprawozdanie_2') {
                     sh '''
-                        docker rmi -f opencv-tester || true
-                        docker build -t opencv-tester -f Dockerfile.test .
+                        docker rmi -f node-tester || true
+                        docker build -t node-tester -f Dockerfile.test .
                     '''
                 }
             }
