@@ -44,7 +44,7 @@ pipeline {
                 dir(env.APP_DIR) {
                     sh '''
                         docker build -t node-deploy -f Dockerfile.deploy .
-                        docker run -d --name node-deploy-p node-deploy
+                        docker run -d --name node-deploy node-deploy
                         sleep 5
                     '''
                 }
@@ -59,7 +59,7 @@ pipeline {
                         docker logs node-deploy-p | tee logs/deploy.log
 
                         echo "== Simple validation =="
-                        if docker logs node-deploy-p | grep -q "Hello from nodejs-template"; then
+                        if docker logs node-deploy-p | grep -q "hello from index.js"; then
                             echo "Deploy test passed ✅"
                         else
                             echo "Deploy test failed ❌"
