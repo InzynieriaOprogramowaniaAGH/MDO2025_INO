@@ -1414,15 +1414,123 @@ RUN apt-get update && apt-get install -y \
 
 - W wyniku jego działania:
 
+    - Przygotowane zostało środowisko pracy
+
+    - Został zbudowany redis
+
+    - Zostały odpalone testy dla redisa
+
+    - Zbudowany został obraz `redis-runtime2.0`
+
     - Na DockerHub został wypchnięty obraz `redis_runtime2.0`
 
-<div align="center"> 
+    <div align="center"> 
     <img src="screens11/28.png">
-</div>
+    </div>
 
-<div align="center"> 
+    <div align="center"> 
     <img src="screens11/29.png">
-</div>
+    </div>
+
+    ```log
+        [Pipeline] { (Push to Docker Hub)
+        [Pipeline] withCredentials
+        Masking supported pattern matches of $DOCKER_PASS
+        [Pipeline] {
+        [Pipeline] sh
+        + docker login -u mihlsap --password-stdin
+        + echo ****
+
+        WARNING! Your credentials are stored unencrypted in '/root/.docker/config.json'.
+        Configure a credential helper to remove this warning. See
+        https://docs.docker.com/go/credential-store/
+
+        Login Succeeded
+        + docker tag redis_runtime2.0 mihlsap/redis_runtime2.0
+        + docker push mihlsap/redis_runtime2.0
+        Using default tag: latest
+        The push refers to repository [docker.io/mihlsap/redis_runtime2.0]
+        0b8b9f9796dc: Preparing
+        b3ee05f07cbc: Preparing
+        0964e85b1d2b: Preparing
+        51be8d6101cc: Preparing
+        05563e6a7458: Preparing
+        95c2cef1b2a5: Preparing
+        8901a649dd5a: Preparing
+        95c2cef1b2a5: Waiting
+        8901a649dd5a: Waiting
+        51be8d6101cc: Layer already exists
+        0964e85b1d2b: Layer already exists
+        0b8b9f9796dc: Layer already exists
+        05563e6a7458: Layer already exists
+        b3ee05f07cbc: Layer already exists
+        95c2cef1b2a5: Layer already exists
+        8901a649dd5a: Layer already exists
+        latest: digest: sha256:332f2215d7308067d7c9dab2e04f19092e60d268cd08410411ddd5cad0228293 size: 1785
+    ```
+
+    - Sprawdzone zostało działanie wypchniętego obrazu
+
+    ```log
+        [Pipeline] { (Deploy to cloud)
+        [Pipeline] withCredentials
+        Masking supported pattern matches of $DOCKER_PASS
+        [Pipeline] {
+        [Pipeline] sh
+        + echo ****
+        + docker login -u mihlsap --password-stdin
+        Login Succeeded
+        + docker pull mihlsap/redis_runtime2.0
+        Using default tag: latest
+        latest: Pulling from mihlsap/redis_runtime2.0
+        Digest: sha256:332f2215d7308067d7c9dab2e04f19092e60d268cd08410411ddd5cad0228293
+        Status: Image is up to date for mihlsap/redis_runtime2.0:latest
+        docker.io/mihlsap/redis_runtime2.0:latest
+        + docker rm -f redis-runtime
+        redis-runtime
+        + docker run -d --name redis-runtime -p 6379:6379 mihlsap/redis_runtime2.0
+        efdc386cd6026067b523ed8d6c25b697756d36c8391c73108fa11b9eb004d2b2
+        + sleep 3
+        + docker exec redis-runtime redis-cli PING
+        PONG
+        [Pipeline] }
+    ```
+
+    - Wdrożony został redis na kubernetess za pomocą pliku `redis-deploy.yaml`
+
+    ```log
+        [Pipeline] { (Deploy to Kubernetes)
+        [Pipeline] sh
+        + kubectl apply -f INO/GCL01/MG417201/redis-ci-cd/redis-deploy.yaml
+        deployment.apps/redis-deploy unchanged
+        [Pipeline] sh
+        + kubectl rollout status deployment/redis-deploy
+        deployment "redis-deploy" successfully rolled out
+        [Pipeline] sh
+        + kubectl get pods
+        NAME                            READY   STATUS    RESTARTS   AGE
+        redis-deploy-577579bbcf-gstx4   1/1     Running   0          4h
+        redis-deploy-577579bbcf-pznvc   1/1     Running   0          4h
+        redis-deploy-577579bbcf-tqs29   1/1     Running   0          4h
+        redis-deploy-577579bbcf-wcsrs   1/1     Running   0          4h
+        [Pipeline] }
+    ```
+
+    - Za pomocą skryptu `check-rollout.sh` sprawdzone zostało wdrożenie
+
+    ```log
+        [Pipeline] { (Verify K8s Rollout)
+        [Pipeline] dir
+        Running in /var/jenkins_home/workspace/redis-ci-cd-pipeline/INO/GCL01/MG417201/redis-ci-cd
+        [Pipeline] {
+        [Pipeline] sh
+        + chmod +x check-rollout.sh
+        [Pipeline] sh
+        + ./check-rollout.sh redis-deploy 60
+        Waiting up to 60 s for rollout of deployment/redis-deploy ...
+        Rollout of redis-deploy succeeded: 4/4 replicas available.
+        [Pipeline] }
+    ```
 
 ### Strategie wdrożenia
 

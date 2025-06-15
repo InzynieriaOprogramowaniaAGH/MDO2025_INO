@@ -100,7 +100,7 @@ pipeline {
       }
     }
 
-    stage('Deploy to cloud') {
+    stage('Deploy to local Docker runtime (test)') {
       when {
         expression { params.PUBLISH }
       }
