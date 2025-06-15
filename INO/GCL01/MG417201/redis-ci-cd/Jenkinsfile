@@ -3,15 +3,18 @@ pipeline {
     docker {
       image 'mihlsap/my-ci-image:minikube'
       args """
-        --privileged
+        --privileged 
         --network=host
-        --entrypoint=""
-        --volume=/var/run/docker.sock:/var/run/docker.sock
-        --volume=/home/mati/.kube:/root/.kube
+        --entrypoint="" 
+        --volume=/var/run/docker.sock:/var/run/docker.sock 
+        --volume=/home/mati/.kube:/root/.kube 
         --volume=/home/mati/.minikube:/root/.minikube
       """
-
     }
+  }
+
+  environment {
+    KUBECONFIG = '/root/.kube/config'
   }
 
   parameters {
@@ -31,15 +34,16 @@ pipeline {
         sh '''
           echo "Aktualizuję ścieżki w pliku kubeconfig..."
           sed 's|/home/mati/.minikube|/root/.minikube|g' /root/.kube/config > /root/.kube/config.patched
+          mv /root/.kube/config.patched /root/.kube/config
 
           echo "Sprawdzam status Minikube na hoście..."
-          if ! KUBECONFIG=/root/.kube/config.patched kubectl get nodes >/dev/null 2>&1; then
+          if ! kubectl get nodes >/dev/null 2>&1; then
             echo "Minikube nieaktywny! Zaloguj się na hosta i uruchom: minikube start"
             exit 1
           fi
 
           echo "Minikube aktywny. Gotowe do działania."
-          KUBECONFIG=/root/.kube/config.patched kubectl get nodes
+          kubectl get nodes
         '''
       }
     }
