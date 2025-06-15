@@ -6,6 +6,7 @@ pipeline {
         DOCKER_CERT_PATH = "/certs/client"
         DOCKER_TLS_VERIFY = "1"
         APP_DIR = "ITE/GCL04/KK416776/sprawozdanie_2"
+        VERSION = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
     }
 
     stages {
@@ -72,8 +73,8 @@ pipeline {
         stage('Publish') {
             steps {
                 dir(env.APP_DIR) {
-                    sh 'docker save node-deploy -o artifacts/node-deploy.tar'
-                    archiveArtifacts artifacts: 'artifacts/node-deploy.tar', fingerprint: true
+                    sh 'docker save node-deploy -o artifacts/node-deploy_${VERSION}.tar'
+                    archiveArtifacts artifacts: 'artifacts/node-deploy_${VERSION}.tar', fingerprint: true
                 }
             }
         }
@@ -92,4 +93,3 @@ pipeline {
         }
     }
 }
-

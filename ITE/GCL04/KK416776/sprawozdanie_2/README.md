@@ -86,6 +86,7 @@ pipeline {
         DOCKER_CERT_PATH = "/certs/client"
         DOCKER_TLS_VERIFY = "1"
         APP_DIR = "ITE/GCL04/KK416776/sprawozdanie_2"
+        VERSION = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
     }
 
     stages {
@@ -101,7 +102,7 @@ pipeline {
             steps {
                 dir(env.APP_DIR){
                     catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                        sh 'docker build -t node-builder -f Dockerfile.build. . > logs/build.log 2>&1'
+                        sh 'docker build -t node-builder -f Dockerfile.build . > logs/build.log 2>&1'
                     }
                 }
             }
@@ -111,7 +112,7 @@ pipeline {
             steps {
                 dir(env.APP_DIR) {
                     catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                        sh 'docker build -t node-tester -f Dockerfile.test. . > logs/test.log 2>&1'
+                        sh 'docker build -t node-tester -f Dockerfile.test . > logs/test.log 2>&1'
                         sh 'docker run --rm node-tester >> logs/test.log 2>&1'
                     }
                 }
@@ -122,7 +123,7 @@ pipeline {
             steps {
                 dir(env.APP_DIR) {
                     sh '''
-                        docker build -t node-deploy -f Dockerfile.deploy. .
+                        docker build -t node-deploy -f Dockerfile.deploy .
                         docker run -d --name node-deploy-p node-deploy
                         sleep 5
                     '''
@@ -152,8 +153,8 @@ pipeline {
         stage('Publish') {
             steps {
                 dir(env.APP_DIR) {
-                    sh 'docker save node-deploy -o artifacts/node-deploy.tar'
-                    archiveArtifacts artifacts: 'artifacts/node-deploy.tar', fingerprint: true
+                    sh 'docker save node-deploy -o artifacts/node-deploy_${VERSION}.tar'
+                    archiveArtifacts artifacts: 'artifacts/node-deploy_${VERSION}.tar', fingerprint: true
                 }
             }
         }
