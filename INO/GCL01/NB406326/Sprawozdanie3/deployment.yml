@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: takenoteapp
+  labels:
+    app: takenoteapp
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: takenoteapp
+  template:
+    metadata:
+      labels:
+        app: takenoteapp
+    spec:
+      containers:
+        - name: takenoteapp
+          image: natbal/takenotepipline
+          ports:
+            - containerPort: 5000
