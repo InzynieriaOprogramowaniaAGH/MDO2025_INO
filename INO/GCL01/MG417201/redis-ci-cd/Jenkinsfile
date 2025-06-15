@@ -138,7 +138,7 @@ pipeline {
       steps {
         sh 'chmod +x INO/GCL01/MG417201/redis-ci-cd/check-rollout.sh'
         sh 'cd INO/GCL01/MG417201/redis-ci-cd/'
-        sh '.check-rollout.sh redis-deploy 60'
+        sh './check-rollout.sh redis-deploy 60'
       }
     }
   }
