@@ -28,20 +28,25 @@ pipeline {
         sh '''
           set -eux
 
-          minikube delete || true
+          echo "Sprawdzam czy Minikube już działa..."
+          if minikube status >/dev/null 2>&1; then
+            echo "Minikube już działa – pomijam uruchamianie."
+          else
+            echo "Minikube nieaktywny – próbuję uruchomić."
+            minikube start \
+              --driver=docker \
+              --force \
+              --container-runtime=containerd \
+              --kubernetes-version=v1.32.0 \
+              --cpus=2 \
+              --memory=2200mb \
+              --interactive=false \
+              --wait=all \
+              --wait-timeout=10m
+          fi
 
-          minikube start \
-            --driver=docker \
-            --force \
-            --container-runtime=containerd \
-            --kubernetes-version=v1.27.3 \
-            --cpus=4 \
-            --memory=4096mb \
-            --interactive=false \
-            --wait=all \
-            --wait-timeout=15m
-
-            kubectl get nodes
+          echo "Stan klastra:"
+          kubectl get nodes
         '''
       }
     }
