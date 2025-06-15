@@ -56,10 +56,10 @@ pipeline {
                 dir(env.APP_DIR) {
                     sh '''
                         echo "== Logs from deployed container =="
-                        docker logs node-deploy-p | tee logs/deploy.log
+                        docker logs node-deploy | tee logs/deploy.log
 
                         echo "== Simple validation =="
-                        if docker logs node-deploy-p | grep -q "hello from index.js"; then
+                        if docker logs node-deploy | grep -q "hello from index.js"; then
                             echo "Deploy test passed ✅"
                         else
                             echo "Deploy test failed ❌"
