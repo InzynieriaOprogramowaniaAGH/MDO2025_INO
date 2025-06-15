@@ -128,6 +128,7 @@ pipeline {
       }
       steps {
         sh 'kubectl apply -f INO/GCL01/MG417201/redis-ci-cd/redis-deploy.yaml'
+        sh 'kubectl -- rollout status deployment/redis-deploy'
       }
     }
 

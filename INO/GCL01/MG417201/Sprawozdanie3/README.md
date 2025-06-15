@@ -1376,7 +1376,16 @@ done
 - W celu wykonania zadania utworzyłem własny obraz Dockera zawierający wszystkie potrzebne zależności do poprawnego działania pipeline'a
 
 ```Dockerfile
+FROM debian:bookworm-slim
 
+RUN apt-get update && apt-get install -y \
+  curl bash conntrack socat iptables iproute2 gnupg ca-certificates util-linux docker.io sudo && \
+  update-alternatives --set iptables /usr/sbin/iptables-legacy && \
+  update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+
+  RUN curl -LO https://dl.k8s.io/release/v1.32.0/bin/linux/amd64/kubectl && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl
 ```
 
 - Następnie zbudowałem obraz na jego podstawie:
@@ -1397,7 +1406,23 @@ done
 
 - Na końcu uruchomiłem pipeline'a
 
->[Logi]()
+>[Logi](../redis-ci-cd/output/logs2.log)
+
+<div align="center"> 
+    <img src="screens11/27.png">
+</div>
+
+- W wyniku jego działania:
+
+    - Na DockerHub został wypchnięty obraz `redis_runtime2.0`
+
+<div align="center"> 
+    <img src="screens11/28.png">
+</div>
+
+<div align="center"> 
+    <img src="screens11/29.png">
+</div>
 
 ### Strategie wdrożenia
 
