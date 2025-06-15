@@ -2,7 +2,16 @@ pipeline {
   agent {
     docker {
       image 'mihlsap/my-ci-image:minikube'
-      args '--privileged --entrypoint="" --tmpfs /tmp --tmpfs /run --mount type=tmpfs,destination=/var/lib/docker'
+      args '''
+        --privileged
+        --entrypoint=""
+        --volume=/var/run/docker.sock:/var/run/docker.sock
+        --volume=/home/mati/.kube:/root/.kube
+        --volume=/home/mati/.minikube:/root/.minikube
+        --tmpfs /tmp
+        --tmpfs /run
+        --mount type=tmpfs,destination=/var/lib/docker
+      '''
     }
   }
 
@@ -16,7 +25,6 @@ pipeline {
   }
 
   stages {
-
     stage('Checkout') {
       steps {
         checkout scm
@@ -27,11 +35,8 @@ pipeline {
       steps {
         sh '''
           set -eux
-
           echo "Sprawdzam czy Minikube już działa..."
-          if minikube status >/dev/null 2>&1; then
-            echo "Minikube już działa – pomijam uruchamianie."
-          else
+          if ! minikube status >/dev/null 2>&1; then
             echo "Minikube nieaktywny – próbuję uruchomić."
             minikube start \
               --driver=docker \
@@ -43,9 +48,10 @@ pipeline {
               --interactive=false \
               --wait=all \
               --wait-timeout=10m
+          else
+            echo "Minikube już działa"
           fi
 
-          echo "Stan klastra:"
           kubectl get nodes
         '''
       }

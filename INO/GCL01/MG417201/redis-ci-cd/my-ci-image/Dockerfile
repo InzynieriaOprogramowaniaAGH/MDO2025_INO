@@ -1,23 +1,6 @@
 FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y \
-  curl bash conntrack socat iptables gnupg ca-certificates util-linux docker.io sudo
-
-ENV KUBECTL_VERSION=v1.27.3
-ENV MINIKUBE_VERSION=v1.33.1
-ENV CRICTL_VERSION=v1.28.0
-ENV CNI_VERSION=v1.3.0
-ENV KUBECONFIG=/root/.kube/config
-
-RUN curl -Lo /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
-    chmod +x /usr/local/bin/kubectl
-
-RUN curl -Lo /usr/local/bin/minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && \
-    chmod +x /usr/local/bin/minikube
-
-RUN curl -L https://github.com/kubernetes-sigs/cri-tools/releases/download/${CRICTL_VERSION}/crictl-${CRICTL_VERSION}-linux-amd64.tar.gz \
-  | tar -C /usr/local/bin -xz
-
-RUN mkdir -p /opt/cni/bin
-RUN curl -L https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-linux-amd64-${CNI_VERSION}.tgz \
-  | tar -C /opt/cni/bin -xz
+  curl bash conntrack socat iptables iproute2 gnupg ca-certificates util-linux docker.io sudo && \
+  update-alternatives --set iptables /usr/sbin/iptables-legacy && \
+  update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
