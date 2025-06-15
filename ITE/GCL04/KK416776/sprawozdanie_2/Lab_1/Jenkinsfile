@@ -2,29 +2,78 @@ pipeline {
     agent any
 
     environment {
-        GIT_REPO = 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
-        BRANCH_NAME = 'KK416776'  
+        DOCKER_HOST = "tcp://docker:2376"
+        DOCKER_CERT_PATH = "/certs/client"
+        DOCKER_TLS_VERIFY = "1"
+        APP_DIR = "ITE/GCL04/KK416776/sprawozdanie_2"
     }
 
     stages {
-        stage('Checkout') {
+        stage('Init Logs') {
             steps {
-                git branch: "${BRANCH_NAME}", url: "${GIT_REPO}"
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh "docker build -t my_image ."
+                dir(env.APP_DIR) {
+                    sh 'mkdir -p logs artifacts'
                 }
             }
         }
 
-        stage('Run Container') {
+        stage('Build') {
             steps {
-                script {
-                    sh "docker run -d --name my_container my_image"
+                dir(env.APP_DIR){
+                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                        sh 'docker build -t node-builder -f Dockerfile.build. . > logs/build.log 2>&1'
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir(env.APP_DIR) {
+                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                        sh 'docker build -t node-tester -f Dockerfile.test. . > logs/test.log 2>&1'
+                        sh 'docker run --rm node-tester >> logs/test.log 2>&1'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh '''
+                        docker build -t node-deploy -f Dockerfile.deploy. .
+                        docker run -d --name node-deploy-p node-deploy
+                        sleep 5
+                    '''
+                }
+            }
+        }
+
+        stage('Test Deploy') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh '''
+                        echo "== Logs from deployed container =="
+                        docker logs node-deploy-p | tee logs/deploy.log
+
+                        echo "== Simple validation =="
+                        if docker logs node-deploy-p | grep -q "Hello from nodejs-template"; then
+                            echo "Deploy test passed ✅"
+                        else
+                            echo "Deploy test failed ❌"
+                            exit 1
+                        fi
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh 'docker save node-deploy -o artifacts/node-deploy.tar'
+                    archiveArtifacts artifacts: 'artifacts/node-deploy.tar', fingerprint: true
                 }
             }
         }
@@ -32,10 +81,15 @@ pipeline {
 
     post {
         always {
-            script {
-                sh "docker rm -f my_container || true"
-                sh "docker rmi my_image || true"
+            sh '''
+                docker container rm -f node-deploy-p || true
+                docker image rm node-builder node-tester node-deploy || true
+                docker system prune -af || true
+            '''
+            dir(env.APP_DIR) {
+                archiveArtifacts artifacts: 'logs/*.log', allowEmptyArchive: true
             }
         }
     }
 }
+
