@@ -1,0 +1,14 @@
+FROM ubuntu:latest
+
+RUN apt update && \
+	apt install -y cmake g++ build-essential git python3
+
+WORKDIR /root
+
+RUN git clone https://github.com/opencv/opencv.git
+
+WORKDIR /root/opencv
+RUN mkdir build
+
+WORKDIR /root/opencv/build
+RUN cmake .. && make -j$(nproc)
