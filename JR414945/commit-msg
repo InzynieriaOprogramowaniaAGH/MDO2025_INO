@@ -1,0 +1,8 @@
+#!/bin/bash
+commit_message=$(cat "$1")
+pattern="^JR414945"
+
+if [[ ! $commit_message =~ $pattern ]]; then
+	echo "BLAD: Commit message musi zaczynac sie od JR414945"
+	exit 1
+fi
