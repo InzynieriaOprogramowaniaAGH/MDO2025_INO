@@ -13,10 +13,6 @@ pipeline {
     }
   }
 
-  environment {
-    KUBECONFIG = '/root/.kube/config'
-  }
-
   parameters {
     booleanParam(name: 'PUBLISH', defaultValue: true, description: 'Push artifact/image?')
     booleanParam(name: 'DEPLOY_K8S', defaultValue: true, description: 'Deploy to Minikube?')
@@ -34,12 +30,12 @@ pipeline {
         sh '''
           echo "Aktualizuję ścieżki w pliku kubeconfig..."
           sed 's|/home/mati/.minikube|/root/.minikube|g' /root/.kube/config > /root/.kube/config.patched
-          cat /root/.kube/config.patched
-          export KUBECONFIG=/root/.kube/config.patched
 
+          echo "Ustawiam zmienną KUBECONFIG na zmodyfikowany plik..."
+          export KUBECONFIG=/root/.kube/config.patched
           echo "Sprawdzam status Minikube na hoście..."
           if ! kubectl get nodes >/dev/null 2>&1; then
-            echo "Minikube nieaktywny! Zaloguj się na hosta i uruchom: minikube start" 
+            echo "Minikube nieaktywny! Zaloguj się na hosta i uruchom: minikube start"
             exit 1
           fi
 
