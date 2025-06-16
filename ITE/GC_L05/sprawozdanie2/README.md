@@ -58,6 +58,8 @@ CMD ["npm", "start"]
 
 ## Kontener deploy
 
+Utworzono kontener produkcyjny (deploy), oparty na lekkim obrazie `node:18-slim`. Kopiuje on gotową aplikację `express-build` do katalogu `/app`, ustawia katalog roboczy oraz określa komendę startową i port, na którym nasłuchuje aplikacja.
+
 ```
 FROM node:18-slim
 
