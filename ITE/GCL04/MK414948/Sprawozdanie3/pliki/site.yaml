@@ -1,0 +1,12 @@
+---
+- name: Deploy Node.js app from Docker Hub
+  hosts: endpoints
+  become: yes
+  vars:
+    docker_image_name: monkakrakowska/nodedummy
+    docker_container_name: moja_aplikacja
+    app_port: 3001
+    host_port: 3001
+
+  roles:
+    - docker-node
