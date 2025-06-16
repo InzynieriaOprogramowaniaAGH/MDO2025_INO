@@ -4,6 +4,8 @@
 
 ## Wybór aplikacji
 
+Na potrzeby wykonania laboratorium wybrano aplikację Express.js, które jest objęta licencją MIT.
+
 ## Budowanie aplikacji
 
 Budowanie aplikacji sprowadza się do instalacji wymaganych pakietów poprzez npm:
