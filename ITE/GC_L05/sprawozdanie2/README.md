@@ -15,10 +15,14 @@ npm install
 
 ## Testy aplikacji
 
+Repozytorium zawiera zestaw testów, które można uruchomić za pomocą polecenia:
+
 ```
 npm test
 
 ```
+
+Uruchomione testy zakończyły się sukcesem.
 
 ## Diagram UML
 
