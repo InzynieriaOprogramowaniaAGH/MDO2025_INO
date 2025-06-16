@@ -12,7 +12,7 @@ Celem ćwiczenia jest wdrożenie dowolnej aplikacji webowej na chmurze AWS w for
 Nie ma wymagań co do funkcjonalności - może to być wyświetlanie treści zwracanej przez jeden *endopoint*, uzupełnianej o dane z bazy danych.
 
 ## Polecenia
-1. Upewnij się, że wykorzystujesz zasoby regionu `us-east-1`, następnie stwórz trzy (Security Groups)[https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html], umieszczając je w domyślnym VPC:
+1. Upewnij się, że wykorzystujesz zasoby regionu `us-east-1`, następnie stwórz trzy [Security Groups](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html), umieszczając je w domyślnym VPC:
     - Dla bazy danych - pozwól na dowolny ruch wychodzący (outbound rules) oraz na _bezpieczny_ przychodzący (inbound rules).
     - Dla aplikacji backendowej - pozwól na dowolny ruch wychodzący (outbound rules) oraz na _bezpieczny_ przychodzący (inbound rules). Testowo należy dodać możliwość komunikacji poprzez SSH.
     - Dla aplikacji frontendowej - pozwól na dowolny ruch wychodzący (outbound rules) oraz _bezpieczny_ przychodzący (inbound rules). Testowo należy dodać możliwość komunikacji poprzez SSH.
