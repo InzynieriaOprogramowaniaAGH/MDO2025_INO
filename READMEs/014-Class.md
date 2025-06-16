@@ -5,7 +5,7 @@
 Format sprawozdania jak poprzednio.
 
 ## Zadania do wykonania
-Celem ćwiczenia jest wdrożenie dowolnej aplikacji webowej na chmurze AWS w formie three-tier architecture. Aplikacja powinna składać się co najmniej z następujących komponentów:
+Celem ćwiczenia jest wdrożenie dowolnej aplikacji webowej na chmurze AWS w formie *three-tier architecture*. Aplikacja powinna składać się co najmniej z następujących komponentów:
 - *frontend*, np. React, Vue
 - *backend*, np. Nodejs, Django
 - baza danych z puli dostępnych na chmurze.
