@@ -12,6 +12,9 @@
 
 ## Build w kontenerze
 
+Stworzono dockerfile, który buduje aplikację Node.js opartą na Express, instaluje zależności i kopiuje kod źródłowy do katalogu roboczego w kontenerze. Gotowa aplikacja nasłuchuje na porcie 3000 i uruchamia się za pomocą komendy npm start.
+
+
 ```
 
 FROM node:18-alpine
