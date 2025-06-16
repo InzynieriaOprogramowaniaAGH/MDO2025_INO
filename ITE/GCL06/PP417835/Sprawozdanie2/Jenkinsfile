@@ -12,12 +12,10 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                echo 'klonowanie'
+                echo 'Klonowanie tylko jednej gałęzi'
                 sh '''
-                    rm -rf MDO2025_INO
-                    git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
-                    cd MDO2025_INO
-                    git checkout PP417835
+                rm -rf MDO2025_INO
+                git clone --branch PP417835 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
                 '''
             }
         }
