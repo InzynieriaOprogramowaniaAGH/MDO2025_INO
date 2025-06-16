@@ -83,7 +83,7 @@ pipeline {
     post {
         always {
             sh '''
-                docker container rm -f node-deploy-p || true
+                docker container rm -f node-deploy || true
                 docker image rm node-builder node-tester node-deploy || true
                 docker system prune -af || true
             '''
