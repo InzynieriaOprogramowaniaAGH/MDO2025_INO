@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeapp-canary
+  labels:
+    role: nodeapp
+    stage: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: nodeapp
+      stage: canary
+  template:
+    metadata:
+      labels:
+        role: nodeapp
+        stage: canary
+    spec:
+      containers:
+        - name: nodeapp-container
+          image: pawelk1234/nodeapp:latest
+          ports:
+            - containerPort: 3000
