@@ -35,6 +35,9 @@ CMD ["npm", "start"]
 
 ## Testowanie w kontenerze
 
+Następnie stworzono dockerfile, który buduje dodatkowo uruchamia testy (`npm test`) w trakcie budowania.
+
+
 ```
 FROM node:18-alpine
 
