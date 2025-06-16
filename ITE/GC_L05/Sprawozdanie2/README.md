@@ -2421,6 +2421,10 @@ Aktualnie wykonano następujące kroki:
 
 ---
 
+## Kontener deploy
+
+
+
 # Jenkinsfile: lista kontrolna - Laboratorium 7
 
 ---
