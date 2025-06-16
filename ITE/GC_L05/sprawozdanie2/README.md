@@ -6,7 +6,17 @@
 
 ## Budowanie aplikacji
 
+```
+npm install
+
+```
+
 ## Testy aplikacji
+
+```
+npm test
+
+```
 
 ## Diagram UML
 
@@ -58,7 +68,7 @@ CMD ["npm", "start"]
 
 ## Kontener deploy
 
-Utworzono kontener produkcyjny (deploy), oparty na lekkim obrazie `node:18-slim`. Kopiuje on gotową aplikację `express-build` do katalogu `/app`, ustawia katalog roboczy oraz określa komendę startową i port, na którym nasłuchuje aplikacja.
+Utworzono kontener produkcyjny (deploy), oparty na lekkim obrazie node:18-slim, zawierający jedynie gotową do uruchomienia aplikację. 
 
 ```
 FROM node:18-slim
