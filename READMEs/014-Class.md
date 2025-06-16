@@ -1,7 +1,7 @@
 # Prawo Conway'a i AWS
 - **UWAGA!** Wykonanie ćwiczenia nie jest obowiązkowe. Termin oddania wg. USOS:
-    * Podwyższenie oceny wyższej niż 3.0 o pół stopnia dla terminu 1 zaliczenia: 2025-07-10
-    * Podwyższenie oceny wyzszej niż 3.0 o pół stopnia dla terminu 2 i 3 zaliczenia (tylko dla oceny 4.5 i 5.0): 2025-09-19
+    * Podwyższenie oceny wyższej niż 3.0 o jeden stopień dla terminu 1 zaliczenia: 2025-07-10
+    * Podwyższenie oceny wyzszej niż 3.0 o jeden stopień dla terminu 2 i 3 zaliczenia (tylko dla oceny 4.5 i 5.0): 2025-09-19
 Format sprawozdania jak poprzednio.
 
 ## Zadania do wykonania
