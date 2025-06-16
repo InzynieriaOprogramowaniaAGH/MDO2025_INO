@@ -52,6 +52,19 @@ CMD ["npm", "start"]
 
 ## Kontener deploy
 
+```
+FROM node:18-slim
+
+COPY --from=express-build /build/app /app
+
+WORKDIR /app
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
+
+```
+
 ## Krok publish
 
 ## publish - uzasadnienie
