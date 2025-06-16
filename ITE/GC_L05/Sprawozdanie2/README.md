@@ -2360,90 +2360,63 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'amelia/mruby'
+        IMAGE_NAME = 'amelia/pytest-deploy'
         IMAGE_VERSION = "${env.BUILD_NUMBER}"
     }
 
     stages {
-        stage('Clean') {
-            steps {
-                sh 'rm -rf MDO2025_INO'
-            }
-        }
-
         stage('Checkout') {
             steps {
-                sh 'git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
-                dir('MDO2025_INO') {
-                    sh 'git checkout AN417592'
-                }
+                git branch: 'AN417592', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
             }
         }
 
-        stage('Build mruby') {
+        stage('Build Docker Image') {
             steps {
-                dir('MDO2025_INO/ITE/GCL05/AN417592') {
+                sh '''
+                    echo "Buduję obraz Dockera (builder)..."
+                    docker build -t pytest-examples-builder:latest -f ITE/GC_L05/AN417592/Dockerfile.builder .
+                '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '''
+                    echo "Uruchamiam kontener i wykonuję testy..."
+                    docker run --rm pytest-examples-builder:latest
+                '''
+            }
+        }
+
+        stage('Build Deploy Image') {
+            steps {
+                sh '''
+                    echo "Buduję obraz do deploya..."
+                    docker build -t ${IMAGE_NAME}:${IMAGE_VERSION} -f ITE/GC_L05/AN417592/Dockerfile.deploy .
+                '''
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
-                        docker build -f Dockerfile.build -t mruby-build .
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 
-                        docker create --name temp mruby-build
-                        mkdir -p mruby.deploy
-                        docker cp temp:/mruby/build/host/bin/mruby mruby.deploy/
-                        docker rm temp
-                        chmod +x mruby.deploy/mruby
-                    '''
-                }
-            }
-        }
+                        docker tag ${IMAGE_NAME}:${IMAGE_VERSION} ${IMAGE_NAME}:latest
 
-        stage('Test') {
-            steps {
-                dir('MDO2025_INO/ITE/GCL05/AN417592') {
-                    sh 'docker build -f Dockerfile.test -t r-test .'
-                }
-            }
-        }
-
-        stage('Build deploy image') {
-            steps {
-                dir('MDO2025_INO/ITE/GCL05/AN417592/mruby-pipeline') {
-                    sh 'docker build -f Dockerfile.deploy -t mruby-deploy .'
-                }
-            }
-        }
-
-        stage('Test deploy image') {
-            steps {
-                dir('MDO2025_INO/ITE/GCL05/AN417592/mruby-pipeline') {
-                    sh '''
-                        docker run --rm \
-                          -v $(pwd)/script.rb:/app/script.rb \
-                          mruby-deploy > result.txt
-
-                        cat result.txt
-                        grep -q "Hello world" result.txt
-                    '''
-                }
-            }
-        }
-
-        stage('Push image to Docker Hub') {
-            when {
-                expression {
-                    return fileExists('MDO2025_INO/ITE/GCL05/AN417592/Sprawozdanie2/mruby-pipeline/result.txt') &&
-                           readFile('MDO2025_INO/ITE/GCL05/AN417592/Sprawozdanie2/mruby-pipeline/result.txt').contains('Hello world')
-                }
-            }
-            steps {
-                dir('MDO2025_INO/ITE/GCL05/AN417592/Sprawozdanie2/mruby-pipeline') {
-                    sh """
-                        docker tag mruby-deploy ${IMAGE_NAME}:${IMAGE_VERSION}
-                        docker tag mruby-deploy ${IMAGE_NAME}:latest
                         docker push ${IMAGE_NAME}:${IMAGE_VERSION}
                         docker push ${IMAGE_NAME}:latest
-                    """
+                    '''
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline zakończony!'
         }
     }
 }
