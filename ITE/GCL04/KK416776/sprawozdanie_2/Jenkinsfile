@@ -73,8 +73,8 @@ pipeline {
         stage('Publish') {
             steps {
                 dir(env.APP_DIR) {
-                    sh 'docker save node-deploy -o artifacts/node-deploy_${VERSION}.tar'
-                    archiveArtifacts artifacts: 'artifacts/node-deploy_${VERSION}.tar', fingerprint: true
+                    sh "docker save node-deploy -o artifacts/node-deploy_${VERSION}.tar"
+                    archiveArtifacts artifacts: "artifacts/node-deploy_${VERSION}.tar", fingerprint: true
                 }
             }
         }
