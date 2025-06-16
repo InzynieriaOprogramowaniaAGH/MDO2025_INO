@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_CURL_BUILD = 'curl_build'
         IMAGE_CURL_TEST = 'curl_test'
-        IMAGE_CURL_PUBLISH = 'curl_publish'
+        IMAGE_CURL_DEPLOY_SMOKE_PUBLISH = 'curl_deploy_smoke_publish'
         VERSION = "v${BUILD_NUMBER}"
         ZIP_NAME = "curl_${BUILD_NUMBER}.tar"
     }
@@ -48,8 +48,8 @@ pipeline {
                 echo 'wdrazanie'
                 dir('MDO2025_INO/ITE/GCL06/PP417835/curl') {
                     sh '''
-                        docker build -f Dockerfile.deploy -t ${IMAGE_CURL_FINAL}:${VERSION} .
-                        docker run --rm ${IMAGE_CURL_FINAL}:${VERSION} curl --version
+                        docker build -f Dockerfile.deploy -t ${IMAGE_CURL_DEPLOY_SMOKE_PUBLISH}:${VERSION} .
+                        docker run --rm ${IMAGE_CURL_DEPLOY_SMOKE_PUBLISH}:${VERSION} curl --version
                     '''
                 }
             }
@@ -59,7 +59,7 @@ pipeline {
             steps {
                 echo 'Smoke test do www.metal.agh.edu.pl'
                 sh '''
-                    docker run --rm ${IMAGE_CURL_PUBLISH}:${VERSION} curl -s --fail http://www.metal.agh.edu.pl \
+                    docker run --rm ${IMAGE_CURL_DEPLOY_SMOKE_PUBLISH}:${VERSION} curl -s --fail http://www.metal.agh.edu.pl \
                         && echo "SMOKE TEST PASSED" \
                         || echo "SMOKE TEST FAILED"
                 '''
@@ -72,7 +72,7 @@ pipeline {
 
                 
                 sh """
-                docker save ${IMAGE_CURL_PUBLISH}:${VERSION} -o ${ZIP_NAME}
+                docker save ${IMAGE_CURL_DEPLOY_SMOKE_PUBLISH}:${VERSION} -o ${ZIP_NAME}
                 """
 
                 
@@ -86,7 +86,7 @@ pipeline {
                 )]) {
             sh """
                 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                docker tag ${IMAGE_CURL_PUBLISH}:${VERSION} pawpodw2/curl_publish:${VERSION}
+                docker tag ${IMAGE_CURL_DEPLOY_SMOKE_PUBLISH}:${VERSION} pawpodw2/curl_publish:${VERSION}
                 docker push pawpodw2/curl_publish:${VERSION}
             """
             }
