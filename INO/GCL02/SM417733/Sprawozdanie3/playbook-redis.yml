@@ -1,0 +1,64 @@
+- name: Deploy docker container from Docker Hub
+  hosts: Endpoints
+  become: true
+
+  vars:
+    docker_package: docker
+    docker_service: docker
+    image_name: pszemo6/redis_runtime:4
+    container_name: redis_runtime_test
+
+  tasks:
+
+    - name: Zainstaluj wymagane pakiety
+      dnf:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - dnf-plugins-core
+        - docker
+        - python3-docker
+
+    - name: Włącz i uruchom usługę docker
+      service:
+        name: "{{ docker_service }}"
+        state: started
+        enabled: true
+
+    - name: Pobierz obraz Dockera z Docker Hub
+      community.docker.docker_image:
+        name: "{{ image_name }}"
+        source: pull
+
+    - name: Uruchom kontener
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}"
+        state: started
+        restart_policy: unless-stopped
+        ports:
+          - "6379:6379"
+
+    - name: Poczekaj chwilę na start kontenera
+      wait_for:
+        port: 6379
+        delay: 2
+        timeout: 10
+
+    - name: Zweryfikuj, że kontener działa
+      shell: docker ps --filter "name={{ container_name }}" --format "{{ '{{' }}.Status{{ '}}' }}"
+      register: container_status
+
+    - name: Pokaż status kontenera
+      debug:
+        msg: "Kontener działa: {{ container_status.stdout }}"
+
+    - name: Zatrzymaj kontener
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: stopped
+
+    - name: Usuń kontener
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        state: absent

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-canary
+  labels:
+    version: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: redis
+        version: canary
+    spec:
+      containers:
+        - name: redis
+          image: pszemo6/redis_runtime:4
+          ports:
+            - containerPort: 6379
