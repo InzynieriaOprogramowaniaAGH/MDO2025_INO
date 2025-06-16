@@ -2353,75 +2353,102 @@ Na koniec przygotowywany jest wersjonowany artefakt — w tym przypadku obraz Do
 
 ---
 
-## Plan na Pipeline oraz Postęp Prac
-
----
-
-### Plan
-
----
-
-Celem pipeline'u jest zautomatyzowanie pełnego procesu CI/CD dla wybranej aplikacji. Ścieżka krytyczna obejmuje: commit → clone → build → test → deploy → publish.
-
-Aktualnie wykonano następujące kroki:
-
-- Skonfigurowano Jenkins z Docker-in-Docker (DIND).
-
-- Utworzono i przetestowano pipeline obejmujący kroki checkout, build oraz test w kontenerze.
-
-- Przygotowano obrazy kontenerowe zgodnie z wymaganiami (builder + tester).
-
-- Zaplanowano kroki deploy i publish.
-
-- Udokumentowano różnice między kontenerami build/test/deploy.
-
----
-
-### Ścieżka krytyczna: Status
-
-
----
-
-| Krok    | Status | Uwagi |
-|---------|--------|-------|
-| Commit  | ✔️     | Pipeline może być wyzwalany manualnie lub na commit. |
-| Clone   | ✔️     | Repozytorium klonowane w kroku Checkout. |
-| Build   | ✔️     | Obraz buildowany z Dockerfile.builder. |
-| Test    | ✔️     | Testy uruchamiane w osobnym kontenerze zbudowanym na builderze. |
-| Deploy  | 🟡     | Zaplanowane wdrożenie kontenera deploy po buildzie i testach. |
-| Publish | 🟡     | Artefakt będzie przygotowywany jako obraz Docker (ew. ZIP). |
-
-
-### Pełna lista kontrolna: Status i Plan
-
-| Krok                                         | Status | Uwagi |
-|----------------------------------------------|--------|-------|
-| Aplikacja została wybrana                    | ✔️     | Repo MDO2025_INO |
-| Licencja potwierdzona                        | ✔️     | Repozytorium edukacyjne |
-| Wybrany program buduje się                   | ✔️     | Build działa |
-| Przechodzą dołączone testy                   | ✔️     | Testy z uruchamianego kontenera |
-| Decyzja o forku                              | ✔️     | Brak potrzeby, korzystanie z własnej gałęzi |
-| Diagram UML procesu CI/CD                   | 🟡     | W przygotowaniu – plan przedstawiony słownie, rysunek do uzupełnienia |
-| Wybrano kontener bazowy                      | ✔️     | python:3.11-slim lub inny świadomie wybrany obraz |
-| Build wewnątrz kontenera                     | ✔️     | - |
-| Testy wewnątrz kontenera                     | ✔️     | - |
-| Tester oparty o builder                      | ✔️     | - |
-| Logi jako artefakt                           | 🟡     | Logi widoczne w Jenkins, opcjonalnie archiveArtifacts |
-| Kontener deploy                              | 🟡     | Tworzony osobno lub reużywany builder |
-| Uzasadnienie kontenera deploy                | 🟡     | Opis będzie podany poniżej |
-| Deploy kontenera z aplikacją                 | 🟡     | Plan na smoke test po uruchomieniu kontenera |
-| Smoke test aplikacji                         | 🟡     | Przewidziany, np. sprawdzenie endpointu HTTP lub logów |
-| Definicja artefaktu                          | ✔️     | Obraz Docker jako artefakt |
-| Uzasadnienie wyboru artefaktu                 | ✔️     | Docker: łatwość deployu i transportu |
-| Wersjonowanie artefaktu                      | 🟡     | Semantic Versioning (np. v1.0.0) |
-| Dostępność artefaktu                         | 🟡     | Zapis w Jenkins lub opcjonalnie Docker Hub |
-| Identyfikacja pochodzenia artefaktu           | ✔️     | Nazwa + tag + commit SHA |
-| Pliki Dockerfile i Jenkinsfile                | ✔️     | Są załączane i będą osobno |
-| Weryfikacja UML vs efekt                     | 🟡     | Porównanie planu i realizacji po zakończeniu |
-
----
-
 ## Kontener deploy
+
+```
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = 'amelia/mruby'
+        IMAGE_VERSION = "${env.BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Clean') {
+            steps {
+                sh 'rm -rf MDO2025_INO'
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                sh 'git clone https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO'
+                dir('MDO2025_INO') {
+                    sh 'git checkout AN417592'
+                }
+            }
+        }
+
+        stage('Build mruby') {
+            steps {
+                dir('MDO2025_INO/ITE/GCL05/AN417592') {
+                    sh '''
+                        docker build -f Dockerfile.build -t mruby-build .
+
+                        docker create --name temp mruby-build
+                        mkdir -p mruby.deploy
+                        docker cp temp:/mruby/build/host/bin/mruby mruby.deploy/
+                        docker rm temp
+                        chmod +x mruby.deploy/mruby
+                    '''
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('MDO2025_INO/ITE/GCL05/AN417592') {
+                    sh 'docker build -f Dockerfile.test -t r-test .'
+                }
+            }
+        }
+
+        stage('Build deploy image') {
+            steps {
+                dir('MDO2025_INO/ITE/GCL05/AN417592/mruby-pipeline') {
+                    sh 'docker build -f Dockerfile.deploy -t mruby-deploy .'
+                }
+            }
+        }
+
+        stage('Test deploy image') {
+            steps {
+                dir('MDO2025_INO/ITE/GCL05/AN417592/mruby-pipeline') {
+                    sh '''
+                        docker run --rm \
+                          -v $(pwd)/script.rb:/app/script.rb \
+                          mruby-deploy > result.txt
+
+                        cat result.txt
+                        grep -q "Hello world" result.txt
+                    '''
+                }
+            }
+        }
+
+        stage('Push image to Docker Hub') {
+            when {
+                expression {
+                    return fileExists('MDO2025_INO/ITE/GCL05/AN417592/Sprawozdanie2/mruby-pipeline/result.txt') &&
+                           readFile('MDO2025_INO/ITE/GCL05/AN417592/Sprawozdanie2/mruby-pipeline/result.txt').contains('Hello world')
+                }
+            }
+            steps {
+                dir('MDO2025_INO/ITE/GCL05/AN417592/Sprawozdanie2/mruby-pipeline') {
+                    sh """
+                        docker tag mruby-deploy ${IMAGE_NAME}:${IMAGE_VERSION}
+                        docker tag mruby-deploy ${IMAGE_NAME}:latest
+                        docker push ${IMAGE_NAME}:${IMAGE_VERSION}
+                        docker push ${IMAGE_NAME}:latest
+                    """
+                }
+            }
+        }
+    }
+}
+
+```
 
 
 
