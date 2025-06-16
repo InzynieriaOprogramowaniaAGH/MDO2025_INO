@@ -3,6 +3,9 @@ Sprawozdanie 4
 GitHub Actions
 ----------------
 
+Link do repozytorium z akcjami:
+https://github.com/JanekRzodki/node-js-dummy-test/actions
+
 Celem zadania było:
 * zapoznanie się z koncepcją GitHub Actions,
 * stworzenie własnego pipeline’u do budowania i testowania aplikacji w reakcji na zmiany w gałęzi ino_dev,
