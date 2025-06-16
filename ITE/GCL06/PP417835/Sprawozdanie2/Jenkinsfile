@@ -63,6 +63,33 @@ pipeline {
             }
         }
 
+        stage('Publish') {
+            steps {
+                echo 'Publikacja obrazu do archiwum'
+
+                // Zapis obrazu do pliku
+                sh """
+                docker save ${IMAGE_CURL_FINAL}:${VERSION} -o ${ZIP_NAME}
+                """
+
+                // Archiwizacja artefaktu
+                archiveArtifacts artifacts: "${ZIP_NAME}", onlyIfSuccessful: true
+
+                // Logowanie i publikacja do Docker Hub
+                withCredentials([usernamePassword(
+                credentialsId: 'pawpodw-dockerhub',
+                usernameVariable: 'DOCKER_USER',
+                passwordVariable: 'DOCKER_PASS'
+                )]) {
+            sh """
+                echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                docker tag ${IMAGE_CURL_FINAL}:${VERSION} pawpodw2/curl_final:${VERSION}
+                docker push pawpodw2/curl-final:${VERSION}
+            """
+            }
+        }
+        }
+
         
     }
 
