@@ -6,6 +6,8 @@
 
 ## Budowanie aplikacji
 
+Budowanie aplikacji sprowadza się do instalacji wymaganych pakietów poprzez npm:
+
 ```
 npm install
 
