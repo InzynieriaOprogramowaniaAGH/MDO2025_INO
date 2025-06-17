@@ -2604,6 +2604,9 @@ Etap `SmokeTest` uruchamia kontener z finalnym obrazem deploy w utworzonej sieci
 
 Etap `Publish` tworzy archiwum ZIP z plikami aplikacji i wypycha zbudowany obraz Dockera do zewnętrznego rejestru Docker Hub przy użyciu bezpiecznych poświadczeń. Dodatkowo plik `.zip` z artefaktami zostaje zarchiwizowany w Jenkinsie jako część historii builda.
 
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/deploy-pipeline.png?raw=true)
+
 ## Krok Deploy – wyjaśnienie
 
 Etap Deploy w pipeline został zaprojektowany z myślą o aplikacji testowej wykorzystującej pytest. W przeciwieństwie do klasycznych serwisów uruchamianych w tle, aplikacja ta nie wymaga stałego działania — wystarczy jednorazowe odpalenie testów, a wynik od razu wskazuje, czy wszystko działa poprawnie.
