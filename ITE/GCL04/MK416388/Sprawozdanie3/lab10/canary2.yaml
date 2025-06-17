@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-js-dummy-deployment
+  labels:
+    app: node-js-dummy
+    environment: production
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: node-js-dummy-app
+  template:
+    metadata:
+      labels:
+        app: node-js-dummy-app
+    spec:
+      containers:
+        - name: node-js-dummy-container
+          image: pyonaaa/node-js-dummy-test:latest
+          ports:
+            - containerPort: 3000
