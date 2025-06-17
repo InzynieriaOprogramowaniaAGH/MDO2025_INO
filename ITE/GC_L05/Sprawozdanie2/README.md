@@ -2457,7 +2457,19 @@ Ostatni krok pipeline’u, czyli etap Push to Docker Hub, odpowiada za publikacj
 
 Wypchnięcie obrazu do rejestru wymaga uwierzytelnienia z użyciem wcześniej zdefiniowanych poświadczeń. Dzięki temu każda wersja aplikacji, która przejdzie testy, trafia do centralnego repozytorium, skąd może być wykorzystana do dalszego wdrażania lub testowania — w sposób powtarzalny i bezpieczny.
 
+## Maintainability
 
+1.Pipeline został zaprojektowany tak, aby był łatwy w utrzymaniu i elastyczny w dalszym rozwoju:
+
+2. Poszczególne kroki działają niezależnie – od pobrania kodu, przez budowę i testowanie, aż po wdrożenie i publikację.
+
+3. Proces budowania i wdrażania został rozdzielony, co pozwala modyfikować jeden z nich bez wpływu na drugi.
+
+4. Każde uruchomienie pipeline’u zaczyna się od pobrania świeżej wersji repozytorium, co gwarantuje pracę na aktualnym kodzie.
+
+5. Publikacja obrazu jest możliwa tylko wtedy, gdy testy zakończą się sukcesem — to zabezpiecza przed wdrażaniem błędnych wersji.
+
+6. Dzięki zastosowaniu niestandardowego polecenia startowego (CMD), kontener z mruby nie zawiesza działania pipeline’u i zawsze kończy się poprawnie po wykonaniu skryptu.
 
 
 
