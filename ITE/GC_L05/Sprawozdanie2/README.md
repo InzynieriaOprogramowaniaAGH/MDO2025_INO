@@ -2353,7 +2353,29 @@ Na koniec przygotowywany jest wersjonowany artefakt — w tym przypadku obraz Do
 
 ---
 
-## Kontener deploy
+### Automatyzacja budowania i wdrażania aplikacji testowej w oparciu o pytest
+
+Budowanie i wdrażanie aplikacji pytest zostało zautomatyzowane przy użyciu Jenkinsa, w formie wieloetapowego pipeline’u.
+
+### Pobranie kodu źródłowego
+
+Pipeline rozpoczyna się od etapu Checkout, w którym następuje pobranie kodu źródłowego z repozytorium GitHub z określonej gałęzi (AN417592). 
+
+### Budowa obrazu
+
+W etapie Build Docker Image budowany jest tymczasowy obraz Dockera (pytest-examples-builder), bazujący na pliku Dockerfile.builder. Obraz ten zawiera wszystkie niezbędne zależności do uruchomienia testów (w tym pytest i wymagane biblioteki aplikacji). Proces ten umożliwia przeniesienie środowiska testowego do kontenera i gwarantuje, że testy są uruchamiane w kontrolowanych warunkach.
+
+### Uruchomienie testów jednostkowych
+
+Etap Run Tests polega na uruchomieniu zbudowanego wcześniej kontenera pytest-examples-builder w celu wykonania testów. Kontener uruchamiany jest tymczasowo (z opcją --rm), co zapobiega zaleganiu niepotrzebnych instancji. Wyniki testów są automatycznie oceniane przez Jenkins — niepowodzenie któregokolwiek testu skutkuje zatrzymaniem pipeline’u.
+
+### Budowa obrazu wdrożeniowego
+
+Po pomyślnym przejściu testów, etap Build Deploy Image tworzy końcowy, zoptymalizowany obraz aplikacji. Bazuje on na Dockerfile.deploy i zawiera jedynie elementy niezbędne do uruchomienia aplikacji w środowisku produkcyjnym — bez narzędzi testowych i deweloperskich. 
+
+### Wypchnięcie obrazu do Docker Huba
+
+W końcowym etapie Push to Docker Hub, obraz wdrożeniowy zostaje otagowany i wypchnięty do zewnętrznego rejestru Dockera. Wykorzystywane są bezpiecznie przechowywane poświadczenia (docker-hub-creds). Wypychany jest zarówno tag wersjonowany (na podstawie numeru builda), jak i latest. 
 
 ```
 pipeline {
