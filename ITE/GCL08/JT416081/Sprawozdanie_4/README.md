@@ -33,7 +33,7 @@ Fork (rozgałęzienie) to kopia istniejącego repozytorium GitHub, którą tworz
 
 ![alt text](image5.png)
 
-5. Usuniecie znalezionych workflow'ów (niestety nie potrzebnie razem z folderem "workflows" ):
+5. Usunięcie znalezionych workflow'ów (niestety nie potrzebnie razem z folderem "workflows" ):
 
 ![alt text](image6.png)
 
@@ -103,7 +103,7 @@ Sekcja jobs definiuje następujące zadania do wykonania:
 
 (Inna nazwa commmita ze względu na literówke w nazwie folder workflows)
 
-9. W dalszej części do moejgo workflow'u dodałem funkcjonalność zapisywania tzw. artefaktów. 
+9. W dalszej części do mojego workflow'u dodałem funkcjonalność zapisywania tzw. artefaktów. 
 
 Artefakt to dowolny plik lub zestaw plików, które są generowane podczas wykonywania workflowa i które GitHub zachowuje jako pliki do pobrania. W moim przypadku po zakończeniu budowania i testowania, artefakt zawiera wszystkie pliki wygenerowane m.in.: cJSON_test libcjson.so, Makefile, CTestTestfile.cmake itd.
 
@@ -168,5 +168,5 @@ Workflow zakończony sukcesem:
 Wnioski:
 
 - GitHub Actions umożliwia szybkie i intuicyjne tworzenie zautomatyzowanych workflowów CI/CD bez konieczności dodatkowej konfiguracji serwera
-- Integracja z GitHubem oraz obsługa triggerów pozwala na natychmiastowe reagowanie na zmiany w repozytorium, co usprawnia proces testowania i budowania projektu.
-- Dodanie artefaktów oraz uruchamianie testów w ramach workflowa potwierdziło poprawność działania projektu i stanowi dobrą podstawę do dalszego rozwoju automatyzacji.
+- Integracja z GitHubem oraz obsługa triggerów pozwala na natychmiastowe reagowanie na zmiany w repozytorium, co usprawnia proces testowania i budowania projektu
+- Dodanie artefaktów oraz uruchamianie testów w ramach workflowa potwierdziło poprawność działania projektu i stanowi dobrą podstawę do dalszego rozwoju automatyzacji
