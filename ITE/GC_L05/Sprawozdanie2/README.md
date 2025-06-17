@@ -2306,49 +2306,6 @@ Finished: SUCCESS
 
 
 ```
-## Kompletny pipeline: wymagane składniki
-
----
-
-W ramach realizacji zadania utworzono kompletny pipeline w Jenkinsie, oparty na kontenerze Jenkins z dostępem do Dockera (DIND — Docker in Docker). Skonfigurowano pliki Dockerfile oraz plik pipeline, a całość została umieszczona w repozytorium przedmiotowym w odpowiedniej gałęzi.
-
-### Opis pipeline:
-
-Pipeline realizuje następujące kroki:
-
-1. Checkout kodu źródłowego — klonowanie repozytorium MDO2025_INO z własnej gałęzi (AN417592).
-
-2. Build kontenera Builder — budowa obrazu Dockera z użyciem pliku Dockerfile.builder, który zawiera wszystkie wymagane zależności. Obraz ten jest używany do przygotowania środowiska testowego. Wybrano świadomie bazowy obraz Dockera, zamiast latest, aby uniknąć problemów związanych z niekompatybilnymi zmianami.
-
-3. Run Tests — utworzony obraz jest wykorzystywany do uruchamiania testów. Kontener uruchamia się tymczasowo, a po zakończeniu działania jest automatycznie usuwany (--rm). Logi testowe są widoczne w Jenkinsie, co umożliwia analizę niepowodzeń.
-
-4. Deploy — po pomyślnym przejściu testów budowany jest nowy obraz aplikacji (jeśli różni się od obrazu testowego). W ramach deploya kontener jest uruchamiany na serwerze, symulując wdrożenie.
-
-5. Publish — końcowy artefakt (np. gotowy obraz Dockera lub paczka ZIP) jest przygotowywany do dalszej redystrybucji. Artefakt zostaje dołączony jako wynik builda w Jenkinsie i może być pobrany ręcznie lub wysłany do zewnętrznego rejestru (registry) Dockera.
-
-### Czy aplikacja powinna być zapakowana do pliku-formatu?
-
-W przypadku aplikacji dockeryzowanej (np. aplikacja webowa lub backend) bardziej naturalnym i przenośnym rozwiązaniem jest stworzenie obrazu Docker zamiast budowania osobnego pakietu DEB/RPM. Zapakowanie do formatu ZIP lub TAR może być zasadne tylko w przypadku aplikacji przeznaczonych do ręcznego wdrożenia lub dystrybucji poza środowiskiem kontenerowym.
-
-### Czy program powinien być dystrybuowany jako obraz Docker?
-
-Tak — dystrybucja w formie obrazu Docker umożliwia łatwe wdrożenie i uruchomienie aplikacji w różnych środowiskach. Jednak finalny obraz powinien być oczyszczony: powinien zawierać tylko skompilowaną aplikację, a nie całe repozytorium źródłowe ani logi/artefakty builda. Pozwala to na zmniejszenie rozmiaru obrazu i poprawę bezpieczeństwa.
-
-### Czym się różni obraz node od node-slim?
-
-Obraz node zawiera pełne środowisko Node.js wraz z narzędziami developerskimi, co zwiększa jego rozmiar (kilkaset MB).
-Obraz node-slim to odchudzona wersja, zawierająca jedynie minimum wymagane do uruchomienia aplikacji. Ma znacznie mniejszy rozmiar (~50–100MB) i jest bardziej odpowiedni do środowiska produkcyjnego.
-
-### Proces Deploy:
-
-Po przejściu wszystkich testów, aplikacja jest wdrażana poprzez uruchomienie zbudowanego obrazu w kontenerze. Jeśli obraz jest przeznaczony do produkcji, powinien być zoptymalizowany (np. poprzez multi-stage build w Dockerze), aby minimalizować wielkość i usunąć zbędne pliki buildowe.
-
-### Proces Publish:
-
-Na koniec przygotowywany jest wersjonowany artefakt — w tym przypadku obraz Dockera oznaczony tagiem odpowiadającym wersji aplikacji (np. pytest-examples-builder:v1.0.0) lub ewentualnie paczka ZIP zawierająca binaria lub build aplikacji. Artefakt jest następnie dołączony do wyników pipeline'u jako pobieralny plik lub wypychany do prywatnego registry Dockera.
-
----
-
 # Pipeline: lista kontrolna - Laboratorium 6
 
 ---
