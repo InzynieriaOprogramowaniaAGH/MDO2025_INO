@@ -2601,6 +2601,7 @@ Etap `Deploy` tworzy kontener tymczasowy z obrazu buildowego, z którego kopiowa
 
 ## Etap Publish
 
+Etap `Publish` tworzy archiwum ZIP z plikami aplikacji i wypycha zbudowany obraz Dockera do zewnętrznego rejestru Docker Hub przy użyciu bezpiecznych poświadczeń. Dodatkowo plik `.zip` z artefaktami zostaje zarchiwizowany w Jenkinsie jako część historii builda.
 
 ## Krok Deploy – wyjaśnienie
 
