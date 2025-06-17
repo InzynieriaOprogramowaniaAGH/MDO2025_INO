@@ -2451,6 +2451,10 @@ pipeline {
 
 ## Przepis dostarczany z SCM
 
+Utworzono globalny credientials dla DockerHub:
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/update%20credentials.png?raw=true)
+
 ## Czyszczenie -  brak cache’owanego kodu
 
 ##  Etap Build 
