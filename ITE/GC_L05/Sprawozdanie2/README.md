@@ -2472,6 +2472,15 @@ Wypchnięcie obrazu do rejestru wymaga uwierzytelnienia z użyciem wcześniej zd
 6. Dzięki zastosowaniu niestandardowego polecenia startowego (CMD), kontener z mruby nie zawiesza działania pipeline’u i zawsze kończy się poprawnie po wykonaniu skryptu.
 
 
+Oczywiście! Oto analogiczne **podsumowanie** dla procesu CI/CD związanego z aplikacją opartą na `pytest`:
+
+---
+
+### **Podsumowanie**
+
+Proces CI/CD został zaprojektowany w taki sposób, aby końcowym efektem był w pełni gotowy do wdrożenia artefakt — obraz Docker `pytest-deploy`, zawierający przetestowaną aplikację w wersji produkcyjnej oraz odpowiednią konfigurację umożliwiającą jej natychmiastowe uruchomienie.
+
+Gotowy obraz jest publikowany do zewnętrznego rejestru Docker Hub i może być uruchomiony na dowolnym systemie z zainstalowanym Dockerem — bez potrzeby instalowania dodatkowych narzędzi developerskich, takich jak `pytest`, `git` czy kompilatory. Dzięki temu cały proces wdrożenia jest prosty, szybki i powtarzalny.
 
 
 
