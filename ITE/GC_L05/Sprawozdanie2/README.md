@@ -2593,7 +2593,7 @@ Etap `Build` tworzy obraz Dockera na podstawie pliku `Dockerfile.builder`, któr
 
 ## Etap Test
 
-
+Etap `Test` buduje tymczasowy obraz testowy z pliku `Dockerfile.test`, a następnie uruchamia go w celu wykonania testów. Wynik działania testów jest zapisywany do pliku `test-vX.log`, który zostaje zarchiwizowany w Jenkinsie, jeśli testy zakończą się sukcesem. 
 
 ## Etap Deploy
 
