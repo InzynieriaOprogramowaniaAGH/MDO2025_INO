@@ -2589,7 +2589,11 @@ Etap `Clean` odpowiada za dokładne wyczyszczenie środowiska Dockera przed budo
 
 ##  Etap Build 
 
+Etap `Build` tworzy obraz Dockera na podstawie pliku `Dockerfile.builder`, który zawiera wszystkie zależności potrzebne do zbudowania aplikacji. 
+
 ## Etap Test
+
+
 
 ## Etap Deploy
 
