@@ -2459,7 +2459,7 @@ Wypchnięcie obrazu do rejestru wymaga uwierzytelnienia z użyciem wcześniej zd
 
 ## Maintainability
 
-1.Pipeline został zaprojektowany tak, aby był łatwy w utrzymaniu i elastyczny w dalszym rozwoju:
+1. Pipeline został zaprojektowany tak, aby był łatwy w utrzymaniu i elastyczny w dalszym rozwoju:
 
 2. Poszczególne kroki działają niezależnie – od pobrania kodu, przez budowę i testowanie, aż po wdrożenie i publikację.
 
