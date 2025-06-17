@@ -2,15 +2,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    deployment.kubernetes.io/revision: "1"
+    deployment.kubernetes.io/revision: "3"
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"my-nginx","namespace":"default"},"spec":{"replicas":4,"selector":{"matchLabels":{"app":"my-nginx"}},"template":{"metadata":{"labels":{"app":"my-nginx"}},"spec":{"containers":[{"image":"nginx","name":"nginx","ports":[{"containerPort":80}]}]}}}}
-  creationTimestamp: "2025-06-17T20:46:12Z"
-  generation: 1
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"deployment.kubernetes.io/revision":"2"},"creationTimestamp":"2025-06-17T21:38:10Z","generation":6,"name":"my-nginx","namespace":"default","resourceVersion":"6279","uid":"50be8bc0-209d-476a-9c1d-91f9d5ccf74b"},"spec":{"progressDeadlineSeconds":600,"replicas":4,"revisionHistoryLimit":10,"selector":{"matchLabels":{"app":"my-nginx"}},"strategy":{"rollingUpdate":{"maxSurge":"25%","maxUnavailable":"25%"},"type":"RollingUpdate"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"my-nginx"}},"spec":{"containers":[{"image":"matejj7/nginx:v1","imagePullPolicy":"Always","name":"nginx","ports":[{"containerPort":80,"protocol":"TCP"}],"resources":{},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File"}],"dnsPolicy":"ClusterFirst","restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{},"terminationGracePeriodSeconds":30}}},"status":{"availableReplicas":4,"conditions":[{"lastTransitionTime":"2025-06-17T21:58:33Z","lastUpdateTime":"2025-06-17T21:58:33Z","message":"Deployment has minimum availability.","reason":"MinimumReplicasAvailable","status":"True","type":"Available"},{"lastTransitionTime":"2025-06-17T21:54:38Z","lastUpdateTime":"2025-06-17T21:58:34Z","message":"ReplicaSet \"my-nginx-8648cbdc68\" has successfully progressed.","reason":"NewReplicaSetAvailable","status":"True","type":"Progressing"}],"observedGeneration":6,"readyReplicas":4,"replicas":4,"updatedReplicas":4}}
+  creationTimestamp: "2025-06-17T21:38:10Z"
+  generation: 7
   name: my-nginx
   namespace: default
-  resourceVersion: "1495"
-  uid: e35e528c-dbaa-40be-a5f2-59d281013c2b
+  resourceVersion: "6447"
+  uid: 50be8bc0-209d-476a-9c1d-91f9d5ccf74b
 spec:
   progressDeadlineSeconds: 600
   replicas: 4
@@ -47,19 +47,19 @@ spec:
 status:
   availableReplicas: 4
   conditions:
-  - lastTransitionTime: "2025-06-17T20:46:18Z"
-    lastUpdateTime: "2025-06-17T20:46:18Z"
+  - lastTransitionTime: "2025-06-17T21:58:33Z"
+    lastUpdateTime: "2025-06-17T21:58:33Z"
     message: Deployment has minimum availability.
     reason: MinimumReplicasAvailable
     status: "True"
     type: Available
-  - lastTransitionTime: "2025-06-17T20:46:12Z"
-    lastUpdateTime: "2025-06-17T20:46:19Z"
-    message: ReplicaSet "my-nginx-77f778d969" has successfully progressed.
+  - lastTransitionTime: "2025-06-17T21:54:38Z"
+    lastUpdateTime: "2025-06-17T21:59:13Z"
+    message: ReplicaSet "my-nginx-67fcf46bc" has successfully progressed.
     reason: NewReplicaSetAvailable
     status: "True"
     type: Progressing
-  observedGeneration: 1
+  observedGeneration: 7
   readyReplicas: 4
   replicas: 4
   updatedReplicas: 4
