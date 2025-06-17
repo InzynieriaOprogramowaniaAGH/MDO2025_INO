@@ -2575,6 +2575,12 @@ pipeline {
 
 ```
 
+## Etap Checkout
+
+---
+
+Etap `Checkout` pobiera kod źródłowy z repozytorium GitHub z gałęzi `AN417592`. Dzięki temu pipeline zawsze pracuje na aktualnej wersji projektu znajdującej się w systemie kontroli wersji.
+
 ## Czyszczenie -  brak cache’owanego kodu
 
 ---
