@@ -2577,6 +2577,10 @@ pipeline {
 
 ## Czyszczenie -  brak cache’owanego kodu
 
+---
+
+Etap `Clean` odpowiada za dokładne wyczyszczenie środowiska Dockera przed budowaniem. Usuwane są wszystkie kontenery, wolumeny, sieci użytkownika oraz obrazy (poza `gcc:14` i `alpine`). Dodatkowo wykonywane jest pełne czyszczenie cache'a buildera (`docker builder prune`).
+
 ##  Etap Build 
 
 ## Etap Test
