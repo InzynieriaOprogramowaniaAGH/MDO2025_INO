@@ -2459,7 +2459,7 @@ Wypchnięcie obrazu do rejestru wymaga uwierzytelnienia z użyciem wcześniej zd
 
 ## Maintainability
 
-1. Pipeline został zaprojektowany tak, aby był łatwy w utrzymaniu i elastyczny w dalszym rozwoju:
+1. Pipeline został zaprojektowany tak, aby był łatwy w utrzymaniu i elastyczny w dalszym rozwoju.
 
 2. Poszczególne kroki działają niezależnie – od pobrania kodu, przez budowę i testowanie, aż po wdrożenie i publikację.
 
@@ -2470,9 +2470,6 @@ Wypchnięcie obrazu do rejestru wymaga uwierzytelnienia z użyciem wcześniej zd
 5. Publikacja obrazu jest możliwa tylko wtedy, gdy testy zakończą się sukcesem — to zabezpiecza przed wdrażaniem błędnych wersji.
 
 6. Dzięki zastosowaniu niestandardowego polecenia startowego (CMD), kontener z mruby nie zawiesza działania pipeline’u i zawsze kończy się poprawnie po wykonaniu skryptu.
-
-
-Oczywiście! Oto analogiczne **podsumowanie** dla procesu CI/CD związanego z aplikacją opartą na `pytest`:
 
 ---
 
