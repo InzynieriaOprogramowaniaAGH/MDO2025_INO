@@ -2444,3 +2444,26 @@ pipeline {
 }
 
 ```
+
+## Krok Deploy – wyjaśnienie
+
+Etap Deploy w pipeline został zaprojektowany z myślą o aplikacji testowej wykorzystującej pytest. W przeciwieństwie do klasycznych serwisów uruchamianych w tle, aplikacja ta nie wymaga stałego działania — wystarczy jednorazowe odpalenie testów, a wynik od razu wskazuje, czy wszystko działa poprawnie.
+
+Na potrzeby wdrożenia przygotowano osobny obraz oparty o Dockerfile.deploy, który zawiera tylko to, co potrzebne do uruchomienia aplikacji w wersji produkcyjnej — bez zbędnych narzędzi programistycznych (jak git czy pytest). Obraz ten jest czysty i lekki, a jego głównym celem jest umożliwienie szybkiego uruchomienia przetestowanego kodu w środowisku docelowym.
+
+## Krok Publish – wyjaśnienie
+
+Ostatni krok pipeline’u, czyli etap Push to Docker Hub, odpowiada za publikację zbudowanego obrazu w zewnętrznym rejestrze Docker Hub. Jenkins taguje obraz na dwa sposoby — dynamicznie oraz jako latest.
+
+Wypchnięcie obrazu do rejestru wymaga uwierzytelnienia z użyciem wcześniej zdefiniowanych poświadczeń. Dzięki temu każda wersja aplikacji, która przejdzie testy, trafia do centralnego repozytorium, skąd może być wykorzystana do dalszego wdrażania lub testowania — w sposób powtarzalny i bezpieczny.
+
+
+
+
+
+
+
+
+
+
+
