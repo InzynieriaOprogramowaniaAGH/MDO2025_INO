@@ -2628,8 +2628,6 @@ Wypchnięcie obrazu do rejestru wymaga uwierzytelnienia z użyciem wcześniej zd
 
 5. Publikacja obrazu jest możliwa tylko wtedy, gdy testy zakończą się sukcesem — to zabezpiecza przed wdrażaniem błędnych wersji.
 
-6. Dzięki zastosowaniu niestandardowego polecenia startowego (CMD), kontener z mruby nie zawiesza działania pipeline’u i zawsze kończy się poprawnie po wykonaniu skryptu.
-
 ---
 
 ### **Podsumowanie**
