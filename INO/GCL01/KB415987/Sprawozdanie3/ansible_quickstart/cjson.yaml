@@ -1,0 +1,5 @@
+- name: Deploy CJSON in container
+  hosts: ansible-target
+  become: true
+  roles:
+    - cjson
