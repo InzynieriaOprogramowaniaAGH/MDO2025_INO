@@ -2597,6 +2597,8 @@ Etap `Test` buduje tymczasowy obraz testowy z pliku `Dockerfile.test`, a następ
 
 ## Etap Deploy
 
+Etap `Deploy` tworzy kontener tymczasowy z obrazu buildowego, z którego kopiowane są przygotowane pliki aplikacji. Następnie budowany jest finalny obraz produkcyjny na podstawie `Dockerfile.deploy`, gotowy do wdrożenia.
+
 ## Etap Publish
 
 
