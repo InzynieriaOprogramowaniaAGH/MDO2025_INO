@@ -2463,6 +2463,118 @@ Pipeline został skonfigurowany tak, aby pobierał kod z repozytorium GitHub ora
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/pipeline%20scm%20configuration.png?raw=true)
 
+## Jenkinsfile
+
+```
+
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_BUILD = 'pytest-builder'
+        IMAGE_TEST = 'pytest-test'
+        IMAGE_DEPLOY = 'pytest-deploy'
+        DOCKERHUB_REPO = 'amelia/pytest-deploy'
+        VERSION = "v${BUILD_NUMBER}"
+        IMAGE_TAG = "amelia/pytest-deploy:v${BUILD_NUMBER}"
+        ZIP_BASE = 'pytest'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'AN417592', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Clean') {
+            steps {
+                dir('ITE/GC_L05/AN417592') {
+                    sh '''
+                        docker container ls -a -q | xargs -r docker rm -f
+                        docker volume ls -q | xargs -r docker volume rm -f
+                        docker network ls -q --filter type=custom | xargs -r docker network rm -f
+                        docker builder prune --all --force
+                        docker images -q | sort -u | grep -vE '^(gcc:14|alpine:latest)$' | xargs -r docker rmi -f
+                    '''
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('ITE/GC_L05/AN417592') {
+                    sh 'docker build -f Dockerfile.builder -t $IMAGE_BUILD .'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('ITE/GC_L05/AN417592') {
+                    sh 'docker build -f Dockerfile.test -t $IMAGE_TEST .'
+                    sh 'docker run --rm $IMAGE_TEST > test-${VERSION}.log'
+                    archiveArtifacts artifacts: "test-${VERSION}.log", onlyIfSuccessful: true
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('ITE/GC_L05/AN417592') {
+                    sh '''
+                        docker create --name temp-pytest-container $IMAGE_BUILD
+                        docker cp temp-pytest-container:/app ./
+                        docker rm temp-pytest-container
+                        docker build -f Dockerfile.deploy -t $IMAGE_DEPLOY:$VERSION .
+                    '''
+                }
+            }
+        }
+
+        stage('SmokeTest') {
+            steps {
+                dir('ITE/GC_L05/AN417592') {
+                    sh '''
+                        docker network create ci || true
+                        docker run -dit --network ci --name pytest_app $IMAGE_DEPLOY:$VERSION
+                        sleep 3
+                        docker exec pytest_app python3 /app/test_script.py || echo "Test script failed"
+                        docker stop pytest_app
+                        docker rm pytest_app
+                        docker network rm ci
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir('ITE/GC_L05/AN417592') {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                            docker run --rm -v $(pwd):/app -w /app alpine sh -c "apk add --no-cache zip && zip -r ${ZIP_BASE}-${VERSION}.zip app"
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker tag $IMAGE_DEPLOY:$VERSION $IMAGE_TAG
+                            docker push $IMAGE_TAG
+                        '''
+                        archiveArtifacts artifacts: "${ZIP_BASE}-${VERSION}.zip", onlyIfSuccessful: true
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline zakończony!'
+        }
+    }
+}
+
+
+```
+
 ## Czyszczenie -  brak cache’owanego kodu
 
 ##  Etap Build 
