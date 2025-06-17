@@ -2577,13 +2577,9 @@ pipeline {
 
 ## Etap Checkout
 
----
-
 Etap `Checkout` pobiera kod źródłowy z repozytorium GitHub z gałęzi `AN417592`. Dzięki temu pipeline zawsze pracuje na aktualnej wersji projektu znajdującej się w systemie kontroli wersji.
 
 ## Czyszczenie -  brak cache’owanego kodu
-
----
 
 Etap `Clean` odpowiada za dokładne wyczyszczenie środowiska Dockera przed budowaniem. Usuwane są wszystkie kontenery, wolumeny, sieci użytkownika oraz obrazy (poza `gcc:14` i `alpine`). Dodatkowo wykonywane jest pełne czyszczenie cache'a buildera (`docker builder prune`).
 
