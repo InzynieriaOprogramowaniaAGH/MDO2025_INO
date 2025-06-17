@@ -2445,6 +2445,23 @@ pipeline {
 
 ```
 
+# Jenkinsfile - lista kontrolna 
+
+---
+
+## Przepis dostarczany z SCM
+
+## Czyszczenie -  brak cache’owanego kodu
+
+##  Etap Build 
+
+## Etap Test
+
+## Etap Deploy
+
+## Etap Publish
+
+
 ## Krok Deploy – wyjaśnienie
 
 Etap Deploy w pipeline został zaprojektowany z myślą o aplikacji testowej wykorzystującej pytest. W przeciwieństwie do klasycznych serwisów uruchamianych w tle, aplikacja ta nie wymaga stałego działania — wystarczy jednorazowe odpalenie testów, a wynik od razu wskazuje, czy wszystko działa poprawnie.
