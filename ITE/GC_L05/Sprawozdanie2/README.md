@@ -2595,6 +2595,11 @@ Etap `Test` buduje tymczasowy obraz testowy z pliku `Dockerfile.test`, a następ
 
 Etap `Deploy` tworzy kontener tymczasowy z obrazu buildowego, z którego kopiowane są przygotowane pliki aplikacji. Następnie budowany jest finalny obraz produkcyjny na podstawie `Dockerfile.deploy`, gotowy do wdrożenia.
 
+## Etap Smoke Test
+
+Etap `SmokeTest` uruchamia kontener z finalnym obrazem deploy w utworzonej sieci Docker, a następnie wykonuje testowy skrypt `test_script.py` wewnątrz kontenera. Pozwala to zweryfikować, czy aplikacja działa poprawnie w środowisku zbliżonym do produkcyjnego.
+
+
 ## Etap Publish
 
 Etap `Publish` tworzy archiwum ZIP z plikami aplikacji i wypycha zbudowany obraz Dockera do zewnętrznego rejestru Docker Hub przy użyciu bezpiecznych poświadczeń. Dodatkowo plik `.zip` z artefaktami zostaje zarchiwizowany w Jenkinsie jako część historii builda.
