@@ -2451,9 +2451,15 @@ pipeline {
 
 ## Przepis dostarczany z SCM
 
-Utworzono globalny credientials dla DockerHub:
+#### Ustawienia poświadczeń Docker Hub 
+
+Dodano nowe poświadczenia globalne w Jenkinsie dla użytkownika Docker Huba amelia090. Zostały one zapisane pod ID dockerhub-credentials i są wykorzystywane w pipeline’ie do automatycznego logowania podczas publikacji obrazu do Docker Huba w etapie deploy.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/update%20credentials.png?raw=true)
+
+#### Konfiguracja pipeline'u z repozytorium GitHub (Configure)
+
+Pipeline został skonfigurowany tak, aby pobierał kod z repozytorium GitHub oraz używał gałęzi AN417592. Dzięki temu Jenkins automatycznie odczytuje plik Jenkinsfile z repozytorium i wykonuje aktualny proces CI/CD.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/pipeline%20scm%20configuration.png?raw=true)
 
