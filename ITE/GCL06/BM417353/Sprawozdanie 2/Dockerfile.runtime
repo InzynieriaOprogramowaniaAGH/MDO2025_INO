@@ -1,0 +1,20 @@
+FROM fedora:latest
+
+# Instalacja zależności potrzebnych tylko do uruchomienia Irssi
+RUN dnf install -y \
+    ncurses \
+    openssl \
+    glib2 \
+    && dnf clean all
+
+# Skopiowanie zbudowanego Irssi i RPM (jeśli dostępny)
+COPY irssi.tar.gz /tmp/
+
+# Rozpakowanie
+RUN mkdir -p /opt/irssi && \
+    tar -xzf /tmp/irssi.tar.gz -C /opt/irssi --strip-components=3
+
+ENV PATH="/opt/irssi/usr/local/bin:$PATH"
+
+ENTRYPOINT ["irssi"]
+
