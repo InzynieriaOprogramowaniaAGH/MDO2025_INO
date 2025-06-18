@@ -32,6 +32,8 @@ a następnie skopiowano wyświetlone hasło i wklejono je do formularza w celu k
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dostosuj%20wtyczki.png?raw=true)
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/instalacja%20wtyczek.png?raw=true)
+
 Utworzono pierwszego administratora:
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/tworzenie%20admina%20jenkins.png?raw=true)
