@@ -6,6 +6,9 @@
 
 ### Konfiguracja jenkins
 
+Ekran startowy jenkins:
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ekran%20startowy%20jenkins.png?raw=true)
 
 
 ## Zadanie wstępne: uruchomienie
