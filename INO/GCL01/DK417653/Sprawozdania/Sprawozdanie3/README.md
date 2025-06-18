@@ -40,7 +40,7 @@ sudo dnf install -y ansible
 ansible --version
 ```
 
-![ansible-install](screen\ansible_instalation.png)
+![ansible-install](screen/ansible_instalation.png)
 
 Następnie utworzono użytkownika `ansible` oraz wygenerowano parę kluczy SSH:
 
