@@ -1,0 +1,13 @@
+FROM fedora:latest
+
+RUN dnf -y upgrade \
+    && dnf install -y wget
+    
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
+RUN wget http://172.19.97.181:8080/job/weechat_project/lastSuccessfulBuild/artifact/output/weechat-1.0-1.fc42.x86_64.rpm -O /tmp/weechat-1.0-1.fc42.x86_64.rpm \
+    && dnf install -y /tmp/weechat-1.0-1.fc42.x86_64.rpm
+
+CMD ["weechat", "/exit"]
