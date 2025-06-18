@@ -1,0 +1,49 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - ino_dev
+  pull_request:
+    branches:
+      - ino_dev
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Test tags'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx --fix
+        
+      - name: Run tests
+        run: npm test
+
+      - name: Create deployment package (.zip)
+        run: |
+          mkdir -p dist
+          cp -r node_modules src views package.json dist/
+          cd dist
+          zip -r app-${{ github.run_number }}.zip ./*
+        shell: bash
+
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-${{ github.run_number }}.zip
+          path: dist/app-${{ github.run_number }}.zip
