@@ -16,9 +16,11 @@ a następnie skopiowano wyświetlone hasło i wklejono je do formularza w celu k
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ekran_logowania_jenkinsa.png?raw=true)
 
+Utworzono pierwszego administratora:
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/tworzenie%20admina%20jenkins.png?raw=true)
 
-Ekran startowy jenkins:
+Konfiguracja jenkins przebiegła pomyślnie. Pojawił się ekran startowy jenkins:
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ekran%20startowy%20jenkins.png?raw=true)
 
