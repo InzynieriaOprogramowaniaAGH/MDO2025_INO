@@ -1,0 +1,3 @@
+---
+# defaults file for deploy_whl_container
+wheel_filename: pytest_examples-0.0.18-py3-none-any.whl

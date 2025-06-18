@@ -1,0 +1,10 @@
+- name: Operation on dissconnected machine
+  hosts: fake-machine
+  tasks:
+  - name: ping
+    ansible.builtin.ping:
+    register: ping_results
+
+  - name: Ping results
+    ansible.builtin.debug:
+      var: ping_results

@@ -1,0 +1,62 @@
+---
+# tasks file for deploy_whl_container
+- name: Docker status
+  become: true
+  dnf:
+    name: docker
+    state: present
+
+- name: Docker services on
+  become: true
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Ensure package directory exists
+  file:
+    path: package
+    state: directory
+
+- name: Copy artifact to remote machine
+  copy: 
+    src: "{{wheel_filename}}"
+    dest: "package/{{wheel_filename}}"
+
+- name: Copy Dokcerfile
+  template: 
+    src:  Dockerfile.j2
+    dest: package/Dockerfile
+
+- name: Create image 
+  docker_image:
+    name: artifact_image
+    build:
+      path: package/
+    source: build
+
+- name: Run container
+  command: >
+    docker run --rm 
+    artifact_image
+    python -c "import pytest_examples; print(pytest_examples.__version__)"
+  register: test_run
+  failed_when: test_run.rc != 0
+
+- name: Show output of test run
+  debug:
+    msg: "{{ test_run.stdout }}"
+
+# - name: Sprawdź czy plik ready.txt jest w kontenerze
+#   command: docker exec artifact_container test -f /packages/ready.txt
+#   register: result
+#   ignore_errors: yes
+
+# - name: Zweryfikuj, że plik istnieje w kontenerze
+#   assert:
+#     that:
+#       - result.rc == 0
+
+
+
+
