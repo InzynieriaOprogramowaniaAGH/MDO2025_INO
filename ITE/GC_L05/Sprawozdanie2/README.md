@@ -23,7 +23,7 @@ docker create network jenkins
 Kolejnym krokiem była prośba o podanie hasła administratora w celu odblokowania Jenkinsa. W terminalu wykonano polecenie:
 
 ```
-cat /var/jenkins_home/secrets/initialAdminPassword
+docker exec jenkins-blueocean-docker cat /var/jenkins_home/secrets/initialAdminPassword
 
 ```
 a następnie skopiowano wyświetlone hasło i wklejono je do formularza w celu kontynuacji konfiguracji.
