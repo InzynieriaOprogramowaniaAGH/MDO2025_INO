@@ -1,0 +1,128 @@
+pipeline {
+    agent {
+        docker {
+            image 'debian:bookworm'
+            args  '-u root'
+        }
+    }
+
+    environment {
+        INSTALL_DIR = '/tmp/irssi-install'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/master']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/irssi/irssi.git'
+                    ]],
+                    extensions: [
+                        [$class: 'SubmoduleOption', recursiveSubmodules: true]
+                    ]
+                ])
+            }
+        }
+
+    stage('Install Dependencies') {
+    steps {
+        sh '''
+            apt-get update --allow-releaseinfo-change || true
+            DEBIAN_FRONTEND=noninteractive apt-get install -y \
+                build-essential autoconf automake libtool \
+                pkg-config libglib2.0-dev libncurses5-dev \
+                meson ninja-build libssl-dev \
+                ruby ruby-dev rubygems rpm
+
+            gem install --no-document fpm
+        '''
+    }
+}
+
+
+
+
+
+
+        stage('Configure & Build') {
+            steps {
+                sh '''
+                    meson setup builddir --wrap-mode=nodownload || true
+                    meson compile -C builddir
+                '''
+            }
+        }
+
+        stage('Test Version') {
+            steps {
+                sh 'builddir/src/fe-text/irssi --version || true'
+            }
+        }
+
+       stage('Test Run') {
+    steps {
+        sh '''
+            if [ -x builddir/src/fe-text/irssi ]; then
+                echo "Irssi binary exists and is executable"
+            else
+                echo "Irssi binary not found!" >&2
+                exit 1
+            fi
+        '''
+    }
+}
+
+
+        stage('Install to Temp') {
+            steps {
+                sh '''
+                    mkdir -p ${INSTALL_DIR}
+                    meson install -C builddir --destdir=${INSTALL_DIR}
+                '''
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh '''
+                    tar czf irssi.tar.gz -C /tmp irssi-install
+                '''
+            }
+        }
+
+        stage('Build RPM') {
+            steps {
+                sh '''
+                    fpm -s dir -t rpm \
+                        -n irssi \
+                        -v 1.0 \
+                        -C ${INSTALL_DIR} \
+                        --prefix=/ \
+                        .
+                '''
+            }
+        }
+
+        stage('Archive') {
+            steps {
+                archiveArtifacts artifacts: '*.tar.gz,*.rpm', fingerprint: true
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                expression { return false }  // na razie wyłączone
+            }
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'ssh-prod', keyFileVariable: 'KEY')]) {
+                    sh '''
+                        scp -i $KEY -o StrictHostKeyChecking=no irssi.tar.gz jenkins@192.168.0.123:/srv/releases/
+                    '''
+                }
+            }
+        }
+    }
+}
+
