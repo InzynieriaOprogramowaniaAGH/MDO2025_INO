@@ -1,0 +1,20 @@
+Started by user mati
+
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins
+ in /var/jenkins_home/workspace/uname@2
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Show Uname)
+[Pipeline] echo
+=== System info ===
+[Pipeline] sh
++ uname -a
+Linux 444fec4be30f 6.13.5-200.fc41.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Feb 27 15:07:31 UTC 2025 x86_64 GNU/Linux
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

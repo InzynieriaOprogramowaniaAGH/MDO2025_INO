@@ -2,4 +2,5 @@ FROM redis_build AS redis_test
 
 WORKDIR /redis
 
-RUN make test || true
+RUN ./runtest --single unit/type/string --single unit/type/list \
+  --tags "-slow -needs:save -needs:repl -external:skip -latency-monitor -needs:latency"

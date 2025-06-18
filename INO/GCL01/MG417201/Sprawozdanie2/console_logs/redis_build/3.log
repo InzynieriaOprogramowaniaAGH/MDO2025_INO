@@ -1,0 +1,77 @@
+Started by user mati
+
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins
+ in /var/jenkins_home/workspace/redis_build
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Cloning repo)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/redis_build/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/MG417201^{commit} # timeout=10
+Checking out Revision a37492bd7f362f65b82afc1dd524aea0f96f4e90 (refs/remotes/origin/MG417201)
+ > git config core.sparsecheckout # timeout=10
+ > git read-tree -mu HEAD # timeout=10
+ > git config core.sparsecheckout false # timeout=10
+ > git checkout -f a37492bd7f362f65b82afc1dd524aea0f96f4e90 # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git checkout -b MG417201 a37492bd7f362f65b82afc1dd524aea0f96f4e90 # timeout=10
+Commit message: "MG417201: report modification"
+ > git rev-list --no-walk a37492bd7f362f65b82afc1dd524aea0f96f4e90 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Docker image)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/redis_build/INO/GCL01/MG417201/lab3/dockerfiles
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker build -t redis-builder-image -f Dockerfile.build.redis .
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  7.168kB
+
+Step 1/5 : FROM ubuntu:latest AS redis_build
+ ---> a0e45e2ce6e6
+Step 2/5 : RUN apt update && apt install -y     build-essential tcl git
+ ---> Using cache
+ ---> ffb63fa8a0aa
+Step 3/5 : RUN git clone https://github.com/redis/redis.git
+ ---> Using cache
+ ---> 5649b50598bc
+Step 4/5 : WORKDIR /redis
+ ---> Using cache
+ ---> 4212738c1deb
+Step 5/5 : RUN make
+ ---> Using cache
+ ---> 2c86287280c4
+Successfully built 2c86287280c4
+Successfully tagged redis-builder-image:latest
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

@@ -1,0 +1,324 @@
+Started by user mati
+
+Obtained INO/GCL01/MG417201/redis-ci-cd/Jenkinsfile from git https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins
+ in /var/jenkins_home/workspace/redis-ci-cd-pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: git
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/redis-ci-cd-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/MG417201^{commit} # timeout=10
+Checking out Revision 02b9a9ac2c97a38cab0e06485494fdaaec87ef80 (refs/remotes/origin/MG417201)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 02b9a9ac2c97a38cab0e06485494fdaaec87ef80 # timeout=10
+Commit message: "MG417201: report 3 modification"
+ > git rev-list --no-walk 31eea5abc2953af015f9995d8d7181975b2d336e # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker inspect -f . docker:20.10-dind
+.
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] withDockerContainer
+Jenkins seems to be running inside container 1e8a41a9dde20b8e56044c54e51b6c2bd743609409106dbdfc3881b48d8f954a
+$ docker run -t -d -u 0:0 --privileged -v /var/run/docker.sock:/var/run/docker.sock -w /var/jenkins_home/workspace/redis-ci-cd-pipeline --volumes-from 1e8a41a9dde20b8e56044c54e51b6c2bd743609409106dbdfc3881b48d8f954a -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** docker:20.10-dind cat
+$ docker top 3117bcc5201392a3f559eba985ace1c7e84a1ab7889849ce17501715ff03395e -eo pid,comm
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] checkout
+The recommended git tool is: git
+No credentials specified
+Warning: JENKINS-30600: special launcher org.jenkinsci.plugins.docker.workflow.WithContainerStep$Decorator$1@2b6e3700; decorates hudson.Launcher$LocalLauncher@2397ea6b will be ignored (a typical symptom is the Git executable not being run inside a designated container)
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/redis-ci-cd-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO # timeout=10
+Fetching upstream changes from https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/MG417201^{commit} # timeout=10
+Checking out Revision 02b9a9ac2c97a38cab0e06485494fdaaec87ef80 (refs/remotes/origin/MG417201)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 02b9a9ac2c97a38cab0e06485494fdaaec87ef80 # timeout=10
+Commit message: "MG417201: report 3 modification"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/redis-ci-cd-pipeline/INO/GCL01/MG417201/redis-ci-cd
+[Pipeline] {
+[Pipeline] sh
++ docker build -t redis_build:1.0 -f Dockerfile.build.redis .
+#1 [internal] load build definition from Dockerfile.build.redis
+#1 sha256:85e3e75e008861f330c12c8ecb8cdd291d6f60ad51d47f59b10de14e5c84fb67
+#1 transferring dockerfile:
+#1 transferring dockerfile: 290B 0.1s done
+#1 DONE 0.9s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:latest
+#2 sha256:0ea2d3a5bc7b93ef916ceeff90f587f343b4d52df26c632a199e326f7a620686
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 sha256:c3b11bb33f23c5a92b61d27ae0e8b00200fcda7253164172929b5941c95511ef
+#3 transferring context: 2B done
+#3 DONE 0.6s
+
+#8 [1/5] FROM docker.io/library/ubuntu:latest
+#8 sha256:493c534c8c7c53763e5e72fbefd3b115364c9b79ffe34b8a34192b4eacec7dfd
+#8 DONE 0.0s
+
+#7 [2/5] RUN apt update && apt install -y     build-essential tcl git
+#7 sha256:7f6707f3d8c33d1bdb23bbaf1fdca90791afe3a9cff24289923fdec34d4e64eb
+#7 CACHED
+
+#6 [3/5] RUN git clone https://github.com/redis/redis.git
+#6 sha256:a1b9ea35c9995ead68ae7b0a880116fcb81f81f8ebfd78610c1ff20220db0c4e
+#6 CACHED
+
+#5 [4/5] WORKDIR /redis
+#5 sha256:245052f39e62576eaaef28829565cd79e49ca853f0bc8819c2dd283ef8fcf6a7
+#5 CACHED
+
+#4 [5/5] RUN make
+#4 sha256:f95f42aed95ed57f314ee953136146373cf9394e6e3844e11919ab49e628ba6c
+#4 CACHED
+
+#9 exporting to image
+#9 sha256:ab838f05d91bbe597131f161138cebc498878b3b414dd70cd9cb8498c3b8d43e
+#9 exporting layers done
+#9 writing image sha256:936186acb738a2ce97ae4010d9a80ee72cc36d9ffcd494ada15727582dca6e09 0.0s done
+#9 naming to docker.io/library/redis_build:1.0 0.0s done
+#9 DONE 0.1s
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/redis-ci-cd-pipeline/INO/GCL01/MG417201/redis-ci-cd
+[Pipeline] {
+[Pipeline] sh
++ docker build -t redis_test:1.0 -f Dockerfile.test.redis .
+#1 [internal] load build definition from Dockerfile.test.redis
+#1 sha256:4ca66006e1c7ee3efee9d53217e2e698615484185cbcfc68f2374f2e2faabd17
+#1 transferring dockerfile: 317B 0.0s done
+#1 DONE 0.2s
+
+#2 [internal] load metadata for docker.io/library/redis_build:latest
+#2 sha256:435984f68ea390be79aeac3941f0fb8e3952cc2074146218a4ad8908c2b0d86d
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 sha256:da5080e959b1b07021aee07c48afb34f7602f19a2bb1bb9d60fe3d913a46665c
+#3 transferring context: 2B done
+#3 DONE 0.2s
+
+#6 [1/3] FROM docker.io/library/redis_build:latest
+#6 sha256:d4b1eb48481ab9eb8ba2bcd0827c5b2204766e422e6af260ba100c2defc995d5
+#6 DONE 0.0s
+
+#5 [2/3] WORKDIR /redis
+#5 sha256:70342f1d408e675166254280f6aa8aac3bfa6169ceed13ead52773255091d09f
+#5 CACHED
+
+#4 [3/3] RUN ./runtest --single unit/type/string --single unit/type/list   --tags "-slow -needs:save -needs:repl -external:skip -latency-monitor -needs:latency"
+#4 sha256:d0f4bd4a01ac18c296190ec89fd91012abee74d63e840f0a057267f9d8ad0b7a
+#4 CACHED
+
+#7 exporting to image
+#7 sha256:1a350935d6e7064094d6b1306b9c7efe11432dfa8fcfa9f494de03f63681e085
+#7 exporting layers done
+#7 writing image sha256:dbe15d116ca56cc8fb9619c302cdf94d54b87817f4ce28dd7c5efb6fff2b3df7 0.0s done
+#7 naming to docker.io/library/redis_test:1.0
+#7 naming to docker.io/library/redis_test:1.0 0.0s done
+#7 DONE 0.1s
+[Pipeline] sh
++ mkdir -p logs
++ docker run --rm redis_test:1.0
+[Pipeline] }
+[Pipeline] // dir
+Post stage
+[Pipeline] archiveArtifacts
+Archiving artifacts
+Recording fingerprints
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Package Runtime)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/redis-ci-cd-pipeline/INO/GCL01/MG417201/redis-ci-cd
+[Pipeline] {
+[Pipeline] sh
++ docker build -t redis_runtime1.0 -f Dockerfile.runtime .
+#1 [internal] load build definition from Dockerfile.runtime
+#1 sha256:a09b3ece680df036443bc12d5a2c1355e4c87466693e5d565576d375636570d0
+#1 DONE 0.0s
+
+#1 [internal] load build definition from Dockerfile.runtime
+#1 sha256:a09b3ece680df036443bc12d5a2c1355e4c87466693e5d565576d375636570d0
+#1 transferring dockerfile: 104B 0.1s
+#1 transferring dockerfile: 697B 0.2s done
+#1 DONE 0.9s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:latest
+#2 sha256:0ea2d3a5bc7b93ef916ceeff90f587f343b4d52df26c632a199e326f7a620686
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/redis_build:1.0
+#3 sha256:8c0534f2c38e8d3de379abc0b40b486342fac5ec55f664c15e53e8d8ee0a60c3
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 sha256:168db30137d7f61e520fe8fc65f745e3f1fb70dec7fd14637034e537305a0b61
+#4 transferring context: 2B 0.0s done
+#4 DONE 2.5s
+
+#12 [stage-1 1/7] FROM docker.io/library/ubuntu:latest
+#12 sha256:493c534c8c7c53763e5e72fbefd3b115364c9b79ffe34b8a34192b4eacec7dfd
+#12 DONE 0.0s
+
+#9 [builder 1/1] FROM docker.io/library/redis_build:1.0
+#9 sha256:d42f30b235f29f406ec32bdd260d459bbadd59fdff06f4f2a89f24b96bc60f06
+#9 DONE 0.0s
+
+#11 [stage-1 2/7] RUN apt-get update  && apt-get install -y --no-install-recommends ca-certificates  && rm -rf /var/lib/apt/lists/*
+#11 sha256:9ca25bcd7831bca76e3bfcc1277d3b8d7114afe9c2289654aa355881ef72418d
+#11 CACHED
+
+#10 [stage-1 3/7] RUN mkdir -p /data  && useradd --no-create-home --shell /usr/sbin/nologin redis
+#10 sha256:232fa47cfe5efbdffdc8173ae9c9718c643fc4525dd295c923fd84996d964e8e
+#10 CACHED
+
+#8 [stage-1 4/7] COPY --from=builder /redis/src/redis-server /usr/local/bin/redis-server
+#8 sha256:e4a8f380181203b2fdb580006e2ea01161c0240b201c31251fa25c0585f75adb
+#8 CACHED
+
+#7 [stage-1 5/7] COPY --from=builder /redis/src/redis-cli    /usr/local/bin/redis-cli
+#7 sha256:e9bd9e2134306ccec69086194cf5c62f1920f161c21ec671527e53702cc8a523
+#7 CACHED
+
+#6 [stage-1 6/7] COPY --from=builder /redis/redis.conf        /etc/redis/redis.conf
+#6 sha256:275178a5aa0c61e086b4f4035fe6768df752e0a411fbb3f2a6b27f652a57df16
+#6 CACHED
+
+#5 [stage-1 7/7] RUN chown -R redis:redis /data
+#5 sha256:c1e805f3d056ed9d3f149d0e74fd8e9a6ae319fa65df94417d19e6e003c5b4eb
+#5 CACHED
+
+#13 exporting to image
+#13 sha256:525d58c9e7265f2505cadf3c66da48c28ff410c84118aada3dce3bfa3011a217
+#13 exporting layers done
+#13 writing image sha256:e037fc619ab57183ebb7258d7626859097916d8b5423ec5c490d7d9a99398c0f
+#13 writing image sha256:e037fc619ab57183ebb7258d7626859097916d8b5423ec5c490d7d9a99398c0f 0.2s done
+#13 naming to docker.io/library/redis_runtime1.0:latest
+#13 naming to docker.io/library/redis_runtime1.0:latest 0.1s done
+#13 DONE 1.4s
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push to Docker Hub)
+[Pipeline] withCredentials
+Masking supported pattern matches of $DOCKER_PASS
+[Pipeline] {
+[Pipeline] sh
++ echo ****
++ docker login -u mihlsap --password-stdin
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
++ docker tag redis_runtime1.0 mihlsap/redis_runtime1.0
++ docker push mihlsap/redis_runtime1.0
+Using default tag: latest
+The push refers to repository [docker.io/mihlsap/redis_runtime1.0]
+902df50ea17c: Preparing
+70d28adcabaf: Preparing
+353bffc92204: Preparing
+f594e0454f15: Preparing
+636a7c8727e3: Preparing
+0481c8e37b95: Preparing
+8901a649dd5a: Preparing
+0481c8e37b95: Waiting
+8901a649dd5a: Waiting
+902df50ea17c: Layer already exists
+636a7c8727e3: Layer already exists
+70d28adcabaf: Layer already exists
+353bffc92204: Layer already exists
+f594e0454f15: Layer already exists
+0481c8e37b95: Layer already exists
+8901a649dd5a: Layer already exists
+latest: digest: sha256:58bf1f4ad6e9c9e22dd0c962974760e86573f1bc1bb0bf4af884c8537f70840b size: 1785
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy to cloud)
+[Pipeline] withCredentials
+Masking supported pattern matches of $DOCKER_PASS
+[Pipeline] {
+[Pipeline] sh
++ echo ****
++ docker login -u mihlsap --password-stdin
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
++ docker pull mihlsap/redis_runtime1.0
+Using default tag: latest
+latest: Pulling from mihlsap/redis_runtime1.0
+Digest: sha256:58bf1f4ad6e9c9e22dd0c962974760e86573f1bc1bb0bf4af884c8537f70840b
+Status: Image is up to date for mihlsap/redis_runtime1.0:latest
+docker.io/mihlsap/redis_runtime1.0:latest
++ docker rm -f redis-runtime
+redis-runtime
++ docker run -d --name redis-runtime -p 6379:6379 mihlsap/redis_runtime1.0
+b3e9d946fa2bd9476e557bc89a21be461b463850e9850eabc44dccbaa8689724
++ sleep 3
++ docker exec redis-runtime redis-cli PING
+PONG
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+Pipeline zakończony – artefakt gotowy i wdrożony.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+$ docker stop --time=1 3117bcc5201392a3f559eba985ace1c7e84a1ab7889849ce17501715ff03395e
+$ docker rm -f --volumes 3117bcc5201392a3f559eba985ace1c7e84a1ab7889849ce17501715ff03395e
+[Pipeline] // withDockerContainer
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

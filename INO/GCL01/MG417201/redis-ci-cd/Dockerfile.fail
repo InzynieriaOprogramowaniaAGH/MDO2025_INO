@@ -1,0 +1,2 @@
+FROM mihlsap/redis_runtime1.0:1.0
+CMD ["/bin/false"]

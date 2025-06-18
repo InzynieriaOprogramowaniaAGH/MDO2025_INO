@@ -1,0 +1,157 @@
+pipeline {
+  agent {
+    docker {
+      image 'mihlsap/my-ci-image:minikube'
+      args """
+        --privileged 
+        --network=host
+        --entrypoint="" 
+        --volume=/var/run/docker.sock:/var/run/docker.sock 
+        --volume=/home/mati/.kube:/root/.kube 
+        --volume=/home/mati/.minikube:/root/.minikube
+      """
+    }
+  }
+
+  environment {
+    KUBECONFIG = '/root/.kube/config'
+  }
+
+  parameters {
+    booleanParam(name: 'PUBLISH', defaultValue: true, description: 'Push artifact/image?')
+    booleanParam(name: 'DEPLOY_K8S', defaultValue: true, description: 'Deploy to Minikube?')
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Init Kubernetes CLI') {
+      steps {
+        sh '''
+          echo "Aktualizuję ścieżki w pliku kubeconfig..."
+          sed 's|/home/mati/.minikube|/root/.minikube|g' /root/.kube/config > /root/.kube/config.patched
+          mv /root/.kube/config.patched /root/.kube/config
+
+          echo "Sprawdzam status Minikube na hoście..."
+          if ! kubectl get nodes >/dev/null 2>&1; then
+            echo "Minikube nieaktywny! Zaloguj się na hosta i uruchom: minikube start"
+            exit 1
+          fi
+
+          echo "Minikube aktywny. Gotowe do działania."
+          kubectl get nodes
+        '''
+      }
+    }
+
+    stage('Build') {
+      steps {
+        dir('INO/GCL01/MG417201/redis-ci-cd') {
+          sh 'docker build -t redis_build:1.0 -f Dockerfile.build.redis .'
+        }
+      }
+    }
+
+    stage('Test') {
+      steps {
+        dir('INO/GCL01/MG417201/redis-ci-cd') {
+          sh 'docker build -t redis_test:1.0 -f Dockerfile.test.redis .'
+          sh '''
+            mkdir -p logs
+            docker run --rm redis_test:1.0 > logs/test.log 2>&1
+          '''
+        }
+      }
+      post {
+        always {
+          archiveArtifacts artifacts: 'INO/GCL01/MG417201/redis-ci-cd/logs/*.log', fingerprint: true
+        }
+      }
+    }
+
+    stage('Package Runtime') {
+      steps {
+        dir('INO/GCL01/MG417201/redis-ci-cd') {
+          sh 'docker build -t redis_runtime2.0 -f Dockerfile.runtime .'
+        }
+      }
+    }
+
+    stage('Push to Docker Hub') {
+      when {
+        expression { params.PUBLISH }
+      }
+      steps {
+        withCredentials([usernamePassword(
+          credentialsId: 'docker-hub-credentials',
+          usernameVariable: 'DOCKER_USER',
+          passwordVariable: 'DOCKER_PASS'
+        )]) {
+          sh '''
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+            docker tag redis_runtime2.0 mihlsap/redis_runtime2.0
+            docker push mihlsap/redis_runtime2.0
+          '''
+        }
+      }
+    }
+
+    stage('Deploy to local Docker runtime (test)') {
+      when {
+        expression { params.PUBLISH }
+      }
+      steps {
+        withCredentials([usernamePassword(
+          credentialsId: 'docker-hub-credentials',
+          usernameVariable: 'DOCKER_USER',
+          passwordVariable: 'DOCKER_PASS'
+        )]) {
+          sh '''
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin              
+            docker pull mihlsap/redis_runtime2.0
+            docker rm -f redis-runtime || true
+            docker run -d --name redis-runtime -p 6379:6379 mihlsap/redis_runtime2.0
+            sleep 3
+            docker exec redis-runtime redis-cli PING
+          '''
+        }
+      }
+    }
+
+    stage('Deploy to Kubernetes') {
+      when {
+        expression { params.DEPLOY_K8S }
+      }
+      steps {
+        sh 'kubectl apply -f INO/GCL01/MG417201/redis-ci-cd/redis-deploy.yaml'
+        sh 'kubectl rollout status deployment/redis-deploy'
+        sh 'kubectl get pods'
+      }
+    }
+
+    stage('Verify K8s Rollout') {
+      when {
+        expression { params.DEPLOY_K8S }
+      }
+      steps {
+        dir('INO/GCL01/MG417201/redis-ci-cd') {
+          sh 'chmod +x check-rollout.sh'
+          sh './check-rollout.sh redis-deploy 60'
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo 'Pipeline zakończony – artefakt gotowy i wdrożony.'
+    }
+    failure {
+      echo 'Coś poszło nie tak w pipeline.'
+    }
+  }
+}
