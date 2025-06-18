@@ -6,6 +6,8 @@
 
 ### Konfiguracja jenkins
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ekran_logowania_jenkinsa.png?raw=true)
+
 Ekran startowy jenkins:
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ekran%20startowy%20jenkins.png?raw=true)
