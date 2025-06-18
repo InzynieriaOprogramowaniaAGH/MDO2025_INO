@@ -1,0 +1,33 @@
+name: CI Pipeline for ino_dev
+
+on:
+  push:
+    branches:
+      - ino_dev
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '10' 
+
+      - name: Install dependencies
+        run: npm install
+
+
+      - name: Run tests and generate coverage
+        run: npm run test 
+
+      - name: Archive test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports 
+          path: reports/ 
