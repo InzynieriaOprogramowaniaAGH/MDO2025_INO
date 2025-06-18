@@ -1,6 +1,13 @@
 ---
 # Pipeline, Jenkins, izolacja etapów - laboratorium 5
 
+## Przygotowanie
+---
+
+### Konfiguracja jenkins
+
+
+
 ## Zadanie wstępne: uruchomienie
 ---
 
