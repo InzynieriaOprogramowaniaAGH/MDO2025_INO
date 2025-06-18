@@ -1,0 +1,5 @@
+FROM nginx:latest
+RUN echo "<h1>Wersja 2 działa!</h1>" > /usr/share/nginx/html/index.html
+
+# Aby kontener nie chodził w tle - nie wylaczyc sie odrazu
+CMD ["nginx", "-g", "daemon off;"]

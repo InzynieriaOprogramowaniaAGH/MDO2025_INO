@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-demo
+  labels:
+    app: nginx-demo
+spec:
+  replicas: 4   # Replic nr chnage 8 -> 1 -> 0 -> 4
+  selector:
+    matchLabels:
+      app: nginx-demo
+  template:
+    metadata:
+      labels:
+        app: nginx-demo 
+    spec:
+      containers:
+      - name: nginx-demo
+        image: nginx-demo:bad  # version change 1 -> 2 -> bad
+        ports:
+        - containerPort: 80
