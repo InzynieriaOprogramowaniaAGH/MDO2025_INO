@@ -1,27 +1,13 @@
-FROM jenkins/jenkins:lts
-
+FROM jenkins/jenkins:2.504.2-jdk21
 USER root
-
-# Workaround APT
-RUN echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/10no-check-valid-until && \
-    echo "Acquire::Check-Date \"false\";" >> /etc/apt/apt.conf.d/10no-check-valid-until
-
-# Instalacja Docker CLI i coreutils (w tym date)
-RUN apt-get update -o Acquire::Check-Valid-Until=false && \
-    apt-get install -y docker.io coreutils && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-# Zainstaluj bash, coreutils itp.
-RUN apt-get update && apt-get install -y bash coreutils curl sudo
-
-# Ustaw symbolic link sh -> bash
-RUN ln -sf /bin/bash /bin/sh
-# Zmiana GID grupy docker
-ARG DOCKER_GID=992
-RUN groupmod -g ${DOCKER_GID} docker && \
-    usermod -aG docker jenkins
-
-# UWAGA: newgrp docker tutaj nic nie da w Dockerfile, możesz usunąć
-# RUN newgrp docker 
-
+RUN apt-get update && apt-get install -y lsb-release ca-certificates curl && \
+    install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
+    chmod a+r /etc/apt/keyrings/docker.asc && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
+    https://download.docker.com/linux/debian $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" \
+    | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && apt-get install -y docker-ce-cli && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 USER jenkins
+RUN jenkins-plugin-cli --plugins "blueocean docker-workflow json-path-api"
