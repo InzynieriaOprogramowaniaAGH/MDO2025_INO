@@ -8,6 +8,10 @@
 
 Utworzono sieć mostkową:
 
+```
+docker create network jenkins
+```
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20network.png?raw=true)
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20dind%20jenkins.png?raw=true)
