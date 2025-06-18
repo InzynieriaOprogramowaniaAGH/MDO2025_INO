@@ -68,30 +68,31 @@ Zajęcia: Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
     - Restart usług sshd i rngd.
 
     Zawartość pliku playbook.yml:
-    - hosts: all
-  become: yes
-  tasks:
-    - name: Ping machines
-      ansible.builtin.ping:
+        ---
+        - hosts: all
+      become: yes
+      tasks:
+        - name: Ping machines
+          ansible.builtin.ping:
 
-    - name: Copy inventory file
-      ansible.builtin.copy:
-        src: ./inventory.ini
-        dest: /tmp/inventory.ini
+        - name: Copy inventory file
+          ansible.builtin.copy:
+            src: ./inventory.ini
+            dest: /tmp/inventory.ini
 
-    - name: Update all packages
-      ansible.builtin.dnf:
-        name: '*'
-        state: latest
-        update_cache: yes
+        - name: Update all packages
+          ansible.builtin.dnf:
+            name: '*'
+            state: latest
+            update_cache: yes
 
-    - name: Restart sshd and rngd
-      ansible.builtin.systemd:
-        name: "{{ item }}"
-        state: restarted
-      loop:
-        - sshd
-        - rngd
+        - name: Restart sshd and rngd
+          ansible.builtin.systemd:
+            name: "{{ item }}"
+            state: restarted
+          loop:
+            - sshd
+            - rngd
 
     Playbook został uruchomiony z poziomu maszyny sterującej.
 
@@ -120,85 +121,85 @@ Zajęcia: Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
     - Zatrzymano i usunięto kontener.
 
     Zawartość playbooka:
-    ---
-- hosts: Endpoints
-  become: yes
-  tasks:
-    - name: Install required system packages
-      ansible.builtin.dnf:
-        name:
-          - python3-packaging
-          - python3-pip
-          - docker
-        state: present
-        update_cache: yes
+        ---
+        - hosts: Endpoints
+      become: yes
+      tasks:
+        - name: Install required system packages
+          ansible.builtin.dnf:
+            name:
+              - python3-packaging
+              - python3-pip
+              - docker
+            state: present
+            update_cache: yes
 
-    - name: Install Python 'requests'
+        - name: Install Python 'requests'
       ansible.builtin.pip:
         name: requests
         executable: pip3
 
-    - name: Start and enable Docker service
-      ansible.builtin.service:
-        name: docker
-        state: started
-        enabled: yes
+        - name: Start and enable Docker service
+          ansible.builtin.service:
+            name: docker
+            state: started
+            enabled: yes
 
-    - name: Create Docker network CI (if not exists)
-      shell: docker network create CI || true
-      ignore_errors: true
+        - name: Create Docker network CI (if not exists)
+          shell: docker network create CI || true
+          ignore_errors: true
 
-    - name: Pull Docker image
-      community.docker.docker_image:
-        name: nacymon/node-red-ci:latest
-        source: pull
+        - name: Pull Docker image
+          community.docker.docker_image:
+            name: nacymon/node-red-ci:latest
+            source: pull
 
-    - name: Stop and remove existing container (if exists)
-      community.docker.docker_container:
-        name: RED
-        state: absent
-        force_kill: true
+        - name: Stop and remove existing container (if exists)
+          community.docker.docker_container:
+            name: RED
+            state: absent
+            force_kill: true
 
-    - name: Remove any container using port 3000
-      shell: |
-        for id in $(docker ps -q --filter "publish=3000"); do docker rm -f $id; done
-      ignore_errors: true
+        - name: Remove any container using port 3000
+          shell: |
+            for id in $(docker ps -q --filter "publish=3000"); do docker rm -f $id; done
+          ignore_errors: true
 
-    - name: Run Node-RED container in CI network
-      community.docker.docker_container:
-        name: RED
-        image: nacymon/node-red-ci:latest
-        state: started
-        restart_policy: unless-stopped
-        networks:
-          - name: CI
-        published_ports:
-          - "3000:3000"
+        - name: Run Node-RED container in CI network
+          community.docker.docker_container:
+            name: RED
+            image: nacymon/node-red-ci:latest
+            state: started
+            restart_policy: unless-stopped
+            networks:
+              - name: CI
+            published_ports:
+              - "3000:3000"
 
-    - name: Wait for the container to be ready
-      wait_for:
-        port: 3000
-        host: "localhost"
-        state: started
-        delay: 5
-        timeout: 60
-        msg: "Node-RED is not available on port 3000"
+        - name: Wait for the container to be ready
+          wait_for:
+            port: 3000
+            host: "localhost"
+            state: started
+            delay: 5
+            timeout: 60
+            msg: "Node-RED is not available on port 3000"
 
-    - name: Test HTTP response from container
-      uri:
-        url: http://localhost:3000
-        return_content: yes
-      register: http_response
+        - name: Test HTTP response from container
+          uri:
+            url: http://localhost:3000
+            return_content: yes
+          register: http_response
 
-    - name: Show HTTP response status
-      debug:
-        msg: "Node-RED HTTP status: {{ http_response.status }}"
+        - name: Show HTTP response status
+          debug:
+            msg: "Node-RED HTTP status: {{ http_response.status }}"
 
-    - name: Stop and remove Docker container
-      community.docker.docker_container:
-        name: RED
-        state: absent
-        force_kill: true
+        - name: Stop and remove Docker container
+          community.docker.docker_container:
+            name: RED
+            state: absent
+            force_kill: true
 
     Uruchomiony plik.
 
@@ -212,11 +213,11 @@ Zajęcia: Automatyzacja i zdalne wykonywanie poleceń za pomocą Ansible
     Utworzenie pliku playbooka w ścieżce /deploy-container/tasks/playbook.yml i skopiowanie do niego treści z playbooka2.
 
     Utworzenie kolejnego playbooka korzystającego z utworzonej roli o treści:
-            ---
-    - hosts: Endpoints
-    become: yes
-    roles:
-        - deploy_container
+                ---
+        - hosts: Endpoints
+        become: yes
+        roles:
+            - deploy_container
 
     ![Zdjecie](Obraz19.png)
 
@@ -228,8 +229,9 @@ Zajęcia: Pliki odpowiedzi dla wdrożeń nienadzorowanych
     Aby ustawić właściciela pliku należało skorzystać z polecenia sudo chown nacymon:nacymon anaconda-ks.cfg.
 
     Dodanie do pliku potrzebnych repozytoriów.
-    url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
-    repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
+        url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
+
+        repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
 
     Ustawiono nazwe hosta na inną niż domyslna : network  --hostname=nacymonhost
 
