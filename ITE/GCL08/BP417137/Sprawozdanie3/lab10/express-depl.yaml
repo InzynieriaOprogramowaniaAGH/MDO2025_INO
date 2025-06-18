@@ -96,7 +96,7 @@ metadata:
           f:updatedReplicas: {}
       subresource: status
 spec:
-  replicas: 5
+  replicas: 8
   selector:
     matchLabels:
       app: express-depl

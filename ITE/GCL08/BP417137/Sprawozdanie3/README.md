@@ -546,6 +546,7 @@ kubectl create deployment express-depl --image=docker.io/bpajda/express-deploy-i
 
 
 W panelu można zauwazyc nowy wpis o deploymencie
+
 ![alt text](lab10/wdr2.png)
 
 ### Wystawienie portu do komunikacji z wdrozeniem analogicznie jak wyzej
@@ -579,13 +580,16 @@ Wszystko co do teraz zrobilismy na deploymencie jest w nim zapisane i gdy tak ja
 ![alt text](lab10/wdr9.png)
 
 kopiujemy ten plik i wklejamy do pliku yaml stworzonego w repozytorium
+
 ![alt text](lab10/wdr10.png)
 
 
 Z pliku trzeba usuną sekcje: status
+
 ![alt text](lab10/wdr11.png)
 
 Dla pokazania różnicy zmienimy liczbe podow na 5
+
 ![alt text](lab10/wdr12.png)
 
 ### dodajemy konfiguracje w oparciu o plik yaml
@@ -600,10 +604,364 @@ ilosc podow wzrosla
 
 ![alt text](lab10/wdr14.png)
 
-# mozna sprawdzic status wdrozenia rolloutem
+### mozna sprawdzic status wdrozenia rolloutem
 
 ```sh
 kubectl rollout status deployment/express-depl
 ```
 
 ![alt text](lab10/wdr15.png)
+
+# Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+## Przygotowanie nowego obrazu
+
+Przez wzglad na dzialanie naszej aplikacji dodamy dodatkowy mozliwy plik do files oraz zmienimy plik index.js by wyswietlal tez i nasz plik
+
+### edycja index.js oraz utworzenie bpajda.txt
+
+```js
+'use strict'
+
+/**
+ * Module dependencies.
+ */
+
+var express = require('../../');
+var path = require('node:path');
+
+var app = module.exports = express();
+
+// path to where the files are stored on disk
+var FILES_DIR = path.join(__dirname, 'files')
+
+app.get('/', function(req, res){
+  res.send('<ul>' +
+    '<li>Download <a href="/files/notes/groceries.txt">notes/groceries.txt</a>.</li>' +
+    '<li>Download <a href="/files/amazing.txt">amazing.txt</a>.</li>' +
+    '<li>Download <a href="/files/missing.txt">missing.txt</a>.</li>' +
+    '<li>Download <a href="/files/CCTV大赛上海分赛区.txt">CCTV大赛上海分赛区.txt</a>.</li>' +
+    '<li>Download <a href="/files/bpajda.txt">bpajda.txt</a>.</li>' +
+    '</ul>')
+});
+
+// /files/* is accessed via req.params[0]
+// but here we name it :file
+app.get('/files/*file', function (req, res, next) {
+  res.download(req.params.file.join('/'), { root: FILES_DIR }, function (err) {
+    if (!err) return; // file sent
+    if (err.status !== 404) return next(err); // non-404 error
+    // file for download not found
+    res.statusCode = 404;
+    res.send('Cant find that file, sorry!');
+  });
+});
+
+/* istanbul ignore next */
+if (!module.parent) {
+  app.listen(3000);
+  console.log('Express started on port 3000');
+}
+```
+
+### tworzymy nowego dockerfila na bazie wczesniejszego i dodajemy pliki
+
+```Dockerfile
+FROM node:20
+WORKDIR /app
+RUN git clone https://github.com/expressjs/express.git
+WORKDIR /app/express/examples/downloads
+COPY bpajda.txt ./files/bpajda.txt
+COPY index.js .
+RUN npm install
+```
+
+### Zbudowanie nowego obrazu builda
+
+```sh
+docker build -f Dockerfile.build -t express-app-new .
+```
+
+![alt text](lab11/image.png)
+
+### Stworzenie dockerfila na deploy (analogicznie jak ostatnio)
+
+```Dockerfile
+FROM node:20-slim
+COPY --from=express-app-new /app/express /app
+WORKDIR /app
+CMD ["node", "examples/downloads"]
+```
+
+### Zbudowanie obrazu deploy
+
+```sh
+docker build -f Dockerfile.deploy -t bpajda/express-deploy-img-1 .
+```
+
+![alt text](lab11/image-1.png)
+
+### Uruchomienie i przetestowanie kontenera
+
+```sh
+docker run -dit --name test -p 3000:3000 bpajda/express-deploy-img-1 
+docker logs test
+```
+![alt text](lab11/image-2.png)
+![alt text](lab11/image-3.png)
+
+### Przeslanie obrazu na docker huba
+
+```sh
+docker push bpajda/express-deploy-img-1
+```
+![alt text](lab11/image-4.png)
+
+## Tworzenie obrazu zwracajacego błąd
+
+### Zbudowanie obrazu deploya zwracajacego false
+
+```Dockerfile
+FROM node:20-slim
+
+COPY --from=express-app-new /app/express /app
+
+WORKDIR /app
+
+CMD ["false"]
+```
+
+```sh
+docker build -f Dockerfile.deployErr -t bpajda/express-deploy-img-2 .
+```
+
+![alt text](lab11/image-5.png)
+
+### Uruchomienie i przetestowanie kontenera
+
+```sh
+docker run -dit --name test2 bpajda/express-deploy-img-2 
+```
+
+![alt text](lab11/image-6.png)
+
+Jak widac zakonczyl prace z błedem
+
+![alt text](lab11/image-7.png)
+
+### Przeslanie obrazu na docker huba
+
+```sh
+docker push bpajda/express-deploy-img-2
+```
+
+![alt text](lab11/image-8.png)
+
+## Zmiany w deploymencie
+### zwiększenie replik np. do 8
+
+Analogicznie jak ostatnio kopiujemy yamla z dashboarda, usuwamy ststus i zmieniamy ilosc replik
+
+```sh
+kubectl apply -f express-depl.yaml
+```
+
+![alt text](lab11/image-9.png)
+
+![alt text](lab11/image-10.png)
+
+### zmniejszenie liczby replik do 1
+
+![alt text](lab11/image-11.png)
+
+![alt text](lab11/image-12.png)
+
+![alt text](lab11/image-13.png)
+
+### zmniejszenie liczby replik do 0
+
+![alt text](lab11/image-14.png)
+
+![alt text](lab11/image-15.png)
+
+![alt text](lab11/image-16.png)
+
+### Zmiana podow na 4 oraz nowa wersja obrazu
+
+![alt text](lab11/image-17.png)
+
+![alt text](lab11/image-18.png)
+
+Nowe pody sie powoli aktualizuja wypierajac stare pody
+
+### Zastosowanie "wadliwego" obrazu
+
+![alt text](lab11/image-19.png)
+
+![alt text](lab11/image-20.png)
+
+### Przywrócenie poprzednej wersji wdrożeń
+
+```sh
+kubectl rollout history deployment/express-depl
+-||-  --revision=3 (ostatni dostepny revision)
+```
+
+![alt text](lab11/image-21.png)
+
+```sh
+kubectl rollout undo deployment/express-depl 
+```
+
+![alt text](lab11/image-22.png)
+
+![alt text](lab11/image-23.png)
+
+## Skrypt kontroli wdrożeń
+
+Stworzone korzystajac z google ai studio, skrypt sprawdza czy dane sa wdrozone w 60 sec
+
+```sh
+#!/bin/bash
+
+DEPLOYMENT_NAME="express-depl"
+NAMESPACE="default"
+TIMEOUT_SECONDS=60
+
+echo "🔎 Rozpoczynam weryfikację wdrożenia '$DEPLOYMENT_NAME'. Czas na zakończenie: $TIMEOUT_SECONDS sekund."
+
+START_TIME=$(date +%s)
+
+
+while true; do
+  if minikube kubectl -- rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE &> /dev/null; then
+    echo "✅ Wdrożenie '$DEPLOYMENT_NAME' zakończone sukcesem!"
+    exit 0
+  fi
+
+  CURRENT_TIME=$(date +%s)
+  ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
+
+  if [ "$ELAPSED_TIME" -ge "$TIMEOUT_SECONDS" ]; then
+    echo "❌ Timeout! Wdrożenie nie zakończyło się w ciągu $TIMEOUT_SECONDS sekund."
+    echo "Ostatnie zdarzenia dla wdrożenia:"
+    minikube kubectl -- describe deployment $DEPLOYMENT_NAME -n $NAMESPACE
+    exit 1
+  fi
+
+  echo "⏳ Oczekuję na zakończenie wdrożenia... (upłynęło $ELAPSED_TIME s)"
+  sleep 5
+done
+```
+
+![alt text](lab11/image-24.png)
+
+## Strategie wdrozeniowe
+stworzone zgodnie z https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+
+### Canary
+
+```sh
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-canary
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: express-canary
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: express-canary
+        version: v1
+    spec:
+      containers:
+      - name: express-deploy-img
+        image: docker.io/bpajda/express-deploy-img:latest
+        imagePullPolicy: Always
+```
+
+### Recreate
+
+```sh
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-recreate
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: express-recreate
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: express-recreate
+        version: v1
+    spec:
+      containers:
+      - name: express-deploy-img
+        image: docker.io/bpajda/express-deploy-img:latest
+        imagePullPolicy: Always
+```
+
+### Rolling
+
+```sh
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: express-rolling
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 30%
+  selector:
+    matchLabels:
+      app: express-rolling
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: express-rolling
+        version: v1
+    spec:
+      containers:
+      - name: express-deploy-img
+        image: docker.io/bpajda/express-deploy-img:latest
+        imagePullPolicy: Always
+```
+
+### zaladowanie nowych wdrozen
+
+```sh
+kubectl apply -f depl-canary.yaml 
+```
+
+![alt text](lab11/image-25.png)
+
+Sprawdzenie rollout statusem
+
+```sh
+kubectl rollout status deployment/express-canary
+```
+
+![alt text](lab11/image-26.png)
+
+![alt text](lab11/image-27.png)
+
+### Opis działań każdej ze strategi:
+
+ - Canary (Wdrożenie Kanarkowe): Polega na udostępnieniu nowej wersji aplikacji tylko dla niewielkiej grupy użytkowników. Pozwala to na testowanie jej w rzeczywistym środowisku i ocenę wyników przed podjęciem decyzji o pełnym wdrożeniu lub wycofaniu zmian.
+
+ - Recreate (Odtworzenie): Strategia, w której wszystkie pody starej wersji są najpierw usuwane, a dopiero po tym tworzone są pody z nową wersją. Jej główną wadą jest krótka przerwa w działaniu aplikacji (downtime).
+
+ - Rolling Update (Wdrożenie Kroczące): Domyślna strategia w Kubernetes. Polega na stopniowej wymianie starych podów na nowe. Kubernetes tworzy nowe pody i czeka, aż będą gotowe, zanim usunie stare, co zapewnia ciągłość działania aplikacji. Proces ten można konfigurować, np. określając maksymalną liczbę dodatkowych podów.
