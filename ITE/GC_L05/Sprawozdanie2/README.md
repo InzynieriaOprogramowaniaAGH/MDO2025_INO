@@ -6,7 +6,13 @@
 
 ### Konfiguracja jenkins
 
-Kolejnym krokiem była prośba o podanie hasła administratora w celu odblokowania Jenkinsa. W terminalu wykonano polecenie `cat /var/jenkins_home/secrets/initialAdminPassword`, a następnie skopiowano wyświetlone hasło i wklejono je do formularza w celu kontynuacji konfiguracji.
+Kolejnym krokiem była prośba o podanie hasła administratora w celu odblokowania Jenkinsa. W terminalu wykonano polecenie:
+
+```
+cat /var/jenkins_home/secrets/initialAdminPassword
+
+```
+a następnie skopiowano wyświetlone hasło i wklejono je do formularza w celu kontynuacji konfiguracji.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/ekran_logowania_jenkinsa.png?raw=true)
 
