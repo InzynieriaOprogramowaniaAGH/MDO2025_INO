@@ -1,129 +1,104 @@
+// Jenkinsfile - Pełny pipeline CI/CD z Builderem, Testerem, Runtime oraz archiwizacją artefaktów
+
 pipeline {
-    agent {
-        docker {
-            image 'debian:bookworm'
-            args  '-u root'
-        }
-    }
+    agent any
 
     environment {
         INSTALL_DIR = '/tmp/irssi-install'
+        IMAGE_BUILDER = 'irssi-builder'
+        IMAGE_RUNTIME = 'irssi-runtime'
+        BUILD_CONTEXT = 'ITE/GCL06/BM417353/Sprawozdanie 2'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/master']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/irssi/irssi.git'
-                    ]],
-                    extensions: [
-                        [$class: 'SubmoduleOption', recursiveSubmodules: true]
-                    ]
-                ])
+                dir(env.BUILD_CONTEXT) {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: '*/main']],
+                        userRemoteConfigs: [[
+                            url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                        ]]
+                    ])
+                }
             }
         }
 
-    stage('Install Dependencies') {
-    steps {
-        sh '''
-            apt-get update --allow-releaseinfo-change || true
-            DEBIAN_FRONTEND=noninteractive apt-get install -y \
-                build-essential autoconf automake libtool \
-                pkg-config libglib2.0-dev libncurses5-dev \
-                meson ninja-build libssl-dev \
-                ruby ruby-dev rubygems rpm
-
-            gem install --no-document fpm
-        '''
-    }
-}
-
-
-
-
-
-
-        stage('Configure & Build') {
+        stage('Build & Test in Builder') {
+            agent {
+                dockerfile {
+                    filename 'Dockerfile.build'
+                    dir "${env.BUILD_CONTEXT}"
+                    additionalBuildArgs '--pull'
+                }
+            }
             steps {
-                sh '''
-                    meson setup builddir --wrap-mode=nodownload || true
-                    meson compile -C builddir
-                '''
+                dir(env.BUILD_CONTEXT) {
+                    sh '''
+                        meson setup builddir --wrap-mode=nodownload || true
+                        meson compile -C builddir
+                        meson test -C builddir || true
+                        builddir/src/fe-text/irssi --version || true
+                    '''
+                }
             }
         }
 
-        stage('Test Version') {
+        stage('Install & Package') {
             steps {
-                sh 'builddir/src/fe-text/irssi --version || true'
-            }
-        }
-
-       stage('Test Run') {
-    steps {
-        sh '''
-            if [ -x builddir/src/fe-text/irssi ]; then
-                echo "Irssi binary exists and is executable"
-            else
-                echo "Irssi binary not found!" >&2
-                exit 1
-            fi
-        '''
-    }
-}
-
-
-        stage('Install to Temp') {
-            steps {
-                sh '''
-                    mkdir -p ${INSTALL_DIR}
-                    meson install -C builddir --destdir=${INSTALL_DIR}
-                '''
-            }
-        }
-
-        stage('Package') {
-            steps {
-                sh '''
-                    tar czf irssi.tar.gz -C /tmp irssi-install
-                '''
+                dir(env.BUILD_CONTEXT) {
+                    sh '''
+                        mkdir -p ${INSTALL_DIR}
+                        meson install -C builddir --destdir=${INSTALL_DIR}
+                        tar czf irssi.tar.gz -C /tmp irssi-install
+                    '''
+                }
             }
         }
 
         stage('Build RPM') {
-    steps {
-        sh '''
-            rm -f irssi-1.0-1.x86_64.rpm
-            fpm -s dir -t rpm \
-                -n irssi \
-                -v 1.0 \
-                -C ${INSTALL_DIR} \
-                --prefix=/ \
-                .
-        '''
-    }
-}
-
-
-        stage('Archive') {
             steps {
-                archiveArtifacts artifacts: '*.tar.gz,*.rpm', fingerprint: true
-            }
-        }
-
-        stage('Deploy') {
-            when {
-                expression { return false }  // na razie wyłączone
-            }
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'ssh-prod', keyFileVariable: 'KEY')]) {
+                dir(env.BUILD_CONTEXT) {
                     sh '''
-                        scp -i $KEY -o StrictHostKeyChecking=no irssi.tar.gz jenkins@192.168.0.123:/srv/releases/
+                        rm -f irssi-1.0-1.x86_64.rpm
+                        fpm -s dir -t rpm \
+                            -n irssi \
+                            -v 1.0 \
+                            -C ${INSTALL_DIR} \
+                            --prefix=/ \
+                            .
                     '''
                 }
             }
+        }
+
+        stage('Build Runtime Image') {
+            steps {
+                dir(env.BUILD_CONTEXT) {
+                    sh 'docker build -t ${IMAGE_RUNTIME} -f Dockerfile.runtime .'
+                }
+            }
+        }
+
+        stage('Run Runtime Image') {
+            steps {
+                sh 'docker run --rm ${IMAGE_RUNTIME} irssi --version || true'
+            }
+        }
+
+        stage('Archive & Publish') {
+            steps {
+                dir(env.BUILD_CONTEXT) {
+                    archiveArtifacts artifacts: '*.tar.gz,*.rpm', fingerprint: true
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed.'
         }
     }
 }
