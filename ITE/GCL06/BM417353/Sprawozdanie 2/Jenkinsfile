@@ -93,17 +93,19 @@ pipeline {
         }
 
         stage('Build RPM') {
-            steps {
-                sh '''
-                    fpm -s dir -t rpm \
-                        -n irssi \
-                        -v 1.0 \
-                        -C ${INSTALL_DIR} \
-                        --prefix=/ \
-                        .
-                '''
-            }
-        }
+    steps {
+        sh '''
+            rm -f irssi-1.0-1.x86_64.rpm
+            fpm -s dir -t rpm \
+                -n irssi \
+                -v 1.0 \
+                -C ${INSTALL_DIR} \
+                --prefix=/ \
+                .
+        '''
+    }
+}
+
 
         stage('Archive') {
             steps {
@@ -125,4 +127,3 @@ pipeline {
         }
     }
 }
-
