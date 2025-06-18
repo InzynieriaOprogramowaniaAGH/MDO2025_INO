@@ -50,7 +50,7 @@ sudo su - ansible
 ssh-keygen -t ed25519
 ```
 
-![keygen](screen\keygen.png)
+![keygen](screen/keygen.png)
 
 Klucz publiczny przesłano na maszynę `ansible-target` (nazwa maszyny do jej adresu jest przypisana w korku poniżej):
 
@@ -64,7 +64,7 @@ Test połączenia:
 ```bash
 ssh ansible@ansible-target 
 ```
-![ssh-id copy](screen\ssh-idcopy.png)
+![ssh-id copy](screen/ssh-idcopy.png)
 ---
 
 ##  Konfiguracja pliku inwentarza
@@ -73,7 +73,7 @@ ssh ansible@ansible-target
 
 Upewniono się, że maszyny rozpoznają się po nazwach poprzez odpowiednie wpisy w pliku `/etc/hosts` na obu systemach, co umożliwia komunikację pomędzy nimi z wykorzystaniem nazw, a nie adresu.
 
-![ip-name](screen\ip-name.png)
+![ip-name](screen/ip-name.png)
 
 
 ###  Plik inwentarza `inventory.ini`
@@ -83,18 +83,18 @@ Utworzony prosty plik inwentarza pozwala na porawną konfigurację Ansible,defin
 
 Zawartość pliku `inventory.ini`:
 
-![inv.ini](screen\inv.png)
+![inv.ini](screen/inv.png)
 
 Weryfikacja:
 
 ```bash
 ansible -i inventory.ini all -m ping
 ```
-### *[Inventory file](src\ansible_quickstart\inventory.ini)*
+### *[Inventory file](src/ansible_quickstart/inventory.ini)*
 
 Wynik:
 
-![ini result](screen\ini_result.png)
+![ini result](screen/ini_result.png)
 
 ---
 
@@ -143,7 +143,7 @@ Za pomocą playbooków Ansible można tworzyć rozbudowane ciągi zadań przezna
 
 
 ```
-### [Playbook file](src\ansible_quickstart\playbook.yaml)
+### [Playbook file](src/ansible_quickstart/playbook.yaml)
 
 Struktura playbooka została podzielona na trzy oddzielne sekcje, aby logicznie rozdzielić poszczególne etapy operacji:
 
@@ -162,11 +162,11 @@ ansible-playbook -i inventory.ini playbook.yaml
 
 Wynik:
 
-![Wynik ansible playbook1](screen\ansible1.png)
+![Wynik ansible playbook1](screen/ansible1.png)
 
 Po ponownym wykonaniu playbooka `changed=0`, co pokazuje, że wcześniejscze czyności przeszły poprawnie i tym razem wykoanie zadania nie wprowadza żadnych zmian z poprzednim.
 
-![Wynik ansible playbook2](screen\ansible2.png)
+![Wynik ansible playbook2](screen/ansible2.png)
 
 ---
 
@@ -192,7 +192,7 @@ fatal: [target]: UNREACHABLE! => {
 }
 ```
 
-![Fake](screen\fakeresult.png)
+![Fake](screen/fakeresult.png)
 
 Ansible poprawnie zidentyfikował problem i oznaczył host jako `UNREACHABLE`, nie przerywając całkowicie działania (jeśli byłoby więcej hostów w grupie).
 
@@ -251,7 +251,7 @@ Umożliwia to modularne podejście oraz łatwe utrzymanie i rozwój w przyszło�
 # defaults file for deploy_whl_container
 wheel_filename: pytest_examples-0.0.18-py3-none-any.whl
 ```
-####  [Plik](src\ansible-delpoy\deploy_whl_container\defaults\main.yml)
+####  [Plik](src/ansible-delpoy/deploy_whl_container/defaults/main.yml)
 
 ###  `tasks/main.yml` (skrócony opis kluczowych kroków)
 
@@ -264,7 +264,7 @@ wheel_filename: pytest_examples-0.0.18-py3-none-any.whl
 - Zgłoszenie błędu w razie niepowodzenia testu
 - Wyświetlenie wyniku w konsoli
 ```
-####  [Plik](src\ansible-delpoy\deploy_whl_container\tasks\main.yml)
+####  [Plik](src/ansible-delpoy/deploy_whl_container/tasks/main.yml)
 
 
 ###  Szablon `Dockerfile.j2` (przykład)
@@ -275,7 +275,7 @@ COPY {{ wheel_filename }} /packages/
 RUN pip install /packages/{{ wheel_filename }}
 CMD ["python3"]
 ```
-#### [Plik](src\ansible-delpoy\deploy_whl_container\templates\Dockerfile.j2)
+#### [Plik](src/ansible-delpoy/deploy_whl_container/templates/Dockerfile.j2)
 
 
 ### Wykonanie
@@ -288,19 +288,19 @@ ansible-playbook -i inventory.ini deploy.yml
 
 Wynik: 
 
-![galaxy](screen\ansible-galaxy.png)
+![galaxy](screen/ansible-galaxy.png)
 
 W celu sprawdzenia czy faktycznie zadanie zostało wykonane, na masyznie docelowej `ansilbe-target` zostało sprawdzone istnienie obrazu oraz działanie kontenera.
 
 ```bash
  docker images
 ```
-![images](screen\imageisreal.png)
+![images](screen/imageisreal.png)
 
 ```bash
  docker run --rm -it artifact_image bash
 ```
-![galxy](screen\containerisreal.png)
+![galxy](screen/containerisreal.png)
 
 Na hoście znajduje się obraz jak i kontener, który wykonuje podane zadanie, co śwadczy o poprawności przeprowadzenia zadania.
 
@@ -431,7 +431,7 @@ Kolejnym krokiem było rozszerzenie pliku kickstart o instrukcje, dzięki który
   * Utworzyć usługę systemd (`artifact.service`), która wykonuje ten skrypt po starcie systemu,
   * Włączyć tę usługę na stałe (`systemctl enable artifact.service`).
 
-### [Plik Kickstart](src\anacodna-ks.cfg)
+### [Plik Kickstart](src/anacodna-ks.cfg)
 
 ### Uzasadnienie podejścia:
 
@@ -501,7 +501,7 @@ sudo dnf install -y kubectl
 alias minikubectl="minikube kubectl --"
 ```
 
-![minikube install](screen\minikube.png)
+![minikube install](screen/minikube.png)
 
 Sprawdzono wersje komponentów:
 
@@ -534,11 +534,11 @@ kubectl get nodes
 ```bash
 minikube dashboard
 ```
-![Dashboard](screen\dashboard.png)
+![Dashboard](screen/dashboard.png)
 
 Dashboard został otwarty w domyślnej przeglądarce. Zweryfikowano jego działanie i dostępność pod lokalnym adresem.
 
-![browser](screen\dashbrowser.png)
+![browser](screen/dashbrowser.png)
 
 ---
 
@@ -556,13 +556,13 @@ minikube kubectl -- run my-nginx --image=nginx --port=80 --labels app=my-nginx
 
 Wykoanie komendy utworzyło Pod o nazwie my-nginx na bazie obrazu nginx:latest, eksponujący wewnętrznie port 80 i oznaczony etykietą app=my-nginx.
 
-![nginx-1stpod](screen\dash_nginx1.png)
+![nginx-1stpod](screen/dash_nginx1.png)
 
 Następnie sprawdzono działanie poda:
 ```bash
 kubectl get pods -l app=my-manual-nginx
 ```
-![1stpod_running](screen\pod_running.png)
+![1stpod_running](screen/pod_running.png)
 
 
 Pod uzyskał stan `Running`, co pokazuje pomyślne uruchomienie kontenera.
@@ -624,7 +624,7 @@ spec:
         - containerPort: 80
 ```
 
-[Plik deployment](src\nginx-deployment.yaml)
+[Plik deployment](src/nginx-deployment.yaml)
 
 Wdrożono Deployment przy użyciu komend:
 
@@ -900,7 +900,7 @@ KUBECTL_COMMAND="/usr/local/bin/minikube kubectl --"
 DEPLOYMENT_NAME="nginx-demo"
 TIMEOUT=60
 
-echo "Czekam aż deployment \"$DEPLOYMENT_NAME\" się wdroży (timeout: $TIMEOUT sek)..."
+echo "Czekam aż deployment /"$DEPLOYMENT_NAME/" się wdroży (timeout: $TIMEOUT sek)..."
 
 $KUBECTL_COMMAND rollout status deployment/$DEPLOYMENT_NAME --timeout=${TIMEOUT}s
 
