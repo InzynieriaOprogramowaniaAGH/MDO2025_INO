@@ -18,6 +18,8 @@ docker create network jenkins
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20build%20-t.png?raw=true)
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/jenkins%20blueocean%20docker%20run.png?raw=true)
+
 Kolejnym krokiem była prośba o podanie hasła administratora w celu odblokowania Jenkinsa. W terminalu wykonano polecenie:
 
 ```
