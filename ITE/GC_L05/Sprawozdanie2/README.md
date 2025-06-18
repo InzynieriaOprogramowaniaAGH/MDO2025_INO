@@ -6,6 +6,8 @@
 
 ### Konfiguracja jenkins
 
+Utworzono sieć mostkową:
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20network.png?raw=true)
 
 Kolejnym krokiem była prośba o podanie hasła administratora w celu odblokowania Jenkinsa. W terminalu wykonano polecenie:
