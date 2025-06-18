@@ -229,6 +229,7 @@ Zajęcia: Pliki odpowiedzi dla wdrożeń nienadzorowanych
     Aby ustawić właściciela pliku należało skorzystać z polecenia sudo chown nacymon:nacymon anaconda-ks.cfg.
 
     Dodanie do pliku potrzebnych repozytoriów.
+
         url --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=fedora-41&arch=x86_64
 
         repo --name=update --mirrorlist=http://mirrors.fedoraproject.org/mirrorlist?repo=updates-released-f41&arch=x86_64
@@ -535,47 +536,50 @@ Zajęcia: Wdrażanie na zarządzalne kontenery: Kubernetes
         W tej strategii wdrożenia najpierw zatrzymywane są wszystkie stare pody, a dopiero potem uruchamiane nowe. Może to powodować chwilową niedostępność aplikacji.
 
         Aby zastosować tę strategię, w pliku wdrożenia należy ustawić:
-        strategy:
-            type: Recreate
+
+            strategy:
+                type: Recreate
 
     - Rolling update:
         Domyślna strategia wdrożenia, w której nowe pody uruchamiane są stopniowo, zastępując stare — zapewnia ciągłą dostępność aplikacji.
 
         Aby dostosować parametry wdrożenia, w pliku należy dodać:
-        strategy:
-          type: RollingUpdate
-          rollingUpdate:
-            maxUnavailable: 2
-            maxSurge: 30%
+
+            strategy:
+              type: RollingUpdate
+              rollingUpdate:
+                maxUnavailable: 2
+                maxSurge: 30%
 
     - Canary Deployment workload:
         Aby zastosować strategię canary, należy utworzyć nowy deployment z nowszą wersją obrazu oraz mniejszą liczbą replik niż w wersji stabilnej. Nowa wersja jest udostępniana ograniczonej grupie użytkowników, co umożliwia wczesne wykrycie błędów przed pełnym wdrożeniem.
 
         Stworzenie pliku wdrożenia o treści:
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: node-red-workload
-        spec:
-          replicas: 2
-          strategy:
-            type: RollingUpdate
-            rollingUpdate:
-              maxUnavailable: 2
-              maxSurge: 40%
-          selector:
-            matchLabels:
-              app: node-red-cl
-          template:
+
+            apiVersion: apps/v1
+            kind: Deployment
             metadata:
-              labels:
-                app: node-red-cl
+              name: node-red-workload
             spec:
-              containers:
-                - name: node-red-container
-                  image: nacymon/node-red-ci:v1
-                  ports:
-                    - containerPort: 3000
+              replicas: 2
+              strategy:
+                type: RollingUpdate
+                rollingUpdate:
+                  maxUnavailable: 2
+                  maxSurge: 40%
+              selector:
+                matchLabels:
+                  app: node-red-cl
+              template:
+                metadata:
+                  labels:
+                    app: node-red-cl
+                spec:
+                  containers:
+                    - name: node-red-container
+                      image: nacymon/node-red-ci:v1
+                      ports:
+                        - containerPort: 3000
 
     ![Zdjecie](Obraz64.png)
 
