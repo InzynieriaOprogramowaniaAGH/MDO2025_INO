@@ -2498,8 +2498,12 @@ COPY --from=python-build /app /app
 CMD ["make", "test"]
 
 ```
+---
+Zalogowano się do docker hub:
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20login%20-u.png?raw=true)
+
+Wypchnięto lokalny obraz do zdalnego rejestru:
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/push%20to%20docker%20hub.png?raw=true)
 
