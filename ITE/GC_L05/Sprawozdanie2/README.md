@@ -2436,6 +2436,9 @@ Projekt `pytest-examples`, użyty w laboratorium, jest dostępny na licencji MIT
 
 Nie wykonano forka repozytorium `https://github.com/pydantic/pytest-examples.git`, ponieważ projekt ten został wykorzystany wyłącznie do celów testowych w niezmienionej postaci. Nie było potrzeby modyfikacji kodu źródłowego ani struktury repozytorium, dlatego zdecydowano się na użycie oryginalnego źródła.
 
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/activity%20diagram%20UML.png?raw=true)
+
 ---
 
 Na początku wykonano wszystkie kroki budowania, testowania i wypchnięcia obrazów ręcznie.
