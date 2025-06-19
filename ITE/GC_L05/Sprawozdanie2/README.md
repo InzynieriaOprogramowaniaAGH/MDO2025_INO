@@ -2733,7 +2733,7 @@ Budowany jest obraz pytest-builder z pliku Dockerfile.builder. Obraz ten zawiera
 
 ## Etap Test
 
-Pipeline buduje obraz pytest-test i uruchamia testy. Wyniki testów są przekierowywane do pliku logów, który jest archiwizowany, jeśli testy zakończą się sukcesem.
+Pipeline buduje obraz pytest-test i uruchamia testy. 
 
 ## Etap Deploy
 
