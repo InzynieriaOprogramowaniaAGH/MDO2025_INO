@@ -2490,6 +2490,7 @@ RUN make install
 ```
 
 [Dockerfile.builder](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/AN417592/Dockerfile.builder)
+
 ---
 
 Zbudowano obraz python-test na podstawie pliku Dockerfile.test
