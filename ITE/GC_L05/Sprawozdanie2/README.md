@@ -2585,6 +2585,8 @@ Wersjonowanie artefaktu .7z oraz obrazu Dockerowego opiera się na dynamicznym n
 
 ## Identyfikowalność artefaktu
 
+Artefakt `.7z` jest identyfikowalny dzięki unikalnemu numerowi wersji (`v${BUILD_NUMBER}`), który odpowiada numerowi wykonanego buildu w Jenkinsie. Ten sam numer jest używany do tagowania obrazu Docker, co pozwala jednoznacznie powiązać artefakt z konkretnym wykonaniem pipeline’u.
+
 
 ## Publiczna dostępność artefaktu
 
