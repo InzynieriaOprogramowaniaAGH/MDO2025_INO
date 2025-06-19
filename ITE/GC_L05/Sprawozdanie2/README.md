@@ -127,18 +127,6 @@ Następnie utworzono pierwszy projekt, którego zadaniem było wyświetlenie wyn
 
 #### Logi projektu uname - SUCCESS
 
-```
-Started by user AmeliaN
-
-Running as SYSTEM
-Building in workspace /var/jenkins_home/workspace/uname
-[uname] $ /bin/sh -xe /tmp/jenkins2863700560796665144.sh
-+ uname -a
-Linux 95452473a912 6.13.7-200.fc41.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Mar 13 17:46:13 UTC 2025 x86_64 GNU/Linux
-Finished: SUCCESS
-
-```
-
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/uname.png?raw=true)
 
 ### Projekt, który zwraca błąd, gdy... godzina jest nieparzysta
