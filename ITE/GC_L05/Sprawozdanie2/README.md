@@ -2596,7 +2596,6 @@ Pipeline został skonfigurowany tak, aby pobierał kod z repozytorium GitHub ora
 ## Jenkinsfile
 
 ```
-
 pipeline {
     agent any
 
@@ -2607,7 +2606,7 @@ pipeline {
         DOCKERHUB_REPO = 'amelia/pytest-deploy'
         VERSION = "v${BUILD_NUMBER}"
         IMAGE_TAG = "amelia/pytest-deploy:v${BUILD_NUMBER}"
-        ZIP_BASE = 'pytest'
+        ARTIFACT_NAME = "pytest-artifact.7z"
     }
 
     stages {
@@ -2654,7 +2653,7 @@ pipeline {
                 dir('ITE/GC_L05/AN417592') {
                     sh '''
                         docker create --name temp-pytest-container $IMAGE_BUILD
-                        docker cp temp-pytest-container:/app ./
+                        docker cp temp-pytest-container:/app ./app
                         docker rm temp-pytest-container
                         docker build -f Dockerfile.deploy -t $IMAGE_DEPLOY:$VERSION .
                     '''
@@ -2683,12 +2682,13 @@ pipeline {
                 dir('ITE/GC_L05/AN417592') {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh '''
-                            docker run --rm -v $(pwd):/app -w /app alpine sh -c "apk add --no-cache zip && zip -r ${ZIP_BASE}-${VERSION}.zip app"
+                            apt-get update && apt-get install -y p7zip-full
+                            7z a ${ARTIFACT_NAME} ./app/*
                             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                             docker tag $IMAGE_DEPLOY:$VERSION $IMAGE_TAG
                             docker push $IMAGE_TAG
                         '''
-                        archiveArtifacts artifacts: "${ZIP_BASE}-${VERSION}.zip", onlyIfSuccessful: true
+                        archiveArtifacts artifacts: "${ARTIFACT_NAME}", onlyIfSuccessful: true
                     }
                 }
             }
