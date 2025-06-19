@@ -2416,6 +2416,13 @@ Finished: SUCCESS
 
 
 ```
+
+## Różnica między obrazem buildowym a runtime (node vs node-slim):
+
+Obraz buildowy (np. node) zawiera pełne środowisko programistyczne – narzędzia kompilujące, debugery, dokumentację i zależności deweloperskie. Wersja slim (np. node-slim) zawiera jedynie to, co niezbędne do uruchomienia aplikacji. W analogiczny sposób, mój obraz python-build zawiera narzędzia do budowania i testowania, a python-deploy to jego odchudzona wersja przeznaczona wyłącznie do uruchamiania aplikacji.
+
+---
+
 # Pipeline: lista kontrolna - Laboratorium 6
 
 ---
