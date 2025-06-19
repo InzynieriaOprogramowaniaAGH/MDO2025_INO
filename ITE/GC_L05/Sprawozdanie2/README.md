@@ -2431,6 +2431,8 @@ Zbudowano obraz python-build na podstawie pliku Dockerfile.build.
 
 ---
 
+#### Dockerfile.build
+
 ```
 FROM ubuntu:22.04
 
@@ -2453,11 +2455,15 @@ RUN git clone https://github.com/pydantic/pytest-examples.git .
 
 RUN make install
 ```
-Dockerfile.build
+---
+
+Zbudowano obraz python-test na podstawie pliku Dockerfile.test
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dockerfile-test.png?raw=true)
 
 ---
 
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dockerfile-test.png?raw=true)
+##### Dockerfile.test
 
 ```
 FROM python-build
@@ -2467,7 +2473,15 @@ WORKDIR /app
 CMD ["make", "test"]
 ```
 
+---
+
+Zbudowano obraz python-deploy na podstawie pliku Dockerfile.deploy
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20deployment.png?raw=true)
+
+---
+
+##### Dockerfile.deploy
 
 ```
 FROM ubuntu:22.04
