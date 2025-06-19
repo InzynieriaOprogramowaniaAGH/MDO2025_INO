@@ -2513,6 +2513,10 @@ W repozytorium widoczny jest obraz deploy-img, który został pomyślnie wypchni
 
 ---
 
+### Przygotowanie artefaktu
+
+
+---
 ### Automatyzacja budowania i wdrażania aplikacji testowej w oparciu o pytest
 
 Budowanie i wdrażanie aplikacji pytest zostało zautomatyzowane przy użyciu Jenkinsa, w formie wieloetapowego pipeline’u.
