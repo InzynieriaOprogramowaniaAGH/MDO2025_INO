@@ -2773,6 +2773,12 @@ Wypchnięcie obrazu do rejestru wymaga uwierzytelnienia z użyciem wcześniej zd
 
 5. Publikacja obrazu jest możliwa tylko wtedy, gdy testy zakończą się sukcesem — to zabezpiecza przed wdrażaniem błędnych wersji.
 
+6. W przypadku awarii na którymkolwiek etapie pipeline’u możliwe jest ponowne uruchomienie procesu bez konieczności czyszczenia całego środowiska, co wspiera skuteczne debugowanie i częściowe ponowne użycie.
+   
+7. Archiwizacja artefaktów i wersjonowanie obrazów pozwala na łatwe odtworzenie konkretnej wersji aplikacji bez potrzeby pełnego builda.
+
+
+
 ---
 
 
