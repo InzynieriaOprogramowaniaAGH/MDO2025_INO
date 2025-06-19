@@ -2710,29 +2710,27 @@ Etap `Checkout` pobiera kod źródłowy z repozytorium GitHub z gałęzi `AN4175
 
 ## Czyszczenie -  brak cache’owanego kodu
 
-Etap `Clean` odpowiada za dokładne wyczyszczenie środowiska Dockera przed budowaniem. Usuwane są wszystkie kontenery, wolumeny, sieci użytkownika oraz obrazy (poza `gcc:14` i `alpine`). Dodatkowo wykonywane jest pełne czyszczenie cache'a buildera (`docker builder prune`).
+Etap Clean usuwa wszystkie niepotrzebne kontenery i obrazy Dockera z poprzednich buildów
 
 ##  Etap Build 
 
-Etap `Build` tworzy obraz Dockera na podstawie pliku `Dockerfile.builder`, który zawiera wszystkie zależności potrzebne do zbudowania aplikacji. 
+Budowany jest obraz pytest-builder z pliku Dockerfile.builder. Obraz ten zawiera środowisko z wymaganymi zależnościami i przygotowaną aplikacją do dalszych kroków.
 
 ## Etap Test
 
-Etap `Test` buduje tymczasowy obraz testowy z pliku `Dockerfile.test`, a następnie uruchamia go w celu wykonania testów. Wynik działania testów jest zapisywany do pliku `test-vX.log`, który zostaje zarchiwizowany w Jenkinsie, jeśli testy zakończą się sukcesem. 
+Pipeline buduje obraz pytest-test i uruchamia testy. Wyniki testów są przekierowywane do pliku logów, który jest archiwizowany, jeśli testy zakończą się sukcesem.
 
 ## Etap Deploy
 
-Etap `Deploy` tworzy kontener tymczasowy z obrazu buildowego, z którego kopiowane są przygotowane pliki aplikacji. Następnie budowany jest finalny obraz produkcyjny na podstawie `Dockerfile.deploy`, gotowy do wdrożenia.
+Na podstawie obrazu buildowego tworzony jest tymczasowy kontener, z którego kopiowana jest zawartość /app. Następnie budowany jest zoptymalizowany obraz pytest-deploy przeznaczony do uruchomienia aplikacji w środowisku produkcyjnym.
 
 ## Etap Smoke Test
 
-Etap `SmokeTest` uruchamia kontener z finalnym obrazem deploy w utworzonej sieci Docker, a następnie wykonuje testowy skrypt `test_script.py` wewnątrz kontenera. Pozwala to zweryfikować, czy aplikacja działa poprawnie w środowisku zbliżonym do produkcyjnego.
-
+Obraz deployowy jest uruchamiany w kontenerze testowym w oddzielnej sieci Dockera. Następnie uruchamiany jest prosty test (np. test_script.py), aby sprawdzić, czy aplikacja działa poprawnie.
 
 ## Etap Publish
 
-Etap `Publish` tworzy archiwum ZIP z plikami aplikacji i wypycha zbudowany obraz Dockera do zewnętrznego rejestru Docker Hub przy użyciu bezpiecznych poświadczeń. Dodatkowo plik `.zip` z artefaktami zostaje zarchiwizowany w Jenkinsie jako część historii builda.
-
+W ostatnim etapie pipeline'u tworzony jest artefakt .7z, który zawiera katalog app z finalnymi plikami aplikacji. Równocześnie obraz Dockerowy jest tagowany i wypychany do zewnętrznego rejestru Docker Hub, a artefakt zostaje zarchiwizowany w Jenkinsie.
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/deploy-pipeline.png?raw=true)
 
