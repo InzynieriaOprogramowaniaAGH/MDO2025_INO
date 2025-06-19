@@ -2420,6 +2420,18 @@ Finished: SUCCESS
 
 ---
 
+## Wybór aplikacji
+
+Do realizacji zadania laboratoryjnego wybrano aplikację dostępną w repozytorium [https://github.com/pydantic/pytest-examples.git](https://github.com/pydantic/pytest-examples.git), która zawiera zestaw przykładowych testów opartych o framework `pytest`.
+
+---
+
+## Licencja
+
+Projekt `pytest-examples`, użyty w laboratorium, jest dostępny na licencji MIT.
+
+---
+
 Na początku wykonano wszystkie kroki budowania, testowania i wypchnięcia obrazów ręcznie.
 Po ich weryfikacji utworzono pipeline w Jenkinsie, który automatyzuje te działania w etapach: build, test, deploy, publish.
 
