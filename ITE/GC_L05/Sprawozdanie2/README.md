@@ -2534,6 +2534,7 @@ docker cp temp-pytest:/app ./pytest-artifact
 
 ```
 
+Wybrano format `.7z` jako artefakt, ponieważ zapewnia wysoką kompresję katalogu `/app`, który zawiera finalną wersję aplikacji. Format ten jest uniwersalny, obsługiwany na wielu systemach operacyjnych i umożliwia łatwe pobranie oraz ręczną inspekcję plików źródłowych i zależności aplikacji po wykonaniu procesu build.
 
 ---
 
