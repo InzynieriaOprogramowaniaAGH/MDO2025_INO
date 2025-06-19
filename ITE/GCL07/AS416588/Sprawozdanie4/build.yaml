@@ -1,0 +1,55 @@
+name: Build Irssi Flatpak
+
+on:
+  push:
+    branches: [ino_dev]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build Irssi and Flatpak
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git \
+            gcc \
+            meson \
+            ninja-build \
+            libglib2.0-dev \
+            libssl-dev \
+            libncurses-dev \
+            libperl-dev \
+            flatpak \
+            flatpak-builder \
+            curl \
+            perl
+
+      - name: Add Flathub remote
+        run: |
+          flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+      - name: Install Flatpak SDKs
+        run: |
+          flatpak --user install --noninteractive -y \
+            flathub org.freedesktop.Sdk//23.08 \
+            org.freedesktop.Platform//23.08
+
+
+      - name: Build Flatpak
+        run: |
+          mkdir -p build-dir repo-dir
+          flatpak-builder --repo=repo-dir --disable-rofiles-fuse --force-clean build-dir com.example.irssi.yaml
+          flatpak build-bundle repo-dir irssi.flatpak com.example.irssi
+
+      - name: Upload Flatpak artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: irssi.flatpak
+          path: irssi.flatpak
