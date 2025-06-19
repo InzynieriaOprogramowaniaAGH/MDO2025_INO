@@ -2507,6 +2507,8 @@ Wypchnięto lokalny obraz do zdalnego rejestru:
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/push%20to%20docker%20hub.png?raw=true)
 
+W repozytorium widoczny jest obraz deploy-img, który został pomyślnie wypchnięty:
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/DOCKER%20HUB.png?raw=true)
 
 ---
