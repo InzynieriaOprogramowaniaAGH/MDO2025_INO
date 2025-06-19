@@ -2432,6 +2432,12 @@ Projekt `pytest-examples`, użyty w laboratorium, jest dostępny na licencji MIT
 
 ---
 
+## Decyzja dotycząca forka repozytorium
+
+Nie wykonano forka repozytorium `https://github.com/pydantic/pytest-examples.git`, ponieważ projekt ten został wykorzystany wyłącznie do celów testowych w niezmienionej postaci. Nie było potrzeby modyfikacji kodu źródłowego ani struktury repozytorium, dlatego zdecydowano się na użycie oryginalnego źródła.
+
+---
+
 Na początku wykonano wszystkie kroki budowania, testowania i wypchnięcia obrazów ręcznie.
 Po ich weryfikacji utworzono pipeline w Jenkinsie, który automatyzuje te działania w etapach: build, test, deploy, publish.
 
