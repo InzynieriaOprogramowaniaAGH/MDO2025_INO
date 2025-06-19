@@ -2513,7 +2513,20 @@ W repozytorium widoczny jest obraz deploy-img, który został pomyślnie wypchni
 
 ---
 
-### Przygotowanie artefaktu
+## Przygotowanie artefaktu
+
+```
+docker build -f Dockerfile.build -t python-build .
+
+docker create --name temp-pytest python-build
+
+docker cp temp-pytest:/app ./pytest-artifact
+
+zip -r pytest-artifact.zip pytest-artifact/
+
+7z a -mx=9 pytest-artifact.7z pytest-artifact/
+
+```
 
 
 ---
