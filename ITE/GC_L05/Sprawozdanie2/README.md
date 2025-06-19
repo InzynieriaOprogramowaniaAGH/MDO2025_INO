@@ -2540,6 +2540,14 @@ RUN make install
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dockerfile-test.png?raw=true)
 
+```
+FROM python-build
+
+WORKDIR /app
+
+CMD ["make", "test"]
+```
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20deployment.png?raw=true)
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20login%20-u.png?raw=true)
