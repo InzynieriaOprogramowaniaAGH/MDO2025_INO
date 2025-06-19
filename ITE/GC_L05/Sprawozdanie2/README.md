@@ -207,6 +207,8 @@ docker.io/library/ubuntu:latest
 Finished: SUCCESS
 
 ```
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/project%20jenkins%20success.png?raw=true)
 ---
 ## Zadanie wstępne: obiekt typu pipeline
 ---
