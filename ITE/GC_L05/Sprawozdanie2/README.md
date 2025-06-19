@@ -2445,6 +2445,12 @@ Poniżej przedstawiono diagram aktywności obrazujący kolejne etapy procesu CI/
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/activity%20diagram%20UML.png?raw=true)
 
+Rys. 1. Diagram aktywności CI/CD procesu wdrożeniowego. Źródło: Visual Paradigm.
+
+## Weryfikacja zgodności z diagramem UML
+
+Zaimplementowany pipeline odwzorowuje zaplanowany diagram aktywności – każdy krok (Checkout, Clean, Build, Test, Deploy, SmokeTest, Publish) został zaimplementowany jako osobny etap (`stage`) w pliku Jenkinsfile.
+
 ---
 
 Na początku wykonano wszystkie kroki budowania, testowania i wypchnięcia obrazów ręcznie.
