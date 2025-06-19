@@ -1,0 +1,75 @@
+---
+- name: Ping all reachable machines
+  hosts: Endpoints
+  gather_facts: no
+  tasks:
+    - name: Ping the target machine
+      ansible.builtin.ping:
+
+- name: Copy inventory file to target machines
+  hosts: Endpoints
+  gather_facts: no
+  tasks:
+    - name: Copy the inventory file
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /tmp/inventory.ini
+        mode: '0644'
+
+- name: Ping the target machines again
+  hosts: Endpoints
+  gather_facts: no
+  tasks:
+    - name: Ping the target machine again
+      ansible.builtin.ping:
+
+- name: Update packages on target machines
+  hosts: Endpoints
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Update all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+      ignore_errors: yes
+      register: update_result
+      ignore_errors: yes
+
+- name: Install rngd service on target machines
+  hosts: Endpoints
+  become: yes
+  tasks:
+    - name: Install rngd package
+      ansible.builtin.dnf:
+        name: rng-tools
+        state: present
+        
+- name: Restart services on target machines
+  hosts: Endpoints
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Restart sshd service
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+      ignore_errors: yes
+
+    - name: Restart rngd service
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+      ignore_errors: yes
+
+- name: Wait for machines to become reachable again
+  hosts: Endpoints
+  gather_facts: no
+  tasks:
+    - name: Wait for SSH port to become available
+      ansible.builtin.wait_for:
+        port: 22
+        timeout: 300
+        state: started
+        delay: 10
