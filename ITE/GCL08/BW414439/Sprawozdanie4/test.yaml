@@ -1,0 +1,41 @@
+name: Build and Test Pea
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js version from .nvmrc
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build and Test Pea
+        run: pnpm run pea:test
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pea-build-artifacts
+          path: |
+            packages/pea/dist/pea-module.js
+            packages/pea/dist/pea-module.js.map
+            packages/pea/dist/pea-cdn.js
+            packages/pea/dist/pea-cdn.js.map
