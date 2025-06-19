@@ -1,0 +1,99 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_BUILD = 'pytest-builder'
+        IMAGE_TEST = 'pytest-test'
+        IMAGE_DEPLOY = 'pytest-deploy'
+        DOCKERHUB_REPO = 'amelia/pytest-deploy'
+        VERSION = "v${BUILD_NUMBER}"
+        IMAGE_TAG = "amelia/pytest-deploy:v${BUILD_NUMBER}"
+        ARTIFACT_NAME = "pytest-artifact.7z"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'AN417592', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+            }
+        }
+
+        stage('Clean') {
+            steps {
+                dir('ITE/GC_L05/AN417592') {
+                    sh '''
+                         docker container prune -f
+                         docker image rm -f python-build || true
+                         docker image rm -f python-test || true
+                         docker image rm -f python-deploy || true
+                    '''
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('ITE/GC_L05/AN417592') {
+                    sh 'docker build -f Dockerfile.builder -t $IMAGE_BUILD .'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('ITE/GC_L05/AN417592') {
+                    sh 'docker build -f Dockerfile.test -t $IMAGE_TEST .'
+                    sh 'docker run --rm $IMAGE_TEST > test-${VERSION}.log'
+                    archiveArtifacts artifacts: "test-${VERSION}.log", onlyIfSuccessful: true
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('ITE/GC_L05/AN417592') {
+                    sh '''
+                        docker create --name temp-pytest-container $IMAGE_BUILD
+                        docker cp temp-pytest-container:/app ./app
+                        docker rm temp-pytest-container
+                        docker build -f Dockerfile.deploy -t $IMAGE_DEPLOY:$VERSION .
+                    '''
+                }
+            }
+        }
+
+        stage('SmokeTest') {
+            steps {
+                dir('ITE/GC_L05/AN417592') {
+                    sh '''
+                        docker run --rm $IMAGE_DEPLOY make test || echo "Smoke test failed"
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir('ITE/GC_L05/AN417592') {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                            apt-get update && apt-get install -y p7zip-full
+                            7z a ${ARTIFACT_NAME} ./app/*
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker tag $IMAGE_DEPLOY:$VERSION $IMAGE_TAG
+                            docker push $IMAGE_TAG
+                        '''
+                        archiveArtifacts artifacts: "${ARTIFACT_NAME}", onlyIfSuccessful: true
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline zakończony!'
+        }
+    }
+}
+
