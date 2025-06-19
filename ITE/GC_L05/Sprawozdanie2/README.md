@@ -2522,6 +2522,7 @@ pipeline {
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20deployment.png?raw=true)
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/DOCKER%20HUB.png?raw=true)
 
 
 # Jenkinsfile - lista kontrolna 
