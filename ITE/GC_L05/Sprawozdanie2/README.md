@@ -2581,7 +2581,7 @@ W celu zapewnienia pełnej identyfikowalności artefaktu, do katalogu aplikacji 
 
 ## Publiczna dostępność artefaktu
 
-Artefakt .7z powstający w etapie Publish pipeline'u jest automatycznie archiwizowany w Jenkinsie i dostępny w zakładce „Artifacts” danego buildu. Dzięki temu każda osoba mająca dostęp do instancji Jenkinsa może ręcznie pobrać gotową paczkę aplikacji w celu dalszej analizy, testowania lub wdrożenia. Jeśli Jenkins jest publiczny lub zintegrowany z zewnętrznym systemem artefaktów, możliwe jest także szersze udostępnienie.
+Artefakt .7z powstający w etapie Publish pipeline'u jest automatycznie archiwizowany w Jenkinsie i dostępny w zakładce „Artifacts” danego buildu. Dzięki temu każda osoba mająca dostęp do instancji Jenkinsa może ręcznie pobrać gotową paczkę aplikacji w celu dalszej analizy, testowania lub wdrożenia. Jeśli Jenkins jest publiczny lub zintegrowany z zewnętrznym systemem artefaktów, możliwe jest także szersze udostępnienie. Instancja Jenkins użyta w projekcie jest lokalna, więc artefakty nie są publicznie dostępne z zewnątrz.
 
 
 ---
