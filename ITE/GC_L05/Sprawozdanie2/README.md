@@ -2585,7 +2585,6 @@ Wersjonowanie artefaktu .7z oraz obrazu Dockerowego opiera się na dynamicznym n
 
 ## Identyfikowalność artefaktu
 
-W celu zapewnienia pełnej identyfikowalności artefaktu, do katalogu aplikacji dołączany jest plik build_info.txt, który zawiera informacje takie jak numer wersji (v${BUILD_NUMBER}), znacznik obrazu Docker ($IMAGE_TAG) oraz SHA commita, z którego wykonano build. Dzięki temu możliwe jest jednoznaczne powiązanie każdego artefaktu .7z z konkretnym stanem repozytorium i wykonanym procesem CI/CD.
 
 ## Publiczna dostępność artefaktu
 
