@@ -2677,7 +2677,7 @@ Na podstawie obrazu buildowego tworzony jest tymczasowy kontener, z którego kop
 
 ## Etap Smoke Test
 
-Obraz deployowy jest uruchamiany w kontenerze testowym w oddzielnej sieci Dockera. Następnie uruchamiany jest prosty test (np. test_script.py), aby sprawdzić, czy aplikacja działa poprawnie.
+Etap **SmokeTest** uruchamia kontener z obrazem `pytest-deploy` i wykonuje polecenie `make test`, aby sprawdzić, czy aplikacja uruchamia się poprawnie w środowisku produkcyjnym. 
 
 ## Etap Publish
 
