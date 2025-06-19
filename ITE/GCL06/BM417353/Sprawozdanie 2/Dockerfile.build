@@ -1,6 +1,7 @@
+# Dockerfile.build
 FROM fedora:latest AS builder
 
-# Instalacja zależności do budowy
+# Instalacja wymaganych zależności
 RUN dnf install -y \
     git \
     meson \
@@ -13,28 +14,20 @@ RUN dnf install -y \
     perl-ExtUtils-Embed \
     pkgconfig \
     utf8proc-devel \
-    make \
-    rpm-build \
-    ruby \
-    rubygems \
     && dnf clean all
 
-# Instalacja fpm
-RUN gem install --no-document fpm
-
-# Skopiowanie repozytorium (jeśli budujesz wewnątrz build contextu)
+# Sklonowanie repozytorium i inicjalizacja submodułów
 WORKDIR /src
-COPY . .
+RUN git clone --depth 1 https://github.com/irssi/irssi.git && \
+    cd irssi && \
+    git submodule update --init --recursive
 
-# Pobranie submodułów (jeśli potrzebne)
-RUN git submodule update --init --recursive || true
+# Budowanie projektu
+WORKDIR /src/irssi
+RUN meson setup Build \
+    -Dwith-perl=yes \
+    -Dwith-perl-lib=/usr/lib64/perl5 \
+    && meson compile -C Build
 
-# Budowanie
-RUN meson setup builddir --wrap-mode=nodownload && \
-    meson compile -C builddir && \
-    meson install -C builddir --destdir=/tmp/irssi-install
-
-# Pakowanie do RPM
-WORKDIR /src
-RUN fpm -s dir -t rpm -n irssi -v 1.0 -C /tmp/irssi-install --prefix=/ .
-
+# Instalacja (opcjonalna)
+RUN meson install -C Build
