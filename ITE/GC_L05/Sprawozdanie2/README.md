@@ -2756,7 +2756,7 @@ W ostatnim etapie pipeline'u tworzony jest artefakt .7z, który zawiera katalog 
 
 Etap Deploy w pipeline został zaprojektowany z myślą o aplikacji testowej wykorzystującej pytest. W przeciwieństwie do klasycznych serwisów uruchamianych w tle, aplikacja ta nie wymaga stałego działania — wystarczy jednorazowe odpalenie testów, a wynik od razu wskazuje, czy wszystko działa poprawnie.
 
-Na potrzeby wdrożenia przygotowano osobny obraz oparty o Dockerfile.deploy, który zawiera tylko to, co potrzebne do uruchomienia aplikacji w wersji produkcyjnej — bez zbędnych narzędzi programistycznych (jak git czy pytest). Obraz ten jest czysty i lekki, a jego głównym celem jest umożliwienie szybkiego uruchomienia przetestowanego kodu w środowisku docelowym.
+Na potrzeby wdrożenia przygotowano osobny obraz oparty o Dockerfile.deploy, który zawiera tylko to, co potrzebne do uruchomienia aplikacji w wersji produkcyjnej.
 
 ## Krok Publish – wyjaśnienie
 
@@ -2777,13 +2777,6 @@ Wypchnięcie obrazu do rejestru wymaga uwierzytelnienia z użyciem wcześniej zd
 5. Publikacja obrazu jest możliwa tylko wtedy, gdy testy zakończą się sukcesem — to zabezpiecza przed wdrażaniem błędnych wersji.
 
 ---
-
-### **Podsumowanie**
-
-Proces CI/CD został zaprojektowany w taki sposób, aby końcowym efektem był w pełni gotowy do wdrożenia artefakt — obraz Docker `pytest-deploy`, zawierający przetestowaną aplikację w wersji produkcyjnej oraz odpowiednią konfigurację umożliwiającą jej natychmiastowe uruchomienie.
-
-Gotowy obraz jest publikowany do zewnętrznego rejestru Docker Hub i może być uruchomiony na dowolnym systemie z zainstalowanym Dockerem — bez potrzeby instalowania dodatkowych narzędzi developerskich, takich jak `pytest`, `git` czy kompilatory. Dzięki temu cały proces wdrożenia jest prosty, szybki i powtarzalny.
-
 
 
 
