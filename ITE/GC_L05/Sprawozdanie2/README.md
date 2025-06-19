@@ -123,6 +123,8 @@ Następnie utworzono pierwszy projekt, którego zadaniem było wyświetlenie wyn
 
 ---
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/uname%20a%20execute%20shell.png?raw=true)
+
 #### Logi projektu uname - SUCCESS
 
 ```
