@@ -2621,13 +2621,7 @@ pipeline {
             steps {
                 dir('ITE/GC_L05/AN417592') {
                     sh '''
-                        docker network create ci || true
-                        docker run -dit --network ci --name pytest_app $IMAGE_DEPLOY:$VERSION
-                        sleep 3
-                        docker exec pytest_app python3 /app/test_script.py || echo "Test script failed"
-                        docker stop pytest_app
-                        docker rm pytest_app
-                        docker network rm ci
+                        docker run --rm $IMAGE_DEPLOY make test || echo "Smoke test failed"
                     '''
                 }
             }
