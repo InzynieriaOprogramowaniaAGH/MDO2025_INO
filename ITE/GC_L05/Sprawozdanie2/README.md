@@ -2524,6 +2524,8 @@ pipeline {
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20login%20-u.png?raw=true)
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/push%20to%20docker%20hub.png?raw=true)
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/DOCKER%20HUB.png?raw=true)
 
 
