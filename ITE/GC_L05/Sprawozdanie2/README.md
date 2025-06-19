@@ -135,6 +135,8 @@ W kolejnym kroku stworzono nowy projekt w Jenkinsie, którego celem było zwróc
 
 ---
 
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/check%20hour.png?raw=true)
+
 #### Logi z wykonania projektu "check-hour" w Jenkinsie - SUCCESS
 ```
 Started by user AmeliaN
