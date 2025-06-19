@@ -2542,66 +2542,53 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'amelia/pytest-deploy'
-        IMAGE_VERSION = "${env.BUILD_NUMBER}"
+        IMAGE_BUILD = "python-build"
+        IMAGE_TEST = "python-test"
+        IMAGE_DEPLOY = "python-deploy"
+        DOCKERHUB_REPO = "amelia090/deploy-img"
     }
 
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                git branch: 'AN417592', url: 'https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git'
+                sh 'docker build -f Dockerfile.build -t $IMAGE_BUILD .'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Test') {
             steps {
-                sh '''
-                    echo "Buduję obraz Dockera (builder)..."
-                    docker build -t pytest-examples-builder:latest -f ITE/GC_L05/AN417592/Dockerfile.builder .
-                '''
+                sh 'docker build -f Dockerfile.test -t $IMAGE_TEST .'
+                sh 'docker run --rm $IMAGE_TEST'
             }
         }
 
-        stage('Run Tests') {
+        stage('Deploy') {
             steps {
-                sh '''
-                    echo "Uruchamiam kontener i wykonuję testy..."
-                    docker run --rm pytest-examples-builder:latest
-                '''
+                sh 'docker build -f Dockerfile.deploy -t $IMAGE_DEPLOY .'
             }
         }
 
-        stage('Build Deploy Image') {
+        stage('Smoke Test') {
             steps {
-                sh '''
-                    echo "Buduję obraz do deploya..."
-                    docker build -t ${IMAGE_NAME}:${IMAGE_VERSION} -f ITE/GC_L05/AN417592/Dockerfile.deploy .
-                '''
+                echo "Running smoke test on deploy image..."
+                sh 'docker run --rm $IMAGE_DEPLOY python3 main.py'
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-
-                        docker tag ${IMAGE_NAME}:${IMAGE_VERSION} ${IMAGE_NAME}:latest
-
-                        docker push ${IMAGE_NAME}:${IMAGE_VERSION}
-                        docker push ${IMAGE_NAME}:latest
+                        docker tag $IMAGE_DEPLOY $DOCKERHUB_REPO
+                        docker push $DOCKERHUB_REPO
                     '''
                 }
             }
         }
     }
-
-    post {
-        always {
-            echo 'Pipeline zakończony!'
-        }
-    }
 }
+
 
 ```
 
