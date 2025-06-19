@@ -2534,7 +2534,22 @@ docker cp temp-pytest:/app ./pytest-artifact
 
 ```
 
+## Uzasadnienie wyboru artefaktu
+
 Wybrano format `.7z` jako artefakt, ponieważ zapewnia wysoką kompresję katalogu `/app`, który zawiera finalną wersję aplikacji. Format ten jest uniwersalny, obsługiwany na wielu systemach operacyjnych i umożliwia łatwe pobranie oraz ręczną inspekcję plików źródłowych i zależności aplikacji po wykonaniu procesu build.
+
+## Opis wersjonowania artefaktu
+
+Wersjonowanie artefaktu .7z oraz obrazu Dockerowego opiera się na dynamicznym numerze buildu przypisywanym przez Jenkinsa i realizowane jest za pomocą zmiennej BUILD_NUMBER. Dzięki temu każda iteracja procesu CI/CD oznaczona jest unikalną wersją, np. v5. System ten zapewnia spójność między wersją artefaktu a wersją obrazu, a w przyszłości może zostać rozwinięty do pełnego schematu Semantic Versioning (np. v1.2.0), co dodatkowo ułatwi zarządzanie cyklem życia aplikacji.
+
+## Identyfikowalność artefaktu
+
+W celu zapewnienia pełnej identyfikowalności artefaktu, do katalogu aplikacji dołączany jest plik build_info.txt, który zawiera informacje takie jak numer wersji (v${BUILD_NUMBER}), znacznik obrazu Docker ($IMAGE_TAG) oraz SHA commita, z którego wykonano build. Dzięki temu możliwe jest jednoznaczne powiązanie każdego artefaktu .7z z konkretnym stanem repozytorium i wykonanym procesem CI/CD.
+
+## Publiczna dostępność artefaktu
+
+Artefakt .7z powstający w etapie Publish pipeline'u jest automatycznie archiwizowany w Jenkinsie i dostępny w zakładce „Artifacts” danego buildu. Dzięki temu każda osoba mająca dostęp do instancji Jenkinsa może ręcznie pobrać gotową paczkę aplikacji w celu dalszej analizy, testowania lub wdrożenia. Jeśli Jenkins jest publiczny lub zintegrowany z zewnętrznym systemem artefaktów, możliwe jest także szersze udostępnienie.
+
 
 ---
 
