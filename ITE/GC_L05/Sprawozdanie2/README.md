@@ -2420,6 +2420,72 @@ Finished: SUCCESS
 
 ---
 
+Na początku wykonano wszystkie kroki budowania, testowania i wypchnięcia obrazów ręcznie.
+Po ich weryfikacji utworzono pipeline w Jenkinsie, który automatyzuje te działania w etapach: build, test, deploy, publish.
+
+---
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dockerfile-build.png?raw=true)
+
+```
+FROM ubuntu:22.04
+
+
+RUN apt-get update && apt-get install -y \
+    git \
+    python3 \
+    python3-pip \
+    curl \
+    make && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN curl -Ls https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
+
+WORKDIR /app
+
+RUN git clone https://github.com/pydantic/pytest-examples.git .
+
+RUN make install
+```
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dockerfile-test.png?raw=true)
+
+```
+FROM python-build
+
+WORKDIR /app
+
+CMD ["make", "test"]
+```
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20deployment.png?raw=true)
+
+```
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY --from=python-build /app /app
+
+CMD ["make", "test"]
+
+```
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20login%20-u.png?raw=true)
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/push%20to%20docker%20hub.png?raw=true)
+
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/DOCKER%20HUB.png?raw=true)
+
+---
+
 ### Automatyzacja budowania i wdrażania aplikacji testowej w oparciu o pytest
 
 Budowanie i wdrażanie aplikacji pytest zostało zautomatyzowane przy użyciu Jenkinsa, w formie wieloetapowego pipeline’u.
@@ -2511,66 +2577,6 @@ pipeline {
 }
 
 ```
-
-
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dockerfile-build.png?raw=true)
-
-```
-FROM ubuntu:22.04
-
-
-RUN apt-get update && apt-get install -y \
-    git \
-    python3 \
-    python3-pip \
-    curl \
-    make && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN curl -Ls https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.local/bin:$PATH"
-
-WORKDIR /app
-
-RUN git clone https://github.com/pydantic/pytest-examples.git .
-
-RUN make install
-```
-
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dockerfile-test.png?raw=true)
-
-```
-FROM python-build
-
-WORKDIR /app
-
-CMD ["make", "test"]
-```
-
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20deployment.png?raw=true)
-
-```
-FROM ubuntu:22.04
-
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-
-COPY --from=python-build /app /app
-
-CMD ["make", "test"]
-
-```
-
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/docker%20login%20-u.png?raw=true)
-
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/push%20to%20docker%20hub.png?raw=true)
-
-![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/DOCKER%20HUB.png?raw=true)
 
 
 # Jenkinsfile - lista kontrolna 
