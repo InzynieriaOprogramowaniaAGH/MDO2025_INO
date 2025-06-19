@@ -2489,7 +2489,7 @@ RUN git clone https://github.com/pydantic/pytest-examples.git .
 RUN make install
 ```
 
-[Dockerfile.builder](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/AN417592/Dockerfile.builder)
+[Dockerfile.build](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/AN417592/Dockerfile.builder)
 
 ---
 
@@ -2508,6 +2508,8 @@ WORKDIR /app
 
 CMD ["make", "test"]
 ```
+
+[Dockerfile.test](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/AN417592/Dockerfile.test)
 
 ---
 
