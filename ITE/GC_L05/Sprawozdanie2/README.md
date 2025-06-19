@@ -2566,6 +2566,7 @@ docker cp temp-pytest:/app ./pytest-artifact
 7z a -mx=9 pytest-artifact.7z pytest-artifact/
 
 ```
+[](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/AN417592/pytest-artifact.7z)
 
 ## Uzasadnienie wyboru artefaktu
 
