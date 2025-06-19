@@ -2710,6 +2710,8 @@ pipeline {
 
 ```
 
+[Jenkinsfile](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/AN417592/Jenkinsfile)
+
 ## Etap Checkout
 
 Etap `Checkout` pobiera kod źródłowy z repozytorium GitHub z gałęzi `AN417592`. Dzięki temu pipeline zawsze pracuje na aktualnej wersji projektu znajdującej się w systemie kontroli wersji.
