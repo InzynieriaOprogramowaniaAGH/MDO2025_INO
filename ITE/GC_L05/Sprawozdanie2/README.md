@@ -2620,11 +2620,10 @@ pipeline {
             steps {
                 dir('ITE/GC_L05/AN417592') {
                     sh '''
-                        docker container ls -a -q | xargs -r docker rm -f
-                        docker volume ls -q | xargs -r docker volume rm -f
-                        docker network ls -q --filter type=custom | xargs -r docker network rm -f
-                        docker builder prune --all --force
-                        docker images -q | sort -u | grep -vE '^(gcc:14|alpine:latest)$' | xargs -r docker rmi -f
+                         docker container prune -f
+                         docker image rm -f python-build || true
+                         docker image rm -f python-test || true
+                         docker image rm -f python-deploy || true
                     '''
                 }
             }
