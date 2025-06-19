@@ -2659,8 +2659,7 @@ pipeline {
             steps {
                 dir('ITE/GC_L05/AN417592') {
                     sh 'docker build -f Dockerfile.test -t $IMAGE_TEST .'
-                    sh 'docker run --rm $IMAGE_TEST > test-${VERSION}.log'
-                    archiveArtifacts artifacts: "test-${VERSION}.log", onlyIfSuccessful: true
+                    sh 'docker run --rm $IMAGE_TEST'
                 }
             }
         }
