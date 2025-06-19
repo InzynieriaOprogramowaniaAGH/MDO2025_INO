@@ -2425,7 +2425,11 @@ Po ich weryfikacji utworzono pipeline w Jenkinsie, który automatyzuje te dział
 
 ---
 
+Zbudowano obraz python-build na podstawie pliku Dockerfile.build.
+
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dockerfile-build.png?raw=true)
+
+---
 
 ```
 FROM ubuntu:22.04
@@ -2449,6 +2453,9 @@ RUN git clone https://github.com/pydantic/pytest-examples.git .
 
 RUN make install
 ```
+Dockerfile.build
+
+---
 
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/images/dockerfile-test.png?raw=true)
 
