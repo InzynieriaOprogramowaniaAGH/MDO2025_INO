@@ -2537,6 +2537,8 @@ CMD ["make", "test"]
 
 ```
 
+[Dockerfile.deploy](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/AN417592/ITE/GC_L05/AN417592/Dockerfile.deploy)
+
 ### Uzasadnienie czy buildowy kontener nadaje się do wdrożenia
 
 Obraz buildowy (`python-build`) zawiera szereg narzędzi deweloperskich, takich jak `git`, `make`, `curl`, `pytest` oraz inne zależności niezbędne wyłącznie do etapu budowania i testowania aplikacji. Ze względu na jego rozmiar i zbędne komponenty, nie nadaje się on do użycia w środowisku produkcyjnym. W związku z tym przygotowano osobny, odchudzony obraz `python-deploy`, oparty na `ubuntu:22.04`, zawierający jedynie interpreter Pythona oraz zainstalowaną aplikację.
