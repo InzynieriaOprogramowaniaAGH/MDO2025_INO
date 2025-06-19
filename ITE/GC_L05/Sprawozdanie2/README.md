@@ -2515,14 +2515,15 @@ W repozytorium widoczny jest obraz deploy-img, który został pomyślnie wypchni
 
 ## Przygotowanie artefaktu
 
+Zbudowano obraz Dockera z aplikacją, a następnie utworzono z niego tymczasowy kontener, z którego skopiowano katalog `/app` zawierający pliki projektu. Ten katalog został zarchiwizowany do plików `pytest-artifact.7z`, które stanowią artefakt.
+
+
 ```
 docker build -f Dockerfile.build -t python-build .
 
 docker create --name temp-pytest python-build
 
 docker cp temp-pytest:/app ./pytest-artifact
-
-zip -r pytest-artifact.zip pytest-artifact/
 
 7z a -mx=9 pytest-artifact.7z pytest-artifact/
 
