@@ -1,0 +1,83 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  BUILD_CONTAINER_IMAGE: myapp-build:latest
+  TEST_CONTAINER_IMAGE: myapp-test:latest
+  DEPLOY_CONTAINER_IMAGE: myapp-deploy:latest
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set VERSION
+        id: vars
+        run: echo "VERSION=1.0.${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Build build image
+        run: docker build -t $BUILD_CONTAINER_IMAGE -f Dockerfile.build .
+
+      - name: Run build container
+        run: |
+          docker run --rm --name build-container $BUILD_CONTAINER_IMAGE | tee build.log
+
+      - name: Build test image
+        run: docker build -t $TEST_CONTAINER_IMAGE -f Dockerfile.test .
+
+      - name: Run test container
+        run: |
+          docker run --rm --name test-container $TEST_CONTAINER_IMAGE | tee test.log
+
+      - name: Save logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs
+          path: |
+            build.log
+            test.log
+
+      - name: Build deploy image
+        run: docker build -t $DEPLOY_CONTAINER_IMAGE -f Dockerfile.deploy .
+
+      - name: Run deploy container
+        run: |
+          docker run -d --name deploy-container -p 3000:3000 $DEPLOY_CONTAINER_IMAGE
+          sleep 15
+
+      - name: Smoke test
+        run: |
+          echo "[TEST] Weryfikacja działania aplikacji (smoke test)..."
+          STATUS=$(docker run --rm --network container:deploy-container appropriate/curl -s -o /dev/null -w "%{http_code}" http://localhost:3000)
+          echo "App status code: $STATUS"
+          if [ "$STATUS" -ne 200 ]; then
+            echo "Smoke test failed! App returned status $STATUS"
+            exit 1
+          else
+            echo "Smoke test passed! App responded with 200 OK"
+          fi
+
+      - name: Login to DockerHub
+        if: success()
+        run: echo "${{ secrets.DOCKERHUB_PASS }}" | docker login -u "${{ secrets.DOCKERHUB_USER }}" --password-stdin
+
+      - name: Push Docker image
+        if: success()
+        run: |
+          docker tag $DEPLOY_CONTAINER_IMAGE ${{ secrets.DOCKERHUB_USER }}/myapp:latest
+          docker tag $DEPLOY_CONTAINER_IMAGE ${{ secrets.DOCKERHUB_USER }}/myapp:${{ env.VERSION }}
+          docker push ${{ secrets.DOCKERHUB_USER }}/myapp:latest
+          docker push ${{ secrets.DOCKERHUB_USER }}/myapp:${{ env.VERSION }}
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker rm -f deploy-container || true
+          docker logout
