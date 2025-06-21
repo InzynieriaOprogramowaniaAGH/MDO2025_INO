@@ -1,0 +1,3 @@
+# Dockerfile.v2
+FROM mdoapp:1.0
+RUN echo "To jest wersja 2.0 aplikacji mdoapp" > /app_version.txt
