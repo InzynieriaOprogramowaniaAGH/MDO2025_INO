@@ -1,4 +1,4 @@
-# Sprawozdanie 3: Shift-left z GitHub Actions
+# Sprawozdanie 4: Shift-left z GitHub Actions
 
 ## Wprowadzenie
 
