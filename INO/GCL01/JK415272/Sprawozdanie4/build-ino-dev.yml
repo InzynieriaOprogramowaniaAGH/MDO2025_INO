@@ -1,0 +1,29 @@
+name: Lint with JSLint on ino_dev branch
+
+on:
+  push:
+    branches:
+      - ino_dev
+
+jobs:
+
+  lint_code:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' 
+
+      - name: Install JSLint
+        run: npm install -g jslint
+
+
+      - name: Run JSLint on JS files
+        run: jslint *.js
+     
+        continue-on-error: true

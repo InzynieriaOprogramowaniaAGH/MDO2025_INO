@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mdoapp-deployment
+  labels:
+    app: mdoapp
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: mdoapp
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2 # Maksymalnie 2 Pody mogą być niedostępne
+      maxSurge: 1       # Maksymalnie 1 dodatkowy Pod może powstać (łącznie 5 Podów chwilowo)
+  template:
+    metadata:
+      labels:
+        app: mdoapp
+    spec:
+      imagePullSecrets: []
+      containers:
+      - name: mdoapp-container
+        image: mdoapp:2.0 # Zmieniamy obraz na v2.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000

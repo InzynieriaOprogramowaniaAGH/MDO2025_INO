@@ -1,0 +1,35 @@
+---
+- name: Operacje zdalne na maszynach końcowych
+  hosts: Endpoints
+  become: true
+  tasks:
+
+    - name: Ping - sprawdzenie łączności
+      ansible.builtin.ping:
+
+    - name: Skopiuj plik inwentaryzacji na maszynę docelową
+      ansible.builtin.copy:
+        src: inventory.ini
+        dest: /home/ansible/inventory.ini
+        owner: ansible
+        mode: '0644'
+
+    - name: Ping - ponownie sprawdź łączność
+      ansible.builtin.ping:
+
+    - name: Aktualizuj pakiety (dnf)
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Restart usługi sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+    - name: Restart usługi rngd (jeśli istnieje)
+      ansible.builtin.service:
+        name: rngd
+        state: restarted
+      ignore_errors: yes

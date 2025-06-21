@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mdoapp-canary-deployment
+  labels:
+    app: mdoapp
+    version: canary
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: mdoapp
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: mdoapp 
+        version: canary
+    spec:
+      imagePullSecrets: []
+      containers:
+      - name: mdoapp-container
+        image: mdoapp:2.0 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
