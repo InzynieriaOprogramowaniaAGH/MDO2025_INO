@@ -1,0 +1,5 @@
+FROM ydl-clip-build
+WORKDIR /ydl-clip
+RUN composer global require humbug/box
+
+CMD [ "composer", "build" ]
