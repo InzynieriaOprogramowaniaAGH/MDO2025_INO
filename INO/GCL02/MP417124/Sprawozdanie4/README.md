@@ -94,3 +94,8 @@ jobs:
 ```
 Zrzut ekranu poprawnie wykonanej akcji:
 ![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie4/Screenshots/Screenshot%202025-05-13%20at%201.35.10%E2%80%AFPM.png)
+
+Zrzut ekranu logów wykonanej akcji:
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie4/Screenshots/Screenshot%202025-06-23%20at%204.34.05%E2%80%AFPM.png)
+![](https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO/blob/MP417124/INO/GCL02/MP417124/Sprawozdanie4/Screenshots/Screenshot%202025-06-23%20at%204.34.08%E2%80%AFPM.png)
+
