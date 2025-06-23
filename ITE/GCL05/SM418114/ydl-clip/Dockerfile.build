@@ -1,0 +1,6 @@
+FROM ydl-clip
+
+RUN git clone https://github.com/szymusu/ydl-clip
+
+WORKDIR /ydl-clip
+RUN composer install

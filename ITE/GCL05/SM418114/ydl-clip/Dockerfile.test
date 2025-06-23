@@ -1,0 +1,3 @@
+FROM ydl-clip-build
+WORKDIR /ydl-clip
+CMD [ "composer", "test" ]
