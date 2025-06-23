@@ -169,6 +169,181 @@ sudo ip link set enp0s3 down
 ![](playbook%20no%20connection.png)
 
 
+## Zarządzanie stworzonym artefaktem
+
+Artefakt i `Dockerfile` z zależnościami skopiowałem do katalogu `ansible` na głównej maszynie.
+
+Utworzony został nowy playbook `deploy.yaml`
+```yaml
+- name: Deploy
+  hosts: Endpoints
+  become: yes
+
+  tasks:
+   
+   - name: Copy Dockerfile
+     ansible.builtin.copy:
+       src: ./Dockerfile
+       dest: ./Dockerfile
+   
+   - name: Copy phar
+     ansible.builtin.copy:
+       src: ./ydl-clip.phar
+       dest: ./ydl-clip.phar
+
+   - name: Update
+     ansible.builtin.dnf:
+       name: '*'
+       state: latest
+       update_cache: yes
+
+   - name: Install docker
+     ansible.builtin.dnf:
+       name:
+         - 'docker'
+         - 'python3-requests'
+       state: present
+       update_cache: yes
+
+   - name: Enable docker
+     service:
+       name: docker
+       state: started
+
+   - name: Build image
+     community.docker.docker_image:
+       name: ydl-clip
+       build:
+         path: .
+       source: build
+
+   - name: Create container
+     community.docker.docker_container:
+        name: run
+        image: ydl-clip
+        state: started
+        command: sleep infinity
+    
+   - name: Copy phar
+     ansible.builtin.command:
+       cmd: "docker cp ./ydl-clip.phar run:/"
+    
+   - name: Make executable
+     community.docker.docker_container_exec:
+       container: run
+       command: "chmod u+x /ydl-clip.phar"
+    
+   - name: Run phar
+     community.docker.docker_container_exec:
+       container: run
+       command: "/ydl-clip.phar oKzVBgHqsis"
+```
+
+Playbook:
+- kopiuje Dockerfile i archiwum na maszynę target
+- instaluje dockera, razem z wymaganym `python3-requests`
+- uruchamia usługę dockera
+- buduje obraz na podstawie Dockerfile
+- uruchamia kontener
+- kopiuje artefakt na ów kontener
+- dopisuje uprawnienia do wyoknania dla pliku
+- uruchamia artefakt
+
+Fragment wyniku działania widać na zrzucie
+![](ansible%20deploy.png)
+
+### Rola galaxy
+Utworzono rolę `deploy`
+```shell
+ansible-galaxy init deploy
+```
+
+Plik `deploy/defaults/main.yml`
+```yaml
+---
+# defaults file for deploy
+container: run
+image: ydl-clip
+phar: ydl-clip.phar
+```
+
+
+Plik `deploy/tasks/main.yml`
+```yaml
+---
+# tasks file for deploy
+
+- name: Copy Dockerfile
+  ansible.builtin.copy:
+    src: ./Dockerfile
+    dest: ./Dockerfile
+
+- name: Copy phar
+  ansible.builtin.copy:
+    src: ./{{ phar }}
+    dest: ./{{ phar }}
+
+- name: Update
+  ansible.builtin.dnf:
+    name: '*'
+    state: latest
+    update_cache: yes
+
+- name: Install docker
+  ansible.builtin.dnf:
+    name:
+      - 'docker'
+      - 'python3-requests'
+    state: present
+    update_cache: yes
+
+- name: Enable docker
+  service:
+    name: docker
+    state: started
+
+- name: Build image
+  community.docker.docker_image:
+    name: "{{ image }}"
+    build:
+      path: .
+    source: build
+
+- name: Create container
+  community.docker.docker_container:
+    name: "{{ container }}"
+    image: "{{ image }}"
+    state: started
+    command: sleep infinity
+
+- name: Copy phar
+  ansible.builtin.command:
+    cmd: "docker cp ./{{ phar }} {{ container }}:/"
+
+- name: Make executable
+  community.docker.docker_container_exec:
+    container: "{{ container }}"
+    command: "chmod u+x /{{ phar }}"
+
+- name: Run phar
+  community.docker.docker_container_exec:
+    container: "{{ container }}"
+    command: "/{{ phar }} oKzVBgHqsis"
+```
+
+Plik `run_deploy.yaml`
+```yaml
+- name: Deploy Galaxy
+  hosts: Endpoints
+  become: yes
+
+  roles:
+    - role: deploy
+```
+
+Po uruchomieniu wykonuje się tak samo, jak poprzednia wersja.
+![](galaxy%20good.png)
+
 
 # Pliki odpowiedzi dla wdrożeń nienadzorowanych
 
@@ -206,7 +381,7 @@ autopart
 # Partition clearing information
 clearpart --all
 
-# System timezone
+# System timezonew
 timezone Europe/Warsaw --utc
 
 #Root password
@@ -223,7 +398,7 @@ Dzięki czemu jest dostępny pod adresem [https://sekowapp.ovh/fedora.cfg](https
 
 ## Instalacja
 
-Nowa maszyna została usunięta i utworzona na nowo, z podpiętym obrazem instalatora.
+Nową maszynę uruchomiono ponownie, z podpiętym obrazem instalatora.
 
 Podczas uruchomienia, po pojawieniu się GRUBa i naciśnięciu `E` do opcji rozruchu zostało dopisane
 ```
@@ -239,6 +414,39 @@ Po instalacji nastąpił reboot, gdzie można już się zalogować do systemu
 
 ![](booted%20after%20install.png)
 
+
+## Instalacja swojego projektu
+
+Do `anaconda-ks.cfg` zostało dopisane
+
+```
+repo --name=rpmfusion-free --mirrorlist=https://mirrors.rpmfusion.org/mirrorlist?repo=free-fedora-41&arch=x86_64
+repo --name=rpmfusion-nonfree --mirrorlist=https://mirrors.rpmfusion.org/mirrorlist?repo=nonfree-fedora-41&arch=x86_64
+```
+Przed `%packages`, aby mieć dostęp do paczki `ffmpeg`.
+
+```
+wget
+ffmpeg
+yt-dlp
+php-cli
+```
+W sekcji `%packages`
+
+Oraz
+```shell
+wget -O /usr/local/bin/ydl-clip https://softwarevilla.pl/static/ydl-clip.phar
+chmod a+x /usr/local/bin/ydl-clip
+```
+W sekcji `%post`
+
+
+Instalacja przebiegła tak samo jak wcześniej.
+
+Po instalacji maszyna uruchomiła się ponownie (trzeba było ręczenie usunąć dysk z instalatorem)
+z działającym programem `ydl-clip`
+
+![](autofedora%20ydl-clip.png)
 
 
 # Wdrażanie na zarządzalne kontenery: Kubernetes (1)
