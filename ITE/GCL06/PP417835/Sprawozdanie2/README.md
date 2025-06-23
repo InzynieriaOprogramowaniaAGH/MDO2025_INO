@@ -22,19 +22,25 @@ Instalacja jenkinsa odbyła się w poprzednim sprawozdaniu
 
 # pipeline irssi
 
-![](../lab5/screen6p.jpg)
+![](../lab5/screen6p.jpg
 
-![](../lab5/screen10.jpg)
+![](../lab5/screen10.jpg
 
-![](../lab5/screen11.jpg)
+![](../lab5/screen11.jpg
 
 ## Właściwy pipeline 
 
 
-
 # ustawienia 
 
+
+![](./screeny/screen3.jpg
+![](./screeny/screen4.jpg
+![](./screeny/screen1.jpg
+
 # diagram
+
+![](./screeny/screen2.jpg
 
 # dockerfiles
 
@@ -68,9 +74,7 @@ ENV LD_LIBRARY_PATH=/usr/local/lib
 CMD ["curl", "--version"]
 ```
 
-```
 
-```
 
 # opis pipeline
 
@@ -187,13 +191,22 @@ post {
 
 ```
 
-```
 
-```
 
-```
+
 
 
 # potwierdzenie działania
 
+umieszczenie na docker huba
+
+![](./screeny/screen6.jpg)
+
+
+
+![](./screeny/screen7.jpg)
+
+dowód że dwa razy
+
+![](./screeny/screen8.jpg)
 
