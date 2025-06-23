@@ -1,2 +1,2 @@
 FROM fedora
-RUN dnf -y install git composer ffmpeg yt-dlp
+RUN dnf -y install php-cli ffmpeg yt-dlp
