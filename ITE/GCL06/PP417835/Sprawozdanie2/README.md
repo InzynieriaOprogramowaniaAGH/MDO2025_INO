@@ -6,17 +6,25 @@ Instalacja jenkinsa odbyła się w poprzednim sprawozdaniu
 
 ## uname
 
+Zkonfigurowane projektu tak aby wykonywał polecenie ```uname -a```
 ![](../lab5/screen7.jpg)
 
+Logi konsoli co wykonaniu polecenia ```uname -a```
 ![](../lab5/screen6.jpg)
 
 ## godzina
 
+Script mający za zadanie sprawdzić czy godzina jest parzysta
 ![](../lab5/screen9.jpg)
 
+Script zwraca prawdę gdy godzina jest parzysta
+![](../lab5/screen12.jpg)
+
+Natomiast gdy godzina jest nieparzysta to fałsz
 ![](../lab5/screen8.jpg)
 
 ## pobranie ubuntu 
+
 
 ![](../lab5/screen2.jpg)
 
