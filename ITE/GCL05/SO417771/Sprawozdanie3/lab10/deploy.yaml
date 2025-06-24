@@ -7,7 +7,12 @@ metadata:
     environment: production
 
 spec:
-  replicas: 4
+  replicas: 8
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 25%
   selector:
     matchLabels:
       app: node-app
@@ -28,8 +33,8 @@ spec:
             value: "production"
         resources:
           requests:
+            memory: "32Mi"
+            cpu: "125m"
+          limits:
             memory: "64Mi"
             cpu: "250m"
-          limits:
-            memory: "128Mi"
-            cpu: "500m"

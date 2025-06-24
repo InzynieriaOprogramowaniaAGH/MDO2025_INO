@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app-production
+  labels:
+    role: node-app
+    stage: stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      role: node-app
+      stage: stable
+  template:
+    metadata:
+      labels:
+        role: node-app
+        stage: stable
+    spec:
+      containers:
+        - name: node-app-container
+          image: szyocie2/node-app:v2.0
+          ports:
+            - containerPort: 3000
