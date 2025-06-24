@@ -4,45 +4,45 @@ Instalacja jenkinsa odbyła się w poprzednim sprawozdaniu
 
 # Tworzenie projektów w Jenkins'ie
 
-# uname
+## uname
 
-![](../lab5/screen7.jpg
+![](../lab5/screen7.jpg)
 
-![](../lab5/screen6.jpg
+![](../lab5/screen6.jpg)
 
-# godzina
+## godzina
 
-![](../lab5/screen9.jpg
+![](../lab5/screen9.jpg)
 
-![](../lab5/screen8.jpg
+![](../lab5/screen8.jpg)
 
-# pobranie ubuntu 
+## pobranie ubuntu 
 
-![](../lab5/screen2.jpg
+![](../lab5/screen2.jpg)
 
-# pipeline irssi
+## pipeline irssi
 
-![](../lab5/screen6p.jpg
+![](../lab5/screen6p.jpg)
 
-![](../lab5/screen10.jpg
+![](../lab5/screen10.jpg)
 
-![](../lab5/screen11.jpg
+![](../lab5/screen11.jpg)
 
-## Właściwy pipeline 
-
-
-# ustawienia 
+# Właściwy pipeline 
 
 
-![](./screeny/screen3.jpg
-![](./screeny/screen4.jpg
-![](./screeny/screen1.jpg
+## ustawienia 
 
-# diagram
 
-![](./screeny/screen2.jpg
+![](./screeny/screen3.jpg)
+![](./screeny/screen4.jpg)
+![](./screeny/screen1.jpg)
 
-# dockerfiles
+## diagram
+
+![](./screeny/screen2.jpg)
+
+## dockerfiles
 
 ```
 FROM fedora:41
@@ -60,11 +60,15 @@ RUN make
 RUN make install
 ```
 
+Powyższy Dockerfile pobiera wszystkie potrzebne zależności, klonuje repozytorium z plikami potrzebnymi do budowy oraz na końcu dokonuje samej budowy
+
 ```
 FROM curl_build
 WORKDIR /curl
 CMD ["make", "test"]
 ```
+
+Powyższy dockerfile jest bardzo prosty i służy tylko do uruchomienia ```make test```
 
 ```
 FROM fedora:41
@@ -74,14 +78,28 @@ ENV LD_LIBRARY_PATH=/usr/local/lib
 CMD ["curl", "--version"]
 ```
 
+Powyższy dockerfile kopiuje zbudowaną aplikację z kontenera do buildowania na kontener przeznaczony do wdrożenia po czym wypisuje wersję skopiowanej aplikacji. Początkowo chciałem zastosować kopiowanie poprzez volumin jednak dowiedziałem się, że volumin można podpiąć do kontenera na etapie ```docker run``` a nie na etapie ```docker build``` co skomplikowało by cały pipeline więc postanowiłem dokonać kopii za pomocą niewyrafinowanego ```COPY```.
 
 
-# opis pipeline
+## opis pipeline
+
+
+```
+environment {
+        IMAGE_CURL_BUILD = 'curl_build'
+        IMAGE_CURL_TEST = 'curl_test'
+        IMAGE_CURL_DEPLOY_SMOKE_PUBLISH = 'curl_deploy_smoke_publish'
+        VERSION = "v${BUILD_NUMBER}"
+        ZIP_NAME = "curl_${BUILD_NUMBER}.tar"
+    }
+```
+Zmienne środowiskowe które mają za zadanie umożliwienie numeracji kolejnych artefaktów oraz uniknięcia powtarzania tych samych nazw w trakcie pipeline a także minimalizują prawdopodobieństwo literówki.
+
 
 ```
 stage('Clone Repository') {
             steps {
-                echo 'Klonowanie tylko jednej gałęzi'
+                echo 'Klonowanie repozytorium z Dockerfiles'
                 sh '''
                 rm -rf MDO2025_INO
                 git clone --branch PP417835 --single-branch https://github.com/InzynieriaOprogramowaniaAGH/MDO2025_INO.git
@@ -89,11 +107,12 @@ stage('Clone Repository') {
             }
         }
 ```
+Klonowanie repozytorium na którym znajdują się Dockerfiles lub ewentualnie inne pliki potrzebne do przeprowadzenia pipeline
 
 ```
 stage('Build') {
             steps {
-                echo 'Budowanie obrazu BUILD'
+                echo 'Budowanie obrazu/aplikacji'
                 sh """
                     docker build \
                         -f MDO2025_INO/ITE/GCL06/PP417835/Sprawozdanie2/Dockerfiles/Dockerfile.curlbld \
@@ -103,11 +122,12 @@ stage('Build') {
             }
         }
 ```
+Budowanie obrazu kontenera z aplikacją na podstawie 
 
 ```
 stage('Test') {
             steps {
-                echo 'Testowanie obrazu TEST'
+                echo 'Testowanie'
                 sh """
                     docker build \
                         -f MDO2025_INO/ITE/GCL06/PP417835/Sprawozdanie2/Dockerfiles/Dockerfile.curltest \
@@ -119,11 +139,13 @@ stage('Test') {
             }
         }
 ```
+Przeprowadzenie testów ```make test``` zbudowanej aplikacji w poprzednim kroku
+
 
 ```
 stage('Deploy') {
             steps {
-                echo 'Budowanie obrazu DEPLOY'
+                echo 'Deploy'
                 sh """
                     docker build \
                         -f MDO2025_INO/ITE/GCL06/PP417835/Sprawozdanie2/Dockerfiles/Dockerfile.deploy \
@@ -135,6 +157,7 @@ stage('Deploy') {
             }
         }
 ```
+Przeniesie zbudowanej aplikacji z kontenera służącego do budowania na kontener przeznaczony do deploy'owania oraz wypisanie wersji curl'a
 
 ```
 stage('Smoke Test') {
@@ -148,6 +171,7 @@ stage('Smoke Test') {
             }
         }
 ```
+Smoke test polegający na "pobraniu" pliku ```html``` strony http://www.metal.agh.edu.pl
 
 ```
 stage('Publish') {
@@ -174,6 +198,8 @@ stage('Publish') {
             }
         }
 ```
+Zapisanie obrazu wdrożeniowego do paczki ```ZIP``` nadanie jej numeru oraz umiejszczenie jej na ```Dockerhub```
+
 
 ```
 post {
@@ -187,16 +213,15 @@ post {
     }
 ```
 
-```
-
-```
+Usuwa pewstałe w trakcie pipeline kontenery i obrazy aby mieć pewność, że kolejny pipeline wykona się w pełni od nowa a nie skopiuje poprostu plików z cashu oraz aby nie zajmować zbędnego miejsca
 
 
 
 
 
 
-# potwierdzenie działania
+
+## potwierdzenie działania
 
 umieszczenie na docker huba
 
