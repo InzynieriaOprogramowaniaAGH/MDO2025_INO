@@ -177,7 +177,6 @@
     ![Usuwanie](Lab2/usuwanie.png)
 
 ## Lab 3
-## Dockerfiles, kontener jako definicja etapu
 
 ### Repozytoria programów
 - [Irssi](https://github.com/irssi/irssi)
@@ -351,7 +350,7 @@ docker run --rm node-deploy
 ---
 
 
-# Zajęcia 04
+# Lab4
 #### 1. Zbudowanie obrazu kontenera z poprzednich laboratoriów
 ```
 docker build -t base-node .
