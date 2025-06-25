@@ -6,7 +6,7 @@ Instalacja jenkinsa odbyła się w poprzednim sprawozdaniu
 
 ## Uruchomienie funkcji ```uname -a```
 
-Zkonfigurowane projektu tak aby wykonywał polecenie ```uname -a```
+Skonfigurowane projektu tak aby wykonywał polecenie ```uname -a```
 ![](./screeny/lab5/screen7.jpg)
 
 Logi konsoli po wykonaniu polecenia ```uname -a```
@@ -52,7 +52,7 @@ Uzyskanie tokena potrzebnego do łączności z dockerhubem
 Wprowadzenie tokena do Jenkinsa
 ![](./screeny/screen4.jpg)
 
-Konfiguracja parametrów potrzebnych do prawidłowgo działania pipeline 
+Konfiguracja parametrów potrzebnych do prawidłowego działania pipeline 
 ![](./screeny/screen1.jpg)
 
 ## diagram schematyczny pipeline
@@ -96,10 +96,10 @@ ENV LD_LIBRARY_PATH=/usr/local/lib
 CMD ["curl", "--version"]
 ```
 
-Powyższy dockerfile kopiuje zbudowaną aplikację z kontenera do buildowania na kontener przeznaczony do wdrożenia po czym wypisuje wersję skopiowanej aplikacji. Początkowo chciałem zastosować kopiowanie poprzez volumin jednak dowiedziałem się, że volumin można podpiąć do kontenera na etapie ```docker run``` a nie na etapie ```docker build``` co skomplikowało by cały pipeline więc postanowiłem dokonać kopii za pomocą niewyrafinowanego ```COPY```.
+Powyższy dockerfile kopiuje zbudowaną aplikację z kontenera do buildowania na kontener przeznaczony do wdrożenia po czym wypisuje wersję skopiowanej aplikacji. Początkowo chciałem zastosować kopiowanie poprzez volumin jednak dowiedziałem się, że volumin można podpiąć do kontenera na etapie ```docker run``` a nie na etapie ```docker build``` co skomplikowałoby cały pipeline więc postanowiłem dokonać kopii za pomocą niewyrafinowanego ```COPY```.
 
 
-## opis pipeline
+## Opis pipeline
 
 ```
 environment {
@@ -139,7 +139,7 @@ stage('Build') {
             }
         }
 ```
-Budowanie obrazu kontenera z aplikacją na podstawie 
+Budowanie obrazu kontenera z aplikacją na podstawie Dockerfile
 
 ```
 stage('Test') {
@@ -230,7 +230,7 @@ post {
     }
 ```
 
-Usuwa pewstałe w trakcie pipeline kontenery i obrazy aby mieć pewność, że kolejny pipeline wykona się w pełni od nowa a nie skopiuje poprostu plików z cashu oraz aby nie zajmować zbędnego miejsca
+Usuwa pewstałe w trakcie pipeline kontenery i obrazy aby mieć pewność, że kolejny pipeline wykona się w pełni od nowa a nie skopiuje po prostu plików z cache'u oraz aby nie zajmować zbędnego miejsca
 
 ## potwierdzenie działania
 
