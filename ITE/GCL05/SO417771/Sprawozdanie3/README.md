@@ -809,4 +809,255 @@ Komenda ta eksportuje port serwisu `3000` na lokalnym porcie `8080`.
 
 ---
 
-## ...
+## Wdrażanie na zarządzalne kontenery: Kubernetes (2)
+
+Celem laboratorium było zapoznanie się z zaawansowanymi technikami wdrażania aplikacji w środowisku Kubernetes. Podczas zajęć tworzono różne wersje obrazów aplikacji, realizowano aktualizacje i rollbacki, testowano różne strategie aktualizacji (Recreate, Rolling Update, Canary Deployment) oraz automatyzowano procesy sprawdzania poprawności wdrożenia. Laboratorium umożliwiło zdobycie praktycznych umiejętności w zakresie zarządzania cyklem życia aplikacji kontenerowych i rozwiązywania problemów podczas wdrożeń.
+
+## Przygotowanie nowego obrazu
+
+Do zadania wykorzystuję trzy wersje obrazów:
+
+- :latest - obraz aplikacji pochodzący z pipeline Jenkins
+- :v2.0 - drugi poprawny obraz
+- :v3.0 - wadaliwy obraz (w polu command ustawiono wartość ["/bin/false"])
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.1.png)
+
+## Zmiany w deploymencie
+
+1. Zwiększenie replik do 8
+
+Zrealizowano to poprzez zmianę wartości parametru `replicas` w pliku `deploy.yaml` z 4 na 8. Następnie wykonano poniższe polecenie, które wdraża zasoby określone w pliku `deploy.yaml` do klastra Kubernetes, w naszym przypadku dokonując aktualizacji o dodatkowe 4 repliki.
+
+```sh
+minikubectl apply -f deploy.yaml
+```
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.2.png)
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.3.png)
+
+2. Zmniejszenie replik do 1
+
+Zrealizowano to poprzez zmianę wartości parametru `replicas` w pliku `deploy.yaml` z 8 na 1. Następnie wykonano poniższe polecenie, które wdraża zasoby określone w pliku `deploy.yaml` do klastra Kubernetes, w naszym przypadku dokonując downgrade'u zasobów do jednej repliki.
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.4.png)
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.5.png)
+
+3. Zmniejszenie replik do 0
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.6.png)
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.7.png)
+
+4. Zwiększenie replik do 4
+
+Zrealizowano to poprzez zmianę wartości parametru `replicas` w pliku `deploy.yaml` z 0 na 4. Następnie wykonano poniższe polecenie, które wdraża zasoby określone w pliku `deploy.yaml` do klastra Kubernetes, w naszym przypadku dokonując aktualizacji zasobów o dodatkowe 4 repliki.
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.8.png)
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.9.png)
+
+5. Zastosowanie nowej wersji
+
+Zmiana parametru image w pliku `deploy.yaml` z `szyocie2/node-app:latest` na `szyocie/node-app:v2.0` spowodowała wdrożenie nowych zasobów do klastra Kubernetes. Dzięki strategii `rolling update` nowe Pody są uruchamiane przed usunięciem starych, co zapewnia ciągłość działania aplikacji.
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.10.png)
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.11.png)
+
+6. Zastosowanie starszej wersji
+
+Zmiana parametru image w pliku `deploy.yaml` z `szyocie2/node-app:v2.0` na `szyocie2/node-app:latest` spowodowała wdrożenie nowych zasobów do klastra Kubernetes. Podczas zmiany obrazu na starszy Kubernetes traktuje to jako nowe wdrożenie, tworząc nowe Pody przed usunięciem starych, aby zachować ciągłość działania, zgodnie z strategią `rolling update`.
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.12.png)
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.13.png)
+
+7. Zastosowanie "wadliwego" obrazu
+
+Zmiana parametru image w pliku `deploy.yaml` z `szyocie2/node-app:latest` na `szyocie2/node-app:v3.0` spowodowała wdrożenie wadliwego obrazu. Kubernetes uruchamia nowe Pody zgodnie ze strategią `rolling update`, ale ponieważ nowe kontenery kończą działanie z błędem, przechodzą w stan `CrashLoopBackOff`, a stare Pody są usuwane dopiero po uznaniu nowych za gotowe, co w tym przypadku nigdy nie następuje.
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.14.png)
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.15.png)
+
+**Przywrócenie poprzedniej wersji za pomocą poleceń**
+
+```sh
+minikubectl rollout history deployment/node-deployment
+```
+
+```sh
+minikubectl rollout undo deployment/node-deployment
+```
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.16.png)
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.17.png)
+
+## Kontrola wdrożenia
+
+```sh
+minikubectl rollout history deployment/node-deployment --revision=4
+```
+
+Powyższa komenda wyświetla szczegóły konkretnej wersji rewizji. Z analizy danych wynika, że rewizja 4 działała na wadliwym obrazie `szyocie/node-app:v3.0`
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.18.png)
+
+```sh
+minikubectl describe deployment node-deployment
+```
+
+Powyższa komenda wyświetli szczegółowe informacje na temat obecnie działającego wdrożenia.
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.19.png)
+
+Napisano skrypt `check.sh`, który sprawdza czy wdrożenie wykonało się w 60 sekund.
+
+```sh
+#!/bin/bash
+
+TARGET_DEPLOY="node-deployment"
+NS="default"
+MAX_WAIT=60
+CHECK_INTERVAL=5
+ELAPSED_TIME=0
+
+echo "Checking status of deployment: $TARGET_DEPLOY"
+
+
+while [ $ELAPSED_TIME -lt $MAX_WAIT ]; do
+    if minikube kubectl -- rollout status deployment/$TARGET_DEPLOY --namespace $NS --timeout=5s > /dev/null 2>&1; then
+        echo "Deployment successful after ${ELAPSED_TIME}s"
+        exit 0
+    fi
+
+    sleep $CHECK_INTERVAL
+    ELAPSED_TIME=$((ELAPSED_TIME + CHECK_INTERVAL))
+    echo "Retrying in ${CHECK_INTERVAL}s..."
+done
+
+echo "Timeout reached after $MAX_WAIT seconds"
+exit 1
+```
+
+```sh
+chmod +x check-deploy.sh
+```
+
+Dzięki tej komendzie nadane zostały uprawnienia do uruchomienia skryptu.
+
+Sprawdzenie działania skryptu:
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.20.png)
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.21.png)
+
+## Strategie wdrożenia
+
+1. *Recreate*
+
+Strategia `Recreate` polega na usunięciu wszystkich starych Podów przed uruchomieniem nowych. Ustawienia tej strategii wprowadzono, dodając do pliku `deploy.yaml` polecenie `type: Recreate`.
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.22.png)
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.23.png)
+
+2. *Rolling Update z parametrami*
+
+Strategia `RollingUpdate` pozwala na stopniową aktualizację Podów, uruchamiając nowe przed usunięciem starych. Ustawiono `maxUnavailable: 2` (maksymalnie 2 niedostępne Pody) oraz `maxSurge: 25%` (dodatkowe Pody do 25% replicas). Konfigurację dodano w pliku `deploy.yaml` w sekcji strategy jako type: `RollingUpdate`.
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.24.png)
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.25.png)
+
+3. *Canary Deployment*
+
+Stworzono dwa pliki wdrożenia — `canary1.yaml` (nowa wersja) i `canary2.yaml` (stara wersja). Strategia `Canary Deployment` wprowadza nową wersję obok stabilnej w ograniczonej liczbie replik. Obie wersje mają różne etykiety `version` (canary i stable) oraz wspólną etykietę `role: node-app`, co umożliwia obsługę przez jeden serwis `node-service.yaml`, kierujący ruch proporcjonalnie do liczby replik.
+
+`canary1.yaml`
+
+```sh
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app-canary
+  labels:
+    role: node-app
+    stage: canary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: node-app
+      stage: canary
+  template:
+    metadata:
+      labels:
+        role: node-app
+        stage: canary
+    spec:
+      containers:
+        - name: node-app-container
+          image: szyocie2/node-app:latest
+          ports:
+            - containerPort: 3000
+```
+
+Wdrożenie nowej wersji aplikacji (canary) tworzy jeden pod z obrazem `szyocie2/node-app:latest`, oznaczony etykietami `role: node-app` i stage: canary. Takie podejście pozwala na wprowadzenie zmian na małej liczbie replik, minimalizując ryzyko i umożliwiając równoległe testowanie nowej wersji ze stabilną.
+
+`canary2.yaml`
+
+```sh
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app-production
+  labels:
+    role: node-app
+    stage: stable
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      role: node-app
+      stage: stable
+  template:
+    metadata:
+      labels:
+        role: node-app
+        stage: stable
+    spec:
+      containers:
+        - name: node-app-container
+          image: szyocie2/node-app:v2.0
+          ports:
+            - containerPort: 3000
+```
+
+Ten manifest definiuje stabilne wdrożenie aplikacji, uruchamiając trzy repliki kontenera z obrazem `szyocie2/node-app:v2.0`. Pody mają etykiety `role: node-app` i stage: stable, co umożliwia łatwe rozróżnienie wersji. Stabilna wersja obsługuje większość ruchu, zapewniając ciągłość działania.
+
+`node-service.yaml`
+
+```sh
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-app-service
+spec:
+  selector:
+    role: node-app
+  ports:
+    - port: 80
+      targetPort: 3000
+  type: ClusterIP
+```
+
+Definicja usługi w Kubernetes, która łączy się z podami oznaczonymi etykietą `role: node-app`. Serwis nasłuchuje na porcie `80` i przekierowuje ruch na port `3000` w podach. Typ `ClusterIP` oznacza, że usługa jest dostępna tylko wewnątrz klastra, umożliwiając komunikację między komponentami.
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.26.png)
+
+![Opis obrazka](../Sprawozdanie3/lab11/screenshots/lab11.27.png)
