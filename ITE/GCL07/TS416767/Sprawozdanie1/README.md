@@ -350,7 +350,7 @@ docker run --rm node-deploy
 ---
 
 
-# Lab4
+## Lab4
 #### 1. Zbudowanie obrazu kontenera z poprzednich laboratoriów
 ```
 docker build -t base-node .
