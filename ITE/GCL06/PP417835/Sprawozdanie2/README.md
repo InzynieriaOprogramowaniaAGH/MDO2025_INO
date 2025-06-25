@@ -2,52 +2,62 @@
 
 Instalacja jenkinsa odbyła się w poprzednim sprawozdaniu
 
-# Tworzenie projektów w Jenkins'ie
+# Projekty wprowadzające w Jenkins'ie
 
-## uname
+## Uruchomienie funkcji ```uname -a```
 
 Zkonfigurowane projektu tak aby wykonywał polecenie ```uname -a```
-![](../lab5/screen7.jpg)
+![](./screeny/lab5/screen7.jpg)
 
-Logi konsoli co wykonaniu polecenia ```uname -a```
-![](../lab5/screen6.jpg)
+Logi konsoli po wykonaniu polecenia ```uname -a```
+![](./screeny/lab5/screen6.jpg)
 
-## godzina
+## Stwierdzenie parzystości godziny
 
 Script mający za zadanie sprawdzić czy godzina jest parzysta
-![](../lab5/screen9.jpg)
+![](./screeny/lab5/screen9.jpg)
 
 Script zwraca prawdę gdy godzina jest parzysta
-![](../lab5/screen12.jpg)
+![](./screeny/lab5/screen8.jpg)
 
 Natomiast gdy godzina jest nieparzysta to fałsz
-![](../lab5/screen8.jpg)
+![](./screeny/lab5/screen12.jpg)
 
-## pobranie ubuntu 
+## pobranie Ubuntu 
 
-
-![](../lab5/screen2.jpg)
+Logi pokazujące sukces w pobraniu obrazu ```Ubuntu```
+![](./screeny/lab5/screen2.jpg)
 
 ## pipeline irssi
+Tą część wdrażacącą do pipeline wykonałem na zajęciach dla ```irssi``` ponieważ w momencie wykonywania tego ćwiczenia nie została jeszcze podjęta ostateczna decyzja o wyborze ```curl```.
 
-![](../lab5/screen6p.jpg)
+Składnia pipeline mającego za zadanie zbuildowanie ```irssi``` i przeprowadzenie testów 
+![](./screeny/lab5/screen6p.jpg)
 
-![](../lab5/screen10.jpg)
+Logi konsoli po przejściu pipeline potwierdzające sukces.
+![](./screeny/lab5/screen10.jpg)
 
-![](../lab5/screen11.jpg)
+Potwierdzenie dwukrotnego uruchomienia pipeline z sukcesem.
+![](./screeny/lab5/screen11.jpg)
 
-# Właściwy pipeline 
+# Główny pipeline ```curl```
 
+Docker-in-Docker (DIND) uruchamia Dockera wewnątrz izolowanego kontenera, co zwiększa bezpieczeństwo ale kosztem wydajności i cache'a. CI  pozwala na szybsze buildy i łatwiejszy dostęp do woluminów, lecz niesie ze sobą większe ryzyko bezpieczeństwa. W moim projekcie wybrałem kontener CI, ponieważ mój projekt nie wymaga podwyższonych standardów bezpieczeństwa.
 
-## ustawienia 
+## konfiguracja Jenkinsa i dockerhuba przed wykonaniem pipeline 
 
-
+Uzyskanie tokena potrzebnego do łączności z dockerhubem
 ![](./screeny/screen3.jpg)
+
+Wprowadzenie tokena do Jenkinsa
 ![](./screeny/screen4.jpg)
+
+Konfiguracja parametrów potrzebnych do prawidłowgo działania pipeline 
 ![](./screeny/screen1.jpg)
 
-## diagram
+## diagram schematyczny pipeline
 
+Diagram przedstawiający w schematyczny sposób wszystkie kroki wykonywane podczas pipeline
 ![](./screeny/screen2.jpg)
 
 ## dockerfiles
@@ -90,7 +100,6 @@ Powyższy dockerfile kopiuje zbudowaną aplikację z kontenera do buildowania na
 
 
 ## opis pipeline
-
 
 ```
 environment {
@@ -223,23 +232,16 @@ post {
 
 Usuwa pewstałe w trakcie pipeline kontenery i obrazy aby mieć pewność, że kolejny pipeline wykona się w pełni od nowa a nie skopiuje poprostu plików z cashu oraz aby nie zajmować zbędnego miejsca
 
-
-
-
-
-
-
 ## potwierdzenie działania
 
-umieszczenie na docker huba
-
+Końcowy artefakt jest publikowany na DockerHubie
 ![](./screeny/screen6.jpg)
 
 
-
+Dowód na podwójne przejście pipeline oraz pojawienie się końcowego artefaktu
 ![](./screeny/screen7.jpg)
 
-dowód że dwa razy
 
+Dwukrotny przebieg pipeline
 ![](./screeny/screen8.jpg)
 
