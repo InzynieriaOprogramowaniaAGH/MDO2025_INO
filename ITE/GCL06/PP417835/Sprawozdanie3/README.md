@@ -58,6 +58,7 @@ ansible-target ansible_user=ansible ansible_ssh_private_key_file=~/.ssh/ansible_
 ```
 
 oraz wpisanie klucza publicznego który służy do łączenia się między maszynami do pliku kluczy autoryzowanych oraz nadanie odpowiednich uprawnień plikowi kluczy autoryzowanych aby możliwe było dokonanie pingu ansiblowego
+
 ![](./screeny/ansible/screen13.jpg)
 
 udany ping ```ansible```, który różni się od "normalnego" pingu 
@@ -71,30 +72,39 @@ Przepraszam za wpis po polsku w playbooku ale wspomagałem się AI przy napisani
 ![](./screeny/ansible/screen15.jpg)
 
 "Uruchomienie" playbooka, który poprawnie skopiował plik inwentarza co jest oznaczone przez napis ```changed=1``` 
+
 ![](./screeny/ansible/screen16.jpg)
 
 Ponowne uruchomienie nie wykazuje już żadnych zmian co znaczy, że wszystko działa poprawnie
+
 ![](./screeny/ansible/screen17.jpg)
 
 Połączenie się z nową maszyną i zainstalowanie na niej ```rngd```
+
 ![](./screeny/ansible/screen18.jpg)
 
 Rozbudowanie playbooka o część odpowiedzialną za aktualizacje i restart usług
+
 ![](./screeny/ansible/screen19.jpg)
 
 Uruchomienie playbooka po rozbudowaniu, który aktualizuje pakiety i uruchamia usługi co jest znowu potwierdzone wartością change większą od 0
+
 ![](./screeny/ansible/screen20.jpg)
 
 Zatrzymanie usługi ssh na nowej maszynie
+
 ![](./screeny/ansible/screen21.jpg)
 
 Po zatrzymaniu usługi nie ma połączenia więc playbook nie "przechodzi" co jest porządanym i logicznym działaniem
+
 ![](./screeny/ansible/screen22.jpg)
 
 Po ponownym włączeniu ssh wszystko wróciło do normy
+
 ![](./screeny/ansible/screen23.jpg)
 
 Uruchomienie ```ansible-galaxy init user``` co utworzyło szkielet roli
+
 ![](./screeny/ansible/screen24.jpg)
 
 Dalsza rozbudowa playbooka w katalogach stworzonych przez ```ansible-galaxy``` mająca za zadanie wdrożenie na nowej maszynie obrazu dockera stworzonego w poprzednim sprawozdaniu
@@ -163,6 +173,7 @@ Dalsza rozbudowa playbooka w katalogach stworzonych przez ```ansible-galaxy``` m
 ![](./screeny/ansible/screen25.jpg)
 
 Błąd działania nowego rozbudowanego playbooka wynikający z tego, że na dockerhubie nie miałem obrazu ```latest``` 
+
 ![](./screeny/ansible/screen26.jpg)
 
 Dopiero wpisanie konkretnej wersji rozwiązało ten problem. 
@@ -172,6 +183,7 @@ Wpisywanie konkretnej wersji jest mieczem obosiecznym ponieważ z jednej strony 
 
 
 Po zmianie na stałą wersję playbook wykonuje się poprawnie
+
 ![](./screeny/ansible/screen28.jpg)
 
 
@@ -180,12 +192,15 @@ Po zmianie na stałą wersję playbook wykonuje się poprawnie
 Plik odpowiedzi pozyskałem kilka tygodni temu ale niestety nie zrobiłem screenów. O prawdziwości moich słów może świadczyć fakt, że w katalogu ITE/GCL06/PP417835/lab9/ ostatni commit jest sprzed miesiąca
 
 Kreator nowej maszyny która skorzysta z pliku odpowiedzi
+
 ![](./screeny/lab9/screen1.jpg)
 
 Początkowo chciałem korzystać z fedory 42 jednak przez...
+
 ![](./screeny/lab9/screen2.jpg)
 
 taki oraz inne błędy zdecydowałem się pracować dalej na fedorze 41 
+
 ![](./screeny/lab9/screen2_2.jpg)
 
 
