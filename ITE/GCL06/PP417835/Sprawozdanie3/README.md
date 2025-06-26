@@ -40,42 +40,44 @@ zmiana nazwy hosta
 
 # sass
 
+10
+
 ![](./screeny/ansible/screen10.jpg)
-
+11
 ![](./screeny/ansible/scree11.jpg)
-
+12
 ![](./screeny/ansible/screen12.jpg)
-
+13
 ![](./screeny/ansible/screen13.jpg)
-
+14
 ![](./screeny/ansible/screen14.jpg)
-
+15
 ![](./screeny/ansible/screen15.jpg)
-
+16
 ![](./screeny/ansible/screen16.jpg)
-
+17
 ![](./screeny/ansible/screen17.jpg)
-
+18
 ![](./screeny/ansible/screen18.jpg)
-
+19
 ![](./screeny/ansible/screen19.jpg)
-
+20
 ![](./screeny/ansible/screen20.jpg)
-
+21
 ![](./screeny/ansible/screen21.jpg)
-
+22
 ![](./screeny/ansible/screen22.jpg)
-
+23
 ![](./screeny/ansible/screen23.jpg)
-
+24
 ![](./screeny/ansible/screen24.jpg)
-
+25
 ![](./screeny/ansible/screen25.jpg)
-
+26
 ![](./screeny/ansible/screen26.jpg)
-
+27
 ![](./screeny/ansible/screen27.jpg)
-
+28
 ![](./screeny/ansible/screen28.jpg)
 
 
