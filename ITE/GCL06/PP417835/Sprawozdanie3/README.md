@@ -67,6 +67,7 @@ udany ping ```ansible```, który różni się od "normalnego" pingu
 Utworzenie playbooka, który ma za zadanie określenie parametrów i wywołanie procedur na nowych maszynach
 
 Przepraszam za wpis po polsku w playbooku ale wspomagałem się AI przy napisaniu tego playbooka i nie zauważyłem aby przetłumaczyć wyrażenie na angielski
+
 ![](./screeny/ansible/screen15.jpg)
 
 "Uruchomienie" playbooka, który poprawnie skopiował plik inwentarza co jest oznaczone przez napis ```changed=1``` 
