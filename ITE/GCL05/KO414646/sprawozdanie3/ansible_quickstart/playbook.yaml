@@ -1,0 +1,26 @@
+- name: creative-playbook-name
+  hosts: Endpoints
+  become: true
+  tasks:
+    - name: Ping my hosts
+      ansible.builtin.ping:
+
+    - name: Copy inventory
+      ansible.builtin.copy:
+        src: ./inventory.ini
+        dest: /home/ansible/inventory.ini
+
+    - name: Update packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+    - name: Restart sshd
+      ansible.builtin.systemd:
+        name: sshd
+        state: restarted
+
+    - name: Restart rngd
+      ansible.builtin.systemd:
+        name: rngd
+        state: restarted

@@ -1,0 +1,67 @@
+---
+# tasks file for deploy-freeciv
+- name: Ensure Docker is installed
+  ansible.builtin.dnf:
+    name: docker
+    state: present
+  become: true
+
+- name: Start and enable Docker service
+  ansible.builtin.systemd:
+    name: docker
+    state: started
+    enabled: true
+  become: true
+
+- name: Create server directory
+  ansible.builtin.file:
+    path: /server
+    state: directory
+  become: true
+
+- name: Copy app
+  ansible.builtin.copy:
+    src: freeciv_server.tar.gz
+    dest: /server
+  become: true
+
+- name: Extract app
+  ansible.builtin.unarchive:
+    src: /server/freeciv_server.tar.gz
+    dest: /server
+    remote_src: yes
+
+- name: Copy Dockerfile
+  ansible.builtin.copy:
+    src: Dockerfile
+    dest: /server
+  become: true
+
+- name: Build Docker image on remote host
+  ansible.builtin.shell: docker build -t deploy-image -f /server/Dockerfile /server
+  become: true
+
+- name: Remove existing container if any
+  ansible.builtin.shell: docker rm -f deploy-container || true
+  become: true
+
+- name: Run Docker container
+  ansible.builtin.shell: >
+    docker run -d
+    --name deploy-container
+    --restart=always
+    --security-opt label=disable
+    deploy-image
+  become: true
+
+- name: Wait for server startup
+  ansible.builtin.pause:
+    seconds: 5
+
+- name: Show server logs
+  ansible.builtin.shell: docker logs deploy-container
+  register: container_logs
+  become: true
+
+- debug:
+    var: container_logs.stdout_lines

@@ -1,0 +1,5 @@
+- name: Run freeciv_server
+  hosts: Endpoints
+  become: true
+  roles:
+   - deploy-freeciv
