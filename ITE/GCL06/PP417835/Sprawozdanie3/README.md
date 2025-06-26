@@ -2,7 +2,7 @@
 
 # Ansible
 
-nie mam instalacji ansibla bo instalowałem z Panem na zajęciach i nie robiłem screenów w tym czasie
+nie mam instalacji ansibla maszyny wirtualnej bo instalowałem z Panem na zajęciach i nie robiłem screenów w tym czasie
 
 Działająca nowa maszyna do ansible
 
