@@ -5,33 +5,33 @@
 nie mam instalacji ansibla bo instalowałem z Panem na zajęciach i nie robiłem screenów w tym czasie
 
 
-dziala maszyna 
+Działająca nowa maszyna do ansible
 
 ![](./screeny/ansible/screen1.jpg)
 
-migawka
+Utworzenie migawki
 
 ![](./screeny/ansible/screen2.jpg)
 
-wymiana kluczy
+Utworzenie nowego klucza i jego przesłanie do nowej maszyny co zapewni łączność ssh bez użycia hasła
 
 ![](./screeny/ansible/screen3.jpg)
 
 ![](./screeny/ansible/screen4.jpg)
 
-ssh config
+zmiany w pliku config w katalogu ssh aby wskazać na klucz za pomocą którego mają być ustanawiane połączenia z nową maszyną
 
 ![](./screeny/ansible/screen5.jpg)
 
 ![](./screeny/ansible/screen6.jpg)
 
-logowanie
+logowanie za pomocą ssh do nowej maszyny bez użycia hasła
 
 ![](./screeny/ansible/screen7.jpg)
 
 # inwentaryzacja
 
-zmiana nazwy hosta
+zmiana nazwy hosta maszyny głównej i dowód na zmianę po restarcie
 
 ![](./screeny/ansible/screen8.jpg)
 
@@ -42,8 +42,11 @@ zmiana nazwy hosta
 
 10
 
+dodanie na maszynie gównej skojarzenia nazwy słownej z adresem IP nowej maszyny dzięki czemu będzie możliwe odnoszenie się do nowej maszyny po nazwie słownej która jest wygodniejsza od adresu IP
 ![](./screeny/ansible/screen10.jpg)
 11
+
+Pingowanie dwóch maszyn nawzajem aby sprawdzić czy połączenie zostało poprawnie ustanowione
 ![](./screeny/ansible/scree11.jpg)
 12
 ![](./screeny/ansible/screen12.jpg)
