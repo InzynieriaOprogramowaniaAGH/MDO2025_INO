@@ -1,0 +1,36 @@
+---
+- name: Artifact_playbook
+  become: true
+  
+  tasks:
+    - name: Download docker
+      ansible.builtin.dnf:
+        name: docker
+
+    - name: Start docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+      
+
+    - name: Build
+      community.docker.docker_container:
+        name: picoc
+        image: khan9/pico-c_interactive:1.73
+        state: started
+        command: sleep infinity
+
+    - name: Test
+      ansible.builtin.command: docker ps -a
+      register: out
+
+    - name: Print the result of the program
+      debug:
+        var: out.stdout
+
+    - name: Stop
+      ansible.builtin.command: docker stop picoc
+
+    - name: Remove
+      ansible.builtin.command: docker rm picoc
+      
