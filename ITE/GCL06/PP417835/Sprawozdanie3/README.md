@@ -37,21 +37,17 @@ zmiana nazwy hosta maszyny głównej i dowód na zmianę po restarcie
 ![](./screeny/ansible/screen9.jpg)
 
 
-
-10
-
 dodanie na maszynie głównej skojarzenia nazwy słownej z adresem IP nowej maszyny dzięki czemu będzie możliwe odnoszenie się do nowej maszyny po nazwie słownej która jest wygodniejsza od adresu IP
 ![](./screeny/ansible/screen10.jpg)
-11
 
 Identycznie skojarzenie słowne tylko w drugą stronę
 
 ![](./screeny/ansible/screen11.jpg)
-12
+
 Pingowanie dwóch maszyn nawzajem aby sprawdzić czy połączenie zostało poprawnie ustanowione
 
 ![](./screeny/ansible/screen12.jpg)
-13
+
 utworzenie pliku inventory.ini
 ```
 [Orchestrators]
@@ -63,11 +59,9 @@ ansible-target ansible_user=ansible ansible_ssh_private_key_file=~/.ssh/ansible_
 
 oraz wpisanie klucza publicznego który służy do łączenia się między maszynami do pliku kluczy autoryzowanych oraz nadanie odpowiednich uprawnień plikowi kluczy autoryzowanych aby możliwe było dokonanie pingu ansiblowego
 ![](./screeny/ansible/screen13.jpg)
-14
 
 udany ping ```ansible```, który różni się od "normalnego" pingu 
 ![](./screeny/ansible/screen14.jpg)
-15
 
 Utworzenie playbooka, który ma za zadanie określenie parametrów i wywołanie procedur na nowych maszynach
 
