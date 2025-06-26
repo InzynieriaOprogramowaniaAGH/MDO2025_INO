@@ -46,11 +46,18 @@ dodanie na maszynie gównej skojarzenia nazwy słownej z adresem IP nowej maszyn
 ![](./screeny/ansible/screen10.jpg)
 11
 
+
+
 Pingowanie dwóch maszyn nawzajem aby sprawdzić czy połączenie zostało poprawnie ustanowione
-![](./screeny/ansible/scree11.jpg)
+![](./screeny/ansible/screen11.jpg)
 12
+
+utworzenie pliku inventory.ini
 ![](./screeny/ansible/screen12.jpg)
 13
+```
+miejsce na inventor
+```
 ![](./screeny/ansible/screen13.jpg)
 14
 ![](./screeny/ansible/screen14.jpg)
