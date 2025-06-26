@@ -46,15 +46,15 @@ dodanie na maszynie gównej skojarzenia nazwy słownej z adresem IP nowej maszyn
 ![](./screeny/ansible/screen10.jpg)
 11
 
+Identycznie skojarzenie słowne tylko w drugą stronę
 
-
-Pingowanie dwóch maszyn nawzajem aby sprawdzić czy połączenie zostało poprawnie ustanowione
 ![](./screeny/ansible/screen11.jpg)
 12
+Pingowanie dwóch maszyn nawzajem aby sprawdzić czy połączenie zostało poprawnie ustanowione
 
-utworzenie pliku inventory.ini
 ![](./screeny/ansible/screen12.jpg)
 13
+utworzenie pliku inventory.ini
 ```
 miejsce na inventor
 ```
