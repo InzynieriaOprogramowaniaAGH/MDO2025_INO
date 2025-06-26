@@ -1,0 +1,48 @@
+---
+- name: is docker installed?
+  ansible.builtin.package:
+    name: docker
+    state: latest
+
+- name: run docker service
+  ansible.builtin.systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: pull image from DockerHub
+  community.docker.docker_image:
+    name: pawpodw2/curl_publish
+    tag: v15
+    source: pull
+
+- name: run container curl_publish
+  community.docker.docker_container:
+    name: vercheck
+    image: pawpodw2/curl_publish:v15
+    state: started
+    restart_policy: unless-stopped
+    command: tail -f /dev/null
+
+- name: wait to stabilize
+  pause:
+    seconds: 5
+
+- name: test connectivity with AGH Metal
+  command: docker exec vercheck curl -s --fail http://www.metal.agh.edu.pl
+  register: result
+  ignore_errors: true
+
+- name: results of test
+  debug:
+    msg: "{{ 'success of conectivity' if result.rc == 0 else 'fail of conectivity' }}"
+
+- name: stop container
+  community.docker.docker_container:
+    name: vercheck
+    state: stopped
+
+- name: delete container
+  community.docker.docker_container:
+    name: vercheck
+    state: absent

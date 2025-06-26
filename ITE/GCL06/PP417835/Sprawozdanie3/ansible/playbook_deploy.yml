@@ -1,0 +1,5 @@
+- name: Deploy curl to hosts
+  hosts: Endpoints
+  become: yes
+  roles:
+    - user
