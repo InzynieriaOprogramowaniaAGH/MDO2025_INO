@@ -1,0 +1,3 @@
+FROM irssibuild
+WORKDIR /irssi/Build
+RUN ninja test

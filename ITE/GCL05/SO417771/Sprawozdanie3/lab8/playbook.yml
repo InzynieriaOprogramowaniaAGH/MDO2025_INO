@@ -1,0 +1,15 @@
+- name: Playbook
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Ping do wszystkich maszyn
+      ansible.builtin.ping:
+
+- name: Skopiuj plik inventory.yaml na Endpoints
+  hosts: Endpoints
+  gather_facts: yes
+  tasks:
+    - name: Skopiuj plik inwentaryzacji
+      ansible.builtin.copy:
+        src: ./inventory.yaml
+        dest: /tmp/inventory.yaml

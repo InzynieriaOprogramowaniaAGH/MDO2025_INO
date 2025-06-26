@@ -1,0 +1,34 @@
+- name: Playbook
+  hosts: all
+  gather_facts: yes
+  tasks:
+    - name: Ping do wszystkich maszyn
+      ansible.builtin.ping:
+
+- name: Skopiuj plik inventory.yaml na Endpoints
+  hosts: Endpoints
+  gather_facts: yes
+  tasks:
+    - name: Skopiuj plik inwentaryzacji
+      ansible.builtin.copy:
+        src: ./inventory.yaml
+        dest: /tmp/inventory.yaml
+
+- name: Aktualizacja systemu + restart usług
+  hosts: Endpoints
+  become: trueansible-playbook -i inventory.ini playbook.yml --ask-become-pass
+  tasks:
+    - name: Aktualizacja pakietów
+      ansible.builtin.package:
+        name: "*"
+        state: latest
+
+    - name: Restart usługi sshd
+      ansible.builtin.service:
+        name: sshd
+        state: restarted
+
+    - name: Restart usługi rngd
+      ansible.builtin.service:
+        name: rngd
+        state: restartedansible-playbook -i inventory.ini playbook.yml --ask-become-pass
