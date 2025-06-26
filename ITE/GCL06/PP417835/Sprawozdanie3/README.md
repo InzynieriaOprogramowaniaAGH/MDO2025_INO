@@ -61,6 +61,7 @@ oraz wpisanie klucza publicznego który służy do łączenia się między maszy
 ![](./screeny/ansible/screen13.jpg)
 
 udany ping ```ansible```, który różni się od "normalnego" pingu 
+
 ![](./screeny/ansible/screen14.jpg)
 
 Utworzenie playbooka, który ma za zadanie określenie parametrów i wywołanie procedur na nowych maszynach
