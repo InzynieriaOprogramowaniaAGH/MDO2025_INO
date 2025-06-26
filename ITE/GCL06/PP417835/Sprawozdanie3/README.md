@@ -138,22 +138,86 @@ Po zmianie na stałą wersję playbook wykonuje się poprawnie
 
 
 ## masowe wdrożenia 
+
+Plik odpowiedzi pozyskałem kilka tygodni temu ale niestety nie zrobiłem screenów. O prawdziwości moich słów może świadczyć fakt, że w katalogu ITE/GCL06/PP417835/lab9/ ostatni commit jest sprzed miesiąca
 1
+
+Kreator nowej maszyny która skorzysta z pliku odpowiedzi
 ![](./screeny/lab9/screen1.jpg)
 
 2
-![](./screeny/lab9/screen2.jpg)
-3
-![](./screeny/lab9/screen3.jpg)
-4
-![](./screeny/lab9/screen4.jpg)
 
+Początkowo chciałem kożystać z fedory 42 jednak przez...
+![](./screeny/lab9/screen2.jpg)
+
+taki oraz inne blędy zdecydowałem się pracować dalej na fedorze 41 
+![](./screeny/lab9/screen2_2.jpg)
+3
+
+
+![](./screeny/lab9/screen3.jpg)
+
+Instalacja zakończona sukcesem
 5
 ![](./screeny/lab9/screen5.jpg)
 6
+
+plik odpowiedzi dzięki któremu powyższa instalacja się dokonała. Hasło wpisałem tymczasowo na stałe ponieważ zapomniałem starego ale wiem, że to bardzo zła praktyka
 ![](./screeny/lab9/screen6.jpg)
 7
+
+Plik odpowiedzi który od razu przy pierwszym uruchomieniu nowej maszyny wirtualnej zapisuje na niej docker z programem ```curl```, który był celem pipeline z poprzedniego sprawozdania
+```
+miejsce na ostateczny plik wdrożenia
+```
+
+Potwierdzenie, że isntalacja nowej maszyny przebiegła zgodnie z założeniami
 ![](./screeny/lab9/screen7.jpg)
 
 
 # kubernetes
+1
+![](./screeny/kubernetes/screen1.jpg)
+2
+![](./screeny/kubernetes/screen2.jpg)
+3
+![](./screeny/kubernetes/screen3.jpg)
+4
+![](./screeny/kubernetes/screen4.jpg)
+5
+![](./screeny/kubernetes/screen5.jpg)
+6
+![](./screeny/kubernetes/screen6.jpg)
+7
+![](./screeny/kubernetes/screen7.jpg)
+8
+![](./screeny/kubernetes/screen8.jpg)
+9
+![](./screeny/kubernetes/screen9.jpg)
+10
+![](./screeny/kubernetes/screen10.jpg)
+11
+![](./screeny/kubernetes/screen11.jpg)
+12
+![](./screeny/kubernetes/screen12.jpg)
+13
+![](./screeny/kubernetes/screen13.jpg)
+14
+![](./screeny/kubernetes/screen14.jpg)
+15
+![](./screeny/kubernetes/screen15.jpg)
+16
+![](./screeny/kubernetes/screen16.jpg)
+17
+![](./screeny/kubernetes/screen17.jpg)
+18
+![](./screeny/kubernetes/screen18.jpg)
+19
+![](./screeny/kubernetes/screen19.jpg)
+20
+![](./screeny/kubernetes/screen20.jpg)
+21
+![](./screeny/kubernetes/screen21.jpg)
+22
+![](./screeny/kubernetes/screen22.jpg)
+
