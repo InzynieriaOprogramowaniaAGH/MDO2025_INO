@@ -38,4 +38,50 @@ zmiana nazwy hosta
 ![](./screeny/ansible/screen9.jpg)
 
 
+# sass
+
+![](./screeny/ansible/screen10.jpg)
+
+![](./screeny/ansible/scree11.jpg)
+
+![](./screeny/ansible/screen12.jpg)
+
+![](./screeny/ansible/screen13.jpg)
+
+![](./screeny/ansible/screen14.jpg)
+
+![](./screeny/ansible/screen15.jpg)
+
+![](./screeny/ansible/screen16.jpg)
+
+![](./screeny/ansible/screen17.jpg)
+
+![](./screeny/ansible/screen18.jpg)
+
+![](./screeny/ansible/screen19.jpg)
+
+![](./screeny/ansible/screen20.jpg)
+
+![](./screeny/ansible/screen21.jpg)
+
+![](./screeny/ansible/screen22.jpg)
+
+![](./screeny/ansible/screen23.jpg)
+
+![](./screeny/ansible/screen24.jpg)
+
+![](./screeny/ansible/screen25.jpg)
+
+![](./screeny/ansible/screen26.jpg)
+
+![](./screeny/ansible/screen27.jpg)
+
+![](./screeny/ansible/screen28.jpg)
+
+
+
 ## masowe wdrożenia 
+
+
+
+# kubernetes
