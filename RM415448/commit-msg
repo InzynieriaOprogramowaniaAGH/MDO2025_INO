@@ -1,5 +1,0 @@
-prefix="RM415448:"
-
-if ! grep -q "^$prefix" "$1"; then
-  sed -i "1s/^/$prefix /" "$1"
-fi
