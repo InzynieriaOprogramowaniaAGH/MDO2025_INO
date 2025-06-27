@@ -1,0 +1,5 @@
+FROM node-builder
+
+WORKDIR /app/nodejs-template
+
+CMD ["npm", "run", "test"]

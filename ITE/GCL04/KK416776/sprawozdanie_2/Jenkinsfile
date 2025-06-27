@@ -1,0 +1,95 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HOST = "tcp://docker:2376"
+        DOCKER_CERT_PATH = "/certs/client"
+        DOCKER_TLS_VERIFY = "1"
+        APP_DIR = "ITE/GCL04/KK416776/sprawozdanie_2"
+        VERSION = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+    }
+
+    stages {
+        stage('Init Logs') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh 'mkdir -p logs artifacts'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir(env.APP_DIR){
+                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                        sh 'docker build -t node-builder -f Dockerfile.build . > logs/build.log 2>&1'
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir(env.APP_DIR) {
+                    catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                        sh 'docker build -t node-tester -f Dockerfile.test . > logs/test.log 2>&1'
+                        sh 'docker run --rm node-tester >> logs/test.log 2>&1'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh '''
+                        docker build -t node-deploy -f Dockerfile.deploy .
+                        docker run -d --name node-deploy node-deploy
+                        sleep 5
+                    '''
+                }
+            }
+        }
+
+        stage('Test Deploy') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh '''
+                        echo "== Logs from deployed container =="
+                        docker logs node-deploy | tee logs/deploy.log
+
+                        echo "== Simple validation =="
+                        if docker logs node-deploy | grep -q "hello from index.js"; then
+                            echo "Deploy test passed ✅"
+                        else
+                            echo "Deploy test failed ❌"
+                            exit 1
+                        fi
+                    '''
+                }
+            }
+        }
+
+        stage('Publish') {
+            steps {
+                dir(env.APP_DIR) {
+                    sh "docker save node-deploy -o artifacts/node-deploy_${VERSION}.tar"
+                    archiveArtifacts artifacts: "artifacts/node-deploy_${VERSION}.tar", fingerprint: true
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            sh '''
+                docker container rm -f node-deploy || true
+                docker image rm node-builder node-tester node-deploy || true
+                docker system prune -af || true
+            '''
+            dir(env.APP_DIR) {
+                archiveArtifacts artifacts: 'logs/*.log', allowEmptyArchive: true
+            }
+        }
+    }
+}
