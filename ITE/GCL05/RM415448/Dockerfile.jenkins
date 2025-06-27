@@ -1,0 +1,19 @@
+FROM jenkins/jenkins:2.492.2-jdk17
+USER root
+RUN apt-get update && apt-get install -y \
+    lsb-release \
+    ca-certificates \
+    curl \
+    apt-transport-https \
+    gnupg \
+    && curl -fsSL https://download.docker.com/linux/debian/gpg | tee /etc/apt/keyrings/docker.asc \
+    && echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list \
+    && apt-get update \
+    && apt-get install -y docker-ce docker-ce-cli containerd.io \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
+USER jenkins
+EXPOSE 8080
+EXPOSE 50000
+CMD ["/usr/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
