@@ -1,0 +1,30 @@
+- name: MyPlaybook
+  hosts: Endpoints
+  
+  become: true
+  
+  tasks:
+    - name: ping
+      ansible.builtin.ping:
+
+    - name: copy
+      ansible.builtin.copy:
+        src: /home/kh/playbook.yaml
+        dest: /home/ansible/playbook.yaml
+        mode: '0644'
+
+    - name: update
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_only: yes
+
+    - name: restart sshd
+      ansible.builtin.service:
+       name: sshd
+       state: restarted
+
+    - name: restart rngd
+      ansible.builtin.service:
+       name: rngd
+       state: restarted

@@ -1,0 +1,4 @@
+FROM nginx
+
+RUN apt-get update
+COPY nginx_mod.conf /etc/nginx/nginx.conf
