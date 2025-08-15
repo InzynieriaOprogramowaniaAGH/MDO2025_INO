@@ -1,7 +1,7 @@
 # Dockerfile.build
 FROM fedora:latest AS builder
 
-# Instalacja wymaganych zależności
+# Instalacja wymaganych zależności systemowych i buildowych
 RUN dnf install -y \
     git \
     meson \
@@ -14,7 +14,12 @@ RUN dnf install -y \
     perl-ExtUtils-Embed \
     pkgconfig \
     utf8proc-devel \
+    ruby \
+    rubygems \
     && dnf clean all
+
+# Instalacja fpm (musimy mieć rubygems)
+RUN gem install --no-document fpm
 
 # Sklonowanie repozytorium i inicjalizacja submodułów
 WORKDIR /src
