@@ -1,5 +1,0 @@
-# Dockerfile.test
-FROM doctest-builder as tester
-
-WORKDIR /app/build
-RUN ctest
