@@ -7,14 +7,6 @@ pipeline {
     }
 
     stages {
-        stage('Init Submodules') {
-            steps {
-                echo '>>> INIT SUBMODULES'
-                // inicjalizacja wszystkich submodułów w repo
-                sh 'git submodule update --init --recursive'
-            }
-        }
-
         stage('Build') {
             agent {
                 dockerfile {
