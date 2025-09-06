@@ -5,9 +5,10 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libpcre3-dev \
     libapr1-dev libaprutil1-dev \
-    python3 python3-pip \
+    python3 python3-venv python3-pip \
     make git wget curl \
-    && pip3 install pytest \
+    && python3 -m venv /opt/venv \
+    && /opt/venv/bin/pip install pytest \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
