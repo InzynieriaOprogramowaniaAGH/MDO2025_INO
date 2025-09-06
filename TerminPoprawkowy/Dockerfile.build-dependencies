@@ -1,0 +1,13 @@
+FROM debian:bookworm-slim
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    libpcre3-dev \
+    libapr1-dev libaprutil1-dev \
+    python3 python3-pip \
+    make git wget curl \
+    && pip3 install pytest \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
