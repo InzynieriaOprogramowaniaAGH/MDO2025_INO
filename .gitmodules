@@ -1,0 +1,3 @@
+[submodule "httpd"]
+	path = httpd
+	url = https://github.com/apache/httpd.git

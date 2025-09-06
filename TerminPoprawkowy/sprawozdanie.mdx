@@ -1,0 +1,157 @@
+# Sprawozdanie z Projektu Zaliczeniowego: Metodyki DevOps
+
+## 1. Wybór oprogramowania i uzasadnienie
+
+Na potrzeby projektu wybrano oprogramowanie **Apache HTTP Server (httpd)**, jeden z najpopularniejszych serwerów WWW. Wybór ten został podyktowany następującymi kryteriami:
+
+1.  **Działanie w kontenerze z wystawionym portem TCP**: Apache jest standardowym rozwiązaniem do konteneryzacji, a jego domyślny port do nasłuchiwania to `80`. Uruchomienie go w kontenerze jest proste i powszechnie stosowane.
+
+2.  **Obecność testów w repozytorium**: Repozytorium źródłowe Apache'a jest zaopatrzone w obszerne testy. Znajdują się one w katalogu `test/`, co ułatwia weryfikację i spełnia kryterium projektu.
+
+3.  **Stosowność licencji**: Apache jest rozpowszechniany na licencji **Apache 2.0**. Jest to licencja permisywna, która pozwala na swobodne wykorzystanie kodu, co w pełni kwalifikuje go do użycia w ramach niniejszego projektu.
+
+## 2. Dowód działania aplikacji poza kontenerem
+
+### Weryfikacja działania
+
+Aby udowodnić, że Apache nasłuchuje na porcie `8080`, wykonano następujące kroki w konsoli systemowej.
+
+**Krok 1: Weryfikacja gniazda nasłuchującego**
+
+Użyto polecenia `lsof` lub `ss` (Socket Statistics), aby sprawdzić, czy proces Apache'a nasłuchuje na porcie `8080`:  
+
+![Logo](./screenshots/bezKontenera/lsof8080.png)
+
+Powyższy wynik jednoznacznie pokazuje, że proces Apachejest w stanie `LISTEN` na wszystkich interfejsach (`0.0.0.0`) na porcie `8080`.
+
+**Krok 2: Weryfikacja komunikacji z usługą**
+
+Aby potwierdzić, że usługa odpowiada na żądania, użyto narzędzia `curl` do wysłania żądania HTTP GET:  
+
+![Logo](./screenshots/bezKontenera/curl8080.png)
+
+Weryfikacja graficzna
+
+Po wpisaniu w przeglądarce adresu http://localhost:8080 widoczna jest domyślna strona Apache.  
+
+![Logo](./screenshots/bezKontenera/apache.png)
+
+Listing katalogu z testami
+
+Testy dla Apache'a znajdują się w głównym repozytorium, w katalogu `test/`. Poniżej znajduje się listing jego struktury, który potwierdza obecność testów:  
+
+![Logo](./screenshots/testListing.png)
+
+Jak widać, testy są zorganizowane w podkatalogu `test/`, co jest powszechną konwencją w tego typu projektach.
+
+## 3\. Analiza licencji oprogramowania Apache 2.0
+
+Oprogramowanie Apache HTTP Server jest rozpowszechniane na licencji **Apache License 2.0**, której kluczowe fragmenty znajdują się: https://github.com/apache/httpd?tab=Apache-2.0-1-ov-file#readme
+
+Licencja ta jest **permisywna** i w pełni zezwala na wykorzystanie oprogramowania do celów niniejszego projektu. Poniżej znajduje się uzasadnienie:
+
+  * **Swoboda wykorzystania i modyfikacji**: `Apache License 2.0` pozwala na użycie, modyfikowanie i rozpowszechnianie kodu źródłowego i binarnego. Umożliwia to budowanie własnego obrazu Docker.
+  * **Zasady dotyczące atrybucji**: Licencja wymaga zachowania oryginalnej informacji o prawach autorskich oraz warunków licencji, co jest standardową praktyką.
+  * **Patent grant**: Licencja zawiera sekcję `patent grant`, która chroni użytkowników przed pozwami patentowymi ze strony kontrybutorów, co jest dodatkową korzyścią.
+
+Zatem, licencja Apache 2.0 jest w pełni zgodna z wymaganiami projektu.
+
+## 4\. Dowód działania aplikacji wewnątrz kontenera
+
+Weryfikacja działania
+
+Aby wykazać, że Apache działa wewnątrz kontenera, przygotowano prosty `Dockerfile`. Poniżej przedstawiono jego zawartość.
+```
+FROM httpd:alpine
+EXPOSE 80
+```
+
+Po zbudowaniu obrazu poleceniem `docker build -t my-apache .` i uruchomieniu go, wykonano następujące weryfikacje.
+
+**Krok 1: Weryfikacja uruchomionego kontenera i nasłuchującego portu**
+
+Użyto polecenia `docker ps` do listy uruchomionych kontenerów.  
+
+![Logo](./screenshots/kontener/dockerPs.png)
+
+Wynik ten pokazuje, że kontener o nazwie `my-apache` jest uruchomiony, a jego port `80` jest mapowany na port `8080` hosta.
+
+**Krok 2: Weryfikacja komunikacji z usługą**
+
+Użyto narzędzia `curl` do komunikacji z serwerem Apache, ale tym razem za pośrednictwem zmapowanego portu `8080` na hoście.
+
+![Logo](./screenshots/kontener/curl8080.png)
+
+Weryfikacja graficzna
+
+Po wpisaniu w przeglądarce adresu http://localhost:8080 widoczna jest domyślna strona powitalna Apache, co potwierdza działanie aplikacji wewnątrz kontenera i prawidłowe mapowanie portów.
+![Logo](./screenshots/kontener/apache.png)
+
+## 5. Dowód działania buildu i testów lokalnie bez kontenera
+
+### Krok 1: Przygotowanie konfiguracji
+```bash
+./buildconf
+```
+
+### Krok 2: Konfiguracja projektu
+```bash
+./configure --enable-so --enable-ssl \
+  --with-ssl=/opt/homebrew/opt/openssl@3 \
+  --with-mpm=event \
+  --with-included-apr
+```
+
+### Krok 3: Konfiguracja ścieżki instalacji i HTTP/2
+
+```bash
+./configure --prefix=$PWD/install --enable-http2
+```
+
+### Krok 4: Budowanie projektu
+
+```bash
+make -j$(sysctl -n hw.ncpu)
+```
+Rezultat:  
+
+![Logo](./screenshots/buildSuccessfull.png)
+
+### Krok 5: Instalacja
+```bash
+make install
+```
+
+### Krok 6: Uruchomienie testów
+```bash
+pytest -vv
+```
+
+Rezultat:  
+![Logo](./screenshots/testRunning.png)
+
+
+
+
+
+
+Pobierz oficjalny obraz Jenkinsa LTS (z DockerHub):
+docker pull jenkins/jenkins:lts
+
+Uruchom Jenkinsa z wolumenem na dane:
+docker network create jenkins
+docker volume create jenkins_data
+docker run -d \
+  --name jenkins \
+  --restart=always \
+  -p 8080:8080 -p 50000:50000 \
+  -v jenkins_data:/var/jenkins_home \
+  --network jenkins \
+  jenkins/jenkins:lts
+
+
+Pierwsze uruchomienie – pobierz hasło admina:
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+
+
+http://192.168.0.7:8080/
