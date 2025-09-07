@@ -3,40 +3,28 @@ pipeline {
 
     stages {
         stage('Build') {
-            agent {
-                dockerfile {
-                    filename 'Dockerfile.build-dependencies'
-                    dir '.'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
+            agent any
             steps {
                 sh '''
                     echo ">>> BUILD START"
 
-                    cd httpd
-                    rm -rf srclib/apr srclib/apr-util
-                    git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
-                    git clone -b 1.6.x https://github.com/apache/apr-util.git srclib/apr-util
+                    docker run --rm -v $PWD:/workspace -w /workspace docker:24-dind /bin/sh -c "
+                        cd httpd
+                        rm -rf srclib/apr srclib/apr-util
+                        git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
+                        git clone -b 1.6.x https://github.com/apache/apr-util.git srclib/apr-util
+                        ./buildconf
+                        ./configure --prefix=$PWD/install --enable-so --enable-ssl --with-ssl=/usr --with-mpm=event --with-included-apr --enable-http2
+                        make -j$(nproc)
+                        make install
+                    "
 
-                    ./buildconf
-                    ./configure --prefix=$PWD/install \
-                                --enable-so \
-                                --enable-ssl \
-                                --with-ssl=/usr \
-                                --with-mpm=event \
-                                --with-included-apr \
-                                --enable-http2
-
-                    make -j$(nproc)
-                    make install
-
+                    docker build -t apache-builder -f Dockerfile.builder .
                     echo ">>> BUILD END"
                 '''
-
-                sh 'docker build -t apache-builder -f Dockerfile.builder .'
             }
         }
+
 
         stage('Test') {
             agent any  // root agent, użyjemy docker run w sh
