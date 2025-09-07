@@ -11,6 +11,7 @@ RUN apt-get update -o Acquire::Check-Valid-Until=false \
     make git wget curl \
     libnghttp2-dev \
     nghttp2-client \
+    apache2 \
  && python3 -m venv /opt/venv \
  && /opt/venv/bin/pip install --upgrade pip \
  && /opt/venv/bin/pip install \
@@ -18,4 +19,5 @@ RUN apt-get update -o Acquire::Check-Valid-Until=false \
       cryptography \
       pyOpenSSL \
       websockets \
+      filelock \
  && rm -rf /var/lib/apt/lists/*
