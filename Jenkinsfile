@@ -41,12 +41,12 @@ pipeline {
 
                     docker run --rm \
                         -v $PWD/httpd:/httpd \
-                        -w /httpd \
+                        -w /httpd/test \
                         my-httpd-builder:latest sh -c "
                             export PATH=/httpd/install/bin:$PATH
                             . /opt/venv/bin/activate
-                            mkdir -p test-results
-                            pytest -vv --junitxml=test-results/results.xml
+                            mkdir -p /httpd/test-results
+                            pytest -vv --junitxml=/httpd/test-results/results.xml
                         "
 
                     echo ">>> TEST END"
