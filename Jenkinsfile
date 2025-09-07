@@ -9,7 +9,7 @@ pipeline {
 
                     docker build -t my-httpd-builder:latest -f Dockerfile.build-dependencies .
 
-                    docker run --rm my-httpd-builder:latest sh -c "
+                    docker run --name my-httpd-build-container my-httpd-builder:latest sh -c "
                         rm -rf srclib/apr srclib/apr-util
                         git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
                         git clone -b 1.6.x https://github.com/apache/apr-util.git srclib/apr-util
@@ -27,12 +27,16 @@ pipeline {
                         make install
                     "
 
+                    docker commit my-httpd-build-container my-httpd-built:latest
+
+                    docker rm my-httpd-build-container
+
                     echo ">>> BUILD END"
                 '''
             }
         }
 
-       stage('Test') {
+        stage('Test') {
             steps {
                 sh '''
                     echo ">>> TEST START"
@@ -40,17 +44,20 @@ pipeline {
                     docker run --rm \
                         -v $PWD/httpd:/httpd \
                         -w /httpd \
-                        my-httpd-builder:latest sh -c "
-                            echo "--- JESTEM W KATALOGU: ---"
+                        my-httpd-built:latest sh -c "
+                            echo '--- JESTEM W KATALOGU: ---'
                             pwd
-                            echo "--- ZAWARTOŚĆ KATALOGU /app: ---"
+                            echo '--- ZAWARTOŚĆ KATALOGU /httpd: ---'
                             ls -la
+                            echo '--- ZAWARTOŚĆ KATALOGU /httpd/test: ---'
+                            ls -la /httpd/test
+
                             export PATH=/httpd/install/bin:\$PATH
                             export PYTHONPATH=/httpd/test/pyhttpd:\$PYTHONPATH
                             . /opt/venv/bin/activate
                             mkdir -p /httpd/test-results
 
-                            pytest /httpd/test --rootdir=/httpd --junitxml=/httpd/test-results/results.xml -vv
+                            pytest /httpd/test --rootdir=/httpd/test --junitxml=/httpd/test-results/results.xml -vv
                         "
 
                     echo ">>> TEST END"
