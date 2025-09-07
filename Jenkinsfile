@@ -75,8 +75,23 @@ pipeline {
                     RANDOM_PORT=$(shuf -i 20000-40000 -n 1)
                     echo "Uruchamiam kontener na losowym porcie: $RANDOM_PORT"
                     docker run -d --name my-httpd-runtime -p $RANDOM_PORT:80 my-httpd:latest
-                    sleep 5
-                    curl -I http://localhost:$RANDOM_PORT || true
+
+                    # czekamy aż serwer będzie gotowy (max 30s)
+                    MAX_WAIT=30
+                    WAITED=0
+                    until curl -I http://localhost:$RANDOM_PORT >/dev/null 2>&1 || [ $WAITED -ge $MAX_WAIT ]; do
+                        sleep 1
+                        WAITED=$((WAITED+1))
+                    done
+
+                    # jeśli curl się nie powiódł, pokaż logi kontenera
+                    if ! curl -I http://localhost:$RANDOM_PORT >/dev/null 2>&1; then
+                        echo ">>> Błąd! Serwer nie wystartował poprawnie, logi kontenera:"
+                        docker logs my-httpd-runtime
+                    else
+                        echo ">>> Serwer działa poprawnie na porcie $RANDOM_PORT"
+                    fi
+
                     docker stop my-httpd-runtime
                     docker rm my-httpd-runtime
 
@@ -84,7 +99,6 @@ pipeline {
                 '''
             }
         }
-
 
         stage('Publish') {
             steps {
