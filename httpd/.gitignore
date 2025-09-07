@@ -314,15 +314,15 @@ Release
 # /server/mpm/worker/
 
 # /srclib/
-/srclib/pth
-/srclib/apr
-/srclib/apr-util
-/srclib/apr-iconv
-/srclib/distcache
-/srclib/lua
-/srclib/pcre
-/srclib/openssl
-/srclib/zlib
+# /srclib/pth
+# # /srclib/apr
+# # /srclib/apr-util
+# /srclib/apr-iconv
+# /srclib/distcache
+# /srclib/lua
+# /srclib/pcre
+# /srclib/openssl
+# /srclib/zlib
 
 # /support/
 /support/rotatelogs
