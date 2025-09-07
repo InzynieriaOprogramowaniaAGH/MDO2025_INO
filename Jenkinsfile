@@ -8,62 +8,55 @@ pipeline {
 
     stages {
         stage('Build') {
-            agent {
-                dockerfile {
-                    filename 'Dockerfile.build-dependencies'
-                    dir '.'
-                }
-            }
+            agent { dockerfile { filename 'Dockerfile.build-dependencies' } }
             steps {
                 sh '''
                     echo ">>> BUILD START"
-
                     cd httpd
                     rm -rf srclib/apr srclib/apr-util
                     git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
                     git clone -b 1.6.x https://github.com/apache/apr-util.git srclib/apr-util
 
                     ./buildconf
-
                     ./configure --prefix=$PWD/install \
-                        --enable-so \
-                        --enable-ssl \
-                        --with-ssl=/usr \
-                        --with-mpm=event \
-                        --with-included-apr \
-                        --enable-http2
+                                --enable-so \
+                                --enable-ssl \
+                                --with-ssl=/usr \
+                                --with-mpm=event \
+                                --with-included-apr \
+                                --enable-http2
 
                     make -j$(nproc)
                     make install
-
                     echo ">>> BUILD END"
+
+                    echo "$PWD/install" > ../apache_install_path.txt
                 '''
-                stash includes: 'httpd/install/**', name: 'apache-install'
+                stash includes: 'httpd/install/**, apache_install_path.txt', name: 'apache-install'
             }
         }
 
         stage('Test') {
-            agent {
-                dockerfile {
-                    filename 'Dockerfile.build-dependencies'
-                    dir '.'
-                }
-            }
+            agent { dockerfile { filename 'Dockerfile.build-dependencies' } }
             steps {
                 unstash 'apache-install'
                 sh '''
                     echo ">>> TEST START"
-                    export PATH=$PWD/httpd/install/bin:$PATH
+                    APACHE_INSTALL=$(cat apache_install_path.txt)
+                    export PATH=$APACHE_INSTALL/bin:$PATH
+                    export SERVERROOT=$APACHE_INSTALL
                     . /opt/venv/bin/activate
+
+                    # opcjonalnie start lokalnego httpd dla testów
+                    $APACHE_INSTALL/bin/httpd -k start -f $APACHE_INSTALL/conf/httpd.conf
+
                     pytest -vv --junitxml=test-results/results.xml
+
+                    $APACHE_INSTALL/bin/httpd -k stop
                     echo ">>> TEST END"
                 '''
             }
-            post {
-                always {
-                    junit '**/test-results/results.xml'
-                }
-            }
+            post { always { junit '**/test-results/results.xml' } }
         }
 
         stage('Deploy') {
