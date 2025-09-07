@@ -56,7 +56,17 @@ pipeline {
             steps {
                 sh '''
                     echo ">>> DEPLOY START"
+
                     docker build -t my-httpd:latest -f Dockerfile.deploy .
+
+                    docker run -d --name my-httpd-runtime-test -p 8080:80 my-httpd:latest
+
+                    sleep 5
+                    curl -I http://localhost:8080 || true
+
+                    docker stop my-httpd-runtime-test
+                    docker rm my-httpd-runtime-test
+
                     echo ">>> DEPLOY END"
                 '''
             }

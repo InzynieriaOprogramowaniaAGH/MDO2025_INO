@@ -160,3 +160,21 @@ docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 
 
 http://192.168.0.7:8080/
+
+
+Wnioski dotyczące dystrybucji
+Czy program powinien być pakowany?
+Tak, ale w naszym przypadku najlepszym sposobem jest obraz Docker, bo:
+Zapewnia środowisko runtime niezależne od systemu hosta.
+Można go łatwo uruchomić na dowolnej maszynie lub w Kubernetes.
+Nie wymaga instalowania zależności buildowych na docelowej maszynie.
+Co powinien zawierać pakiet / obraz?
+Tylko runtime:
+Skompilowane binaria (httpd/install/)
+Konfiguracja i ewentualne statyczne pliki (jeśli istnieją)
+Nie:
+Repozytoria Git
+Pliki builda, logi, narzędzia developerskie
+Zależności potrzebne tylko do kompilacji
+Czy obraz powinien zawierać repo, logi i artefakty builda?
+Nie. Obraz produkcyjny musi być lekki i zawierać tylko to, co potrzebne do uruchomienia serwera.

@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/local/apache2
+
 COPY install/ /usr/local/apache2/
 
 EXPOSE 80 443
