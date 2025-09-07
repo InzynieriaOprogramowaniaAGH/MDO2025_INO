@@ -57,15 +57,20 @@ pipeline {
                 sh '''
                     echo ">>> DEPLOY START"
 
+                    # kopiujemy artefakt z kontenera buildowego na hosta
+                    docker create --name temp my-httpd-built:latest
+                    docker cp temp:/httpd/install ./install
+                    docker rm temp
+
+                    # budujemy lekki runtime image
                     docker build -t my-httpd:latest -f Dockerfile.deploy .
 
-                    docker run -d --name my-httpd-runtime-test -p 8080:80 my-httpd:latest
-
+                    # sanity check
+                    docker run -d --name my-httpd-runtime -p 8080:80 my-httpd:latest
                     sleep 5
                     curl -I http://localhost:8080 || true
-
-                    docker stop my-httpd-runtime-test
-                    docker rm my-httpd-runtime-test
+                    docker stop my-httpd-runtime
+                    docker rm my-httpd-runtime
 
                     echo ">>> DEPLOY END"
                 '''
