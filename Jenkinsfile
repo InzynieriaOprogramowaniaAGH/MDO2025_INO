@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:24-dind'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     stages {
         stage('Build') {
@@ -14,14 +9,14 @@ pipeline {
 
                     docker build -t my-httpd-builder:latest -f Dockerfile.build-dependencies .
 
-                    docker run --rm -v $PWD/httpd:/app/httpd -w /app/httpd my-httpd-builder:latest sh -c "
+                    docker run --rm my-httpd-builder:latest sh -c "
+                        cd /httpd
                         rm -rf srclib/apr srclib/apr-util
                         git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
                         git clone -b 1.6.x https://github.com/apache/apr-util.git srclib/apr-util
 
                         ./buildconf
-
-                        ./configure --prefix=/app/httpd/install \\
+                        ./configure --prefix=/httpd/install \\
                             --enable-so \\
                             --enable-ssl \\
                             --with-ssl=/usr \\
@@ -39,29 +34,24 @@ pipeline {
         }
 
         stage('Test') {
-            agent {
-                docker {
-                    image 'my-httpd-builder:latest'
-                    args '-v $PWD:/app -w /app/httpd'
-                }
-            }
             steps {
                 sh '''
                     echo ">>> TEST START"
-                    
-                    export PATH=$PWD/install/bin:$PATH
-                    
-                    . /opt/venv/bin/activate
 
-                    mkdir -p ./test-results
-                    pytest -vv --junitxml=./test-results/results.xml
+                    docker run --rm my-httpd-builder:latest sh -c "
+                        export PATH=/httpd/install/bin:\$PATH
+                        . /opt/venv/bin/activate
+                        mkdir -p /httpd/test-results
+                        cd /httpd
+                        pytest -vv --junitxml=/httpd/test-results/results.xml
+                    "
 
                     echo ">>> TEST END"
                 '''
             }
             post {
                 always {
-                    junit '**/test-results/results.xml'
+                    junit 'httpd/test-results/results.xml'
                 }
             }
         }
@@ -80,10 +70,10 @@ pipeline {
             steps {
                 sh '''
                     echo ">>> PUBLISH START"
-                    tar czf build-output.tar.gz install/
+                    tar czf build-output.tar.gz httpd/install/
                 '''
                 archiveArtifacts artifacts: 'build-output.tar.gz', fingerprint: true
-                sh 'echo ">>> PUBLISH END"'
+                echo ">>> PUBLISH END"
             }
         }
     }
