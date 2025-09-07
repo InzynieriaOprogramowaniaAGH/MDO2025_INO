@@ -7,13 +7,14 @@ pipeline {
                 sh '''
                     echo ">>> BUILD START"
 
+                    cd httpd
+                    rm -rf srclib/apr srclib/apr-util
+                    git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
+                    git clone -b 1.6.x https://github.com/apache/apr-util.git srclib/apr-util
+
                     docker build -t my-httpd-builder:latest -f Dockerfile.build-dependencies .
 
-                    docker run --rm my-httpd-builder:latest sh -c "
-                        rm -rf srclib/apr srclib/apr-util
-                        git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
-                        git clone -b 1.6.x https://github.com/apache/apr-util.git srclib/apr-util
-
+                    docker run --rm -v $PWD/httpd:/httpd -w /httpd my-httpd-builder:latest sh -c "
                         ./buildconf
                         ./configure --prefix=/httpd/install \\
                             --enable-so \\
@@ -26,7 +27,7 @@ pipeline {
                         make -j\$(nproc)
                         make install
                     "
-
+                    cd ..
                     echo ">>> BUILD END"
                 '''
             }
@@ -37,9 +38,9 @@ pipeline {
                 sh '''
                     echo ">>> TEST START"
 
-                    docker run --rm \
-                        -v $PWD/httpd:/httpd \
-                        -w /httpd \
+                    docker run --rm \\
+                        -v $PWD/httpd:/httpd \\
+                        -w /httpd \\
                         my-httpd-builder:latest sh -c "
                             export PATH=/httpd/install/bin:\$PATH
                             export PYTHONPATH=/httpd/test/pyhttpd:\$PYTHONPATH
