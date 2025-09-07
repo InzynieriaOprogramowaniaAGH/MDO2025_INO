@@ -27,13 +27,6 @@ pipeline {
 
                         make -j\$(nproc)
                         make install
-
-                        export PATH=/httpd/install/bin:\$PATH
-                        export PYTHONPATH=/httpd/test/pyhttpd:\$PYTHONPATH
-                        . /opt/venv/bin/activate
-                        mkdir -p /httpd/test-results
-
-                        pytest /httpd/test --rootdir=/httpd/test --junitxml=/httpd/test-results/results.xml -vv
                     "
 
                     echo ">>> BUILD END"
@@ -41,7 +34,7 @@ pipeline {
             }
         }
 
-        stage('Test') {
+       stage('Test') {
             steps {
                 sh '''
                     echo ">>> TEST START"
@@ -50,12 +43,13 @@ pipeline {
                         -v $PWD/httpd:/httpd \
                         -w /httpd \
                         my-httpd-builder:latest sh -c "
-                            export PATH=/httpd/install/bin:$PATH
-                            export PYTHONPATH=/httpd/test/pyhttpd:$PYTHONPATH
+                            export PATH=/httpd/install/bin:\$PATH
+                            export PYTHONPATH=/httpd/test/pyhttpd:\$PYTHONPATH
                             . /opt/venv/bin/activate
                             mkdir -p /httpd/test-results
 
-                            pytest /httpd/test --rootdir=/httpd/test --junitxml=/httpd/test-results/results.xml -vv
+                            # używamy rootdir=/httpd, żeby testy widziały configi w modules i test
+                            pytest /httpd/test --rootdir=/httpd --junitxml=/httpd/test-results/results.xml -vv
                         "
 
                     echo ">>> TEST END"
