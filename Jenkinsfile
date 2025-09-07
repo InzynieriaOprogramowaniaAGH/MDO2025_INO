@@ -14,7 +14,7 @@ pipeline {
 
                     docker build -t my-httpd-builder:latest -f Dockerfile.build-dependencies .
 
-                    docker run --rm -v $PWD:/app -w /app/httpd my-httpd-builder:latest sh -c "
+                    docker run --rm -v $PWD/httpd:/app/httpd -w /app/httpd my-httpd-builder:latest sh -c "
                         rm -rf srclib/apr srclib/apr-util
                         git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
                         git clone -b 1.6.x https://github.com/apache/apr-util.git srclib/apr-util
