@@ -40,22 +40,25 @@ pipeline {
         }
 
         stage('Test') {
-            agent none
-            steps {
-                docker.image('my-httpd-builder:latest').inside('-v $PWD/httpd:/app') {
-                    sh '''
-                        echo ">>> TEST START"
-
-                        export PATH=/app/install/bin:$PATH
-                        
-                        . /opt/venv/bin/activate
-
-                        mkdir -p /app/test-results
-                        pytest -vv --junitxml=/app/test-results/results.xml
-
-                        echo ">>> TEST END"
-                    '''
+            agent {
+                docker {
+                    image 'my-httpd-builder:latest'
+                    args '-v $PWD/httpd:/app'
                 }
+            }
+            steps {
+                sh '''
+                    echo ">>> TEST START"
+
+                    export PATH=/app/install/bin:$PATH
+                    
+                    . /opt/venv/bin/activate
+
+                    mkdir -p /app/test-results
+                    pytest -vv --junitxml=/app/test-results/results.xml
+
+                    echo ">>> TEST END"
+                '''
             }
             post {
                 always {
