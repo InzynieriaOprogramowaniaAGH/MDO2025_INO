@@ -65,7 +65,19 @@ pipeline {
                     # budujemy lekki runtime image
                     docker build -t my-httpd:latest -f Dockerfile.deploy .
 
-                    # sanity check
+                    # zwolnienie portu 8080 jeśli jest zajęty
+                    if docker ps -a --format '{{.Names}}' | grep -q my-httpd-runtime; then
+                        echo "Stopping old my-httpd-runtime container..."
+                        docker stop my-httpd-runtime
+                        docker rm my-httpd-runtime
+                    fi
+
+                    if lsof -i :8080 >/dev/null 2>&1; then
+                        echo "Port 8080 jest zajęty, zabijam proces..."
+                        sudo lsof -ti :8080 | xargs -r sudo kill
+                    fi
+
+                    # sanity check - uruchomienie kontenera
                     docker run -d --name my-httpd-runtime -p 8080:80 my-httpd:latest
                     sleep 5
                     curl -I http://localhost:8080 || true
