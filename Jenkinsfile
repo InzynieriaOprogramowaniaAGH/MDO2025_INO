@@ -27,14 +27,6 @@ pipeline {
                         make install
                     "
 
-                    echo '--- SPRAWDZAM KATALOG /httpd/test ---'
-                    if [ -d /httpd/test ]; then
-                        echo '/httpd/test istnieje:'
-                        ls -la /httpd/test
-                    else
-                        echo '/httpd/test NIE ISTNIEJE'
-                    fi
-
                     docker commit my-httpd-build-container my-httpd-built:latest
 
                     docker rm my-httpd-build-container
@@ -50,13 +42,6 @@ pipeline {
                     echo ">>> TEST START"
 
                     docker run --rm my-httpd-built:latest sh -c "
-                        echo '--- JESTEM W KATALOGU: ---'
-                        pwd
-                        echo '--- ZAWARTOŚĆ KATALOGU /httpd: ---'
-                        ls -la /httpd
-                        echo '--- ZAWARTOŚĆ KATALOGU /httpd/test: ---'
-                        ls -la /httpd/test
-
                         export PATH=/httpd/install/bin:\$PATH
                         export PYTHONPATH=/httpd/test/pyhttpd:\$PYTHONPATH
                         . /opt/venv/bin/activate
