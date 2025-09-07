@@ -50,8 +50,8 @@ pipeline {
             steps {
                 sh '''
                     echo ">>> TEST START"
-                    source /opt/venv/bin/activate
-                    pytest -vv --junitxml=test-results/results.xml || true
+                    . /opt/venv/bin/activate
+                    pytest -vv --junitxml=test-results/results.xml
                     echo ">>> TEST END"
                 '''
             }
