@@ -46,7 +46,6 @@ pipeline {
                         . /opt/venv/bin/activate
                         pip install python-multipart
 
-                        # uruchamiamy tylko testy HTTP/1
                         pytest /httpd/test/modules/http1 -vv
                     "
                 '''
