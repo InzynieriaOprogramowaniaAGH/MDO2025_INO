@@ -28,7 +28,6 @@ pipeline {
                     "
 
                     docker commit my-httpd-build-container my-httpd-built:latest
-
                     docker rm my-httpd-build-container
 
                     echo ">>> BUILD END"
@@ -41,7 +40,9 @@ pipeline {
                 sh '''
                     echo ">>> TEST START"
 
-                    docker run --rm my-httpd-built:latest sh -c "
+                    mkdir -p $WORKSPACE/httpd/test-results
+
+                    docker run --rm -v $WORKSPACE/httpd/test-results:/httpd/test-results my-httpd-built:latest sh -c "
                         export PATH=/httpd/install/bin:\$PATH
                         export PYTHONPATH=/httpd/test/pyhttpd:\$PYTHONPATH
                         . /opt/venv/bin/activate
