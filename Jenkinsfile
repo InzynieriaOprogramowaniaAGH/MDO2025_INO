@@ -8,10 +8,11 @@ pipeline {
 
     stages {
         stage('Build') {
-            agent { dockerfile { filename 'Dockerfile.build-dependencies' } }
+            agent { docker { image 'docker:24-dind' args '-v /var/run/docker.sock:/var/run/docker.sock' } }
             steps {
                 sh '''
                     echo ">>> BUILD START"
+
                     cd httpd
                     rm -rf srclib/apr srclib/apr-util
                     git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
@@ -28,35 +29,38 @@ pipeline {
 
                     make -j$(nproc)
                     make install
-                    echo ">>> BUILD END"
 
-                    echo "$PWD/install" > ../apache_install_path.txt
+                    echo ">>> BUILD END"
                 '''
-                stash includes: 'httpd/install/**, apache_install_path.txt', name: 'apache-install'
+
+                sh 'docker build -t apache-builder -f Dockerfile.builder .'
             }
         }
 
         stage('Test') {
-            agent { dockerfile { filename 'Dockerfile.build-dependencies' } }
+            agent {
+                docker {
+                    image 'apache-builder'
+                    args '-v /opt/venv:/opt/venv'
+                }
+            }
             steps {
-                unstash 'apache-install'
                 sh '''
                     echo ">>> TEST START"
-                    APACHE_INSTALL=$(cat apache_install_path.txt)
-                    export PATH=$APACHE_INSTALL/bin:$PATH
-                    export SERVERROOT=$APACHE_INSTALL
+                    export PATH=/httpd/install/bin:$PATH
+                    export SERVERROOT=/httpd/install
+
                     . /opt/venv/bin/activate
 
-                    # opcjonalnie start lokalnego httpd dla testów
-                    $APACHE_INSTALL/bin/httpd -k start -f $APACHE_INSTALL/conf/httpd.conf
-
+                    # uruchomienie pytest z logami
                     pytest -vv --junitxml=test-results/results.xml
 
-                    $APACHE_INSTALL/bin/httpd -k stop
                     echo ">>> TEST END"
                 '''
             }
-            post { always { junit '**/test-results/results.xml' } }
+            post {
+                always { junit '**/test-results/results.xml' }
+            }
         }
 
         stage('Deploy') {
