@@ -146,8 +146,13 @@ docker run -d \
   --restart=always \
   -p 8080:8080 -p 50000:50000 \
   -v jenkins_data:/var/jenkins_home \
+  -V /VAR/RUN/DOCKER.SOCK:/VAR/RUN/DOCKER.SOCK \
   --network jenkins \
+  -u root
   jenkins/jenkins:lts
+
+  docker exec -it jenkins bash
+apt-get update && apt-get install -y docker.io
 
 
 Pierwsze uruchomienie – pobierz hasło admina:
