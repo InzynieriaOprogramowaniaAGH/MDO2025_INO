@@ -25,10 +25,13 @@ pipeline {
 
                     ./buildconf
 
-                    ./configure --enable-so --enable-ssl \
+                    ./configure --prefix=$PWD/install \
+                        --enable-so \
+                        --enable-ssl \
                         --with-ssl=/usr \
                         --with-mpm=event \
-                        --with-included-apr
+                        --with-included-apr \
+                        --enable-http2
 
                     ./configure --prefix=$PWD/install --enable-http2
 
@@ -50,6 +53,7 @@ pipeline {
             steps {
                 sh '''
                     echo ">>> TEST START"
+                    export PATH=$PWD/httpd/install/bin:$PATH
                     . /opt/venv/bin/activate
                     pytest -vv --junitxml=test-results/results.xml
                     echo ">>> TEST END"
