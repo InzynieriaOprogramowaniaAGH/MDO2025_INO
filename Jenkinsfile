@@ -14,8 +14,7 @@ pipeline {
 
                     docker build -t my-httpd-builder:latest -f Dockerfile.build-dependencies .
 
-                    docker run --rm -v $PWD:/app my-httpd-builder:latest sh -c "
-                        cd /app/httpd
+                    docker run --rm -v $PWD:/app -w /app/httpd my-httpd-builder:latest sh -c "
                         rm -rf srclib/apr srclib/apr-util
                         git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
                         git clone -b 1.6.x https://github.com/apache/apr-util.git srclib/apr-util
@@ -43,14 +42,13 @@ pipeline {
             agent {
                 docker {
                     image 'my-httpd-builder:latest'
-                    args '-v $PWD:/app'
+                    args '-v $PWD:/app -w /app/httpd'
                 }
             }
             steps {
                 sh '''
                     echo ">>> TEST START"
                     
-                    cd /app/httpd
                     export PATH=$PWD/install/bin:$PATH
                     
                     . /opt/venv/bin/activate
