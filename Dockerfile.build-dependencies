@@ -23,5 +23,10 @@ RUN apt-get update -o Acquire::Check-Valid-Until=false \
       filelock \
  && rm -rf /var/lib/apt/lists/*
 
+RUN curl -L -o /tmp/pebble.zip https://github.com/letsencrypt/pebble/releases/download/v2.0.9/pebble-v2.0.9-linux-amd64.zip && \
+    unzip /tmp/pebble.zip -d /usr/local/bin && \
+    rm /tmp/pebble.zip && \
+    chmod +x /usr/local/bin/pebble
+
 WORKDIR /httpd
 COPY httpd/ /httpd/
