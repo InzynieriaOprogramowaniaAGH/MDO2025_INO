@@ -27,6 +27,13 @@ pipeline {
 
                         make -j\$(nproc)
                         make install
+
+                        export PATH=/httpd/install/bin:\$PATH
+                        export PYTHONPATH=/httpd/test/pyhttpd:\$PYTHONPATH
+                        . /opt/venv/bin/activate
+                        mkdir -p /httpd/test-results
+
+                        pytest /httpd/test --rootdir=/httpd/test --junitxml=/httpd/test-results/results.xml -vv
                     "
 
                     echo ">>> BUILD END"
