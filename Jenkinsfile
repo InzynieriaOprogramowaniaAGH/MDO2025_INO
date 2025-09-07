@@ -33,8 +33,6 @@ pipeline {
                         --with-included-apr \
                         --enable-http2
 
-                    ./configure --prefix=$PWD/install --enable-http2
-
                     make -j$(nproc)
                     make install
 
