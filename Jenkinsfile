@@ -40,6 +40,7 @@ pipeline {
         }
 
         stage('Test') {
+            agent none
             steps {
                 docker.image('my-httpd-builder:latest').inside('-v $PWD/httpd:/app') {
                     sh '''
