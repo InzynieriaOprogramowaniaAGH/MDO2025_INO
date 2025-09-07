@@ -9,15 +9,13 @@ pipeline {
 
                     docker build -t my-httpd-builder:latest -f Dockerfile.build-dependencies .
 
-                    docker run --rm -v "$PWD":/app -w /app my-httpd-builder:latest sh -c "
-                        cd httpd 
-                        
+                    docker run --rm my-httpd-builder:latest sh -c "
                         rm -rf srclib/apr srclib/apr-util
                         git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
                         git clone -b 1.6.x https://github.com/apache/apr-util.git srclib/apr-util
 
                         ./buildconf
-                        ./configure --prefix=/app/httpd/install \\
+                        ./configure --prefix=/httpd/install \\
                             --enable-so \\
                             --enable-ssl \\
                             --with-ssl=/usr \\
@@ -40,7 +38,7 @@ pipeline {
                     echo ">>> TEST START"
 
                     docker run --rm \
-                        -v "$PWD/httpd":/httpd \
+                        -v $PWD/httpd:/httpd \
                         -w /httpd \
                         my-httpd-builder:latest sh -c "
                             export PATH=/httpd/install/bin:\$PATH
