@@ -1,14 +1,15 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:24-dind'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     stages {
         stage('Build') {
-            agent { docker { image 'docker:24-dind' args '-v /var/run/docker.sock:/var/run/docker.sock' } }
+            agent {
+                dockerfile {
+                    filename 'Dockerfile.build-dependencies'
+                    dir '.'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 sh '''
                     echo ">>> BUILD START"
@@ -38,28 +39,28 @@ pipeline {
         }
 
         stage('Test') {
-            agent {
-                docker {
-                    image 'apache-builder'
-                    args '-v /opt/venv:/opt/venv'
-                }
-            }
+            agent any  // root agent, użyjemy docker run w sh
             steps {
                 sh '''
                     echo ">>> TEST START"
-                    export PATH=/httpd/install/bin:$PATH
-                    export SERVERROOT=/httpd/install
 
-                    . /opt/venv/bin/activate
-
-                    # uruchomienie pytest z logami
-                    pytest -vv --junitxml=test-results/results.xml
+                    # uruchamiamy testy w kontenerze z apache-builder
+                    docker run --rm \
+                        -v $PWD/httpd/install:/httpd/install \
+                        -v /opt/venv:/opt/venv \
+                        apache-builder \
+                        /bin/sh -c "
+                            export PATH=/httpd/install/bin:\$PATH
+                            export SERVERROOT=/httpd/install
+                            . /opt/venv/bin/activate
+                            pytest -vv --junitxml=/httpd/test-results/results.xml
+                        "
 
                     echo ">>> TEST END"
                 '''
             }
             post {
-                always { junit '**/test-results/results.xml' }
+                always { junit 'httpd/test-results/results.xml' }
             }
         }
 
@@ -78,9 +79,9 @@ pipeline {
                 sh '''
                     echo ">>> PUBLISH START"
                     tar czf build-output.tar.gz install/
+                    echo ">>> PUBLISH END"
                 '''
                 archiveArtifacts artifacts: 'build-output.tar.gz', fingerprint: true
-                sh 'echo ">>> PUBLISH END"'
             }
         }
     }
