@@ -47,7 +47,6 @@ pipeline {
                         export PYTHONPATH=/httpd/test/pyhttpd:\$PYTHONPATH
                         . /opt/venv/bin/activate
                         pip install python-multipart
-                        mkdir -p /httpd/test-results
 
                         pytest /httpd/test/modules/http1 --rootdir=/httpd/test --junitxml=/httpd/test-results/results.xml -vv
                     "
