@@ -23,6 +23,5 @@ RUN apt-get update -o Acquire::Check-Valid-Until=false \
       filelock \
  && rm -rf /var/lib/apt/lists/*
 
-
 WORKDIR /httpd
 COPY httpd/ /httpd/

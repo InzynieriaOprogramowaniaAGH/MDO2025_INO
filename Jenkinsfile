@@ -47,7 +47,7 @@ pipeline {
                         . /opt/venv/bin/activate
                         mkdir -p /httpd/test-results
 
-                        pytest /httpd/test/modules/http2 --rootdir=/httpd/test --junitxml=/httpd/test-results/results.xml -vv
+                        pytest /httpd/test/modules/http1 --rootdir=/httpd/test --junitxml=/httpd/test-results/results.xml -vv
                     "
                 '''
             }
