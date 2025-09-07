@@ -40,22 +40,16 @@ pipeline {
                 sh '''
                     echo ">>> TEST START"
 
-                    mkdir -p $WORKSPACE/httpd/test-results
-
-                    docker run --rm -v $WORKSPACE/httpd/test-results:/httpd/test-results my-httpd-built:latest sh -c "
+                    docker run --rm my-httpd-built:latest sh -c "
                         export PATH=/httpd/install/bin:\$PATH
                         export PYTHONPATH=/httpd/test/pyhttpd:\$PYTHONPATH
                         . /opt/venv/bin/activate
                         pip install python-multipart
 
-                        pytest /httpd/test/modules/http1 --rootdir=/httpd/test --junitxml=/httpd/test-results/results.xml -vv
+                        # uruchamiamy tylko testy HTTP/1
+                        pytest /httpd/test/modules/http1 -vv
                     "
                 '''
-            }
-            post {
-                always {
-                    junit 'httpd/test-results/results.xml'
-                }
             }
         }
 
