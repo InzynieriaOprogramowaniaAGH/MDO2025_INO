@@ -10,9 +10,12 @@ RUN apt-get update -o Acquire::Check-Valid-Until=false \
     autoconf automake libtool libtool-bin \
     make git wget curl \
     libnghttp2-dev \
+    nghttp2-client \
  && python3 -m venv /opt/venv \
  && /opt/venv/bin/pip install --upgrade pip \
  && /opt/venv/bin/pip install \
       pytest \
       cryptography \
+      pyOpenSSL \
+      websockets \
  && rm -rf /var/lib/apt/lists/*
