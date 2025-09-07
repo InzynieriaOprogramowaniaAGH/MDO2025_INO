@@ -38,6 +38,7 @@ pipeline {
 
                     echo ">>> BUILD END"
                 '''
+                stash includes: 'httpd/install/**', name: 'apache-install'
             }
         }
 
@@ -49,6 +50,7 @@ pipeline {
                 }
             }
             steps {
+                unstash 'apache-install'
                 sh '''
                     echo ">>> TEST START"
                     export PATH=$PWD/httpd/install/bin:$PATH
