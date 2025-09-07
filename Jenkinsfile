@@ -57,12 +57,21 @@ pipeline {
                 sh '''
                     echo ">>> DEPLOY START"
 
+                    # kopiujemy artefakt z kontenera buildowego na hosta
                     docker create --name temp my-httpd-built:latest
                     docker cp temp:/httpd/install ./install
                     docker rm temp
 
+                    # budujemy lekki runtime image
                     docker build -t my-httpd:latest -f Dockerfile.deploy .
 
+                    # usuwamy stary kontener jeśli istnieje
+                    if docker ps -a --format '{{.Names}}' | grep -q '^my-httpd-runtime$'; then
+                        echo "Stary kontener my-httpd-runtime istnieje, usuwam..."
+                        docker rm -f my-httpd-runtime
+                    fi
+
+                    # sanity check - uruchomienie kontenera na losowym porcie
                     RANDOM_PORT=$(shuf -i 20000-40000 -n 1)
                     echo "Uruchamiam kontener na losowym porcie: $RANDOM_PORT"
                     docker run -d --name my-httpd-runtime -p $RANDOM_PORT:80 my-httpd:latest
@@ -75,6 +84,7 @@ pipeline {
                 '''
             }
         }
+
 
         stage('Publish') {
             steps {
