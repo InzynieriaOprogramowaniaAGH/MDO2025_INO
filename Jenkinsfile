@@ -48,7 +48,6 @@ pipeline {
                             . /opt/venv/bin/activate
                             mkdir -p /httpd/test-results
 
-                            # używamy rootdir=/httpd, żeby testy widziały configi w modules i test
                             pytest /httpd/test --rootdir=/httpd --junitxml=/httpd/test-results/results.xml -vv
                         "
 
