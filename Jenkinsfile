@@ -41,6 +41,10 @@ pipeline {
                         -v $PWD/httpd:/httpd \
                         -w /httpd \
                         my-httpd-builder:latest sh -c "
+                            echo "--- JESTEM W KATALOGU: ---"
+                            pwd
+                            echo "--- ZAWARTOŚĆ KATALOGU /app: ---"
+                            ls -la
                             export PATH=/httpd/install/bin:\$PATH
                             export PYTHONPATH=/httpd/test/pyhttpd:\$PYTHONPATH
                             . /opt/venv/bin/activate
