@@ -39,12 +39,15 @@ pipeline {
                 sh '''
                     echo ">>> TEST START"
 
-                    docker run --rm my-httpd-builder:latest sh -c "
-                        export PATH=/httpd/install/bin:\$PATH
-                        . /opt/venv/bin/activate
-                        mkdir -p test-results
-                        pytest -vv --junitxml=test-results/results.xml
-                    "
+                    docker run --rm \
+                        -v $PWD/httpd:/httpd \
+                        -w /httpd \
+                        my-httpd-builder:latest sh -c "
+                            export PATH=/httpd/install/bin:$PATH
+                            . /opt/venv/bin/activate
+                            mkdir -p test-results
+                            pytest -vv --junitxml=test-results/results.xml
+                        "
 
                     echo ">>> TEST END"
                 '''
