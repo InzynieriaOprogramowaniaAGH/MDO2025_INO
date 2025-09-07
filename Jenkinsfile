@@ -11,18 +11,18 @@ pipeline {
                     docker build -t my-httpd-builder:latest -f Dockerfile.build-dependencies .
 
                     # uruchomienie builda Apache w kontenerze
-                    docker run --rm my-httpd-builder:latest sh -c "
+                    docker run --rm -v $PWD/httpd:/httpd -w /httpd my-httpd-builder:latest sh -c "
                         rm -rf srclib/apr srclib/apr-util
                         git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
                         git clone -b 1.6.x https://github.com/apache/apr-util.git srclib/apr-util
 
                         ./buildconf
-                        ./configure --prefix=/httpd/install \\
-                            --enable-so \\
-                            --enable-ssl \\
-                            --with-ssl=/usr \\
-                            --with-mpm=event \\
-                            --with-included-apr \\
+                        ./configure --prefix=/httpd/install \
+                            --enable-so \
+                            --enable-ssl \
+                            --with-ssl=/usr \
+                            --with-mpm=event \
+                            --with-included-apr \
                             --enable-http2
 
                         make -j\$(nproc)
@@ -39,17 +39,14 @@ pipeline {
                 sh '''
                     echo ">>> TEST START"
 
-                    docker run --rm \
-                        -v $PWD/httpd:/httpd \
-                        -w /httpd \
-                        my-httpd-builder:latest sh -c "
-                            export PATH=/httpd/install/bin:\$PATH
-                            export PYTHONPATH=/httpd/test/pyhttpd:\$PYTHONPATH
-                            . /opt/venv/bin/activate
-                            mkdir -p /httpd/test-results
+                    docker run --rm -v $PWD/httpd:/httpd -w /httpd my-httpd-builder:latest sh -c "
+                        export PATH=/httpd/install/bin:\$PATH
+                        export PYTHONPATH=/httpd/test/pyhttpd:\$PYTHONPATH
+                        . /opt/venv/bin/activate
+                        mkdir -p /httpd/test-results
 
-                            pytest /httpd/test --rootdir=/httpd --junitxml=/httpd/test-results/results.xml -vv
-                        "
+                        pytest /httpd/test --rootdir=/httpd --junitxml=/httpd/test-results/results.xml -vv
+                    "
 
                     echo ">>> TEST END"
                 '''
