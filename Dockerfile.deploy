@@ -9,12 +9,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /httpd/install
-
+# kopiujemy gotowe buildy Apache
 COPY install/ /httpd/install/
 
+# ustawiamy PATH i domyślny katalog roboczy
+ENV PATH=/httpd/install/bin:$PATH
+WORKDIR /httpd/install
+
+# dodajemy ServerName żeby warning zniknął
 RUN echo "ServerName localhost" >> /httpd/install/conf/httpd.conf
 
 EXPOSE 80 443
 
+# uruchamiamy Apache z właściwej ścieżki
 CMD ["/httpd/install/bin/httpd", "-D", "FOREGROUND"]
