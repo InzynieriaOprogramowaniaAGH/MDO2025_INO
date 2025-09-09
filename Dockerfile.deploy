@@ -11,10 +11,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /httpd/install
 
-COPY install/ /usr/local/apache2/
-
-ENV PATH=/httpd/install/bin:$PATH
+COPY install/ /httpd/install/
 
 EXPOSE 80 443
 
-CMD ["/usr/local/apache2/bin/httpd", "-D", "FOREGROUND"]
+CMD ["/httpd/install/bin/httpd", "-D", "FOREGROUND"]
