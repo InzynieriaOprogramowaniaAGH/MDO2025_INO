@@ -83,15 +83,10 @@ pipeline {
                     # sanity check - uruchomienie kontenera na losowym porcie
                     RANDOM_PORT=$(shuf -i 20000-40000 -n 1)
                     echo "Uruchamiam kontener na losowym porcie: $RANDOM_PORT"
-                    docker run -d --name my-httpd-runtime -p $RANDOM_PORT:80 my-httpd:latest
+                    docker run -d --name my-httpd-runtime --network=host -p $RANDOM_PORT:80 my-httpd:latest
 
                     # DOCKER PS
                     docker ps
-
-                    #TEST NOWEGO
-                    CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' my-httpd-runtime)
-                    curl http://$CONTAINER_IP:$RANDOM_PORT
-
 
                     # zwykły curl bez parametrów
                     echo ">>> Testujemy dostęp do serwera przez curl na porcie $RANDOM_PORT"
