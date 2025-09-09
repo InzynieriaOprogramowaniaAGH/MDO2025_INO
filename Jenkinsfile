@@ -88,6 +88,7 @@ pipeline {
                     if ! curl -I http://localhost:$RANDOM_PORT >/dev/null 2>&1; then
                         echo ">>> Błąd! Serwer nie wystartował poprawnie, logi kontenera:"
                         docker logs my-httpd-runtime
+                        exit 1
                     else
                         echo ">>> Serwer działa poprawnie na porcie $RANDOM_PORT"
                     fi
