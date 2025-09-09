@@ -85,6 +85,9 @@ pipeline {
                     echo "Uruchamiam kontener na losowym porcie: $RANDOM_PORT"
                     docker run -d --name my-httpd-runtime -p $RANDOM_PORT:80 my-httpd:latest
 
+                    #DOCKER PS
+                    docker ps
+
                     # czekamy aż serwer będzie gotowy (max 10s)
                     MAX_WAIT=10
                     WAITED=0
