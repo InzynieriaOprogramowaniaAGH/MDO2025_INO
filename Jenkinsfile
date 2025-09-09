@@ -55,6 +55,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
+                    set -euo pipefail
                     echo ">>> DEPLOY START"
 
                     # kopiujemy artefakt z kontenera buildowego na hosta
@@ -62,13 +63,18 @@ pipeline {
                     docker cp temp:/httpd/install ./install
                     docker rm temp
 
-                    # budujemy lekki runtime image
+                    echo ">>> zawartosc ./install (lokalnie):"
+                    ls -la ./install || true
+                    echo ">>> zawartosc ./install/conf (lokalnie):"
+                    ls -la ./install/conf || true
+
+                    # budujemy lekki runtime image (Dockerfile.deploy powinien COPY install/ -> /httpd/install)
                     docker build -t my-httpd:latest -f Dockerfile.deploy .
 
                     # usuwamy stary kontener jeśli istnieje
                     if docker ps -a --format '{{.Names}}' | grep -q '^my-httpd-runtime$'; then
                         echo "Stary kontener my-httpd-runtime istnieje, usuwam..."
-                        docker rm -f my-httpd-runtime
+                        docker rm -f my-httpd-runtime || true
                     fi
 
                     # sanity check - uruchomienie kontenera na losowym porcie
@@ -84,15 +90,22 @@ pipeline {
                         WAITED=$((WAITED+1))
                     done
 
-                    # jeśli curl się nie powiódł, pokaż logi kontenera
+                    # jeśli curl się nie powiódł, pokaż logi kontenera i wypisz zawartość ścieżek
                     if ! curl -I http://localhost:$RANDOM_PORT >/dev/null 2>&1; then
                         echo ">>> Błąd! Serwer nie wystartował poprawnie, logi kontenera:"
-                        docker logs my-httpd-runtime
+                        docker logs my-httpd-runtime || true
+                        echo ">>> Zawartosc /httpd/install w kontenerze (debug):"
+                        docker run --rm my-httpd:latest ls -la /httpd/install || true
+                        echo ">>> Zawartosc /httpd/install/conf w kontenerze (debug):"
+                        docker run --rm my-httpd:latest ls -la /httpd/install/conf || true
+                        # uznajemy to za błąd i przerywamy pipeline
+                        docker rm -f my-httpd-runtime || true
                         exit 1
                     else
                         echo ">>> Serwer działa poprawnie na porcie $RANDOM_PORT"
                     fi
 
+                    # cleanup
                     docker stop my-httpd-runtime
                     docker rm my-httpd-runtime
 

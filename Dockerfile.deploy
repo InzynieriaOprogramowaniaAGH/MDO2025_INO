@@ -6,12 +6,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libapr1 \
     libaprutil1 \
     libexpat1 \
+    ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/local/apache2
+WORKDIR /httpd/install
 
-COPY install/ /usr/local/apache2/
+COPY install/ /httpd/install/
+
+ENV PATH=/httpd/install/bin:$PATH
 
 EXPOSE 80 443
 
-CMD ["/usr/local/apache2/bin/httpd", "-D", "FOREGROUND"]
+CMD ["/httpd/install/bin/httpd", "-D", "FOREGROUND"]
