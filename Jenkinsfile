@@ -85,26 +85,36 @@ pipeline {
                     echo "Uruchamiam kontener na losowym porcie: $RANDOM_PORT"
                     docker run -d --name my-httpd-runtime -p $RANDOM_PORT:80 my-httpd:latest
 
-                    #DOCKER PS
+                    # DOCKER PS
                     docker ps
 
-                    # czekamy aż serwer będzie gotowy (max 10s)
-                    MAX_WAIT=10
-                    WAITED=0
-                    HTTP_CODE=0
-                    until [ $WAITED -ge $MAX_WAIT ]; do
-                        HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$RANDOM_PORT || true)
-                        if [ "$HTTP_CODE" = "200" ]; then
-                            break
-                        fi
-                        sleep 1
-                        WAITED=$((WAITED+1))
-                    done
+                    # funkcja do sprawdzania portu
+                    check_port() {
+                        PORT=$1
+                        HTTP_CODE=0
+                        WAITED=0
+                        MAX_WAIT=10
+                        until [ $WAITED -ge $MAX_WAIT ]; do
+                            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$PORT || true)
+                            if [ "$HTTP_CODE" = "200" ]; then
+                                echo ">>> Serwer działa poprawnie na porcie $PORT (HTTP 200)"
+                                return 0
+                            fi
+                            sleep 1
+                            WAITED=$((WAITED+1))
+                        done
+                        echo ">>> Serwer nie odpowiada na porcie $PORT (kod: $HTTP_CODE)"
+                        return 1
+                    }
 
-                    if [ "$HTTP_CODE" = "200" ]; then
-                        echo ">>> Serwer działa poprawnie na porcie $RANDOM_PORT (HTTP 200)"
-                        echo ">>> Kontener my-httpd-runtime pozostaje uruchomiony jako runtime"
-                    else
+                    # sprawdzamy porty
+                    check_port $RANDOM_PORT || true
+                    check_port 80 || true
+                    check_port 8080 || true
+
+                    # jeśli serwer na RANDOM_PORT nie ruszył, logi debug
+                    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$RANDOM_PORT || true)
+                    if [ "$HTTP_CODE" != "200" ]; then
                         echo ">>> Błąd! Serwer nie wystartował poprawnie (kod: $HTTP_CODE), logi kontenera:"
                         docker logs my-httpd-runtime || true
                         echo ">>> Zawartosc /httpd/install w kontenerze (debug):"
