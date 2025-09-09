@@ -58,7 +58,6 @@ pipeline {
                     set -eu
                     echo ">>> DEPLOY START"
 
-                    # kopiujemy artefakt z kontenera buildowego na hosta
                     docker create --name temp my-httpd-built:latest
                     docker cp temp:/httpd/install ./install
                     docker rm temp
@@ -68,35 +67,25 @@ pipeline {
                     echo ">>> zawartosc ./install/conf (lokalnie):"
                     ls -la ./install/conf || true
 
-                    # przygotowujemy artefakt do pobrania
                     tar czf my-httpd-install.tar.gz ./install
 
-                    # budujemy lekki runtime image
                     docker build -t my-httpd:latest -f Dockerfile.deploy .
 
-                    # usuwamy stary kontener jeśli istnieje
                     if docker ps -a --format '{{.Names}}' | grep -q '^my-httpd-runtime$'; then
                         echo "Stary kontener my-httpd-runtime istnieje, usuwam..."
                         docker rm -f my-httpd-runtime || true
                     fi
 
-                    # Uruchamiam kontener na losowym porcie. Port 80 kontenera jest
-                    # przekierowany na losowy port hosta.
                     RANDOM_PORT=$(shuf -i 20000-40000 -n 1)
                     echo "Uruchamiam kontener na losowym porcie: $RANDOM_PORT"
                     docker run -d --name my-httpd-runtime -p $RANDOM_PORT:80 my-httpd:latest
 
-                    # DOCKER PS
-                    docker ps
-
-                    # --- WAŻNE: POBRANIE ADRESU IP HOSTA ---
                     # Znajdujemy adres IP hosta, który jest dostępny z kontenera Jenkinsa.
                     # Na większości platform Docker, jest to adres IP bramy (gateway) sieci bridge.
                     HOST_IP=$(docker network inspect bridge --format '{{(index .IPAM.Config 0).Gateway}}')
 
                     echo ">>> Testujemy dostęp do serwera przez curl na porcie $RANDOM_PORT na hoście: $HOST_IP"
 
-                    # Zmieniamy 'localhost' na znaleziony adres IP hosta.
                     if ! curl --max-time 10 "$HOST_IP:$RANDOM_PORT"; then
                         echo ">>> Błąd! Serwer nie odpowiada na porcie $RANDOM_PORT na hoście $HOST_IP"
                         docker logs my-httpd-runtime || true

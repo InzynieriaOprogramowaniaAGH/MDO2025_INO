@@ -9,21 +9,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
-# kopiujemy gotowe buildy Apache (tylko runtime)
 COPY install/ /httpd/install/
 
 RUN chown -R www-data:www-data /httpd/install \
     && chmod -R 755 /httpd/install \
     && chmod -R 775 /httpd/install/logs /httpd/install/state /httpd/install/htdocs
 
-# ustawiamy PATH i domyślny katalog roboczy
 ENV PATH=/httpd/install/bin:$PATH
 WORKDIR /httpd/install
 
-# dodajemy ServerName żeby warning zniknął
 RUN echo "ServerName localhost" >> /httpd/install/conf/httpd.conf
 
 EXPOSE 80
 
-# uruchamiamy Apache w foreground
 CMD ["/httpd/install/bin/httpd", "-D", "FOREGROUND"]
