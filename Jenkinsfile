@@ -9,7 +9,7 @@ pipeline {
 
                     docker build -t my-httpd-builder:latest -f Dockerfile.build-dependencies .
 
-                    docker run --name my-httpd-build-container2 my-httpd-builder:latest sh -c "
+                    docker run --name my-httpd-build-container3 my-httpd-builder:latest sh -c "
                         rm -rf srclib/apr srclib/apr-util
                         git clone -b 1.7.x https://github.com/apache/apr.git srclib/apr
                         git clone -b 1.6.x https://github.com/apache/apr-util.git srclib/apr-util
@@ -27,8 +27,8 @@ pipeline {
                         make install
                     "
 
-                    docker commit my-httpd-build-container2 my-httpd-built:latest
-                    docker rm my-httpd-build-container2
+                    docker commit my-httpd-build-container3 my-httpd-built:latest
+                    docker rm my-httpd-build-container3
 
                     echo ">>> BUILD END"
                 '''
