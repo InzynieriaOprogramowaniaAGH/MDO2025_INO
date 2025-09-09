@@ -82,32 +82,33 @@ pipeline {
                     echo "Uruchamiam kontener na losowym porcie: $RANDOM_PORT"
                     docker run -d --name my-httpd-runtime -p $RANDOM_PORT:80 my-httpd:latest
 
-                    # czekamy aż serwer będzie gotowy (max 30s)
-                    MAX_WAIT=30
+                    # czekamy aż serwer będzie gotowy (max 10s)
+                    MAX_WAIT=10
                     WAITED=0
-                    until curl -I http://localhost:$RANDOM_PORT >/dev/null 2>&1 || [ $WAITED -ge $MAX_WAIT ]; do
+                    HTTP_CODE=0
+                    until [ $WAITED -ge $MAX_WAIT ]; do
+                        HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$RANDOM_PORT || true)
+                        if [ "$HTTP_CODE" = "200" ]; then
+                            break
+                        fi
                         sleep 1
                         WAITED=$((WAITED+1))
                     done
 
-                    # jeśli curl się nie powiódł, pokaż logi kontenera i wypisz zawartość ścieżek
-                    if ! curl -I http://localhost:$RANDOM_PORT >/dev/null 2>&1; then
-                        echo ">>> Błąd! Serwer nie wystartował poprawnie, logi kontenera:"
+                    if [ "$HTTP_CODE" = "200" ]; then
+                        echo ">>> Serwer działa poprawnie na porcie $RANDOM_PORT (HTTP 200)"
+                        docker stop my-httpd-runtime
+                        docker rm my-httpd-runtime
+                    else
+                        echo ">>> Błąd! Serwer nie wystartował poprawnie (kod: $HTTP_CODE), logi kontenera:"
                         docker logs my-httpd-runtime || true
                         echo ">>> Zawartosc /httpd/install w kontenerze (debug):"
                         docker run --rm my-httpd:latest ls -la /httpd/install || true
                         echo ">>> Zawartosc /httpd/install/conf w kontenerze (debug):"
                         docker run --rm my-httpd:latest ls -la /httpd/install/conf || true
-                        # uznajemy to za błąd i przerywamy pipeline
                         docker rm -f my-httpd-runtime || true
                         exit 1
-                    else
-                        echo ">>> Serwer działa poprawnie na porcie $RANDOM_PORT"
                     fi
-
-                    # cleanup
-                    docker stop my-httpd-runtime
-                    docker rm my-httpd-runtime
 
                     echo ">>> DEPLOY END"
                 '''
