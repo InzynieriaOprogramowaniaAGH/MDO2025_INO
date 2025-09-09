@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /httpd/install
 
-COPY install/ /httpd/install/
+COPY install/ /usr/local/apache2/
 
 ENV PATH=/httpd/install/bin:$PATH
 
