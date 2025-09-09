@@ -52,7 +52,7 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+       stage('Deploy') {
             steps {
                 sh '''
                     set -eu
@@ -88,43 +88,16 @@ pipeline {
                     # DOCKER PS
                     docker ps
 
-                    # funkcja do sprawdzania portu
-                    check_port() {
-                        PORT=$1
-                        HTTP_CODE=0
-                        WAITED=0
-                        MAX_WAIT=10
-                        until [ $WAITED -ge $MAX_WAIT ]; do
-                            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$PORT || true)
-                            if [ "$HTTP_CODE" = "200" ]; then
-                                echo ">>> Serwer działa poprawnie na porcie $PORT (HTTP 200)"
-                                return 0
-                            fi
-                            sleep 1
-                            WAITED=$((WAITED+1))
-                        done
-                        echo ">>> Serwer nie odpowiada na porcie $PORT (kod: $HTTP_CODE)"
-                        return 1
-                    }
-
-                    # sprawdzamy porty
-                    check_port $RANDOM_PORT || true
-                    check_port 80 || true
-                    check_port 8080 || true
-
-                    # jeśli serwer na RANDOM_PORT nie ruszył, logi debug
-                    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$RANDOM_PORT || true)
-                    if [ "$HTTP_CODE" != "200" ]; then
-                        echo ">>> Błąd! Serwer nie wystartował poprawnie (kod: $HTTP_CODE), logi kontenera:"
+                    # zwykły curl bez parametrów
+                    echo ">>> Testujemy dostęp do serwera przez curl na porcie $RANDOM_PORT"
+                    if ! curl http://localhost:$RANDOM_PORT; then
+                        echo ">>> Błąd! Serwer nie odpowiada na porcie $RANDOM_PORT"
                         docker logs my-httpd-runtime || true
-                        echo ">>> Zawartosc /httpd/install w kontenerze (debug):"
-                        docker run --rm my-httpd:latest ls -la /httpd/install || true
-                        echo ">>> Zawartosc /httpd/install/conf w kontenerze (debug):"
-                        docker run --rm my-httpd:latest ls -la /httpd/install/conf || true
                         echo ">>> Pozostawiam kontener do debugowania"
                         exit 1
                     fi
 
+                    echo ">>> Serwer działa poprawnie na porcie $RANDOM_PORT"
                     echo ">>> DEPLOY END"
                 '''
             }
