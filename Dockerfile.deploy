@@ -23,7 +23,7 @@ WORKDIR /httpd/install
 # dodajemy ServerName żeby warning zniknął
 RUN echo "ServerName localhost" >> /httpd/install/conf/httpd.conf
 
-EXPOSE 80 443
+EXPOSE 80
 
 # uruchamiamy Apache w foreground
 CMD ["/httpd/install/bin/httpd", "-D", "FOREGROUND"]

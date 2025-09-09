@@ -121,7 +121,7 @@ pipeline {
                         docker run --rm my-httpd:latest ls -la /httpd/install || true
                         echo ">>> Zawartosc /httpd/install/conf w kontenerze (debug):"
                         docker run --rm my-httpd:latest ls -la /httpd/install/conf || true
-                        docker rm -f my-httpd-runtime || true
+                        echo ">>> Pozostawiam kontener do debugowania"
                         exit 1
                     fi
 
