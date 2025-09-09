@@ -13,6 +13,8 @@ WORKDIR /httpd/install
 
 COPY install/ /httpd/install/
 
+RUN echo "ServerName localhost" >> /httpd/install/conf/httpd.conf
+
 EXPOSE 80 443
 
 CMD ["/httpd/install/bin/httpd", "-D", "FOREGROUND"]
