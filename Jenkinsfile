@@ -68,7 +68,10 @@ pipeline {
                     echo ">>> zawartosc ./install/conf (lokalnie):"
                     ls -la ./install/conf || true
 
-                    # budujemy lekki runtime image (Dockerfile.deploy powinien COPY install/ -> /httpd/install)
+                    # przygotowujemy artefakt do pobrania
+                    tar czf my-httpd-install.tar.gz ./install
+
+                    # budujemy lekki runtime image
                     docker build -t my-httpd:latest -f Dockerfile.deploy .
 
                     # usuwamy stary kontener jeśli istnieje
@@ -97,8 +100,7 @@ pipeline {
 
                     if [ "$HTTP_CODE" = "200" ]; then
                         echo ">>> Serwer działa poprawnie na porcie $RANDOM_PORT (HTTP 200)"
-                        docker stop my-httpd-runtime
-                        docker rm my-httpd-runtime
+                        echo ">>> Kontener my-httpd-runtime pozostaje uruchomiony jako runtime"
                     else
                         echo ">>> Błąd! Serwer nie wystartował poprawnie (kod: $HTTP_CODE), logi kontenera:"
                         docker logs my-httpd-runtime || true
