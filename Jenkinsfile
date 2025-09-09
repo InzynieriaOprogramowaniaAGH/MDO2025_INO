@@ -55,7 +55,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    set -euo pipefail
+                    set -eu
                     echo ">>> DEPLOY START"
 
                     # kopiujemy artefakt z kontenera buildowego na hosta
