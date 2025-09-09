@@ -88,10 +88,15 @@ pipeline {
                     # DOCKER PS
                     docker ps
 
+                    #TEST NOWEGO
+                    CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' my-httpd-runtime)
+                    curl http://$CONTAINER_IP:$RANDOM_PORT
+
+
                     # zwykły curl bez parametrów
                     echo ">>> Testujemy dostęp do serwera przez curl na porcie $RANDOM_PORT"
                     curl localhost:$RANDOM_PORT
-                    
+
                     if ! curl localhost:$RANDOM_PORT; then
                         echo ">>> Błąd! Serwer nie odpowiada na porcie $RANDOM_PORT"
                         docker logs my-httpd-runtime || true
