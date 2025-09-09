@@ -80,20 +80,25 @@ pipeline {
                         docker rm -f my-httpd-runtime || true
                     fi
 
-                    # sanity check - uruchomienie kontenera na losowym porcie
+                    # Uruchamiam kontener na losowym porcie. Port 80 kontenera jest
+                    # przekierowany na losowy port hosta.
                     RANDOM_PORT=$(shuf -i 20000-40000 -n 1)
                     echo "Uruchamiam kontener na losowym porcie: $RANDOM_PORT"
-                    docker run -d --name my-httpd-runtime --network=host -p $RANDOM_PORT:80 my-httpd:latest
+                    docker run -d --name my-httpd-runtime -p $RANDOM_PORT:80 my-httpd:latest
 
                     # DOCKER PS
                     docker ps
 
-                    # zwykły curl bez parametrów
-                    echo ">>> Testujemy dostęp do serwera przez curl na porcie $RANDOM_PORT"
-                    curl localhost:$RANDOM_PORT
+                    # --- WAŻNE: POBRANIE ADRESU IP HOSTA ---
+                    # Znajdujemy adres IP hosta, który jest dostępny z kontenera Jenkinsa.
+                    # Na większości platform Docker, jest to adres IP bramy (gateway) sieci bridge.
+                    HOST_IP=$(docker network inspect bridge --format '{{(index .IPAM.Config 0).Gateway}}')
 
-                    if ! curl localhost:$RANDOM_PORT; then
-                        echo ">>> Błąd! Serwer nie odpowiada na porcie $RANDOM_PORT"
+                    echo ">>> Testujemy dostęp do serwera przez curl na porcie $RANDOM_PORT na hoście: $HOST_IP"
+
+                    # Zmieniamy 'localhost' na znaleziony adres IP hosta.
+                    if ! curl --max-time 10 "$HOST_IP:$RANDOM_PORT"; then
+                        echo ">>> Błąd! Serwer nie odpowiada na porcie $RANDOM_PORT na hoście $HOST_IP"
                         docker logs my-httpd-runtime || true
                         echo ">>> Pozostawiam kontener do debugowania"
                         exit 1
@@ -101,6 +106,7 @@ pipeline {
 
                     echo ">>> Serwer działa poprawnie na porcie $RANDOM_PORT"
                     echo ">>> DEPLOY END"
+
                 '''
             }
         }
