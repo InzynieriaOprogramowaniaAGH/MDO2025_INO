@@ -68,10 +68,6 @@ pipeline {
                     echo ">>> zawartosc ./install/conf (lokalnie):"
                     ls -la ./install/conf || true
 
-                    # WAŻNY KROK DEBUGOWANIA: Testowanie konfiguracji Apache
-                    echo ">>> Sprawdzam poprawnosc httpd.conf"
-                    docker run --rm -v $(pwd)/install:/httpd/install my-httpd-built:latest /httpd/install/bin/httpd -t
-
                     # przygotowujemy artefakt do pobrania
                     tar czf my-httpd-install.tar.gz ./install
 
