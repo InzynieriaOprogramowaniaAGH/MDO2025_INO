@@ -90,7 +90,9 @@ pipeline {
 
                     # zwykły curl bez parametrów
                     echo ">>> Testujemy dostęp do serwera przez curl na porcie $RANDOM_PORT"
-                    if ! curl http://localhost:$RANDOM_PORT; then
+                    curl localhost:$RANDOM_PORT
+                    
+                    if ! curl localhost:$RANDOM_PORT; then
                         echo ">>> Błąd! Serwer nie odpowiada na porcie $RANDOM_PORT"
                         docker logs my-httpd-runtime || true
                         echo ">>> Pozostawiam kontener do debugowania"
