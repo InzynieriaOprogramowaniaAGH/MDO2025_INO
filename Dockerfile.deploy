@@ -17,4 +17,4 @@ ENV PATH=/httpd/install/bin:$PATH
 
 EXPOSE 80 443
 
-CMD ["/httpd/install/bin/httpd", "-D", "FOREGROUND"]
+CMD ["/usr/local/apache2/bin/httpd", "-D", "FOREGROUND"]
