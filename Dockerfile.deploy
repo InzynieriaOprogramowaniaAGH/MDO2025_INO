@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # kopiujemy gotowe buildy Apache (tylko runtime)
 COPY install/ /httpd/install/
 
+RUN chown -R www-data:www-data /httpd/install/logs /httpd/install/state \
+ && chmod -R 775 /httpd/install/logs /httpd/install/state
+
 # ustawiamy PATH i domyślny katalog roboczy
 ENV PATH=/httpd/install/bin:$PATH
 WORKDIR /httpd/install
