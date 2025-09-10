@@ -131,6 +131,96 @@ Rezultat:
 ![Logo](./screenshots/testRunning.png)
 
 
+## 6. Konfiguracja Środowiska Jenkins
+
+Celem zadania było przygotowanie w pełni funkcjonalnego środowiska do automatyzacji procesów CI/CD. W tym celu na maszynie wirtualnej z systemem Fedora Server zainstalowano i skonfigurowano serwer Jenkins, który następnie został zintegrowany z technologią Docker.
+
+
+### Krok 1: Instalacja i uruchomienie Jenkins na Fedorze
+
+Instancja Jenkins została uruchomiona na maszynie wirtualnej z systemem **Fedora Server** (wersja bez środowiska graficznego).
+
+Proces instalacji Jenkinsa obejmował następujące kroki:
+1.  Instalacja wymaganej zależności - środowiska Java Development Kit w wersji 17: `sudo dnf install java-17-openjdk-devel`.
+2.  Dodanie oficjalnego repozytorium Jenkins do menedżera pakietów `dnf`.
+3.  Import klucza GPG w celu weryfikacji autentyczności pakietów.
+4.  Instalacja Jenkinsa za pomocą komendy `sudo dnf install jenkins`.
+5.  Uruchomienie i włączenie usługi Jenkins w systemie `systemd`, aby startowała automatycznie wraz z systemem (`systemctl start jenkins`, `systemctl enable jenkins`).
+
+
+### Krok 2:  Konfiguracja sieci i dostępności
+
+Aby instancja Jenkins była dostępna z sieci lokalnej (spoza maszyny wirtualnej), podjęto następujące działania:
+1.  **Konfiguracja karty sieciowej maszyny wirtualnej:** W ustawieniach VirtualBox zmieniono tryb pracy karty sieciowej z `NAT` na `Bridged Adapter`. Dzięki temu maszyna wirtualna otrzymała własny adres IP w sieci hosta.
+
+Dzięki tym zmianom, interfejs webowy Jenkinsa stał się dostępny z przeglądarki na maszynie-hoście pod adresem IP maszyny wirtualnej.
+
+![Logo](./screenshots/fedora/jenkinsRunning.png)
+
+### Krok 3: Zabezpieczenie instancji
+
+Po pierwszym uruchomieniu przeprowadzono standardową konfigurację Jenkinsa. W celu spełnienia wymagań bezpieczeństwa, aby tylko zalogowani użytkownicy mogli uruchamiać buildy i przeglądać pełne logi, zastosowano mechanizm **Matrix-based security**:
+1.  W panelu **Manage Jenkins > Configure Global Security** włączono opcję **Matrix-based security**.
+2.  Dla grupy **Authenticated Users** (użytkownicy zalogowani) przyznano pełne uprawnienia do wszystkich operacji (Build, Read, Configure itp.).
+3.  Dla użytkownika **Anonymous** (użytkownicy niezalogowani) odebrano kluczowe uprawnienia, w tym `Build > Build`, `Job > Read` (aby nie widzieli szczegółów zadań) oraz `Run > Replay`. Pozostawiono jedynie ogólne uprawnienie `Overall > Read`, aby strona główna była widoczna.
+
+W ten sposób osoba niezalogowana nie może ani uruchomić nowego zadania, ani uzyskać dostępu do wrażliwych danych zawartych w logach konsoli.
+
+> **📷 Zrzut ekranu 3:** Zrzut ekranu panelu konfiguracyjnego `Matrix-based security` w Jenkinsie, na którym widać tabelę z uprawnieniami dla grup `Anonymous` i `Authenticated Users`.
+
+---
+
+### 1.4. Integracja z Dockerem i Eksport VM
+
+Jenkins do realizacji zadań w pipeline wykorzystuje Dockera. W tym celu na maszynie wirtualnej zainstalowano silnik Docker Community Edition. Kluczowym krokiem było nadanie uprawnień użytkownikowi `jenkins` do wykonywania poleceń `docker` bez konieczności używania `sudo`. Zrealizowano to poprzez dodanie użytkownika `jenkins` do grupy systemowej `docker` poleceniem: `sudo usermod -aG docker jenkins`. Po tej operacji usługa Jenkins została zrestartowana.
+
+Po zakończeniu całej konfiguracji, gotowa maszyna wirtualna została wyeksportowana do pliku w formacie **OVA (Open Virtualization Appliance)**. Plik ten stanowi kompletną, przenośną kopię zapasową skonfigurowanego środowiska.
+
+> **📷 Zrzut ekranu 4:** Umieść zrzut okna dialogowego z programu VirtualBox (lub innego) pokazujący proces eksportowania maszyny wirtualnej do pliku `.ova`.
+
+---
+---
+
+## 2. Implementacja Pipeline CI/CD
+
+Zgodnie z wymaganiami, stworzono zadanie typu **Pipeline**, które w deklaratywny sposób opisuje kroki budowy, testowania, wdrażania i publikacji oprogramowania (w tym przypadku serwera Apache httpd) w pliku `Jenkinsfile`.
+
+### 2.1. Etap `Build`
+
+Celem tego etapu jest skompilowanie serwera Apache httpd ze źródeł w czystym i powtarzalnym środowisku kontenerowym.
+
+* **Wybór i uzasadnienie kontenera bazowego:** Do budowania zależności (`Dockerfile.build-dependencies`) wybrano oficjalny obraz **`debian:bookworm-slim`**. Uzasadnienie wyboru jest następujące: jest to obraz lekki, stabilny i szeroko stosowany w środowiskach produkcyjnych. Zawiera menedżer pakietów `apt`, który zapewnia łatwy dostęp do wszystkich niezbędnych narzędzi deweloperskich (`build-essential`, `git`, `libssl-dev`, `python3-venv` etc.).
+* **Stworzenie obrazu z zależnościami:** Zamiast instalować zależności przy każdym uruchomieniu pipeline'u, stworzono dedykowany obraz `my-httpd-builder:latest`. Zawiera on wszystkie narzędzia i biblioteki potrzebne do skompilowania serwera httpd. Dzięki temu etap `Build` jest szybszy i bardziej niezawodny, ponieważ unika się problemów z siecią czy niedostępnością repozytoriów pakietów.
+* **Proces budowania i widoczność logów:** Proces kompilacji (klonowanie repozytoriów `apr` i `apr-util`, uruchomienie `./buildconf`, `./configure`, `make` oraz `make install`) odbywa się wewnątrz kontenera uruchomionego z obrazu `my-httpd-builder`. Cały standardowy strumień wyjścia i błędów z tych poleceń jest przechwytywany przez Jenkins i wyświetlany w logach konsoli zadania, co zapewnia pełną widoczność postępu i ewentualnych problemów.
+
+> **📷 Zrzut ekranu 5:** Fragment logu konsoli z Jenkinsa dla etapu `Build`, na którym widać końcowe linie działania polecenia `make install` oraz komunikat `>>> BUILD END`.
+
+---
+
+### 2.2. Etap `Test`
+
+W tym etapie weryfikowana jest poprawność działania świeżo skompilowanego oprogramowania.
+
+* **Użycie "buildera" jako obrazu bazowego:** Jako podstawę do uruchomienia testów wykorzystano obraz `my-httpd-built:latest`, który został stworzony w poprzednim kroku poprzez `docker commit`. Jest to logiczny wybór, ponieważ zawiera on dokładnie te skompilowane pliki binarne, które mają zostać przetestowane. Gwarantuje to spójność między tym, co zostało zbudowane, a tym, co jest testowane.
+* **Uruchomienie testów:** W kontenerze uruchomiono zestaw testów jednostkowych `pytest` dostarczony razem z kodem źródłowym Apache httpd. Użyto flagi `-vv` (bardzo szczegółowy tryb), aby uzyskać dokładne informacje o każdym przeprowadzanym teście.
+* **Dostępność logów i analiza wyników:** Wyniki działania `pytest` są w całości widoczne w logach Jenkinsa. W przypadku powodzenia, widoczna jest lista testów ze statusem `PASSED`. Gdyby któryś z testów się nie powiódł, `pytest` wyświetliłby szczegółowy raport błędu (traceback), co pozwala na natychmiastową identyfikację problemu bez potrzeby ręcznego debugowania w kontenerze.
+
+> **📷 Zrzut ekranu 6:** Widok logów konsoli Jenkinsa dla etapu `Test`. Powinien być widoczny wynik działania `pytest` z listą testów i podsumowaniem, np. `======== 12 passed in 3.45s ========`.
+
+---
+
+### 2.3. Etapy `Deploy` i `Publish`
+
+Końcowe etapy pipeline'u odpowiadają za przygotowanie finalnego artefaktu oraz jego dystrybucję.
+
+* **Deploy:** W tym kroku tworzony jest minimalny obraz `my-httpd:latest` przeznaczony do uruchomienia produkcyjnego. Kopiowane są do niego wyłącznie niezbędne, skompilowane pliki z obrazu `my-httpd-built`, bez narzędzi deweloperskich. Następnie uruchamiany jest test typu "smoke test", który sprawdza, czy serwer poprawnie startuje i odpowiada na zapytania sieciowe.
+* **Publish:** Po pomyślnym wdrożeniu i teście, artefakty są publikowane. Obraz Docker `my-httpd:latest` jest tagowany i wysyłany do publicznego repozytorium **Docker Hub**. Dodatkowo, spakowane archiwum `.tar.gz` z plikami instalacyjnymi serwera jest archiwizowane w Jenkinsie, skąd może być pobrane ręcznie lub przez inne procesy.
+
+> **📷 Zrzut ekranu 7:** Umieść zrzut ekranu przedstawiający Twoje repozytorium `my-httpd` na stronie Docker Hub, z widocznymi tagami `latest` i numerem ostatniego buildu.
+
+> **📷 Zrzut ekranu 8:** Zrzut ekranu strony builda w Jenkinsie, na której w sekcji **Build Artifacts** widoczny jest plik `my-httpd-install.tar.gz` gotowy do pobrania.
+
+
 
 
 

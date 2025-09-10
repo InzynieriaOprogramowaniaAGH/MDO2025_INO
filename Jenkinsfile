@@ -52,7 +52,7 @@ pipeline {
                         . /opt/venv/bin/activate
                         pip install python-multipart
 
-                        pytest /httpd/test/modules/http1 -vv
+                        pytest /httpd/test -vv
                     "
                 '''
             }
