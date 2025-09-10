@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKERHUB_USERNAME      = 'bmatejek003'
+        DOCKERHUB_CREDENTIALS_ID = 'dockerhub-credentials'
+        IMAGE_NAME              = 'my-httpd'
+    }
+
     stages {
         stage('Build') {
             steps {
@@ -102,12 +108,33 @@ pipeline {
 
         stage('Publish') {
             steps {
-                sh '''
-                    echo ">>> PUBLISH START"
-                    tar czf build-output.tar.gz httpd/install/
-                    echo ">>> PUBLISH END"
-                '''
-                archiveArtifacts artifacts: 'build-output.tar.gz', fingerprint: true
+                echo ">>> PUBLISH START"
+                
+                withCredentials([usernamePassword(credentialsId: env.DOCKERHUB_CREDENTIALS_ID, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        set -x
+                        echo "Logowanie do Docker Hub..."
+                        echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+
+                        echo "Tagowanie obrazu: ${env.DOCKERHUB_USERNAME}/${env.IMAGE_NAME}:latest"
+                        docker tag ${env.IMAGE_NAME}:latest ${env.DOCKERHUB_USERNAME}/${env.IMAGE_NAME}:latest
+                        docker tag ${env.IMAGE_NAME}:latest ${env.DOCKERHUB_USERNAME}/${env.IMAGE_NAME}:${BUILD_NUMBER}
+
+                        echo "Wysyłanie obrazu (tag latest)..."
+                        docker push ${env.DOCKERHUB_USERNAME}/${env.IMAGE_NAME}:latest
+                        
+                        echo "Wysyłanie obrazu (tag ${BUILD_NUMBER})..."
+                        docker push ${env.DOCKERHUB_USERNAME}/${env.IMAGE_NAME}:${BUILD_NUMBER}
+
+                        echo "Wylogowywanie z Docker Hub..."
+                        docker logout
+                    """
+                }
+
+                echo "Archiwizowanie artefaktu my-httpd-install.tar.gz..."
+                archiveArtifacts artifacts: 'my-httpd-install.tar.gz', fingerprint: true
+                
+                echo ">>> PUBLISH END"
             }
         }
     }
