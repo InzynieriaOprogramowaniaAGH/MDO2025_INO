@@ -160,15 +160,11 @@ Dzięki tym zmianom, interfejs webowy Jenkinsa stał się dostępny z przegląda
 ### Krok 3: Zabezpieczenie instancji
 
 Po pierwszym uruchomieniu przeprowadzono standardową konfigurację Jenkinsa. W celu spełnienia wymagań bezpieczeństwa, aby tylko zalogowani użytkownicy mogli uruchamiać buildy i przeglądać pełne logi, zastosowano mechanizm **Matrix-based security**:
-1.  W panelu **Manage Jenkins > Configure Global Security** włączono opcję **Matrix-based security**.
-2.  Dla grupy **Authenticated Users** (użytkownicy zalogowani) przyznano pełne uprawnienia do wszystkich operacji (Build, Read, Configure itp.).
-3.  Dla użytkownika **Anonymous** (użytkownicy niezalogowani) odebrano kluczowe uprawnienia, w tym `Build > Build`, `Job > Read` (aby nie widzieli szczegółów zadań) oraz `Run > Replay`. Pozostawiono jedynie ogólne uprawnienie `Overall > Read`, aby strona główna była widoczna.
+1.  Dla grupy **Authenticated Users** (użytkownicy zalogowani) przyznano pełne uprawnienia do wszystkich operacji (Build, Read, Configure itp.).
+2.  Dla użytkownika **Anonymous** (użytkownicy niezalogowani) odebrano kluczowe uprawnienia, w tym `Build > Build`, `Job > Read` (aby nie widzieli szczegółów zadań) oraz `Run > Replay`. Pozostawiono jedynie ogólne uprawnienie `Overall > Read`, aby strona główna była widoczna.
 
 W ten sposób osoba niezalogowana nie może ani uruchomić nowego zadania, ani uzyskać dostępu do wrażliwych danych zawartych w logach konsoli.
-
-> **📷 Zrzut ekranu 3:** Zrzut ekranu panelu konfiguracyjnego `Matrix-based security` w Jenkinsie, na którym widać tabelę z uprawnieniami dla grup `Anonymous` i `Authenticated Users`.
-
----
+![Logo](./screenshots/fedora/jenkinsSecurity.png)
 
 ### 1.4. Integracja z Dockerem i Eksport VM
 
