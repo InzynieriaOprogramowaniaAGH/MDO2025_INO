@@ -266,6 +266,16 @@ Dostarczony Jenkinsfile idealnie realizuje te założenia, wykorzystując koncep
 
 * **Faza Publish** Oprócz obrazu Docker, Jenkinsfile tworzy również archiwum .tar.gz z plikami instalacyjnymi serwera, które jest archiwizowane (archiveArtifacts artifacts: 'my-httpd-install.tar.gz'). To pozwala na jego manualne pobranie, spełniając wymóg stworzenia co najmniej jednego elementu redystrybucyjnego.
 
+#### Wersjonowanie
+
+Pipeline stosuje jednoznaczną konwencję wersjonowania, która jest powszechnie stosowaną najlepszą praktyką w branży. Każdy pomyślny build jest tagowany w dwóch miejscach:  
+
+* Tag latest: Zawsze wskazuje na najnowszą, stabilną wersję aplikacji.
+
+* Tag BUILD_NUMBER: Nadaje obrazowi unikalny, niezmienny identyfikator powiązany z numerem uruchomienia Jenkinsa (np. bmatejek003/my-httpd:123).
+
+Dzięki temu, deweloperzy i administratorzy mogą łatwo śledzić historię buildów, a w przypadku wykrycia błędu, bezproblemowo powrócić do poprzedniej, stabilnej wersji, po prostu odwołując się do jej numeru builda. To kluczowy element dla zapewnienia stabilności w środowisku produkcyjnym.
+
 #### Wykazanie działania aplikacji
 
 Jenkinsfile wykazuje, że aplikacja działa w sposób nieblokujący.
