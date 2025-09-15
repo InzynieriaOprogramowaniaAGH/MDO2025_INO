@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  redis:
+    image: redis:7-alpine
+
+  simple-webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.build   # use your build Dockerfile
+    image: myorg/simple-webserver:latest
+    command: ["./webserver", "-redis", "redis:6379"]
+    depends_on:
+      - redis
+    ports:
+      - "8082:8082"

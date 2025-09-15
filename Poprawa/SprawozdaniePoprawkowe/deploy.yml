@@ -1,0 +1,50 @@
+- name: Deploy simple-webserver to clean machine
+  hosts: staging
+  become: true
+  tasks:
+    - name: Ensure Docker is installed
+      package:
+        name: docker
+        state: present
+
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Pull runtime image
+      community.docker.docker_image:
+        name: vvojtasek/simple-webserver:{{ runtime_tag }}
+        source: pull
+
+    - name: Remove old container if exists
+      community.docker.docker_container:
+        name: simple-webserver
+        state: absent
+
+    - name: Run container with Redis in separate network
+      block:
+        - name: Ensure network exists
+          community.docker.docker_network:
+            name: app-network
+            state: present
+
+        - name: Run Redis
+          community.docker.docker_container:
+            name: redis
+            image: redis:7-alpine
+            networks:
+              - name: app-network
+            state: started
+
+        - name: Run webserver
+          community.docker.docker_container:
+            name: simple-webserver
+            image: vvojtasek/simple-webserver:{{ runtime_tag }}
+            command: ./webserver -redis redis:6379
+            ports:
+              - "8083:8082"
+            networks:
+              - name: app-network
+            state: started
